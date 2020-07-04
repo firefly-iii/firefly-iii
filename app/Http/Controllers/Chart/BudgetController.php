@@ -412,7 +412,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $budgets   = $this->repository->getActiveBudgets();
         $chartData = [

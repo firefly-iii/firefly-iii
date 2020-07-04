@@ -64,10 +64,14 @@
                 </span>
             </td>
             <td>
-                cat
+                <span v-for="tr in transaction.attributes.transactions">
+                    <a :href="'categories/show/' + transaction.category_id"  v-if="0!==tr.category_id">{{ tr.category_name }}</a><br />
+                </span>
             </td>
             <td>
-                bud
+                <span v-for="tr in transaction.attributes.transactions">
+                    <a :href="'budgets/show/' + transaction.budget_id" v-if="0!==tr.budget_id">{{ tr.budget_name }}</a><br />
+                </span>
             </td>
         </tr>
         </tbody>

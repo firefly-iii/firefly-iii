@@ -30,10 +30,10 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-budget-chart/>
+                <main-budget/>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-category-chart/>
+                <main-category />
             </div>
         </div>
 

@@ -100,9 +100,11 @@
             },
             getLabels() {
                 let firstSet = this.dataSet[0];
-                for (const entryLabel in firstSet.entries) {
-                    if (firstSet.entries.hasOwnProperty(entryLabel)) {
-                        this.newDataSet.labels.push(entryLabel);
+                if (typeof firstSet !== 'undefined') {
+                    for (const entryLabel in firstSet.entries) {
+                        if (firstSet.entries.hasOwnProperty(entryLabel)) {
+                            this.newDataSet.labels.push(entryLabel);
+                        }
                     }
                 }
             },
@@ -111,18 +113,20 @@
                     if (this.dataSet.hasOwnProperty(setKey)) {
                         let newSet = {};
                         let oldSet = this.dataSet[setKey];
-                        newSet.label = oldSet.label;
-                        newSet.type = oldSet.type;
-                        newSet.currency_symbol = oldSet.currency_symbol;
-                        newSet.currency_code = oldSet.currency_code;
-                        newSet.yAxisID = oldSet.yAxisID;
-                        newSet.data = [];
-                        for (const entryLabel in oldSet.entries) {
-                            if (oldSet.entries.hasOwnProperty(entryLabel)) {
-                                newSet.data.push(oldSet.entries[entryLabel]);
+                        if (typeof oldSet !== 'undefined') {
+                            newSet.label = oldSet.label;
+                            newSet.type = oldSet.type;
+                            newSet.currency_symbol = oldSet.currency_symbol;
+                            newSet.currency_code = oldSet.currency_code;
+                            newSet.yAxisID = oldSet.yAxisID;
+                            newSet.data = [];
+                            for (const entryLabel in oldSet.entries) {
+                                if (oldSet.entries.hasOwnProperty(entryLabel)) {
+                                    newSet.data.push(oldSet.entries[entryLabel]);
+                                }
                             }
+                            this.newDataSet.datasets.push(newSet);
                         }
-                        this.newDataSet.datasets.push(newSet);
                     }
                 }
             }

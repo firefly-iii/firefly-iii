@@ -1,5 +1,5 @@
 <!--
-  - MainAccount.vue
+  - MainBudgetChart.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,27 +21,28 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
+            <h3 class="card-title">{{ $t('firefly.budgets') }}</h3>
         </div>
         <div class="card-body">
             <div>
-                <main-account-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-account-chart>
+                <main-budget-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-budget-chart>
             </div>
         </div>
         <div class="card-footer">
-            <a href="./accounts/asset" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
+            <a href="./budgets" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
         </div>
     </div>
 </template>
 
 <script>
-    import MainAccountChart from "./MainAccountChart";
+    import MainBudgetChart from "./MainBudgetChart";
+    import DefaultBarOptions from "../charts/DefaultBarOptions";
     import DataConverter from "../charts/DataConverter";
-    import DefaultLineOptions from "../charts/DefaultLineOptions";
 
     export default {
+        name: "MainBudget",
         components: {
-            MainAccountChart
+            MainBudgetChart
         },
         data() {
             return {
@@ -51,20 +52,17 @@
             }
         },
         mounted() {
-            this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
-
-
+            this.chartOptions = DefaultBarOptions.methods.getDefaultOptions();
             this.loaded = false;
-            axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+            axios.get('./api/v1/chart/budget/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
-                    this.chartData = DataConverter.methods.convertChart(response.data);
-                    this.chartData = DataConverter.methods.colorizeData(this.chartData);
-                    this.chartData = DataConverter.methods.convertLabelsToDate(this.chartData);
+                    this.chartData = response.data;
+                    //this.chartData = DataConverter.methods.colorizeData(this.chartData);
+                    this.chartData = DataConverter.methods.convertChart(this.chartData);
                     this.loaded = true
                 });
         },
         methods: {
-
         },
         computed: {
             chartStyles() {
@@ -76,6 +74,9 @@
                 }
             }
         },
-        name: "MainAccount"
     }
 </script>
+
+<style scoped>
+
+</style>

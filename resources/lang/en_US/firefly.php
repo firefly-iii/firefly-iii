@@ -1319,6 +1319,7 @@ return [
     'month'                                     => 'Month',
     'budget'                                    => 'Budget',
     'spent'                                     => 'Spent',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Spent in budget',
     'left_to_spend'                             => 'Left to spend',
     'earned'                                    => 'Earned',

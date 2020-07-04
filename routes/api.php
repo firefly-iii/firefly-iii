@@ -197,6 +197,17 @@ Route::group(
     }
 );
 
+// Budgets
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/budget',
+     'as'        => 'api.v1.chart.budget.',],
+    static function () {
+
+        // (frontpage) budget overview
+        Route::get('overview', ['uses' => 'BudgetController@overview', 'as' => 'overview']);
+    }
+);
+
 // Categories
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
@@ -349,7 +360,6 @@ Route::group(
         // Attachment API routes:
         Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
         Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
-        Route::get('transfers', ['uses' => 'TransferController@search', 'as' => 'transfers']);
     }
 );
 

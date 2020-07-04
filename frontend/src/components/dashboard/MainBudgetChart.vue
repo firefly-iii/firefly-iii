@@ -18,25 +18,17 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">I am a card</h3>
-        </div>
-        <div class="card-body">
-            <p>
-                I am card body
-            </p>
-        </div>
-    </div>
-</template>
 
 <script>
+    import {Line} from 'vue-chartjs'
+
     export default {
-        name: "MainBudgetChart"
+        name: "MainBudgetChart",
+        extends: Line,
+        props: ['options', 'chartData'],
+
+        mounted() {
+            this.renderChart(this.chartData, this.options)
+        }
     }
 </script>
-
-<style scoped>
-
-</style>

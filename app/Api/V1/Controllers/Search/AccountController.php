@@ -43,8 +43,7 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
-    /** @var array */
-    private $validFields;
+    private array $validFields;
 
     public function __construct()
     {
