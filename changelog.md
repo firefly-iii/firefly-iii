@@ -36,6 +36,7 @@ Several alpha and beta releases preceded this release.
 - The example environment file has several fixes to make it more clear what features are for.
 - Sandstorm support is now entirely decrepated.
 - The max upload size is now larger. Although mostly enforced by your server, Firefly III used to have a very low upper limit.
+- The `MAIL_DRIVER` variable is now called `MAIL_MAILER`.
 
 ### Removed
 - [Issue 3517](https://github.com/firefly-iii/firefly-iii/issues/3517) The category no longer shows income because it skewed the chart and made it useless.
