@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'average per bill',
     'expected_total'                             => 'expected total',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version Authorization Request',
     'authorization_request_intro'                => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budgets and spending',
     'budgets_and_spending'                      => 'Budgets and spending',
     'go_to_budget'                              => 'Go to budget "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Savings',
     'newWithdrawal'                             => 'New expense',
     'newDeposit'                                => 'New deposit',
@@ -1698,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

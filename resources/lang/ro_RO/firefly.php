@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'media pe factură',
     'expected_total'                             => 'total așteptat',
     'reconciliation_account_name'                => ':name reconciliere (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'v: Solicitare de autorizare',
     'authorization_request_intro'                => '<strong> :client </ strong> solicită permisiunea de a accesa administrația financiară. Doriți să autorizați <strong> :client </ strong> pentru a accesa aceste înregistrări?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Hopaa!',
     'profile_something_wrong'                   => 'A apărut o eroare!',
     'profile_try_again'                         => 'A apărut o problemă. Încercați din nou.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Exportă date din Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Bugetele și cheltuielile',
     'budgets_and_spending'                      => 'Bugete și cheltuieli',
     'go_to_budget'                              => 'Mergi la buget "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Economii',
     'newWithdrawal'                             => 'Cheltuieli noi',
     'newDeposit'                                => 'Depozit nou',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Lună',
     'budget'                                    => 'Buget',
     'spent'                                     => 'Cheltuit',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Cheltuit în budget',
     'left_to_spend'                             => 'Ramas de cheltuit',
     'earned'                                    => 'Câștigat',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

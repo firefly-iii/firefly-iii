@@ -13,7 +13,29 @@
         "amount": "Montant",
         "budget": "Budget",
         "category": "Cat\u00e9gorie",
-        "opposing_account": "Compte oppos\u00e9"
+        "opposing_account": "Compte oppos\u00e9",
+        "budgets": "Budgets",
+        "categories": "Cat\u00e9gories",
+        "go_to_budgets": "G\u00e9rer vos budgets",
+        "income": "Recette \/ revenu",
+        "go_to_deposits": "Aller aux d\u00e9p\u00f4ts",
+        "go_to_categories": "G\u00e9rer vos cat\u00e9gories",
+        "expense_accounts": "Comptes de d\u00e9penses",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "G\u00e9rer vos factures",
+        "bills": "Factures",
+        "go_to_piggies": "G\u00e9rer vos tirelires",
+        "saved": "Saved",
+        "piggy_banks": "Tirelires",
+        "piggy_bank": "Tirelire",
+        "amounts": "Montants"
+    },
+    "list": {
+        "piggy_bank": "Tirelire",
+        "percentage": "pct.",
+        "amount": "Montant",
+        "name": "Nom",
+        "next_expected_match": "Prochaine association attendue"
     },
     "config": {
         "html_language": "fr"

@@ -214,6 +214,8 @@ return [
     'average_per_bill'                           => 'fatura başına ortalama',
     'expected_total'                             => 'beklenen toplam',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v: version Yetkilendirme İsteği',
     'authorization_request_intro'                => '<strong>:client</strong> finansal yönetiminize erişmek için izin istiyor. Bu kayıtlara erişmek için  <strong>:client</strong> \'yi yetkilendirmek ister misiniz?',
@@ -696,6 +698,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1136,6 +1139,8 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'budgetsAndSpending'                        => 'Bütçe ve Harcama',
     'budgets_and_spending'                      => 'Budgets and spending',
     'go_to_budget'                              => 'Go to budget "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Birikim',
     'newWithdrawal'                             => 'Yeni gider',
     'newDeposit'                                => 'Yeni mevduat',
@@ -1321,6 +1326,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'month'                                     => 'Ay',
     'budget'                                    => 'Bütçe',
     'spent'                                     => 'Harcanan',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Bütçede harcama',
     'left_to_spend'                             => 'Harcama için bırakıldı',
     'earned'                                    => 'Kazanılan',
@@ -1699,6 +1705,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

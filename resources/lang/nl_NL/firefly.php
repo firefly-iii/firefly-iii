@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'gemiddeld per contract',
     'expected_total'                             => 'verwacht totaal',
     'reconciliation_account_name'                => ':name afstemming (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version autorisatieverzoek',
     'authorization_request_intro'                => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Oeps!',
     'profile_something_wrong'                   => 'Er is iets mis gegaan!',
     'profile_try_again'                         => 'Er is iets misgegaan. Probeer het nogmaals.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Gegevens exporteren uit Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budgetten en uitgaven',
     'budgets_and_spending'                      => 'Budgetten en uitgaven',
     'go_to_budget'                              => 'Ga naar budget "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Sparen',
     'newWithdrawal'                             => 'Nieuwe uitgave',
     'newDeposit'                                => 'Nieuwe inkomsten',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Maand',
     'budget'                                    => 'Budget',
     'spent'                                     => 'Uitgegeven',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Uitgegeven in budget',
     'left_to_spend'                             => 'Over om uit te geven',
     'earned'                                    => 'Verdiend',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Groep ":title" geüpdatet',
     'deleted_object_group'               => 'Groep ":title" verwijderd',
     'object_group'                       => 'Groep',
+
 
 
     //

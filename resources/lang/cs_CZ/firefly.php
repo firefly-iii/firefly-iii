@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'průměr na účet',
     'expected_total'                             => 'očekávaný celkový součet',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Požadavek na ověření – Firefly III verze :version',
     'authorization_request_intro'                => '<strong>:client</strong> žádá oprávnění pro přístup k vaší finanční správě. Chcete autorizovat <strong>:client</strong> pro přístup k těmto záznamům?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Rozpočty a útraty',
     'budgets_and_spending'                      => 'Rozpočty a útraty',
     'go_to_budget'                              => 'Přejít na rozpočet „{budget}“',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Úspory',
     'newWithdrawal'                             => 'Nový výdaj',
     'newDeposit'                                => 'Nový vklad',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Měsíc',
     'budget'                                    => 'Rozpočet',
     'spent'                                     => 'Utraceno',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Utraceno v rozpočtu',
     'left_to_spend'                             => 'Zbývá k utracení',
     'earned'                                    => 'Vyděláno',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'trung bình mỗi hóa đơn',
     'expected_total'                             => 'tổng dự kiến',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
     'authorization_request_intro'                => '<strong>:client</strong> đang yêu cầu sự cho phép truy cập quản trị tài chính của bạn. Bạn có muốn ủy quyền <strong>:client</strong> để truy cập những hồ sơ này?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Rất tiếc!',
     'profile_something_wrong'                   => 'Có lỗi xảy ra!',
     'profile_try_again'                         => 'Xảy ra lỗi. Vui lòng thử lại.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Xuất dữ liệu từ Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Ngân sách và chi tiêu',
     'budgets_and_spending'                      => 'Ngân sách và chi tiêu',
     'go_to_budget'                              => 'Đến ngân sách "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Tiết kiệm',
     'newWithdrawal'                             => 'Chi phí mới',
     'newDeposit'                                => 'Tiền gửi mới',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Tháng',
     'budget'                                    => 'Ngân sách',
     'spent'                                     => 'Đã chi',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Đã chi trong ngân sách',
     'left_to_spend'                             => 'Còn lại để chi tiêu',
     'earned'                                    => 'Kiếm được',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Nhóm được cập nhật thành công ":title"',
     'deleted_object_group'               => 'Đã xóa nhóm thành công ":title"',
     'object_group'                       => 'Nhóm',
+
 
 
     //

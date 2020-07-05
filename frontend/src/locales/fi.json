@@ -13,7 +13,29 @@
         "amount": "Summa",
         "budget": "Budjetti",
         "category": "Kategoria",
-        "opposing_account": "Vastatili"
+        "opposing_account": "Vastatili",
+        "budgets": "Budjetit",
+        "categories": "Kategoriat",
+        "go_to_budgets": "Avaa omat budjetit",
+        "income": "Tuotto \/ ansio",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Avaa omat kategoriat",
+        "expense_accounts": "Kulutustilit",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Avaa omat laskut",
+        "bills": "Laskut",
+        "go_to_piggies": "Tarkastele s\u00e4\u00e4st\u00f6possujasi",
+        "saved": "Saved",
+        "piggy_banks": "S\u00e4\u00e4st\u00f6possut",
+        "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
+        "percentage": "pros.",
+        "amount": "Summa",
+        "name": "Nimi",
+        "next_expected_match": "Seuraava lasku odotettavissa"
     },
     "config": {
         "html_language": "fi"

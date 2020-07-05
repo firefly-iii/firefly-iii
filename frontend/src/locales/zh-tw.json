@@ -13,7 +13,29 @@
         "amount": "\u91d1\u984d",
         "budget": "\u9810\u7b97",
         "category": "\u5206\u985e",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "\u9810\u7b97",
+        "categories": "\u5206\u985e",
+        "go_to_budgets": "\u524d\u5f80\u60a8\u7684\u9810\u7b97",
+        "income": "\u6536\u5165 \/ \u6240\u5f97",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "\u524d\u5f80\u60a8\u7684\u5206\u985e",
+        "expense_accounts": "\u652f\u51fa\u5e33\u6236",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "\u524d\u5f80\u60a8\u7684\u5e33\u55ae",
+        "bills": "\u5e33\u55ae",
+        "go_to_piggies": "\u524d\u5f80\u60a8\u7684\u5c0f\u8c6c\u64b2\u6eff",
+        "saved": "Saved",
+        "piggy_banks": "\u5c0f\u8c6c\u64b2\u6eff",
+        "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
+        "percentage": "pct.",
+        "amount": "\u91d1\u984d",
+        "name": "\u540d\u7a31",
+        "next_expected_match": "\u4e0b\u4e00\u500b\u9810\u671f\u7684\u914d\u5c0d"
     },
     "config": {
         "html_language": "zh-tw"

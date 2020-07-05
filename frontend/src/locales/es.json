@@ -13,7 +13,29 @@
         "amount": "Cantidad",
         "budget": "Presupuesto",
         "category": "Categoria",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "Presupuestos",
+        "categories": "Categor\u00edas",
+        "go_to_budgets": "Ir a tus presupuestos",
+        "income": "Ingresos \/ salarios",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Ir a tus categor\u00edas",
+        "expense_accounts": "Cuentas de gastos",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Ir a tus cuentas",
+        "bills": "Facturas",
+        "go_to_piggies": "Ir a tu hucha",
+        "saved": "Saved",
+        "piggy_banks": "Alcanc\u00edas",
+        "piggy_bank": "Alcanc\u00eda",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Alcancilla",
+        "percentage": "pct.",
+        "amount": "Monto",
+        "name": "Nombre",
+        "next_expected_match": "Pr\u00f3xima coincidencia esperada"
     },
     "config": {
         "html_language": "es"

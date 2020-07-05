@@ -21,22 +21,36 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">I am a card</h3>
+            <!-- debit = expense -->
+            <h3 class="card-title">{{ $t('firefly.income') }}</h3>
         </div>
-        <div class="card-body">
-            <p>
-                I am card body
-            </p>
+        <div class="card-body table-responsive p-0">
+            <transaction-list-small :transactions="this.transactions" />
+        </div>
+        <div class="card-footer">
+            <a href="./accounts/revenue" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_deposits') }}</a>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        name: "MainCrebitChart"
+        name: "MainCredit",
+        components: {},
+        data() {
+            return {
+                transactions: []
+            }
+        },
+        mounted() {
+            axios.get('./api/v1/transactions?type=deposit&limit=10&start=' + window.sessionStart + '&end=' + window.sessionEnd)
+                .then(response => {
+                          this.transactions = response.data.data;
+                      }
+                );
+        },
+        methods: {
+        },
+        computed: {},
     }
 </script>
-
-<style scoped>
-
-</style>

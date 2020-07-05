@@ -156,16 +156,6 @@ class BudgetController extends Controller
                 'yAxisID'       => 0, // 0, 1, 2
                 'entries'       => $entries,
             ];
-//            // spent
-//            $return['spent'] = [
-//                'label'         => sprintf('%s (%s)', trans('firefly.spent'), $currencyName),
-//                'data_type'     => 'spent',
-//                'currency_name' => $currencyName,
-//                'type'          => 'bar',
-//                'yAxisID'       => 0, // 0, 1, 2
-//                'entries'       => $entries,
-//            ];
-
 
             // spent_capped
             $return['spent_capped'] = [

@@ -13,7 +13,29 @@
         "amount": "Bedrag",
         "budget": "Budget",
         "category": "Categorie",
-        "opposing_account": "Tegenrekening"
+        "opposing_account": "Tegenrekening",
+        "budgets": "Budgetten",
+        "categories": "Categorie\u00ebn",
+        "go_to_budgets": "Ga naar je budgetten",
+        "income": "Inkomsten",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Ga naar je categorie\u00ebn",
+        "expense_accounts": "Crediteuren",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Ga naar je contracten",
+        "bills": "Contracten",
+        "go_to_piggies": "Ga naar je spaarpotjes",
+        "saved": "Saved",
+        "piggy_banks": "Spaarpotjes",
+        "piggy_bank": "Spaarpotje",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Spaarpotje",
+        "percentage": "pct",
+        "amount": "Bedrag",
+        "name": "Naam",
+        "next_expected_match": "Volgende verwachte match"
     },
     "config": {
         "html_language": "nl"

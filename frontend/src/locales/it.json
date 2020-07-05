@@ -13,7 +13,29 @@
         "amount": "Importo",
         "budget": "Budget",
         "category": "Categoria",
-        "opposing_account": "Conto beneficiario"
+        "opposing_account": "Conto beneficiario",
+        "budgets": "Budget",
+        "categories": "Categorie",
+        "go_to_budgets": "Vai ai tuoi budget",
+        "income": "Redditi \/ entrate",
+        "go_to_deposits": "Vai ai depositi",
+        "go_to_categories": "Vai alle tue categorie",
+        "expense_accounts": "Conti uscite",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Vai alle tue bollette",
+        "bills": "Bollette",
+        "go_to_piggies": "Vai ai tuoi salvadanai",
+        "saved": "Saved",
+        "piggy_banks": "Salvadanai",
+        "piggy_bank": "Salvadanaio",
+        "amounts": "Importi"
+    },
+    "list": {
+        "piggy_bank": "Salvadanaio",
+        "percentage": "perc.",
+        "amount": "Importo",
+        "name": "Nome",
+        "next_expected_match": "Prossimo abbinamento previsto"
     },
     "config": {
         "html_language": "it"

@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => '每张帐单的平均数',
     'expected_total'                             => '期望总数',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III :version 版授权请求',
     'authorization_request_intro'                => '<strong>:client</strong> 正在要求通行您的财务管理后台的许可，您是否愿意授权 <strong>:client</strong> 通行这些纪录？',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => '从 Fifly III 导出数据',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => '预算与花费',
     'budgets_and_spending'                      => '预算与花费',
     'go_to_budget'                              => '转到预算 "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => '储蓄',
     'newWithdrawal'                             => '新支出',
     'newDeposit'                                => '新存款',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => '月',
     'budget'                                    => '预算',
     'spent'                                     => '支出',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => '预算内支出',
     'left_to_spend'                             => '剩余可花费',
     'earned'                                    => '已赚得',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

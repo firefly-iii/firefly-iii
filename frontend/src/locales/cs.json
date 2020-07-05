@@ -13,7 +13,29 @@
         "amount": "\u010c\u00e1stka",
         "budget": "Rozpo\u010det",
         "category": "Kategorie",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "Rozpo\u010dty",
+        "categories": "Kategorie",
+        "go_to_budgets": "P\u0159ej\u00edt k rozpo\u010dt\u016fm",
+        "income": "Odm\u011bna\/p\u0159\u00edjem",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "P\u0159ej\u00edt ke kategori\u00edm",
+        "expense_accounts": "V\u00fddajov\u00e9 \u00fa\u010dty",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "P\u0159ej\u00edt k \u00fa\u010dt\u016fm",
+        "bills": "\u00da\u010dty",
+        "go_to_piggies": "P\u0159ej\u00edt k pokladni\u010dk\u00e1m",
+        "saved": "Saved",
+        "piggy_banks": "Pokladni\u010dky",
+        "piggy_bank": "Pokladni\u010dka",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Pokladni\u010dka",
+        "percentage": "pct.",
+        "amount": "\u010c\u00e1stka",
+        "name": "Jm\u00e9no",
+        "next_expected_match": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 shoda"
     },
     "config": {
         "html_language": "cs"

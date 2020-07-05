@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'gjennomsnitt per regning',
     'expected_total'                             => 'forventet totalt',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version autorisasjonsforespørsel',
     'authorization_request_intro'                => '<strong>:client</strong> ber om tillatelse til å få tilgang til finansadministrasjonen din. Vil du autorisere <strong>:client</strong> slik at den får tilgang til disse dine data?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budsjetter og utgifter',
     'budgets_and_spending'                      => 'Budsjetter og utgifter',
     'go_to_budget'                              => 'Gå til budsjett "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Oppspart',
     'newWithdrawal'                             => 'Ny utgift',
     'newDeposit'                                => 'Nytt innskudd',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Måned',
     'budget'                                    => 'Busjett',
     'spent'                                     => 'Brukt',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Brukt i budsjett',
     'left_to_spend'                             => 'Igjen å bruke',
     'earned'                                    => 'Opptjent',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

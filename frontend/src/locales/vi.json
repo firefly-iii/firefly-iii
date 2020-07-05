@@ -13,7 +13,29 @@
         "amount": "S\u1ed1 ti\u1ec1n",
         "budget": "Ng\u00e2n s\u00e1ch",
         "category": "Danh m\u1ee5c",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "Ng\u00e2n s\u00e1ch",
+        "categories": "Danh m\u1ee5c",
+        "go_to_budgets": "Chuy\u1ec3n \u0111\u1ebfn ng\u00e2n s\u00e1ch c\u1ee7a b\u1ea1n",
+        "income": "Thu nh\u1eadp doanh thu",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "\u0110i \u0111\u1ebfn danh m\u1ee5c c\u1ee7a b\u1ea1n",
+        "expense_accounts": "T\u00e0i kho\u1ea3n chi ph\u00ed",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "\u0110i \u0111\u1ebfn h\u00f3a \u0111\u01a1n c\u1ee7a b\u1ea1n",
+        "bills": "H\u00f3a \u0111\u01a1n",
+        "go_to_piggies": "T\u1edbi heo \u0111\u1ea5t c\u1ee7a b\u1ea1n",
+        "saved": "Saved",
+        "piggy_banks": "Heo \u0111\u1ea5t",
+        "piggy_bank": "Heo \u0111\u1ea5t",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "\u1ed0ng heo con",
+        "percentage": "ph\u1ea7n tr\u0103m.",
+        "amount": "S\u1ed1 ti\u1ec1n",
+        "name": "T\u00ean",
+        "next_expected_match": "Tr\u1eadn \u0111\u1ea5u d\u1ef1 ki\u1ebfn ti\u1ebfp theo"
     },
     "config": {
         "html_language": "vi"

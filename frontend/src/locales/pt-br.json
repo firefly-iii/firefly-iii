@@ -13,7 +13,29 @@
         "amount": "Valor",
         "budget": "Or\u00e7amento",
         "category": "Categoria",
-        "opposing_account": "Conta oposta"
+        "opposing_account": "Conta oposta",
+        "budgets": "Or\u00e7amentos",
+        "categories": "Categorias",
+        "go_to_budgets": "V\u00e1 para seus or\u00e7amentos",
+        "income": "Receita \/ Renda",
+        "go_to_deposits": "Ir para os dep\u00f3sitos",
+        "go_to_categories": "V\u00e1 para suas categorias",
+        "expense_accounts": "Contas de despesas",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "V\u00e1 para suas faturas",
+        "bills": "Faturas",
+        "go_to_piggies": "V\u00e1 para sua poupan\u00e7a",
+        "saved": "Saved",
+        "piggy_banks": "Cofrinhos",
+        "piggy_bank": "Cofrinho",
+        "amounts": "Quantias"
+    },
+    "list": {
+        "piggy_bank": "Cofrinho",
+        "percentage": "pct.",
+        "amount": "Total",
+        "name": "Nome",
+        "next_expected_match": "Pr\u00f3ximo correspondente esperado"
     },
     "config": {
         "html_language": "pt-br"

@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'średnia za rachunek',
     'expected_total'                             => 'oczekiwana suma',
     'reconciliation_account_name'                => 'Uzgadnianie :name (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Żądanie autoryzacji Firefly III v:version',
     'authorization_request_intro'                => '<strong>:client</strong> prosi o pozwolenie na dostęp do Twojej administracji finansowej. Czy chcesz pozwolić <strong>:client</strong> na dostęp do tych danych?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Uuuups!',
     'profile_something_wrong'                   => 'Coś poszło nie tak!',
     'profile_try_again'                         => 'Coś poszło nie tak. Spróbuj ponownie.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Eksportuj dane z Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budżety i wydatki',
     'budgets_and_spending'                      => 'Budżety i wydatki',
     'go_to_budget'                              => 'Idź do budżetu "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Oszczędności',
     'newWithdrawal'                             => 'Nowy wydatek',
     'newDeposit'                                => 'Nowa wpłata',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Miesiąc',
     'budget'                                    => 'Budżet',
     'spent'                                     => 'Wydano',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Wydano w budżecie',
     'left_to_spend'                             => 'Pozostało do wydania',
     'earned'                                    => 'Zarobiono',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Pomyślnie zmodyfikowano grupę ":title"',
     'deleted_object_group'               => 'Pomyślnie usunięto grupę ":title"',
     'object_group'                       => 'Grupa',
+
 
 
     //

@@ -22,11 +22,11 @@ import Dashboard from "../components/dashboard/Dashboard";
 import TopBoxes from "../components/dashboard/TopBoxes";
 import MainAccount from "../components/dashboard/MainAccount";
 import MainAccountList from "../components/dashboard/MainAccountList";
-import MainBillsChart from "../components/dashboard/MainBillsChart";
+import MainBillsList from "../components/dashboard/MainBillsList";
 import MainBudget from "../components/dashboard/MainBudget";
 import MainCategory from "../components/dashboard/MainCategory";
-import MainCrebitChart from "../components/dashboard/MainCrebitChart";
-import MainDebitChart from "../components/dashboard/MainDebitChart";
+import MainCredit from "../components/dashboard/MainCredit";
+import MainDebit from "../components/dashboard/MainDebit";
 import MainPiggyList from "../components/dashboard/MainPiggyList";
 import TransactionListLarge from "../components/transactions/TransactionListLarge";
 import TransactionListMedium from "../components/transactions/TransactionListMedium";
@@ -48,14 +48,12 @@ Vue.component('dashboard', Dashboard);
 Vue.component('top-boxes', TopBoxes);
 Vue.component('main-account', MainAccount);
 Vue.component('main-account-list', MainAccountList);
-Vue.component('main-bills-chart', MainBillsChart);
+Vue.component('main-bills-list', MainBillsList);
 Vue.component('main-budget', MainBudget);
 Vue.component('main-category', MainCategory);
-Vue.component('main-credit-chart', MainCrebitChart);
-Vue.component('main-debit-chart', MainDebitChart);
+Vue.component('main-credit', MainCredit);
+Vue.component('main-debit', MainDebit);
 Vue.component('main-piggy-list', MainPiggyList);
-
-
 
 // i18n
 let i18n = require('../i18n');

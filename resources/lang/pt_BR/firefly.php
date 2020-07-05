@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'média por fatura',
     'expected_total'                             => 'total esperado',
     'reconciliation_account_name'                => 'Reconciliação :name (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version Pedido de autorização',
     'authorization_request_intro'                => '<strong>:client</strong> está pedindo permissão para acessar sua administração financeira. Gostaria de autorizar <strong>:client</strong> para acessar esses registros?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Ops!',
     'profile_something_wrong'                   => 'Alguma coisa deu errado!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Quantias',
 
     // export data:
     'export_data_title'                         => 'Exportar dados do Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Orçamentos e despesas',
     'budgets_and_spending'                      => 'Orçamentos e despesas',
     'go_to_budget'                              => 'Ir para o orçamento "{budget}"',
+    'go_to_deposits'                            => 'Ir para os depósitos',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Poupanças',
     'newWithdrawal'                             => 'Nova despesa',
     'newDeposit'                                => 'Novo depósito',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Mês',
     'budget'                                    => 'Orçamento',
     'spent'                                     => 'Gasto',
+    'spent_capped'                              => 'Despesa (limitada)',
     'spent_in_budget'                           => 'Gasto no orçamento',
     'left_to_spend'                             => 'Restante para gastar',
     'earned'                                    => 'Ganho',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'O grupo ":title" foi atualizado com sucesso',
     'deleted_object_group'               => 'O grupo ":title" foi deletado com sucesso',
     'object_group'                       => 'Grupo',
+
 
 
     //

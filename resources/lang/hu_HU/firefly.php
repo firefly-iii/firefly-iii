@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'számlánkénti átlag',
     'expected_total'                             => 'várható teljes összeg',
     'reconciliation_account_name'                => ':name egyeztetés (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version engedély kérelem',
     'authorization_request_intro'                => '<strong>:client</strong> hozzáférést kért az Ön pénzügyi adminisztrációjához. Szeretne hozzáférést ezekhez adatokhoz <strong>:client</strong> részére?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Adatok exportálása a Firefly III-ból',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Költségkeretek és kiadások',
     'budgets_and_spending'                      => 'Költségkeretek és kiadások',
     'go_to_budget'                              => 'Ugrás költségkerethez "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Magtakarítások',
     'newWithdrawal'                             => 'Új költség',
     'newDeposit'                                => 'Új bevétel',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Hónap',
     'budget'                                    => 'Költségkeret',
     'spent'                                     => 'Elköltött',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Költségkeretből elköltve',
     'left_to_spend'                             => 'Elkölthető',
     'earned'                                    => 'Megkeresett',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

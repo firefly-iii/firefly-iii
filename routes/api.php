@@ -219,6 +219,19 @@ Route::group(
     }
 );
 
+//// Bills
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/bill',
+//     'as'        => 'api.v1.chart.bill.',],
+//    static function () {
+//
+//        // Overview API routes:
+//        // Route::get('overview', ['uses' => 'BillController@overview', 'as' => 'overview']);
+//    }
+//);
+
+
+// Configuration
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration',
      'as'        => 'api.v1.configuration.',],

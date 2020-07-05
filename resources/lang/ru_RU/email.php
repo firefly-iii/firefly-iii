@@ -56,15 +56,15 @@ return [
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
-    'email_change_old'                 => 'The old email address was: :email',
-    'email_change_old_strong'          => 'The old email address was: <strong>:email</strong>',
-    'email_change_new'                 => 'The new email address is: :email',
-    'email_change_new_strong'          => 'The new email address is: <strong>:email</strong>',
-    'email_change_instructions'        => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
-    'email_change_undo_link'           => 'To undo the change, follow this link:',
+    'email_change_old'                 => 'Старый адрес электронной почты: :email',
+    'email_change_old_strong'          => 'Старый адрес электронной почты: <strong>:email</strong>',
+    'email_change_new'                 => 'Новый адрес электронной почты: :email',
+    'email_change_new_strong'          => 'Новый адрес электронной почты: <strong>:email</strong>',
+    'email_change_instructions'        => 'Вы не можете использовать Firefly III, пока не подтвердите это изменение. Перейдите по ссылке ниже, чтобы сделать это.',
+    'email_change_undo_link'           => 'Чтобы отменить изменения, перейдите по ссылке:',
 
     // OAuth token created
-    'oauth_created_subject'            => 'A new OAuth client has been created',
+    'oauth_created_subject'            => 'Создан новый OAuth клиент',
     'oauth_created_body'               => 'Кто-то (надеемся, что вы) только что создал новый клиент API OAuth для вашей учетной записи. Он назван ":name" и имеет обратный URL <span style="font-family: monospace;">:url</span>.',
     'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
     'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
@@ -77,8 +77,8 @@ return [
     // error
     'error_subject'                    => 'Caught an error in Firefly III',
     'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
-    'error_type'                       => 'The error was of type ":class".',
-    'error_timestamp'                  => 'The error occurred on/at: :time.',
+    'error_type'                       => 'Ошибка типа ":class".',
+    'error_timestamp'                  => 'Ошибка произошла в: :time.',
     'error_location'                   => 'This error occurred in file "<span style="font-family: monospace;">:file</span>" on line :line with code :code.',
     'error_user'                       => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
     'error_no_user'                    => 'There was no user logged in for this error or no user was detected.',
@@ -88,9 +88,9 @@ return [
     'error_stacktrace'                 => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
     'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
-    'error_stacktrace_below'           => 'The full stacktrace is below:',
+    'error_stacktrace_below'           => 'Полная трассировки стека:',
 
     // report new journals
-    'new_journals_subject'             => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
-    'new_journals_header'              => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:',
+    'new_journals_subject'             => 'Firefly III создал новую транзакцию|Firefly III создал :count новых транзакций',
+    'new_journals_header'              => 'Firefly III создал для вас транзакцию. Вы можете найти её в вашей установке Firefly III: |Firefly III создал для вас :count транзакций. Вы можете найти их в вашей установке Firefly III:',
 ];

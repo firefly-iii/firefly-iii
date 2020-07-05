@@ -13,7 +13,29 @@
         "amount": "Jumlah",
         "budget": "Anggaran",
         "category": "Kategori",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "Anggaran",
+        "categories": "Kategori",
+        "go_to_budgets": "Pergi ke anggaran mu",
+        "income": "Pendapatan \/ penghasilan",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Menuju ke kategori yang anda miliki",
+        "expense_accounts": "Rekening pengeluaran",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Menuju ke bill yang anda miliki",
+        "bills": "Tagihan",
+        "go_to_piggies": "Go to your piggy banks",
+        "saved": "Saved",
+        "piggy_banks": "Piggy banks",
+        "piggy_bank": "Celengan",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Celengan",
+        "percentage": "pct.",
+        "amount": "Jumlah",
+        "name": "Nama",
+        "next_expected_match": "Transaksi yang diharapkan berikutnya"
     },
     "config": {
         "html_language": "id"

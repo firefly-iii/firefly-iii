@@ -13,7 +13,29 @@
         "amount": "Amount",
         "budget": "Budget",
         "category": "Category",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "Budgets",
+        "categories": "Categories",
+        "go_to_budgets": "Go to your budgets",
+        "income": "Revenue \/ income",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Go to your categories",
+        "expense_accounts": "Expense accounts",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Go to your bills",
+        "bills": "Bills",
+        "go_to_piggies": "Go to your piggy banks",
+        "saved": "Saved",
+        "piggy_banks": "Piggy banks",
+        "piggy_bank": "Piggy bank",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Piggy bank",
+        "percentage": "pct.",
+        "amount": "Amount",
+        "name": "Name",
+        "next_expected_match": "Next expected match"
     },
     "config": {
         "html_language": "en"

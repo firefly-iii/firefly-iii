@@ -13,7 +13,29 @@
         "amount": "Miktar",
         "budget": "B\u00fct\u00e7e",
         "category": "Kategori",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "B\u00fct\u00e7eler",
+        "categories": "Kategoriler",
+        "go_to_budgets": "B\u00fct\u00e7elerine git",
+        "income": "Gelir \/ gelir",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Kategorilerinize gidin",
+        "expense_accounts": "Gider hesaplar\u0131",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Faturalar\u0131na git",
+        "bills": "Fatura",
+        "go_to_piggies": "Kumbaran\u0131za gidin",
+        "saved": "Saved",
+        "piggy_banks": "Piggy banks",
+        "piggy_bank": "Kumbara",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Kumbara",
+        "percentage": "yzd.",
+        "amount": "Miktar",
+        "name": "\u0130sim",
+        "next_expected_match": "Beklenen sonraki e\u015fle\u015fme"
     },
     "config": {
         "html_language": "tr"

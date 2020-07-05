@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'keskiarvo laskuittain',
     'expected_total'                             => 'odotettavissa yhteensä',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version Valtuutus Pyyntö',
     'authorization_request_intro'                => '<strong>:client</strong> pyytää valtuutustasi nähdäkseen sinun taloushallintosi. Haluatko antaa hänelle pääsyn näihin tietoihin?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Hupsis!',
     'profile_something_wrong'                   => 'Jokin meni vikaan!',
     'profile_try_again'                         => 'Jokin meni vikaan. Yritä uudelleen.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Vie tietoja Firefly III:sta',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budjetit ja kulutus',
     'budgets_and_spending'                      => 'Budjetit ja kulutus',
     'go_to_budget'                              => 'Avaa budjetti "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Säästöt',
     'newWithdrawal'                             => 'Uusi kustannus',
     'newDeposit'                                => 'Uusi talletus',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Kuukausi',
     'budget'                                    => 'Budjetti',
     'spent'                                     => 'Käytetty',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Budjetista käytetty',
     'left_to_spend'                             => 'Käytettävissä',
     'earned'                                    => 'Ansaittu',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Ryhmän ":title" päivitys onnistui',
     'deleted_object_group'               => 'Ryhmän ":title" poistaminen onnistui',
     'object_group'                       => 'Ryhmä',
+
 
 
     //

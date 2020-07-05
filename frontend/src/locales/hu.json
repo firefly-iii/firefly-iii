@@ -13,7 +13,29 @@
         "amount": "\u00d6sszeg",
         "budget": "K\u00f6lts\u00e9gkeret",
         "category": "Kateg\u00f3ria",
-        "opposing_account": "Opposing account"
+        "opposing_account": "Opposing account",
+        "budgets": "K\u00f6lts\u00e9gkeretek",
+        "categories": "Kateg\u00f3ri\u00e1k",
+        "go_to_budgets": "Ugr\u00e1s a k\u00f6lts\u00e9gkeretekhez",
+        "income": "J\u00f6vedelem \/ bev\u00e9tel",
+        "go_to_deposits": "Go to deposits",
+        "go_to_categories": "Ugr\u00e1s a kateg\u00f3ri\u00e1khoz",
+        "expense_accounts": "K\u00f6lts\u00e9gsz\u00e1ml\u00e1k",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Ugr\u00e1s a sz\u00e1ml\u00e1khoz",
+        "bills": "Sz\u00e1ml\u00e1k",
+        "go_to_piggies": "Ugr\u00e1s a malacperselyekhez",
+        "saved": "Saved",
+        "piggy_banks": "Malacperselyek",
+        "piggy_bank": "Malacpersely",
+        "amounts": "Amounts"
+    },
+    "list": {
+        "piggy_bank": "Malacpersely",
+        "percentage": "%",
+        "amount": "\u00d6sszeg",
+        "name": "N\u00e9v",
+        "next_expected_match": "K\u00f6vetkez\u0151 v\u00e1rhat\u00f3 egyez\u00e9s"
     },
     "config": {
         "html_language": "hu"

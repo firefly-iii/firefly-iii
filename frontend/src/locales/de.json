@@ -13,7 +13,29 @@
         "amount": "Betrag",
         "budget": "Budget",
         "category": "Kategorie",
-        "opposing_account": "Gegenkonto"
+        "opposing_account": "Gegenkonto",
+        "budgets": "Budgets",
+        "categories": "Kategorien",
+        "go_to_budgets": "Budgets anzeigen",
+        "income": "Einnahmen \/ Einkommen",
+        "go_to_deposits": "Zu Einlagen wechseln",
+        "go_to_categories": "Kategorien anzeigen",
+        "expense_accounts": "Kreditoren (Ausgabenkonten)",
+        "go_to_expenses": "Go to expenses",
+        "go_to_bills": "Rechnungen anzeigen",
+        "bills": "Rechnungen",
+        "go_to_piggies": "Sparschweine anzeigen",
+        "saved": "Saved",
+        "piggy_banks": "Sparschweine",
+        "piggy_bank": "Sparschwein",
+        "amounts": "Betr\u00e4ge"
+    },
+    "list": {
+        "piggy_bank": "Sparschwein",
+        "percentage": "%",
+        "amount": "Betrag",
+        "name": "Name",
+        "next_expected_match": "N\u00e4chste erwartete \u00dcbereinstimmung"
     },
     "config": {
         "html_language": "de"

@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'medel per nota',
     'expected_total'                             => 'total förväntad',
     'reconciliation_account_name'                => ':name reconciliation (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version Auktorisationsbegäran',
     'authorization_request_intro'                => '<strong>:client</strong> begär tillstånd för åtkomst till din ekonomi administration. Vill du tillåta <strong>:client</strong> åtkomst till dessa poster?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => 'Whoops!',
     'profile_something_wrong'                   => 'Something went wrong!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Export data from Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Budgetar och utgifter',
     'budgets_and_spending'                      => 'Budgetar och utgifter',
     'go_to_budget'                              => 'Gå till budget "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Sparande',
     'newWithdrawal'                             => 'Ny utgift',
     'newDeposit'                                => 'Ny insättning',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Månad',
     'budget'                                    => 'Budget',
     'spent'                                     => 'Spenderat',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Spenderat per budget',
     'left_to_spend'                             => 'Återstår att spendera',
     'earned'                                    => 'Tjänat',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //

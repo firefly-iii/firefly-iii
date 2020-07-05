@@ -213,6 +213,8 @@ return [
     'average_per_bill'                           => 'promedio por cuenta',
     'expected_total'                             => 'total esperado',
     'reconciliation_account_name'                => ':name reconciliación (:currency)',
+    'saved'                                      => 'Saved',
+
     // API access
     'authorization_request'                      => 'Firefly III v:version Solicitud de autorización',
     'authorization_request_intro'                => '<strong>:client</strong> está solicitando permiso para acceder a su administración financiera. ¿Desea autorizar a <strong>:client</strong> para acceder a estos registros?',
@@ -694,6 +696,7 @@ return [
     'profile_whoops'                            => '¡Ups!',
     'profile_something_wrong'                   => '¡Algo salió mal!',
     'profile_try_again'                         => 'Algo salió mal. Por favor, vuelva a intentarlo.',
+    'amounts'                                   => 'Amounts',
 
     // export data:
     'export_data_title'                         => 'Exportar datos de Firefly III',
@@ -1134,6 +1137,8 @@ return [
     'budgetsAndSpending'                        => 'Presupuestos y gastos',
     'budgets_and_spending'                      => 'Presupuestos y gastos',
     'go_to_budget'                              => 'Ir al presupuesto "{budget}"',
+    'go_to_deposits'                            => 'Go to deposits',
+    'go_to_expenses'                            => 'Go to expenses',
     'savings'                                   => 'Ahorros',
     'newWithdrawal'                             => 'Nuevo gasto',
     'newDeposit'                                => 'Nuevo deposito',
@@ -1319,6 +1324,7 @@ return [
     'month'                                     => 'Mes',
     'budget'                                    => 'Presupuesto',
     'spent'                                     => 'Gastado',
+    'spent_capped'                              => 'Spent (capped)',
     'spent_in_budget'                           => 'Gastado en presupuesto',
     'left_to_spend'                             => 'Disponible para gastar',
     'earned'                                    => 'Ganado',
@@ -1697,6 +1703,7 @@ return [
     'updated_object_group'               => 'Succesfully updated group ":title"',
     'deleted_object_group'               => 'Succesfully deleted group ":title"',
     'object_group'                       => 'Group',
+
 
 
     //
