@@ -25,7 +25,7 @@
         </div>
         <div class="card-body">
             <div>
-                <main-account-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-account-chart>
+                <canvas id="mainAccountsChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
             </div>
         </div>
         <div class="card-footer">
@@ -35,45 +35,24 @@
 </template>
 
 <script>
-    import MainAccountChart from "./MainAccountChart";
     import DataConverter from "../charts/DataConverter";
     import DefaultLineOptions from "../charts/DefaultLineOptions";
 
     export default {
-        components: {
-            MainAccountChart
-        },
-        data() {
-            return {
-                chartData: null,
-                loaded: false,
-                chartOptions: null,
-            }
-        },
+        name: "MainAccount",
         mounted() {
-            this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
-            this.loaded = false;
             axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
-                    this.chartData = DataConverter.methods.convertChart(response.data);
-                    this.chartData = DataConverter.methods.colorizeData(this.chartData);
-                    this.chartData = DataConverter.methods.convertLabelsToDate(this.chartData);
-                    this.loaded = true
+
+                    let chartData = DataConverter.methods.convertChart(response.data);
+                    chartData = DataConverter.methods.colorizeLineData(chartData);
+                    let lineChartCanvas = $('#mainAccountsChart').get(0).getContext('2d');
+                    new Chart(lineChartCanvas, {
+                        type: 'line',
+                        data: chartData,
+                        options: DefaultLineOptions.methods.getDefaultOptions()
+                    });
                 });
         },
-        methods: {
-
-        },
-        computed: {
-            chartStyles() {
-                return {
-                    height: '400px',
-                    'max-height': '400px',
-                    position: 'relative',
-                    display: 'block',
-                }
-            }
-        },
-        name: "MainAccount"
     }
 </script>

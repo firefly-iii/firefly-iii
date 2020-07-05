@@ -25,7 +25,7 @@
         </div>
         <div class="card-body">
             <div>
-                <main-category-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-category-chart>
+                <canvas id="mainCategoryChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
             </div>
         </div>
         <div class="card-footer">
@@ -35,43 +35,22 @@
 </template>
 
 <script>
-    import MainCategoryChart from "./MainCategoryChart";
     import DefaultBarOptions from "../charts/DefaultBarOptions";
     import DataConverter from "../charts/DataConverter";
-
     export default {
         name: "MainCategory",
-        components: {
-            MainCategoryChart
-        },
-        data() {
-            return {
-                chartData: null,
-                loaded: false,
-                chartOptions: null,
-            }
-        },
         mounted() {
-            this.chartOptions = DefaultBarOptions.methods.getDefaultOptions();
-            this.loaded = false;
             axios.get('./api/v1/chart/category/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
-                    this.chartData = response.data;
-                    this.chartData = DataConverter.methods.convertChart(this.chartData);
-                    this.loaded = true
+                    let chartData = DataConverter.methods.convertChart(response.data);
+                    chartData = DataConverter.methods.colorizeLineData(chartData);
+                    let stackedBarChartCanvas = $('#mainCategoryChart').get(0).getContext('2d')
+                    new Chart(stackedBarChartCanvas, {
+                        type: 'bar',
+                        data: chartData,
+                        options: DefaultBarOptions.methods.getDefaultOptions()
+                    });
                 });
-        },
-        methods: {
-        },
-        computed: {
-            chartStyles() {
-                return {
-                    height: '400px',
-                    'max-height': '400px',
-                    position: 'relative',
-                    display: 'block',
-                }
-            }
         },
     }
 </script>

@@ -24,6 +24,7 @@
 
 
 <script>
+    import FormatLabel from "../charts/FormatLabel";
 
     export default {
         name: "DefaultBarOptions",
@@ -31,55 +32,23 @@
             return {}
         },
         methods: {
-            /**
-             * Takes a string phrase and breaks it into separate phrases no bigger than 'maxwidth', breaks are made at complete words.
-             * https://stackoverflow.com/questions/21409717/chart-js-and-long-labels
-             *
-             * @param str
-             * @param maxwidth
-             * @returns {Array}
-             */
-            formatLabel(str, maxwidth) {
-                var sections = [];
-                str = String(str);
-                var words = str.split(" ");
-                var temp = "";
-
-                words.forEach(function (item, index) {
-                    if (temp.length > 0) {
-                        var concat = temp + ' ' + item;
-
-                        if (concat.length > maxwidth) {
-                            sections.push(temp);
-                            temp = "";
-                        } else {
-                            if (index === (words.length - 1)) {
-                                sections.push(concat);
-                                return;
-                            } else {
-                                temp = concat;
-                                return;
-                            }
-                        }
-                    }
-
-                    if (index === (words.length - 1)) {
-                        sections.push(item);
-                        return;
-                    }
-
-                    if (item.length < maxwidth) {
-                        temp = item;
-                    } else {
-                        sections.push(item);
-                    }
-
-                });
-
-                return sections;
-            },
             getDefaultOptions() {
                 return {
+                    type: 'bar',
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 50,
+                            top: 0,
+                            bottom: 0
+                        },
+                    },
+                    stacked: true,
+                    elements: {
+                        line: {
+                            cubicInterpolationMode: 'monotone'
+                        }
+                    },
                     legend: {
                         display: false,
                     },
@@ -88,11 +57,6 @@
                     },
                     responsive: true,
                     maintainAspectRatio: false,
-                    elements: {
-                        line: {
-                            cubicInterpolationMode: 'monotone'
-                        }
-                    },
                     scales: {
                         xAxes: [
                             {
@@ -103,23 +67,26 @@
                                 ticks: {
                                     // break ticks when too long.
                                     callback: function (value, index, values) {
-                                        //return this.formatLabel(value, 20);
-                                        return value;
+                                        return FormatLabel.methods.formatLabel(value, 20);
+                                        //return value;
                                     }
                                 }
                             }
                         ],
                         yAxes: [{
+                            stacked: false,
                             display: true,
+                            drawOnChartArea: false,
+                            offset: true,
+                            beginAtZero: true,
                             ticks: {
                                 callback: function (tickValue) {
                                     "use strict";
                                     let currencyCode = this.chart.data.datasets[0].currency_code ? this.chart.data.datasets[0].currency_code : 'EUR';
                                     return new Intl.NumberFormat(window.localeValue, {style: 'currency', currency: currencyCode}).format(tickValue);
                                 },
-                                beginAtZero: true
-                            }
 
+                            }
                         }]
                     },
                     tooltips: {
@@ -128,8 +95,10 @@
                             label: function (tooltipItem, data) {
                                 "use strict";
                                 let currencyCode = data.datasets[tooltipItem.datasetIndex].currency_code ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
-                                let nrString =
-                                    new Intl.NumberFormat(window.localeValue, {style: 'currency', currency: currencyCode}).format(tooltipItem.yLabel)
+                                let nrString = new Intl.NumberFormat(window.localeValue, {
+                                    style: 'currency',
+                                    currency: currencyCode
+                                }).format(tooltipItem.yLabel);
 
                                 return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
                             }

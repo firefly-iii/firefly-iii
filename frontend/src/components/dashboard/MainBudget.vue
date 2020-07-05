@@ -24,8 +24,8 @@
             <h3 class="card-title">{{ $t('firefly.budgets') }}</h3>
         </div>
         <div class="card-body">
-            <div>
-                <main-budget-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-budget-chart>
+            <div style="position: relative;">
+                <canvas id="mainBudgetChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
             </div>
         </div>
         <div class="card-footer">
@@ -35,44 +35,21 @@
 </template>
 
 <script>
-    import MainBudgetChart from "./MainBudgetChart";
     import DefaultBarOptions from "../charts/DefaultBarOptions";
     import DataConverter from "../charts/DataConverter";
-
     export default {
         name: "MainBudget",
-        components: {
-            MainBudgetChart
-        },
-        data() {
-            return {
-                chartData: null,
-                loaded: false,
-                chartOptions: null,
-            }
-        },
         mounted() {
-            this.chartOptions = DefaultBarOptions.methods.getDefaultOptions();
-            this.loaded = false;
             axios.get('./api/v1/chart/budget/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
-                    this.chartData = response.data;
-                    //this.chartData = DataConverter.methods.colorizeData(this.chartData);
-                    this.chartData = DataConverter.methods.convertChart(this.chartData);
-                    this.loaded = true
+                    let chartData = DataConverter.methods.convertChart(response.data);
+                    let stackedBarChartCanvas = $('#mainBudgetChart').get(0).getContext('2d')
+                    new Chart(stackedBarChartCanvas, {
+                        type: 'bar',
+                        data: chartData,
+                        options: DefaultBarOptions.methods.getDefaultOptions()
+                    });
                 });
-        },
-        methods: {
-        },
-        computed: {
-            chartStyles() {
-                return {
-                    height: '400px',
-                    'max-height': '400px',
-                    position: 'relative',
-                    display: 'block',
-                }
-            }
         },
     }
 </script>

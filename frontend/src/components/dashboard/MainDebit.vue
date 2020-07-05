@@ -26,53 +26,33 @@
         </div>
         <div class="card-body">
             <div>
-                <main-debit-chart v-if="loaded" :styles="chartStyles" :options="chartOptions" :chart-data="chartData"></main-debit-chart>
+                <canvas id="mainDebitChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
             </div>
         </div>
         <div class="card-footer">
-            <a href="./accounts/expense" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_expenses') }}</a>
+            <a href="./transactions/withdrawals" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_expenses') }}</a>
         </div>
     </div>
 </template>
 
 <script>
-    import MainDebitChart from "./MainDebitChart";
     import DefaultBarOptions from "../charts/DefaultBarOptions";
     import DataConverter from "../charts/DataConverter";
 
     export default {
         name: "MainDebit",
-        components: {
-            MainDebitChart
-        },
-        data() {
-            return {
-                chartData: null,
-                loaded: false,
-                chartOptions: null,
-            }
-        },
         mounted() {
-            this.chartOptions = DefaultBarOptions.methods.getDefaultOptions();
-            this.loaded = false;
             axios.get('./api/v1/chart/account/expense?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
-                    this.chartData = response.data;
-                    this.chartData = DataConverter.methods.convertChart(this.chartData);
-                    this.loaded = true
+                    let chartData = DataConverter.methods.convertChart(response.data);
+                    chartData = DataConverter.methods.colorizeLineData(chartData);
+                    let stackedBarChartCanvas = $('#mainDebitChart').get(0).getContext('2d')
+                    new Chart(stackedBarChartCanvas, {
+                        type: 'bar',
+                        data: chartData,
+                        options: DefaultBarOptions.methods.getDefaultOptions()
+                    });
                 });
-        },
-        methods: {
-        },
-        computed: {
-            chartStyles() {
-                return {
-                    height: '400px',
-                    'max-height': '400px',
-                    position: 'relative',
-                    display: 'block',
-                }
-            }
         },
     }
 </script>
