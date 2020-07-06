@@ -98,7 +98,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code|nullable',
 
             // amount
-            'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.amount'                => 'required|numeric|gt:0',
             'transactions.*.foreign_amount'        => 'numeric',
 
             // description

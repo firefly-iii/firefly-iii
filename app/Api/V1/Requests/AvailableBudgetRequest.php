@@ -67,7 +67,7 @@ class AvailableBudgetRequest extends Request
         return [
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'amount'        => 'required|numeric|more:0',
+            'amount'        => 'required|numeric|gt:0',
             'start'         => 'required|date|before:end',
             'end'           => 'required|date|after:start',
         ];

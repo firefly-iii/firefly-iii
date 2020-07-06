@@ -69,8 +69,8 @@ class BillStoreRequest extends Request
     {
         return [
             'name'                    => 'required|between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'              => 'required|numeric|more:0|max:1000000000',
-            'amount_max'              => 'required|numeric|more:0|max:1000000000',
+            'amount_min'              => 'required|numeric|gt:0|max:1000000000',
+            'amount_max'              => 'required|numeric|gt:0|max:1000000000',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
             'repeat_freq'             => 'required|in:weekly,monthly,quarterly,half-year,yearly',

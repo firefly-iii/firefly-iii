@@ -172,7 +172,7 @@ class TransactionUpdateRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                => 'numeric|more:0|max:100000000000',
+            'transactions.*.amount'                => 'numeric|gt:0|max:100000000000',
             'transactions.*.foreign_amount'        => 'numeric|gte:0',
 
             // description

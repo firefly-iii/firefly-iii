@@ -85,8 +85,8 @@ class BillRequest extends Request
     {
         $rules = [
             'name'          => 'between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'    => 'numeric|more:0',
-            'amount_max'    => 'numeric|more:0',
+            'amount_min'    => 'numeric|gt:0',
+            'amount_max'    => 'numeric|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'date'          => 'date',
