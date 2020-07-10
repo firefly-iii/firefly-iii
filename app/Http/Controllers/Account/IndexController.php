@@ -116,6 +116,14 @@ class IndexController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
+     */
+    public function emptyIndex()
+    {
+        return view('accounts.empty-index');
+    }
+
+    /**
      * Show list of accounts.
      *
      * @param Request $request

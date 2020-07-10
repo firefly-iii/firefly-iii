@@ -127,6 +127,7 @@ Route::group(
     static function () {
 
     // show:
+        Route::get('', ['uses' => 'Account\IndexController@emptyIndex', 'as' => 'empty-index']);
         Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
         // create
