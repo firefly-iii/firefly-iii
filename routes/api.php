@@ -387,6 +387,16 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
+     'as'        => 'api.v1.data.',],
+    static function () {
+
+        // Overview API routes:
+        Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
      'as'        => 'api.v1.currencies.',],
     static function () {

@@ -48,6 +48,10 @@ interface ObjectGroupRepositoryInterface
      * Delete empty ones.
      */
     public function deleteEmpty(): void;
+    /**
+     * Delete all.
+     */
+    public function deleteAll(): void;
 
     /**
      * @param ObjectGroup $objectGroup

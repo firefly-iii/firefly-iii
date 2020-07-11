@@ -396,4 +396,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $this->user->piggyBanks()->delete();
+    }
 }

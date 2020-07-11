@@ -561,4 +561,12 @@ class RecurringRepository implements RecurringRepositoryInterface
 
         return $filtered;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $this->user->recurrences()->delete();
+    }
 }

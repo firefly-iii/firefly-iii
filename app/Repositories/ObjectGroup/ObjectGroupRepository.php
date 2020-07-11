@@ -171,4 +171,18 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     {
         return $objectGroup->piggyBanks;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteAll(): void
+    {
+        $all = $this->get();
+        /** @var ObjectGroup $group */
+        foreach ($all as $group) {
+            $group->piggyBanks()->sync([]);
+            $group->bills()->sync([]);
+            $group->delete();
+        }
+    }
 }

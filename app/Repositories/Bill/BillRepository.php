@@ -50,8 +50,7 @@ use Storage;
 class BillRepository implements BillRepositoryInterface
 {
     use CreatesObjectGroups;
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -763,5 +762,13 @@ class BillRepository implements BillRepositoryInterface
     {
         $bill->order = $order;
         $bill->save();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $this->user->bills()->delete();
     }
 }
