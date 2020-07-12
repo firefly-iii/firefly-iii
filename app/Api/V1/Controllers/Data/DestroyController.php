@@ -42,8 +42,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
-use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Http\JsonResponse;

@@ -36,7 +36,7 @@ class DataDestroyRequest extends Request
     public function authorize(): bool
     {
         // Only allow authenticated users
-        return auth()->check();
+        return auth()->check() && !auth()->user()->hasRole('demo');
     }
 
     /**
