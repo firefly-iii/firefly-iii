@@ -37,6 +37,11 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     /**
+     *
+     */
+    public function destroyAll(): void;
+
+    /**
      * @param PiggyBank $piggyBank
      * @param string    $objectGroupTitle
      *

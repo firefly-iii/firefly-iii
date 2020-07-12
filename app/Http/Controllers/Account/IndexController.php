@@ -116,6 +116,14 @@ class IndexController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
+     */
+    public function emptyIndex(?string $objectType = null)
+    {
+        return view('accounts.empty-index', compact('objectType'));
+    }
+
+    /**
      * Show list of accounts.
      *
      * @param Request $request
@@ -125,6 +133,11 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $objectType)
     {
+        // temp catch for layout.
+        if ('v2' === config('firefly.layout')) {
+            return $this->emptyIndex($objectType);
+        }
+
         $objectType    = $objectType ?? 'asset';
         $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));

@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Regel må ha minst en aksjon.',
     'base64'                         => 'Dette er ikke godkjent base64 kodet data.',
     'model_id_invalid'               => 'Den angitte ID er ugyldig for denne modellen.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute må være mindre enn 10,000,000',
     'active_url'                     => ':attribute er ikke en gyldig URL.',
     'after'                          => ':attribute må være en dato etter :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

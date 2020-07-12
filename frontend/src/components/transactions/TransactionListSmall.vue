@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <table class="table table-striped">
+    <table class="table table-striped table-sm">
         <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
         <thead>
         <tr>

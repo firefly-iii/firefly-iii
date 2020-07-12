@@ -79,7 +79,6 @@
                 return sections;
             },
             getDefaultOptions() {
-                console.log('getDefaultOptions()');
                 return {
                     legend: {
                         display: false,

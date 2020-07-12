@@ -1,5 +1,5 @@
 <!--
-  - MainBudgetChart.vue
+  - Show.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,21 +19,14 @@
   -->
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">I am a card</h3>
-        </div>
-        <div class="card-body">
-            <p>
-                I am card body
-            </p>
-        </div>
+    <div>
+        I am a show
     </div>
 </template>
 
 <script>
     export default {
-        name: "MainBudgetChart"
+        name: "Show"
     }
 </script>
 

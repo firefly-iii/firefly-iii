@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Aturan harus memiliki setidaknya satu tindakan.',
     'base64'                         => 'Ini bukanlah data base64 encoded yang valid.',
     'model_id_invalid'               => 'ID yang diberikan tidaklah valid untuk model ini.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute harus kurang dari 10,000,000',
     'active_url'                     => ':attribute bukan URL yang valid.',
     'after'                          => ':attribute harus tanggal setelah :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'De regel moet minstens één actie hebben.',
     'base64'                         => 'Dit is geen geldige base64 gecodeerde data.',
     'model_id_invalid'               => 'Dit ID past niet bij dit object.',
-    'more'                           => ':attribute moet groter zijn dan ":more".',
     'less'                           => ':attribute moet minder zijn dan 10.000.000',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Je kan deze rekening niet gebruiken als doelrekening.',
 
     'gte.numeric' => ':attribute moet groter of gelijk zijn aan :value.',
+    'gt.numeric'  => 'De :attribute moet groter zijn dan :value.',
     'gte.file'    => ':attribute moet groter of gelijk zijn aan :value kilobytes.',
     'gte.string'  => ':attribute moet :value karakters of meer bevatten.',
     'gte.array'   => ':attribute moet :value items of meer bevatten.',

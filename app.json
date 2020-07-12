@@ -41,7 +41,7 @@
     {
       "plan": "heroku-postgresql",
       "options": {
-        "version": "9.5"
+        "version": "12"
       }
     }
   ],
@@ -58,7 +58,7 @@
   ],
   "env": {
     "APP_KEY": {
-      "description": "This key is used to encrypt your data.",
+      "description": "This key is used to create app cookies en secure attachments.",
       "value": "base64:If1gJN4pyycXTq+WS5TjneDympKuu+8SKvTl6RZnhJg="
     }
   }

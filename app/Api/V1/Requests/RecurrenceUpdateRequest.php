@@ -107,8 +107,8 @@ class RecurrenceUpdateRequest extends Request
             'repetitions.*.weekend' => 'required|numeric|min:1|max:4',
 
             'transactions.*.description'           => 'required|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.amount'                => 'required|numeric|gt:0',
+            'transactions.*.foreign_amount'        => 'numeric|gt:0',
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',

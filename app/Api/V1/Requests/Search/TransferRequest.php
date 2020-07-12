@@ -51,7 +51,7 @@ class TransferRequest extends Request
         return [
             'source'      => ['required', new IsTransferAccount],
             'destination' => ['required', new IsTransferAccount],
-            'amount'      => 'required|numeric|more:0',
+            'amount'      => 'required|numeric|gt:0',
             'description' => 'required|min:1',
             'date'        => 'required|date',
         ];

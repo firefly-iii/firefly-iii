@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Kural en az bir eylem olması gerekir.',
     'base64'                         => 'Bu geçerli Base64 olarak kodlanmış veri değildir.',
     'model_id_invalid'               => 'Verilen kimlik bu model için geçersiz görünüyor.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute  10.000.000 den daha az olmalıdır',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

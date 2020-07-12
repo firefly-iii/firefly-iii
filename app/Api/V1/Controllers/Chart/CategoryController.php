@@ -74,8 +74,6 @@ class CategoryController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     *
-     * TODO after 4.8,0, simplify
      */
     public function overview(DateRequest $request): JsonResponse
     {
@@ -89,32 +87,15 @@ class CategoryController extends Controller
 
         $tempData      = [];
         $spentWith     = $this->opsRepository->listExpenses($start, $end);
-        $earnedWith    = $this->opsRepository->listIncome($start, $end);
         $spentWithout  = $this->noCatRepository->listExpenses($start, $end);
-        $earnedWithout = $this->noCatRepository->listIncome($start, $end);
         $categories    = [];
 
 
-        foreach ([$spentWith, $earnedWith, $spentWithout, $earnedWithout] as $set) {
+        foreach ([$spentWith, $spentWithout,] as $set) {
             foreach ($set as $currency) {
                 foreach ($currency['categories'] as $category) {
                     $categories[] = $category['name'];
-                    $inKey        = sprintf('%d-i', $currency['currency_id']);
                     $outKey       = sprintf('%d-e', $currency['currency_id']);
-                    // make data arrays if not yet present.
-                    $tempData[$inKey]  = $tempData[$inKey] ?? [
-                            'currency_id'             => $currency['currency_id'],
-                            'label'                   => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
-                            'currency_code'           => $currency['currency_code'],
-                            'currency_symbol'         => $currency['currency_symbol'],
-                            'currency_decimal_places' => $currency['currency_decimal_places'],
-                            'type'                    => 'bar', // line, area or bar
-                            'yAxisID'                 => 0, // 0, 1, 2
-                            'entries'                 => [
-                                // per category:
-                                // "category" => 5,
-                            ],
-                        ];
                     $tempData[$outKey] = $tempData[$outKey] ?? [
                             'currency_id'             => $currency['currency_id'],
                             'label'                   => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
@@ -123,16 +104,12 @@ class CategoryController extends Controller
                             'currency_decimal_places' => $currency['currency_decimal_places'],
                             'type'                    => 'bar', // line, area or bar
                             'yAxisID'                 => 0, // 0, 1, 2
-                            'entries'                 => [
-                                // per category:
-                                // "category" => 5,
-                            ],
+                            'entries'                 => [],
                         ];
 
                     foreach ($category['transaction_journals'] as $journal) {
                         // is it expense or income?
-                        $letter                                  = -1 === bccomp($journal['amount'], '0') ? 'e' : 'i';
-                        $currentKey                              = sprintf('%d-%s', $currency['currency_id'], $letter);
+                        $currentKey                              = sprintf('%d-%s', $currency['currency_id'], 'e');
                         $name                                    = $category['name'];
                         $tempData[$currentKey]['entries'][$name] = $tempData[$currentKey]['entries'][$name] ?? '0';
                         $tempData[$currentKey]['entries'][$name] = bcadd($tempData[$currentKey]['entries'][$name], $journal['amount']);

@@ -44,6 +44,11 @@ interface BillRepositoryInterface
     public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill;
 
     /**
+     *
+     */
+    public function destroyAll(): void;
+
+    /**
      * @param Bill $bill
      *
      * @return Bill

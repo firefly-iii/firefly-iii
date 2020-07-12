@@ -63,9 +63,9 @@ class TransactionLinkTransformer extends AbstractTransformer
             'id'           => (int)$link->id,
             'created_at'   => $link->created_at->toAtomString(),
             'updated_at'   => $link->updated_at->toAtomString(),
-            'inward_id'    => $link->source_id,
-            'outward_id'   => $link->destination_id,
-            'link_type_id' => $link->link_type_id,
+            'inward_id'    => (int) $link->source_id,
+            'outward_id'   => (int) $link->destination_id,
+            'link_type_id' => (int) $link->link_type_id,
             'notes'        => '' === $notes ? null : $notes,
             'links'        => [
                 [

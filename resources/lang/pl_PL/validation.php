@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Reguła powinna mieć co najmniej jedną akcję.',
     'base64'                         => 'To nie są prawidłowe dane zakodowane w base64.',
     'model_id_invalid'               => 'Podane ID wygląda na nieprawidłowe dla tego modelu.',
-    'more'                           => ':attribute musi być większy od ":more".',
     'less'                           => ':attribute musi być mniejszy od 10 000 000',
     'active_url'                     => ':attribute nie jest prawidłowym adresem URL.',
     'after'                          => ':attribute musi być datą późniejszą od :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Nie możesz użyć tego konta jako konta docelowego.',
 
     'gte.numeric' => ':attribute musi być większy lub równy :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute musi mieć rozmiar większy niż lub równy :value kilobajtów.',
     'gte.string'  => ':attribute musi mieć :value lub więcej znaków.',
     'gte.array'   => ':attribute musi mieć :value lub więcej elementów.',

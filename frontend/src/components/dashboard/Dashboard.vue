@@ -30,28 +30,28 @@
 
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-budget-chart/>
+                <main-budget/>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-category-chart/>
+                <main-category />
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-debit-chart/>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <main-debit/>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-credit-chart/>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <main-credit/>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-bills-chart/>
-            </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <main-piggy-list/>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <main-bills-list/>
             </div>
         </div>
     </div>
@@ -59,9 +59,6 @@
 
 <script>
     export default {
-        name: "Dashboard",
-        mounted() {
-            console.log('Dashboard mounted.')
-        }
+        name: "Dashboard"
     }
 </script>

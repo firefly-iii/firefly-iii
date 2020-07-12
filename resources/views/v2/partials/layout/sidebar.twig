@@ -26,7 +26,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('index') }}" class="nav-link">
+                    <a href="{{ route('index') }}" class="nav-link {{ activeRouteStrict('index') }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             {{ 'dashboard'|_ }}
@@ -121,8 +121,8 @@
 
                 <li class="nav-header text-uppercase">{{ 'others'|_ }}</li>
 
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                <li class="nav-item has-treeview {{ menuOpenRoutePartial('accounts') }}">
+                    <a href="#" class="nav-link {{ activeRoutePartial('accounts') }}">
                         <i class="nav-icon fas fa-credit-card"></i>
                         <p>
                             {{ 'accounts'|_ }}
@@ -131,26 +131,27 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', 'asset') }}" class="nav-link">
+                            <!-- dingflofbips "{{ activeRoutePartialObjectType('accounts', 'asset') }}" -->
+                            <a href="{{ route('accounts.index','asset') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'asset') }}">
                                 <i class="far fa-money-bill-alt nav-icon"></i>
                                 <p>{{ 'asset_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', 'expense') }}" class="nav-link">
+                            <a href="{{ route('accounts.index','expense') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'expense') }}">
                                 <i class="fas fa-shopping-cart nav-icon"></i>
                                 <p>{{ 'expense_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', 'revenue') }}" class="nav-link">
+                            <a href="{{ route('accounts.index','revenue') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'revenue') }}">
                                 <i class="fas fa-briefcase nav-icon"></i>
                                 <p>{{ 'revenue_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('accounts.index', 'liabilities') }}" class="nav-link">
-                                <i class="far fa-funnel-dollar nav-icon"></i>
+                            <a href="{{ route('accounts.index','liabilities') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
+                                <i class="fas fa-funnel-dollar nav-icon"></i>
                                 <p>{{ 'liabilities_accounts'|_ }}</p>
                             </a>
                         </li>

@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Правило должно иметь хотя бы одно действие.',
     'base64'                         => 'Это некорректный формат для данных, зашифрованных с помощью base64.',
     'model_id_invalid'               => 'Данный ID кажется недопустимым для этой модели.',
-    'more'                           => ':attribute должен быть больше, чем ":more".',
     'less'                           => ':attribute должен быть меньше 10,000,000',
     'active_url'                     => ':attribute не является допустимым URL-адресом.',
     'after'                          => ':attribute должна быть позже :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',
 
     'gte.numeric' => 'Значение :attribute должно быть больше или равно :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'Размер файла в поле :attribute должен быть больше или равен :value Килобайт(а).',
     'gte.string'  => 'Значение :attribute должно быть больше или равно :value символам.',
     'gte.array'   => 'Значения поля :attribute должно включать :value элементов или больше.',

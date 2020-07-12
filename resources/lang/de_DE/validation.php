@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Regel muss mindestens eine Aktion enthalten',
     'base64'                         => 'Dies sind keine gültigen base64-kodierten Daten.',
     'model_id_invalid'               => 'Die angegebene ID scheint für dieses Modell ungültig zu sein.',
-    'more'                           => ':attribute muss größer als „:more” sein.',
     'less'                           => ':attribute muss kleiner als 10.000.000 sein',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
     'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',
     'gte.string'  => ':attribute muss mindestens :value Zeichen enthalten.',
     'gte.array'   => ':attribute muss mindestens :value Elemente enthalten.',

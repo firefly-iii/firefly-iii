@@ -70,7 +70,7 @@ class BudgetLimitRequest extends Request
             'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
-            'amount'        => 'required|more:0',
+            'amount'        => 'required|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];

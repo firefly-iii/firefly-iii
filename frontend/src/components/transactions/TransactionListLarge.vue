@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <table class="table table-striped">
+    <table class="table table-striped table-sm">
         <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
         <thead>
         <tr>
@@ -64,10 +64,14 @@
                 </span>
             </td>
             <td>
-                cat
+                <span v-for="tr in transaction.attributes.transactions">
+                    <a :href="'categories/show/' + transaction.category_id"  v-if="0!==tr.category_id">{{ tr.category_name }}</a><br />
+                </span>
             </td>
             <td>
-                bud
+                <span v-for="tr in transaction.attributes.transactions">
+                    <a :href="'budgets/show/' + transaction.budget_id" v-if="0!==tr.budget_id">{{ tr.budget_name }}</a><br />
+                </span>
             </td>
         </tr>
         </tbody>

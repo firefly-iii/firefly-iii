@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Ο κανόνας πρέπει να έχει τουλάχιστον μία λειτουργία.',
     'base64'                         => 'Αυτά δεν είναι έγκυρα base64 κωδικοποιημένα δεδομένα.',
     'model_id_invalid'               => 'Το παραχωρημένο αναγνωριστικό δε φαίνεται έγκυρο για αυτό το μοντέλο.',
-    'more'                           => ':attribute πρέπει να είναι μεγαλύτερο από ":more".',
     'less'                           => 'Το :attribute πρέπει να είναι μικρότερο από 10,000,000',
     'active_url'                     => 'Το :attribute δεν είναι έγκυρο URL.',
     'after'                          => 'Το :attribute πρέπει να είναι ημερομηνία μετά από :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Δεν μπορείτε να χρησιμοποιήσετε αυτό το λογαριασμό ως λογαριασμό προορισμού.',
 
     'gte.numeric' => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value kilobytes.',
     'gte.string'  => 'Το :attribute πρέπει να είναι μεγαλύτερο ή ίσο με :value χαρακτήρες.',
     'gte.array'   => 'Το :attribute πρέπει να έχει :value αντικείμενα ή παραπάνω.',

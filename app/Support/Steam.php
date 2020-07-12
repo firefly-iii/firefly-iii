@@ -234,18 +234,17 @@ class Steam
             $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
             $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int)$entry->foreign_currency_id) {
+            if ($currencyId === (int) $entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
 
             $currentBalance  = bcadd($currentBalance, $amount);
-            $carbon          = new Carbon($entry->date, 'UTC');
-            $carbon->setTimezone(env('TZ'));
+            $carbon          = new Carbon($entry->date, config('app.timezone'));
             $date            = $carbon->format('Y-m-d');
             $balances[$date] = $currentBalance;
         }

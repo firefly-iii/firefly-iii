@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 use Cache;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
 use Log;
@@ -67,9 +68,10 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param null   $default
      *
-     * @return \FireflyIII\Models\Configuration|null
+     * @throws FireflyException
+     * @return Configuration|null
      */
     public function get(string $name, $default = null): ?Configuration
     {
@@ -82,9 +84,12 @@ class FireflyConfig
         }
 
         try {
+            /** @var Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         } catch (QueryException|Exception $e) {
-            return null;
+            Log::error(sprintf('Query exception while polling for config var: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
+            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
         }
 
         if ($config) {

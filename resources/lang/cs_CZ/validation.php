@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Pravidlo musí obsahovat alespoň jednu akci.',
     'base64'                         => 'Data nejsou v platném base64 kódování.',
     'model_id_invalid'               => 'Zdá se, že dané ID je neplatné pro tento model.',
-    'more'                           => ':attribute musí být větší než ":more".',
     'less'                           => ':attribute musí být menší než 10.000.000',
     'active_url'                     => ':attribute není platná adresa URL.',
     'after'                          => ':attribute nemůže být dříve než :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

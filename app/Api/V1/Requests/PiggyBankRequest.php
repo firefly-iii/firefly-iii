@@ -91,7 +91,7 @@ class PiggyBankRequest extends Request
                 $piggyBank               = $this->route()->parameter('piggyBank');
                 $rules['name']           = 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
                 $rules['account_id']     = ['belongsToUser:accounts', new IsAssetAccountId];
-                $rules['target_amount']  = 'numeric|more:0';
+                $rules['target_amount']  = 'numeric|gt:0';
                 $rules['current_amount'] = ['numeric', new ZeroOrMore, new LessThanPiggyTarget];
                 break;
         }

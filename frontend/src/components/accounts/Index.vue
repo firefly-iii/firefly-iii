@@ -1,5 +1,5 @@
 <!--
-  - SingleTransactionRow.vue
+  - Index.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,13 +20,13 @@
 
 <template>
     <div>
-        Hello
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
     export default {
-        name: "SingleTransactionRow"
+        name: "Index"
     }
 </script>
 

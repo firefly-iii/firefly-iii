@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => '規則必須至少有一個動作。',
     'base64'                         => '這不是有效的 base64 編碼資料。',
     'model_id_invalid'               => '指定的 ID 對於此模型似乎無效。',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute 必須小於 10,000,000。',
     'active_url'                     => ':attribute 不是有效的 URL。',
     'after'                          => ':attribute 必須是一個在 :date 之後的日期。',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

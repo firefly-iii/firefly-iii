@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Rule must have at least one action.',
     'base64'                         => 'This is not valid base64 encoded data.',
     'model_id_invalid'               => 'The given ID seems invalid for this model.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

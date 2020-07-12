@@ -75,6 +75,7 @@ class ShowController extends Controller
     }
 
 
+
     /**
      * Show an account.
      *
@@ -89,6 +90,13 @@ class ShowController extends Controller
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
+        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+
+        // temp catch for layout.
+        if ('v2' === config('firefly.layout')) {
+            return view('accounts.empty-index', compact('objectType'));
+        }
+
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
@@ -103,7 +111,6 @@ class ShowController extends Controller
         }
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
-        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $today            = new Carbon;
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page             = (int) $request->get('page');

@@ -43,6 +43,13 @@ interface JournalRepositoryInterface
     public function getLast(): ?TransactionJournal;
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function findByType(array $types): Collection;
+
+    /**
      * TODO maybe create JSON repository?
      *
      * Search in journal descriptions.
