@@ -70,7 +70,7 @@ class BudgetTransformer extends AbstractTransformer
         $autoBudget = $this->repository->getAutoBudget($budget);
         $spent      = [];
         if (null !== $start && null !== $end) {
-            $spent = array_values($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
+            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget])));
         }
 
         $abCurrencyId   = null;
@@ -88,7 +88,7 @@ class BudgetTransformer extends AbstractTransformer
             $abCurrencyId   = $autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
-            $abAmount       = $autoBudget->amount;
+            $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
             $abPeriod       = $autoBudget->period;
         }
 
@@ -113,6 +113,22 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         return $data;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function beautify(array $array): array
+    {
+        $return = [];
+        foreach ($array as $data) {
+            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
+            $return[]    = $data;
+        }
+
+        return $return;
     }
 
 }

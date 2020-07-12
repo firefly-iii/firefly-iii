@@ -52,7 +52,7 @@ class CurrencyExchangeRateTransformer extends AbstractTransformer
      */
     public function transform(CurrencyExchangeRate $rate): array
     {
-        $result = round((float)$rate->rate * (float)$this->parameters->get('amount'), $rate->toCurrency->decimal_places);
+        $result = number_format((float) $rate->rate * (float) $this->parameters->get('amount'), $rate->toCurrency->decimal_places, '.', '');
         $result = 0.0 === $result ? null : $result;
         $data   = [
             'id'                           => (int)$rate->id,

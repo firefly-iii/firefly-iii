@@ -260,10 +260,10 @@ class RecurrenceTransformer extends AbstractTransformer
             }
 
 
-            $amount        = round($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $amount        = number_format((float) $transaction->amount, $transaction->transactionCurrency->decimal_places, '.', '');
             $foreignAmount = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
-                $foreignAmount = round($transaction->foreign_amount, $foreignCurrencyDp);
+                $foreignAmount = number_format($transaction->foreign_amount, $foreignCurrencyDp, '.', '');
             }
             $transactionArray = [
                 'currency_id'                     => $transaction->transaction_currency_id,

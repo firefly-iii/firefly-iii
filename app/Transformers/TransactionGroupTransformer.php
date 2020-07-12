@@ -335,8 +335,12 @@ class TransactionGroupTransformer extends AbstractTransformer
         $category        = $this->getCategory($journal->categories->first());
         $bill            = $this->getBill($journal->bill);
 
+        if (null !== $foreignAmount && null !== $foreignCurrency) {
+            $foreignAmount = number_format($foreignAmount, $foreignCurrency['decimal_places'], '.', '');
+        }
+
         return [
-            'user'                   => (int)$journal->user_id,
+            'user'                   => (int) $journal->user_id,
             'transaction_journal_id' => $journal->id,
             'type'                   => strtolower($type),
             'date'                   => $journal->date->toAtomString(),
@@ -352,7 +356,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'foreign_currency_symbol'         => $foreignCurrency['symbol'],
             'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
 
-            'amount'         => $amount,
+            'amount'         => number_format((float) $amount, $currency->decimal_places, '.', ''),
             'foreign_amount' => $foreignAmount,
 
             'description' => $journal->description,
@@ -390,7 +394,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'sepa_cc'       => $metaFieldData['sepa_cc'],
             'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
             'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_ddb'],
+            'sepa_db'       => $metaFieldData['sepa_db'],
             'sepa_country'  => $metaFieldData['sepa_country'],
             'sepa_ep'       => $metaFieldData['sepa_ep'],
             'sepa_ci'       => $metaFieldData['sepa_ci'],

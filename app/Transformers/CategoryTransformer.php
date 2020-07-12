@@ -96,7 +96,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = round($data['sum'], (int)$data['currency_decimal_places']);
+            $data['sum'] = number_format((float) $data['sum'], (int) $data['currency_decimal_places'], '.', '');
             $return[]    = $data;
         }
 
