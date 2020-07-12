@@ -60,6 +60,7 @@ class General extends AbstractExtension
             $this->activeRouteStrict(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialObjectType(),
+            $this->menuOpenRoutePartial(),
             $this->formatDate(),
             $this->getMetaField(),
             $this->hasRole(),
@@ -90,8 +91,31 @@ class General extends AbstractExtension
     }
 
     /**
+     * Will return "menu-open" when a part of the route matches the argument.
+     * ie. "accounts" will match "accounts.index".
+     *
+     * @return TwigFunction
+     */
+    protected function menuOpenRoutePartial(): TwigFunction
+    {
+        return new TwigFunction(
+            'menuOpenRoutePartial',
+            static function (): string {
+                $args  = func_get_args();
+                $route = $args[0]; // name of the route.
+                $name  = Route::getCurrentRoute()->getName() ?? '';
+                if (!(false === strpos($name, $route))) {
+                    return 'menu-open';
+                }
+
+                return '';
+            }
+        );
+    }
+
+    /**
      * This function will return "active" when the current route matches the first argument (even partly)
-     * but, the variable $what has been set and matches the second argument.
+     * but, the variable $objectType has been set and matches the second argument.
      *
      * @return TwigFunction
      */
