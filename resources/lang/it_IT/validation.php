@@ -198,7 +198,7 @@ return [
     'generic_invalid_destination' => 'Non puoi utilizzare questo conto come conto di destinazione.',
 
     'gte.numeric' => 'Il campo :attribute deve essere maggiore o uguale a :value.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
+    'gt.numeric'  => 'Il campo :attribute deve essere maggiore di :value.',
     'gte.file'    => 'Il campo :attribute deve essere maggiore o uguale a :value kilobyte.',
     'gte.string'  => 'Il campo :attribute deve essere maggiore o uguale a :value caratteri.',
     'gte.array'   => 'Il campo :attribute deve avere :value o più elementi.',
