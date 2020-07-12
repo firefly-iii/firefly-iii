@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Piggy banks",
         "piggy_bank": "Kumbara",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Varsay\u0131lan varl\u0131k hesab\u0131",
+        "account_role_defaultAsset": "Varsay\u0131lan varl\u0131k hesab\u0131",
+        "account_role_savingAsset": "Birikim hesab\u0131",
+        "account_role_sharedAsset": "Payla\u015f\u0131lan varl\u0131k hesab\u0131",
+        "account_role_ccAsset": "Kredi Kart\u0131",
+        "account_role_cashWalletAsset": "Nakit c\u00fczdan"
     },
     "list": {
         "piggy_bank": "Kumbara",
         "percentage": "yzd.",
         "amount": "Miktar",
         "name": "\u0130sim",
+        "role": "Rol",
+        "iban": "IBAN numaras\u0131",
+        "lastActivity": "Son Etkinlik",
+        "currentBalance": "Cari bakiye",
+        "balanceDiff": "Bakiye fark\u0131",
         "next_expected_match": "Beklenen sonraki e\u015fle\u015fme"
     },
     "config": {

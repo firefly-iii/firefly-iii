@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Salvadanai",
         "piggy_bank": "Salvadanaio",
-        "amounts": "Importi"
+        "amounts": "Importi",
+        "Default asset account": "Conto attivit\u00e0 predefinito",
+        "account_role_defaultAsset": "Conto attivit\u00e0 predefinito",
+        "account_role_savingAsset": "Conto risparmio",
+        "account_role_sharedAsset": "Conto attivit\u00e0 condiviso",
+        "account_role_ccAsset": "Carta di credito",
+        "account_role_cashWalletAsset": "Portafoglio"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
         "percentage": "perc.",
         "amount": "Importo",
         "name": "Nome",
+        "role": "Ruolo",
+        "iban": "IBAN",
+        "lastActivity": "Ultima attivit\u00e0",
+        "currentBalance": "Saldo corrente",
+        "balanceDiff": "Differenze saldi",
         "next_expected_match": "Prossimo abbinamento previsto"
     },
     "config": {

@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Pokladni\u010dky",
         "piggy_bank": "Pokladni\u010dka",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "V\u00fdchoz\u00ed \u00fa\u010det s aktivy",
+        "account_role_defaultAsset": "V\u00fdchoz\u00ed \u00fa\u010det aktiv",
+        "account_role_savingAsset": "Spo\u0159ic\u00ed \u00fa\u010det",
+        "account_role_sharedAsset": "Sd\u00edlen\u00fd \u00fa\u010det aktiv",
+        "account_role_ccAsset": "Kreditn\u00ed karta",
+        "account_role_cashWalletAsset": "Pen\u011b\u017eenka"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
         "percentage": "pct.",
         "amount": "\u010c\u00e1stka",
         "name": "Jm\u00e9no",
+        "role": "Role",
+        "iban": "IBAN",
+        "lastActivity": "Posledn\u00ed aktivita",
+        "currentBalance": "Aktu\u00e1ln\u00ed z\u016fstatek",
+        "balanceDiff": "Rozd\u00edl z\u016fstatku",
         "next_expected_match": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 shoda"
     },
     "config": {

@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Skarbonki",
         "piggy_bank": "Skarbonka",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Domy\u015blne konto aktyw\u00f3w",
+        "account_role_defaultAsset": "Domy\u015blne konto aktyw\u00f3w",
+        "account_role_savingAsset": "Konto oszcz\u0119dno\u015bciowe",
+        "account_role_sharedAsset": "Wsp\u00f3\u0142dzielone konto aktyw\u00f3w",
+        "account_role_ccAsset": "Karta kredytowa",
+        "account_role_cashWalletAsset": "Portfel got\u00f3wkowy"
     },
     "list": {
         "piggy_bank": "Skarbonka",
         "percentage": "%",
         "amount": "Kwota",
         "name": "Nazwa",
+        "role": "Rola",
+        "iban": "IBAN",
+        "lastActivity": "Ostatnia aktywno\u015b\u0107",
+        "currentBalance": "Bie\u017c\u0105ce saldo",
+        "balanceDiff": "R\u00f3\u017cnica sald",
         "next_expected_match": "Nast\u0119pne oczekiwane dopasowanie"
     },
     "config": {

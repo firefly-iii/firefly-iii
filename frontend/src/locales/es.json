@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Alcanc\u00edas",
         "piggy_bank": "Alcanc\u00eda",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Cuenta de ingresos por defecto",
+        "account_role_defaultAsset": "Cuentas de ingresos por defecto",
+        "account_role_savingAsset": "Cuentas de ahorros",
+        "account_role_sharedAsset": "Cuenta de ingresos compartida",
+        "account_role_ccAsset": "Tarjeta de Cr\u00e9dito",
+        "account_role_cashWalletAsset": "Billetera de efectivo"
     },
     "list": {
         "piggy_bank": "Alcancilla",
         "percentage": "pct.",
         "amount": "Monto",
         "name": "Nombre",
+        "role": "Rol",
+        "iban": "IBAN",
+        "lastActivity": "Actividad m\u00e1s reciente",
+        "currentBalance": "Balance actual",
+        "balanceDiff": "Diferencia de saldo",
         "next_expected_match": "Pr\u00f3xima coincidencia esperada"
     },
     "config": {

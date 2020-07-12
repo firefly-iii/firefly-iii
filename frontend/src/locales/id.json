@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Piggy banks",
         "piggy_bank": "Celengan",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Akun aset standar",
+        "account_role_defaultAsset": "Akun aset standar",
+        "account_role_savingAsset": "Rekening tabungan",
+        "account_role_sharedAsset": "Akun aset bersama",
+        "account_role_ccAsset": "Kartu kredit",
+        "account_role_cashWalletAsset": "Cash wallet"
     },
     "list": {
         "piggy_bank": "Celengan",
         "percentage": "pct.",
         "amount": "Jumlah",
         "name": "Nama",
+        "role": "Peran",
+        "iban": "IBAN",
+        "lastActivity": "Aktifitas terakhir",
+        "currentBalance": "Saldo saat ini",
+        "balanceDiff": "Perbedaan saldo",
         "next_expected_match": "Transaksi yang diharapkan berikutnya"
     },
     "config": {

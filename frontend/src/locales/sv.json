@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Spargrisar",
         "piggy_bank": "Piggy bank",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "F\u00f6rvalt tillg\u00e5ngskonto",
+        "account_role_defaultAsset": "F\u00f6rvalt tillg\u00e5ngskonto",
+        "account_role_savingAsset": "Sparkonto",
+        "account_role_sharedAsset": "Delat tillg\u00e5ngskonto",
+        "account_role_ccAsset": "Kreditkort",
+        "account_role_cashWalletAsset": "Pl\u00e5nbok"
     },
     "list": {
         "piggy_bank": "Spargris",
         "percentage": "procent",
         "amount": "Belopp",
         "name": "Namn",
+        "role": "Roll",
+        "iban": "IBAN",
+        "lastActivity": "Senaste aktivitet",
+        "currentBalance": "Nuvarande saldo",
+        "balanceDiff": "Saldodifferens",
         "next_expected_match": "N\u00e4sta f\u00f6rv\u00e4ntade tr\u00e4ff"
     },
     "config": {

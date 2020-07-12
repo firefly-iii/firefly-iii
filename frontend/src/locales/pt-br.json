@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Cofrinhos",
         "piggy_bank": "Cofrinho",
-        "amounts": "Quantias"
+        "amounts": "Quantias",
+        "Default asset account": "Conta padr\u00e3o",
+        "account_role_defaultAsset": "Conta padr\u00e3o",
+        "account_role_savingAsset": "Conta poupan\u00e7a",
+        "account_role_sharedAsset": "Contas de ativos compartilhadas",
+        "account_role_ccAsset": "Cart\u00e3o de cr\u00e9dito",
+        "account_role_cashWalletAsset": "Carteira de dinheiro"
     },
     "list": {
         "piggy_bank": "Cofrinho",
         "percentage": "pct.",
         "amount": "Total",
         "name": "Nome",
+        "role": "Papel",
+        "iban": "IBAN",
+        "lastActivity": "\u00daltima atividade",
+        "currentBalance": "Saldo atual",
+        "balanceDiff": "Diferen\u00e7a de saldo",
         "next_expected_match": "Pr\u00f3ximo correspondente esperado"
     },
     "config": {

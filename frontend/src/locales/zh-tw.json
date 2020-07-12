@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "\u5c0f\u8c6c\u64b2\u6eff",
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "\u9810\u8a2d\u8cc7\u7522\u5e33\u6236",
+        "account_role_defaultAsset": "\u9810\u8a2d\u8cc7\u7522\u5e33\u6236",
+        "account_role_savingAsset": "\u5132\u84c4\u5e33\u6236",
+        "account_role_sharedAsset": "\u5171\u7528\u8cc7\u7522\u5e33\u6236",
+        "account_role_ccAsset": "\u4fe1\u7528\u5361",
+        "account_role_cashWalletAsset": "\u73fe\u91d1\u9322\u5305"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
         "percentage": "pct.",
         "amount": "\u91d1\u984d",
         "name": "\u540d\u7a31",
+        "role": "\u89d2\u8272",
+        "iban": "\u570b\u969b\u9280\u884c\u5e33\u6236\u865f\u78bc (IBAN)",
+        "lastActivity": "\u4e0a\u6b21\u6d3b\u52d5",
+        "currentBalance": "\u76ee\u524d\u9918\u984d",
+        "balanceDiff": "\u9918\u984d\u5dee",
         "next_expected_match": "\u4e0b\u4e00\u500b\u9810\u671f\u7684\u914d\u5c0d"
     },
     "config": {

@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Spaarpotjes",
         "piggy_bank": "Spaarpotje",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Standaard betaalrekening",
+        "account_role_defaultAsset": "Standaard betaalrekening",
+        "account_role_savingAsset": "Spaarrekening",
+        "account_role_sharedAsset": "Gedeelde betaalrekening",
+        "account_role_ccAsset": "Credit card",
+        "account_role_cashWalletAsset": "Cash"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
         "percentage": "pct",
         "amount": "Bedrag",
         "name": "Naam",
+        "role": "Rol",
+        "iban": "IBAN",
+        "lastActivity": "Laatste activiteit",
+        "currentBalance": "Huidig saldo",
+        "balanceDiff": "Saldoverschil",
         "next_expected_match": "Volgende verwachte match"
     },
     "config": {

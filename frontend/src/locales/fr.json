@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Tirelires",
         "piggy_bank": "Tirelire",
-        "amounts": "Montants"
+        "amounts": "Montants",
+        "Default asset account": "Compte d\u2019actif par d\u00e9faut",
+        "account_role_defaultAsset": "Compte d'actif par d\u00e9faut",
+        "account_role_savingAsset": "Compte d\u2019\u00e9pargne",
+        "account_role_sharedAsset": "Compte d'actif partag\u00e9",
+        "account_role_ccAsset": "Carte de cr\u00e9dit",
+        "account_role_cashWalletAsset": "Porte-monnaie"
     },
     "list": {
         "piggy_bank": "Tirelire",
         "percentage": "pct.",
         "amount": "Montant",
         "name": "Nom",
+        "role": "R\u00f4le",
+        "iban": "Num\u00e9ro IBAN",
+        "lastActivity": "Activit\u00e9 r\u00e9cente",
+        "currentBalance": "Solde courant",
+        "balanceDiff": "Diff\u00e9rence de solde",
         "next_expected_match": "Prochaine association attendue"
     },
     "config": {

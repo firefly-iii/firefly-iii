@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Pu\u0219culi\u021b\u0103",
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Ccont de active implicit",
+        "account_role_defaultAsset": "Contul implicit activ",
+        "account_role_savingAsset": "Cont de economii",
+        "account_role_sharedAsset": "Contul de active partajat",
+        "account_role_ccAsset": "Card de credit",
+        "account_role_cashWalletAsset": "Cash - Numerar"
     },
     "list": {
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
         "percentage": "procent %",
         "amount": "Sum\u0103",
         "name": "Nume",
+        "role": "Rol",
+        "iban": "IBAN",
+        "lastActivity": "Ultima activitate",
+        "currentBalance": "Sold curent",
+        "balanceDiff": "Diferen\u021ba de sold",
         "next_expected_match": "Urm\u0103toarea potrivire a\u0219teptat\u0103"
     },
     "config": {

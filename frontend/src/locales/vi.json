@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Heo \u0111\u1ea5t",
         "piggy_bank": "Heo \u0111\u1ea5t",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "M\u1eb7c \u0111\u1ecbnh t\u00e0i kho\u1ea3n",
+        "account_role_defaultAsset": "t\u00e0i kho\u1ea3n m\u1eb7c \u0111\u1ecbnh",
+        "account_role_savingAsset": "T\u00e0i kho\u1ea3n ti\u1ebft ki\u1ec7m",
+        "account_role_sharedAsset": "t\u00e0i kho\u1ea3n d\u00f9ng chung",
+        "account_role_ccAsset": "Th\u1ebb t\u00edn d\u1ee5ng",
+        "account_role_cashWalletAsset": "V\u00ed ti\u1ec1n m\u1eb7t"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",
         "percentage": "ph\u1ea7n tr\u0103m.",
         "amount": "S\u1ed1 ti\u1ec1n",
         "name": "T\u00ean",
+        "role": "Quy t\u1eafc",
+        "iban": "IBAN",
+        "lastActivity": "Ho\u1ea1t \u0111\u1ed9ng cu\u1ed1i c\u00f9ng",
+        "currentBalance": "S\u1ed1 d\u01b0 hi\u1ec7n t\u1ea1i",
+        "balanceDiff": "S\u1ed1 d\u01b0 ch\u00eanh l\u1ec7ch",
         "next_expected_match": "Tr\u1eadn \u0111\u1ea5u d\u1ef1 ki\u1ebfn ti\u1ebfp theo"
     },
     "config": {

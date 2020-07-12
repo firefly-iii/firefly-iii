@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Piggy banks",
         "piggy_bank": "Piggy bank",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Default asset account",
+        "account_role_defaultAsset": "Default asset account",
+        "account_role_savingAsset": "Savings account",
+        "account_role_sharedAsset": "Shared asset account",
+        "account_role_ccAsset": "Credit card",
+        "account_role_cashWalletAsset": "Cash wallet"
     },
     "list": {
         "piggy_bank": "Piggy bank",
         "percentage": "pct.",
         "amount": "Amount",
         "name": "Name",
+        "role": "Role",
+        "iban": "IBAN",
+        "lastActivity": "Last activity",
+        "currentBalance": "Current balance",
+        "balanceDiff": "Balance difference",
         "next_expected_match": "Next expected match"
     },
     "config": {

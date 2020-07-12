@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "S\u00e4\u00e4st\u00f6possut",
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Oletusomaisuustili",
+        "account_role_defaultAsset": "Oletusk\u00e4ytt\u00f6tili",
+        "account_role_savingAsset": "S\u00e4\u00e4st\u00f6tili",
+        "account_role_sharedAsset": "Jaettu k\u00e4ytt\u00f6tili",
+        "account_role_ccAsset": "Luottokortti",
+        "account_role_cashWalletAsset": "K\u00e4teinen"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
         "percentage": "pros.",
         "amount": "Summa",
         "name": "Nimi",
+        "role": "Rooli",
+        "iban": "IBAN",
+        "lastActivity": "Viimeisin tapahtuma",
+        "currentBalance": "T\u00e4m\u00e4nhetkinen saldo",
+        "balanceDiff": "Saldomuutos",
         "next_expected_match": "Seuraava lasku odotettavissa"
     },
     "config": {

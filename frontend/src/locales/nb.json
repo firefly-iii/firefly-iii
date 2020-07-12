@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Sparegriser",
         "piggy_bank": "Sparegris",
-        "amounts": "Amounts"
+        "amounts": "Amounts",
+        "Default asset account": "Standard aktivakonto",
+        "account_role_defaultAsset": "Standard aktivakonto",
+        "account_role_savingAsset": "Sparekonto",
+        "account_role_sharedAsset": "Delt aktivakonto",
+        "account_role_ccAsset": "Kredittkort",
+        "account_role_cashWalletAsset": "Kontant lommebok"
     },
     "list": {
         "piggy_bank": "Sparegris",
         "percentage": "pct.",
         "amount": "Bel\u00f8p",
         "name": "Navn",
+        "role": "Rolle",
+        "iban": "IBAN",
+        "lastActivity": "Siste aktivitet",
+        "currentBalance": "N\u00e5v\u00e6rende saldo",
+        "balanceDiff": "Saldodifferanse",
         "next_expected_match": "Neste forventede treff"
     },
     "config": {

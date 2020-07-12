@@ -28,13 +28,24 @@
         "saved": "Saved",
         "piggy_banks": "Sparschweine",
         "piggy_bank": "Sparschwein",
-        "amounts": "Betr\u00e4ge"
+        "amounts": "Betr\u00e4ge",
+        "Default asset account": "Standard-Bestandskonto",
+        "account_role_defaultAsset": "Standard-Bestandskonto",
+        "account_role_savingAsset": "Sparkonto",
+        "account_role_sharedAsset": "Gemeinsames Bestandskonto",
+        "account_role_ccAsset": "Kreditkarte",
+        "account_role_cashWalletAsset": "Geldb\u00f6rse"
     },
     "list": {
         "piggy_bank": "Sparschwein",
         "percentage": "%",
         "amount": "Betrag",
         "name": "Name",
+        "role": "Rolle",
+        "iban": "IBAN",
+        "lastActivity": "Letzte Aktivit\u00e4t",
+        "currentBalance": "Aktueller Kontostand",
+        "balanceDiff": "Saldendifferenz",
         "next_expected_match": "N\u00e4chste erwartete \u00dcbereinstimmung"
     },
     "config": {
