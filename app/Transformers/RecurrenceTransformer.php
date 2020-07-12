@@ -133,13 +133,13 @@ class RecurrenceTransformer extends AbstractTransformer
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
             $repetitionArray = [
-                'id'          => $repetition->id,
+                'id'          => (int) $repetition->id,
                 'created_at'  => $repetition->created_at->toAtomString(),
                 'updated_at'  => $repetition->updated_at->toAtomString(),
                 'type'        => $repetition->repetition_type,
                 'moment'      => $repetition->repetition_moment,
-                'skip'        => (int)$repetition->repetition_skip,
-                'weekend'     => (int)$repetition->weekend,
+                'skip'        => (int) $repetition->repetition_skip,
+                'weekend'     => (int) $repetition->weekend,
                 'description' => $this->repository->repetitionDescription($repetition),
                 'occurrences' => [],
             ];
@@ -188,21 +188,21 @@ class RecurrenceTransformer extends AbstractTransformer
                 case 'piggy_bank_id':
                     $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
                     if (null !== $piggy) {
-                        $array['piggy_bank_id']   = $piggy->id;
+                        $array['piggy_bank_id']   = (int) $piggy->id;
                         $array['piggy_bank_name'] = $piggy->name;
                     }
                     break;
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
-                        $array['category_id']   = $category->id;
+                        $array['category_id']   = (int) $category->id;
                         $array['category_name'] = $category->name;
                     }
                     break;
                 case 'budget_id':
                     $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
                     if (null !== $budget) {
-                        $array['budget_id']   = $budget->id;
+                        $array['budget_id']   = (int) $budget->id;
                         $array['budget_name'] = $budget->name;
                     }
                     break;
@@ -231,10 +231,12 @@ class RecurrenceTransformer extends AbstractTransformer
             $foreignCurrencyCode   = null;
             $foreignCurrencySymbol = null;
             $foreignCurrencyDp     = null;
+            $foreignCurrencyId     = null;
             if (null !== $transaction->foreign_currency_id) {
+                $foreignCurrencyId     = (int) $transaction->foreign_currency_id;
                 $foreignCurrencyCode   = $transaction->foreignCurrency->code;
                 $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
-                $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
+                $foreignCurrencyDp     = (int) $transaction->foreignCurrency->decimal_places;
             }
 
             // source info:
@@ -244,7 +246,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $sourceIban = null;
             if (null !== $sourceAccount) {
                 $sourceName = $sourceAccount->name;
-                $sourceId   = $sourceAccount->id;
+                $sourceId   = (int) $sourceAccount->id;
                 $sourceType = $sourceAccount->accountType->type;
                 $sourceIban = $sourceAccount->iban;
             }
@@ -254,7 +256,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $destinationIban = null;
             if (null !== $destinationAccount) {
                 $destinationName = $destinationAccount->name;
-                $destinationId   = $destinationAccount->id;
+                $destinationId   = (int) $destinationAccount->id;
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
@@ -266,11 +268,11 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignAmount = number_format($transaction->foreign_amount, $foreignCurrencyDp, '.', '');
             }
             $transactionArray = [
-                'currency_id'                     => $transaction->transaction_currency_id,
+                'currency_id'                     => (int) $transaction->transaction_currency_id,
                 'currency_code'                   => $transaction->transactionCurrency->code,
                 'currency_symbol'                 => $transaction->transactionCurrency->symbol,
-                'currency_decimal_places'         => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id'             => $transaction->foreign_currency_id,
+                'currency_decimal_places'         => (int) $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id'             => $foreignCurrencyId,
                 'foreign_currency_code'           => $foreignCurrencyCode,
                 'foreign_currency_symbol'         => $foreignCurrencySymbol,
                 'foreign_currency_decimal_places' => $foreignCurrencyDp,

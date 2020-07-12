@@ -78,20 +78,21 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $currency = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
 
         // get associated journal and transaction, if any:
-        $journalId = (int)$event->transaction_journal_id;
+        $journalId = $event->transaction_journal_id;
         $groupId   = null;
-        if (0 !== $journalId) {
-            $groupId = (int)$event->transactionJournal->transaction_group_id;
+        if (0 !== (int) $journalId) {
+            $groupId   = (int) $event->transactionJournal->transaction_group_id;
+            $journalId = (int) $journalId;
         }
         $data = [
             'id'                      => (int) $event->id,
             'created_at'              => $event->created_at->toAtomString(),
             'updated_at'              => $event->updated_at->toAtomString(),
             'amount'                  => number_format((float) $event->amount, $currency->decimal_places, '.', ''),
-            'currency_id'             => $currency->id,
+            'currency_id'             => (int) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'currency_decimal_places' => (int) $currency->decimal_places,
             'transaction_journal_id'  => $journalId,
             'transaction_group_id'    => $groupId,
             'links'                   => [

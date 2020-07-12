@@ -181,12 +181,12 @@ class AccountTransformer extends AbstractTransformer
     {
         $currency       = $this->repository->getAccountCurrency($account);
         $default        = app('amount')->getDefaultCurrencyByUser($account->user);
-        $currencyId     = $default->id;
+        $currencyId     = (int) $default->id;
         $currencyCode   = $default->code;
         $decimalPlaces  = $default->decimal_places;
         $currencySymbol = $default->symbol;
         if (null !== $currency) {
-            $currencyId     = $currency->id;
+            $currencyId     = (int) $currency->id;
             $currencyCode   = $currency->code;
             $decimalPlaces  = $currency->decimal_places;
             $currencySymbol = $currency->symbol;

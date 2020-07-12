@@ -162,7 +162,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $bill) {
             return $array;
         }
-        $array['id']   = $bill->id;
+        $array['id']   = (int) $bill->id;
         $array['name'] = $bill->name;
 
         return $array;
@@ -182,7 +182,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $budget) {
             return $array;
         }
-        $array['id']   = $budget->id;
+        $array['id']   = (int) $budget->id;
         $array['name'] = $budget->name;
 
         return $array;
@@ -202,7 +202,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $category) {
             return $array;
         }
-        $array['id']   = $category->id;
+        $array['id']   = (int) $category->id;
         $array['name'] = $category->name;
 
         return $array;
@@ -286,10 +286,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $currency) {
             return $array;
         }
-        $array['id']             = $currency->id;
+        $array['id']             = (int) $currency->id;
         $array['code']           = $currency->code;
         $array['symbol']         = $currency->symbol;
-        $array['decimal_places'] = $currency->decimal_places;
+        $array['decimal_places'] = (int) $currency->decimal_places;
 
         return $array;
     }
@@ -341,15 +341,15 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                   => (int) $journal->user_id,
-            'transaction_journal_id' => $journal->id,
+            'transaction_journal_id' => (int) $journal->id,
             'type'                   => strtolower($type),
             'date'                   => $journal->date->toAtomString(),
             'order'                  => $journal->order,
 
-            'currency_id'             => $currency->id,
+            'currency_id'             => (int) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'currency_decimal_places' => (int) $currency->decimal_places,
 
             'foreign_currency_id'             => $foreignCurrency['id'],
             'foreign_currency_code'           => $foreignCurrency['code'],
@@ -361,12 +361,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'description' => $journal->description,
 
-            'source_id'   => $source->account_id,
+            'source_id'   => (int) $source->account_id,
             'source_name' => $source->account->name,
             'source_iban' => $source->account->iban,
             'source_type' => $source->account->accountType->type,
 
-            'destination_id'   => $destination->account_id,
+            'destination_id'   => (int) $destination->account_id,
             'destination_name' => $destination->account->name,
             'destination_iban' => $destination->account->iban,
             'destination_type' => $destination->account->accountType->type,
@@ -450,19 +450,19 @@ class TransactionGroupTransformer extends AbstractTransformer
             $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
 
             $result[] = [
-                'user'                   => (int)$row['user_id'],
-                'transaction_journal_id' => $row['transaction_journal_id'],
+                'user'                   => (int) $row['user_id'],
+                'transaction_journal_id' => (int) $row['transaction_journal_id'],
                 'type'                   => strtolower($type),
                 'date'                   => $row['date']->toAtomString(),
                 'order'                  => $row['order'],
 
-                'currency_id'             => $row['currency_id'],
+                'currency_id'             => (int) $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_name'           => $row['currency_name'],
                 'currency_symbol'         => $row['currency_symbol'],
-                'currency_decimal_places' => $row['currency_decimal_places'],
+                'currency_decimal_places' => (int) $row['currency_decimal_places'],
 
-                'foreign_currency_id'             => $row['foreign_currency_id'],
+                'foreign_currency_id'             => $row['foreign_currency_id'] ? (int) $row['foreign_currency_id'] : null,
                 'foreign_currency_code'           => $row['foreign_currency_code'],
                 'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
                 'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
@@ -472,23 +472,23 @@ class TransactionGroupTransformer extends AbstractTransformer
 
                 'description' => $row['description'],
 
-                'source_id'   => $row['source_account_id'],
+                'source_id'   => (int) $row['source_account_id'],
                 'source_name' => $row['source_account_name'],
                 'source_iban' => $row['source_account_iban'],
                 'source_type' => $row['source_account_type'],
 
-                'destination_id'   => $row['destination_account_id'],
+                'destination_id'   => (int) $row['destination_account_id'],
                 'destination_name' => $row['destination_account_name'],
                 'destination_iban' => $row['destination_account_iban'],
                 'destination_type' => $row['destination_account_type'],
 
-                'budget_id'   => $row['budget_id'],
+                'budget_id'   => $row['budget_id'] ? (int) $row['budget_id'] : null,
                 'budget_name' => $row['budget_name'],
 
-                'category_id'   => $row['category_id'],
+                'category_id'   => $row['category_id'] ? (int) $row['category_id'] : null,
                 'category_name' => $row['category_name'],
 
-                'bill_id'   => $row['bill_id'],
+                'bill_id'   => $row['bill_id'] ? (int) $row['bill_id'] : null,
                 'bill_name' => $row['bill_name'],
 
                 'reconciled' => $row['reconciled'],

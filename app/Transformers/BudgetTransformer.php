@@ -85,7 +85,7 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         if (null !== $autoBudget) {
-            $abCurrencyId   = $autoBudget->transactionCurrency->id;
+            $abCurrencyId   = (int) $autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
             $abAmount       = number_format((float) $autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');

@@ -61,7 +61,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = $currency->id;
+            $currencyId            = (int) $currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
@@ -74,7 +74,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->format('Y-m-d'),
             'end'                     => $budgetLimit->end_date->format('Y-m-d'),
-            'budget_id'               => $budgetLimit->budget_id,
+            'budget_id'               => (int) $budgetLimit->budget_id,
             'currency_id'             => $currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
