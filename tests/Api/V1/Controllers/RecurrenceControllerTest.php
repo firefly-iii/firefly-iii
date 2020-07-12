@@ -79,8 +79,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -146,8 +146,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Checking Account'])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Checking Account', null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -217,8 +217,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['deposit']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account'])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account', null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -287,8 +287,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$expenseAccount->id, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$expenseAccount->id, null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -354,8 +354,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, $expenseAccount->name])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, $expenseAccount->name, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -411,8 +411,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
 
         // mock calls:
@@ -484,8 +484,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Checking Account'])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Checking Account', null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -550,8 +550,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
 
         // mock calls:
@@ -617,8 +617,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(false);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$assetAccount->id, null, null])->andReturn(false);
 
 
         // mock calls:
@@ -690,8 +690,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -752,8 +752,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -817,8 +817,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -885,8 +885,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
 
         // data to submit
@@ -948,8 +948,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1014,7 +1014,7 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, null])->andReturn(false);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, null, null])->andReturn(false);
 
 
         // mock calls:
@@ -1089,7 +1089,7 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$expenseAccount->id, null])->andReturn(false);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$expenseAccount->id, null, null])->andReturn(false);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1157,7 +1157,7 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Fake name'])->andReturn(false);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Fake name', null])->andReturn(false);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1226,8 +1226,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1347,8 +1347,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['transfer']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$otherAssetAccount->id, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$otherAssetAccount->id, null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1417,8 +1417,8 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['deposit']);
-        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account'])->andReturn(true);
-        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account', null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null, null])->andReturn(true);
 
 
         // mock calls:

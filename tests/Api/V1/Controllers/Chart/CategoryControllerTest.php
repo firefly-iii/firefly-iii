@@ -69,10 +69,10 @@ class CategoryControllerTest extends TestCase
         $opsRepos->shouldReceive('setUser')->atLeast()->once();
 
         $opsRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->categoryListExpenses());
-        $opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
+        //$opsRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->categoryListIncome());
 
         $noCatRepos->shouldReceive('listExpenses')->atLeast()->once()->andReturn($this->noCategoryListExpenses());
-        $noCatRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
+        //$noCatRepos->shouldReceive('listIncome')->atLeast()->once()->andReturn($this->noCategoryListIncome());
 
 
         $parameters = [
