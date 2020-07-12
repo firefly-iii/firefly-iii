@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'A szabályban legalább egy műveletnek lennie kell.',
     'base64'                         => 'Ez nem érvényes base64 kódolású adat.',
     'model_id_invalid'               => 'A megadott azonosító érvénytelennek tűnik ehhez a modellhez.',
-    'more'                           => ':attribute értékének nagyobbnak kell lennie, mint ":more".',
     'less'                           => ':attribute kisebbnek kell lennie 10,000,000-nél',
     'active_url'                     => ':attribute nem egy érvényes URL.',
     'after'                          => ':attribute egy :date utáni dátum kell legyen.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Nem használhatod ezt a fiókot célfiókként.',
 
     'gte.numeric' => ':attribute attribútumnak :value értéknél nagyobbnak vagy vele egyenlőnek kell lennie.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute attribútumnak :value kilobájtnál nagyobb vagy egyenlőnek kell lennie.',
     'gte.string'  => ':attribute attribútumnak :value karakternél nagyobb vagy egyenlőnek kell lennie.',
     'gte.array'   => 'A(z) :attribute legalább :value elemet kell, hogy tartalmazzon.',

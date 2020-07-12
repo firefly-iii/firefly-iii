@@ -53,7 +53,7 @@ return [
 
     // email change
     'email_change_subject'             => 'Firefly III sähköpostiosoitteesi on muuttunut',
-    'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
+    'email_change_body_to_new'         => 'Joko sinä, tai joku jolla on pääsy Firefly III -tilillesi, on vaihtanut sähköpostiosoitteesi. Jos et odottanut tätä viestiä, ohita ja poista se.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
     'email_change_old'                 => 'Vanha sähköpostiosoite oli: :email',
@@ -70,7 +70,7 @@ return [
     'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
 
     // reset password
-    'reset_pw_subject'                 => 'Your password reset request',
+    'reset_pw_subject'                 => 'Salasanasi nollauspyyntö',
     'reset_pw_instructions'            => 'Somebody tried to reset your password. If it was you, please follow the link below to do so.',
     'reset_pw_warning'                 => '<strong>PLEASE</strong> verify that the link actually goes to the Firefly III you expect it to go!',
 

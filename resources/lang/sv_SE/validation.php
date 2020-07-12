@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Regel måste ha minst en åtgärd.',
     'base64'                         => 'Detta är inte giltigt bas64 data.',
     'model_id_invalid'               => 'Angivet ID verkar ogiltig för denna modell.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute måste vara mindre än 10 000 000',
     'active_url'                     => ':attribute är inte en giltig URL.',
     'after'                          => ':attribute måste vara ett datum efter :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Det går inte att använda detta konto som mottagarkonto.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

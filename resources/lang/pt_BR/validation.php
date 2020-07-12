@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'A regra deve ter pelo menos uma ação.',
     'base64'                         => 'Isto não é válido na codificação de dados base64.',
     'model_id_invalid'               => 'A identificação especificada parece inválida para este modelo.',
-    'more'                           => ':attribute deve ser maior que ":more".',
     'less'                           => ':attribute deve ser menor do que 10.000.000',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

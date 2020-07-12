@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.1 (API 1.3.0)] - 2020-07-12
+
+### Added
+- Extra logging in case of database errors at first launch.
+
+### Changed
+- Completely rewrote the [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
+
+### Fixed
+- [Issue 3532](https://github.com/firefly-iii/firefly-iii/issues/3532) Fix empty validation messages.
+- Profile methods to change email / password were broken.
+- Heroku will build again.
+- Some integers were not properly cast to strings.
+- Fixed several timezone issues when generated the dashboard account chart.
+
+### API
+- [Issue 3546](https://github.com/firefly-iii/firefly-iii/issues/3546) New endpoints to selectively delete data.
+- [Issue 3554](https://github.com/firefly-iii/firefly-iii/issues/3554) Consistent parsing for amounts. 
 
 ## [5.3.0 (API 1.2.0)] - 2020-07-03
 

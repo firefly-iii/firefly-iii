@@ -55,7 +55,7 @@ return [
     'email_change_subject'             => 'Ваш адрес электронной почты Firefly III был изменен',
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
-    'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
+    'email_change_ignore'              => 'Если вы инициировали это изменение, вы можете спокойно проигнорировать это сообщение.',
     'email_change_old'                 => 'Старый адрес электронной почты: :email',
     'email_change_old_strong'          => 'Старый адрес электронной почты: <strong>:email</strong>',
     'email_change_new'                 => 'Новый адрес электронной почты: :email',

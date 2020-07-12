@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Säännöllä täytyy olla vähintään yksi tapahtuma.',
     'base64'                         => 'Tämä ei ole kelvollinen base64-koodattu data.',
     'model_id_invalid'               => 'Annettu tunniste ei kelpaa tämän mallin kanssa.',
-    'more'                           => 'Määritteen :attribute täytyy suurempi kuin ":more".',
     'less'                           => 'Määritteen :attribute täytyy olla pienempi kuin 10,000,000',
     'active_url'                     => ':attribute ei ole verkko-osoite.',
     'after'                          => 'Määritteen :attribute täytyy olla :date jälkeen oleva päivämäärä.',
@@ -199,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Et voi käyttää tätä tiliä kohdetilinä.',
 
     'gte.numeric' => 'Määritteen :attribute arvon täytyy olla vähintään :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'Määritteen :attribute koon täytyy olla vähintään :value kilotavua.',
     'gte.string'  => 'Määritteen :attribute pituus täytyy olla vähintään :value merkkiä.',
     'gte.array'   => 'Määritteellä :attribute tulee olla vähintään :value alkiota.',
