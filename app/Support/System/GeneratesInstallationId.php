@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\System;
 
+use FireflyIII\Exceptions\FireflyException;
 use Log;
 use Ramsey\Uuid\Uuid;
 
@@ -37,7 +38,12 @@ trait GeneratesInstallationId
      */
     protected function generateInstallationId(): void
     {
+        try {
         $config = app('fireflyconfig')->get('installation_id', null);
+        } catch(FireflyException $e) {
+            Log::info('Could not create or generate installation ID. Do not continue.');
+            return;
+        }
 
         // delete if wrong UUID:
         if (null !== $config && 'b2c27d92-be90-5c10-8589-005df5b314e6' === $config->data) {
