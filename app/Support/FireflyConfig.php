@@ -87,8 +87,8 @@ class FireflyConfig
             /** @var Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         } catch (QueryException|Exception $e) {
-            Log::error(sprintf('Query exception while polling for config var: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            //Log::error(sprintf('Query exception while polling for config var: %s', $e->getMessage()));
+            //Log::error($e->getTraceAsString());
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
         }
 

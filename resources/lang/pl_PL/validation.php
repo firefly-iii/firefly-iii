@@ -198,7 +198,7 @@ return [
     'generic_invalid_destination' => 'Nie możesz użyć tego konta jako konta docelowego.',
 
     'gte.numeric' => ':attribute musi być większy lub równy :value.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
+    'gt.numeric'  => ':attribute musi być większy niż :value.',
     'gte.file'    => ':attribute musi mieć rozmiar większy niż lub równy :value kilobajtów.',
     'gte.string'  => ':attribute musi mieć :value lub więcej znaków.',
     'gte.array'   => ':attribute musi mieć :value lub więcej elementów.',
