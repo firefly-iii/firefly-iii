@@ -75,7 +75,7 @@ class AccountUpdateRequest extends Request
             'opening_balance'         => $this->nullableString('opening_balance'),
             'opening_balance_date'    => $this->date('opening_balance_date'),
             'cc_type'                 => $this->nullableString('credit_card_type'),
-            'cc_Monthly_payment_date' => $this->nullableString('monthly_payment_date'),
+            'cc_monthly_payment_date' => $this->nullableString('monthly_payment_date'),
             'notes'                   => $this->nullableNlString('notes'),
             'interest'                => $this->nullableString('interest'),
             'interest_period'         => $this->nullableString('interest_period'),
