@@ -154,17 +154,6 @@ class ApplyRulesTest extends TestCase
         $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn($groups);
         $ruleGroupRepos->shouldReceive('getActiveStoreRules')->atLeast()->once()->andReturn(new Collection);
 
-
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([[], [], []]);
-
-        $ruleEngine->shouldReceive('setUser')->atLeast()->once();
-        $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
-        $ruleEngine->shouldReceive('processJournalArray')->times(3);
-        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
-
         $parameters = [
             '--user=1',
             '--token=token',
@@ -179,8 +168,7 @@ class ApplyRulesTest extends TestCase
 
         $this->artisan('firefly-iii:apply-rules ' . implode(' ', $parameters))
              ->expectsOutput('No rules or rule groups have been included.')
-             ->expectsOutput('Done!')
-             ->assertExitCode(0);
+             ->assertExitCode(1);
     }
 
 

@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.3 (API 1.3.0)] - 2020-07-17
+
+### Fixed
+- [Issue 3565](https://github.com/firefly-iii/firefly-iii/issues/3565) Spelling error in API array.
+- [Issue 3566](https://github.com/firefly-iii/firefly-iii/issues/3566) Fix issue in bills chart.
+- [Issue 3568](https://github.com/firefly-iii/firefly-iii/issues/3568) Fix issue with floating number.
+- [Issue 3573](https://github.com/firefly-iii/firefly-iii/issues/3573) Fix link in readme.
+- [Issue 3574](https://github.com/firefly-iii/firefly-iii/issues/3574) Fix issue with floating number.
+
 ## [5.3.2 (API 1.3.0)] - 2020-07-13
 
 ### Fixed
