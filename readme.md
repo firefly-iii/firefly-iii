@@ -96,7 +96,7 @@ And to organise everything:
 * Easy navigation through your records
 * Lots of charts because we all love them
 
-Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/features).
+Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/introduction).
 
 ### <img src="https://www.firefly-iii.org/static/screenshots/iphone-complete.png" align="left" width="250"> Who's it for?
 
