@@ -60,7 +60,7 @@ return [
     'due_date'                => 'Ημερομηνία προθεσμίας',
     'payment_date'            => 'Ημερομηνία πληρωμής',
     'invoice_date'            => 'Ημερομηνία τιμολογίου',
-    'internal_reference'      => 'Internal reference',
+    'internal_reference'      => 'Εσωτερική αναφορά',
     'notes'                   => 'Σημειώσεις',
     'from'                    => 'Από',
     'piggy_bank'              => 'Κουμπαράς',

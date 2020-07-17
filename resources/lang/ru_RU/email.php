@@ -36,16 +36,16 @@ return [
     // access token created
     'access_token_created_subject'     => 'Создан новый токен доступа',
     'access_token_created_body'        => 'Кто-то (надеемся, что вы) только что создал новый токен доступа к Firefly III API для вашей учетной записи.',
-    'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_explanation' => 'С этим токеном они могут получить доступ к <strong>всем</strong> вашим финансовым картам через Firefly III API.',
+    'access_token_created_revoke'      => 'Если это были не вы, пожалуйста, отмените этот токен как можно скорее по адресу :url.',
 
     // registered
     'registered_subject'               => 'Добро пожаловать в Firefly III!',
-    'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
-    'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">grand theory</a>.',
-    'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
+    'registered_welcome'               => 'Добро пожаловать в <a style="color:#337ab7" href=":address">Firefly III</a>. Вы успешно зарегистрированы, и это письмо отправлено для подтверждения регистрации. Ура!',
+    'registered_pw'                    => 'Если вы уже забыли свой пароль, пожалуйста, сбросьте его <a style="color:#337ab7" href=":address/password/reset">с помощью инструмента сброса пароля</a>.',
+    'registered_help'                  => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
+    'registered_doc_html'              => 'Если вы ещё этого не сделали, прочтите <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">грандиозную теорию</a>.',
+    'registered_doc_text'              => 'Если вы еще этого не сделали, прочтите краткое руководство по использованию и полное описание.',
     'registered_closing'               => 'Наслаждайтесь!',
     'registered_firefly_iii_link'      => 'Firefly III:',
     'registered_pw_reset_link'         => 'Сбросить пароль:',
@@ -53,8 +53,8 @@ return [
 
     // email change
     'email_change_subject'             => 'Ваш адрес электронной почты Firefly III был изменен',
-    'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
-    'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
+    'email_change_body_to_new'         => 'Вы или кто-то, у кого есть доступ к вашей учетной записи Firefly III, изменил ваш адрес электронной почты. Если вы не ожидали этого сообщения, проигнорируйте и удалите его.',
+    'email_change_body_to_old'         => 'Вы или кто-то, у кого есть доступ к вашей учетной записи Firefly III, изменили ваш адрес электронной почты. Если вы не ожидали, что это произошло, вы <strong>должны</strong> перейти по ссылке "Отменить" ниже, чтобы защитить свой аккаунт!',
     'email_change_ignore'              => 'Если вы инициировали это изменение, вы можете спокойно проигнорировать это сообщение.',
     'email_change_old'                 => 'Старый адрес электронной почты: :email',
     'email_change_old_strong'          => 'Старый адрес электронной почты: <strong>:email</strong>',
@@ -66,28 +66,28 @@ return [
     // OAuth token created
     'oauth_created_subject'            => 'Создан новый OAuth клиент',
     'oauth_created_body'               => 'Кто-то (надеемся, что вы) только что создал новый клиент API OAuth для вашей учетной записи. Он назван ":name" и имеет обратный URL <span style="font-family: monospace;">:url</span>.',
-    'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
+    'oauth_created_explanation'        => 'С этим клиентом они могут получить доступ к <strong>всем</strong> вашим финансовым картам через Firefly III API.',
+    'oauth_created_undo'               => 'Если это были не вы, пожалуйста, отмените этот клиент как можно скорее по адресу :url.',
 
     // reset password
     'reset_pw_subject'                 => 'Ваш запрос на сброс пароля',
-    'reset_pw_instructions'            => 'Somebody tried to reset your password. If it was you, please follow the link below to do so.',
-    'reset_pw_warning'                 => '<strong>PLEASE</strong> verify that the link actually goes to the Firefly III you expect it to go!',
+    'reset_pw_instructions'            => 'Кто-то пытался сбросить ваш пароль. Если это вы, пожалуйста, перейдите по ссылке ниже, чтобы сделать это.',
+    'reset_pw_warning'                 => '<strong>ПОЖАЛУЙСТА</strong> убедитесь, что ссылка действительно ведён Firefly III, как вы и ожидаете!',
 
     // error
-    'error_subject'                    => 'Caught an error in Firefly III',
-    'error_intro'                      => 'Firefly III v:version ran into an error: <span style="font-family: monospace;">:errorMessage</span>.',
+    'error_subject'                    => 'Найдена ошибка в Firefly III',
+    'error_intro'                      => 'В Firefly III v:version произошла ошибка: <span style="font-family: monospace;">:errorMessage</span>.',
     'error_type'                       => 'Ошибка типа ":class".',
     'error_timestamp'                  => 'Ошибка произошла в: :time.',
-    'error_location'                   => 'This error occurred in file "<span style="font-family: monospace;">:file</span>" on line :line with code :code.',
-    'error_user'                       => 'The error was encountered by user #:id, <a href="mailto::email">:email</a>.',
-    'error_no_user'                    => 'There was no user logged in for this error or no user was detected.',
+    'error_location'                   => 'Эта ошибка произошла в файле <span style="font-family: monospace;">:file</span> в строке :line с кодом :code.',
+    'error_user'                       => 'У пользователя #:id произошла ошибка, <a href="mailto::email">:email</a>.',
+    'error_no_user'                    => 'Пользователь не авторизован из-за этой ошибки или пользователь не был обнаружен.',
     'error_ip'                         => 'IP адрес, связанный с этой ошибкой: :ip',
     'error_url'                        => 'URL-адрес: :url',
     'error_user_agent'                 => 'User agent: :userAgent',
-    'error_stacktrace'                 => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
-    'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
-    'error_github_text'                => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
+    'error_stacktrace'                 => 'Полный stacktrace находится ниже. Если вы считаете, что это ошибка в Firefly III, вы можете направить это сообщение на <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii. rg</a>. Это может помочь исправить ошибку, с которой вы столкнулись.',
+    'error_github_html'                => 'Если вы предпочитаете, вы также можете новый запрос на <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
+    'error_github_text'                => 'Если вы предпочитаете, вы также можете открыть новый вопрос на https://github.com/firefly-iii/firefly-iii/issues.',
     'error_stacktrace_below'           => 'Полная трассировки стека:',
 
     // report new journals

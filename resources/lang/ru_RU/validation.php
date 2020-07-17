@@ -198,7 +198,7 @@ return [
     'generic_invalid_destination' => 'Вы не можете использовать этот счёт в качестве счёта назначения.',
 
     'gte.numeric' => 'Значение :attribute должно быть больше или равно :value.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
+    'gt.numeric'  => 'Значение :attribute должно быть больше :value.',
     'gte.file'    => 'Размер файла в поле :attribute должен быть больше или равен :value Килобайт(а).',
     'gte.string'  => 'Значение :attribute должно быть больше или равно :value символам.',
     'gte.array'   => 'Значения поля :attribute должно включать :value элементов или больше.',
