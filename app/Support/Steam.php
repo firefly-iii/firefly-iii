@@ -503,7 +503,7 @@ class Steam
 
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date,'UTC');
-            $date->setTimezone(env('TZ'));
+            $date->setTimezone(config('app.timezone'));
             $list[(int)$entry->account_id] = $date;
         }
 
