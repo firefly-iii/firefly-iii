@@ -23,7 +23,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.13.0",
+        "@fortawesome/fontawesome-free": "^5.14.0",
         "@popperjs/core": "^2.4.4",
         "bootstrap": "^4.5.0",
         "chart.js": "^2.9.3",
