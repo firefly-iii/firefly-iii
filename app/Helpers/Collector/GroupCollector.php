@@ -554,9 +554,9 @@ class GroupCollector implements GroupCollectorInterface
             $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
 
             // this is going to happen a lot:
-            $result['date']->setTimezone(env('TZ'));
-            $result['created_at']->setTimezone(env('TZ'));
-            $result['updated_at']->setTimezone(env('TZ'));
+            $result['date']->setTimezone(config('app.timezone'));
+            $result['created_at']->setTimezone(config('app.timezone'));
+            $result['updated_at']->setTimezone(config('app.timezone'));
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

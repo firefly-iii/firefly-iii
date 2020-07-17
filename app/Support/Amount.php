@@ -143,9 +143,8 @@ class Amount
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
         $coloured  = $coloured ?? true;
-        $float     = round($amount, 12);
         $info      = $this->getLocaleInfo();
-        $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+        $formatted = number_format((float) $amount, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = true === $separated ? ' ' : '';
