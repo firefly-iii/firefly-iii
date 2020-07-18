@@ -27,6 +27,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Rules\ZeroOrMore;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -38,6 +39,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class PiggyBankRequest extends FormRequest
 {
+    use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

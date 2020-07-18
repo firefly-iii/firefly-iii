@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 
@@ -35,6 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

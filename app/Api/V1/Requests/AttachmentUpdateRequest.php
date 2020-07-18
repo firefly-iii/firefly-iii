@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -32,6 +33,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AttachmentUpdateRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

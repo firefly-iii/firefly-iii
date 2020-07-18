@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -35,6 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

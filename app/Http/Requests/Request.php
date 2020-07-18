@@ -39,78 +39,7 @@ use Log;
 class Request extends FormRequest
 {
     use ConvertsDataTypes;
-    /**
-     * @param $array
-     *
-     * @return array|null
-     */
-    public function arrayFromValue($array): ?array
-    {
-        if (is_array($array)) {
-            return $array;
-        }
-        if (null === $array) {
-            return null;
-        }
-        if (is_string($array)) {
-            return explode(',', $array);
-        }
 
-        return null;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    public function convertBoolean(?string $value): bool
-    {
-        if (null === $value) {
-            return false;
-        }
-        if ('true' === $value) {
-            return true;
-        }
-        if ('yes' === $value) {
-            return true;
-        }
-        if (1 === $value) {
-            return true;
-        }
-        if ('1' === $value) {
-            return true;
-        }
-        if (true === $value) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string|null $string
-     *
-     * @return Carbon|null
-     */
-    public function dateFromValue(?string $string): ?Carbon
-    {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
-            return null;
-        }
-        try {
-            $carbon = new Carbon($string);
-        } catch (Exception $e) {
-            Log::debug(sprintf('Invalid date: %s: %s', $string, $e->getMessage()));
-
-            return null;
-        }
-
-        return $carbon;
-    }
 
     /**
      * Return floating value.
@@ -131,67 +60,14 @@ class Request extends FormRequest
 
 
 
-    /**
-     * Parse to integer
-     *
-     * @param string|null $string
-     *
-     * @return int|null
-     */
-    public function integerFromValue(?string $string): ?int
-    {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
-            return null;
-        }
-
-        return (int) $string;
-    }
-
-
-
-    /**
-     * Parse and clean a string, but keep the newlines.
-     *
-     * @param string|null $string
-     *
-     * @return string|null
-     */
-    public function nlStringFromValue(?string $string): ?string
-    {
-        if (null === $string) {
-            return null;
-        }
-        $result = app('steam')->nlCleanString($string);
-
-        return '' === $result ? null : $result;
-
-    }
 
 
 
 
 
 
-    /**
-     * Parse and clean a string.
-     *
-     * @param string|null $string
-     *
-     * @return string|null
-     */
-    public function stringFromValue(?string $string): ?string
-    {
-        if (null === $string) {
-            return null;
-        }
-        $result = app('steam')->cleanString($string);
 
-        return '' === $result ? null : $result;
 
-    }
 
     /**
      * Return date time or NULL.
@@ -229,40 +105,4 @@ class Request extends FormRequest
 
         return $result;
     }
-
-    /**
-     * @param Validator $validator
-     */
-    protected function validateAutoBudgetAmount(Validator $validator): void
-    {
-        $data         = $validator->getData();
-        $type         = $data['auto_budget_type'] ?? '';
-        $amount       = $data['auto_budget_amount'] ?? '';
-        $period       = (string) ($data['auto_budget_period'] ?? '');
-        $currencyId   = $data['auto_budget_currency_id'] ?? '';
-        $currencyCode = $data['auto_budget_currency_code'] ?? '';
-        if (is_numeric($type)) {
-            $type = (int) $type;
-        }
-        if (0 === $type || 'none' === $type || '' === $type) {
-            return;
-        }
-        // basic float check:
-        if ('' === $amount) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
-        }
-        if (1 !== bccomp((string) $amount, '0')) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.auto_budget_amount_positive'));
-        }
-        if ('' === $period) {
-            $validator->errors()->add('auto_budget_period', (string) trans('validation.auto_budget_period_mandatory'));
-        }
-        if ('' === $currencyCode && '' === $currencyId) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.require_currency_info'));
-        }
-    }
-
-
-
-
 }

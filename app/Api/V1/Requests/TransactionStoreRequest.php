@@ -28,6 +28,7 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
@@ -40,7 +41,7 @@ use Log;
  */
 class TransactionStoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation;
+    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes;
 
     /**
      * Authorize logged in users.

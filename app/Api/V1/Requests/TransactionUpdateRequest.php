@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,7 +40,7 @@ use Log;
  */
 class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes;
 
     /** @var array Array values. */
     private $arrayFields;

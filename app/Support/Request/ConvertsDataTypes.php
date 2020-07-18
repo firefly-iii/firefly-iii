@@ -65,6 +65,107 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Parse and clean a string, but keep the newlines.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    protected function nlStringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->nlCleanString($string);
+
+        return '' === $result ? null : $result;
+
+    }
+
+    /**
+     * @param $array
+     *
+     * @return array|null
+     */
+    protected function arrayFromValue($array): ?array
+    {
+        if (is_array($array)) {
+            return $array;
+        }
+        if (null === $array) {
+            return null;
+        }
+        if (is_string($array)) {
+            return explode(',', $array);
+        }
+
+        return null;
+    }
+
+
+
+    /**
+     * @param string|null $string
+     *
+     * @return Carbon|null
+     */
+    protected function dateFromValue(?string $string): ?Carbon
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+        try {
+            $carbon = new Carbon($string);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Invalid date: %s: %s', $string, $e->getMessage()));
+
+            return null;
+        }
+
+        return $carbon;
+    }
+
+    /**
+     * Parse and clean a string.
+     *
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    protected function stringFromValue(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->cleanString($string);
+
+        return '' === $result ? null : $result;
+    }
+
+
+    /**
+     * Parse to integer
+     *
+     * @param string|null $string
+     *
+     * @return int|null
+     */
+    protected function integerFromValue(?string $string): ?int
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (int) $string;
+    }
+
+    /**
      * Return string value, but keep newlines.
      *
      * @param string $field
@@ -111,6 +212,36 @@ trait ConvertsDataTypes
         }
 
         return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
+    }
+
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function convertBoolean(?string $value): bool
+    {
+        if (null === $value) {
+            return false;
+        }
+        if ('true' === $value) {
+            return true;
+        }
+        if ('yes' === $value) {
+            return true;
+        }
+        if (1 === $value) {
+            return true;
+        }
+        if ('1' === $value) {
+            return true;
+        }
+        if (true === $value) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

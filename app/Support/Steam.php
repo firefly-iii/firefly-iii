@@ -362,8 +362,10 @@ class Steam
      * Remove weird chars from strings.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function cleanString(string $string): string
     {
@@ -425,8 +427,10 @@ class Steam
      * Remove weird chars from strings, but keep newlines and tabs.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function nlCleanString(string $string): string
     {
