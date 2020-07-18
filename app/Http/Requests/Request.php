@@ -38,25 +38,6 @@ use Log;
  */
 class Request extends FormRequest
 {
-    use ConvertsDataTypes;
-
-
-    /**
-     * Return floating value.
-     *
-     * @param string $field
-     *
-     * @return float|null
-     */
-    public function float(string $field): ?float
-    {
-        $res = $this->get($field);
-        if (null === $res) {
-            return null;
-        }
-
-        return (float) $res;
-    }
 
 
 

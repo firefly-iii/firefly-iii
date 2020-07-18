@@ -25,6 +25,8 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
+use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -32,6 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountFormRequest extends FormRequest
 {
+    use ConvertsDataTypes, AppendsLocationData;
     /**
      * Verify the request.
      *

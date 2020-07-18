@@ -44,21 +44,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $result = false;
-        // Only allow authenticated users
-        if (auth()->check()) {
-            /** @var User $user */
-            $user = auth()->user();
-
-            /** @var UserRepositoryInterface $repository */
-            $repository = app(UserRepositoryInterface::class);
-
-            if ($repository->hasRole($user, 'owner')) {
-                $result = true; // @codeCoverageIgnore
-            }
-        }
-
-        return $result;
+        return auth()->check() && auth()->user()->hasRole('owner');
     }
 
     /**

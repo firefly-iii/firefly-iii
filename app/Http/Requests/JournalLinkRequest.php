@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\LinkType;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,6 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class JournalLinkRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *

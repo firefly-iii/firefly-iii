@@ -64,6 +64,25 @@ trait ConvertsDataTypes
         return (int) $this->get($field);
     }
 
+
+    /**
+     * Return floating value.
+     *
+     * @param string $field
+     *
+     * @return float|null
+     */
+    protected function float(string $field): ?float
+    {
+        $res = $this->get($field);
+        if (null === $res) {
+            return null;
+        }
+
+        return (float) $res;
+    }
+
+
     /**
      * Parse and clean a string, but keep the newlines.
      *

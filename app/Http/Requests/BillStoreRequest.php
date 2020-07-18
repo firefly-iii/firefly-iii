@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,6 +30,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class BillStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *

@@ -29,6 +29,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -39,7 +40,7 @@ use Log;
  */
 class RecurrenceFormRequest extends FormRequest
 {
-
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *

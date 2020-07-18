@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -32,6 +34,7 @@ use Illuminate\Validation\Validator;
  */
 class BudgetFormUpdateRequest extends FormRequest
 {
+    use ConvertsDataTypes, ValidatesAutoBudgetRequest;
     /**
      * Verify the request.
      *

@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,6 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupFormRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *
