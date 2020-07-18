@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class MassEditBulkJournalRequest.
  */
-class BulkEditJournalRequest extends Request
+class BulkEditJournalRequest extends FormRequest
 {
     /**
      * Verify the request.

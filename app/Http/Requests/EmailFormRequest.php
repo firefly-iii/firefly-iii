@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class EmailFormRequest.
  *
  * @codeCoverageIgnore
  */
-class EmailFormRequest extends Request
+class EmailFormRequest extends FormRequest
 {
     /**
      * Verify the request.

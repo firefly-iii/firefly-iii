@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\PiggyBank;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class PiggyBankFormRequest.
  */
-class PiggyBankUpdateRequest extends Request
+class PiggyBankUpdateRequest extends FormRequest
 {
     /**
      * Verify the request.

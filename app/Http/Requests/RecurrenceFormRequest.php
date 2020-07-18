@@ -30,13 +30,14 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
 use FireflyIII\Validation\AccountValidator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class RecurrenceFormRequest
  */
-class RecurrenceFormRequest extends Request
+class RecurrenceFormRequest extends FormRequest
 {
 
     /**

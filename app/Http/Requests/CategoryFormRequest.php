@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Category;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CategoryFormRequest.
  */
-class CategoryFormRequest extends Request
+class CategoryFormRequest extends FormRequest
 {
     /**
      * Verify the request.

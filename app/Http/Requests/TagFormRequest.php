@@ -24,11 +24,12 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TagFormRequest.
  */
-class TagFormRequest extends Request
+class TagFormRequest extends FormRequest
 {
     /**
      * Verify the request.

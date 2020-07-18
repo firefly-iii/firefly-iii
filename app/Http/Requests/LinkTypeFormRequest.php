@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class LinkTypeFormRequest.
  */
-class LinkTypeFormRequest extends Request
+class LinkTypeFormRequest extends FormRequest
 {
     /**
      * Verify the request.

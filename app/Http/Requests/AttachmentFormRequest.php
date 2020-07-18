@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class AttachmentFormRequest.
  *
  * @codeCoverageIgnore
  */
-class AttachmentFormRequest extends Request
+class AttachmentFormRequest extends FormRequest
 {
     /**
      * Verify the request.

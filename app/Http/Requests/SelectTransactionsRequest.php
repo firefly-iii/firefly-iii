@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class SelectTransactionsRequest.
  *
  * @codeCoverageIgnore
  */
-class SelectTransactionsRequest extends Request
+class SelectTransactionsRequest extends FormRequest
 {
     /**
      * Verify the request.

@@ -25,11 +25,12 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AccountFormRequest.
  */
-class AccountFormRequest extends Request
+class AccountFormRequest extends FormRequest
 {
     /**
      * Verify the request.

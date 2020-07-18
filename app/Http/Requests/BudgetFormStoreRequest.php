@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * @codeCoverageIgnore
  * Class BudgetFormStoreRequest
  */
-class BudgetFormStoreRequest extends Request
+class BudgetFormStoreRequest extends FormRequest
 {
     /**
      * Verify the request.

@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class DeleteAccountFormRequest.
  *
  * @codeCoverageIgnore
  */
-class DeleteAccountFormRequest extends Request
+class DeleteAccountFormRequest extends FormRequest
 {
     /**
      * Verify the request.

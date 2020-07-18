@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CurrencyFormRequest.
  */
-class CurrencyFormRequest extends Request
+class CurrencyFormRequest extends FormRequest
 {
     /**
      * Verify the request.

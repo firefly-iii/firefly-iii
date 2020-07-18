@@ -24,11 +24,12 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class RuleGroupFormRequest.
  */
-class RuleGroupFormRequest extends Request
+class RuleGroupFormRequest extends FormRequest
 {
     /**
      * Verify the request.
