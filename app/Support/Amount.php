@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Log;
+use NumberFormatter;
 
 /**
  * Class Amount.
@@ -36,80 +37,6 @@ use Log;
  */
 class Amount
 {
-
-    /**
-     * bool $sepBySpace is $localeconv['n_sep_by_space']
-     * int $signPosn = $localeconv['n_sign_posn']
-     * string $sign = $localeconv['negative_sign']
-     * bool $csPrecedes = $localeconv['n_cs_precedes'].
-     *
-     * @param bool   $sepBySpace
-     * @param int    $signPosn
-     * @param string $sign
-     * @param bool   $csPrecedes
-     *
-     * @return string
-     *
-     */
-    public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
-    {
-        // negative first:
-        $space = ' ';
-
-        // require space between symbol and amount?
-        if (false === $sepBySpace) {
-            $space = ''; // no
-        }
-
-        // there are five possible positions for the "+" or "-" sign (if it is even used)
-        // pos_a and pos_e could be the ( and ) symbol.
-        $posA = ''; // before everything
-        $posB = ''; // before currency symbol
-        $posC = ''; // after currency symbol
-        $posD = ''; // before amount
-        $posE = ''; // after everything
-
-        // format would be (currency before amount)
-        // AB%sC_D%vE
-        // or:
-        // AD%v_B%sCE (amount before currency)
-        // the _ is the optional space
-
-        // switch on how to display amount:
-        switch ($signPosn) {
-            default:
-            case 0:
-                // ( and ) around the whole thing
-                $posA = '(';
-                $posE = ')';
-                break;
-            case 1:
-                // The sign string precedes the quantity and currency_symbol
-                $posA = $sign;
-                break;
-            case 2:
-                // The sign string succeeds the quantity and currency_symbol
-                $posE = $sign;
-                break;
-            case 3:
-                // The sign string immediately precedes the currency_symbol
-                $posB = $sign;
-                break;
-            case 4:
-                // The sign string immediately succeeds the currency_symbol
-                $posC = $sign;
-        }
-
-        // default is amount before currency
-        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
-
-        if ($csPrecedes) {
-            // alternative is currency before amount
-            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
-        }
-
-        return $format;
-    }
 
     /**
      * This method will properly format the given number, in color or "black and white",
@@ -142,13 +69,16 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
+        $locale = app('steam')->getLocale();
+
         $coloured  = $coloured ?? true;
-        $info      = $this->getLocaleInfo();
-        $formatted = number_format((float) $amount, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
-        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
-        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = true === $separated ? ' ' : '';
-        $result    = false === $precedes ? $formatted . $space . $symbol : $symbol . $space . $formatted;
+        $float     = round($amount, 12);
+
+        $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
+        $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
+        $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
+        $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
+        $result = $fmt->format($float);
 
         if (true === $coloured) {
             if ($amount > 0) {
@@ -300,56 +230,29 @@ class Amount
     }
 
     /**
-     * This method returns the correct format rules required by accounting.js,
-     * the library used to format amounts in charts.
-     *
-     * @param array $config
-     *
      * @return array
      */
-    public function getJsConfig(array $config): array
+    public function getAccountingLocaleInfo(): array
     {
-        $negative = self::getAmountJsConfig($config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes']);
-        $positive = self::getAmountJsConfig($config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes']);
+        $locale = app('steam')->getLocale();
+
+        $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
+
+        $positivePrefixed = $fmt->getAttribute(NumberFormatter::POSITIVE_PREFIX) !== '';
+        $negativePrefixed = $fmt->getAttribute(NumberFormatter::NEGATIVE_PREFIX) !== '';
+
+        $positive = ($positivePrefixed) ? '%s %v' : '%v %s';
+        $negative = ($negativePrefixed) ? '%s %v' : '%v %s';
 
         return [
-            'pos'  => $positive,
-            'neg'  => $negative,
-            'zero' => $positive,
+            'mon_decimal_point' => $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL),
+            'mon_thousands_sep' => $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL),
+            'format' => [
+                'pos'  => $positive,
+                'neg'  => $negative,
+                'zero' => $positive,
+            ]
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocaleInfo(): array
-    {
-        // get config from preference, not from translation:
-        $locale = app('steam')->getLocale();
-        $array  = app('steam')->getLocaleArray($locale);
-
-        setlocale(LC_MONETARY, $array);
-        $info = localeconv();
-        // correct variables
-        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
-
-        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
-
-        return $info;
-    }
-
-    /**
-     * @param array  $info
-     * @param string $field
-     *
-     * @return bool
-     */
-    private function getLocaleField(array $info, string $field): bool
-    {
-        return (is_bool($info[$field]) && true === $info[$field])
-               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 
     /**
