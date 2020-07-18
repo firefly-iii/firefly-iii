@@ -25,13 +25,14 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ConfigurationRequest
  *
  * @codeCoverageIgnore
  */
-class ConfigurationRequest extends Request
+class ConfigurationRequest extends FormRequest
 {
 
     /**

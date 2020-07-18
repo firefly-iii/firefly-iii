@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\ZeroOrMore;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  *
@@ -31,7 +32,7 @@ use FireflyIII\Rules\ZeroOrMore;
  *
  * @codeCoverageIgnore
  */
-class PiggyBankStoreRequest extends Request
+class PiggyBankStoreRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

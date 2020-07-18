@@ -1,8 +1,7 @@
 <?php
-
 /**
- * Request.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * GetRecurrenceData.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,17 +21,12 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
-
-use FireflyIII\Http\Requests\Request as FireflyIIIRequest;
+namespace FireflyIII\Support\Request;
 
 /**
- * Class Request.
- *
- * Technically speaking this class does not have to be extended like this but who knows what the future brings.
- *
+ * Trait GetRecurrenceData
  */
-class Request extends FireflyIIIRequest
+trait GetRecurrenceData
 {
     /**
      * @param array $transaction

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Category;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CategoryRequest
@@ -31,7 +32,7 @@ use FireflyIII\Models\Category;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class CategoryRequest extends Request
+class CategoryRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

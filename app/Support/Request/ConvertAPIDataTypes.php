@@ -1,7 +1,6 @@
 <?php
-
 /**
- * TransferRequest.php
+ * ConvertAPIDataTypes.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,38 +21,12 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests\Search;
-
-use FireflyIII\Api\V1\Requests\Request;
-use FireflyIII\Rules\IsTransferAccount;
+namespace FireflyIII\Support\Request;
 
 /**
- * Class TransferRequest
+ * Trait ConvertAPIDataTypes
  */
-class TransferRequest extends Request
+trait ConvertAPIDataTypes
 {
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'source'      => ['required', new IsTransferAccount],
-            'destination' => ['required', new IsTransferAccount],
-            'amount'      => 'required|numeric|gt:0',
-            'description' => 'required|min:1',
-            'date'        => 'required|date',
-        ];
-    }
 }

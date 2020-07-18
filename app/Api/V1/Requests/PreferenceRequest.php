@@ -23,13 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  *
  * Class PreferenceRequest
  *
  * @codeCoverageIgnore
  */
-class PreferenceRequest extends Request
+class PreferenceRequest extends FormRequest
 {
 
 

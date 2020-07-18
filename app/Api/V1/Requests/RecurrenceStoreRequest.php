@@ -26,17 +26,19 @@ namespace FireflyIII\Api\V1\Requests;
 use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * Class RecurrenceStoreRequest
  */
-class RecurrenceStoreRequest extends Request
+class RecurrenceStoreRequest extends FormRequest
 {
-    use RecurrenceValidation, TransactionValidation, CurrencyValidation;
+    use RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData;
 
     /**
      * Authorize logged in users.

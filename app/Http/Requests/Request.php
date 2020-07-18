@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Exception;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
@@ -37,6 +38,7 @@ use Log;
  */
 class Request extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * @param $array
      *
@@ -127,17 +129,7 @@ class Request extends FormRequest
         return (float) $res;
     }
 
-    /**
-     * Return integer value.
-     *
-     * @param string $field
-     *
-     * @return int
-     */
-    public function integer(string $field): int
-    {
-        return (int) $this->get($field);
-    }
+
 
     /**
      * Parse to integer
@@ -158,17 +150,7 @@ class Request extends FormRequest
         return (int) $string;
     }
 
-    /**
-     * Return string value, but keep newlines.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function nlString(string $field): string
-    {
-        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
-    }
+
 
     /**
      * Parse and clean a string, but keep the newlines.
@@ -188,74 +170,10 @@ class Request extends FormRequest
 
     }
 
-    /**
-     * Return integer value, or NULL when it's not set.
-     *
-     * @param string $field
-     *
-     * @return int|null
-     */
-    public function nullableInteger(string $field): ?int
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
 
-        $value = (string) $this->get($field);
-        if ('' === $value) {
-            return null;
-        }
 
-        return (int) $value;
-    }
 
-    /**
-     * Return string value, but keep newlines, or NULL if empty.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function nullableNlString(string $field): ?string
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
 
-        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
-    }
-
-    /**
-     * Return string value, or NULL if empty.
-     *
-     * @param string $field
-     *
-     * @return string|null
-     */
-    public function nullableString(string $field): ?string
-    {
-        if (!$this->has($field)) {
-            return null;
-        }
-        $res = trim(app('steam')->cleanString((string) ($this->get($field) ?? '')));
-        if ('' === $res) {
-            return null;
-        }
-
-        return $res;
-    }
-
-    /**
-     * Return string value.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function string(string $field): string
-    {
-        return app('steam')->cleanString((string) ($this->get($field) ?? ''));
-    }
 
     /**
      * Parse and clean a string.
@@ -273,86 +191,6 @@ class Request extends FormRequest
 
         return '' === $result ? null : $result;
 
-    }
-
-    /**
-     * Read the submitted Request data and add new or updated Location data to the array.
-     *
-     * @param array       $data
-     *
-     * @param string|null $prefix
-     *
-     * @return array
-     */
-    protected function appendLocationData(array $data, ?string $prefix): array
-    {
-        Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
-        $data['store_location']  = false;
-        $data['update_location'] = false;
-        $data['longitude']       = null;
-        $data['latitude']        = null;
-        $data['zoom_level']      = null;
-
-        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
-        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
-        $hasLocation    = $this->boolean($hasLocationKey);
-
-        // for a POST (store), all fields must be present and accounted for:
-        if (
-            ('POST' === $this->method() && $this->routeIs('*.store'))
-            && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-        ) {
-            Log::debug('Method is POST and all fields present.');
-            $data['store_location'] = $this->boolean($hasLocationKey);
-            $data['longitude']      = $this->nullableString($longitudeKey);
-            $data['latitude']       = $this->nullableString($latitudeKey);
-            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
-        }
-        if (
-            ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-            && (
-                ('PUT' === $this->method() && $this->routeIs('*.update'))
-                || ('POST' === $this->method() && $this->routeIs('*.update'))
-            )
-        ) {
-            Log::debug('Method is PUT and all fields present.');
-            $data['update_location'] = true;
-            $data['longitude']       = $this->nullableString($longitudeKey);
-            $data['latitude']        = $this->nullableString($latitudeKey);
-            $data['zoom_level']      = $this->nullableString($zoomLevelKey);
-        }
-        if (false === $hasLocation || null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
-            Log::debug('One of the fields is NULL or hasLocation is false, wont save.');
-            $data['store_location']  = false;
-            $data['update_location'] = true; // update is always true, but the values are null:
-            $data['longitude']       = null;
-            $data['latitude']        = null;
-            $data['zoom_level']      = null;
-        }
-        Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
-
-        return $data;
-    }
-
-    /**
-     * Return date or NULL.
-     *
-     * @param string $field
-     *
-     * @return Carbon|null
-     */
-    protected function date(string $field): ?Carbon
-    {
-        $result = null;
-        try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
-        } catch (Exception $e) {
-            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
-        }
-
-        return $result;
     }
 
     /**
@@ -424,20 +262,7 @@ class Request extends FormRequest
         }
     }
 
-    /**
-     * @param string|null $prefix
-     * @param string      $key
-     *
-     * @return string
-     */
-    private function getLocationKey(?string $prefix, string $key): string
-    {
-        if (null === $prefix) {
-            return $key;
-        }
 
-        return sprintf('%s_%s', $prefix, $key);
-    }
 
 
 }

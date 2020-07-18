@@ -29,12 +29,13 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * Class RecurrenceUpdateRequest
  */
-class RecurrenceUpdateRequest extends Request
+class RecurrenceUpdateRequest extends FormRequest
 {
     use RecurrenceValidation, TransactionValidation, CurrencyValidation;
 

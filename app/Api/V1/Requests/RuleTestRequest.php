@@ -30,13 +30,14 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Log;
 
 /**
  * Class RuleTestRequest
  */
-class RuleTestRequest extends Request
+class RuleTestRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

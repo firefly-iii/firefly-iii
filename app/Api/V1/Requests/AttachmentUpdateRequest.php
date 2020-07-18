@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * ClassAttachmentUpdateRequest
  *
  * @codeCoverageIgnore
  */
-class AttachmentUpdateRequest extends Request
+class AttachmentUpdateRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

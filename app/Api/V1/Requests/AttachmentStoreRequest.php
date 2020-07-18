@@ -24,13 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsValidAttachmentModel;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AttachmentStoreRequest
  *
  * @codeCoverageIgnore
  */
-class AttachmentStoreRequest extends Request
+class AttachmentStoreRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

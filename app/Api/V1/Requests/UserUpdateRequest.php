@@ -27,12 +27,13 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\User;
+use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
  * Class UserUpdateRequest
  */
-class UserUpdateRequest extends Request
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

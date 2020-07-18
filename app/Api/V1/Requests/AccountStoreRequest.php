@@ -26,14 +26,18 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AccountStoreRequest
  *
  * @codeCoverageIgnore
  */
-class AccountStoreRequest extends Request
+class AccountStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes, AppendsLocationData;
 
     /**
      * Authorize logged in users.

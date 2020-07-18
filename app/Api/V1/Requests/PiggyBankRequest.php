@@ -27,6 +27,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Rules\ZeroOrMore;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  *
@@ -35,7 +36,7 @@ use FireflyIII\Rules\ZeroOrMore;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class PiggyBankRequest extends Request
+class PiggyBankRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

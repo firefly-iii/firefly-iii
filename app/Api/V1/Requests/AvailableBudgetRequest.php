@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class AvailableBudgetRequest
  *
  * @codeCoverageIgnore
  */
-class AvailableBudgetRequest extends Request
+class AvailableBudgetRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

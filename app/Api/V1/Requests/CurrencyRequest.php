@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
@@ -32,7 +33,7 @@ use FireflyIII\Rules\IsBoolean;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class CurrencyRequest extends Request
+class CurrencyRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

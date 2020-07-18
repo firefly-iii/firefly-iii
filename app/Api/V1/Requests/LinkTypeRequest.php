@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\LinkType;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
@@ -33,7 +34,7 @@ use Illuminate\Validation\Rule;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class LinkTypeRequest extends Request
+class LinkTypeRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

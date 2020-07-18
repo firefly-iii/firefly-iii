@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class DataDestroyRequest
  */
-class DataDestroyRequest extends Request
+class DataDestroyRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

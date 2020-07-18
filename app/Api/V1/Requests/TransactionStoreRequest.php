@@ -31,13 +31,14 @@ use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionStoreRequest
  */
-class TransactionStoreRequest extends Request
+class TransactionStoreRequest extends FormRequest
 {
     use TransactionValidation, GroupValidation, CurrencyValidation;
 

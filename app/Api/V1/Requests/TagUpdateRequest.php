@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TagUpdateRequest
@@ -32,7 +33,7 @@ use FireflyIII\Models\Location;
  * @codeCoverageIgnore
  *
  */
-class TagUpdateRequest extends Request
+class TagUpdateRequest extends FormRequest
 {
 
     /**

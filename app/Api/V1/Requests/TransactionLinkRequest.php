@@ -26,13 +26,14 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  *
  * Class TransactionLinkRequest
  */
-class TransactionLinkRequest extends Request
+class TransactionLinkRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

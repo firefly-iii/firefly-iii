@@ -24,12 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class AccountObjectGroupUpdateRequestUpdateRequest
  *
  * @codeCoverageIgnore
  */
-class ObjectGroupUpdateRequest extends Request
+class ObjectGroupUpdateRequest extends FormRequest
 {
 
     /**

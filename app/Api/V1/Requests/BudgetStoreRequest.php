@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
@@ -31,7 +32,7 @@ use Illuminate\Validation\Validator;
  *
  * @codeCoverageIgnore
  */
-class BudgetStoreRequest extends Request
+class BudgetStoreRequest extends FormRequest
 {
     /**
      * Authorize logged in users.

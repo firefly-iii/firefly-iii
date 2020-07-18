@@ -30,13 +30,14 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionUpdateRequest
  */
-class TransactionUpdateRequest extends Request
+class TransactionUpdateRequest extends FormRequest
 {
     use TransactionValidation, GroupValidation;
 
