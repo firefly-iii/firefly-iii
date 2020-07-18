@@ -280,7 +280,13 @@ class TransactionGroupTwig extends AbstractExtension
             $amount = bcmul($amount, '-1');
         }
         $destinationType = $array['destination_account_type'] ?? 'invalid';
+        // opening balance and it goes to initial balance? its expense.
         if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // reconciliation and it goes to reconciliation?
+        if ($type === TransactionType::RECONCILIATION && AccountType::RECONCILIATION === $destinationType) {
             $amount = bcmul($amount, '-1');
         }
 
