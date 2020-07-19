@@ -144,27 +144,6 @@ class Amount
     }
 
     /**
-     * @return string
-     */
-    public function getCurrencySymbol(): string
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-        $cache = new CacheProperties;
-        $cache->addProperty('getCurrencySymbol');
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
-
-        $cache->store($currency->symbol);
-
-        return $currency->symbol;
-    }
-
-    /**
      * @return \FireflyIII\Models\TransactionCurrency
      */
     public function getDefaultCurrency(): TransactionCurrency
@@ -237,8 +216,8 @@ class Amount
 
         $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
 
-        $positivePrefixed = $fmt->getAttribute(NumberFormatter::POSITIVE_PREFIX) !== '';
-        $negativePrefixed = $fmt->getAttribute(NumberFormatter::NEGATIVE_PREFIX) !== '';
+        $positivePrefixed = '' !== $fmt->getAttribute(NumberFormatter::POSITIVE_PREFIX);
+        $negativePrefixed = '' !== $fmt->getAttribute(NumberFormatter::NEGATIVE_PREFIX);
 
         $positive = ($positivePrefixed) ? '%s %v' : '%v %s';
         $negative = ($negativePrefixed) ? '%s %v' : '%v %s';
