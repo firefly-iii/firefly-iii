@@ -75,25 +75,6 @@ class TagController extends Controller
     }
 
     /**
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function cloud(DateRequest $request): JsonResponse
-    {
-        // parameters for boxes:
-        $dates = $request->getAll();
-        $start = $dates['start'];
-        $end   = $dates['end'];
-
-        // get all tags:
-        $tags  = $this->repository->get();
-        $cloud = $this->getTagCloud($tags, $start, $end);
-
-        return response()->json($cloud);
-    }
-
-    /**
      * Delete the resource.
      *
      * @param Tag $tag
@@ -283,57 +264,5 @@ class TagController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
-    }
-
-    /**
-     * @param array $cloud
-     * @param float $min
-     * @param float $max
-     *
-     * @return array
-     */
-    private function analyseTagCloud(array $cloud, float $min, float $max): array
-    {
-        foreach (array_keys($cloud['tags']) as $index) {
-            $cloud['tags'][$index]['relative'] = round($cloud['tags'][$index]['size'] / $max, 4);
-        }
-        $cloud['min'] = $min;
-        $cloud['max'] = $max;
-
-        return $cloud;
-    }
-
-    /**
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    private function getTagCloud(Collection $tags, Carbon $start, Carbon $end): array
-    {
-        $min   = null;
-        $max   = 0;
-        $cloud = [
-            'tags' => [],
-        ];
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $earned = (float) $this->repository->earnedInPeriod($tag, $start, $end);
-            $spent  = (float) $this->repository->spentInPeriod($tag, $start, $end);
-            $size   = ($spent * -1) + $earned;
-            $min    = $min ?? $size;
-            if ($size > 0) {
-                $max             = $size > $max ? $size : $max;
-                $cloud['tags'][] = [
-                    'tag'  => $tag->tag,
-                    'id'   => $tag->id,
-                    'size' => $size,
-                ];
-            }
-        }
-        $cloud = $this->analyseTagCloud($cloud, $min, $max);
-
-        return $cloud;
     }
 }
