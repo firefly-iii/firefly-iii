@@ -49,7 +49,7 @@
                     :open-on-empty=true
                     :open-on-focus=true
                     v-on:input="selectedItem"
-                    :async-src="accountAutoCompleteURI"
+                    :async-function="aSyncFunction"
                     v-model="name"
                     :target="target"
                     item-key="name_with_balance"
@@ -133,6 +133,15 @@
         },
         methods:
             {
+                aSyncFunction: function (query, done) {
+                    axios.get(this.accountAutoCompleteURI + query)
+                        .then(res => {
+                            done(res.data);
+                        })
+                        .catch(err => {
+                            // any error handler
+                        })
+                },
                 hasError: function () {
                     return this.error.length > 0;
                 },
