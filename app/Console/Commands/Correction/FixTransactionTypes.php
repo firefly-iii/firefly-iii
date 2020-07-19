@@ -52,7 +52,7 @@ class FixTransactionTypes extends Command
 
             return 0;
         }
-        $this->line(sprintf('All transaction journals are of the correct type (in %s seconds).', $end));
+        $this->line(sprintf('All transaction journals are of the correct transaction type (in %s seconds).', $end));
 
         return 0;
     }
