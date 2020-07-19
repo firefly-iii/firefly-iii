@@ -65,7 +65,7 @@
                                     </transaction-description>
                                     <account-select
                                             inputName="source[]"
-                                            v-bind:title="$t('firefly.source_account')"
+                                            v-bind:inputDescription="$t('firefly.source_account')"
                                             :accountName="transaction.source_account.name"
                                             :accountTypeFilters="transaction.source_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
@@ -77,7 +77,7 @@
                                     ></account-select>
                                     <account-select
                                             inputName="destination[]"
-                                            v-bind:title="$t('firefly.destination_account')"
+                                            v-bind:inputDescription="$t('firefly.destination_account')"
                                             :accountName="transaction.destination_account.name"
                                             :accountTypeFilters="transaction.destination_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"

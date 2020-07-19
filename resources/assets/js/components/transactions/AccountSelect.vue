@@ -20,14 +20,14 @@
 <template>
     <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <div class="col-sm-12 text-sm">
-            {{ title }}
+            {{ inputDescription }}
         </div>
         <div class="col-sm-12">
             <div class="input-group">
                 <input
                         ref="input"
                         type="text"
-                        :placeholder="title"
+                        :placeholder="inputDescription"
                         :data-index="index"
                         autocomplete="off"
                         data-role="input"
@@ -36,7 +36,7 @@
                         class="form-control"
                         v-on:submit.prevent
                         :name="inputName"
-                        :title="title">
+                        :title="inputDescription">
                 <span class="input-group-btn">
             <button
                     v-on:click="clearSource"
@@ -65,7 +65,7 @@
     export default {
         props: {
             inputName: String,
-            title: String,
+            inputDescription: String,
             index: Number,
             transactionType: String,
             error: Array,

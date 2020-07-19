@@ -66,7 +66,7 @@
                                     </transaction-description>
                                     <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                                     inputName="source[]"
-                                                    v-bind:title="$t('firefly.source_account')"
+                                                    v-bind:inputDescription="$t('firefly.source_account')"
                                                     :accountName="transaction.source_account.name"
                                                     :accountTypeFilters="transaction.source_account.allowed_types"
                                                     :transactionType="transactionType"
@@ -86,7 +86,7 @@
                                     </div>
                                     <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                                     inputName="destination[]"
-                                                    v-bind:title="$t('firefly.destination_account')"
+                                                    v-bind:inputDescription="$t('firefly.destination_account')"
                                                     :accountName="transaction.destination_account.name"
                                                     :accountTypeFilters="transaction.destination_account.allowed_types"
                                                     :transactionType="transactionType"
