@@ -76,7 +76,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:migrate-recurrence-meta',
             'firefly-iii:migrate-tag-locations',
 
-            // there are 15 verify commands.
+            // there are 16 verify commands.
             'firefly-iii:fix-piggies',
             'firefly-iii:create-link-types',
             'firefly-iii:create-access-tokens',
@@ -94,6 +94,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:fix-long-descriptions',
             'firefly-iii:fix-recurring-transactions',
             'firefly-iii:unify-group-accounts',
+            'firefly-iii:fix-transaction-types',
 
             // two report commands
             'firefly-iii:report-empty-objects',

@@ -185,6 +185,7 @@
       "@php artisan firefly-iii:fix-long-descriptions",
       "@php artisan firefly-iii:fix-recurring-transactions",
       "@php artisan firefly-iii:unify-group-accounts",
+      "@php artisan firefly-iii:fix-transaction-types",
 
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",

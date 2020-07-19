@@ -156,7 +156,7 @@ class FireflyConfig
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
         }
-        Log::debug('Set new value for ', ['name' => $name]);
+        //Log::debug('Set new value for ', ['name' => $name]);
         /** @var Configuration $config */
         try {
             $config = Configuration::whereName($name)->first();
@@ -168,7 +168,7 @@ class FireflyConfig
             return $item;
         }
         if (null === $config) {
-            Log::debug('Does not exist yet ', ['name' => $name]);
+            //Log::debug('Does not exist yet ', ['name' => $name]);
             /** @var Configuration $item */
             $item       = new Configuration;
             $item->name = $name;
@@ -179,7 +179,7 @@ class FireflyConfig
 
             return $item;
         }
-        Log::debug('Exists already, overwrite value.', ['name' => $name]);
+        //Log::debug('Exists already, overwrite value.', ['name' => $name]);
         $config->data = $value;
         $config->save();
         Cache::forget('ff-config-' . $name);
