@@ -90,8 +90,8 @@ class Kernel extends HttpKernel
                 StartFireflySession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
-                CreateFreshApiToken::class,
                 AuthenticateSession::class,
+                CreateFreshApiToken::class,
             ],
 
             // only the basic variable binders.
@@ -155,8 +155,8 @@ class Kernel extends HttpKernel
                 MFAMiddleware::class,
                 Range::class,
                 Binder::class,
-                CreateFreshApiToken::class,
                 InterestingMessage::class,
+                CreateFreshApiToken::class,
             ],
             // MUST be logged in
             // MUST have 2fa
