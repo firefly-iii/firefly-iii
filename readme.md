@@ -111,6 +111,10 @@ Several users have built pretty awesome stuff around the Firefly III API. Check 
 * [A Telegram bot by Valmik](https://github.com/vjFaLk/firefly-bot)
 * [An Android app by Daniel Quah](https://github.com/emansih/FireflyMobile)
 * [A tool to import from Plaid by George Hahn](https://gitlab.com/GeorgeHahn/firefly-plaid-connector)
+* [A tool to migrate from YNAB4 to Firefly III by maroux](https://github.com/maroux/Firefly-YNAB4-Importer)
+
+I wrote some tools myself as well, mainly to support importing from various sources:
+
 * [Firefly III CSV importer](http://github.com/firefly-iii/csv-importer)
 * [Firefly III bunq 🌈 importer](http://github.com/firefly-iii/bunq-importer)
 * [Firefly III YNAB importer](http://github.com/firefly-iii/ynab-importer)
