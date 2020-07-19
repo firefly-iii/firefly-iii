@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Amount;
-use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -53,62 +52,6 @@ use Log;
  */
 class AutoCompleteController extends Controller
 {
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function accounts(Request $request): JsonResponse
-    {
-        $accountTypes = explode(',', $request->get('types') ?? '');
-        $search       = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes  = [AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
-        $balanceTypes         = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
-        $filteredAccountTypes = [];
-        foreach ($accountTypes as $type) {
-            if (in_array($type, $allowedAccountTypes, true)) {
-                $filteredAccountTypes[] = $type;
-            }
-        }
-        if (0 === count($filteredAccountTypes)) {
-            $filteredAccountTypes = $allowedAccountTypes;
-        }
-        Log::debug(sprintf('Now in accounts("%s"). Filtering results.', $search), $filteredAccountTypes);
-
-        $return          = [];
-        $result          = $repository->searchAccount((string) $search, $filteredAccountTypes);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $nameWithBalance = $account->name;
-            $currency        = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-
-            if (in_array($account->accountType->type, $balanceTypes, true)) {
-                $balance         = app('steam')->balance($account, new Carbon);
-                $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
-            }
-
-            $return[] = [
-                'id'                      => $account->id,
-                'name'                    => $account->name,
-                'name_with_balance'       => $nameWithBalance,
-                'type'                    => $account->accountType->type,
-                'currency_id'             => $currency->id,
-                'currency_name'           => $currency->name,
-                'currency_code'           => $currency->code,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-        }
-
-
-        return response()->json($return);
-    }
 
     /**
      * Searches in the titles of all transaction journals.
@@ -187,53 +130,6 @@ class AutoCompleteController extends Controller
         return response()->json($array);
     }
 
-    /**
-     * An auto-complete specifically for asset accounts and liabilities, used when mass updating and for rules mostly.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function assetAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string) $search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function bills(Request $request): JsonResponse
-    {
-        $query = (string) $request->get('search');
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $result     = $repository->searchBill($query);
-
-        return response()->json($result->toArray());
-    }
 
     /**
      * @param Request $request
@@ -312,37 +208,6 @@ class AutoCompleteController extends Controller
         return response()->json($result);
     }
 
-    /**
-     * An auto-complete specifically for expense accounts, used when mass updating mostly.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function expenseAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::EXPENSE];
-        Log::debug(sprintf('Now in expenseAccounts(%s). Filtering results.', $search), $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string) $search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
 
     /**
      * An auto-complete specifically for expense accounts, used when mass updating mostly.
@@ -404,37 +269,6 @@ class AutoCompleteController extends Controller
         return response()->json($response);
     }
 
-    /**
-     * An auto-complete specifically for revenue accounts, used when converting transactions mostly.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function revenueAccounts(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-
-        // filter the account types:
-        $allowedAccountTypes = [AccountType::REVENUE];
-        Log::debug('Now in revenueAccounts(). Filtering results.', $allowedAccountTypes);
-
-        $return = [];
-        $result = $repository->searchAccount((string) $search, $allowedAccountTypes);
-
-        /** @var Account $account */
-        foreach ($result as $account) {
-            $return[] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'type' => $account->accountType->type,
-            ];
-        }
-
-        return response()->json($return);
-    }
 
     /**
      * @param Request $request

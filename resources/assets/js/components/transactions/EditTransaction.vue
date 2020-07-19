@@ -307,21 +307,7 @@
             },
             deleteTransaction(index, event) {
                 event.preventDefault();
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        // TODO empty iff?
-                    }
-                }
-
                 this.transactions.splice(index, 1);
-
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        // TODO empty iff?
-                    }
-                }
             },
             clearDestination(index) {
                 // console.log('clearDestination(' + index + ')');
@@ -380,6 +366,12 @@
 
                 }
             },
+            ucFirst(string) {
+                if (typeof string === 'string') {
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                }
+                return null;
+            },
             processIncomingGroupRow(transaction) {
                 // console.log(transaction);
                 this.setTransactionType(transaction.type);
@@ -390,6 +382,11 @@
                         newTags.push({text: transaction.tags[key], tiClasses: []});
                     }
                 }
+                console.log('source allowed types for a ' + transaction.type);
+                //console.log(window.expectedSourceTypes.source[transaction.type]);
+                console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
+                console.log('destination allowed types for a ' + transaction.type);
+                console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
 
                 this.transactions.push({
                                            transaction_journal_id: transaction.transaction_journal_id,
@@ -445,7 +442,7 @@
                                                currency_name: transaction.currency_name,
                                                currency_code: transaction.currency_code,
                                                currency_decimal_places: transaction.currency_decimal_places,
-                                               allowed_types: [transaction.source_type]
+                                               allowed_types: window.expectedSourceTypes.source[this.ucFirst(transaction.type)]
                                            },
                                            destination_account: {
                                                id: transaction.destination_id,
@@ -455,9 +452,21 @@
                                                currency_name: transaction.currency_name,
                                                currency_code: transaction.currency_code,
                                                currency_decimal_places: transaction.currency_decimal_places,
-                                               allowed_types: [transaction.destination_type]
+                                               allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                                            }
                                        });
+            },
+            limitSourceType: function (type) {
+                // let i;
+                // for (i = 0; i < this.transactions.length; i++) {
+                //     this.transactions[i].source_account.allowed_types = [type];
+                // }
+            },
+            limitDestinationType: function (type) {
+                // let i;
+                // for (i = 0; i < this.transactions.length; i++) {
+                //     this.transactions[i].destination_account.allowed_types = [type];
+                // }
             },
             convertData: function () {
                 let data = {

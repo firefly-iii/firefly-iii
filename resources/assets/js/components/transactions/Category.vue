@@ -85,7 +85,7 @@
         },
         mounted() {
             this.target = this.$refs.input;
-            this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/categories?search=";
+            this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/categories?query=";
         },
         methods: {
             hasError: function () {

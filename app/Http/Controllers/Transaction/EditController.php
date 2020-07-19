@@ -77,15 +77,25 @@ class EditController extends Controller
         $repository           = app(AccountRepositoryInterface::class);
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
         $accountToTypes       = config('firefly.account_to_transaction');
-        $defaultCurrency      = app('amount')->getDefaultCurrency();
-        $cash                 = $repository->getCashAccount();
-        $previousUri          = $this->rememberPreviousUri('transactions.edit.uri');
-        $parts                = parse_url($previousUri);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUri          = str_replace($search, '', $previousUri);
+        $expectedSourceTypes  = config('firefly.expected_source_types');
+        $allowedSourceDests   = config('firefly.source_dests');
+        //
+
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $cash            = $repository->getCashAccount();
+        $previousUri     = $this->rememberPreviousUri('transactions.edit.uri');
+        $parts           = parse_url($previousUri);
+        $search          = sprintf('?%s', $parts['query'] ?? '');
+        $previousUri     = str_replace($search, '', $previousUri);
 
 
-        return view('transactions.edit', compact('cash', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency', 'previousUri'));
+        return view(
+            'transactions.edit',
+            compact(
+                'cash', 'allowedSourceDests', 'expectedSourceTypes', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency',
+                'previousUri'
+            )
+        );
     }
 
 }

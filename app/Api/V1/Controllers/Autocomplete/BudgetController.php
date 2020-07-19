@@ -1,6 +1,6 @@
 <?php
 /**
- * BillController.php
+ * BudgetController.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -26,20 +26,20 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class BillController
+ * Class BudgetController
  */
-class BillController extends Controller
+class BudgetController extends Controller
 {
-    private BillRepositoryInterface $repository;
+    private BudgetRepositoryInterface $repository;
 
     /**
-     * BillController constructor.
+     * BudgetController constructor.
      */
     public function __construct()
     {
@@ -48,7 +48,7 @@ class BillController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user             = auth()->user();
-                $this->repository = app(BillRepositoryInterface::class);
+                $this->repository = app(BudgetRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -61,12 +61,12 @@ class BillController extends Controller
      *
      * @return JsonResponse
      */
-    public function bills(AutocompleteRequest $request): JsonResponse
+    public function budgets(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchBill($data['query']);
+        $result   = $this->repository->searchBudget($data['query']);
         $filtered = $result->map(
-            static function (Bill $item) {
+            static function (Budget $item) {
                 return [
                     'id'   => $item->id,
                     'name' => $item->name,
@@ -74,8 +74,6 @@ class BillController extends Controller
             }
         );
 
-
-        return response()->json($filtered->toArray());
+        return response()->json($filtered);
     }
-
 }

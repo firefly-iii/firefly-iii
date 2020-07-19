@@ -63,6 +63,8 @@ Route::group(
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
+        Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
+        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
     }
 );
 
