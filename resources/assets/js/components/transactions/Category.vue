@@ -49,7 +49,7 @@
                     :open-on-empty=true
                     :open-on-focus=true
                     v-on:input="selectedItem"
-                    :async-src="categoryAutoCompleteURI"
+                    :async-function="categoryAutoCompleteURI"
                     v-model="name"
                     :target="target"
                     item-key="name"
@@ -90,6 +90,15 @@
         methods: {
             hasError: function () {
                 return this.error.length > 0;
+            },
+            aSyncFunction: function (query, done) {
+                axios.get(this.categoryAutoCompleteURI + query)
+                    .then(res => {
+                        done(res.data);
+                    })
+                    .catch(err => {
+                        // any error handler
+                    })
             },
             handleInput(e) {
                 if (typeof this.$refs.input.value === 'string') {
