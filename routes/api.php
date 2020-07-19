@@ -57,6 +57,15 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete', 'prefix' => 'autocomplete',
+     'as'        => 'api.v1.autocomplete.',],
+    static function () {
+        // Auto complete routes
+        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
      'as'        => 'api.v1.object-groups.',],
     static function () {

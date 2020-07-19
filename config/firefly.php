@@ -616,7 +616,7 @@ return [
     'allowed_opposing_types'    => [
         'source'      => [
             AccountType::ASSET           => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE,
-                                             AccountType::LOAN, AccountType::RECONCILIATION,],
+                                             AccountType::LOAN, AccountType::RECONCILIATION, AccountType::MORTGAGE],
             AccountType::CASH            => [AccountType::ASSET],
             AccountType::DEBT            => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
                                              AccountType::MORTGAGE,],
