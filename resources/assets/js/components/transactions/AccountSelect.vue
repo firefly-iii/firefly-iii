@@ -104,10 +104,9 @@
         },
         mounted() {
             this.target = this.$refs.input;
-            let types = this.allowedTypes.join(',');
+            this.updateACURI(this.allowedTypes.join(','));
             // console.log('mounted(): this.name = this.accountName (' + this.accountName + ')');
             this.name = this.accountName;
-            this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
             this.triggerTransactionType();
         },
 
@@ -124,7 +123,7 @@
                 if (0 === this.accountTypeFilters.length) {
                     types = this.defaultAccountTypeFilters.join(',');
                 }
-                this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&search=";
+                this.updateACURI(types);
             },
             name() {
                 // console.log('Watch: name()');
@@ -141,6 +140,15 @@
                         .catch(err => {
                             // any error handler
                         })
+                },
+                updateACURI: function (types) {
+                    this.accountAutoCompleteURI =
+                        document.getElementsByTagName('base')[0].href +
+                        'api/v1/autocomplete/accounts' +
+                        '?types=' +
+                        types +
+                        '&query=';
+                    console.log('Auto complete URI is now ' + this.accountAutoCompleteURI);
                 },
                 hasError: function () {
                     return this.error.length > 0;
