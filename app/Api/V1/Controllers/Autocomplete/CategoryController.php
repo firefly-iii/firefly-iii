@@ -60,7 +60,7 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function budgets(AutocompleteRequest $request): JsonResponse
+    public function categories(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
         $result   = $this->repository->searchCategory($data['query']);

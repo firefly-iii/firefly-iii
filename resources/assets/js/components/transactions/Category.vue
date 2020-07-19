@@ -49,7 +49,7 @@
                     :open-on-empty=true
                     :open-on-focus=true
                     v-on:input="selectedItem"
-                    :async-function="categoryAutoCompleteURI"
+                    :async-function="aSyncFunction"
                     v-model="name"
                     :target="target"
                     item-key="name"
