@@ -72,13 +72,12 @@ class Amount
         $locale = app('steam')->getLocale();
 
         $coloured  = $coloured ?? true;
-        $float     = round($amount, 12);
 
         $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format($float);
+        $result = $fmt->format($amount);
 
         if (true === $coloured) {
             if ($amount > 0) {
