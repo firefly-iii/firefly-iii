@@ -222,7 +222,7 @@ class FixAccountTypes extends Command
      */
     private function inspectJournal(TransactionJournal $journal): void
     {
-        Log::debug(sprintf('Now trying to fix journal #%d', $journal->id));
+        //Log::debug(sprintf('Now trying to fix journal #%d', $journal->id));
         $count = $journal->transactions()->count();
         if (2 !== $count) {
             Log::debug(sprintf('Journal has %d transactions, so cant fix.', $count));
