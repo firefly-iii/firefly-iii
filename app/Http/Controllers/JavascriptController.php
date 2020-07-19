@@ -144,9 +144,8 @@ class JavascriptController extends Controller
             $currency = app('amount')->getDefaultCurrency();
         }
 
-        $localeconv                = app('amount')->getLocaleInfo();
-        $accounting                = app('amount')->getJsConfig($localeconv);
-        $localeconv['frac_digits'] = $currency->decimal_places;
+        $accountingLocaleInfo                = app('amount')->getAccountingLocaleInfo();
+        $accountingLocaleInfo['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
@@ -154,14 +153,13 @@ class JavascriptController extends Controller
         $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
-            'currencyCode'    => $currency->code,
-            'currencySymbol'  => $currency->symbol,
-            'accounting'      => $accounting,
-            'localeconv'      => $localeconv,
-            'language'        => $lang,
-            'dateRangeTitle'  => $dateRange['title'],
-            'dateRangeConfig' => $dateRange['configuration'],
-            'uid'             => $uid,
+            'currencyCode'          => $currency->code,
+            'currencySymbol'        => $currency->symbol,
+            'accountingLocaleInfo'  => $accountingLocaleInfo,
+            'language'              => $lang,
+            'dateRangeTitle'        => $dateRange['title'],
+            'dateRangeConfig'       => $dateRange['configuration'],
+            'uid'                   => $uid,
         ];
         $request->session()->keep(['two-factor-secret']);
 
