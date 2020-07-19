@@ -105,6 +105,7 @@ class InstallController extends Controller
             'firefly-iii:fix-long-descriptions'        => [],
             'firefly-iii:fix-recurring-transactions'   => [],
             'firefly-iii:unify-group-accounts'         => [],
+            'firefly-iii:fix-transaction-types'        => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
