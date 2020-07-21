@@ -55,11 +55,14 @@ class AutocompleteRequest extends FormRequest
         if ('' !== $types) {
             $array = explode(',', $types);
         }
+        $limit = $this->integer('limit');
+        $limit = 0 === $limit ? 10 : $limit;
 
         return [
             'types' => $array,
             'query' => $this->string('query'),
             'date'  => $this->date('date'),
+            'limit' => $limit,
         ];
     }
 
@@ -68,6 +71,8 @@ class AutocompleteRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'limit' => 'min:0|max:25'
+        ];
     }
 }

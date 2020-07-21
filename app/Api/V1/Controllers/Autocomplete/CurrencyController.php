@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -57,10 +56,11 @@ class CurrencyController extends Controller
     }
 
     /**
+     * TODO add limit
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
-     * @codeCoverageIgnore
      */
     public function currencyWithCode(AutocompleteRequest $request): JsonResponse
     {

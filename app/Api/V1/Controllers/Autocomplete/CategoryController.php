@@ -38,7 +38,7 @@ class CategoryController extends Controller
     private CategoryRepositoryInterface $repository;
 
     /**
-     * BudgetController constructor.
+     * CategoryController constructor.
      */
     public function __construct()
     {
@@ -56,6 +56,7 @@ class CategoryController extends Controller
     }
 
     /**
+     * TODO add limit
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

@@ -121,40 +121,7 @@ class AutoCompleteController extends Controller
 
         return response()->json($array);
     }
-
-    /**
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function piggyBanks(): JsonResponse
-    {
-        /** @var PiggyBankRepositoryInterface $repository */
-        $repository = app(PiggyBankRepositoryInterface::class);
-
-        /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
-
-        $piggies         = $repository->getPiggyBanks();
-        $defaultCurrency = Amount::getDefaultCurrency();
-        $response        = [];
-        /** @var PiggyBank $piggy */
-        foreach ($piggies as $piggy) {
-            $currency                = $accountRepos->getAccountCurrency($piggy->account) ?? $defaultCurrency;
-            $currentAmount           = $repository->getRepetition($piggy)->currentamount ?? '0';
-            $piggy->objectGroup      = $piggy->objectGroups->first();
-            $piggy->name_with_amount = sprintf(
-                '%s (%s / %s)',
-                $piggy->name,
-                app('amount')->formatAnything($currency, $currentAmount, false),
-                app('amount')->formatAnything($currency, $piggy->targetamount, false),
-            );
-            $response[]              = $piggy->toArray();
-        }
-
-        return response()->json($response);
-    }
-
-
+    
     /**
      * @param Request $request
      *

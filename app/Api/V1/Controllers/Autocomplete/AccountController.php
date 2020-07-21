@@ -44,9 +44,7 @@ class AccountController extends Controller
     private AccountRepositoryInterface $repository;
 
     /**
-     * TransactionController constructor.
-     *
-     * @codeCoverageIgnore
+     * AccountController constructor.
      */
     public function __construct()
     {
@@ -65,6 +63,7 @@ class AccountController extends Controller
     }
 
     /**
+     * TODO add limit
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
