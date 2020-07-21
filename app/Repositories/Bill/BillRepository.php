@@ -661,14 +661,15 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchBill(string $query): Collection
+    public function searchBill(string $query, int $limit): Collection
     {
         $query = sprintf('%%%s%%', $query);
 
-        return $this->user->bills()->where('name', 'LIKE', $query)->get();
+        return $this->user->bills()->where('name', 'LIKE', $query)->take($limit)->get();
     }
 
     /**

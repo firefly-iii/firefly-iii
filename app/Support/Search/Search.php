@@ -235,7 +235,7 @@ class Search implements SearchInterface
                     }
                     break;
                 case 'bill':
-                    $result = $this->billRepository->searchBill($modifier['value']);
+                    $result = $this->billRepository->searchBill($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBills($result);
                     }

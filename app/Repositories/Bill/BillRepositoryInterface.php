@@ -287,10 +287,11 @@ interface BillRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchBill(string $query): Collection;
+    public function searchBill(string $query, int $limit): Collection;
 
     /**
      * @param User $user

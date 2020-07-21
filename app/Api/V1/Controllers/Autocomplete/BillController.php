@@ -65,7 +65,7 @@ class BillController extends Controller
     public function bills(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchBill($data['query']);
+        $result   = $this->repository->searchBill($data['query'], $data['limit']);
         $filtered = $result->map(
             static function (Bill $item) {
                 return [
