@@ -1,6 +1,6 @@
 <?php
 /**
- * CategoryController.php
+ * ObjectGroupController.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,22 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class CategoryController
+ * Class ObjectGroupController
  */
-class CategoryController extends Controller
+class ObjectGroupController extends Controller
 {
-    private CategoryRepositoryInterface $repository;
+    private ObjectGroupRepositoryInterface $repository;
 
     /**
-     * BudgetController constructor.
+     * CurrencyController constructor.
      */
     public function __construct()
     {
@@ -47,7 +48,7 @@ class CategoryController extends Controller
             function ($request, $next) {
                 /** @var User $user */
                 $user             = auth()->user();
-                $this->repository = app(CategoryRepositoryInterface::class);
+                $this->repository = app(ObjectGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -60,19 +61,21 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function categories(AutocompleteRequest $request): JsonResponse
+    public function objectGroups(AutocompleteRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $result   = $this->repository->searchCategory($data['query']);
-        $filtered = $result->map(
-            static function (Category $item) {
-                return [
-                    'id'   => $item->id,
-                    'name' => $item->name,
-                ];
-            }
-        );
+        $data   = $request->getData();
+        $return = [];
+        $result = $this->repository->search($data['query']);
 
-        return response()->json($filtered);
+        /** @var ObjectGroup $account */
+        foreach ($result as $objectGroup) {
+            $return[] = [
+                'id'    => $objectGroup->id,
+                'title' => $objectGroup->title,
+            ];
+        }
+
+        return response()->json($return);
     }
+
 }

@@ -192,11 +192,11 @@
                             enabled: true
                         }
                     ];
-                    for (const key in res.data) {
-                        if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                            if (res.data[key].enabled) {
-                                this.currencies.push(res.data[key]);
-                                this.enabledCurrencies.push(res.data[key]);
+                    for (const key in res.data.data) {
+                        if (res.data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                            if (res.data.data[key].enabled) {
+                                this.currencies.push(res.data.data[key]);
+                                this.enabledCurrencies.push(res.data.data[key]);
                             }
                         }
                     }

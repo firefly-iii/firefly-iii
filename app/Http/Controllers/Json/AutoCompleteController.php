@@ -24,16 +24,9 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Amount;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -42,7 +35,6 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Log;
 
 /**
  * Class AutoCompleteController.
@@ -128,113 +120,6 @@ class AutoCompleteController extends Controller
 
 
         return response()->json($array);
-    }
-
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function budgets(Request $request): JsonResponse
-    {
-        $search = (string) $request->get('search');
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $result     = $repository->searchBudget($search);
-
-        return response()->json($result->toArray());
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function categories(Request $request): JsonResponse
-    {
-        $query = (string) $request->get('search');
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $result     = $repository->searchCategory($query);
-
-        return response()->json($result->toArray());
-    }
-
-    /**
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function currencies(): JsonResponse
-    {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $return     = [];
-        $collection = $repository->getAll();
-
-        /** @var TransactionCurrency $currency */
-        foreach ($collection as $currency) {
-            $return[] = [
-                'id'             => $currency->id,
-                'name'           => $currency->name,
-                'code'           => $currency->code,
-                'symbol'         => $currency->symbol,
-                'enabled'        => $currency->enabled,
-                'decimal_places' => $currency->decimal_places,
-            ];
-        }
-
-        return response()->json($return);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function currencyNames(Request $request): JsonResponse
-    {
-        $query = (string) $request->get('search');
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $result     = $repository->searchCurrency($query)->toArray();
-        foreach ($result as $index => $item) {
-            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
-        }
-
-        return response()->json($result);
-    }
-
-
-    /**
-     * An auto-complete specifically for expense accounts, used when mass updating mostly.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function objectGroups(Request $request): JsonResponse
-    {
-        $search = $request->get('search');
-
-        /** @var ObjectGroupRepositoryInterface $repository */
-        $repository = app(ObjectGroupRepositoryInterface::class);
-
-        $return = [];
-        $result = $repository->search((string) $search);
-
-        /** @var ObjectGroup $account */
-        foreach ($result as $objectGroup) {
-            $return[] = [
-                'id'    => $objectGroup->id,
-                'title' => $objectGroup->title,
-            ];
-        }
-
-        return response()->json($return);
     }
 
     /**
