@@ -57,7 +57,6 @@ class ObjectGroupController extends Controller
     }
 
     /**
-     * TODO add limit
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -66,7 +65,7 @@ class ObjectGroupController extends Controller
     {
         $data   = $request->getData();
         $return = [];
-        $result = $this->repository->search($data['query']);
+        $result = $this->repository->search($data['query'], $data['limit']);
 
         /** @var ObjectGroup $account */
         foreach ($result as $objectGroup) {
