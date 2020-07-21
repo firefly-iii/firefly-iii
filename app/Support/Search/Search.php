@@ -229,7 +229,7 @@ class Search implements SearchInterface
                     }
                     break;
                 case 'category':
-                    $result = $this->categoryRepository->searchCategory($modifier['value']);
+                    $result = $this->categoryRepository->searchCategory($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setCategories($result);
                     }

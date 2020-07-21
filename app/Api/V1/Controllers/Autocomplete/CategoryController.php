@@ -56,7 +56,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * TODO add limit
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -64,7 +63,7 @@ class CategoryController extends Controller
     public function categories(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchCategory($data['query']);
+        $result   = $this->repository->searchCategory($data['query'], $data['limit']);
         $filtered = $result->map(
             static function (Category $item) {
                 return [
