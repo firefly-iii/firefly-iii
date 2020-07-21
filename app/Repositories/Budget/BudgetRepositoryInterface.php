@@ -138,10 +138,10 @@ interface BudgetRepositoryInterface
 
     /**
      * @param string $query
-     *
+     * @param int $limit
      * @return Collection
      */
-    public function searchBudget(string $query): Collection;
+    public function searchBudget(string $query, int $limit): Collection;
 
     /**
      * @param Budget $budget

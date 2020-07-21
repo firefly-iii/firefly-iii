@@ -238,10 +238,11 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchBudget(string $query): Collection
+    public function searchBudget(string $query, int $limit): Collection
     {
 
         $search = $this->user->budgets();
@@ -251,7 +252,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $search->orderBy('order', 'ASC')
         ->orderBy('name', 'ASC')->where('active', 1);
 
-        return $search->get();
+        return $search->take($limit)->get();
     }
 
     /**

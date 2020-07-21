@@ -248,7 +248,7 @@ class Search implements SearchInterface
                     break;
                     break;
                 case 'budget':
-                    $result = $this->budgetRepository->searchBudget($modifier['value']);
+                    $result = $this->budgetRepository->searchBudget($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBudgets($result);
                     }
