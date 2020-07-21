@@ -276,10 +276,11 @@ interface AccountRepositoryInterface
     /**
      * @param string $query
      * @param array  $types
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchAccount(string $query, array $types): Collection;
+    public function searchAccount(string $query, array $types, int $limit): Collection;
 
     /**
      * @param User $user

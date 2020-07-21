@@ -559,10 +559,11 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param string $query
      * @param array  $types
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchAccount(string $query, array $types): Collection
+    public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
                               ->where('active', 1)
@@ -582,7 +583,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        return $dbQuery->get(['accounts.*']);
+        return $dbQuery->take($limit)->get(['accounts.*']);
     }
 
     /**

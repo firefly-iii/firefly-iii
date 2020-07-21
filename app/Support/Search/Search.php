@@ -214,7 +214,7 @@ class Search implements SearchInterface
                 case 'source':
                     // source can only be asset, liability or revenue account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
@@ -223,7 +223,7 @@ class Search implements SearchInterface
                 case 'destination':
                     // source can only be asset, liability or expense account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }

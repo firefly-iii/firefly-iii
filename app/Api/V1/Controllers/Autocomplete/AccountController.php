@@ -63,7 +63,6 @@ class AccountController extends Controller
     }
 
     /**
-     * TODO add limit
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
@@ -78,7 +77,7 @@ class AccountController extends Controller
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
         $return          = [];
-        $result          = $repository->searchAccount((string) $query, $types);
+        $result          = $repository->searchAccount((string) $query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
