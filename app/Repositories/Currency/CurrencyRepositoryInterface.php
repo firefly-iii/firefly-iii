@@ -230,10 +230,11 @@ interface CurrencyRepositoryInterface
 
     /**
      * @param string $search
+     * @param int    $limit
      *
      * @return Collection
      */
-    public function searchCurrency(string $search): Collection;
+    public function searchCurrency(string $search, int $limit): Collection;
 
     /**
      * @param User $user

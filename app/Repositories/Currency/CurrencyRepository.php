@@ -476,17 +476,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param string $search
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchCurrency(string $search): Collection
+    public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::where('enabled', 1);
         if ('' !== $search) {
             $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
         }
 
-        return $query->get();
+        return $query->take($limit)->get();
     }
 
     /**

@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -56,18 +57,50 @@ class CurrencyController extends Controller
     }
 
     /**
-     * TODO add limit
-     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      */
-    public function currencyWithCode(AutocompleteRequest $request): JsonResponse
+    public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
+    {
+        $data       = $request->getData();
+        $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
+        $result     = [];
+
+        /** @var TransactionCurrency $currency */
+        foreach ($collection as $currency) {
+            $result[] = [
+                'id'             => $currency->id,
+                'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
+                'code'           => $currency->code,
+                'symbol'         => $currency->symbol,
+                'decimal_places' => $currency->decimal_places,
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function currencies(AutocompleteRequest $request): JsonResponse
     {
         $data   = $request->getData();
-        $result = $this->repository->searchCurrency($data['query'])->toArray();
-        foreach ($result as $index => $item) {
-            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
+        $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
+        $result     = [];
+
+        /** @var TransactionCurrency $currency */
+        foreach ($collection as $currency) {
+            $result[] = [
+                'id'             => $currency->id,
+                'name'           => $currency->name,
+                'code'           => $currency->code,
+                'symbol'         => $currency->symbol,
+                'decimal_places' => $currency->decimal_places,
+            ];
         }
 
         return response()->json($result);
