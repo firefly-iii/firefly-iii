@@ -146,6 +146,16 @@ interface PiggyBankRepositoryInterface
     public function findByName(string $name): ?PiggyBank;
 
     /**
+     * Search for piggy banks.
+     *
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchPiggyBank(string $query, int $limit): Collection;
+
+    /**
      * @param int $piggyBankId
      *
      * @return PiggyBank|null

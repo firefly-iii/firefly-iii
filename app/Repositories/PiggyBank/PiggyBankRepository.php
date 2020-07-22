@@ -403,4 +403,19 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         $this->user->piggyBanks()->delete();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchPiggyBank(string $query, int $limit): Collection
+    {
+        $search = $this->user->piggyBanks();
+        if ('' !== $query) {
+            $search->where('piggy_banks.name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('piggy_banks.order', 'ASC')
+               ->orderBy('piggy_banks.name', 'ASC')->where('piggy_banks.active', 1);
+
+        return $search->take($limit)->get();
+    }
 }

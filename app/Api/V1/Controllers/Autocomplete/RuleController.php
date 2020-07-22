@@ -26,6 +26,9 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 
+/**
+ * Class RuleController
+ */
 class RuleController extends Controller
 {
 

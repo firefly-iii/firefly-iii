@@ -66,8 +66,10 @@ Route::group(
         Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);
-        Route::get('currencies-with-code', ['uses' => 'CurrencyController@currenciesWithCode', 'as' => 'currenciesWithCode']);
+        Route::get('currencies-with-code', ['uses' => 'CurrencyController@currenciesWithCode', 'as' => 'currencies-with-code']);
         Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
+        Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
+        Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
     }
 );
 
