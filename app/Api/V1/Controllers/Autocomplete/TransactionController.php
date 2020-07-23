@@ -63,7 +63,7 @@ class TransactionController extends Controller
      *
      * @return JsonResponse
      */
-    public function allJournals(AutocompleteRequest $request): JsonResponse
+    public function transactions(AutocompleteRequest $request): JsonResponse
     {
         $data   = $request->getData();
         $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);

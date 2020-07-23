@@ -71,6 +71,7 @@ Route::group(
         Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+        Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
         Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
     }
 );
