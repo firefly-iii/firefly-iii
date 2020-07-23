@@ -74,7 +74,7 @@ function initExpenseACField(fieldName) {
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
-                                               url: 'json/expense-accounts?uid=' + uid,
+                                               url: 'api/v1/autocomplete/accounts?types=Expense account&uid=' + uid,
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
                                                        return {name: name};
@@ -82,7 +82,7 @@ function initExpenseACField(fieldName) {
                                                }
                                            },
                                            remote: {
-                                               url: 'json/expense-accounts?search=%QUERY&uid=' + uid,
+                                               url: 'api/v1/autocomplete/accounts?types=Expense account&query=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
@@ -113,7 +113,7 @@ function initRevenueACField(fieldName) {
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
                                              prefetch: {
-                                                 url: 'json/revenue-accounts?uid=' + uid,
+                                                 url: 'api/v1/autocomplete/accounts?types=Revenue account&uid=' + uid,
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {
                                                          return {name: name};
@@ -121,7 +121,7 @@ function initRevenueACField(fieldName) {
                                                  }
                                              },
                                              remote: {
-                                                 url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
+                                                 url: 'api/v1/autocomplete/accounts?types=Revenue account&query=%QUERY&uid=' + uid,
                                                  wildcard: '%QUERY',
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {

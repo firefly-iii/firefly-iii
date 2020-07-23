@@ -1,6 +1,6 @@
 <?php
 /**
- * TransactionController.php
+ * TransactionTypeController.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -26,58 +26,51 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\User;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class TransactionController
+ * Class TransactionTypeController
  */
-class TransactionController extends Controller
+class TransactionTypeController extends Controller
 {
-
-    private JournalRepositoryInterface $repository;
+    private TransactionTypeRepositoryInterface $repository;
 
     /**
-     * TransactionController constructor.
+     * TransactionTypeController constructor.
      */
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(JournalRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository = app(TransactionTypeRepositoryInterface::class);
 
                 return $next($request);
             }
         );
     }
 
-
     /**
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
-    public function allJournals(AutocompleteRequest $request): JsonResponse
+    public function transactionTypes(AutocompleteRequest $request): JsonResponse
     {
-        $data   = $request->getData();
-        $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+        $data  = $request->getData();
+        $types = $this->repository->searchTypes($data['query'], $data['limit']);
+        $array = [];
 
-        // limit and unique
-        $filtered = $result->unique('description');
-        $array    = [];
-
-        /** @var TransactionJournal $journal */
-        foreach ($filtered as $journal) {
+        /** @var TransactionType $type */
+        foreach ($types as $type) {
+            // different key for consistency.
             $array[] = [
-                'id'          => $journal->id,
-                'name'        => $journal->description,
-                'description' => $journal->description,
+                'id'   => $type->id,
+                'name' => $type->type,
+                'type' => $type->type,
             ];
         }
 

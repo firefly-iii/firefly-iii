@@ -40,7 +40,7 @@ class TagController extends Controller
     private TagRepositoryInterface $repository;
 
     /**
-     * CurrencyController constructor.
+     * TagController constructor.
      */
     public function __construct()
     {

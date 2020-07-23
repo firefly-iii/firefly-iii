@@ -71,14 +71,15 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      * @return Collection
      */
-    public function searchTypes(string $query): Collection
+    public function searchTypes(string $query, int $limit): Collection
     {
         if ('' === $query) {
             return TransactionType::get();
         }
 
-        return TransactionType::where('type', 'LIKE', sprintf('%%%s%%', $query))->get();
+        return TransactionType::where('type', 'LIKE', sprintf('%%%s%%', $query))->take($limit)->get();
     }
 }

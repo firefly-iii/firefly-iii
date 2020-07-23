@@ -67,7 +67,7 @@
         name: "TransactionDescription",
         mounted() {
             this.target = this.$refs.descr;
-            this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/transaction-journals/all?search=";
+            this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/transactions?query=";
             this.$refs.descr.focus();
         },
         components: {

@@ -48,7 +48,8 @@ interface TransactionTypeRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      * @return Collection
      */
-    public function searchTypes(string $query): Collection;
+    public function searchTypes(string $query, int $limit): Collection;
 }

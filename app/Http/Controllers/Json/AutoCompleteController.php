@@ -45,37 +45,6 @@ use Illuminate\Http\Request;
 class AutoCompleteController extends Controller
 {
 
-    /**
-     * Searches in the titles of all transaction journals.
-     * The result is limited to the top 15 unique results.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function allJournals(Request $request): JsonResponse
-    {
-        $search = (string) $request->get('search');
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $result     = $repository->searchJournalDescriptions($search);
-
-        // limit and unique
-        $filtered = $result->unique('description');
-        $limited  = $filtered->slice(0, 15);
-        $array    = $limited->toArray();
-        // duplicate 'description' value into 'name':
-        $array = array_map(
-            static function (array $journal) {
-                $journal['name'] = $journal['description'];
-
-                return $journal;
-            },
-            $array
-        );
-
-        return response()->json(array_values($array));
-    }
 
     /**
      * Searches in the titles of all transaction journals.
@@ -122,26 +91,4 @@ class AutoCompleteController extends Controller
         return response()->json($array);
     }
 
-
-
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function transactionTypes(Request $request): JsonResponse
-    {
-        $query = (string) $request->get('search');
-        /** @var TransactionTypeRepositoryInterface $repository */
-        $repository = app(TransactionTypeRepositoryInterface::class);
-        $array      = $repository->searchTypes($query)->toArray();
-
-        foreach ($array as $index => $item) {
-            // different key for consistency.
-            $array[$index]['name'] = $item['type'];
-        }
-
-        return response()->json($array);
-    }
 }

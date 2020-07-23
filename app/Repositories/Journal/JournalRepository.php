@@ -63,9 +63,10 @@ class JournalRepository implements JournalRepositoryInterface
      * Search in journal descriptions.
      *
      * @param string $search
+     * @param int $limit
      * @return Collection
      */
-    public function searchJournalDescriptions(string $search): Collection
+    public function searchJournalDescriptions(string $search, int $limit): Collection
     {
         $query = $this->user->transactionJournals()
                             ->orderBy('date', 'DESC');
@@ -73,7 +74,7 @@ class JournalRepository implements JournalRepositoryInterface
             $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
         }
 
-        return $query->get();
+        return $query->take($limit)->get();
     }
 
     /**

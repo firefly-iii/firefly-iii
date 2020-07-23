@@ -28,7 +28,7 @@ $(document).ready(function () {
                                               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                               queryTokenizer: Bloodhound.tokenizers.whitespace,
                                               prefetch: {
-                                                  url: 'json/transaction-journals/all?uid=' + uid,
+                                                  url: 'api/v1/autocomplete/transactions?uid=' + uid,
                                                   filter: function (list) {
                                                       return $.map(list, function (obj) {
                                                           return obj;
@@ -36,7 +36,7 @@ $(document).ready(function () {
                                                   }
                                               },
                                               remote: {
-                                                  url: 'json/transaction-journals/all?search=%QUERY&uid=' + uid,
+                                                  url: 'api/v1/autocomplete/transactions?query=%QUERY&uid=' + uid,
                                                   wildcard: '%QUERY',
                                                   filter: function (list) {
                                                       return $.map(list, function (obj) {
@@ -55,7 +55,7 @@ $(document).ready(function () {
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
-                                               url: 'json/expense-accounts?uid=' + uid,
+                                               url: 'api/v1/autocomplete/accounts?types=Expense account?uid=' + uid,
                                                filter: function (list) {
                                                    return $.map(list, function (obj) {
                                                        return obj;
@@ -63,7 +63,7 @@ $(document).ready(function () {
                                                }
                                            },
                                            remote: {
-                                               url: 'json/expense-accounts?search=%QUERY&uid=' + uid,
+                                               url: 'api/v1/autocomplete/accounts?types=Expense account?query=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
                                                    return $.map(list, function (obj) {
@@ -83,7 +83,7 @@ $(document).ready(function () {
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
                                              prefetch: {
-                                                 url: 'json/revenue-accounts?uid=' + uid,
+                                                 url: 'api/v1/autocomplete/accounts?types=Revenue account?uid=' + uid,
                                                  filter: function (list) {
                                                      return $.map(list, function (obj) {
                                                          return obj;
@@ -91,7 +91,7 @@ $(document).ready(function () {
                                                  }
                                              },
                                              remote: {
-                                                 url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
+                                                 url: 'api/v1/autocomplete/accounts?types=Revenue account?query=%QUERY&uid=' + uid,
                                                  wildcard: '%QUERY',
                                                  filter: function (list) {
                                                      return $.map(list, function (obj) {

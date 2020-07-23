@@ -249,7 +249,7 @@ function updateActionInput(selectList) {
             break;
         case 'set_description':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-journals/all');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'set_source_account':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -277,7 +277,7 @@ function updateActionInput(selectList) {
             break;
         case 'update_piggy':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/piggy-banks');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/piggy-banks');
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
@@ -328,14 +328,14 @@ function updateTriggerInput(selectList) {
             break;
         case 'transaction_type':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-types');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transaction-types');
             break;
         case 'description_starts':
         case 'description_ends':
         case 'description_contains':
         case 'description_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-journals/all');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'has_no_category':
         case 'has_any_category':
@@ -352,7 +352,7 @@ function updateTriggerInput(selectList) {
         case 'currency_is':
         case 'foreign_currency_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/currency-names');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/currencies-with-code');
             break;
         case 'amount_less':
         case 'amount_more':
