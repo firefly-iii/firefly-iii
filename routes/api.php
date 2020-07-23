@@ -70,6 +70,7 @@ Route::group(
         Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
         Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
+        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
     }
 );
 

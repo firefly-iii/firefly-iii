@@ -29,7 +29,7 @@ $(document).ready(function () {
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
-                                               url: 'json/object-groups?uid=' + uid,
+                                               url: 'api/v1/autocomplete/object-groups?uid=' + uid,
                                                filter: function (list) {
                                                    return $.map(list, function (obj) {
                                                        return obj;
@@ -37,7 +37,7 @@ $(document).ready(function () {
                                                }
                                            },
                                            remote: {
-                                               url: 'json/object-groups?search=%QUERY&uid=' + uid,
+                                               url: 'api/v1/autocomplete/object-groups?query=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
                                                    return $.map(list, function (obj) {

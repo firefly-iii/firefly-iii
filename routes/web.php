@@ -604,19 +604,16 @@ Route::group(
     static function () {
 
         // for auto complete
-        Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'autocomplete.budgets']);
-        Route::get('object-groups', ['uses' => 'Json\AutoCompleteController@objectGroups', 'as' => 'autocomplete.object-groups']);
-        Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'autocomplete.categories']);
-        Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
-        Route::get('piggy-banks', ['uses' => 'Json\AutoCompleteController@piggyBanks', 'as' => 'autocomplete.piggy-banks']);
-        Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
-        Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
-        Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
-        Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
-        Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
+        //        Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
+        //        Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
+        //        Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
+        //        Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
 
         // budgets:
-        Route::get('budget/total-budgeted/{currency}/{start_date}/{end_date}', ['uses' => 'Json\BudgetController@getBudgetInformation', 'as' => 'budget.total-budgeted']);
+        Route::get(
+            'budget/total-budgeted/{currency}/{start_date}/{end_date}',
+            ['uses' => 'Json\BudgetController@getBudgetInformation', 'as' => 'budget.total-budgeted']
+        );
 
 
         // boxes

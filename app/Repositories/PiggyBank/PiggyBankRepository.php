@@ -414,7 +414,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $search->where('piggy_banks.name', 'LIKE', sprintf('%%%s%%', $query));
         }
         $search->orderBy('piggy_banks.order', 'ASC')
-               ->orderBy('piggy_banks.name', 'ASC')->where('piggy_banks.active', 1);
+               ->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get();
     }

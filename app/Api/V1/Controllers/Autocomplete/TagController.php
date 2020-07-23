@@ -25,6 +25,11 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Models\Tag;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class TagController
@@ -32,4 +37,46 @@ use FireflyIII\Api\V1\Controllers\Controller;
 class TagController extends Controller
 {
 
+    private TagRepositoryInterface $repository;
+
+    /**
+     * CurrencyController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                /** @var User $user */
+                $user             = auth()->user();
+                $this->repository = app(TagRepositoryInterface::class);
+                $this->repository->setUser($user);
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function tags(AutocompleteRequest $request): JsonResponse
+    {
+        $data = $request->getData();
+
+        $result = $this->repository->searchTags($data['query'], $data['limit']);
+        $array  = [];
+        /** @var Tag $tag */
+        foreach ($result as $tag) {
+            $array[] = [
+                'id'   => $tag->id,
+                'name' => $tag->tag,
+                'tag'  => $tag->tag,
+            ];
+        }
+
+        return response()->json($array);
+    }
 }

@@ -32,13 +32,12 @@
             <select class="form-control" ref="currency_select" name="foreign_currency[]" @input="handleInput">
                 <option
                         v-for="currency in this.enabledCurrencies"
-                        v-if="currency.enabled"
                         :value="currency.id"
-                        :label="currency.name"
+                        :label="currency.attributes.name"
                         :selected="value.currency_id === currency.id"
 
                 >
-                    {{ currency.name }}
+                    {{ currency.attributes.name }}
                 </option>
             </select>
         </div>
@@ -174,27 +173,32 @@
                 }
             },
             loadCurrencies: function () {
-                // console.log('loadCurrencies');
-                let URI = document.getElementsByTagName('base')[0].href + "json/currencies";
+                //console.log('loadCurrencies');
+                let URI = document.getElementsByTagName('base')[0].href + "api/v1/currencies";
                 axios.get(URI, {}).then((res) => {
                     this.currencies = [
                         {
-                            name: this.no_currency,
                             id: 0,
-                            enabled: true
+                            attributes: {
+                                name: this.no_currency,
+                                enabled: true
+                            },
                         }
                     ];
 
                     this.enabledCurrencies   = [
                         {
-                            name: this.no_currency,
+                            attributes: {
+                                name: this.no_currency,
+                                enabled: true
+                            },
                             id: 0,
-                            enabled: true
                         }
                     ];
                     for (const key in res.data.data) {
                         if (res.data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                            if (res.data.data[key].enabled) {
+                            if (res.data.data[key].attributes.enabled) {
+                                console.log(res.data.data[key].attributes);
                                 this.currencies.push(res.data.data[key]);
                                 this.enabledCurrencies.push(res.data.data[key]);
                             }

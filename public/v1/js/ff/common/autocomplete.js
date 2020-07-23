@@ -27,7 +27,7 @@ function initTagsAC() {
                                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                      queryTokenizer: Bloodhound.tokenizers.whitespace,
                                      prefetch: {
-                                         url: 'json/tags?uid=' + uid,
+                                         url: 'api/v1/autocomplete/tags?uid=' + uid,
                                          filter: function (list) {
                                              return $.map(list, function (item) {
                                                  return {name: item.name};
@@ -35,7 +35,7 @@ function initTagsAC() {
                                          }
                                      },
                                      remote: {
-                                         url: 'json/tags?search=%QUERY&uid=' + uid,
+                                         url: 'api/v1/autocomplete/tags?query=%QUERY&uid=' + uid,
                                          wildcard: '%QUERY',
                                          filter: function (list) {
                                              return $.map(list, function (item) {

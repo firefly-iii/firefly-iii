@@ -91,7 +91,7 @@
                 if (this.tag.length < 2) {
                     return;
                 }
-                const url = document.getElementsByTagName('base')[0].href + `json/tags?search=${this.tag}`;
+                const url = document.getElementsByTagName('base')[0].href + `api/v1/autocomplete/tags?query=${this.tag}`;
 
                 clearTimeout(this.debounce);
                 this.debounce = setTimeout(() => {

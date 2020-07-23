@@ -245,7 +245,7 @@ function updateActionInput(selectList) {
         case 'add_tag':
         case 'remove_tag':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/tags');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/tags');
             break;
         case 'set_description':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -316,7 +316,7 @@ function updateTriggerInput(selectList) {
             break;
         case 'tag_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/tags');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/tags');
             break;
         case 'budget_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');

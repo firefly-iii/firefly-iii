@@ -121,27 +121,8 @@ class AutoCompleteController extends Controller
 
         return response()->json($array);
     }
-    
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function tags(Request $request): JsonResponse
-    {
-        $search = (string) $request->get('search');
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $result     = $repository->searchTags($search);
-        $array      = $result->toArray();
-        foreach ($array as $index => $item) {
-            // rename field for consistency.
-            $array[$index]['name'] = $item['tag'];
-        }
 
-        return response()->json($array);
-    }
+
 
     /**
      * @param Request $request
