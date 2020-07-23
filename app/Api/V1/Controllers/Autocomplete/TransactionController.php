@@ -28,8 +28,10 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
 /**
  * Class TransactionController
@@ -37,7 +39,8 @@ use Illuminate\Http\JsonResponse;
 class TransactionController extends Controller
 {
 
-    private JournalRepositoryInterface $repository;
+    private JournalRepositoryInterface          $repository;
+    private TransactionGroupRepositoryInterface $groupRepository;
 
     /**
      * TransactionController constructor.
@@ -48,9 +51,11 @@ class TransactionController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(JournalRepositoryInterface::class);
+                $user                  = auth()->user();
+                $this->repository      = app(JournalRepositoryInterface::class);
+                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->repository->setUser($user);
+                $this->groupRepository->setUser($user);
 
                 return $next($request);
             }
@@ -77,6 +82,49 @@ class TransactionController extends Controller
             $array[] = [
                 'id'          => $journal->id,
                 'name'        => $journal->description,
+                'description' => $journal->description,
+            ];
+        }
+
+        return response()->json($array);
+    }
+
+    /**
+     * Searches in the titles of all transaction journals.
+     * The result is limited to the top 15 unique results.
+     *
+     * If the query is numeric, it will append the journal with that particular ID.
+     *
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function allJournalsWithID(AutocompleteRequest $request): JsonResponse
+    {
+        $data   = $request->getData();
+        $array  = [];
+        $result = new Collection;
+
+
+        if (is_numeric($data['query'])) {
+            // search for group, not journal.
+            $firstResult = $this->groupRepository->find((int) $data['query']);
+            if (null !== $firstResult) {
+                // group may contain multiple journals, each a result:
+                foreach ($firstResult->transactionJournals as $journal) {
+                    $result->push($journal);
+                }
+            }
+        }
+        if (!is_numeric($data['query'])) {
+            $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+        }
+
+        /** @var TransactionJournal $journal */
+        foreach ($result as $journal) {
+            $array[] = [
+                'id'          => $journal->id,
+                'name'        => printf('#%d: %s', $journal->id, $journal->description),
                 'description' => $journal->description,
             ];
         }
