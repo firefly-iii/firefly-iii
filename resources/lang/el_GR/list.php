@@ -45,6 +45,7 @@ return [
     'account_type'            => 'Τύπος λογαριασμού',
     'created_at'              => 'Δημιουργήθηκε στις',
     'account'                 => 'Λογαριασμός',
+    'external_uri'            => 'External URI',
     'matchingAmount'          => 'Ποσό',
     'destination'             => 'Προορισμός',
     'source'                  => 'Προέλευση',

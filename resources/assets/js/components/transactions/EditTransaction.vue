@@ -416,6 +416,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: transaction.budget_id,
@@ -428,7 +429,8 @@
                                                payment_date: transaction.payment_date,
                                                invoice_date: transaction.invoice_date,
                                                internal_reference: transaction.internal_reference,
-                                               notes: transaction.notes
+                                               notes: transaction.notes,
+                                               external_uri: transaction.external_uri
                                            },
                                            foreign_amount: {
                                                amount: this.roundNumber(this.positiveAmount(transaction.foreign_amount), transaction.foreign_currency_decimal_places),
@@ -608,6 +610,7 @@
                         payment_date: row.custom_fields.payment_date,
                         invoice_date: row.custom_fields.invoice_date,
                         internal_reference: row.custom_fields.internal_reference,
+                        external_uri: row.custom_fields.external_uri,
                         notes: row.custom_fields.notes,
                         tags: tagList
                     };
@@ -830,6 +833,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: 0,
@@ -843,7 +847,8 @@
                                                "invoice_date": "",
                                                "internal_reference": "",
                                                "notes": "",
-                                               "attachments": []
+                                               "attachments": [],
+                                               "external_uri": "",
                                            },
                                            foreign_amount: {
                                                amount: "",
@@ -903,6 +908,10 @@
                                 case 'tags':
                                     this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                     break;
+                                case 'external_uri':
+                                    console.log('Found ext error in field "'+fieldName+'": ' + errors.errors[key]);
+                                    this.transactions[transactionIndex].errors.custom_errors[fieldName] = errors.errors[key];
+                                    break;
                                 case 'source_name':
                                 case 'source_id':
                                     this.transactions[transactionIndex].errors.source_account =
@@ -954,6 +963,7 @@
                                 internal_reference: [],
                                 notes: [],
                                 attachments: [],
+                                external_uri: [],
                             },
                         };
                     }

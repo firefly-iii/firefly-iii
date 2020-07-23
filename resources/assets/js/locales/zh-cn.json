@@ -27,6 +27,7 @@
         "category": "\u5206\u7c7b",
         "attachments": "\u9644\u52a0\u6863\u6848",
         "notes": "\u6ce8\u91ca",
+        "external_uri": "External URI",
         "update_transaction": "\u66f4\u65b0\u4ea4\u6613",
         "after_update_create_another": "\u66f4\u65b0\u540e\uff0c\u8fd4\u56de\u6b64\u9875\u9762\u7ee7\u7eed\u7f16\u8f91\u3002",
         "store_as_new": "\u4fdd\u5b58\u4e3a\u65b0\u4ea4\u6613\u800c\u4e0d\u662f\u66f4\u65b0\u6b64\u4ea4\u6613\u3002",

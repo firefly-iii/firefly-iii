@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Belső hivatkozás',
     'pref_optional_tj_notes'                => 'Megjegyzések',
     'pref_optional_tj_attachments'          => 'Mellékletek',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Dátumok',
     'optional_field_meta_business'          => 'Üzleti',
     'optional_field_attachments'            => 'Mellékletek',
     'optional_field_meta_data'              => 'Opcionális metaadat',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

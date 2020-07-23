@@ -644,6 +644,7 @@
                                 internal_reference: [],
                                 notes: [],
                                 attachments: [],
+                                external_uri: [],
                             },
                         };
                     }
@@ -740,6 +741,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: 0,
@@ -753,7 +755,8 @@
                                                "invoice_date": "",
                                                "internal_reference": "",
                                                "notes": "",
-                                               "attachments": []
+                                               "attachments": [],
+                                               "external_uri": "",
                                            },
                                            foreign_amount: {
                                                amount: "",

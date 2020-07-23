@@ -35,6 +35,7 @@ import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
 import Budget from "./components/transactions/Budget";
+import CustomUri from "./components/transactions/CustomUri";
 
 /**
  * First we will load Axios via bootstrap.js
@@ -50,6 +51,7 @@ Vue.component('custom-date', CustomDate);
 Vue.component('custom-string', CustomString);
 Vue.component('custom-attachments', CustomAttachments);
 Vue.component('custom-textarea', CustomTextarea);
+Vue.component('custom-uri', CustomUri);
 Vue.component('standard-date', StandardDate);
 Vue.component('group-description', GroupDescription);
 Vue.component('transaction-description', TransactionDescription);

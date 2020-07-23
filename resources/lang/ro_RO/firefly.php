@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Referință internă',
     'pref_optional_tj_notes'                => 'Notițe',
     'pref_optional_tj_attachments'          => 'Ataşamente',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Date',
     'optional_field_meta_business'          => 'Afaceri',
     'optional_field_attachments'            => 'Ataşamente',
     'optional_field_meta_data'              => 'Meta date opționale',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

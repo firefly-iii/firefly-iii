@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => '內部參照',
     'pref_optional_tj_notes'                => '備註',
     'pref_optional_tj_attachments'          => '附加檔案',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => '日期',
     'optional_field_meta_business'          => '商務',
     'optional_field_attachments'            => '附加檔案',
     'optional_field_meta_data'              => '可選中繼資料',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Referensi internal',
     'pref_optional_tj_notes'                => 'Catatan',
     'pref_optional_tj_attachments'          => 'Lampiran',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Tanggal',
     'optional_field_meta_business'          => 'Bisnis',
     'optional_field_attachments'            => 'Lampiran',
     'optional_field_meta_data'              => 'Data meta opsional',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

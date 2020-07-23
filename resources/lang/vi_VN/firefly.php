@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Tài liệu tham khảo nội bộ',
     'pref_optional_tj_notes'                => 'Ghi chú',
     'pref_optional_tj_attachments'          => 'Tài liệu đính kèm',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Ngày',
     'optional_field_meta_business'          => 'Kinh doanh',
     'optional_field_attachments'            => 'Tài liệu đính kèm',
     'optional_field_meta_data'              => 'Dữ liệu meta tùy chọn',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

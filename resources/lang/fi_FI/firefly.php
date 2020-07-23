@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Sisäinen viite',
     'pref_optional_tj_notes'                => 'Muistiinpanot',
     'pref_optional_tj_attachments'          => 'Liitteet',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Päivämäärät',
     'optional_field_meta_business'          => 'Yritys',
     'optional_field_attachments'            => 'Liitteet',
     'optional_field_meta_data'              => 'Valinnainen metatieto',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

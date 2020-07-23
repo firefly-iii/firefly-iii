@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Interní reference',
     'pref_optional_tj_notes'                => 'Poznámky',
     'pref_optional_tj_attachments'          => 'Přílohy',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Datumy',
     'optional_field_meta_business'          => 'Business',
     'optional_field_attachments'            => 'Přílohy',
     'optional_field_meta_data'              => 'Volitelná metadata',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

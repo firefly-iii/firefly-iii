@@ -27,6 +27,7 @@
         "category": "Kategoria",
         "attachments": "Liitteet",
         "notes": "Muistiinpanot",
+        "external_uri": "External URI",
         "update_transaction": "P\u00e4ivit\u00e4 tapahtuma",
         "after_update_create_another": "P\u00e4ivityksen j\u00e4lkeen, palaa takaisin jatkamaan muokkausta.",
         "store_as_new": "Tallenna uutena tapahtumana p\u00e4ivityksen sijaan.",

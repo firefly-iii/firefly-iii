@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Εσωτερική αναφορά',
     'pref_optional_tj_notes'                => 'Σημειώσεις',
     'pref_optional_tj_attachments'          => 'Συνημμένα',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Ημερομηνίες',
     'optional_field_meta_business'          => 'Επιχείρηση',
     'optional_field_attachments'            => 'Συνημμένα',
     'optional_field_meta_data'              => 'Προαιρετικά μετα-δεδομένα',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Διαγραφή δεδομένων από το Firefly III',

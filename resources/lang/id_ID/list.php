@@ -45,6 +45,7 @@ return [
     'account_type'            => 'Jenis akun',
     'created_at'              => 'Dibuat di',
     'account'                 => 'Akun',
+    'external_uri'            => 'External URI',
     'matchingAmount'          => 'Jumlah',
     'destination'             => 'Tujuan',
     'source'                  => 'Sumber',

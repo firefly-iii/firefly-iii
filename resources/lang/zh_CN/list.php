@@ -45,6 +45,7 @@ return [
     'account_type'            => '帐户类型',
     'created_at'              => '建立于',
     'account'                 => '帐户',
+    'external_uri'            => 'External URI',
     'matchingAmount'          => '金额',
     'destination'             => '目标',
     'source'                  => '来源',

@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Intern referanse',
     'pref_optional_tj_notes'                => 'Notater',
     'pref_optional_tj_attachments'          => 'Vedlegg',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Datoer',
     'optional_field_meta_business'          => 'Bedrift',
     'optional_field_attachments'            => 'Vedlegg',
     'optional_field_meta_data'              => 'Valgfri metadata',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

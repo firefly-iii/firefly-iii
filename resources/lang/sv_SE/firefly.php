@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Intern referens',
     'pref_optional_tj_notes'                => 'Anteckningar',
     'pref_optional_tj_attachments'          => 'Bilagor',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Datum',
     'optional_field_meta_business'          => 'Affärsverksamhet',
     'optional_field_attachments'            => 'Bilagor',
     'optional_field_meta_data'              => 'Valfri metadata',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

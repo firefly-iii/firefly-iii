@@ -27,6 +27,7 @@
         "category": "Kategoria",
         "attachments": "Za\u0142\u0105czniki",
         "notes": "Notatki",
+        "external_uri": "External URI",
         "update_transaction": "Zaktualizuj transakcj\u0119",
         "after_update_create_another": "Po aktualizacji wr\u00f3\u0107 tutaj, aby kontynuowa\u0107 edycj\u0119.",
         "store_as_new": "Zapisz jako now\u0105 zamiast aktualizowa\u0107.",

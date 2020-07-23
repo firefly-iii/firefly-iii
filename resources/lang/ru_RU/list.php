@@ -45,6 +45,7 @@ return [
     'account_type'            => 'Тип профиля',
     'created_at'              => 'Создан',
     'account'                 => 'Счёт',
+    'external_uri'            => 'External URI',
     'matchingAmount'          => 'Сумма',
     'destination'             => 'Получатель',
     'source'                  => 'Источник',

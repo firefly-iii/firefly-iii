@@ -27,6 +27,7 @@
         "category": "Kategorie",
         "attachments": "P\u0159\u00edlohy",
         "notes": "Pozn\u00e1mky",
+        "external_uri": "External URI",
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",

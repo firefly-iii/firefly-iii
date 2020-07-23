@@ -45,6 +45,7 @@ return [
     'account_type'            => 'Account type',
     'created_at'              => 'Created at',
     'account'                 => 'Account',
+    'external_uri'            => 'External URI',
     'matchingAmount'          => 'Amount',
     'destination'             => 'Destination',
     'source'                  => 'Source',

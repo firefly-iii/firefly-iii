@@ -93,7 +93,7 @@ class JournalUpdateService
         $this->accountRepository  = app(AccountRepositoryInterface::class);
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         $this->metaString         = ['sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id', 'recurrence_id',
-                                     'internal_reference', 'bunq_payment_id', 'external_id',];
+                                     'internal_reference', 'bunq_payment_id', 'external_id', 'external_uri'];
         $this->metaDate           = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date',];
     }
 

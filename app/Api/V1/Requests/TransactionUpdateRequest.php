@@ -129,6 +129,7 @@ class TransactionUpdateRequest extends FormRequest
             'sepa_ep',
             'sepa_ci',
             'sepa_batch_id',
+            'external_uri'
         ];
         $this->booleanFields = [
             'reconciled',
@@ -206,6 +207,7 @@ class TransactionUpdateRequest extends FormRequest
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',

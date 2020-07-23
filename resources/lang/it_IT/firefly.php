@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Riferimento interno',
     'pref_optional_tj_notes'                => 'Note',
     'pref_optional_tj_attachments'          => 'Allegati',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Dati',
     'optional_field_meta_business'          => 'Attività commerciale',
     'optional_field_attachments'            => 'Allegati',
     'optional_field_meta_data'              => 'Metadati opzionali',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Elimina i dati da Firefly III',

@@ -92,7 +92,7 @@ class TransactionJournalFactory
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
             'sepa_db', 'sepa_country', 'sepa_ep',
-            'sepa_ci', 'sepa_batch_id',
+            'sepa_ci', 'sepa_batch_id', 'external_uri',
 
             // dates
             'interest_date', 'book_date', 'process_date',

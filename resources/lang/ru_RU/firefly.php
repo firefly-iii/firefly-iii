@@ -619,10 +619,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Внутренняя ссылка',
     'pref_optional_tj_notes'                => 'Заметки',
     'pref_optional_tj_attachments'          => 'Вложения',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Даты',
     'optional_field_meta_business'          => 'Бизнес',
     'optional_field_attachments'            => 'Вложения',
     'optional_field_meta_data'              => 'Расширенные данные',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Удалить данные из Firefly III',

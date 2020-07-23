@@ -621,10 +621,12 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'pref_optional_tj_internal_reference'   => 'Dahili referans',
     'pref_optional_tj_notes'                => 'Notlar',
     'pref_optional_tj_attachments'          => 'Ekler',
+    'pref_optional_tj_external_uri'         => 'External URI',
     'optional_field_meta_dates'             => 'Tarih',
     'optional_field_meta_business'          => 'İş',
     'optional_field_attachments'            => 'Ekler',
     'optional_field_meta_data'              => 'İsteğe bağlı meta veriler',
+    'external_uri'                          => 'External URI',
 
     // profile:
     'delete_stuff_header'                   => 'Delete data from Firefly III',

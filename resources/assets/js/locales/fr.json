@@ -27,6 +27,7 @@
         "category": "Cat\u00e9gorie",
         "attachments": "Pi\u00e8ces jointes",
         "notes": "Notes",
+        "external_uri": "External URI",
         "update_transaction": "Mettre \u00e0 jour l'op\u00e9ration",
         "after_update_create_another": "Apr\u00e8s la mise \u00e0 jour, revenir ici pour continuer l'\u00e9dition.",
         "store_as_new": "Enregistrer comme une nouvelle op\u00e9ration au lieu de mettre \u00e0 jour.",

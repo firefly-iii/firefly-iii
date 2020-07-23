@@ -27,6 +27,7 @@
         "category": "Categorie",
         "attachments": "Bijlagen",
         "notes": "Notities",
+        "external_uri": "External URI",
         "update_transaction": "Update transactie",
         "after_update_create_another": "Na het opslaan terug om door te gaan met wijzigen.",
         "store_as_new": "Opslaan als nieuwe transactie ipv de huidige bij te werken.",
