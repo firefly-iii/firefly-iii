@@ -90,6 +90,9 @@ p.tagcloud .label {
 .piggy-handle {
     cursor: move;
 }
+.object-handle {
+    cursor: move;
+}
 .rule-handle {
     cursor: move;
 }

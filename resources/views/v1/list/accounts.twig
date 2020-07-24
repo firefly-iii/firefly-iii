@@ -1,43 +1,37 @@
 <div style="padding-left:8px;">
     {{ accounts.render|raw }}
 </div>
-<table class="table table-hover sortable">
+<table class="table table-hover" id="sortable-table">
     <thead>
     <tr>
-        <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>
-        <th data-defaultsign="az">{{ trans('list.name') }}</th>
+        <th class="hidden-sm hidden-xs">&nbsp;</th>
+        <th>{{ trans('list.name') }}</th>
         {% if objectType == 'asset' %}
-            <th data-defaultsign="az" class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
+            <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
         {% endif %}
         {% if objectType == 'liabilities' %}
-            <th data-defaultsign="az">{{ trans('list.liability_type') }}</th>
-            <th data-defaultsign="_19">{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
+            <th>{{ trans('list.liability_type') }}</th>
+            <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
-        <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
+        <th>{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
         {% if objectType != 'liabilities' %}
-            <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
+            <th class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
         {% endif %}
-        <th data-defaultsign="_19" style="width:15%;"
+        <th style="width:15%;"
             class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
+        <th class="hidden-sm hidden-xs">&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     {% for account in accounts %}
-        <tr>
+        <tr class="sortable-object" data-id="{{ account.id }}" data-order="{{ account.order }}" data-position="{{ loop.index0 }}">
             <td class="hidden-sm hidden-xs">
-                <div class="btn-group btn-group-xs edit_tr_buttons"><a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}"
-                                                                       href="{{ route('accounts.edit',account.id) }}"><i
-                                class="fa fa-fw fa-pencil"></i></a>{% if objectType == 'asset' %}<a class="btn btn-default btn-xs"
-                                                                                                    title="{{ 'reconcile_this_account'|_ }}"
-                                                                                                    href="{{ route('accounts.reconcile',account.id) }}"><i
-                                class="fa fa-fw fa-check"></i></a>{% endif %}<a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
-                                                                                href="{{ route('accounts.delete',account.id) }}"><i
-                                class="fa fa-fw fa-trash-o"></i></a></div>
+                <i class="fa fa-fw fa-bars object-handle"></i>
             </td>
-            <td data-value="{{ account.name }}">
+            <td>
                 <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
                 {% if account.location %}
                     <i class="fa fa-fw fa-map-marker"></i>
@@ -57,17 +51,17 @@
             {% endif %}
             {% if objectType == 'liabilities' %}
                 <td>{{ account.accountTypeString }}</td>
-            <td data-value="{{ account.interest }}">
+            <td>
                 {{ account.interest }}% ({{ account.interestPeriod|lower }})
             </td>
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
-            <td data-value="{{ account.endBalance }}" style="text-align: right;">
+            <td style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
                 </span>
             </td>
-            <td class="hidden-sm hidden-xs" data-value="{{ account.active }}">
+            <td class="hidden-sm hidden-xs">
                 {% if account.active %}
                     <i class="fa fa-fw fa-check"></i>
                 {% else %}
@@ -77,21 +71,33 @@
             {# hide last activity to make room for other stuff #}
             {% if objectType != 'liabilities' %}
                 {% if account.lastActivityDate %}
-                    <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
+                    <td class="hidden-sm hidden-xs hidden-md">
                         {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                     </td>
                 {% else %}
-                    <td class="hidden-sm hidden-xs hidden-md" data-value="0000-00-00 00-00-00">
+                    <td class="hidden-sm hidden-xs hidden-md">
                         <em>{{ 'never'|_ }}</em>
                     </td>
                 {% endif %}
             {% endif %}
-            <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.difference }}" style="text-align: right;">
+            <td class="hidden-sm hidden-xs hidden-md" style="text-align: right;">
                 <span style="margin-right:5px;">
                     {{ formatAmountByAccount(account, account.difference) }}
                 </span>
             </td>
-
+            <td class="hidden-sm hidden-xs">
+                <div class="btn-group btn-group-xs pull-right">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ 'actions'|_ }} <span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                        <li><a href="{{ route('accounts.edit',account.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                        <li><a href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                        {% if objectType == 'asset' %}
+                        <li><a href="{{ route('accounts.reconcile',account.id) }}"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </td>
         </tr>
 
     {% endfor %}
