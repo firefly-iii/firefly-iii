@@ -43,17 +43,12 @@ class AccountFactory
     use AccountServiceTrait, LocationServiceTrait;
 
     /** @var AccountRepositoryInterface */
-    protected $accountRepository;
-    /** @var array */
-    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
-    /** @var array */
-    private $canHaveVirtual;
-    /** @var User */
-    private $user;
+    protected       $accountRepository;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array   $canHaveVirtual;
+    private User    $user;
 
     /**
      * AccountFactory constructor.
@@ -67,6 +62,10 @@ class AccountFactory
         }
         $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
         $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->validAssetFields  = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+        $this->validCCFields     = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+        $this->validFields       = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+
     }
 
     /**
@@ -98,6 +97,7 @@ class AccountFactory
                 'user_id'         => $this->user->id,
                 'account_type_id' => $type->id,
                 'name'            => $data['name'],
+                'order'           => $data['order'] ?? 0,
                 'virtual_balance' => $data['virtual_balance'] ?? null,
                 'active'          => true === $data['active'],
                 'iban'            => $data['iban'],

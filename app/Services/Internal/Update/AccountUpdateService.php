@@ -38,18 +38,12 @@ class AccountUpdateService
 {
     use AccountServiceTrait;
 
-    /** @var AccountRepositoryInterface */
-    protected $accountRepository;
-    /** @var array */
-    protected $validAssetFields = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validCCFields = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-    /** @var array */
-    protected $validFields = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
-    /** @var array */
-    private $canHaveVirtual;
-    /** @var User */
-    private $user;
+    protected AccountRepositoryInterface $accountRepository;
+    protected array                      $validAssetFields;
+    protected array                      $validCCFields;
+    protected array                      $validFields;
+    private array                        $canHaveVirtual;
+    private User                         $user;
 
     /**
      * Constructor.
@@ -62,6 +56,9 @@ class AccountUpdateService
         // TODO move to configuration.
         $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
         $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->validAssetFields  = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+        $this->validCCFields     = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
+        $this->validFields       = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
     }
 
     /**
@@ -174,6 +171,7 @@ class AccountUpdateService
         $account->name   = $data['name'] ?? $account->name;
         $account->active = $data['active'] ?? $account->active;
         $account->iban   = $data['iban'] ?? $account->iban;
+        $account->order  = $data['order'] ?? $account->order;
 
         // if account type is a liability, the liability type (account type)
         // can be updated to another one.

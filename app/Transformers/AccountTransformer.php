@@ -96,10 +96,11 @@ class AccountTransformer extends AbstractTransformer
             $zoomLevel = $location->zoom_level;
         }
         return [
-            'id'                      => (int)$account->id,
+            'id'                      => (int) $account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
+            'order'                   => $account->order,
             'name'                    => $account->name,
             'type'                    => $accountType,
             'account_role'            => $accountRole,

@@ -274,12 +274,11 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
 
-        $result = $query->get(['accounts.*']);
-
-        return $result;
+        return $query->get(['accounts.*']);
     }
 
     /**
@@ -294,12 +293,12 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
-        $result = $query->get(['accounts.*']);
 
+        return $query->get(['accounts.*']);
 
-        return $result;
     }
 
     /**
@@ -320,6 +319,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $query->where('active', 1);
         $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
@@ -567,6 +567,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $dbQuery = $this->user->accounts()
                               ->where('active', 1)
+                              ->orderBy('accounts.order', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
                               ->with(['accountType']);
         if ('' !== $query) {
@@ -643,6 +644,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $query->where('active', 0);
         $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
