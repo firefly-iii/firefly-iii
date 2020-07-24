@@ -86,6 +86,14 @@ class ObjectGroup extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function accounts()
+    {
+        return $this->morphedByMany(Account::class, 'object_groupable');
+    }
+
+    /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param string $value
@@ -97,6 +105,7 @@ class ObjectGroup extends Model
     {
         if (auth()->check()) {
             $objectGroupId = (int) $value;
+            /** @var ObjectGroup $objectGroup */
             $objectGroup   = self::where('object_groups.id', $objectGroupId)
                                  ->where('object_groups.user_id', auth()->user()->id)->first();
             if (null !== $objectGroup) {

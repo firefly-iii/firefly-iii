@@ -143,6 +143,13 @@ class Account extends Model
         throw new NotFoundHttpException;
     }
 
+    /**
+     * Get all of the tags for the post.
+     */
+    public function objectGroups()
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
+    }
 
     /**
      * @codeCoverageIgnore
