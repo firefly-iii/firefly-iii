@@ -65,7 +65,7 @@
       },
       {
         "type": "paypal",
-        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"
+        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
       }
     ],
   "require": {

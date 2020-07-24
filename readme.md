@@ -146,7 +146,7 @@ There is also a [security policy](https://github.com/firefly-iii/firefly-iii/sec
 
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! :tada:
 
-OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) or [Patreon](https://www.patreon.com/jc5).
+OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url) or [Patreon](https://www.patreon.com/jc5).
 
 I'm also very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**.
 
