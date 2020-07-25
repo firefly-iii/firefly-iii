@@ -260,7 +260,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, new Carbon);
+            $balance  = app('steam')->balance($account);
             $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
             $role     = (string) $repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
@@ -289,7 +289,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, new Carbon);
+            $balance                     = app('steam')->balance($account);
             $currency                    = $repository->getAccountCurrency($account) ?? $defaultCurrency;
             $role                        = 'l_' . $account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_' . $role);
