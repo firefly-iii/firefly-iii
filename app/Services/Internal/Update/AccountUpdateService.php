@@ -115,12 +115,14 @@ class AccountUpdateService
         // if it can have a virtual balance, it can also have an opening balance.
 
         if (in_array($type->type, $this->canHaveVirtual, true)) {
+            // check if is submitted as empty, that makes it valid:
 
-            if ($this->validOBData($data)) {
+
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
                 $this->updateOBGroup($account, $data);
             }
 
-            if (!$this->validOBData($data)) {
+            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
                 $this->deleteOBGroup($account);
             }
         }

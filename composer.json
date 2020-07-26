@@ -180,6 +180,7 @@
       "@php artisan firefly-iii:delete-empty-journals",
       "@php artisan firefly-iii:delete-empty-groups",
       "@php artisan firefly-iii:fix-account-types",
+      "@php artisan firefly-iii:fix-account-order",
       "@php artisan firefly-iii:rename-meta-fields",
       "@php artisan firefly-iii:fix-ob-currencies",
       "@php artisan firefly-iii:fix-long-descriptions",

@@ -32,6 +32,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Exception;
 
 /**
  *
@@ -129,6 +130,7 @@ class IndexController extends Controller
      * @param Request $request
      * @param string  $objectType
      *
+     * @throws Exception
      * @return Factory|View
      */
     public function index(Request $request, string $objectType)
@@ -138,10 +140,17 @@ class IndexController extends Controller
             return $this->emptyIndex($objectType);
         }
 
-        $objectType    = $objectType ?? 'asset';
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        // reset account order:
+
+        $objectType   = $objectType ?? 'asset';
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+
+        if (1 === random_int(0, 20)) {
+            $this->repository->resetAccountOrder($types);
+        }
+
         $collection    = $this->repository->getActiveAccountsByType($types);
         $total         = $collection->count();
         $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');

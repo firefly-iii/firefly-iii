@@ -697,4 +697,20 @@ class AccountRepository implements AccountRepositoryInterface
 
         return TransactionCurrency::whereIn('id', $currencyIds)->get();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function resetAccountOrder(array $types): void
+    {
+        $list = $this->getAccountsByType($types);
+        /**
+         * @var int     $index
+         * @var Account $account
+         */
+        foreach ($list as $index => $account) {
+            $account->order = $index + 1;
+            $account->save();
+        }
+    }
 }

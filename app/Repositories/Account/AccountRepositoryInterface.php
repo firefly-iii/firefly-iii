@@ -48,6 +48,13 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * Reset order types of the mentioned accounts.
+     *
+     * @param array $types
+     */
+    public function resetAccountOrder(array $types): void;
+
+    /**
      * @param Account $account
      *
      * @return Collection

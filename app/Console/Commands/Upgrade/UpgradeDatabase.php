@@ -89,6 +89,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:delete-empty-journals',
             'firefly-iii:delete-empty-groups',
             'firefly-iii:fix-account-types',
+            'firefly-iii:fix-account-order',
             'firefly-iii:rename-meta-fields',
             'firefly-iii:fix-ob-currencies',
             'firefly-iii:fix-long-descriptions',

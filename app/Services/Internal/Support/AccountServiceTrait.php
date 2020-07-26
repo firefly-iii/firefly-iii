@@ -163,6 +163,27 @@ trait AccountServiceTrait
     }
 
     /**
+     * Returns true if the data in the array is submitted but empty.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function isEmptyOBData(array $data): bool
+    {
+        if (!isset($data['opening_balance']) && !isset($data['opening_balance_date'])) {
+            // not set, so false.
+            return false;
+        }
+        // if isset, but is empty:
+        if ('' === $data['opening_balance'] && '' === $data['opening_balance_date']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param Account $account
      * @param array   $data
      *
