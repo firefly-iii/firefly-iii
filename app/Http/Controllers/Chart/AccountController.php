@@ -530,7 +530,7 @@ class AccountController extends Controller
 
         // sort temp array by amount.
         $amounts = array_column($tempData, 'diff_float');
-        array_multisort($amounts, SORT_DESC, $tempData);
+        array_multisort($amounts, SORT_ASC, $tempData);
 
         // loop all found currencies and build the data array for the chart.
         /**
