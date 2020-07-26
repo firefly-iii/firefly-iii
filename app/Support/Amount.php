@@ -219,8 +219,16 @@ class Amount
         $positivePrefixed = '' !== $fmt->getAttribute(NumberFormatter::POSITIVE_PREFIX);
         $negativePrefixed = '' !== $fmt->getAttribute(NumberFormatter::NEGATIVE_PREFIX);
 
+        $formatAccounting = (int) $fmt->getAttribute(NumberFormatter::CURRENCY_ACCOUNTING);
+
         $positive = ($positivePrefixed) ? '%s %v' : '%v %s';
-        $negative = ($negativePrefixed) ? '%s %v' : '%v %s';
+        $negative = ($negativePrefixed) ? '%s -%v' : '-%v %s';
+
+        if(0 !== $formatAccounting) {
+            $negative = '(%v %s)';
+        }
+
+
 
         return [
             'mon_decimal_point' => $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL),
