@@ -1,0 +1,19 @@
+includes:
+  - ./vendor/nunomaduro/larastan/extension.neon
+  - ./vendor/ergebnis/phpstan-rules/rules.neon
+  - ./vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - ./vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+
+parameters:
+
+  paths:
+    - app
+    - config
+    - database
+    - resources
+    - routes
+    - tests
+    - bootstrap/app.php
+
+  # The level 8 is the highest level
+  level: 5
