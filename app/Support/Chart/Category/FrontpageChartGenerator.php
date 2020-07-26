@@ -98,7 +98,7 @@ class FrontpageChartGenerator
 
         // sort temp array by amount.
         $amounts = array_column($tempData, 'sum_float');
-        array_multisort($amounts, SORT_DESC, $tempData);
+        array_multisort($amounts, SORT_ASC, $tempData);
 
         $currencyData = $this->createCurrencyGroups($tempData);
 
