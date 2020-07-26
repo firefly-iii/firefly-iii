@@ -58,7 +58,7 @@
                 return this.error.length > 0;
             },
             loadPiggies: function () {
-                let URI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/piggy-banks-with-balance";
+                let URI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/piggy-banks-with-balance?limit=1337";
                 axios.get(URI, {}).then((res) => {
                     let tempList = {
                         0: {

@@ -82,7 +82,7 @@
                 return this.error.length > 0;
             },
             loadBudgets: function () {
-                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets';
+                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets?limit=1337';
                 axios.get(URI, {}).then((res) => {
                         this.budgets = [
                             {
