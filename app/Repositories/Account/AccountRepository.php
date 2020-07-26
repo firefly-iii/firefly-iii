@@ -568,6 +568,7 @@ class AccountRepository implements AccountRepositoryInterface
         $dbQuery = $this->user->accounts()
                               ->where('active', 1)
                               ->orderBy('accounts.order', 'ASC')
+                              ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
                               ->with(['accountType']);
         if ('' !== $query) {
