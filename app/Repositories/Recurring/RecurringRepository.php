@@ -569,4 +569,28 @@ class RecurringRepository implements RecurringRepositoryInterface
     {
         $this->user->recurrences()->delete();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int
+    {
+        // if repeat = null just return 0.
+        if (null === $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
+            return 0;
+        }
+        // expect X transactions then stop. Return that number
+        if (null === $recurrence->repeat_until && 0 !== (int) $recurrence->repetitions) {
+            return (int) $recurrence->repetitions;
+        }
+
+        // need to calculate, this depends on the repetition:
+        if (null !== $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
+            $occurrences = $this->getOccurrencesInRange($repetition, $recurrence->first_date ?? today(), $recurrence->repeat_until);
+
+            return count($occurrences);
+        }
+
+        return 0;
+    }
 }

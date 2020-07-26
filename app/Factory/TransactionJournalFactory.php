@@ -56,12 +56,9 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var AccountValidator */
-    private $accountValidator;
-    /** @var BillRepositoryInterface */
-    private $billRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private AccountValidator $accountValidator;
+    private BillRepositoryInterface $billRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var bool */
@@ -88,6 +85,7 @@ class TransactionJournalFactory
     public function __construct()
     {
         $this->errorOnHash = false;
+        // TODO move valid meta fields to config.
         $this->fields      = [
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
@@ -100,7 +98,11 @@ class TransactionJournalFactory
 
             // others
             'recurrence_id', 'internal_reference', 'bunq_payment_id',
-            'import_hash', 'import_hash_v2', 'external_id', 'original_source'];
+            'import_hash', 'import_hash_v2', 'external_id', 'original_source',
+
+            // recurring transactions
+            'recurrence_total', 'recurrence_count'
+        ];
 
 
         if ('testing' === config('app.env')) {

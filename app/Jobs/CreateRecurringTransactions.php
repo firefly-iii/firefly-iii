@@ -53,15 +53,15 @@ class CreateRecurringTransactions implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /** @var int Transaction groups created */
-    public $created;
+    public int $created;
     /** @var int Number of recurrences actually fired */
-    public $executed;
+    public int $executed;
     /** @var int Number of recurrences submitted */
-    public $submitted;
+    public int $submitted;
     /** @var Carbon The current date */
-    private $date;
+    private Carbon $date;
     /** @var bool Force the transaction to be created no matter what. */
-    private $force;
+    private bool $force;
     /** @var TransactionGroupRepositoryInterface */
     private $groupRepository;
     /** @var JournalRepositoryInterface Journal repository */
@@ -219,19 +219,23 @@ class CreateRecurringTransactions implements ShouldQueue
     /**
      * Get transaction information from a recurring transaction.
      *
-     * @param Recurrence $recurrence
-     * @param Carbon     $date
+     * @param Recurrence           $recurrence
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
      *
      * @return array
      *
      */
-    private function getTransactionData(Recurrence $recurrence, Carbon $date): array
+    private function getTransactionData(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): array
     {
+        // total transactions expected for this recurrence:
+        $total        = $this->repository->totalTransactions($recurrence, $repetition);
+        $count        = $this->repository->getJournalCount($recurrence) + 1;
         $transactions = $recurrence->recurrenceTransactions()->get();
         $return       = [];
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
-            $single   = [
+            $single = [
                 'type'                  => strtolower($recurrence->transactionType->type),
                 'date'                  => $date,
                 'user'                  => $recurrence->user_id,
@@ -260,6 +264,8 @@ class CreateRecurringTransactions implements ShouldQueue
                 'piggy_bank_name'       => null,
                 'bill_id'               => null,
                 'bill_name'             => null,
+                'recurrence_total'       => $total,
+                'recurrence_count'       => $count,
             ];
             $return[] = $single;
         }
@@ -268,17 +274,18 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
-     * @param Recurrence $recurrence
-     * @param Carbon     $date
+     * @param Recurrence           $recurrence
+     * @param RecurrenceRepetition $repetition
+     * @param Carbon               $date
      *
      * @return TransactionGroup|null
      */
-    private function handleOccurrence(Recurrence $recurrence, Carbon $date): ?TransactionGroup
+    private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
     {
-        Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
+        #Log::debug(sprintf('Now at date %s.', $date->format('Y-m-d')));
         $date->startOfDay();
         if ($date->ne($this->date)) {
-            Log::debug(sprintf('%s is not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
+            #Log::debug(sprintf('%s is not today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
             return null;
         }
@@ -305,10 +312,11 @@ class CreateRecurringTransactions implements ShouldQueue
             $groupTitle = $first->description;
             // @codeCoverageIgnoreEnd
         }
+
         $array = [
             'user'         => $recurrence->user_id,
             'group_title'  => $groupTitle,
-            'transactions' => $this->getTransactionData($recurrence, $date),
+            'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
         ];
         /** @var TransactionGroup $group */
         $group = $this->groupRepository->store($array);
@@ -328,17 +336,18 @@ class CreateRecurringTransactions implements ShouldQueue
     /**
      * Check if the occurences should be executed.
      *
-     * @param Recurrence $recurrence
-     * @param array      $occurrences
+     * @param Recurrence           $recurrence
+     * @param RecurrenceRepetition $repetition
+     * @param array                $occurrences
      *
      * @return Collection
      */
-    private function handleOccurrences(Recurrence $recurrence, array $occurrences): Collection
+    private function handleOccurrences(Recurrence $recurrence, RecurrenceRepetition $repetition, array $occurrences): Collection
     {
         $collection = new Collection;
         /** @var Carbon $date */
         foreach ($occurrences as $date) {
-            $result = $this->handleOccurrence($recurrence, $date);
+            $result = $this->handleOccurrence($recurrence, $repetition, $date);
             if (null !== $result) {
                 $collection->push($result);
             }
@@ -374,6 +383,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $includeWeekend = clone $this->date;
             $includeWeekend->addDays(2);
             $occurrences = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
+            /*
             Log::debug(
                 sprintf(
                     'Calculated %d occurrences between %s and %s',
@@ -383,9 +393,10 @@ class CreateRecurringTransactions implements ShouldQueue
                 ),
                 $this->debugArray($occurrences)
             );
+            */
             unset($includeWeekend);
 
-            $result     = $this->handleOccurrences($recurrence, $occurrences);
+            $result     = $this->handleOccurrences($recurrence, $repetition, $occurrences);
             $collection = $collection->merge($result);
         }
 

@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Relevant rules',
     'active'                  => 'Is active?',
     'percentage'              => 'pct.',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Next due',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Last activity',

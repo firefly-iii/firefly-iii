@@ -276,6 +276,16 @@
                                     <td class="markdown">{{ journal.notes|markdown }}</td>
                                 </tr>
                             {% endif %}
+                            {% if journalHasMeta(journal.transaction_journal_id, 'recurring_total') and journalHasMeta(journal.transaction_journal_id, 'recurring_count')  %}
+                                {% set recurringTotal = journalGetMetaField(journal.transaction_journal_id, 'recurring_total') %}
+                                {% if 0 == recurringTotal %}
+                                    {% set recurringTotal = '∞' %}
+                                {% endif %}
+                                <tr>
+                                    <td>{{ trans('list.recurring_transaction') }}</td>
+                                    <td>{{ trans('firefly.recurring_info', {total: recurringTotal, count: journalGetMetaField(journal.transaction_journal_id, 'recurring_count') }) }}</td>
+                                </tr>
+                            {% endif %}
                             {% if journal.tags|length > 0 %}
                                 <tr>
                                     <td>{{ 'tags'|_ }}</td>
