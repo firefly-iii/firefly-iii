@@ -231,7 +231,6 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-
         $result = app('amount')->formatFlat($journal['foreign_currency_symbol'], (int)$journal['foreign_currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
@@ -286,12 +285,6 @@ class TransactionGroupTwig extends AbstractExtension
         $sourceAccountId = $journal['source_account_id'];
         $amount = $this->signAmount($amount, $type, $destinationType, $sourceAccountId, $account->id);
         
-        // withdrawals are negative
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
-        
-
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
