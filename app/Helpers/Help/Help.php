@@ -77,7 +77,7 @@ class Help implements HelpInterface
      */
     public function getFromGitHub(string $route, string $language): string
     {
-        $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/master/%s/%s.md', $language, $route);
+        $uri = sprintf('https://raw.githubusercontent.com/firefly-iii/help/main/%s/%s.md', $language, $route);
         Log::debug(sprintf('Trying to get %s...', $uri));
         $opt        = ['headers' => ['User-Agent' => $this->userAgent]];
         $content    = '';

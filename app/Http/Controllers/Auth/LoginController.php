@@ -176,4 +176,35 @@ class LoginController extends Controller
         throw $exception;
     }
 
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUri = config('firefly.custom_logout_uri');
+        if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
+            return redirect($logoutUri);
+        }
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new \Illuminate\Http\Response('', 204)
+            : redirect('/');
+    }
+
 }

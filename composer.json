@@ -65,7 +65,7 @@
       },
       {
         "type": "paypal",
-        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"
+        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
       }
     ],
   "require": {
@@ -93,6 +93,7 @@
     "laravel/ui": "^2.0",
     "laravelcollective/html": "6.*",
     "league/commonmark": "1.*",
+    "league/csv": "^9.6",
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^7.0",
     "pragmarx/recovery": "^0.1.0",
@@ -179,10 +180,13 @@
       "@php artisan firefly-iii:delete-empty-journals",
       "@php artisan firefly-iii:delete-empty-groups",
       "@php artisan firefly-iii:fix-account-types",
+      "@php artisan firefly-iii:fix-account-order",
       "@php artisan firefly-iii:rename-meta-fields",
       "@php artisan firefly-iii:fix-ob-currencies",
       "@php artisan firefly-iii:fix-long-descriptions",
       "@php artisan firefly-iii:fix-recurring-transactions",
+      "@php artisan firefly-iii:unify-group-accounts",
+      "@php artisan firefly-iii:fix-transaction-types",
 
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",

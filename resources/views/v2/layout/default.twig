@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="{{ trans('config.html_language') }}">
+<head>
+    <base href="{{ route('index') }}/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="locale" content="{{ locale|replace({'_':'-'}) }}">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>
+        {% if subTitle %}
+            {{ subTitle }} »
+        {% endif %}
+        {% if title != "Firefly III" %}
+            {{ title }} »
+        {% endif %}
+
+        Firefly III
+
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="v2/plugins/local-fonts/gf-source.css">
+    <link rel="stylesheet" href="v2/css/app.css">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    {% include('partials.layout.navbar') %}
+
+    <!-- Main Sidebar Container -->
+    {% include('partials.layout.sidebar') %}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0 text-dark">{% if mainTitleIcon %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
+                            {{ title }} <small class="text-muted">
+                                {% if subTitleIcon %}<i class="fa fas {{ subTitleIcon }}"></i>{% endif %}
+                                {{ subTitle }}</small></h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Bread crumbs v1</li>
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    {% include('partials.layout.footer') %}
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        bla bla bla
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<script src="{{ route('javascript.v2.variables') }}" nonce="{{ JS_NONCE }}"></script>
+<script src="v2/js/manifest.js" nonce="{{ JS_NONCE }}"></script>
+<script src="v2/js/vendor.js" nonce="{{ JS_NONCE }}"></script>
+{% block scripts %}{% endblock %}
+
+<!-- jQuery -->
+<!--<script src="v2/plugins/jquery/jquery.min.js" nonce="{{ JS_NONCE }}"></script>-->
+<!-- jQuery UI 1.11.4 -->
+<!--<script src="v2/plugins/jquery-ui/jquery-ui.min.js" nonce="{{ JS_NONCE }}"></script>-->
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<!--<script nonce="{{ JS_NONCE }}">
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+-->
+<!-- Bootstrap 4 -->
+<!--<script src="v2/plugins/bootstrap/js/bootstrap.bundle.min.js" nonce="{{ JS_NONCE }}"></script>-->
+<!-- overlayScrollbars -->
+<!--<script src="v2/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js" nonce="{{ JS_NONCE }}"></script>-->
+<!-- AdminLTE App -->
+<!--<script src="v2/dist/js/adminlte.js" nonce="{{ JS_NONCE }}"></script>-->
+</body>
+</html>
+

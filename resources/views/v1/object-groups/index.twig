@@ -1,0 +1,77 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'object_groups'|_ }}</h3>
+                </div>
+                {% if objectGroups|length == 0 %}
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <p>
+                                    {{ 'object_groups_empty_explain'|_ }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if objectGroups|length > 0 %}
+                    <div class="box-body no-padding">
+                        <table class="table table-condensed" id="sortable">
+                            <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>
+                                    {{ 'object_group_title'|_ }}
+                                </th>
+                                <th>
+                                    &nbsp;
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for objectGroup in objectGroups %}
+                                <tr class="group-sortable" data-id="{{ objectGroup.id }}" data-name="{{ objectGroup.title|escape('html') }}" data-order="{{ objectGroup.order }}">
+                                    <td><i class="fa fa-fw fa-bars group-handle"></i></td>
+                                    <td>
+                                        <strong>{{ objectGroup.title }}</strong><br />
+
+                                        {% for piggyBank in objectGroup.piggyBanks %}
+                                            - {{ 'piggy_bank'|_ }}: <a href="{{ route('piggy-banks.show', [piggyBank.id]) }}">{{ piggyBank.name }}</a><br>
+                                        {% endfor %}
+                                        {% for bill in objectGroup.bills %}
+                                            - {{ 'bill'|_ }}: <a href="{{ route('bills.show', [bill.id]) }}">{{ bill.name }}</a><br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a class="btn btn-default" href="{{ route('object-groups.edit', [objectGroup.id]) }}">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-danger" href="{{ route('object-groups.delete', [objectGroup.id]) }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

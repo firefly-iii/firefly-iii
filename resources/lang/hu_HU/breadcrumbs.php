@@ -59,4 +59,7 @@ return [
     'delete_journal_link'    => 'Tranzakciók közötti kapcsolat törlése',
     'telemetry_index'        => 'Telemetria',
     'telemetry_view'         => 'Telemetria megtekintése',
+    'edit_object_group'      => 'Edit group ":title"',
+    'delete_object_group'    => 'Delete group ":title"',
+    'logout_others'          => 'Logout other sessions'
 ];

@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Quy tắc phải có ít nhất một hành động.',
     'base64'                         => 'Đây không phải là dữ liệu được mã hóa base64 hợp lệ.',
     'model_id_invalid'               => 'ID đã cho có vẻ không hợp lệ cho mô hình này.',
-    'more'                           => ':thuộc tính phải lớn hơn ":more".',
     'less'                           => ':thuộc tính phải nhỏ hơn 10,000,000',
     'active_url'                     => 'Thuộc tính: không phải là một URL hợp lệ.',
     'after'                          => 'Thuộc tính: phải là một ngày sau: ngày.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Tổng số tiền không thể bằng không.',
     'current_target_amount'          => 'Số tiền hiện tại phải nhỏ hơn số tiền mục tiêu.',
     'unique_piggy_bank_for_user'     => 'Tên của con heo đất phải là duy nhất.',
+    'unique_object_group'            => 'Tên nhóm phải không bị trùng',
 
     'secure_password'                => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
 
     'gte.numeric' => ':attribute phải lớn hơn hoặc bằng :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute phải lớn hơn hoặc bằng :value kilobyte.',
     'gte.string'  => ':attribute phải lớn hơn hoặc bằng :value ký tự.',
     'gte.array'   => ':attribute phải có :value mục trở lên.',

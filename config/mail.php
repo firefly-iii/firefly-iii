@@ -62,10 +62,10 @@ return [
             'transport' => 'sendmail',
             'path'      => '/usr/sbin/sendmail -bs',
         ],
-
         'log' => [
             'transport' => 'log',
-            'channel'   => env('MAIL_LOG_CHANNEL'),
+            'channel'   => env('MAIL_LOG_CHANNEL', 'stack'),
+            'level'     => 'debug',
         ],
 
         'array' => [

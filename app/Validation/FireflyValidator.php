@@ -505,6 +505,30 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
+    public function validateUniqueObjectGroup($attribute, $value, $parameters): bool
+    {
+        $exclude = $parameters[0] ?? null;
+        $query   = DB::table('object_groups')
+                     ->whereNull('object_groups.deleted_at')
+                     ->where('object_groups.user_id', auth()->user()->id)
+                     ->where('object_groups.title', $value);
+        if (null !== $exclude) {
+            $query->where('object_groups.id', '!=', (int) $exclude);
+        }
+
+        return 0 === $query->count();
+    }
+
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     *                   TODO this method does not need a for loop
+     *
+     * @return bool
+     */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters): bool
     {
         $exclude = $parameters[0] ?? null;

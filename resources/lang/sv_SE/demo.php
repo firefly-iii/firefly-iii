@@ -33,6 +33,5 @@ return [
     'currencies-index'       => 'Firefly III stödjer flera valutor. Standardvaluta är Euro, men kan ändras till US Dollar och många andra valutor. Ett litet urval av valutor har inkluderats och du kan skapa en egen valuta om du så önskar. Att byta standardvaluta ändrar inte valuta på befintliga transaktioner. Firefly III stödjer att man använder flera olika valutor samtidigt.',
     'transactions-index'     => 'Dessa utgifter, insättningar och överföringar är inte särskilt fantasifulla. De har genererats automatiskt.',
     'piggy-banks-index'      => 'Som ni ser finns det tre spargrisar. Använd plus- och minus-knapparna för att påverka mängden pengar i varje spargris. Klicka på spargrisens namn för att se administrationen för varje spargris.',
-    'import-index'           => 'Alla CSV-filer kan importeras till Firefly III. Det stöder också import av data från bunq och Specter. Andra banker och finansiella aggregerare kommer att implementeras i framtiden. Som demo-användare kan du dock bara se den "falska" -leverantören i aktion. Det kommer att generera några slumpmässiga transaktioner för att visa hur processen fungerar.',
     'profile-index'          => 'Tänk på att demosidan återställs var fjärde timme. Din åtkomst kan återkallas när som helst. Detta händer automatiskt och är inte ett fel.',
 ];

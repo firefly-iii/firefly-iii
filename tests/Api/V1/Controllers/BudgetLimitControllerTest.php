@@ -116,7 +116,6 @@ class BudgetLimitControllerTest extends TestCase
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
-        //$repository->shouldReceive('findNull')->andReturn(null)->once();
         $transformer = $this->mock(BudgetLimitTransformer::class);
         $blRepository = $this->mock(BudgetLimitRepositoryInterface::class);
 

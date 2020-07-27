@@ -1,5 +1,6 @@
 /node_modules
 /frontend/node_modules
+/frontend/fonts
 /public/hot
 /public/storage
 /storage/*.key

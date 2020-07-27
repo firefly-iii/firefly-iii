@@ -352,7 +352,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => $spent,
+                'amount'                  => number_format((float) $spent, $currency['decimal_places'], '.', ''),
             ];
         }
 

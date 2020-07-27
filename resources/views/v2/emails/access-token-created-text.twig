@@ -1,0 +1,7 @@
+{% include 'emails.header-text' %}
+{{ trans('email.access_token_created_body')|raw }}
+
+{{ trans('email.access_token_created_explanation')|striptags|raw }}
+
+{{ trans('email.access_token_created_revoke', {url: route('profile.index') })|raw }}
+{% include 'emails.footer-text' %}

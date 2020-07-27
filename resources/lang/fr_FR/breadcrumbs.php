@@ -59,4 +59,7 @@ return [
     'delete_journal_link'    => 'Supprimer le lien entre les opérations',
     'telemetry_index'        => 'Télémétrie',
     'telemetry_view'         => 'Voir la télémétrie',
+    'edit_object_group'      => 'Modifier le groupe ":title"',
+    'delete_object_group'    => 'Supprimer le groupe ":title"',
+    'logout_others'          => 'Déconnecter d\'autres sessions'
 ];

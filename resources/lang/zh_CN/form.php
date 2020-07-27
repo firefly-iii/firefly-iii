@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => '你确定你想要删除名为 ":name" 的帐户?',
     'bill_areYouSure'             => '你确定你想要删除名为 ":name" 的帐单?',
     'rule_areYouSure'             => '你确定你想要删除名为 ":title" 的规则?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '你确定你想要删除名为 ":title" 的规则群组?',
     'budget_areYouSure'           => '你确定你想要删除名为 ":name" 的预算?',
     'category_areYouSure'         => '你确定你想要删除名为 ":name" 的分类?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => '与此连结类型连接的唯一一笔交易会遗失连接。|与此连结类型连接的 :count 笔交易会遗失连接。',
     'also_delete_rules'           => '与此规则群组连接的唯一一则规则也会被删除。|与此规则群组连接的 :count 则规则也会被删除。',
     'also_delete_piggyBanks'      => '与此帐户连接的唯一一个小猪扑满也会被删除。|与此帐户连接的 :count 个小猪扑满也会被删除。',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => '与此帐单连接的唯一一笔交易不会被删除。|与此帐单连接的 :count 笔交易不会被删除。',
     'budget_keep_transactions'    => '与此预算连接的唯一一笔交易不会被删除。|与此预算连接的 :count 笔交易不会被删除。',
     'category_keep_transactions'  => '与此分类连接的唯一一笔交易不会被删除。|与此分类连接的 :count 笔交易不会被删除。',
     'recurring_keep_transactions' => '由此定期交易建立的唯一一笔交易不会被删除。|由此定期交易建立的 :count 笔交易不会被删除。',
     'tag_keep_transactions'       => '与此标签连接的唯一一笔交易不会被删除。|与此标签连接的 :count 笔交易不会被删除。',
     'check_for_updates'           => '检查更新',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => '电子邮件地址',
     'password'              => '密码',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => '这是演示网站',
 
     // import
-    'import_file'           => '导入文件',
     'configuration_file'    => '设置档案',
-    'import_file_type'      => '导入文件类型',
     'csv_comma'             => '逗号 (,)',
     'csv_semicolon'         => '分号 (;)',
     'csv_tab'               => 'TAB键 (不可见)',
     'csv_delimiter'         => 'CSV 栏位分隔符号',
-    'csv_import_account'    => '预设导入帐户',
     'client_id'             => '客户端 ID',
     'app_id'                => '应用 ID',
     'secret'                => '密钥',

@@ -78,6 +78,7 @@ class AccountTransformer extends AbstractTransformer
         [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $decimalPlaces);
         [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
+        $openingBalance = number_format((float) $openingBalance, $decimalPlaces, '.', '');
         $liabilityAmount = null;
         $liabilityStart  = null;
         if (null !== $liabilityType) {
@@ -94,12 +95,12 @@ class AccountTransformer extends AbstractTransformer
             $latitude  = $location->latitude;
             $zoomLevel = $location->zoom_level;
         }
-
         return [
-            'id'                      => (int)$account->id,
+            'id'                      => (int) $account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
+            'order'                   => $account->order,
             'name'                    => $account->name,
             'type'                    => $accountType,
             'account_role'            => $accountRole,
@@ -107,7 +108,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_code'           => $currencyCode,
             'currency_symbol'         => $currencySymbol,
             'currency_decimal_places' => $decimalPlaces,
-            'current_balance'         => round(app('steam')->balance($account, $date), $decimalPlaces),
+            'current_balance'         => number_format((float) app('steam')->balance($account, $date), $decimalPlaces, '.', ''),
             'current_balance_date'    => $date->format('Y-m-d'),
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
@@ -115,7 +116,7 @@ class AccountTransformer extends AbstractTransformer
             'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
             'iban'                    => '' === $account->iban ? null : $account->iban,
             'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
-            'virtual_balance'         => round($account->virtual_balance, $decimalPlaces),
+            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,
@@ -181,12 +182,12 @@ class AccountTransformer extends AbstractTransformer
     {
         $currency       = $this->repository->getAccountCurrency($account);
         $default        = app('amount')->getDefaultCurrencyByUser($account->user);
-        $currencyId     = $default->id;
+        $currencyId     = (int) $default->id;
         $currencyCode   = $default->code;
         $decimalPlaces  = $default->decimal_places;
         $currencySymbol = $default->symbol;
         if (null !== $currency) {
-            $currencyId     = $currency->id;
+            $currencyId     = (int) $currency->id;
             $currencyCode   = $currency->code;
             $decimalPlaces  = $currency->decimal_places;
             $currencySymbol = $currency->symbol;
@@ -240,7 +241,7 @@ class AccountTransformer extends AbstractTransformer
         $openingBalanceDate = null;
         if (in_array($accountType, ['asset', 'liabilities'], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
-            $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
+            $openingBalance     = $amount;
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
 

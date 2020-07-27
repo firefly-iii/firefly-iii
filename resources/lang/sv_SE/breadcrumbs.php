@@ -57,6 +57,9 @@ return [
     'edit_tag'               => 'Redigera etiketten ”:tag”',
     'delete_tag'             => 'Ta bort etiketten ”:tag”',
     'delete_journal_link'    => 'Ta bort länken mellan transaktioner',
-    'telemetry_index'        => 'Telemetry',
-    'telemetry_view'         => 'View telemetry',
+    'telemetry_index'        => 'Telemetri',
+    'telemetry_view'         => 'Visa telemetri',
+    'edit_object_group'      => 'Redigera grupp ":title"',
+    'delete_object_group'    => 'Ta bort grupp ":title"',
+    'logout_others'          => 'Logga ut andra sessioner'
 ];

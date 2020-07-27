@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Support\System\GeneratesInstallationId;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 
 /**
@@ -68,6 +69,7 @@ class UpgradeFireflyInstructions extends Command
         app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
         app('telemetry')->feature('system.os.is_docker', $isDocker);
         app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.users.count', (string)User::count());
 
         return 0;
     }

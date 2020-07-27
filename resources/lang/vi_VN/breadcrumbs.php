@@ -59,4 +59,7 @@ return [
     'delete_journal_link'    => 'Xóa liên kết giữa các giao dịch',
     'telemetry_index'        => 'Thu thập dữ liệu cho nhà phát triển',
     'telemetry_view'         => 'Xem dữ liệu thu thập',
+    'edit_object_group'      => 'Chỉnh sửa nhóm ":title"',
+    'delete_object_group'    => 'Xóa nhóm ":title"',
+    'logout_others'          => 'Logout other sessions'
 ];

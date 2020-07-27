@@ -30,6 +30,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
@@ -669,6 +670,14 @@ try {
         }
     );
 
+    Breadcrumbs::register(
+        'profile.logout-others',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('breadcrumbs.logout_others'), route('profile.logout-others'));
+        }
+    );
+
     // PROFILE
     Breadcrumbs::register(
         'profile.index',
@@ -1163,13 +1172,30 @@ try {
         }
     );
 
-    // SPLIT
+    // object groups
     Breadcrumbs::register(
-        'transactions.split.edit',
-        static function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.split.edit', [$journal->id]));
+        'object-groups.index',
+        static function (BreadcrumbsGenerator $breadcrumbs): void {
+            $breadcrumbs->parent('index');
+            $breadcrumbs->push(trans('firefly.object_groups_breadcrumb'), route('object-groups.index'));
         }
     );
+
+    Breadcrumbs::register(
+        'object-groups.edit',
+        static function (BreadcrumbsGenerator $breadcrumbs, ObjectGroup $objectGroup) {
+            $breadcrumbs->parent('object-groups.index');
+            $breadcrumbs->push(trans('breadcrumbs.edit_object_group', ['title' => $objectGroup->title]), route('object-groups.edit', [$objectGroup->id]));
+        }
+    );
+
+    Breadcrumbs::register(
+        'object-groups.delete',
+        static function (BreadcrumbsGenerator $breadcrumbs, ObjectGroup $objectGroup) {
+            $breadcrumbs->parent('object-groups.index');
+            $breadcrumbs->push(trans('breadcrumbs.delete_object_group', ['title' => $objectGroup->title]), route('object-groups.delete', [$objectGroup->id]));
+        }
+    );
+
 } catch (DuplicateBreadcrumbException $e) {
 }

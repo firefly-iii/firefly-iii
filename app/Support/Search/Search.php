@@ -102,7 +102,7 @@ class Search implements SearchInterface
     {
         $string = implode(' ', $this->words);
         if ('' === $string) {
-            return \is_string($this->originalQuery) ? $this->originalQuery : '';
+            return is_string($this->originalQuery) ? $this->originalQuery : '';
         }
 
         return $string;
@@ -132,6 +132,11 @@ class Search implements SearchInterface
             $filteredQuery = str_replace($match, '', $filteredQuery);
         }
         $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
+
+        // str replace some stuff:
+        $search        = ['%', '=', '/', '<', '>', '(', ')', ';'];
+        $filteredQuery = str_replace($search, ' ', $filteredQuery);
+
         if ('' !== $filteredQuery) {
             $this->words = array_map('trim', explode(' ', $filteredQuery));
         }
@@ -209,7 +214,7 @@ class Search implements SearchInterface
                 case 'source':
                     // source can only be asset, liability or revenue account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
@@ -218,19 +223,19 @@ class Search implements SearchInterface
                 case 'destination':
                     // source can only be asset, liability or expense account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
                     break;
                 case 'category':
-                    $result = $this->categoryRepository->searchCategory($modifier['value']);
+                    $result = $this->categoryRepository->searchCategory($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setCategories($result);
                     }
                     break;
                 case 'bill':
-                    $result = $this->billRepository->searchBill($modifier['value']);
+                    $result = $this->billRepository->searchBill($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBills($result);
                     }
@@ -243,7 +248,7 @@ class Search implements SearchInterface
                     break;
                     break;
                 case 'budget':
-                    $result = $this->budgetRepository->searchBudget($modifier['value']);
+                    $result = $this->budgetRepository->searchBudget($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBudgets($result);
                     }
@@ -297,6 +302,12 @@ class Search implements SearchInterface
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $updatedAt = new Carbon($modifier['value']);
                     $collector->setUpdatedAt($updatedAt);
+                    break;
+                case 'external_id':
+                    $collector->setExternalId($modifier['value']);
+                    break;
+                case 'internal_reference':
+                    $collector->setInternalReference($modifier['value']);
                     break;
             }
         }

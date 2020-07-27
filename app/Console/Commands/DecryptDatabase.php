@@ -98,7 +98,7 @@ class DecryptDatabase extends Command
                         } catch(JsonException $e) {
                             Log::error($e->getMessage());
                         }
-                        Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, print_r($value, true), $table, $id));
+                        //Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, print_r($value, true), $table, $id));
 
                         /** @var Preference $object */
                         $object = Preference::find((int) $id);
@@ -110,7 +110,7 @@ class DecryptDatabase extends Command
                     }
 
                     if ($value !== $original) {
-                        Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, $value, $table, $id));
+                        //Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, $value, $table, $id));
                         DB::table($table)->where('id', $id)->update([$field => $value]);
                     }
                 }
@@ -159,7 +159,6 @@ class DecryptDatabase extends Command
             if ('The MAC is invalid.' === $e->getMessage()) {
                 throw new FireflyException($e->getMessage()); // @codeCoverageIgnore
             }
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
         return $value;

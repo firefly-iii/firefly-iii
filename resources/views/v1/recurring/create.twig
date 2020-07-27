@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 
-    <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal">
+    <form action="{{ route('recurring.store') }}" method="post" id="store" class="form-horizontal" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
         {# row with recurrence information #}
         <div class="row">
@@ -51,8 +51,8 @@
 
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('active', 1) }}
-
                         {{ ExpandedForm.checkbox('apply_rules',1) }}
+                        {{ ExpandedForm.file('attachments[]', {'multiple': 'multiple','helpText': trans('firefly.upload_max_file_size', {'size': uploadSize|filesize}) }) }}
                     </div>
                 </div>
             </div>

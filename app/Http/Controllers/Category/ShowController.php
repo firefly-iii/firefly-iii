@@ -79,7 +79,6 @@ class ShowController extends Controller
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
-        //Log::debug('Now in show()');
         /** @var Carbon $start */
         $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -105,8 +104,6 @@ class ShowController extends Controller
 
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
-
-        //Log::debug('End of show()');
 
         return view('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }

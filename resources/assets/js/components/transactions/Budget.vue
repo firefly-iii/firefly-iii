@@ -27,17 +27,17 @@
             {{ $t('firefly.budget') }}
         </div>
         <div class="col-sm-12">
-            <select 
-            name="budget[]" 
-            ref="budget" 
-            v-model="selected" 
+            <select
+            name="budget[]"
+            ref="budget"
+            v-model="selected"
             @input="handleInput"
-            v-on:change="signalChange" 
+            v-on:change="signalChange"
             :title="$t('firefly.budget')"
             class="form-control"
              v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets" 
-                    :label="cBudget.name" 
+                <option v-for="cBudget in this.budgets"
+                    :label="cBudget.name"
                     :value="cBudget.id">{{cBudget.name}}
                 </option>
             </select>
@@ -53,9 +53,9 @@
     export default {
         name: "Budget",
         props: {
-            transactionType: String, 
+            transactionType: String,
             value: {
-                type: [String, Number], 
+                type: [String, Number],
                 default: 0
             },
             error: Array,
@@ -82,7 +82,7 @@
                 return this.error.length > 0;
             },
             loadBudgets: function () {
-                let URI = document.getElementsByTagName('base')[0].href + "json/budgets";
+                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets?limit=1337';
                 axios.get(URI, {}).then((res) => {
                         this.budgets = [
                             {

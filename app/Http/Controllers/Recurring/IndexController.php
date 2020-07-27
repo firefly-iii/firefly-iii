@@ -111,6 +111,8 @@ class IndexController extends Controller
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            // lazy but OK
+            $array['attachments'] = $recurrence->attachments()->count();
 
             // make carbon objects out of occurrences
             foreach ($array['repetitions'] as $repIndex => $repetition) {
@@ -118,10 +120,6 @@ class IndexController extends Controller
                     $array['repetitions'][$repIndex]['occurrences'][$occIndex] = new Carbon($occurrence);
                 }
             }
-
-            //if (0 !== $recurrence->recurrenceRepetitions->count()) {
-            //$array['ocurrences'] = array_slice($this->recurring->getOccurrencesInRange($recurrence->recurrenceRepetitions->first(), $today, $year), 0, 1);
-            //}
 
             $recurring[] = $array;
         }

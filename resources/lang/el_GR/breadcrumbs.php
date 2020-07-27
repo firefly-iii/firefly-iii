@@ -59,4 +59,7 @@ return [
     'delete_journal_link'    => 'Διαγραφή συνδέσμου μεταξύ των συναλλαγών',
     'telemetry_index'        => 'Τηλεμετρία',
     'telemetry_view'         => 'Προβολή τηλεμετρίας',
+    'edit_object_group'      => 'Επεξεργασία ομάδας ":title"',
+    'delete_object_group'    => 'Διαγραφή ομάδας ":title"',
+    'logout_others'          => 'Αποσυνδέσετε τις άλλες συνεδρίες'
 ];

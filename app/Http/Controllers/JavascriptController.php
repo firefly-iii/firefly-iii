@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -96,6 +97,30 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Bit of a hack but OK.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function variablesV2(Request $request): Response
+    {
+        /** @var Carbon $start */
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end = clone session('end', Carbon::now()->endOfMonth());
+
+        $data = [
+            'start' => $start->format('Y-m-d'),
+            'end'   => $end->format('Y-m-d'),
+        ];
+
+        return response()
+            ->view('javascript.variables', $data)
+            ->header('Content-Type', 'text/javascript');
+    }
+
+    /**
      * Show some common variables to be used in scripts.
      *
      * @param Request                     $request
@@ -107,21 +132,13 @@ class JavascriptController extends Controller
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
         $account    = $repository->findNull((int) $request->get('account'));
-        $currencyId = 0;
-        if (null !== $account) {
-            // TODO we can use getAccountCurrency() instead
-            $currencyId = (int) $repository->getMetaValue($account, 'currency_id');
-        }
-        /** @var TransactionCurrency $currency */
-        $currency = $currencyRepository->findNull($currencyId);
-        if (null === $currency) {
-            /** @var TransactionCurrency $currency */
-            $currency = app('amount')->getDefaultCurrency();
+        $currency = app('amount')->getDefaultCurrency();
+        if(null !== $account) {
+            $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
 
-        $localeconv                = app('amount')->getLocaleInfo();
-        $accounting                = app('amount')->getJsConfig($localeconv);
-        $localeconv['frac_digits'] = $currency->decimal_places;
+        $accounting                = app('amount')->getJsConfig();
+        $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
@@ -129,14 +146,13 @@ class JavascriptController extends Controller
         $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
-            'currencyCode'    => $currency->code,
-            'currencySymbol'  => $currency->symbol,
-            'accounting'      => $accounting,
-            'localeconv'      => $localeconv,
-            'language'        => $lang,
-            'dateRangeTitle'  => $dateRange['title'],
-            'dateRangeConfig' => $dateRange['configuration'],
-            'uid'             => $uid,
+            'currencyCode'          => $currency->code,
+            'currencySymbol'        => $currency->symbol,
+            'accountingLocaleInfo'  => $accounting,
+            'language'              => $lang,
+            'dateRangeTitle'        => $dateRange['title'],
+            'dateRangeConfig'       => $dateRange['configuration'],
+            'uid'                   => $uid,
         ];
         $request->session()->keep(['two-factor-secret']);
 

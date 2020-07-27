@@ -39,7 +39,7 @@ function makeRevenueAC() {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         prefetch: {
-            url: 'json/revenue-accounts?uid=' + uid,
+            url: 'api/v1/autocomplete/accounts?types=Revenue account?uid=' + uid,
             filter: function (list) {
                 return $.map(list, function (object) {
                     return {name: object.name};
@@ -47,7 +47,7 @@ function makeRevenueAC() {
             }
         },
         remote: {
-            url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
+            url: 'api/v1/autocomplete/accounts?types=Revenue account&query=%QUERY&uid=' + uid,
             wildcard: '%QUERY',
             filter: function (list) {
                 return $.map(list, function (object) {

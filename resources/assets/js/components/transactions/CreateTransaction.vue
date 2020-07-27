@@ -65,7 +65,7 @@
                                     </transaction-description>
                                     <account-select
                                             inputName="source[]"
-                                            v-bind:title="$t('firefly.source_account')"
+                                            v-bind:inputDescription="$t('firefly.source_account')"
                                             :accountName="transaction.source_account.name"
                                             :accountTypeFilters="transaction.source_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
@@ -77,7 +77,7 @@
                                     ></account-select>
                                     <account-select
                                             inputName="destination[]"
-                                            v-bind:title="$t('firefly.destination_account')"
+                                            v-bind:inputDescription="$t('firefly.destination_account')"
                                             :accountName="transaction.destination_account.name"
                                             :accountTypeFilters="transaction.destination_account.allowed_types"
                                             :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"
@@ -644,6 +644,7 @@
                                 internal_reference: [],
                                 notes: [],
                                 attachments: [],
+                                external_uri: [],
                             },
                         };
                     }
@@ -740,6 +741,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: 0,
@@ -753,7 +755,8 @@
                                                "invoice_date": "",
                                                "internal_reference": "",
                                                "notes": "",
-                                               "attachments": []
+                                               "attachments": [],
+                                               "external_uri": "",
                                            },
                                            foreign_amount: {
                                                amount: "",
@@ -831,11 +834,11 @@
             selectedSourceAccount: function (index, model) {
                 console.log('Now in selectedSourceAccount()');
                 if (typeof model === 'string') {
-                    console.log('model is string.')
+                    //console.log('model is string.')
                     // cant change types, only name.
                     this.transactions[index].source_account.name = model;
                 } else {
-                    console.log('model is NOT string.')
+                    //console.log('model is NOT string.')
                     this.transactions[index].source_account = {
                         id: model.id,
                         name: model.name,

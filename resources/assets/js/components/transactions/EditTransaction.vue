@@ -66,7 +66,7 @@
                                     </transaction-description>
                                     <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                                     inputName="source[]"
-                                                    v-bind:title="$t('firefly.source_account')"
+                                                    v-bind:inputDescription="$t('firefly.source_account')"
                                                     :accountName="transaction.source_account.name"
                                                     :accountTypeFilters="transaction.source_account.allowed_types"
                                                     :transactionType="transactionType"
@@ -86,7 +86,7 @@
                                     </div>
                                     <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                                     inputName="destination[]"
-                                                    v-bind:title="$t('firefly.destination_account')"
+                                                    v-bind:inputDescription="$t('firefly.destination_account')"
                                                     :accountName="transaction.destination_account.name"
                                                     :accountTypeFilters="transaction.destination_account.allowed_types"
                                                     :transactionType="transactionType"
@@ -307,21 +307,7 @@
             },
             deleteTransaction(index, event) {
                 event.preventDefault();
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        // TODO empty iff?
-                    }
-                }
-
                 this.transactions.splice(index, 1);
-
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        // TODO empty iff?
-                    }
-                }
             },
             clearDestination(index) {
                 // console.log('clearDestination(' + index + ')');
@@ -380,6 +366,12 @@
 
                 }
             },
+            ucFirst(string) {
+                if (typeof string === 'string') {
+                    return string.charAt(0).toUpperCase() + string.slice(1);
+                }
+                return null;
+            },
             processIncomingGroupRow(transaction) {
                 // console.log(transaction);
                 this.setTransactionType(transaction.type);
@@ -390,6 +382,11 @@
                         newTags.push({text: transaction.tags[key], tiClasses: []});
                     }
                 }
+                console.log('source allowed types for a ' + transaction.type);
+                //console.log(window.expectedSourceTypes.source[transaction.type]);
+                console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
+                console.log('destination allowed types for a ' + transaction.type);
+                console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
 
                 this.transactions.push({
                                            transaction_journal_id: transaction.transaction_journal_id,
@@ -419,6 +416,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: transaction.budget_id,
@@ -431,7 +429,8 @@
                                                payment_date: transaction.payment_date,
                                                invoice_date: transaction.invoice_date,
                                                internal_reference: transaction.internal_reference,
-                                               notes: transaction.notes
+                                               notes: transaction.notes,
+                                               external_uri: transaction.external_uri
                                            },
                                            foreign_amount: {
                                                amount: this.roundNumber(this.positiveAmount(transaction.foreign_amount), transaction.foreign_currency_decimal_places),
@@ -445,7 +444,7 @@
                                                currency_name: transaction.currency_name,
                                                currency_code: transaction.currency_code,
                                                currency_decimal_places: transaction.currency_decimal_places,
-                                               allowed_types: [transaction.source_type]
+                                               allowed_types: window.expectedSourceTypes.source[this.ucFirst(transaction.type)]
                                            },
                                            destination_account: {
                                                id: transaction.destination_id,
@@ -455,9 +454,21 @@
                                                currency_name: transaction.currency_name,
                                                currency_code: transaction.currency_code,
                                                currency_decimal_places: transaction.currency_decimal_places,
-                                               allowed_types: [transaction.destination_type]
+                                               allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                                            }
                                        });
+            },
+            limitSourceType: function (type) {
+                // let i;
+                // for (i = 0; i < this.transactions.length; i++) {
+                //     this.transactions[i].source_account.allowed_types = [type];
+                // }
+            },
+            limitDestinationType: function (type) {
+                // let i;
+                // for (i = 0; i < this.transactions.length; i++) {
+                //     this.transactions[i].destination_account.allowed_types = [type];
+                // }
             },
             convertData: function () {
                 let data = {
@@ -599,6 +610,7 @@
                         payment_date: row.custom_fields.payment_date,
                         invoice_date: row.custom_fields.invoice_date,
                         internal_reference: row.custom_fields.internal_reference,
+                        external_uri: row.custom_fields.external_uri,
                         notes: row.custom_fields.notes,
                         tags: tagList
                     };
@@ -821,6 +833,7 @@
                                                    internal_reference: [],
                                                    notes: [],
                                                    attachments: [],
+                                                   external_uri: [],
                                                },
                                            },
                                            budget: 0,
@@ -834,7 +847,8 @@
                                                "invoice_date": "",
                                                "internal_reference": "",
                                                "notes": "",
-                                               "attachments": []
+                                               "attachments": [],
+                                               "external_uri": "",
                                            },
                                            foreign_amount: {
                                                amount: "",
@@ -894,6 +908,10 @@
                                 case 'tags':
                                     this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                     break;
+                                case 'external_uri':
+                                    console.log('Found ext error in field "'+fieldName+'": ' + errors.errors[key]);
+                                    this.transactions[transactionIndex].errors.custom_errors[fieldName] = errors.errors[key];
+                                    break;
                                 case 'source_name':
                                 case 'source_id':
                                     this.transactions[transactionIndex].errors.source_account =
@@ -945,6 +963,7 @@
                                 internal_reference: [],
                                 notes: [],
                                 attachments: [],
+                                external_uri: [],
                             },
                         };
                     }

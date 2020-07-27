@@ -23,14 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class BudgetLimitRequest
  *
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class BudgetLimitRequest extends Request
+class BudgetLimitRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *
@@ -70,7 +74,7 @@ class BudgetLimitRequest extends Request
             'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
-            'amount'        => 'required|more:0',
+            'amount'        => 'required|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];

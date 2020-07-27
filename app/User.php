@@ -34,6 +34,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -44,6 +45,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -135,10 +137,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
- * @property string $password
- * @property bool $blocked
- * @property string|null $blocked_code
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  * @property string|null $provider
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
  */
@@ -257,6 +255,17 @@ class User extends Authenticatable
     public function budgets(): HasMany
     {
         return $this->hasMany(Budget::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Link to object groups.
+     *
+     * @return HasMany
+     */
+    public function objectGroups(): HasMany
+    {
+        return $this->hasMany(ObjectGroup::class);
     }
 
     /**

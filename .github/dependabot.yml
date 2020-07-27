@@ -1,0 +1,26 @@
+version: 2
+updates:
+  
+  # composer updates
+  - package-ecosystem: "composer"
+    directory: "/" # Location of package manifests
+    target-branch: develop
+    labels: bug
+    schedule:
+      interval: "daily"
+
+  # yarn / JS updates
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: develop
+    labels: bug
+    schedule:
+      interval: "daily"
+
+  # yarn / JS updates for new frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    target-branch: develop
+    labels: bug
+    schedule:
+      interval: "daily"

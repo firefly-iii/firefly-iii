@@ -114,7 +114,8 @@ class Range
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
-            $start     = app('navigation')->updateStartDate($viewRange, new Carbon);
+            $today     = today(config('app.timezone'));
+            $start     = app('navigation')->updateStartDate($viewRange, $today);
             $end       = app('navigation')->updateEndDate($viewRange, $start);
 
             app('session')->put('start', $start);
@@ -124,7 +125,7 @@ class Range
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $journal    = $repository->firstNull();
-            $first      = Carbon::now()->startOfYear();
+            $first      = today(config('app.timezone'))->startOfYear();
 
             if (null !== $journal) {
                 $first = $journal->date ?? $first;

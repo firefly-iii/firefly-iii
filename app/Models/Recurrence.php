@@ -191,6 +191,15 @@ class Recurrence extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * @return BelongsTo
      */
     public function transactionType(): BelongsTo

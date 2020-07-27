@@ -27,6 +27,8 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Rules\ZeroOrMore;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  *
@@ -35,8 +37,10 @@ use FireflyIII\Rules\ZeroOrMore;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class PiggyBankRequest extends Request
+class PiggyBankRequest extends FormRequest
 {
+    use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *
@@ -63,6 +67,7 @@ class PiggyBankRequest extends Request
             'startdate'      => $this->date('start_date'),
             'targetdate'     => $this->date('target_date'),
             'notes'          => $this->nlString('notes'),
+            'order'          => $this->integer('order'),
         ];
     }
 
@@ -90,7 +95,7 @@ class PiggyBankRequest extends Request
                 $piggyBank               = $this->route()->parameter('piggyBank');
                 $rules['name']           = 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
                 $rules['account_id']     = ['belongsToUser:accounts', new IsAssetAccountId];
-                $rules['target_amount']  = 'numeric|more:0';
+                $rules['target_amount']  = 'numeric|gt:0';
                 $rules['current_amount'] = ['numeric', new ZeroOrMore, new LessThanPiggyTarget];
                 break;
         }

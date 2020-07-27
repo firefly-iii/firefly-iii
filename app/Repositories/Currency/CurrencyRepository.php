@@ -170,14 +170,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             return 'current_default';
         }
 
-        //        // is the default currency for the system
-        //        $defaultSystemCode = config('firefly.default_currency', 'EUR');
-        //        $result            = $currency->code === $defaultSystemCode;
-        //        if (true === $result) {
-        //            Log::info('Is the default currency of the SYSTEM, return true.');
-        //
-        //            return 'system_fallback';
-        //        }
         Log::debug('Currency is not used, return false.');
 
         return null;
@@ -484,17 +476,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param string $search
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchCurrency(string $search): Collection
+    public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::where('enabled', 1);
         if ('' !== $search) {
             $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
         }
 
-        return $query->get();
+        return $query->take($limit)->get();
     }
 
     /**

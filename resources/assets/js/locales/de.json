@@ -27,6 +27,7 @@
         "category": "Kategorie",
         "attachments": "Anh\u00e4nge",
         "notes": "Notizen",
+        "external_uri": "External URI",
         "update_transaction": "Buchung aktualisieren",
         "after_update_create_another": "Nach dem Aktualisieren hierher zur\u00fcckkehren, um weiter zu bearbeiten.",
         "store_as_new": "Als neue Buchung speichern statt zu aktualisieren.",
@@ -70,7 +71,9 @@
         "profile_create_new_token": "Neuen Schl\u00fcssel erstellen",
         "profile_create_token": "Schl\u00fcssel erstellen",
         "profile_create": "Erstellen",
-        "profile_save_changes": "\u00c4nderungen speichern"
+        "profile_save_changes": "\u00c4nderungen speichern",
+        "default_group_title_name": "(ohne Gruppierung)",
+        "piggy_bank": "Sparschwein"
     },
     "form": {
         "interest_date": "Zinstermin",

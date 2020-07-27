@@ -27,6 +27,7 @@
         "category": "Categoria",
         "attachments": "Archivos adjuntos",
         "notes": "Notas",
+        "external_uri": "External URI",
         "update_transaction": "Actualizar transacci\u00f3n",
         "after_update_create_another": "Despu\u00e9s de actualizar, vuelve aqu\u00ed para continuar editando.",
         "store_as_new": "Almacenar como una nueva transacci\u00f3n en lugar de actualizar.",
@@ -70,7 +71,9 @@
         "profile_create_new_token": "Crear nuevo token",
         "profile_create_token": "Crear token",
         "profile_create": "Crear",
-        "profile_save_changes": "Guardar cambios"
+        "profile_save_changes": "Guardar cambios",
+        "default_group_title_name": "(sin agrupaci\u00f3n)",
+        "piggy_bank": "Alcanc\u00eda"
     },
     "form": {
         "interest_date": "Fecha de inter\u00e9s",

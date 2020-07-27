@@ -1,9 +1,8 @@
 <?php
-declare(strict_types=1);
 
 /**
  * api.php
- * Copyright (c) 2019 james@firefly-iii.org.
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,6 +19,9 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
+
 
 use FireflyIII\Http\Middleware\IsAdmin;
 
@@ -51,6 +53,42 @@ Route::group(
         Route::get('{account}/piggy_banks', ['uses' => 'AccountController@piggyBanks', 'as' => 'piggy_banks']);
         Route::get('{account}/transactions', ['uses' => 'AccountController@transactions', 'as' => 'transactions']);
         Route::get('{account}/attachments', ['uses' => 'AccountController@attachments', 'as' => 'attachments']);
+    }
+);
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete', 'prefix' => 'autocomplete',
+     'as'        => 'api.v1.autocomplete.',],
+    static function () {
+        // Auto complete routes
+        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
+        Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
+        Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
+        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
+        Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);
+        Route::get('currencies-with-code', ['uses' => 'CurrencyController@currenciesWithCode', 'as' => 'currencies-with-code']);
+        Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
+        Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
+        Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
+        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+        Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
+        Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
+        Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
+    }
+);
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
+     'as'        => 'api.v1.object-groups.',],
+    static function () {
+
+        // Accounts API routes:
+        Route::get('', ['uses' => 'ObjectGroupController@index', 'as' => 'index']);
+        Route::get('{objectGroup}', ['uses' => 'ObjectGroupController@show', 'as' => 'show']);
+        Route::put('{objectGroup}', ['uses' => 'ObjectGroupController@update', 'as' => 'update']);
+        Route::delete('{objectGroup}', ['uses' => 'ObjectGroupController@delete', 'as' => 'delete']);
+
+        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ObjectGroupController@piggyBanks', 'as' => 'piggy_banks']);
     }
 );
 
@@ -180,6 +218,17 @@ Route::group(
     }
 );
 
+// Budgets
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/budget',
+     'as'        => 'api.v1.chart.budget.',],
+    static function () {
+
+        // (frontpage) budget overview
+        Route::get('overview', ['uses' => 'BudgetController@overview', 'as' => 'overview']);
+    }
+);
+
 // Categories
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
@@ -191,6 +240,19 @@ Route::group(
     }
 );
 
+//// Bills
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/bill',
+//     'as'        => 'api.v1.chart.bill.',],
+//    static function () {
+//
+//        // Overview API routes:
+//        // Route::get('overview', ['uses' => 'BillController@overview', 'as' => 'overview']);
+//    }
+//);
+
+
+// Configuration
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration',
      'as'        => 'api.v1.configuration.',],
@@ -332,7 +394,6 @@ Route::group(
         // Attachment API routes:
         Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
         Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
-        Route::get('transfers', ['uses' => 'TransferController@search', 'as' => 'transfers']);
     }
 );
 
@@ -343,6 +404,16 @@ Route::group(
 
         // Overview API routes:
         Route::get('basic', ['uses' => 'SummaryController@basic', 'as' => 'basic']);
+    }
+);
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
+     'as'        => 'api.v1.data.',],
+    static function () {
+
+        // Overview API routes:
+        Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
     }
 );
 

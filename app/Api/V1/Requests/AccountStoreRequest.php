@@ -26,14 +26,18 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AccountStoreRequest
  *
  * @codeCoverageIgnore
  */
-class AccountStoreRequest extends Request
+class AccountStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes, AppendsLocationData;
 
     /**
      * Authorize logged in users.
@@ -66,6 +70,7 @@ class AccountStoreRequest extends Request
             'account_type'            => $this->string('type'),
             'account_type_id'         => null,
             'currency_id'             => $this->integer('currency_id'),
+            'order'                   => $this->integer('order'),
             'currency_code'           => $this->string('currency_code'),
             'virtual_balance'         => $this->string('virtual_balance'),
             'iban'                    => $this->string('iban'),
@@ -75,7 +80,7 @@ class AccountStoreRequest extends Request
             'opening_balance'         => $this->string('opening_balance'),
             'opening_balance_date'    => $this->date('opening_balance_date'),
             'cc_type'                 => $this->string('credit_card_type'),
-            'cc_Monthly_payment_date' => $this->string('monthly_payment_date'),
+            'cc_monthly_payment_date' => $this->string('monthly_payment_date'),
             'notes'                   => $this->nlString('notes'),
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
@@ -112,6 +117,7 @@ class AccountStoreRequest extends Request
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
+            'order'                => 'numeric|nullable',
             'currency_id'          => 'numeric|exists:transaction_currencies,id',
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
             'active'               => [new IsBoolean],

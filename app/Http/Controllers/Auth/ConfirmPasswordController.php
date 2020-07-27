@@ -1,6 +1,4 @@
 <?php
-declare(strict_types=1);
-
 
 /**
  * ConfirmPasswordController.php
@@ -21,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 

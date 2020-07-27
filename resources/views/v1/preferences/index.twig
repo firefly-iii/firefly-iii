@@ -49,6 +49,7 @@
                                     </div>
 
                                     {# locale #}
+                                    {% if not isDocker %}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_locale'|_ }}</h3>
                                         <p class="text-info">{{ 'pref_locale_help'|_ }}</p>
@@ -75,6 +76,9 @@
                                             <li>{{ 'pref_locale_no_docker'|_ }}</li>
                                         </ul>
                                     </div>
+                                    {% else %}
+                                    <input type="hidden" name="locale" value="equal" />
+                                    {% endif %}
 
                                     {# fiscal year #}
                                     <div class="preferences-box">
@@ -107,6 +111,7 @@
 
                                         <h4>{{ 'optional_tj_business_fields'|_ }}</h4>
                                         {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[external_uri]','1', tjOptionalFields.external_uri,{ 'label' : 'pref_optional_tj_external_uri'|_ }) }}
                                         {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
 
                                         <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>

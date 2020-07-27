@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Sunteți sigur că doriți să ștergeți contul ":name"?',
     'bill_areYouSure'             => 'Sunteți sigur că doriți să ștergeți factura ":name"?',
     'rule_areYouSure'             => 'Sunteți sigur că doriți să ștergeți regula ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Sunteți sigur că doriți să ștergeți grupul de reguli ":title"?',
     'budget_areYouSure'           => 'Sunteți sigur că doriți să ștergeți bugetul ":name"?',
     'category_areYouSure'         => 'Sunteți sigur că doriți să ștergeți categoria ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Singura tranzacție legată de acest tip de legătură va pierde această conexiune.|Toate cele :count tranzacții legate de acest tip de legătură vor pierde conexiunea.',
     'also_delete_rules'           => 'Singura regulă legată de acest grup de reguli va fi ștersă, de asemenea.|Toate cele :count reguli conectate la acest grup de reguli vor fi șterse, de asemenea.',
     'also_delete_piggyBanks'      => 'Singura pușculita conectată la acest cont va fi ștersă.|Toate cele :count pușculițe conectate la acest cont vor fi șterse, de asemenea.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Singura tranzacție conectată la această factură nu va fi ștearsă.|Toate cele :count tranzacții conectate la această factură vor fi scutite de ștergere.',
     'budget_keep_transactions'    => 'Singura tranzacție conectată la acest buget nu va fi ștearsă.|Toate cele :count tranzacții conectate la acest budet vor fi scutite de ștergere.',
     'category_keep_transactions'  => 'Singura tranzacție conectată la această categorie nu va fi ștearsă.|Toate cele :count tranzacții conectate la această categorie vor fi scutite de ștergere.',
     'recurring_keep_transactions' => 'Singura tranzacție creată de această tranzacție recurentă nu va fi ștearsă.|Toate cele :count tranzacții create de această tranzacție recurente vor fi scutite de ștergere.',
     'tag_keep_transactions'       => 'Singura tranzacție conectată la this tag nu va fi ștearsă.|Toate cele :count tranzacții conectate la această etichetă vor fi scutite de ștergere.',
     'check_for_updates'           => 'Verifică pentru actualizări',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Email',
     'password'              => 'Parolă',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Este un site demo',
 
     // import
-    'import_file'           => 'Fișier de import',
     'configuration_file'    => 'Fișier de configurare',
-    'import_file_type'      => 'Importați tipul de fișier',
     'csv_comma'             => 'O virgulă (,)',
     'csv_semicolon'         => 'Un punct și virgulă (;)',
     'csv_tab'               => 'O filă (invizibilă)',
     'csv_delimiter'         => 'Delimitator CSV',
-    'csv_import_account'    => 'Contul de import implicit',
     'client_id'             => 'ID Client',
     'app_id'                => 'ID Aplicație',
     'secret'                => 'Secret',

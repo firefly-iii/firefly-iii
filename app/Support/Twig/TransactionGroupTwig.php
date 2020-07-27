@@ -286,6 +286,12 @@ class TransactionGroupTwig extends AbstractExtension
         $sourceAccountId = $journal['source_account_id'];
         $amount = $this->signAmount($amount, $type, $destinationType, $sourceAccountId, $account->id);
         
+        // withdrawals are negative
+        if ($type !== TransactionType::WITHDRAWAL) {
+            $amount = bcmul($amount, '-1');
+        }
+        
+
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
@@ -345,15 +351,19 @@ class TransactionGroupTwig extends AbstractExtension
             $amount = bcmul($amount, '-1');
         }
 
-        // negative opening balance
-        if ($type === TransactionType::OPENING_BALANCE)
-          if (AccountType::INITIAL_BALANCE === $destinationType) {
+        // opening balance and it goes to initial balance? its expense.
+        if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
             $amount = bcmul($amount, '-1');
         }
 
         // transfers stay negative from source point of view
         if ($type === TransactionType::TRANSFER
             && !is_null($sourceAccountId) && $sourceAccountId === $displayedAccountId) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // reconciliation and it goes to reconciliation?
+        if ($type === TransactionType::RECONCILIATION && AccountType::RECONCILIATION === $destinationType) {
             $amount = bcmul($amount, '-1');
         }
 

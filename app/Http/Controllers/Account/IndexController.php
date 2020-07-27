@@ -32,6 +32,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Exception;
 
 /**
  *
@@ -101,7 +102,7 @@ class IndexController extends Controller
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
-                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interest          = number_format((float) $this->repository->getMetaValue($account, 'interest'), 6, '.', '');
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
             }
@@ -116,19 +117,40 @@ class IndexController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
+     */
+    public function emptyIndex(?string $objectType = null)
+    {
+        return view('accounts.empty-index', compact('objectType'));
+    }
+
+    /**
      * Show list of accounts.
      *
      * @param Request $request
      * @param string  $objectType
      *
+     * @throws Exception
      * @return Factory|View
      */
     public function index(Request $request, string $objectType)
     {
-        $objectType    = $objectType ?? 'asset';
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        // temp catch for layout.
+        if ('v2' === config('firefly.layout')) {
+            return $this->emptyIndex($objectType);
+        }
+
+        // reset account order:
+
+        $objectType   = $objectType ?? 'asset';
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+
+        if (1 === random_int(0, 20)) {
+            $this->repository->resetAccountOrder($types);
+        }
+
         $collection    = $this->repository->getActiveAccountsByType($types);
         $total         = $collection->count();
         $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
@@ -155,7 +177,7 @@ class IndexController extends Controller
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
                 $account->difference        = bcsub($account->endBalance, $account->startBalance);
-                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interest          = number_format((float) $this->repository->getMetaValue($account, 'interest'), 6, '.', '');
                 $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
                 $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
                 $account->location          = $this->repository->getLocation($account);

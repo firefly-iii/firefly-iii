@@ -248,11 +248,25 @@
                                     </tr>
                                 {% endif %}
                             {% endfor %}
-                            {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci'] %}
+                            {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_uri'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
                                     <tr>
                                         <td>{{ trans('list.'~metaField) }}</td>
-                                        <td>{{ journalGetMetaField(journal.transaction_journal_id, metaField) }}</td>
+                                        <td>
+                                            {% if 'external_uri' == metaField  %}
+                                                {% set uri = journalGetMetaField(journal.transaction_journal_id, metaField) %}
+                                                <a href="{{ uri }}" rel="noopener noreferrer nofollow" target="_blank">
+                                                    {% if uri|length > 60 %}
+                                                        {{ uri|slice(0, 60) ~ '...' }}
+                                                    {% else %}
+                                                        {{ uri }}
+                                                    {% endif %}
+                                                </a>
+                                            {% endif %}
+                                            {% if 'external_uri' != metaField  %}
+                                                {{ journalGetMetaField(journal.transaction_journal_id, metaField) }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -260,6 +274,16 @@
                                 <tr>
                                     <td>{{ trans('list.notes') }}</td>
                                     <td class="markdown">{{ journal.notes|markdown }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if journalHasMeta(journal.transaction_journal_id, 'recurring_total') and journalHasMeta(journal.transaction_journal_id, 'recurring_count')  %}
+                                {% set recurringTotal = journalGetMetaField(journal.transaction_journal_id, 'recurring_total') %}
+                                {% if 0 == recurringTotal %}
+                                    {% set recurringTotal = '∞' %}
+                                {% endif %}
+                                <tr>
+                                    <td>{{ trans('list.recurring_transaction') }}</td>
+                                    <td>{{ trans('firefly.recurring_info', {total: recurringTotal, count: journalGetMetaField(journal.transaction_journal_id, 'recurring_count') }) }}</td>
                                 </tr>
                             {% endif %}
                             {% if journal.tags|length > 0 %}
@@ -373,7 +397,7 @@
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
-        var acURI = '{{ route('json.autocomplete.all-journals-with-id') }}';
+        var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
         var newCloneInstructions = '{{ 'new_clone_instructions'|_|escape('js') }}';
     </script>

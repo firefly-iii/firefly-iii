@@ -24,16 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
-use FireflyIII\User;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
  * Class UserStoreRequest
  */
-class UserStoreRequest extends Request
+class UserStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *
@@ -41,21 +42,7 @@ class UserStoreRequest extends Request
      */
     public function authorize(): bool
     {
-        $result = false;
-        // Only allow authenticated users
-        if (auth()->check()) {
-            /** @var User $user */
-            $user = auth()->user();
-
-            /** @var UserRepositoryInterface $repository */
-            $repository = app(UserRepositoryInterface::class);
-
-            if ($repository->hasRole($user, 'owner')) {
-                $result = true; // @codeCoverageIgnore
-            }
-        }
-
-        return $result;
+        return auth()->check() && auth()->user()->hasRole('owner');
     }
 
     /**

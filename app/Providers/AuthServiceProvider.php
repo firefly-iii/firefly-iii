@@ -22,8 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Support\Authentication\RemoteUserGuard;
+use FireflyIII\Support\Authentication\RemoteUserProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
+use Log;
 
 /**
  * @codeCoverageIgnore
@@ -48,11 +52,24 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Auth::provider(
+            'remote_user_provider', function ($app, array $config) {
+            return new RemoteUserProvider($app, $config);
+        }
+        );
+
+        Auth::extend(
+            'remote_user_guard', static function ($app, string $name, array $config) {
+            return new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app);
+        }
+        );
+
         $this->registerPolicies();
+
+
         Passport::routes();
         Passport::tokensExpireIn(now()->addDays(14));
 
 
-        //
     }
 }

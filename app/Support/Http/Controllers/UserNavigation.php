@@ -40,10 +40,6 @@ use Log;
 trait UserNavigation
 {
 
-    //if (!$this->isEditableAccount($account)) {
-    //            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
-    //        }
-
     /**
      * Will return false if you cant edit this account type.
      *

@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => '规则必须至少有一个动作。',
     'base64'                         => '这不是有效的 base64 编码资料。',
     'model_id_invalid'               => '指定的 ID 对于此模型似乎无效。',
-    'more'                           => ':attribute 必须大于“:more”。',
     'less'                           => ':attribute 必须小于 10,000,000。',
     'active_url'                     => ':attribute 不是有效的URL。',
     'after'                          => ':attribute 必须是一个在 :date 之后的日期。',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => '总金额不能为零。',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => '存钱罐的名称必须是独一无二的。',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => '这不是一个安全的密码，请重试一次。如需更多讯息，请访问 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => '对定期重复交易是无效的重复类型。',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => ':attribute 必须大于或等于 :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute 必须大于或等于 :value Kb',
     'gte.string'  => ':attribute 必须大于或等于 :value 字符。',
     'gte.array'   => ':attribute 必须具有 :value 项或更多',

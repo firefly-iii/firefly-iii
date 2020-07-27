@@ -85,8 +85,6 @@ class CategoryController extends Controller
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = $this->getDate();
 
-        //Log::debug(sprintf('Full range is %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
-
         /** @var WholePeriodChartGenerator $generator */
         $generator = app(WholePeriodChartGenerator::class);
         $chartData = $generator->generate($category, $start, $end);
@@ -113,7 +111,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            // return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $frontPageGenerator = new FrontpageChartGenerator($start, $end);

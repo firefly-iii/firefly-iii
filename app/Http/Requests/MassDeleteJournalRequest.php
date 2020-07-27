@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class MassDeleteJournalRequest.
  *
  * @codeCoverageIgnore
  */
-class MassDeleteJournalRequest extends Request
+class MassDeleteJournalRequest extends FormRequest
 {
     /**
      * Verify the request.

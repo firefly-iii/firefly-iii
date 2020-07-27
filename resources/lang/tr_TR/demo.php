@@ -33,7 +33,5 @@ return [
     'currencies-index'       => 'Firefly III, birden fazla para birimini destekliyor. Euro varsayılan olmasına rağmen, ABD Doları ve diğer birçok para birimine ayarlanabilir. Gördüğünüz gibi küçük bir para birimi seçeneği dedahil edilmiştir ancak isterseniz kendi para biriminizi ekleyebilirsiniz. Varsayılan para birimi değiştirilebilir ancak mevcut işlemlerin para birimi değiştirilemez: Firefly III, aynı anda birden çok para biriminin kullanılmasını destekler.',
     'transactions-index'     => 'Bu masraflar, mevduatlar ve transferler için özellikle yaratıcı değildir. Bunlar otomatik olarak oluşturuldu.',
     'piggy-banks-index'      => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
-    'import-index'           => 'Herhangi bir CSV dosyası Firefly III\'e aktarılabilir. Ayrıca bunq ve Spectre\'den veri almayı da destekliyor. Diğer bankalar ve finansal toplayıcılar gelecekte uygulanacaktır. Ancak bir demo kullanıcısı olarak, yalnızca "fake" -provider etkinlikte görebilirsiniz. Sürecin nasıl çalıştığını göstermek için bazı rasgele işlemler üretecektir.
-',
     'profile-index'          => 'Demo sitesinin her dört saatte bir sıfırlandığını unutmayın. Erişiminiz herhangi bir zamanda iptal edilebilir. Bu otomatik olarak gerçekleşir ve bir hata değildir.',
 ];

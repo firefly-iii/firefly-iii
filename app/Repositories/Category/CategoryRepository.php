@@ -217,17 +217,18 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchCategory(string $query): Collection
+    public function searchCategory(string $query, int $limit): Collection
     {
         $search = $this->user->categories();
         if ('' !== $query) {
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
 
-        return $search->get();
+        return $search->take($limit)->get();
     }
 
     /**

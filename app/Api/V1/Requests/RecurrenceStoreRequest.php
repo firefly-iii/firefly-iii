@@ -26,18 +26,20 @@ namespace FireflyIII\Api\V1\Requests;
 use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * Class RecurrenceStoreRequest
  */
-class RecurrenceStoreRequest extends Request
+class RecurrenceStoreRequest extends FormRequest
 {
-    use RecurrenceValidation, TransactionValidation, CurrencyValidation;
-
+    use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData;
     /**
      * Authorize logged in users.
      *
@@ -104,8 +106,8 @@ class RecurrenceStoreRequest extends Request
             'repetitions.*.skip'                   => 'required|numeric|between:0,31',
             'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
             'transactions.*.description'           => 'required|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.amount'                => 'required|numeric|gt:0',
+            'transactions.*.foreign_amount'        => 'numeric|gt:0',
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',

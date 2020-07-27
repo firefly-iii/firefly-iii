@@ -62,8 +62,10 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasCatInformation    = false;
         $this->hasBudgetInformation = false;
         $this->hasBillInformation   = false;
+        $this->hasNotesInformation  = false;
         $this->hasJoinedTagTables   = false;
         $this->hasJoinedAttTables   = false;
+        $this->hasJoinedMetaTables  = false;
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
@@ -166,13 +168,8 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        //$start = microtime(true);
         /** @var Collection $result */
         $result = $this->query->get($this->fields);
-        //$end    = round(microtime(true) - $start, 5);
-        // log info about query time.
-        //Log::info(sprintf('Query took Firefly III %s seconds', $end));
-        //Log::info($this->query->toSql(), $this->query->getBindings());
 
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
@@ -311,7 +308,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where(
             static function (EloquentBuilder $q) use ($array) {
                 $q->where(
-                    function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array) {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
@@ -552,9 +549,14 @@ class GroupCollector implements GroupCollectorInterface
         $result['tags']        = [];
         $result['attachments'] = [];
         try {
-            $result['date']       = new Carbon($result['date']);
-            $result['created_at'] = new Carbon($result['created_at']);
-            $result['updated_at'] = new Carbon($result['updated_at']);
+            $result['date']       = new Carbon($result['date'], 'UTC');
+            $result['created_at'] = new Carbon($result['created_at'], 'UTC');
+            $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
+
+            // this is going to happen a lot:
+            $result['date']->setTimezone(config('app.timezone'));
+            $result['created_at']->setTimezone(config('app.timezone'));
+            $result['updated_at']->setTimezone(config('app.timezone'));
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

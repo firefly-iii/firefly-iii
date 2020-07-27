@@ -48,6 +48,6 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path('framework/views/v1')),
+    'compiled' => realpath(storage_path(sprintf('framework/views/%s', env('FIREFLY_III_LAYOUT', 'v1')))),
 
 ];

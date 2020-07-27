@@ -148,6 +148,12 @@
           <span>{{ 'tags'|_ }}</span>
         </a>
       </li>
+      <li class="{{ activeRoutePartial('object-groups') }}">
+        <a href="{{ route('object-groups.index') }}">
+          <i class="fa fa-angle-right fa-fw"></i>
+          <span>{{ 'object_groups_menu_bar'|_ }}</span>
+        </a>
+      </li>
     </ul>
   </li>
 
@@ -196,7 +202,7 @@
           <span>{{ 'currencies'|_ }}</span>
         </a>
       </li>
-      {% if hasRole('owner') %}
+        {% if hasRole('owner') %}
         <li class="{{ activeRoutePartial('admin') }}">
           <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
             <i class="fa fa-angle-right fa-fw"></i>
@@ -207,12 +213,10 @@
     </ul>
   </li>
 
-  {% if not SANDSTORM %}
     <li>
       <a href="{{ route('logout') }}">
         <i class="fa fa-sign-out fa-fw"></i>
         <span>{{ 'logout'|_ }}</span>
       </a>
     </li>
-  {% endif %}
 </ul>

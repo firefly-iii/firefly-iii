@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Recurring;
 
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\Recurrence;
@@ -48,7 +49,8 @@ class EditController extends Controller
     /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
     /** @var RecurringRepositoryInterface Recurring repository */
-    private $recurring;
+    private                           $recurring;
+    private AttachmentHelperInterface $attachments;
 
     /**
      * EditController constructor.
@@ -66,9 +68,9 @@ class EditController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
-                $this->recurring = app(RecurringRepositoryInterface::class);
-                $this->budgets   = app(BudgetRepositoryInterface::class);
-
+                $this->recurring   = app(RecurringRepositoryInterface::class);
+                $this->budgets     = app(BudgetRepositoryInterface::class);
+                $this->attachments = app(AttachmentHelperInterface::class);
                 return $next($request);
             }
         );
@@ -159,6 +161,21 @@ class EditController extends Controller
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
+
+        // store new attachment(s):
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        if (null !== $files && !auth()->user()->hasRole('demo')) {
+            $this->attachments->saveAttachmentsForModel($recurrence, $files);
+        }
+        if (null !== $files && auth()->user()->hasRole('demo')) {
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+        }
+
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        }
+
+
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('recurrences.edit.uri'));
         if (1 === (int) $request->get('return_to_edit')) {

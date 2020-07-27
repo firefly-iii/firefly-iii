@@ -126,8 +126,8 @@ class BillController extends Controller
         );
 
         $chartData = [
-            ['type' => 'line', 'label' => (string) trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
             ['type' => 'line', 'label' => (string) trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'line', 'label' => (string) trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
             ['type' => 'bar', 'label' => (string) trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
         ];
 

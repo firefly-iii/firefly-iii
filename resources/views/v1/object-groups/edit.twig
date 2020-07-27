@@ -1,0 +1,58 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectGroup) }}
+{% endblock %}
+
+{% block content %}
+    {{ Form.model(objectGroup, {'class' : 'form-horizontal','enctype': 'multipart/form-data','id' : 'update','url' : route('object-groups.update',objectGroup.id)}) }}
+
+    <input type="hidden" name="id" value="{{ objectGroup.id }}"/>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('title') }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            {# panel for options #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','object group') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success pull-right">
+                        {{ 'update_object_group'|_ }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/piggy-banks/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    {# auto complete for object groups #}
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/object-groups/create-edit.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

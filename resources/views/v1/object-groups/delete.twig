@@ -1,0 +1,42 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectGroup) }}
+{% endblock %}
+
+{% block content %}
+
+    <form method="POST" action="{{ route('object-groups.destroy',objectGroup.id) }}" accept-charset="UTF-8" class="form-horizontal">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('form.delete_object_group', {'title': objectGroup.title}) }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-danger">
+                            {{ trans('form.permDeleteWarning') }}
+                        </p>
+
+                        <p>
+                            {{ trans('form.object_group_areYouSure', {'title': objectGroup.title}) }}
+                        </p>
+
+                        {% if piggyBanks > 0 %}
+                            <p>
+                                {{ Lang.choice('form.not_delete_piggy_banks', piggyBanks, {count: piggyBanks}) }}
+                            </p>
+                        {% endif %}
+
+                    </div>
+                    <div class="box-footer">
+                        <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn pull-right btn-danger"/>
+                        <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

@@ -52,32 +52,36 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-        $currency       = $budgetLimit->transactionCurrency;
-        $amount         = $budgetLimit->amount;
-        $currencyId     = null;
-        $currencyName   = null;
-        $currencyCode   = null;
-        $currencySymbol = null;
+        $currency              = $budgetLimit->transactionCurrency;
+        $amount                = $budgetLimit->amount;
+        $currencyDecimalPlaces = 2;
+        $currencyId            = null;
+        $currencyName          = null;
+        $currencyCode          = null;
+        $currencySymbol        = null;
         if (null !== $currency) {
-            $amount         = round($budgetLimit->amount, $budgetLimit->transactionCurrency->decimal_places);
-            $currencyId     = $currency->id;
-            $currencyName   = $currency->name;
-            $currencyCode   = $currency->code;
-            $currencySymbol = $currency->symbol;
+            $amount                = $budgetLimit->amount;
+            $currencyId            = (int) $currency->id;
+            $currencyName          = $currency->name;
+            $currencyCode          = $currency->code;
+            $currencySymbol        = $currency->symbol;
+            $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $data = [
-            'id'              => (int)$budgetLimit->id,
-            'created_at'      => $budgetLimit->created_at->toAtomString(),
-            'updated_at'      => $budgetLimit->updated_at->toAtomString(),
-            'start'           => $budgetLimit->start_date->format('Y-m-d'),
-            'end'             => $budgetLimit->end_date->format('Y-m-d'),
-            'budget_id'       => $budgetLimit->budget_id,
-            'currency_id'     => $currencyId,
-            'currency_code'   => $currencyCode,
-            'currency_name'   => $currencyName,
-            'currency_symbol' => $currencySymbol,
-            'amount'          => $amount,
-            'links'           => [
+        $amount = number_format((float) $amount, $currencyDecimalPlaces, '.', '');
+        $data   = [
+            'id'                      => (int) $budgetLimit->id,
+            'created_at'              => $budgetLimit->created_at->toAtomString(),
+            'updated_at'              => $budgetLimit->updated_at->toAtomString(),
+            'start'                   => $budgetLimit->start_date->format('Y-m-d'),
+            'end'                     => $budgetLimit->end_date->format('Y-m-d'),
+            'budget_id'               => (int) $budgetLimit->budget_id,
+            'currency_id'             => $currencyId,
+            'currency_code'           => $currencyCode,
+            'currency_name'           => $currencyName,
+            'currency_decimal_places' => $currencyName,
+            'currency_symbol'         => $currencySymbol,
+            'amount'                  => $amount,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/budgets/limits/' . $budgetLimit->id,

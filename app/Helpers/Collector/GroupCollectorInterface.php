@@ -399,6 +399,13 @@ interface GroupCollectorInterface
     public function withCategoryInformation(): GroupCollectorInterface;
 
     /**
+     * Will include notes.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withNotes(): GroupCollectorInterface;
+
+    /**
      * Add tag info.
      *
      * @return GroupCollectorInterface
@@ -418,5 +425,23 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withoutCategory(): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setExternalId(string $externalId): GroupCollectorInterface;
+
+    /**
+     * Look for specific external ID's.
+     *
+     * @param string $externalId
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setInternalReference(string $externalId): GroupCollectorInterface;
 
 }

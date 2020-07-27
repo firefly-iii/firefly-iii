@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'La regla debe tener al menos una acción.',
     'base64'                         => 'Esto no es un dato codificado en base64 válido.',
     'model_id_invalid'               => 'El ID dado no parece válido para este modelo.',
-    'more'                           => ':attribute debe ser mayor que ":more".',
     'less'                           => ':attribute debe ser menor que 10.000.000',
     'active_url'                     => 'El campo :attribute no es una URL válida.',
     'after'                          => 'El campo :attribute debe ser una fecha posterior a :date.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'La cantidad total no puede ser cero.',
     'current_target_amount'          => 'La cantidad actual debe ser menor que la cantidad de destino.',
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
+    'unique_object_group'            => 'El nombre del grupo debe ser único',
 
     'secure_password'                => 'Esta contraseña no es segura. Por favor inténtalo de nuevo. Para más información, visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetición no válido para transacciones recurrentes.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'No puede usar esta cuenta como cuenta de destino.',
 
     'gte.numeric' => ':attribute debe ser mayor o igual que :value.',
+    'gt.numeric'  => 'El :attribute debe ser mayor que :value.',
     'gte.file'    => 'El :attribute debe ser mayor o igual a :value kilobytes.',
     'gte.string'  => ':attribute debe tener :value caracteres o más.',
     'gte.array'   => ':attribute debe tener :value objetos o más.',

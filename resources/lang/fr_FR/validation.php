@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Une règle doit avoir au moins une action.',
     'base64'                         => 'Il ne s\'agit pas de données base64 valides.',
     'model_id_invalid'               => 'L’ID fournit ne semble pas valide pour ce modèle.',
-    'more'                           => ':attribute doit être plus grand que ":more".',
     'less'                           => ':attribute doit être inférieur à 10 000 000',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
+    'unique_object_group'            => 'Le nom du groupe doit être unique',
 
     'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Vous ne pouvez pas utiliser ce compte comme compte de destination.',
 
     'gte.numeric' => 'La valeur de :attribute doit être supérieure ou égale à :value.',
+    'gt.numeric'  => 'Le champ :attribute doit être plus grand que :value.',
     'gte.file'    => 'L\'attribut :attribute doit contenir au moins :value kilo-octets.',
     'gte.string'  => 'Le texte :attribute doit contenir au moins :value caractères.',
     'gte.array'   => 'L\'attribut :attribute doit avoir :value éléments ou plus.',

@@ -27,6 +27,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
@@ -37,7 +38,7 @@ use Log;
  */
 class BillFactory
 {
-    use BillServiceTrait;
+    use BillServiceTrait, CreatesObjectGroups;
 
     /** @var User */
     private $user;
@@ -95,6 +96,24 @@ class BillFactory
 
         if (isset($data['notes'])) {
             $this->updateNote($bill, $data['notes']);
+        }
+
+        $objectGroupTitle = $data['object_group'] ?? '';
+        if ('' !== $objectGroupTitle) {
+            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
+        }
+        // try also with ID:
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        if (0 !== $objectGroupId) {
+            $objectGroup = $this->findObjectGroupById($objectGroupId);
+            if (null !== $objectGroup) {
+                $bill->objectGroups()->sync([$objectGroup->id]);
+                $bill->save();
+            }
         }
 
         return $bill;

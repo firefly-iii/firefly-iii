@@ -1,8 +1,8 @@
 <?php
-declare(strict_types=1);
+
 /**
  * AccountController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Search;
 
@@ -41,8 +43,7 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
-    /** @var array */
-    private $validFields;
+    private array $validFields;
 
     public function __construct()
     {

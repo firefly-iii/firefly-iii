@@ -32,12 +32,17 @@ use Illuminate\Support\Collection;
 interface RuleGroupRepositoryInterface
 {
     /**
+     * Delete everything.
+     */
+    public function destroyAll(): void;
+
+    /**
      * @return int
      */
     public function count(): int;
 
     /**
-     * @param RuleGroup $ruleGroup
+     * @param RuleGroup      $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool

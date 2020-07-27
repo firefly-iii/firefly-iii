@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Kural en az bir eylem olması gerekir.',
     'base64'                         => 'Bu geçerli Base64 olarak kodlanmış veri değildir.',
     'model_id_invalid'               => 'Verilen kimlik bu model için geçersiz görünüyor.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute  10.000.000 den daha az olmalıdır',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Toplam tutarı sıfır olamaz.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'Kumbara adı benzersiz olmalıdır.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * MetaCollection.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Collector\Extensions;
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -28,6 +30,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -36,6 +39,27 @@ use Illuminate\Support\Collection;
 trait MetaCollection
 {
 
+    /**
+     * @inheritDoc
+     */
+    public function withNotes(): GroupCollectorInterface
+    {
+        if (false === $this->hasNotesInformation) {
+            // join bill table
+            $this->query->leftJoin(
+                'notes',
+                static function (JoinClause $join) {
+                    $join->on('notes.noteable_id', '=', 'transaction_journals.id');
+                    $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
+                }
+            );
+            // add fields
+            $this->fields[]            = 'notes.text as notes';
+            $this->hasNotesInformation = true;
+        }
+
+        return $this;
+    }
 
     /**
      * Limit the search to a specific bill.
@@ -285,6 +309,38 @@ trait MetaCollection
             $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
         }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setExternalId(string $externalId): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+        $this->query->where('journal_meta.name', '=', 'external_id');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setInternalReference(string $internalReference): GroupCollectorInterface
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+        }
+
+        $this->query->where('journal_meta.name', '=', 'internal_reference');
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
+
+        return $this;
     }
 
 

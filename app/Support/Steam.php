@@ -234,17 +234,17 @@ class Steam
             $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
             $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int)$entry->foreign_currency_id) {
+            if ($currencyId === (int) $entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
 
             $currentBalance  = bcadd($currentBalance, $amount);
-            $carbon          = new Carbon($entry->date);
+            $carbon          = new Carbon($entry->date, config('app.timezone'));
             $date            = $carbon->format('Y-m-d');
             $balances[$date] = $currentBalance;
         }
@@ -362,8 +362,10 @@ class Steam
      * Remove weird chars from strings.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function cleanString(string $string): string
     {
@@ -425,8 +427,10 @@ class Steam
      * Remove weird chars from strings, but keep newlines and tabs.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function nlCleanString(string $string): string
     {
@@ -502,7 +506,9 @@ class Steam
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
-            $list[(int)$entry->account_id] = new Carbon($entry->max_date);
+            $date = new Carbon($entry->max_date,'UTC');
+            $date->setTimezone(config('app.timezone'));
+            $list[(int)$entry->account_id] = $date;
         }
 
         return $list;
@@ -619,6 +625,7 @@ class Steam
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),
+            str_replace('_', '-', $locale), // for Windows.
         ];
     }
 

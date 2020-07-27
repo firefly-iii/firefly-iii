@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
@@ -32,8 +34,9 @@ use FireflyIII\Rules\IsBoolean;
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class CurrencyRequest extends Request
+class CurrencyRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

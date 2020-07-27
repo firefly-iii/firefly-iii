@@ -27,6 +27,7 @@
         "category": "Categoria",
         "attachments": "Allegati",
         "notes": "Note",
+        "external_uri": "External URI",
         "update_transaction": "Aggiorna transazione",
         "after_update_create_another": "Dopo l'aggiornamento, torna qui per continuare la modifica.",
         "store_as_new": "Salva come nuova transazione invece di aggiornarla.",
@@ -70,7 +71,9 @@
         "profile_create_new_token": "Crea nuovo token",
         "profile_create_token": "Crea token",
         "profile_create": "Crea",
-        "profile_save_changes": "Salva modifiche"
+        "profile_save_changes": "Salva modifiche",
+        "default_group_title_name": "(non in un gruppo)",
+        "piggy_bank": "Salvadanaio"
     },
     "form": {
         "interest_date": "Data interesse",

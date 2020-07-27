@@ -129,9 +129,8 @@ class ReconcileController extends Controller
 
         $startDate = clone $start;
         $startDate->subDay();
-        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
-
-        $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
+        $startBalance = number_format((float) app('steam')->balance($account, $startDate), $currency->decimal_places, '.', '');
+        $endBalance   = number_format((float) app('steam')->balance($account, $end), $currency->decimal_places, '.', '');
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $subTitle     = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 

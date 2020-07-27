@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -48,7 +47,6 @@ class HomeController extends Controller
     {
         parent::__construct();
         $this->middleware(IsDemoUser::class)->except(['index']);
-        $this->middleware(IsSandStormUser::class)->except(['index']);
     }
 
     /**
@@ -61,9 +59,8 @@ class HomeController extends Controller
         Log::channel('audit')->info('User visits admin index.');
         $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $sandstorm     = 1 === (int) getenv('SANDSTORM');
 
-        return view('admin.index', compact('title', 'mainTitleIcon', 'sandstorm'));
+        return view('admin.index', compact('title', 'mainTitleIcon'));
     }
 
     /**

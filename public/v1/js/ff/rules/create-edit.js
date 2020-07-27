@@ -228,7 +228,7 @@ function updateActionInput(selectList) {
     switch (selectList.val()) {
         case 'set_category':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/categories');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/categories');
             break;
         case 'clear_category':
         case 'clear_budget':
@@ -240,44 +240,44 @@ function updateActionInput(selectList) {
             break;
         case 'set_budget':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/budgets');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/budgets');
             break;
         case 'add_tag':
         case 'remove_tag':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/tags');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/tags');
             break;
         case 'set_description':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-journals/all');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'set_source_account':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');
             break;
         case 'set_destination_account':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');
             break;
         case 'convert_withdrawal':
             console.log('Select list value is ' + selectList.val() + ', so input needs expense accounts auto complete.');
-            createAutoComplete(inputResult, 'json/expense-accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts?types=Expense account&');
             break;
         case 'convert_deposit':
             console.log('Select list value is ' + selectList.val() + ', so input needs revenue accounts auto complete.');
-            createAutoComplete(inputResult, 'json/revenue-accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts?types=Revenue account&');
             break;
         case 'convert_transfer':
             console.log('Select list value is ' + selectList.val() + ', so input needs asset accounts auto complete.');
-            createAutoComplete(inputResult, 'json/asset-accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts?types=Asset account&');
             break;
         case 'link_to_bill':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/bills');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/bills');
             break;
         case 'update_piggy':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/piggy-banks');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/piggy-banks');
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
@@ -312,30 +312,30 @@ function updateTriggerInput(selectList) {
         case 'to_account_is':
         case 'to_account_contains':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/accounts');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');
             break;
         case 'tag_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/tags');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/tags');
             break;
         case 'budget_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/budgets');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/budgets');
             break;
         case 'category_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/categories');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/categories');
             break;
         case 'transaction_type':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-types');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transaction-types');
             break;
         case 'description_starts':
         case 'description_ends':
         case 'description_contains':
         case 'description_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/transaction-journals/all');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'has_no_category':
         case 'has_any_category':
@@ -352,7 +352,7 @@ function updateTriggerInput(selectList) {
         case 'currency_is':
         case 'foreign_currency_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'json/currency-names');
+            createAutoComplete(inputResult, 'api/v1/autocomplete/currencies-with-code');
             break;
         case 'amount_less':
         case 'amount_more':
@@ -377,11 +377,17 @@ function createAutoComplete(input, URI) {
     console.log('Now in createAutoComplete("' + URI + '").');
     input.typeahead('destroy');
 
+    // append URI:
+    var lastChar = URI[URI.length -1];
+    var urlParamSplit = '?';
+    if('&' === lastChar) {
+        urlParamSplit = '';
+    }
     var source = new Bloodhound({
                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                                     prefetch: {
-                                        url: URI + '?uid=' + uid,
+                                        url: URI + urlParamSplit + 'uid=' + uid,
                                         filter: function (list) {
                                             return $.map(list, function (item) {
                                                 return {name: item.name};
@@ -389,7 +395,7 @@ function createAutoComplete(input, URI) {
                                         }
                                     },
                                     remote: {
-                                        url: URI + '?search=%QUERY&uid=' + uid,
+                                        url: URI + urlParamSplit + 'query=%QUERY&uid=' + uid,
                                         wildcard: '%QUERY',
                                         filter: function (list) {
                                             return $.map(list, function (item) {

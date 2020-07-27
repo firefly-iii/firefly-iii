@@ -27,6 +27,7 @@
         "category": "Kategori",
         "attachments": "Lampiran",
         "notes": "Notes",
+        "external_uri": "External URI",
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",
@@ -70,7 +71,9 @@
         "profile_create_new_token": "Create new token",
         "profile_create_token": "Create token",
         "profile_create": "Create",
-        "profile_save_changes": "Save changes"
+        "profile_save_changes": "Save changes",
+        "default_group_title_name": "(ungrouped)",
+        "piggy_bank": "Celengan"
     },
     "form": {
         "interest_date": "Tanggal bunga",

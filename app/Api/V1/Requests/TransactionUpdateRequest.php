@@ -28,17 +28,19 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionUpdateRequest
  */
-class TransactionUpdateRequest extends Request
+class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes;
 
     /** @var array Array values. */
     private $arrayFields;
@@ -127,6 +129,7 @@ class TransactionUpdateRequest extends Request
             'sepa_ep',
             'sepa_ci',
             'sepa_batch_id',
+            'external_uri'
         ];
         $this->booleanFields = [
             'reconciled',
@@ -172,7 +175,7 @@ class TransactionUpdateRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                => 'numeric|more:0|max:100000000000',
+            'transactions.*.amount'                => 'numeric|gt:0|max:100000000000',
             'transactions.*.foreign_amount'        => 'numeric|gte:0',
 
             // description
@@ -204,6 +207,7 @@ class TransactionUpdateRequest extends Request
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
@@ -263,17 +267,13 @@ class TransactionUpdateRequest extends Request
                 // TODO if the transaction_journal_id is empty, some fields are mandatory, like the amount!
 
                 // all journals must have a description
-                //$this->validateDescriptions($validator);
 
                 //                // validate foreign currency info
-                //                $this->validateForeignCurrencyInformation($validator);
                 //
 
                 //
                 //                // make sure all splits have valid source + dest info
-                //                $this->validateSplitAccounts($validator);
                 //                 the group must have a description if > 1 journal.
-                //                $this->validateGroupDescription($validator);
             }
         );
     }

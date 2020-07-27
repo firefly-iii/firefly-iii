@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => '你確定你想要刪除名為 ":name" 的帳戶?',
     'bill_areYouSure'             => '你確定你想要刪除名為 ":name" 的帳單?',
     'rule_areYouSure'             => '你確定你想要刪除名為 ":title" 的規則?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => '你確定你想要刪除名為 ":title" 的規則群組?',
     'budget_areYouSure'           => '你確定你想要刪除名為 ":name" 的預算?',
     'category_areYouSure'         => '你確定你想要刪除名為 ":name" 的分類?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => '與此連結類型連接的唯一一筆交易會遺失連接。|與此連結類型連接的 :count 筆交易會遺失連接。',
     'also_delete_rules'           => '與此規則群組連接的唯一一則規則也會被刪除。|與此規則群組連接的 :count 則規則也會被刪除。',
     'also_delete_piggyBanks'      => '與此帳戶連接的唯一一個小豬撲滿也會被刪除。|與此帳戶連接的 :count 個小豬撲滿也會被刪除。',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => '與此帳單連接的唯一一筆交易不會被刪除。|與此帳單連接的 :count 筆交易不會被刪除。',
     'budget_keep_transactions'    => '與此預算連接的唯一一筆交易不會被刪除。|與此預算連接的 :count 筆交易不會被刪除。',
     'category_keep_transactions'  => '與此分類連接的唯一一筆交易不會被刪除。|與此分類連接的 :count 筆交易不會被刪除。',
     'recurring_keep_transactions' => '由此定期交易建立的唯一一筆交易不會被刪除。|由此定期交易建立的 :count 筆交易不會被刪除。',
     'tag_keep_transactions'       => '與此標籤連接的唯一一筆交易不會被刪除。|與此標籤連接的 :count 筆交易不會被刪除。',
     'check_for_updates'           => '檢查更新',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => '電子郵件地址',
     'password'              => '密碼',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => '這是演示網站',
 
     // import
-    'import_file'           => '匯入檔案',
     'configuration_file'    => '組態檔案',
-    'import_file_type'      => '匯入檔案類型',
     'csv_comma'             => '逗號 (,)',
     'csv_semicolon'         => '分號 (;)',
     'csv_tab'               => 'TAB鍵 (不可見)',
     'csv_delimiter'         => 'CSV 欄位分隔符號',
-    'csv_import_account'    => '預設匯入帳戶',
     'client_id'             => '客戶端 ID',
     'app_id'                => 'App ID',
     'secret'                => '金鑰',

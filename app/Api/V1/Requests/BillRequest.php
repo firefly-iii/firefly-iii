@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
@@ -34,9 +36,9 @@ use Illuminate\Validation\Validator;
  *
  * @codeCoverageIgnore
  */
-class BillRequest extends Request
+class BillRequest extends FormRequest
 {
-
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *
@@ -70,6 +72,7 @@ class BillRequest extends Request
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
             'active'        => $active,
+            'order'         => $this->integer('order'),
             'notes'         => $this->nlString('notes'),
         ];
     }
@@ -83,13 +86,13 @@ class BillRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'name'          => 'required|between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'    => 'required|numeric|more:0',
-            'amount_max'    => 'required|numeric|more:0',
+            'name'          => 'between:1,255|uniqueObjectForUser:bills,name',
+            'amount_min'    => 'numeric|gt:0',
+            'amount_max'    => 'numeric|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'date'          => 'required|date',
-            'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
+            'date'          => 'date',
+            'repeat_freq'   => 'in:weekly,monthly,quarterly,half-year,yearly',
             'skip'          => 'between:0,31',
             'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',

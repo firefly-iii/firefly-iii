@@ -106,14 +106,15 @@ class TransferCurrenciesCorrectionsTest extends TestCase
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
         // account repos
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->atLeast()->once()
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        #$accountRepos->shouldReceive('getMetaValue')
+        #             ->atLeast()->once()
+        #             ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
         // currency repos
-        $currencyRepos->shouldReceive('findNull')
-                      ->atLeast()->once()
-                      ->withArgs([1])->andReturn($euro);
+        #$currencyRepos->shouldReceive('findNull')
+        #              ->atLeast()->once()
+        #              ->withArgs([1])->andReturn($euro);
 
         // configuration
         $false       = new Configuration;
@@ -151,14 +152,15 @@ class TransferCurrenciesCorrectionsTest extends TestCase
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
         // account repos
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->atLeast()->once()
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        #$accountRepos->shouldReceive('getMetaValue')
+        #             ->atLeast()->once()
+        #             ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
         // currency repos
-        $currencyRepos->shouldReceive('findNull')
-                      ->atLeast()->once()
-                      ->withArgs([1])->andReturn($euro);
+        #$currencyRepos->shouldReceive('findNull')
+        #              ->atLeast()->once()
+        #              ->withArgs([1])->andReturn($euro);
 
         // configuration
         $false       = new Configuration;
@@ -202,16 +204,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
                      ->withArgs([[TransactionType::TRANSFER]])
                      ->atLeast()->once()->andReturn(new Collection([$transfer]));
 
-        // account repos
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->atLeast()->once()
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1', $dollar->id);
-
-        // currency repos
-        $currencyRepos->shouldReceive('findNull')
-                      ->atLeast()->once()
-                      ->withArgs([1])->andReturn($euro);
-
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
         $currencyRepos->shouldReceive('findNull')
                       ->atLeast()->once()
                       ->withArgs([$dollar->id])->andReturn($dollar);

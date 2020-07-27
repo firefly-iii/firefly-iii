@@ -67,6 +67,7 @@ class PreferencesController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         $accounts = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $isDocker = env('IS_DOCKER', false);
 
         // group accounts
         $groupedAccounts = [];
@@ -122,6 +123,7 @@ class PreferencesController extends Controller
             compact(
                 'language',
                 'groupedAccounts',
+                'isDocker',
                 'frontPageAccounts',
                 'languages',
                 'locales',
@@ -204,6 +206,7 @@ class PreferencesController extends Controller
             'internal_reference' => isset($setOptions['internal_reference']),
             'notes'              => isset($setOptions['notes']),
             'attachments'        => isset($setOptions['attachments']),
+            'external_uri'       => isset($setOptions['external_uri']),
         ];
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 

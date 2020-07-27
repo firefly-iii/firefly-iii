@@ -121,23 +121,26 @@ class DebugController extends Controller
         $search  = ['~', '#'];
         $replace = ['\~', '# '];
 
-        $now            = Carbon::now()->format('Y-m-d H:i:s e');
-        $installationId = app('fireflyconfig')->get('installation_id', '')->data;
-        $phpVersion     = str_replace($search, $replace, PHP_VERSION);
-        $phpOs          = str_replace($search, $replace, PHP_OS);
-        $interface      = PHP_SAPI;
-        $drivers        = implode(', ', DB::availableDrivers());
-        $currentDriver  = DB::getDriverName();
-        $userAgent      = $request->header('user-agent');
-        $trustedProxies = config('firefly.trusted_proxies');
-        $displayErrors  = ini_get('display_errors');
-        $errorReporting = $this->errorReporting((int) ini_get('error_reporting'));
-        $appEnv         = config('app.env');
-        $appDebug       = var_export(config('app.debug'), true);
-        $logChannel     = config('logging.default');
-        $appLogLevel    = config('logging.level');
-        $cacheDriver    = config('cache.default');
-        $loginProvider  = config('auth.providers.users.driver');
+        $now                  = Carbon::now()->format('Y-m-d H:i:s e');
+        $installationIdConfig = app('fireflyconfig')->get('installation_id', '');
+        $installationId       = $installationIdConfig ? $installationIdConfig->data : '';
+        $phpVersion           = str_replace($search, $replace, PHP_VERSION);
+        $phpOs                = str_replace($search, $replace, PHP_OS);
+        $interface            = PHP_SAPI;
+        $drivers              = implode(', ', DB::availableDrivers());
+        $currentDriver        = DB::getDriverName();
+        $userAgent            = $request->header('user-agent');
+        $trustedProxies       = config('firefly.trusted_proxies');
+        $displayErrors        = ini_get('display_errors');
+        $errorReporting       = $this->errorReporting((int) ini_get('error_reporting'));
+        $appEnv               = config('app.env');
+        $appDebug             = var_export(config('app.debug'), true);
+        $logChannel           = config('logging.default');
+        $appLogLevel          = config('logging.level');
+        $cacheDriver          = config('cache.default');
+        $loginProvider        = config('auth.providers.users.driver');
+        $bcscale              = bcscale();
+        $layout               = env('FIREFLY_III_LAYOUT');
 
         // some new vars.
         $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
@@ -195,6 +198,8 @@ class DebugController extends Controller
                 'drivers',
                 'currentDriver',
                 'loginProvider',
+                'bcscale',
+                'layout',
                 'userAgent',
                 'displayErrors',
                 'installationId',

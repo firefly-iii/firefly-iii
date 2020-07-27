@@ -64,7 +64,7 @@ class AttachmentTransformer extends AbstractTransformer
             'id'              => (int)$attachment->id,
             'created_at'      => $attachment->created_at->toAtomString(),
             'updated_at'      => $attachment->updated_at->toAtomString(),
-            'attachable_id'   => $attachment->attachable_id,
+            'attachable_id'   => (int) $attachment->attachable_id,
             'attachable_type' => str_replace('FireflyIII\\Models\\', '', $attachment->attachable_type),
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,

@@ -56,22 +56,23 @@
                         </p>
 
                         {% if ruleGroup.rules.count > 0 %}
-                            <table class="table table-hover table-striped">
+                            <table class="table table-hover table-striped group-rules">
                                 <thead>
                                 <tr>
-                                    <th>&nbsp;</th>
-                                    <th>&nbsp;</th>
-                                    <th>&nbsp;</th>
-                                    <th>{{ 'rule_name'|_ }}</th>
-                                    <th class="hidden-xs">{{ 'rule_triggers'|_ }}</th>
-                                    <th class="hidden-xs">{{ 'rule_actions'|_ }}</th>
+                                    <th style="width:5%;">&nbsp;</th>
+                                    <th style="width:10%;">&nbsp;</th>
+                                    <th style="width:10%;">&nbsp;</th>
+                                    <th style="width:25%;">{{ 'rule_name'|_ }}</th>
+                                    <th style="width:25%;" class="hidden-xs">{{ 'rule_triggers'|_ }}</th>
+                                    <th style="width:25%;" class="hidden-xs">{{ 'rule_actions'|_ }}</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="rule-connected-list">
                                 {% for rule in ruleGroup.rules %}
-                                    <tr>
+                                    <tr class="single-rule" data-order="{{ rule.order }}"  data-id="{{ rule.id }}" data-group-id="{{ ruleGroup.id }}" data-position="{{ loop.index0 }}">
                                         <td>
                                             <div class="btn-group btn-group-xs prio_buttons">
+                                                {#
                                                 {% if rule.order > 1 %}
                                                     <a title="{{ 'rule_priority_up'|_ }}"
                                                        href="{{ route('rules.up', rule.id) }}"
@@ -91,6 +92,8 @@
                                                     <button disabled="disabled" class="btn btn-default"><span
                                                                 class="fa fa-fw"></span></button>
                                                 {% endif %}
+                                                #}
+                                                <i class="fa fa-fw fa-bars rule-handle"></i>
                                             </div>
                                         </td>
                                         <td>
@@ -107,6 +110,7 @@
                                         <td>
                                             <div class="btn-group btn-group-xs test_buttons">
                                                 {# show which transactions would match #}
+                                                {% if rule.active %}
                                                 <a href="#" class="btn btn-default test_rule_triggers" data-id="{{ rule.id }}"
                                                    title="{{ 'test_rule_triggers'|_ }}"><i data-id="{{ rule.id }}"
                                                                                            class="test_rule_triggers fa fa-fw fa-flask"></i></a>
@@ -115,7 +119,7 @@
                                                 <a href="{{ route('rules.select-transactions',rule.id) }}" class="btn btn-default"
                                                    title=" {{ trans('firefly.apply_rule_selection', {title: rule.title}) }}">
                                                     <i class="fa fa-fw fa-power-off "></i></a>
-
+                                                {% endif %}
                                                 {# duplicate rule #}
                                                 <a href="{{ route('rules.duplicate',rule.id) }}" class="btn btn-default"
                                                    title=" {{ trans('firefly.duplicate_rule', {title: rule.title}) }}">
@@ -143,7 +147,7 @@
                                         </td>
                                         <td class="hidden-xs">
                                             {% if rule.ruleTriggers.count > 0 %}
-                                                <ul class="small rule-triggers" data-id="{{ rule.id }}">
+                                                <ul class="small" data-id="{{ rule.id }}">
                                                     {% for trigger in rule.ruleTriggers %}
                                                         {% if trigger.trigger_type != "user_action" %}
                                                             <li
@@ -163,7 +167,7 @@
                                         </td>
                                         <td class="hidden-xs">
                                             {% if rule.ruleActions.count > 0 %}
-                                                <ul class="small rule-actions" data-id="{{ rule.id }}">
+                                                <ul class="small" data-id="{{ rule.id }}">
                                                     {% for action in rule.ruleActions %}
                                                         <li
                                                                 {% if not rule.active %}

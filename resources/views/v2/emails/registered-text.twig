@@ -1,0 +1,21 @@
+{% include 'emails.header-text' %}
+
+{{ trans('email.registered_welcome')|striptags|raw }}
+
+* {{ trans('email.registered_pw')|striptags|raw }}
+* {{ trans('email.registered_help')|raw }}
+* {{ trans('email.registered_doc_text')|raw }}
+
+{{ trans('email.registered_closing')|raw }}
+
+{{ trans('email.registered_firefly_iii_link')|raw }}
+{{ address }}
+
+{{ trans('email.registered_pw_reset_link')|raw }}
+{{ address }}/password/reset
+
+{{ trans('email.registered_doc_link')}}
+https://github.com/firefly-iii/firefly-iii
+https://firefly-iii.org/
+
+{% include 'emails.footer-text' %}

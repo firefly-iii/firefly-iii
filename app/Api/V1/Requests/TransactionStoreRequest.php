@@ -28,18 +28,20 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionStoreRequest
  */
-class TransactionStoreRequest extends Request
+class TransactionStoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation;
+    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes;
 
     /**
      * Authorize logged in users.
@@ -98,7 +100,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code|nullable',
 
             // amount
-            'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.amount'                => 'required|numeric|gt:0',
             'transactions.*.foreign_amount'        => 'numeric',
 
             // description
@@ -138,6 +140,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
@@ -221,7 +224,7 @@ class TransactionStoreRequest extends Request
 
                 // foreign currency info:
                 'foreign_currency_id'   => $this->integerFromValue((string) $object['foreign_currency_id']),
-                'foreign_currency_code' => $this->stringFromValue($object['foreign_currency_code']),
+                'foreign_currency_code' => $this->stringFromValue((string) $object['foreign_currency_code']),
 
                 // amount and foreign amount. Cannot be 0.
                 'amount'                => $this->stringFromValue((string) $object['amount']),
@@ -232,37 +235,37 @@ class TransactionStoreRequest extends Request
 
                 // source of transaction. If everything is null, assume cash account.
                 'source_id'             => $this->integerFromValue((string) $object['source_id']),
-                'source_name'           => $this->stringFromValue($object['source_name']),
-                'source_iban'           => $this->stringFromValue($object['source_iban']),
-                'source_number'         => $this->stringFromValue($object['source_number']),
-                'source_bic'            => $this->stringFromValue($object['source_bic']),
+                'source_name'           => $this->stringFromValue((string) $object['source_name']),
+                'source_iban'           => $this->stringFromValue((string) $object['source_iban']),
+                'source_number'         => $this->stringFromValue((string) $object['source_number']),
+                'source_bic'            => $this->stringFromValue((string) $object['source_bic']),
 
                 // destination of transaction. If everything is null, assume cash account.
                 'destination_id'        => $this->integerFromValue((string) $object['destination_id']),
-                'destination_name'      => $this->stringFromValue($object['destination_name']),
-                'destination_iban'      => $this->stringFromValue($object['destination_iban']),
-                'destination_number'    => $this->stringFromValue($object['destination_number']),
-                'destination_bic'       => $this->stringFromValue($object['destination_bic']),
+                'destination_name'      => $this->stringFromValue((string) $object['destination_name']),
+                'destination_iban'      => $this->stringFromValue((string) $object['destination_iban']),
+                'destination_number'    => $this->stringFromValue((string) $object['destination_number']),
+                'destination_bic'       => $this->stringFromValue((string) $object['destination_bic']),
 
                 // budget info
                 'budget_id'             => $this->integerFromValue((string) $object['budget_id']),
-                'budget_name'           => $this->stringFromValue($object['budget_name']),
+                'budget_name'           => $this->stringFromValue((string) $object['budget_name']),
 
                 // category info
                 'category_id'           => $this->integerFromValue((string) $object['category_id']),
-                'category_name'         => $this->stringFromValue($object['category_name']),
+                'category_name'         => $this->stringFromValue((string) $object['category_name']),
 
                 // journal bill reference. Optional. Will only work for withdrawals
                 'bill_id'               => $this->integerFromValue((string) $object['bill_id']),
-                'bill_name'             => $this->stringFromValue($object['bill_name']),
+                'bill_name'             => $this->stringFromValue((string) $object['bill_name']),
 
                 // piggy bank reference. Optional. Will only work for transfers
                 'piggy_bank_id'         => $this->integerFromValue((string) $object['piggy_bank_id']),
-                'piggy_bank_name'       => $this->stringFromValue($object['piggy_bank_name']),
+                'piggy_bank_name'       => $this->stringFromValue((string) $object['piggy_bank_name']),
 
                 // some other interesting properties
                 'reconciled'            => $this->convertBoolean((string) $object['reconciled']),
-                'notes'                 => $this->nlStringFromValue($object['notes']),
+                'notes'                 => $this->nlStringFromValue((string) $object['notes']),
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:
@@ -271,6 +274,7 @@ class TransactionStoreRequest extends Request
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
                 'bunq_payment_id'       => $this->stringFromValue((string) $object['bunq_payment_id']),
+                'external_uri'          => $this->stringFromValue((string) $object['external_uri']),
 
                 'sepa_cc'       => $this->stringFromValue($object['sepa_cc']),
                 'sepa_ct_op'    => $this->stringFromValue($object['sepa_ct_op']),

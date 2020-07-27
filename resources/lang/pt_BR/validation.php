@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'A regra deve ter pelo menos uma ação.',
     'base64'                         => 'Isto não é válido na codificação de dados base64.',
     'model_id_invalid'               => 'A identificação especificada parece inválida para este modelo.',
-    'more'                           => ':attribute deve ser maior que ":more".',
     'less'                           => ':attribute deve ser menor do que 10.000.000',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
@@ -128,8 +127,9 @@ return [
     'in_array'                       => 'O campo :attribute não existe em :other.',
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'O montante total não pode ser zero.',
-    'current_target_amount'          => 'The current amount must be less than the target amount.',
+    'current_target_amount'          => 'O valor atual deve ser menor do que o valor pretendido.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
+    'unique_object_group'            => 'O nome do grupo deve ser único',
 
     'secure_password'                => 'Esta não é uma senha segura. Por favor, tente novamente. Para mais informações, visite https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetição inválido para transações recorrentes.',
@@ -198,11 +198,12 @@ return [
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',
 
     'amount_required_for_auto_budget' => 'The amount is required.',
-    'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+    'auto_budget_amount_positive'     => 'A quantidade deve ser maior do que zero.',
     'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
 ];

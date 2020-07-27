@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** global: token */
-var fixHelper = function (e, tr) {
+var fixPiggyHelper = function (e, tr) {
     "use strict";
     var $originals = tr.children();
     var $helper = tr.clone();
@@ -34,12 +34,13 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    $('#sortable-piggy').find('tbody').sortable(
+    $('#piggy-sortable').find('tbody').sortable(
         {
-            helper: fixHelper,
+            helper: fixPiggyHelper,
             stop: stopSorting,
-            items: 'tr.sortable',
-            handle: '.handle',
+            connectWith: '.piggy-connected-list',
+            items: 'tr.piggy-sortable',
+            handle: '.piggy-handle',
             start: function (event, ui) {
                 // Build a placeholder cell that spans all the cells in the row
                 var cellCount = 0;
@@ -85,8 +86,10 @@ function stopSorting() {
     "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
 
-    $.each($('#sortable-piggy>tbody>tr.sortable'), function (i, v) {
+    $.each($('#piggy-sortable>tbody>tr.piggy-sortable'), function (i, v) {
         var holder = $(v);
+        var parentBody = holder.parent();
+        var objectGroupTitle = parentBody.data('title');
         var position = parseInt(holder.data('position'));
         var originalOrder = parseInt(holder.data('order'));
         var name = holder.data('name');
@@ -98,16 +101,16 @@ function stopSorting() {
         }
         if (position < i) {
             // position is less.
-            console.log('"' + name + '" has moved up from position ' + originalOrder + ' to ' + (i+1));
+            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved down from position ' + originalOrder + ' to ' + (i + 1));
         }
         if (position > i) {
-            console.log('"' + name + '" has moved up from position ' + originalOrder + ' to ' + (i+1));
+            console.log('"' + name + '" ("' + objectGroupTitle + '") has moved up from position ' + originalOrder + ' to ' + (i + 1));
         }
         // update position:
         holder.data('position', i);
         newOrder = i+1;
 
-        $.post('piggy-banks/set-order/' + id, {order: newOrder, _token: token})
+        $.post('piggy-banks/set-order/' + id, {order: newOrder, objectGroupTitle: objectGroupTitle, _token: token})
     });
     $('.loadSpin').removeClass('fa fa-refresh fa-spin');
 

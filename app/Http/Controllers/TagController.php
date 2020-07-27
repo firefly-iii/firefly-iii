@@ -285,7 +285,7 @@ class TagController extends Controller
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
-        $end          = new Carbon;
+        $end          = $this->repository->lastUseDate($tag) ?? new Carbon;
         $attachments  = $this->repository->getAttachments($tag);
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);

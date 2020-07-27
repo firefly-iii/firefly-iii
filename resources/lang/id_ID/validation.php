@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Aturan harus memiliki setidaknya satu tindakan.',
     'base64'                         => 'Ini bukanlah data base64 encoded yang valid.',
     'model_id_invalid'               => 'ID yang diberikan tidaklah valid untuk model ini.',
-    'more'                           => ':attribute must be larger than ":more".',
     'less'                           => ':attribute harus kurang dari 10,000,000',
     'active_url'                     => ':attribute bukan URL yang valid.',
     'after'                          => ':attribute harus tanggal setelah :date.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Jumlah total tidak boleh nol.',
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'Nama celengan harus unik.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipe pengulangan yang tidak valid untuk transaksi berkala.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'You can\'t use this account as the destination account.',
 
     'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
     'gte.array'   => 'The :attribute must have :value items or more.',

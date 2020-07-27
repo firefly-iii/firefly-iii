@@ -137,6 +137,7 @@ return [
     'account_areYouSure'          => 'Yakin ingin menghapus akun dengan nama ":name"?',
     'bill_areYouSure'             => 'Yakin ingin menghapus tagihan yang bernama ":name"?',
     'rule_areYouSure'             => 'Yakin ingin menghapus aturan yang berjudul ":title"?',
+    'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
     'ruleGroup_areYouSure'        => 'Yakin ingin menghapus grup aturan yang berjudul ":title"?',
     'budget_areYouSure'           => 'Yakin ingin menghapus anggaran dengan nama ":name"?',
     'category_areYouSure'         => 'Yakin ingin menghapus kategori yang bernama ":name"?',
@@ -156,12 +157,15 @@ return [
     'also_delete_connections'     => 'Satu-satunya transaksi yang terkait dengan jenis link ini akan kehilangan koneksi ini. Semua :count transaksi yang terkait dengan jenis link ini akan kehilangan koneksi mereka.',
     'also_delete_rules'           => 'Aturan satu-satunya yang terhubung ke grup aturan ini akan dihapus juga. Aturan All :count yang terhubung ke grup aturan ini akan dihapus juga.',
     'also_delete_piggyBanks'      => 'Satu-satunya piggy bank yang terhubung ke akun ini akan dihapus juga. Semua :count piggy bank yang terhubung ke akun ini akan dihapus juga.',
+    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will be spared deletion.',
     'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will be spared deletion.',
     'category_keep_transactions'  => 'The only transaction connected to this category will not be deleted.|All :count transactions connected to this category will be spared deletion.',
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+
+    'delete_object_group' => 'Delete group ":title"',
 
     'email'                 => 'Alamat email',
     'password'              => 'Kata sandi',
@@ -184,14 +188,11 @@ return [
     'is_demo_site'          => 'Apakah situs demo',
 
     // import
-    'import_file'           => 'Impor file',
     'configuration_file'    => 'File konfigurasi',
-    'import_file_type'      => 'Impor jenis file',
     'csv_comma'             => 'Koma (,)',
     'csv_semicolon'         => 'Titik koma (;)',
     'csv_tab'               => 'Tab (tak terlihat)',
     'csv_delimiter'         => 'Pembatas lapangan CSV',
-    'csv_import_account'    => 'Akun impor default',
     'client_id'             => 'ID klien',
     'app_id'                => 'App ID',
     'secret'                => 'Secret',

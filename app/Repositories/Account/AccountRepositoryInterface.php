@@ -48,6 +48,13 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * Reset order types of the mentioned accounts.
+     *
+     * @param array $types
+     */
+    public function resetAccountOrder(array $types): void;
+
+    /**
      * @param Account $account
      *
      * @return Collection
@@ -276,10 +283,11 @@ interface AccountRepositoryInterface
     /**
      * @param string $query
      * @param array  $types
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchAccount(string $query, array $types): Collection;
+    public function searchAccount(string $query, array $types, int $limit): Collection;
 
     /**
      * @param User $user

@@ -358,4 +358,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return $this->user->ruleGroups()->where('title', $title)->first();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $groups = $this->get();
+        /** @var RuleGroup $group */
+        foreach ($groups as $group) {
+            $group->rules()->delete();
+            $group->delete();
+        }
+    }
 }

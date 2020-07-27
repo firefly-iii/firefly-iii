@@ -25,7 +25,6 @@ namespace FireflyIII\Repositories\Recurring;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -40,6 +39,20 @@ use Illuminate\Support\Collection;
  */
 interface RecurringRepositoryInterface
 {
+    /**
+     * Destroy all recurring transactions.
+     */
+    public function destroyAll(): void;
+
+    /**
+     * Calculate how many transactions are to be expected from this recurrence.
+     *
+     * @param Recurrence $recurrence
+     * @param RecurrenceRepetition $repetition
+     * @return int
+     */
+    public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int;
+
     /**
      * Destroy a recurring transaction.
      *

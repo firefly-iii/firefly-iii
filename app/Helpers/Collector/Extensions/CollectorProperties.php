@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+
 /**
  * CollectorProperties.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Helpers\Collector\Extensions;
 
 use FireflyIII\User;
@@ -36,6 +38,8 @@ trait CollectorProperties
     private $hasAccountInfo;
     /** @var bool Will be true if query result includes bill information. */
     private $hasBillInformation;
+    /** @var bool */
+    private $hasNotesInformation;
     /** @var bool Will be true if query result contains budget info. */
     private $hasBudgetInformation;
     /** @var bool Will be true if query result contains category info. */
@@ -56,4 +60,6 @@ trait CollectorProperties
     private $total;
     /** @var User The user object. */
     private $user;
+
+    private bool $hasJoinedMetaTables;
 }

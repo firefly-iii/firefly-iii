@@ -106,12 +106,9 @@ trait GetConfigurationData
             // first range is the current range:
             $title => [$start, $end],
         ];
-        //Log::debug(sprintf('viewRange is %s', $viewRange));
-        //Log::debug(sprintf('isCustom is %s', var_export($isCustom, true)));
 
         // when current range is a custom range, add the current period as the next range.
         if ($isCustom) {
-            //Log::debug('Custom is true.');
             $index             = app('navigation')->periodShow($start, $viewRange);
             $customPeriodStart = app('navigation')->startOfPeriod($start, $viewRange);
             $customPeriodEnd   = app('navigation')->endOfPeriod($customPeriodStart, $viewRange);

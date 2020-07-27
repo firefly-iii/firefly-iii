@@ -80,7 +80,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                $piggy_bank_repetitions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
  * @property-read int|null $object_groups_count
- * @property bool $encrypted
  */
 class PiggyBank extends Model
 {

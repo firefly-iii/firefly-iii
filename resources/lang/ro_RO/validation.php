@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Regula trebuie să aibă cel puțin o acțiune.',
     'base64'                         => 'Acest lucru nu este valabil pentru datele encoded base64.',
     'model_id_invalid'               => 'ID-ul dat nu pare valid pentru acest model.',
-    'more'                           => ':attribute trebuie să fie mai mare decât ":more".',
     'less'                           => ':attribute trebuie să fie mai mic decât 10,000,000',
     'active_url'                     => ':attribute nu este o adresă URL validă.',
     'after'                          => ':attribute trebuie să fie o dată ulterioară :date.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Suma totală nu poate fi zero.',
     'current_target_amount'          => 'Suma curentă trebuie să fie mai mică decât suma vizată.',
     'unique_piggy_bank_for_user'     => 'Numele pușculiței trebuie să fie unic.',
+    'unique_object_group'            => 'The group name must be unique',
 
     'secure_password'                => 'Aceasta nu este o parolă sigură. Vă rugăm să încercați din nou. Pentru mai multe informații, vizitați https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tip de repetare nevalid pentru tranzacțiile recurente.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Nu puteți utiliza acest cont ca și cont de destinație.',
 
     'gte.numeric' => ':attribute trebuie să fie mai mare sau egal cu :value.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute trebuie să fie mai mare sau egal cu :value kilobytes.',
     'gte.string'  => ':attribute trebuie să fie mai mare sau egal cu :value caractere.',
     'gte.array'   => ':attribute trebuie sa aiba :value valori sau mai multe.',

@@ -109,7 +109,6 @@ class JavascriptControllerTest extends TestCase
         $accountRepos->shouldReceive('findNull')->andReturn($account);
         $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        Amount::shouldReceive('getJsConfig')->andReturn([])->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -135,7 +134,6 @@ class JavascriptControllerTest extends TestCase
         $accountRepos->shouldReceive('findNull')->andReturn($account);
         $currencyRepos->shouldReceive('findNull')->andReturn($euro);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        Amount::shouldReceive('getJsConfig')->andReturn([])->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -157,7 +155,6 @@ class JavascriptControllerTest extends TestCase
         $account = $this->getRandomAsset();
         $euro    = $this->getEuro();
         //Amount::shouldReceive('getDefaultCurrency')->andReturn($euro)->times(2);
-        Amount::shouldReceive('getJsConfig')->andReturn([])->once();
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

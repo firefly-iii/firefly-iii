@@ -12,6 +12,8 @@
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
         var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var allowedSourceDests = {{ allowedSourceDests|json_encode|raw }};
+        var expectedSourceTypes = {{ expectedSourceTypes|json_encode|raw }};
         var cashAccountId = {{ cash.id }};
         var previousUri = '{{ previousUri }}';
     </script>

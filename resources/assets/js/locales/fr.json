@@ -1,6 +1,6 @@
 {
     "firefly": {
-        "welcome_back": "Que se passe-t-il ?",
+        "welcome_back": "Quoi de neuf ?",
         "flash_error": "Erreur !",
         "flash_success": "Super !",
         "close": "Fermer",
@@ -27,6 +27,7 @@
         "category": "Cat\u00e9gorie",
         "attachments": "Pi\u00e8ces jointes",
         "notes": "Notes",
+        "external_uri": "External URI",
         "update_transaction": "Mettre \u00e0 jour l'op\u00e9ration",
         "after_update_create_another": "Apr\u00e8s la mise \u00e0 jour, revenir ici pour continuer l'\u00e9dition.",
         "store_as_new": "Enregistrer comme une nouvelle op\u00e9ration au lieu de mettre \u00e0 jour.",
@@ -70,7 +71,9 @@
         "profile_create_new_token": "Cr\u00e9er un nouveau jeton",
         "profile_create_token": "Cr\u00e9er un jeton",
         "profile_create": "Cr\u00e9er",
-        "profile_save_changes": "Enregistrer les modifications"
+        "profile_save_changes": "Enregistrer les modifications",
+        "default_group_title_name": "(Sans groupement)",
+        "piggy_bank": "Tirelire"
     },
     "form": {
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",

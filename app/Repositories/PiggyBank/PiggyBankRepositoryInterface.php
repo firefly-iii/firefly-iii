@@ -37,6 +37,26 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
     /**
+     *
+     */
+    public function destroyAll(): void;
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param string    $objectGroupTitle
+     *
+     * @return PiggyBank
+     */
+    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank;
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return PiggyBank
+     */
+    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
+
+    /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -124,6 +144,16 @@ interface PiggyBankRepositoryInterface
      * @return PiggyBank|null
      */
     public function findByName(string $name): ?PiggyBank;
+
+    /**
+     * Search for piggy banks.
+     *
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchPiggyBank(string $query, int $limit): Collection;
 
     /**
      * @param int $piggyBankId

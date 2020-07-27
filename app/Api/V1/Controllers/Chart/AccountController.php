@@ -42,10 +42,8 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use ApiSupport;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var AccountRepositoryInterface */
-    private $repository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -196,6 +194,8 @@ class AccountController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
+                'start_date'              => $start->format('Y-m-d'),
+                'end_date'                => $end->format('Y-m-d'),
                 'type'                    => 'line', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],

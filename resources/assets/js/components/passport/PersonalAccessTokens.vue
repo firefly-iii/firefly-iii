@@ -162,7 +162,7 @@
                         <p>
                             {{ $t('firefly.profile_personal_access_token_explanation') }}
                         </p>
-                        <pre><textarea id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
+                        <pre><textarea readonly id="tokenHidden" style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea></pre>
                     </div>
 
                     <!-- Modal Actions -->

@@ -96,6 +96,16 @@ class JournalDestroyService
             $journal->piggyBankEvents()->update(['transaction_journal_id' => null]);
 
             $journal->delete();
+
+            // delete group, if group is empty:
+            $group = $journal->transactionGroup;
+            if (null !== $group) {
+                $count = $group->transactionJournals->count();
+                if (0 === $count) {
+                    $group->delete();
+                }
+            }
+
         } catch (Exception $e) {
             Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore
         }

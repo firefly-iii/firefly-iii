@@ -56,12 +56,9 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var AccountValidator */
-    private $accountValidator;
-    /** @var BillRepositoryInterface */
-    private $billRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private AccountValidator $accountValidator;
+    private BillRepositoryInterface $billRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var bool */
@@ -88,11 +85,12 @@ class TransactionJournalFactory
     public function __construct()
     {
         $this->errorOnHash = false;
+        // TODO move valid meta fields to config.
         $this->fields      = [
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
             'sepa_db', 'sepa_country', 'sepa_ep',
-            'sepa_ci', 'sepa_batch_id',
+            'sepa_ci', 'sepa_batch_id', 'external_uri',
 
             // dates
             'interest_date', 'book_date', 'process_date',
@@ -100,7 +98,11 @@ class TransactionJournalFactory
 
             // others
             'recurrence_id', 'internal_reference', 'bunq_payment_id',
-            'import_hash', 'import_hash_v2', 'external_id', 'original_source'];
+            'import_hash', 'import_hash_v2', 'external_id', 'original_source',
+
+            // recurring transactions
+            'recurrence_total', 'recurrence_count'
+        ];
 
 
         if ('testing' === config('app.env')) {
@@ -367,19 +369,6 @@ class TransactionJournalFactory
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         // TODO this can't be faked so it can't be tested.
-        //        $count = $journal->transactions()->count();
-        //        if (2 !== $count) {
-        //            // @codeCoverageIgnoreStart
-        //            Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
-        //            try {
-        //                $journal->delete();
-        //            } catch (Exception $e) {
-        //                Log::debug(sprintf('Dont care: %s.', $e->getMessage()));
-        //            }
-        //
-        //            return null;
-        //            // @codeCoverageIgnoreEnd
-        //        }
         $journal->completed = true;
         $journal->save();
 

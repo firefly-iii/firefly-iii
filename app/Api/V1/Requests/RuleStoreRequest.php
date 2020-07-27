@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use function is_array;
 
@@ -32,8 +34,9 @@ use function is_array;
  * Class RuleStoreRequest
  *
  */
-class RuleStoreRequest extends Request
+class RuleStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

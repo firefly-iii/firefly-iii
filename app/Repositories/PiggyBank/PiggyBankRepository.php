@@ -281,6 +281,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $currency = app('amount')->getDefaultCurrency();
 
         $set = $this->getPiggyBanks();
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
@@ -392,5 +393,29 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         );
 
         return $set;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $this->user->piggyBanks()->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchPiggyBank(string $query, int $limit): Collection
+    {
+        $search = $this->user->piggyBanks();
+        if ('' !== $query) {
+            $search->where('piggy_banks.name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('piggy_banks.order', 'ASC')
+               ->orderBy('piggy_banks.name', 'ASC');
+
+        return $search->take($limit)->get();
     }
 }

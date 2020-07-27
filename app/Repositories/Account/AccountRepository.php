@@ -274,12 +274,11 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
 
-        $result = $query->get(['accounts.*']);
-
-        return $result;
+        return $query->get(['accounts.*']);
     }
 
     /**
@@ -294,12 +293,12 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
-        $result = $query->get(['accounts.*']);
 
+        return $query->get(['accounts.*']);
 
-        return $result;
     }
 
     /**
@@ -320,6 +319,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $query->where('active', 1);
         $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
@@ -559,13 +559,16 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param string $query
      * @param array  $types
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchAccount(string $query, array $types): Collection
+    public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
                               ->where('active', 1)
+                              ->orderBy('accounts.order', 'ASC')
+                              ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
                               ->with(['accountType']);
         if ('' !== $query) {
@@ -582,7 +585,7 @@ class AccountRepository implements AccountRepositoryInterface
             $dbQuery->whereIn('account_types.type', $types);
         }
 
-        return $dbQuery->get(['accounts.*']);
+        return $dbQuery->take($limit)->get(['accounts.*']);
     }
 
     /**
@@ -642,6 +645,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $query->where('active', 0);
         $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
@@ -692,5 +696,21 @@ class AccountRepository implements AccountRepositoryInterface
         $currencyIds = array_unique($currencyIds);
 
         return TransactionCurrency::whereIn('id', $currencyIds)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function resetAccountOrder(array $types): void
+    {
+        $list = $this->getAccountsByType($types);
+        /**
+         * @var int     $index
+         * @var Account $account
+         */
+        foreach ($list as $index => $account) {
+            $account->order = $index + 1;
+            $account->save();
+        }
     }
 }

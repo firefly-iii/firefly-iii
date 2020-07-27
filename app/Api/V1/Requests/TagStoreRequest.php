@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TagStoreRequest
@@ -31,9 +33,9 @@ use FireflyIII\Models\Location;
  * @codeCoverageIgnore
  *
  */
-class TagStoreRequest extends Request
+class TagStoreRequest extends FormRequest
 {
-
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

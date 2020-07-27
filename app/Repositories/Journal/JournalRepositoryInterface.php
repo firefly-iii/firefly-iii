@@ -43,15 +43,21 @@ interface JournalRepositoryInterface
     public function getLast(): ?TransactionJournal;
 
     /**
-     * TODO maybe create JSON repository?
-     *
-     * Search in journal descriptions.
-     *
-     * @param string $search
+     * @param array $types
      *
      * @return Collection
      */
-    public function searchJournalDescriptions(string $search): Collection;
+    public function findByType(array $types): Collection;
+
+    /**
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @param int $limit
+     *
+     * @return Collection
+     */
+    public function searchJournalDescriptions(string $search, int $limit): Collection;
 
     /**
      * Deletes a transaction group.

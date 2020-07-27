@@ -57,7 +57,6 @@ return [
     'at_least_one_action'            => 'Regel muss mindestens eine Aktion enthalten',
     'base64'                         => 'Dies sind keine gültigen base64-kodierten Daten.',
     'model_id_invalid'               => 'Die angegebene ID scheint für dieses Modell ungültig zu sein.',
-    'more'                           => ':attribute muss größer als „:more” sein.',
     'less'                           => ':attribute muss kleiner als 10.000.000 sein',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
@@ -130,6 +129,7 @@ return [
     'amount_zero'                    => 'Der Gesamtbetrag darf nicht Null sein.',
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
+    'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
 
     'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',
@@ -198,6 +198,7 @@ return [
     'generic_invalid_destination' => 'Sie können dieses Konto nicht als Zielkonto verwenden.',
 
     'gte.numeric' => ':attribute muss größer oder gleich :value sein.',
+    'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => ':attribute muss größer oder gleich :value Kilobytes sein.',
     'gte.string'  => ':attribute muss mindestens :value Zeichen enthalten.',
     'gte.array'   => ':attribute muss mindestens :value Elemente enthalten.',

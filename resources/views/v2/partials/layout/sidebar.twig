@@ -1,0 +1,255 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="{{ route('index') }}" class="brand-link">
+        <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" class="brand-image"
+             style="opacity: .8"> <!--  img-circle elevation-3 -->
+        <span class="brand-text font-weight-light">Firefly III</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <!--
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="v2/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block">Alexander Pierce</a>
+            </div>
+        </div>
+        -->
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                     with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="{{ route('index') }}" class="nav-link {{ activeRouteStrict('index') }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            {{ 'dashboard'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-header text-uppercase">{{ 'financial_control'|_ }}</li>
+
+                <li class="nav-item">
+                    <a href="{{ route('budgets.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <p>
+                            {{ 'budgets'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('bills.index') }}" class="nav-link">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>
+                            {{ 'bills'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('piggy-banks.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-bullseye"></i>
+                        <p>
+                            {{ 'piggyBanks'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-header text-uppercase">{{ 'accounting'|_ }}</li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-exchange-alt"></i>
+                        <p>
+                            {{ 'transactions'|_ }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('transactions.index', 'withdrawal') }}" class="nav-link">
+                                <i class="fas fa-long-arrow-alt-left nav-icon"></i>
+                                <p>{{ 'expenses'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('transactions.index', 'deposit') }}" class="nav-link">
+                                <i class="fas fa-long-arrow-alt-right nav-icon"></i>
+                                <p>{{ 'income'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('transactions.index', 'transfers') }}" class="nav-link">
+                                <i class="fas fa-exchange-alt nav-icon"></i>
+                                <p>{{ 'transfers'|_ }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-microchip"></i>
+                        <p>
+                            {{ 'automation'|_ }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('rules.index') }}" class="nav-link">
+                                <i class="fas fa-random nav-icon"></i>
+                                <p>{{ 'rules'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('recurring.index') }}" class="nav-link">
+                                <i class="fas fa-magic nav-icon"></i>
+                                <p>{{ 'recurrences'|_ }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-header text-uppercase">{{ 'others'|_ }}</li>
+
+                <li class="nav-item has-treeview {{ menuOpenRoutePartial('accounts') }}">
+                    <a href="#" class="nav-link {{ activeRoutePartial('accounts') }}">
+                        <i class="nav-icon fas fa-credit-card"></i>
+                        <p>
+                            {{ 'accounts'|_ }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <!-- dingflofbips "{{ activeRoutePartialObjectType('accounts', 'asset') }}" -->
+                            <a href="{{ route('accounts.index','asset') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'asset') }}">
+                                <i class="far fa-money-bill-alt nav-icon"></i>
+                                <p>{{ 'asset_accounts'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('accounts.index','expense') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'expense') }}">
+                                <i class="fas fa-shopping-cart nav-icon"></i>
+                                <p>{{ 'expense_accounts'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('accounts.index','revenue') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'revenue') }}">
+                                <i class="fas fa-briefcase nav-icon"></i>
+                                <p>{{ 'revenue_accounts'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('accounts.index','liabilities') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
+                                <i class="fas fa-funnel-dollar nav-icon"></i>
+                                <p>{{ 'liabilities_accounts'|_ }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-tags"></i>
+                        <p>
+                            {{ 'classification'|_ }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('categories.index') }}" class="nav-link">
+                                <i class="fas fa-bookmark nav-icon"></i>
+                                <p>{{ 'categories'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('tags.index') }}" class="nav-link">
+                                <i class="fas fa-tags nav-icon"></i>
+                                <p>{{ 'tags'|_ }}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('reports.index') }}" class="nav-link">
+                        <i class="nav-icon far fa-chart-bar"></i>
+                        <p>
+                            {{ 'reports'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('export.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-upload"></i>
+                        <p>
+                            {{ 'export_data_menu'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-sliders-h"></i>
+                        <p>
+                            {{ 'options'|_ }}
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('profile.index') }}" class="nav-link">
+                                <i class="far fa-user nav-icon"></i>
+                                <p>{{ 'profile'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('preferences.index') }}" class="nav-link">
+                                <i class="fas fa-cogs nav-icon"></i>
+                                <p>{{ 'preferences'|_ }}</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('currencies.index') }}" class="nav-link">
+                                <i class="fas fa-euro-sign nav-icon"></i>
+                                <p>{{ 'currencies'|_ }}</p>
+                            </a>
+                        </li>
+                        {% if hasRole('owner') %}
+                        <li class="nav-item">
+                            <a href="{{ route('admin.index') }}" class="nav-link">
+                                <i class="far fa-hand-spock nav-icon"></i>
+                                <p>{{ 'administration'|_ }}</p>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('logout') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p>
+                            {{ 'logout'|_ }}
+                        </p>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>
