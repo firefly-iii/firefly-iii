@@ -137,8 +137,7 @@ class JavascriptController extends Controller
             $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
 
-        $localeconv                = app('amount')->getLocaleInfo();
-        $accounting                = app('amount')->getJsConfig($localeconv);
+        $accounting                = app('amount')->getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */

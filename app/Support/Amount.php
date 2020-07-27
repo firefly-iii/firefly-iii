@@ -115,19 +115,20 @@ class Amount
      * This method returns the correct format rules required by accounting.js,
      * the library used to format amounts in charts.
      *
-     * @param array $config
+     * Used only in one place.
      *
      * @return array
      */
-    public function getJsConfig(array $config): array
+    public function getJsConfig(): array
     {
-        $negative = self::getAmountJsConfig($config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes']);
-        $positive = self::getAmountJsConfig($config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes']);
+        $config = $this->getLocaleInfo();
+        $negative   = self::getAmountJsConfig($config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes']);
+        $positive   = self::getAmountJsConfig($config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes']);
 
         return [
             'mon_decimal_point' => $config['mon_decimal_point'],
             'mon_thousands_sep' => $config['mon_thousands_sep'],
-            'format' => [
+            'format'            => [
                 'pos'  => $positive,
                 'neg'  => $negative,
                 'zero' => $positive,
@@ -138,7 +139,7 @@ class Amount
     /**
      * @return array
      */
-    public function getLocaleInfo(): array
+    private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
         $locale = app('steam')->getLocale();
