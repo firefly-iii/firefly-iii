@@ -144,8 +144,9 @@ class JavascriptController extends Controller
             $currency = app('amount')->getDefaultCurrency();
         }
 
-        $accountingLocaleInfo                = app('amount')->getAccountingLocaleInfo();
-        $accountingLocaleInfo['frac_digits'] = $currency->decimal_places;
+        $localeconv                = app('amount')->getLocaleInfo();
+        $accounting                = app('amount')->getJsConfig($localeconv);
+        $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
@@ -155,7 +156,7 @@ class JavascriptController extends Controller
         $data = [
             'currencyCode'          => $currency->code,
             'currencySymbol'        => $currency->symbol,
-            'accountingLocaleInfo'  => $accountingLocaleInfo,
+            'accountingLocaleInfo'  => $accounting,
             'language'              => $lang,
             'dateRangeTitle'        => $dateRange['title'],
             'dateRangeConfig'       => $dateRange['configuration'],
