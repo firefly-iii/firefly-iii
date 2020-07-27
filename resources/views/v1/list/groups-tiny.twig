@@ -4,14 +4,14 @@
             {% for transaction in group.transactions %}
                 {{ transaction.description }}
                 <span class="pull-right small">
-                    {{ journalArrayAmount(transaction) }}
+                    {{ journalArrayAmount(transaction, account) }}
                 </span>
                 <br/>
             {% endfor %}
             {% if group.count > 1 %}
                 &nbsp;
                 <span class="pull-right small">
-                {{ groupAmount(group) }}
+                {{ groupAmount(group, account) }}
             </span>
             {% endif %}
         </a>
