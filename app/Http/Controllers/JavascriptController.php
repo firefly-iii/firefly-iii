@@ -132,16 +132,9 @@ class JavascriptController extends Controller
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
         $account    = $repository->findNull((int) $request->get('account'));
-        $currencyId = 0;
-        if (null !== $account) {
-            // TODO we can use getAccountCurrency() instead
-            $currencyId = (int) $repository->getMetaValue($account, 'currency_id');
-        }
-        /** @var TransactionCurrency $currency */
-        $currency = $currencyRepository->findNull($currencyId);
-        if (null === $currency) {
-            /** @var TransactionCurrency $currency */
-            $currency = app('amount')->getDefaultCurrency();
+        $currency = app('amount')->getDefaultCurrency();
+        if(null !== $account) {
+            $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
 
         $localeconv                = app('amount')->getLocaleInfo();
