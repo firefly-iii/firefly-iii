@@ -625,6 +625,7 @@ class Steam
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),
+            str_replace('_', '-', $locale), // for Windows.
         ];
     }
 

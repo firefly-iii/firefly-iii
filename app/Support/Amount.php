@@ -121,7 +121,7 @@ class Amount
      */
     public function getJsConfig(): array
     {
-        $config = $this->getLocaleInfo();
+        $config     = $this->getLocaleInfo();
         $negative   = self::getAmountJsConfig($config['n_sep_by_space'], $config['n_sign_posn'], $config['negative_sign'], $config['n_cs_precedes']);
         $positive   = self::getAmountJsConfig($config['p_sep_by_space'], $config['p_sign_posn'], $config['positive_sign'], $config['p_cs_precedes']);
 
@@ -147,6 +147,7 @@ class Amount
 
         setlocale(LC_MONETARY, $array);
         $info = localeconv();
+
         // correct variables
         $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
         $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
@@ -154,7 +155,7 @@ class Amount
         $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
         $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
 
-        $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
+        $fmt = new NumberFormatter( $locale, NumberFormatter::CURRENCY);
 
         $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
         $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
