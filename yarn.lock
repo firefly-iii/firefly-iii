@@ -4888,6 +4888,11 @@ pkg-dir@^4.1.0:
   dependencies:
     find-up "^4.0.0"
 
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
+
 portfinder@^1.0.26:
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.27.tgz#a41333c116b5e5f3d380f9745ac2f35084c4c758"
@@ -6338,11 +6343,12 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
-uiv@^0.34:
-  version "0.34.4"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-0.34.4.tgz#ae3cb2ad6fe01266fdf1933538c1bafe02021c56"
-  integrity sha512-J3Y53f/PcySbMpSEqkYwp2vtIIb+z3PQqvEqWdzD8RWrabFRxd1sd6iiRHx3cX5gzQtv79HtxR1tAk/xC4cSnw==
+uiv@^0.36:
+  version "0.36.0"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-0.36.0.tgz#0b246de1f97c85f5bb783083a65f1a8e9f9a74ef"
+  integrity sha512-9F8wxe3DgZj/movfDmIpfuBGu6TKnzM5IZmhjOSaVeXhe+b1UmKvPw5DMuWVtTpmjkAOBkG6pkqtk9rbfQREhg==
   dependencies:
+    portal-vue "^2.1.7"
     vue-functional-data-merge "^2.0.3"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:

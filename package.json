@@ -17,7 +17,7 @@
         "font-awesome": "^4.7.0",
         "jquery": "^3.4.1",
         "laravel-mix": "^5.0",
-        "uiv": "^0.34",
+        "uiv": "^0.36",
         "vue": "^2.6",
         "vue-i18n": "^8.15",
         "vue-template-compiler": "^2.6.11"
