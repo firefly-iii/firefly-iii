@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e04b52ce27b00d7541a746656232ee10",
+    "content-hash": "32784b68cf78c1f4352ed5ed94b5f22e",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -3807,23 +3807,23 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.11.3",
+            "version": "v0.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "b50247faf2f570eb2b2d0d3c98b4461f1ef60b2d"
+                "reference": "c7e4acdfb3d55a055508b9d3cc8cf71c00329e90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/b50247faf2f570eb2b2d0d3c98b4461f1ef60b2d",
-                "reference": "b50247faf2f570eb2b2d0d3c98b4461f1ef60b2d",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/c7e4acdfb3d55a055508b9d3cc8cf71c00329e90",
+                "reference": "c7e4acdfb3d55a055508b9d3cc8cf71c00329e90",
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": "^5.5|^6|^7",
                 "illuminate/view": "^5.5|^6|^7",
                 "php": ">=7.1",
-                "twig/twig": "~2.0"
+                "twig/twig": "^2.11"
             },
             "require-dev": {
                 "laravel/framework": "5.5.*",
@@ -3839,7 +3839,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.11-dev"
+                    "dev-master": "0.12-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -3875,7 +3875,7 @@
                 "laravel",
                 "twig"
             ],
-            "time": "2020-02-27T13:59:54+00:00"
+            "time": "2020-07-03T08:55:51+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
