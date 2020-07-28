@@ -340,24 +340,6 @@ function multiCurrencyPieChart(URI, container) {
 
 }
 
-
-/**
- *
- * @param URI
- * @param container
- */
-function neutralPieChart(URI, container) {
-    "use strict";
-
-    var colorData = false;
-    var options = $.extend(true, {}, neutralDefaultPieOptions);
-    var chartType = 'pie';
-
-    drawAChart(URI, container, chartType, options, colorData);
-
-}
-
-
 /**
  * @param URI
  * @param container
