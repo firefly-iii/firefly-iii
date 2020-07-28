@@ -117,6 +117,7 @@ class ReportController extends Controller
                         'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
                         'type'            => 'line',
                         'currency_symbol' => $netWorthItem['currency']->symbol,
+                        'currency_code' => $netWorthItem['currency']->code,
                         'entries'         => [],
                     ];
                 }
@@ -217,6 +218,7 @@ class ReportController extends Controller
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
                 'currency_id'     => $currency['currency_id'],
                 'currency_symbol' => $currency['currency_symbol'],
+                'currency_code'   => $currency['currency_code'],
                 'entries'         => [],
             ];
             $expense = [
@@ -225,6 +227,7 @@ class ReportController extends Controller
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'currency_id'     => $currency['currency_id'],
                 'currency_symbol' => $currency['currency_symbol'],
+                'currency_code'   => $currency['currency_code'],
                 'entries'         => [],
 
             ];

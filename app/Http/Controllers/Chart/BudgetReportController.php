@@ -88,6 +88,7 @@ class BudgetReportController extends Controller
                 $result[$title] = $result[$title] ?? [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
+                        'currency_code'   => $currency['currency_code'],
                     ];
                 foreach ($budget['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);
@@ -124,6 +125,7 @@ class BudgetReportController extends Controller
                     $result[$title] = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
 
                     $amount                   = app('steam')->positive($journal['amount']);
@@ -160,6 +162,7 @@ class BudgetReportController extends Controller
                     $result[$title] = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
 
                     $amount                   = app('steam')->positive($journal['amount']);
@@ -201,6 +204,7 @@ class BudgetReportController extends Controller
                     ),
                     'type'            => 'bar',
                     'currency_symbol' => $currency['currency_symbol'],
+                    'currency_code'   => $currency['currency_code'],
                     'currency_id'     => $currency['currency_id'],
                     'entries'         => $this->makeEntries($start, $end),
                 ];
@@ -243,6 +247,7 @@ class BudgetReportController extends Controller
                     $result[$title] = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
 
                     $amount                   = app('steam')->positive($journal['amount']);

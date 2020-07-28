@@ -81,12 +81,12 @@ class BillController extends Controller
         foreach ($paid as $currencyId => $amount) {
             $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
             $label                   = (string) trans('firefly.paid_in_currency', ['currency' => $currencies[$currencyId]->name]);
-            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol];
+            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol, 'currency_code' => $currencies[$currencyId]->code];
         }
         foreach ($unpaid as $currencyId => $amount) {
             $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
             $label                   = (string) trans('firefly.unpaid_in_currency', ['currency' => $currencies[$currencyId]->name]);
-            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol];
+            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol, 'currency_code' => $currencies[$currencyId]->code];
         }
 
         $data = $this->generator->multiCurrencyPieChart($chartData);
@@ -126,9 +126,9 @@ class BillController extends Controller
         );
 
         $chartData = [
-            ['type' => 'line', 'label' => (string) trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'line', 'label' => (string) trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'bar', 'label' => (string) trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'line', 'label' => (string) trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'currency_code' => $bill->transactionCurrency->code, 'entries' => []],
+            ['type' => 'line', 'label' => (string) trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'currency_code' => $bill->transactionCurrency->code, 'entries' => []],
+            ['type' => 'bar', 'label' => (string) trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'currency_code' => $bill->transactionCurrency->code, 'entries' => []],
         ];
 
         foreach ($journals as $journal) {
