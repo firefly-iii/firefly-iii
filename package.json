@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "@johmun/vue-tags-input": "^2.1.0",
-        "axios": "^0.18.1",
+        "axios": "^0.19.2",
         "bootstrap-sass": "^3.3.7",
         "cross-env": "^5.1",
         "font-awesome": "^4.7.0",
