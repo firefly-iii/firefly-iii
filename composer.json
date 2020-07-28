@@ -83,7 +83,7 @@
     "ext-tokenizer": "*",
     "ext-xml": "*",
     "adldap2/adldap2-laravel": "6.*",
-    "bacon/bacon-qr-code": "1.*",
+    "bacon/bacon-qr-code": "2.*",
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
