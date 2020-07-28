@@ -40,12 +40,14 @@ class Steam
 {
 
     /**
+     * Gets balance at the end of current month by default
+     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
      * @return string
      */
-    public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
+    public function balance(Account $account, Carbon $date = null, ?TransactionCurrency $currency = null): string
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -57,6 +59,9 @@ class Steam
         $cache->addProperty($date);
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
+        }
+        if (null === $date) {
+            $date = Carbon::now()->endOfMonth();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -255,12 +260,14 @@ class Steam
     }
 
     /**
+     * Gets balance at the end of current month by default
+     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
      * @return array
      */
-    public function balancePerCurrency(Account $account, Carbon $date): array
+    public function balancePerCurrency(Account $account, Carbon $date = null): array
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -272,6 +279,9 @@ class Steam
         $cache->addProperty($date);
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
+        }
+        if (null === $date) {
+            $date = Carbon::now()->endOfMonth();
         }
         $query    = $account->transactions()
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -289,14 +299,14 @@ class Steam
     }
 
     /**
-     * This method always ignores the virtual balance.
+     * This method always ignores the virtual balance. Gets balance at the end of current month by default
      *
      * @param \Illuminate\Support\Collection $accounts
      * @param \Carbon\Carbon                 $date
      *
      * @return array
      */
-    public function balancesByAccounts(Collection $accounts, Carbon $date): array
+    public function balancesByAccounts(Collection $accounts, Carbon $date = null): array
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
@@ -324,14 +334,14 @@ class Steam
     }
 
     /**
-     * Same as above, but also groups per currency.
+     * Same as above, but also groups per currency. Gets balance at the end of current month by default
      *
      * @param \Illuminate\Support\Collection $accounts
      * @param \Carbon\Carbon                 $date
      *
      * @return array
      */
-    public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
+    public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date = null): array
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
