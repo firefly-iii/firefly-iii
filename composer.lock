@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32784b68cf78c1f4352ed5ed94b5f22e",
+    "content-hash": "500b35f1787a0a1c44dd1fffe974ae39",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -1288,16 +1288,16 @@
         },
         {
             "name": "jc5/google2fa-laravel",
-            "version": "2.0.4",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/google2fa-laravel.git",
-                "reference": "8413b3c8b7cda855f8be1d9fe4696c76898272ac"
+                "reference": "b5b87f96fb241b30b8d2d0fd27d3dce311f7ae42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/8413b3c8b7cda855f8be1d9fe4696c76898272ac",
-                "reference": "8413b3c8b7cda855f8be1d9fe4696c76898272ac",
+                "url": "https://api.github.com/repos/JC5/google2fa-laravel/zipball/b5b87f96fb241b30b8d2d0fd27d3dce311f7ae42",
+                "reference": "b5b87f96fb241b30b8d2d0fd27d3dce311f7ae42",
                 "shasum": ""
             },
             "require": {
@@ -1361,7 +1361,7 @@
                 "google2fa",
                 "laravel"
             ],
-            "time": "2020-01-01T17:48:58+00:00"
+            "time": "2020-07-28T18:27:58+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -7709,16 +7709,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.6.0",
+            "version": "v4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "c346bbfafe2ff60680258b631afb730d186ed864"
+                "reference": "21dce06dfbf0365c6a7cc8fdbdc995926c6a9300"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c346bbfafe2ff60680258b631afb730d186ed864",
-                "reference": "c346bbfafe2ff60680258b631afb730d186ed864",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/21dce06dfbf0365c6a7cc8fdbdc995926c6a9300",
+                "reference": "21dce06dfbf0365c6a7cc8fdbdc995926c6a9300",
                 "shasum": ""
             },
             "require": {
@@ -7735,7 +7735,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.3-dev"
+                    "dev-master": "4.7-dev"
                 }
             },
             "autoload": {
@@ -7757,7 +7757,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2020-07-02T17:12:47+00:00"
+            "time": "2020-07-25T13:18:53+00:00"
         },
         {
             "name": "ocramius/package-versions",

@@ -76,6 +76,17 @@
  * http://jquery.org/license
  */
 
+/*! 
+ * portal-vue © Thorsten Lünborg, 2019 
+ * 
+ * Version: 2.1.7
+ * 
+ * LICENCE: MIT 
+ * 
+ * https://github.com/linusborg/portal-vue
+ * 
+*/
+
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
  * @version 1.16.1

@@ -3,3 +3,14 @@
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
+
+/*! 
+ * portal-vue © Thorsten Lünborg, 2019 
+ * 
+ * Version: 2.1.7
+ * 
+ * LICENCE: MIT 
+ * 
+ * https://github.com/linusborg/portal-vue
+ * 
+*/
