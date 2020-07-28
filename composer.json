@@ -99,7 +99,7 @@
     "pragmarx/recovery": "^0.1.0",
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
-    "rcrowe/twigbridge": "^0.11.2"
+    "rcrowe/twigbridge": "^0.12.1"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
