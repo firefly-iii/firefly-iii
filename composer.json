@@ -107,7 +107,7 @@
     "fzaninotto/faker": "1.*",
     "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
-    "phpunit/phpunit": "^8.5",
+    "phpunit/phpunit": "^9.2",
     "psalm/plugin-laravel": "^1.1",
     "roave/security-advisories": "dev-master",
     "vimeo/psalm": "^3.10"
