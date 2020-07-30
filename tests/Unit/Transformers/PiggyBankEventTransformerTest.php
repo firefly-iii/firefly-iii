@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 use Amount;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -48,6 +46,9 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function setUp(): void
     {
+        self::markTestIncomplete('Incomplete for refactor.');
+
+        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
