@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 
-use FireflyIII\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -33,7 +31,6 @@ use Tests\TestCase;
  */
 class BasicTest extends TestCase
 {
-    use RefreshDatabase;
     /**
      * A basic test example.
      *
