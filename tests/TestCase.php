@@ -21,10 +21,9 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Feature;
+namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\CreatesApplication;
 
 /**
  * Class TestCase
@@ -55,28 +54,4 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest(): void
-    {
-        self::assertTrue(true);
-
-    }
-
-    /**
-     *
-     */
-    public function testDatabase(): void
-    {
-        // Make call to application...
-
-        $this->assertDatabaseHas(
-            'users', [
-                       'email' => 'sally@example.com',
-                   ]
-        );
-    }
 }
