@@ -1,7 +1,6 @@
 <?php
-
-/**
- * TestCase.php
+/*
+ * MocksDefaultValues.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,45 +18,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Traits;
 
-use FireflyIII\User;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\Traits\MocksDefaultValues;
-use Tests\Traits\TestHelpers;
+use FireflyIII\Models\Configuration;
+use FireflyConfig;
 
 /**
- * Class TestCase
+ * Trait MocksDefaultValues
  */
-abstract class TestCase extends BaseTestCase
+trait MocksDefaultValues
 {
-    use CreatesApplication, MocksDefaultValues, TestHelpers;
-
-    /**
-     * @return array
-     */
-    public function dateRangeProvider(): array
+    public function mockDefaultConfiguration(): void
     {
-        return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
-        ];
-    }
 
-    /**
-     * @return User
-     */
-    public function user(): User
-    {
-        return User::find(1);
-    }
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
 
+        $idConfig = new Configuration;
+        $idConfig->data = 'abc';
+
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['installation_id', null])->andReturn($idConfig);
+    }
 
 }

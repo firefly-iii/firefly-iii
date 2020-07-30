@@ -1,7 +1,6 @@
 <?php
-
-/**
- * TestCase.php
+/*
+ * TestHelpers.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,45 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests;
-
-use FireflyIII\User;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\Traits\MocksDefaultValues;
-use Tests\Traits\TestHelpers;
+namespace Tests\Traits;
+use Exception;
+use Log;
 
 /**
- * Class TestCase
+ * Trait TestHelpers
  */
-abstract class TestCase extends BaseTestCase
+trait TestHelpers
 {
-    use CreatesApplication, MocksDefaultValues, TestHelpers;
-
     /**
-     * @return array
+     * @return int
      */
-    public function dateRangeProvider(): array
+    public function randomInt(): int
     {
-        return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
-        ];
-    }
+        $result = 4;
+        try {
+            $result = random_int(1, 100000);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not generate random number: %s', $e->getMessage()));
+        }
 
-    /**
-     * @return User
-     */
-    public function user(): User
-    {
-        return User::find(1);
+        return $result;
     }
-
 
 }
