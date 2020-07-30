@@ -19,7 +19,7 @@
         "sass": "^1.26.10",
         "sass-loader": "^9.0.2",
         "vue": "^2.6",
-        "vue-i18n": "^8.19",
+        "vue-i18n": "^8.20",
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
