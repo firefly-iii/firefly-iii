@@ -82,7 +82,6 @@ class TransactionCurrencyFactory
      * @param null|string $currencyCode
      *
      * @return TransactionCurrency|null
-     *
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {

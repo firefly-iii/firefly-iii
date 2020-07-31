@@ -43,6 +43,7 @@ class BillFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *

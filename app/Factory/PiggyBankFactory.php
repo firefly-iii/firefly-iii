@@ -36,6 +36,7 @@ class PiggyBankFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *
@@ -53,7 +54,6 @@ class PiggyBankFactory
      * @param null|string $piggyBankName
      *
      * @return PiggyBank|null
-     *
      */
     public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {

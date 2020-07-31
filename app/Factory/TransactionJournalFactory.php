@@ -76,6 +76,7 @@ class TransactionJournalFactory
     /** @var User The user */
     private $user;
 
+
     /**
      * Constructor.
      *
@@ -101,7 +102,7 @@ class TransactionJournalFactory
             'import_hash', 'import_hash_v2', 'external_id', 'original_source',
 
             // recurring transactions
-            'recurrence_total', 'recurrence_count'
+            'recurrence_total', 'recurrence_count',
         ];
 
 

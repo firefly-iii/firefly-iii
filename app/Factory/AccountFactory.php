@@ -113,7 +113,7 @@ class AccountFactory
             }
 
             // fix virtual balance when it's empty
-            if ('' === (string)$databaseData['virtual_balance']) {
+            if ('' === (string) $databaseData['virtual_balance']) {
                 $databaseData['virtual_balance'] = null;
             }
 
@@ -152,7 +152,6 @@ class AccountFactory
     }
 
     /**
-     *
      * @param string $accountName
      * @param string $accountType
      *
@@ -198,7 +197,6 @@ class AccountFactory
      * @param null|string $accountType
      *
      * @return AccountType|null
-     *
      */
     protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
     {

@@ -40,6 +40,7 @@ class TagFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *

@@ -51,6 +51,7 @@ class TransactionFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *

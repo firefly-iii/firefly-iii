@@ -40,6 +40,7 @@ class RequestedVersionCheckStatus extends Event
     /** @var User The user */
     public $user;
 
+
     /**
      * Create a new event instance. This event is triggered when Firefly III wants to know
      * what the deal is with the version checker.

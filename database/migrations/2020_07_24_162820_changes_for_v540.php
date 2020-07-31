@@ -19,7 +19,7 @@ class ChangesForV540 extends Migration
     {
         Schema::table(
             'oauth_clients', static function (Blueprint $table) {
-            $table->dropColumn('order');
+            $table->dropColumn('provider');
         }
         );
 
