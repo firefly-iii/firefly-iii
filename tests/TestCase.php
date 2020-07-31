@@ -25,6 +25,7 @@ namespace Tests;
 
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\Traits\CollectsValues;
 use Tests\Traits\MocksDefaultValues;
 use Tests\Traits\TestHelpers;
 
@@ -33,7 +34,7 @@ use Tests\Traits\TestHelpers;
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, MocksDefaultValues, TestHelpers;
+    use CreatesApplication, MocksDefaultValues, TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -50,14 +51,4 @@ abstract class TestCase extends BaseTestCase
             'custom range' => ['custom'],
         ];
     }
-
-    /**
-     * @return User
-     */
-    public function user(): User
-    {
-        return User::find(1);
-    }
-
-
 }

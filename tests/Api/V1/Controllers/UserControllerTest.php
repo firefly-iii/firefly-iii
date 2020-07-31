@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use Faker\Factory;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
-use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;
@@ -49,7 +49,6 @@ class UserControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         $this->mockDefaultConfiguration();
-        Log::info(sprintf('Now in %s.', get_class($this)));
 
     }
 
@@ -61,7 +60,13 @@ class UserControllerTest extends TestCase
      */
     public function testStoreBasic(): void
     {
-        $this->assertTrue(true);
-    }
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        // random user
+        $faker = Factory::create();
+        $data  = ['email' => $faker->email,];
 
+        // test API
+        $response = $this->post(route('api.v1.users.store'), $data, ['Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
 }
