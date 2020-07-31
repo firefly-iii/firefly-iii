@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp .env.ci .env
+        run: test -f .env || cp .ci/.env.ci .env
       - name: Prepare dependencies
         run: |
           set -euxo pipefail
@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp .env.ci .env
+        run: test -f .env || cp .ci/.env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
@@ -97,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp .env.ci .env
+        run: test -f .env || cp .ci/.env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
@@ -119,7 +119,7 @@ jobs:
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: Execute code standard
-        run: /home/runner/.composer/vendor/bin/ecs check app tests --config ~/.composer/vendor/nette/coding-standard/coding-standard-php71.yml
+        run: /home/runner/.composer/vendor/bin/ecs check app tests --config ./.ci/firefly-iii-standard.yml
 
   phpstan:
 
@@ -131,7 +131,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp .env.ci .env
+        run: test -f .env || cp .ci/.env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
