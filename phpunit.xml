@@ -28,8 +28,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="true">
+         processIsolation="false">
     <listeners>
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
     </listeners>

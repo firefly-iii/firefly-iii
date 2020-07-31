@@ -51,4 +51,5 @@ abstract class TestCase extends BaseTestCase
             'custom range' => ['custom'],
         ];
     }
+
 }
