@@ -30,10 +30,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * Class AbstractTransformer
  */
-class AbstractTransformer extends TransformerAbstract
+abstract class AbstractTransformer extends TransformerAbstract
 {
-    /** @var ParameterBag */
-    protected $parameters;
+    protected ParameterBag $parameters;
 
     /**
      * @return ParameterBag

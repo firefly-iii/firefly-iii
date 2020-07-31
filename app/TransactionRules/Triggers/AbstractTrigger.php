@@ -31,7 +31,7 @@ use FireflyIII\Models\TransactionJournal;
  * Class AbstractTrigger
  * @method bool triggered($object)
  */
-class AbstractTrigger
+abstract class AbstractTrigger
 {
     /** @var bool Whether to stop processing after this one is checked. */
     public $stopProcessing;

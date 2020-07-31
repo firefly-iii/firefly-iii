@@ -39,20 +39,17 @@ class FixAccountTypes extends Command
 {
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Make sure all journals have the correct from/to account types.';
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'firefly-iii:fix-account-types';
     /** @var int */
-    private $count;
-    /** @var array */
-    private $expected;
+    private       $count;
+    private array $expected;
     /** @var AccountFactory */
     private $factory;
     /** @var array */
@@ -61,9 +58,8 @@ class FixAccountTypes extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws FireflyException
      * @return int
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -72,21 +68,14 @@ class FixAccountTypes extends Command
         $start         = microtime(true);
         $this->factory = app(AccountFactory::class);
         // some combinations can be fixed by this script:
-        $this->fixable = [
-            // transfers from asset to liability and vice versa
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN),
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT),
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE),
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET),
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET),
-            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET),
+        $this->fixable = [// transfers from asset to liability and vice versa
+                          sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET),
 
-            // withdrawals with a revenue account as destination instead of an expense account.
-            sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE),
+                          // withdrawals with a revenue account as destination instead of an expense account.
+                          sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE),
 
-            // deposits with an expense account as source instead of a revenue account.
-            sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET),
-        ];
+                          // deposits with an expense account as source instead of a revenue account.
+                          sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET),];
 
 
         $this->expected = config('firefly.source_dests');
@@ -115,7 +104,6 @@ class FixAccountTypes extends Command
      * @param string             $type
      * @param Transaction        $source
      * @param Transaction        $dest
-     *
      * @throws FireflyException
      */
     private function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
@@ -155,16 +143,7 @@ class FixAccountTypes extends Command
                 $result  = $this->factory->findOrCreate($dest->account->name, AccountType::EXPENSE);
                 $dest->account()->associate($result);
                 $dest->save();
-                $this->info(
-                    sprintf(
-                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
-                        $journal->id,
-                        $oldDest->id,
-                        $oldDest->name,
-                        $result->id,
-                        $result->name
-                    )
-                );
+                $this->info(sprintf('Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id, $oldDest->id, $oldDest->name, $result->id, $result->name));
                 $this->inspectJournal($journal);
                 break;
             case sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET):
@@ -175,16 +154,7 @@ class FixAccountTypes extends Command
                 $oldSource = $dest->account;
                 $source->account()->associate($result);
                 $source->save();
-                $this->info(
-                    sprintf(
-                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
-                        $journal->id,
-                        $oldSource->id,
-                        $oldSource->name,
-                        $result->id,
-                        $result->name
-                    )
-                );
+                $this->info(sprintf('Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id, $oldSource->id, $oldSource->name, $result->id, $result->name));
                 $this->inspectJournal($journal);
                 break;
             default:
@@ -198,7 +168,6 @@ class FixAccountTypes extends Command
 
     /**
      * @param TransactionJournal $journal
-     *
      * @return Transaction
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
@@ -208,7 +177,6 @@ class FixAccountTypes extends Command
 
     /**
      * @param TransactionJournal $journal
-     *
      * @return Transaction
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
@@ -218,7 +186,6 @@ class FixAccountTypes extends Command
 
     /**
      * @param TransactionJournal $journal
-     *
      * @throws FireflyException
      */
     private function inspectJournal(TransactionJournal $journal): void
@@ -250,7 +217,7 @@ class FixAccountTypes extends Command
         $destAccount       = $destTransaction->account;
         $destAccountType   = $destAccount->accountType->type;
 
-        if (!isset($this->expected[$type])) {
+        if (!array_key_exists($type, $this->expected)) {
             // @codeCoverageIgnoreStart
             Log::info(sprintf('No source/destination info for transaction type %s.', $type));
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
@@ -258,7 +225,7 @@ class FixAccountTypes extends Command
             return;
             // @codeCoverageIgnoreEnd
         }
-        if (!isset($this->expected[$type][$sourceAccountType])) {
+        if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
 
             return;
@@ -273,7 +240,6 @@ class FixAccountTypes extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
      * @codeCoverageIgnore
      */
     private function stupidLaravel(): void

@@ -40,12 +40,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * @codeCoverageIgnore
  */
-class Controller extends BaseController
+abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var ParameterBag Parameters from the URI are stored here. */
-    protected $parameters;
+    protected ParameterBag $parameters;
 
 
     /**

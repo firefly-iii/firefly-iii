@@ -135,7 +135,8 @@ class Telemetry
                 ->where('key', $key)
                 ->where('value', $jsonEncoded)
                 ->count();
-        } catch (QueryException|Exception $e) {
+        } catch (QueryException $e) {
+            Log::info(sprintf('Could not execute hasEntry() but this is OK: %s', $e->getMessage()));
             $count = 0;
         }
 
@@ -188,8 +189,8 @@ class Telemetry
                     'value'           => $value,
                 ]
             );
-        } catch (QueryException|Exception $e) {
-            // ignore.
+        } catch (QueryException $e) {
+            Log::info(sprintf('Could not execute storeEntry() but this is OK: %s', $e->getMessage()));
         }
     }
 }
