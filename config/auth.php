@@ -33,10 +33,11 @@ return [
     |
     */
 
-    'defaults' => [
+    'defaults'     => [
         'guard'     => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
         'passwords' => 'users',
     ],
+    'guard_header' => envNonEmpty('AUTHENTICATION_GUARD_HEADER', 'REMOTE_USER'),
 
     /*
     |--------------------------------------------------------------------------

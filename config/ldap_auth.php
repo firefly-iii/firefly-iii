@@ -245,9 +245,9 @@ return [
         */
 
         'windows' => [
-            'enabled'         => envNonEmpty('WINDOWS_SSO_ENABLED', false),
-            'locate_users_by' => envNonEmpty('WINDOWS_SSO_DISCOVER', 'samaccountname'),
-            'server_key'      => envNonEmpty('WINDOWS_SSO_KEY', 'AUTH_USER'),
+            'enabled'         => false,
+            'locate_users_by' => 'samaccountname',
+            'server_key'      => 'AUTH_USER',
         ],
     ],
 
