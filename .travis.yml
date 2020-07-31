@@ -4,6 +4,11 @@ php:
 dist: xenial
 os: linux
 
+cache:
+  directories:
+    - /home/travis/.config
+    - /home/travis/build/firefly-iii/firefly-iii/vendor
+
 branches:
   only:
     - develop

@@ -1,8 +1,8 @@
 includes:
-  - ~/.config/composer/vendor/nunomaduro/larastan/extension.neon
-  - ~/.config/composer/vendor/ergebnis/phpstan-rules/rules.neon
-  - ~/.config/composer/vendor/phpstan/phpstan-deprecation-rules/rules.neon
-  - ~/.config/composer/vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+  - /home/travis/.config/composer/vendor/nunomaduro/larastan/extension.neon
+  - /home/travis/.config/composer/vendor/ergebnis/phpstan-rules/rules.neon
+  - /home/travis/.config/composer/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - /home/travis/.config/composer/vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
 
 parameters:
   ignoreErrors:
