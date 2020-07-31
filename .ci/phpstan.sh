@@ -2,12 +2,14 @@
 
 echo $PWD
 
-composer global require hirak/prestissimo --no-plugins --no-scripts
-composer global require phpstan/phpstan --no-plugins --no-scripts
-composer global require ergebnis/phpstan-rules --no-plugins --no-scripts
-composer global require nunomaduro/larastan --no-plugins --no-scripts
-composer global require phpstan/phpstan-deprecation-rules --no-plugins --no-scripts
-composer global require thecodingmachine/phpstan-strict-rules --no-plugins --no-scripts
-composer global require nette/coding-standard --no-plugins --no-scripts
+# single line install command
+composer global require hirak/prestissimo \
+                        phpstan/phpstan \
+                        ergebnis/phpstan-rules \
+                        nunomaduro/larastan \
+                        phpstan/phpstan-deprecation-rules \
+                        thecodingmachine/phpstan-strict-rules \
+                        nette/coding-standard \
+                        --no-plugins --no-scripts
 
 ~/.config/composer/vendor/bin/phpstan analyse -c .ci/phpstan.neon
