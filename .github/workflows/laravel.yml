@@ -22,8 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp ci.env .env
-      - name: Prepare Dependencies
+        run: test -f .env || cp .env.ci .env
+      - name: Prepare dependencies
         run: |
           set -euxo pipefail
           export PATH=$PATH:$HOME/.composer/vendor/bin/
@@ -31,7 +31,7 @@ jobs:
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
           touch ./storage/database/database.sqlite
-      - name: Prepare Firefly
+      - name: Prepare Firefly III
         run: |
           chmod -R 777 storage bootstrap/cache
           php artisan migrate --seed
@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp ci.env .env
+        run: test -f .env || cp .env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
@@ -97,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp ci.env .env
+        run: test -f .env || cp .env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
@@ -131,7 +131,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Copy .env
-        run: test -f .env || cp ci.env .env
+        run: test -f .env || cp .env.ci .env
       - name: Download database
         uses: actions/download-artifact@v2
         with:
