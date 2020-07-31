@@ -48,6 +48,7 @@ class PiggyBankController extends Controller
     /** @var PiggyBankRepositoryInterface The piggy bank repository */
     private $repository;
 
+
     /**
      * PiggyBankController constructor.
      *

@@ -57,6 +57,7 @@ class RuleGroupController extends Controller
     /** @var RuleGroupRepositoryInterface The rule group repository */
     private $ruleGroupRepository;
 
+
     /**
      * RuleGroupController constructor.
      *

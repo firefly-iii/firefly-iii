@@ -51,6 +51,7 @@ class RecurrenceController extends Controller
     /** @var RecurringRepositoryInterface The recurring transaction repository */
     private $repository;
 
+
     /**
      * RecurrenceController constructor.
      *

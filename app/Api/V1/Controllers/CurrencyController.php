@@ -74,6 +74,7 @@ class CurrencyController extends Controller
     /** @var UserRepositoryInterface The user repository */
     private $userRepository;
 
+
     /**
      * CurrencyRepository constructor.
      *
@@ -578,7 +579,7 @@ class CurrencyController extends Controller
         $manager  = $this->getManager();
         $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $currency);
-        
+
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);

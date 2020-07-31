@@ -50,6 +50,7 @@ class CategoryController extends Controller
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
+
     /**
      * CategoryController constructor.
      *

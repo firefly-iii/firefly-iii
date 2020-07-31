@@ -50,9 +50,10 @@ use League\Fractal\Resource\Item;
 class AccountController extends Controller
 {
     use AccountFilter, TransactionFilter;
+    public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
-    public const RESOURCE_KEY = 'accounts';
+
 
     /**
      * AccountController constructor.

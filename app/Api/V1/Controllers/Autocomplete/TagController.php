@@ -39,6 +39,7 @@ class TagController extends Controller
 
     private TagRepositoryInterface $repository;
 
+
     /**
      * TagController constructor.
      */

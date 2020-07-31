@@ -62,6 +62,7 @@ class TransactionController extends Controller
     private JournalAPIRepositoryInterface       $journalAPIRepository;
     private JournalRepositoryInterface          $repository;
 
+
     /**
      * TransactionController constructor.
      *

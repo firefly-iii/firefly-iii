@@ -42,6 +42,7 @@ class TransactionController extends Controller
     private JournalRepositoryInterface          $repository;
     private TransactionGroupRepositoryInterface $groupRepository;
 
+
     /**
      * TransactionController constructor.
      */

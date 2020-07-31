@@ -55,6 +55,7 @@ class RuleController extends Controller
     /** @var RuleRepositoryInterface The rule repository */
     private $ruleRepository;
 
+
     /**
      * RuleController constructor.
      *

@@ -37,6 +37,7 @@ class TransactionTypeController extends Controller
 {
     private TransactionTypeRepositoryInterface $repository;
 
+
     /**
      * TransactionTypeController constructor.
      */

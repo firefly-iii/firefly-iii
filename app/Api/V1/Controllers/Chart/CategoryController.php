@@ -45,6 +45,7 @@ class CategoryController extends Controller
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
 
+
     /**
      * AccountController constructor.
      *

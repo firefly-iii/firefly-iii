@@ -61,6 +61,7 @@ class SummaryController extends Controller
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
 
+
     /**
      * SummaryController constructor.
      *

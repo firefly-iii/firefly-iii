@@ -48,6 +48,7 @@ class Controller extends BaseController
     /** @var ParameterBag Parameters from the URI are stored here. */
     protected $parameters;
 
+
     /**
      * Controller constructor.
      *

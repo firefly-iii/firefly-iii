@@ -57,6 +57,7 @@ class BudgetController extends Controller
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
+
     /**
      * BudgetController constructor.
      *

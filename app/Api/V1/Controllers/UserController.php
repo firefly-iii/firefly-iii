@@ -45,6 +45,7 @@ class UserController extends Controller
 {
     private UserRepositoryInterface $repository;
 
+
     /**
      * UserController constructor.
      *

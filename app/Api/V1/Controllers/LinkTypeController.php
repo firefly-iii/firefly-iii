@@ -53,6 +53,7 @@ class LinkTypeController extends Controller
     /** @var UserRepositoryInterface The user repository */
     private $userRepository;
 
+
     /**
      * LinkTypeController constructor.
      *

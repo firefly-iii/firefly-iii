@@ -38,6 +38,7 @@ class CurrencyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
 
+
     /**
      * CurrencyController constructor.
      */

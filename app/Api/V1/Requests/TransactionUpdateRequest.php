@@ -55,6 +55,7 @@ class TransactionUpdateRequest extends FormRequest
     /** @var array Fields that contain text (with newlines) */
     private $textareaFields;
 
+
     /**
      * Authorize logged in users.
      *

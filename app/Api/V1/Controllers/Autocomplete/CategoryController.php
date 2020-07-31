@@ -37,6 +37,7 @@ class CategoryController extends Controller
 {
     private CategoryRepositoryInterface $repository;
 
+
     /**
      * CategoryController constructor.
      */

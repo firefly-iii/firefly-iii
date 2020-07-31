@@ -43,6 +43,7 @@ class AccountController extends Controller
     private array                      $balanceTypes;
     private AccountRepositoryInterface $repository;
 
+
     /**
      * AccountController constructor.
      */

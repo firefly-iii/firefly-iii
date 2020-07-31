@@ -42,6 +42,7 @@ class ConfigurationController extends Controller
     /** @var UserRepositoryInterface The user repository */
     private $repository;
 
+
     /**
      * ConfigurationController constructor.
      *
