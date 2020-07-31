@@ -5,7 +5,7 @@ composer install --no-suggest --no-scripts --no-ansi
 
 
 # Do static code analysis.
-./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress > phpstan.txt
+./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress
 
 cat phpstan.txt
 
