@@ -1,0 +1,13 @@
+language: shell
+dist: xenial
+os: linux
+
+branches:
+  only:
+    - develop
+
+before_script:
+  - phpenv config-rm xdebug.ini || return 0
+
+script:
+  - ./.ci/phpstan.sh
