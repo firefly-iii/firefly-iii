@@ -40,6 +40,8 @@ class Steam
 {
 
     /**
+     * Gets balance at the end of current month by default
+     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
@@ -625,6 +627,7 @@ class Steam
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),
+            str_replace('_', '-', $locale), // for Windows.
         ];
     }
 

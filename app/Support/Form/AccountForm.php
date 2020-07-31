@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Form;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 use Throwable;
 
@@ -41,6 +42,36 @@ class AccountForm
 {
     use FormSupport;
 
+    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
+    {
+        if (null === $repository) {
+            $repository = $this->getAccountRepository();
+        }
+        $accountList     = $repository->getActiveAccountsByType($types);
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $grouped         = [];
+
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role       = (string)$repository->getMetaValue($account, 'account_role');
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = sprintf('l_%s', $account->accountType->type);
+            } elseif ('' === $role) {
+                if (AccountType::EXPENSE === $account->accountType->type) {
+                    $role = 'expense_account';
+                } elseif (AccountType::REVENUE === $account->accountType->type) {
+                    $role = 'revenue_account';
+                } else {
+                    $role = 'no_account_type';
+                }
+            }
+            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
+            $grouped[$key][$account->id] = $account->name;
+        }
+
+        return $grouped;
+    }
+
     /**
      * Shows a <select> with all active asset accounts.
      *
@@ -52,22 +83,8 @@ class AccountForm
      */
     public function activeAssetAccountList(string $name, $value = null, array $options = null): string
     {
-        $repository      = $this->getAccountRepository();
-        $accountList     = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        $date            = $this->getDate();
-
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account, $date);
-            $role                        = $repository->getMetaValue($account, 'account_role');
-            $currency                    = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role                        = '' === $role ? 'no_account_type' : $role;
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
+        $types   = [AccountType::ASSET, AccountType::DEFAULT];
+        $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -84,33 +101,8 @@ class AccountForm
      */
     public function activeLongAccountList(string $name, $value = null, array $options = null): string
     {
-        $types           = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $repository      = $this->getAccountRepository();
-        $accountList     = $repository->getActiveAccountsByType($types);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        $date            = $this->getDate();
-
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, $date);
-            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = $repository->getMetaValue($account, 'account_role');
-
-            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'no_account_type';
-            }
-
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            }
-
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
-
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -126,39 +118,13 @@ class AccountForm
      */
     public function activeWithdrawalDestinations(string $name, $value = null, array $options = null): string
     {
-        $types           = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE,];
-        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $repository      = $this->getAccountRepository();
-        $accountList     = $repository->getActiveAccountsByType($types);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        $date            = $this->getDate();
+        $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE,];
+        $repository = $this->getAccountRepository();
+        $grouped    = $this->getAccountsGrouped($types, $repository);
 
         $cash                     = $repository->getCashAccount();
         $key                      = (string)trans('firefly.cash_account_type');
         $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
-
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, $date);
-            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$repository->getMetaValue($account, 'account_role');
-            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'no_account_type';
-            }
-
-            if ('no_account_type' === $role && AccountType::EXPENSE === $account->accountType->type) {
-                $role = 'expense_account';
-            }
-
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            }
-            $key                         = (string)trans('firefly.opt_group_' . $role);
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -174,36 +140,12 @@ class AccountForm
      */
     public function activeDepositDestinations(string $name, $value = null, array $options = null): string
     {
-        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
-        $liabilityTypes           = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $repository               = $this->getAccountRepository();
-        $accountList              = $repository->getActiveAccountsByType($types);
-        $defaultCurrency          = app('amount')->getDefaultCurrency();
-        $grouped                  = [];
-        $date                     = $this->getDate();
+        $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
+        $repository = $this->getAccountRepository();
+        $grouped    = $this->getAccountsGrouped($types, $repository);
         $cash                     = $repository->getCashAccount();
         $key                      = (string)trans('firefly.cash_account_type');
         $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
-
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, $date);
-            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$repository->getMetaValue($account, 'account_role');
-            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'no_account_type';
-            }
-            if ('no_account_type' === $role && AccountType::REVENUE === $account->accountType->type) {
-                $role = 'revenue_account';
-            }
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type); // @codeCoverageIgnore
-            }
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -227,24 +169,8 @@ class AccountForm
         $selected = request()->old($name) ?? [];
 
         // get all asset accounts:
-        $repository    = $this->getAccountRepository();
         $types         = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
-        $assetAccounts = $repository->getAccountsByType($types);
-        $grouped       = [];
-        // group accounts:
-        /** @var Account $account */
-        foreach ($assetAccounts as $account) {
-            $role = $repository->getMetaValue($account, 'account_role');
-            if (null === $role && in_array($account->accountType->type, [AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT], true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            }
-            if (null === $role && !in_array($account->accountType->type, [AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT], true)) {
-                $role = 'no_account_type';
-            }
-
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $grouped[$key][$account->id] = $account->name;
-        }
+        $grouped       = $this->getAccountsGrouped($types);
 
         unset($options['class']);
         try {
@@ -268,26 +194,8 @@ class AccountForm
      */
     public function assetAccountList(string $name, $value = null, array $options = null): string
     {
-        $repository      = $this->getAccountRepository();
-        $types           = [AccountType::ASSET, AccountType::DEFAULT];
-        $accountList     = $repository->getAccountsByType($types);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        $date            = $this->getDate();
-
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, $date);
-            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$repository->getMetaValue($account, 'account_role');
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
+        $types   = [AccountType::ASSET, AccountType::DEFAULT];
+        $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -304,28 +212,8 @@ class AccountForm
      */
     public function longAccountList(string $name, $value = null, array $options = null): string
     {
-        $types           = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $repository      = $this->getAccountRepository();
-        $accountList     = $repository->getAccountsByType($types);
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $grouped         = [];
-        $date            = $this->getDate();
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account, $date);
-            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$repository->getMetaValue($account, 'account_role');
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            }
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $formatted                   = app('amount')->formatAnything($currency, $balance, false);
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, $formatted);
-        }
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
     }

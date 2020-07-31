@@ -1,7 +1,7 @@
 <?php
-/**
- * ExampleTest.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * TestHelpers.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,25 +18,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests\Unit;
-
-use Tests\TestCase;
+namespace Tests\Traits;
+use Exception;
+use Log;
 
 /**
- * Class ExampleTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * Trait TestHelpers
  */
-class ExampleTest extends TestCase
+trait TestHelpers
 {
     /**
-     * A basic test example.
+     * @return int
      */
-    public function testBasicTest(): void
+    public function randomInt(): int
     {
-        $this->assertTrue(true);
+        $result = 4;
+        try {
+            $result = random_int(1, 100000);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not generate random number: %s', $e->getMessage()));
+        }
+
+        return $result;
     }
+
 }

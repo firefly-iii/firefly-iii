@@ -19,8 +19,10 @@
                         </p>
                         <div class="form group">
                             <div class="col-sm-8 col-md-offset-4">
-                                <img src="{{ image }}" alt="" title=""
+                                <!--<img src="" alt="" title=""
                                      style="border:1px #ddd solid;"/>
+                                     -->
+                                {{ image|raw }}
                             </div>
                             <p>
                                 {{ trans('firefly.2fa_use_secret_instead', {secret: secret|escape})|raw }}

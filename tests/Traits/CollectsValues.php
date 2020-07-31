@@ -1,7 +1,7 @@
 <?php
-/**
- * AccountFactory.php
- * Copyright (c) 2019 james@firefly-iii.org.
+/*
+ * CollectsValues.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,21 +18,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-use Carbon\Carbon;
+namespace Tests\Traits;
 
-$factory->define(
-    FireflyIII\Models\Account::class,
-    static function (Faker\Generator $faker) {
-        return [
-            'id'              => $faker->unique()->numberBetween(1000, 10000),
-            'user_id'         => 1,
-            'created_at'      => new Carbon,
-            'updated_at'      => new Carbon,
-            'name'            => $faker->words(3, true),
-            'account_type_id' => random_int(2, 5),
-            'active'          => true,
-        ];
+
+use FireflyIII\User;
+
+/**
+ * Trait CollectsValues
+ */
+trait CollectsValues
+{
+    /**
+     * @return User
+     */
+    public function user(): User
+    {
+        return User::where('email','james@firefly')->first();
     }
-);
+
+    /**
+     * @return User
+     */
+    public function nonAdminUser(): User
+    {
+        return User::where('email','no_admin@firefly')->first();
+    }
+}

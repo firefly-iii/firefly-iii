@@ -18,8 +18,14 @@ class ChangesForV540 extends Migration
     public function down(): void
     {
         Schema::table(
-            'accounts', static function (Blueprint $table) {
+            'oauth_clients', static function (Blueprint $table) {
             $table->dropColumn('order');
+        }
+        );
+
+        Schema::table(
+            'accounts', static function (Blueprint $table) {
+            $table->dropColumn('provider');
         }
         );
     }
@@ -36,5 +42,12 @@ class ChangesForV540 extends Migration
             $table->integer('order', false, true)->default(0);
         }
         );
+        Schema::table(
+            'oauth_clients', static function (Blueprint $table) {
+            $table->string('provider')->nullable();
+        }
+        );
+
+
     }
 }

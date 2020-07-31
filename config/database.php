@@ -79,6 +79,11 @@ return [
             'database' => envNonEmpty('DB_DATABASE', storage_path('database/database.sqlite')),
             'prefix'   => '',
         ],
+        'sqlite_test' => [
+            'driver'   => 'sqlite',
+            'database' => envNonEmpty('DB_DATABASE', storage_path('database/test_db.sqlite')),
+            'prefix'   => '',
+        ],
         'mysql'  => [
             'driver'      => 'mysql',
             'host'        => envNonEmpty('DB_HOST', $host),

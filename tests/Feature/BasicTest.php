@@ -1,7 +1,7 @@
 <?php
 /**
- * ExampleTest.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * BasicTest.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,27 +18,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace Tests\Feature;
 
+
 use Tests\TestCase;
 
 /**
- * Class ExampleTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * Class BasicTest
  */
-class ExampleTest extends TestCase
+class BasicTest extends TestCase
 {
     /**
      * A basic test example.
+     *
+     * @return void
      */
     public function testBasicTest(): void
     {
-        $response = $this->get('/login');
+        self::assertTrue(true);
+    }
 
-        $response->assertStatus(200);
+    /**
+     *
+     */
+    public function testDatabase(): void
+    {
+        $this->assertDatabaseHas(
+            'users', [
+                       'email' => 'james@firefly',
+                   ]
+        );
     }
 }

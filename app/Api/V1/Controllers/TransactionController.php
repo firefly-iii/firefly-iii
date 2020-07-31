@@ -40,6 +40,7 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use FireflyIII\Transformers\TransactionLinkTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -57,12 +58,9 @@ class TransactionController extends Controller
 {
     use TransactionFilter;
 
-    /** @var TransactionGroupRepositoryInterface Group repository. */
-    private $groupRepository;
-    /** @var JournalAPIRepositoryInterface Journal API repos */
-    private $journalAPIRepository;
-    /** @var JournalRepositoryInterface The journal repository */
-    private $repository;
+    private TransactionGroupRepositoryInterface $groupRepository;
+    private JournalAPIRepositoryInterface       $journalAPIRepository;
+    private JournalRepositoryInterface          $repository;
 
     /**
      * TransactionController constructor.
@@ -108,6 +106,29 @@ class TransactionController extends Controller
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($attachments, $transformer, 'attachments');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function transactionLinks(TransactionGroup $transactionGroup): JsonResponse
+    {
+        $manager     = $this->getManager();
+        $journalLinks = new Collection;
+        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
+            $journalLinks = $this->journalAPIRepository->getJournalLinks($transactionJournal)->merge($journalLinks);
+        }
+
+        /** @var TransactionLinkTransformer $transformer */
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

@@ -1,7 +1,7 @@
 <?php
-/**
- * FakeApiContext.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * MocksDefaultValues.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,22 +21,27 @@
 
 declare(strict_types=1);
 
-namespace Tests\Object;
+namespace Tests\Traits;
+
+use FireflyIII\Models\Configuration;
+use FireflyConfig;
 
 /**
- * Class FakeApiContext
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * Trait MocksDefaultValues
  */
-class FakeApiContext
+trait MocksDefaultValues
 {
-    /**
-     * @return string
-     */
-    public function toJson(): string
+    public function mockDefaultConfiguration(): void
     {
-        return json_encode(['a' => 'b']);
+
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+
+        $idConfig = new Configuration;
+        $idConfig->data = 'abc';
+
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['installation_id', null])->andReturn($idConfig);
     }
 
 }

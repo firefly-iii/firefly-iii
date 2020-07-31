@@ -132,20 +132,13 @@ class JavascriptController extends Controller
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
         $account    = $repository->findNull((int) $request->get('account'));
-        $currencyId = 0;
-        if (null !== $account) {
-            // TODO we can use getAccountCurrency() instead
-            $currencyId = (int) $repository->getMetaValue($account, 'currency_id');
+        $currency = app('amount')->getDefaultCurrency();
+        if(null !== $account) {
+            $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
-        /** @var TransactionCurrency $currency */
-        $currency = $currencyRepository->findNull($currencyId);
-        if (null === $currency) {
-            /** @var TransactionCurrency $currency */
-            $currency = app('amount')->getDefaultCurrency();
-        }
-
-        $accountingLocaleInfo                = app('amount')->getAccountingLocaleInfo();
-        $accountingLocaleInfo['frac_digits'] = $currency->decimal_places;
+        $locale                    = app('steam')->getLocale();
+        $accounting                = app('amount')->getJsConfig();
+        $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
@@ -153,13 +146,14 @@ class JavascriptController extends Controller
         $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
         $data = [
-            'currencyCode'          => $currency->code,
-            'currencySymbol'        => $currency->symbol,
-            'accountingLocaleInfo'  => $accountingLocaleInfo,
-            'language'              => $lang,
-            'dateRangeTitle'        => $dateRange['title'],
-            'dateRangeConfig'       => $dateRange['configuration'],
-            'uid'                   => $uid,
+            'currencyCode'         => $currency->code,
+            'currencySymbol'       => $currency->symbol,
+            'accountingLocaleInfo' => $accounting,
+            'language'             => $lang,
+            'dateRangeTitle'       => $dateRange['title'],
+            'locale'               => $locale,
+            'dateRangeConfig'      => $dateRange['configuration'],
+            'uid'                  => $uid,
         ];
         $request->session()->keep(['two-factor-secret']);
 

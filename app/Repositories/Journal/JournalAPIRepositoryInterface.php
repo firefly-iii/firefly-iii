@@ -52,6 +52,15 @@ interface JournalAPIRepositoryInterface
     public function getAttachments(TransactionJournal $journal): Collection;
 
     /**
+     * Return all journal links for journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getJournalLinks(TransactionJournal $journal): Collection;
+
+    /**
      * Get all piggy bank events for a journal.
      *
      * @param TransactionJournal $journal

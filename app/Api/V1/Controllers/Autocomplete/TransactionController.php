@@ -80,9 +80,10 @@ class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($filtered as $journal) {
             $array[] = [
-                'id'          => $journal->id,
-                'name'        => $journal->description,
-                'description' => $journal->description,
+                'id'                   => $journal->id,
+                'transaction_group_id' => $journal->transaction_group_id,
+                'name'                 => $journal->description,
+                'description'          => $journal->description,
             ];
         }
 
@@ -90,22 +91,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * Searches in the titles of all transaction journals.
-     * The result is limited to the top 15 unique results.
-     *
-     * If the query is numeric, it will append the journal with that particular ID.
-     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      */
-    public function allJournalsWithID(AutocompleteRequest $request): JsonResponse
+    public function transactionsWithID(AutocompleteRequest $request): JsonResponse
     {
         $data   = $request->getData();
-        $array  = [];
         $result = new Collection;
-
-
         if (is_numeric($data['query'])) {
             // search for group, not journal.
             $firstResult = $this->groupRepository->find((int) $data['query']);
@@ -120,12 +113,16 @@ class TransactionController extends Controller
             $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
         }
 
+        // limit and unique
+        $array = [];
+
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
             $array[] = [
-                'id'          => $journal->id,
-                'name'        => printf('#%d: %s', $journal->id, $journal->description),
-                'description' => $journal->description,
+                'id'                   => $journal->id,
+                'transaction_group_id' => $journal->transaction_group_id,
+                'name'                 => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
+                'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
             ];
         }
 

@@ -66,7 +66,7 @@ function makeAutoComplete() {
             }
         },
         remote: {
-            url: acURI + '?search=%QUERY&uid=' + uid,
+            url: acURI + '?query=%QUERY&uid=' + uid,
             wildcard: '%QUERY',
             filter: function (list) {
                 return $.map(list, function (item) {
