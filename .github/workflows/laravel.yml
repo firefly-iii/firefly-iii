@@ -78,11 +78,11 @@ jobs:
         with:
           name: composer
           path: ~/.composer
-      - name: install composer
+      - name: Install composer
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: PHPUnit tests
-        uses: php-actions/phpunit@v1
+        uses: php-actions/phpunit@v9
         with:
           config: phpunit.xml
           memory: 2048M
