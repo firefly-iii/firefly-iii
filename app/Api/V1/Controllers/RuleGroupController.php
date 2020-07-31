@@ -54,6 +54,7 @@ class RuleGroupController extends Controller
 {
     /** @var AccountRepositoryInterface Account repository */
     private $accountRepository;
+
     /** @var RuleGroupRepositoryInterface The rule group repository */
     private $ruleGroupRepository;
 

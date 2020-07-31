@@ -48,6 +48,7 @@ use Log;
 class RecurrenceController extends Controller
 {
     use TransactionFilter;
+
     /** @var RecurringRepositoryInterface The recurring transaction repository */
     private $repository;
 

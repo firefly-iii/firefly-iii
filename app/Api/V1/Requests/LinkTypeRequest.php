@@ -29,7 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- *
  * Class LinkTypeRequest
  *
  * @codeCoverageIgnore

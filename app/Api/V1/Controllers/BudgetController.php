@@ -47,13 +47,14 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class BudgetController.
- *
  */
 class BudgetController extends Controller
 {
     use TransactionFilter;
+
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
+
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 

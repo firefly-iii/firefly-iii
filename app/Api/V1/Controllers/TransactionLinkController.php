@@ -47,6 +47,7 @@ class TransactionLinkController extends Controller
 
     /** @var JournalRepositoryInterface The journal repository */
     private $journalRepository;
+
     /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 

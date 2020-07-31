@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Carbon\Carbon;
-use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\TagStoreRequest;
 use FireflyIII\Api\V1\Requests\TagUpdateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -38,7 +36,6 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;

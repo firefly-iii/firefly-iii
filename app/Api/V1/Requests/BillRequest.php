@@ -81,7 +81,6 @@ class BillRequest extends FormRequest
      * The rules that the incoming request must be matched against.
      *
      * @return array
-     *
      */
     public function rules(): array
     {

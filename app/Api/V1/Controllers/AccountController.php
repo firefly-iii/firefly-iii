@@ -45,11 +45,11 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class AccountController.
- *
  */
 class AccountController extends Controller
 {
     use AccountFilter, TransactionFilter;
+
     public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
@@ -166,7 +166,6 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      * @codeCoverageIgnore
-     *
      */
     public function piggyBanks(Account $account): JsonResponse
     {
@@ -246,7 +245,6 @@ class AccountController extends Controller
      * @param Account $account
      *
      * @return JsonResponse
-     *
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

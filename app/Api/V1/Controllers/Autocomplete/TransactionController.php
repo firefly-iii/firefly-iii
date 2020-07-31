@@ -38,8 +38,8 @@ use Illuminate\Support\Collection;
  */
 class TransactionController extends Controller
 {
-
     private JournalRepositoryInterface          $repository;
+
     private TransactionGroupRepositoryInterface $groupRepository;
 
 

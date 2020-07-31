@@ -38,7 +38,6 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class AvailableBudgetController.
- *
  */
 class AvailableBudgetController extends Controller
 {

@@ -39,7 +39,6 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class GroupController.
- *
  */
 class ObjectGroupController extends Controller
 {
@@ -123,7 +122,6 @@ class ObjectGroupController extends Controller
      *
      * @return JsonResponse
      * @codeCoverageIgnore
-     *
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse
     {

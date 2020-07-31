@@ -72,7 +72,7 @@ class AutocompleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'limit' => 'min:0|max:1337'
+            'limit' => 'min:0|max:1337',
         ];
     }
 }

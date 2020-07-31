@@ -41,6 +41,7 @@ class AccountController extends Controller
     use AccountFilter;
 
     private array                      $balanceTypes;
+
     private AccountRepositoryInterface $repository;
 
 
@@ -60,7 +61,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, ];
     }
 
     /**

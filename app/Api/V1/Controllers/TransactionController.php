@@ -59,7 +59,9 @@ class TransactionController extends Controller
     use TransactionFilter;
 
     private TransactionGroupRepositoryInterface $groupRepository;
+
     private JournalAPIRepositoryInterface       $journalAPIRepository;
+
     private JournalRepositoryInterface          $repository;
 
 

@@ -41,7 +41,9 @@ use Illuminate\Support\Collection;
 class BudgetController extends Controller
 {
     private BudgetLimitRepositoryInterface $blRepository;
+
     private OperationsRepositoryInterface  $opsRepository;
+
     private BudgetRepositoryInterface      $repository;
 
 

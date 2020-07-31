@@ -39,7 +39,6 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class UserController.
- *
  */
 class UserController extends Controller
 {

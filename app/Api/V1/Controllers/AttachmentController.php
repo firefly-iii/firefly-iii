@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\AttachmentStoreRequest;
 use FireflyIII\Api\V1\Requests\AttachmentUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -45,7 +44,6 @@ use function strlen;
 
 /**
  * Class AttachmentController.
- *
  */
 class AttachmentController extends Controller
 {

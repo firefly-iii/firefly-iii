@@ -24,10 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 

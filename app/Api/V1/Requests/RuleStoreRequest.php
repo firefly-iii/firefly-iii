@@ -32,7 +32,6 @@ use function is_array;
 
 /**
  * Class RuleStoreRequest
- *
  */
 class RuleStoreRequest extends FormRequest
 {

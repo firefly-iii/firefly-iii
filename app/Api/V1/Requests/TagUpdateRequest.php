@@ -32,7 +32,6 @@ use Illuminate\Foundation\Http\FormRequest;
  * Class TagUpdateRequest
  *
  * @codeCoverageIgnore
- *
  */
 class TagUpdateRequest extends FormRequest
 {

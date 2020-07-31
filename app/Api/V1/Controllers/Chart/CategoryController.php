@@ -40,8 +40,10 @@ class CategoryController extends Controller
 {
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
+
     /** @var NoCategoryRepositoryInterface */
     private $noCatRepository;
+
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
 
@@ -92,7 +94,7 @@ class CategoryController extends Controller
         $categories    = [];
 
 
-        foreach ([$spentWith, $spentWithout,] as $set) {
+        foreach ([$spentWith, $spentWithout, ] as $set) {
             foreach ($set as $currency) {
                 foreach ($currency['categories'] as $category) {
                     $categories[] = $category['name'];

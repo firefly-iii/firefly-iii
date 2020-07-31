@@ -44,14 +44,19 @@ class TransactionUpdateRequest extends FormRequest
 
     /** @var array Array values. */
     private $arrayFields;
+
     /** @var array Boolean values. */
     private $booleanFields;
+
     /** @var array Fields that contain date values. */
     private $dateFields;
+
     /** @var array Fields that contain integer values. */
     private $integerFields;
+
     /** @var array Fields that contain string values. */
     private $stringFields;
+
     /** @var array Fields that contain text (with newlines) */
     private $textareaFields;
 
@@ -130,7 +135,7 @@ class TransactionUpdateRequest extends FormRequest
             'sepa_ep',
             'sepa_ci',
             'sepa_batch_id',
-            'external_uri'
+            'external_uri',
         ];
         $this->booleanFields = [
             'reconciled',

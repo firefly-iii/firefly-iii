@@ -42,11 +42,11 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class LinkTypeController.
- *
  */
 class LinkTypeController extends Controller
 {
     use TransactionFilter;
+
     /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 

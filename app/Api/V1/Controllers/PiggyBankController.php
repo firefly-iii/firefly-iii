@@ -40,11 +40,9 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class PiggyBankController.
- *
  */
 class PiggyBankController extends Controller
 {
-
     /** @var PiggyBankRepositoryInterface The piggy bank repository */
     private $repository;
 

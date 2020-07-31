@@ -31,7 +31,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- *
  * Class PiggyBankRequest
  *
  * @codeCoverageIgnore

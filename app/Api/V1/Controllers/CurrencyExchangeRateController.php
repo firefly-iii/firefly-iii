@@ -46,7 +46,6 @@ class CurrencyExchangeRateController extends Controller
 
     /**
      * CurrencyExchangeRateController constructor.
-     *
      */
     public function __construct()
     {

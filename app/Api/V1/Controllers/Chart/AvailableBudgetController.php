@@ -40,6 +40,7 @@ class AvailableBudgetController extends Controller
 {
     /** @var OperationsRepositoryInterface */
     private $opsRepository;
+
     /** @var BudgetRepositoryInterface */
     private $repository;
 

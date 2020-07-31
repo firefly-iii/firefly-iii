@@ -31,7 +31,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- *
  * Class TransactionLinkRequest
  */
 class TransactionLinkRequest extends FormRequest
@@ -65,7 +64,6 @@ class TransactionLinkRequest extends FormRequest
     }
 
     /**
-     *
      * The rules that the incoming request must be matched against.
      *
      * @return array

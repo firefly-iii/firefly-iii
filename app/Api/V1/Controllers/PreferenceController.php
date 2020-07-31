@@ -35,7 +35,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
 /**
- *
  * Class PreferenceController
  */
 class PreferenceController extends Controller

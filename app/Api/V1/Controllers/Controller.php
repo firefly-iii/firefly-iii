@@ -39,7 +39,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Class Controller.
  *
  * @codeCoverageIgnore
- *
  */
 class Controller extends BaseController
 {
@@ -51,7 +50,6 @@ class Controller extends BaseController
 
     /**
      * Controller constructor.
-     *
      */
     public function __construct()
     {
@@ -63,7 +61,6 @@ class Controller extends BaseController
      * Method to help build URI's.
      *
      * @return string
-     *
      */
     protected function buildParams(): string
     {

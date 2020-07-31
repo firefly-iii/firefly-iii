@@ -31,7 +31,6 @@ use Illuminate\Foundation\Http\FormRequest;
  * Class TagStoreRequest
  *
  * @codeCoverageIgnore
- *
  */
 class TagStoreRequest extends FormRequest
 {
