@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-
-    "content-hash": "4b5202505732cec5b0a2f9d2fa43e939",
+    "content-hash": "c68a7d6316a937603f67822f7acd2a8d",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -7980,16 +7979,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "v0.6.1",
+            "version": "v0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "7e333510eaaed6fc0e670c69fed148320ecb1cac"
+                "reference": "fd0ab4e585db15618ab6e78b368be456aa8c86ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/7e333510eaaed6fc0e670c69fed148320ecb1cac",
-                "reference": "7e333510eaaed6fc0e670c69fed148320ecb1cac",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/fd0ab4e585db15618ab6e78b368be456aa8c86ad",
+                "reference": "fd0ab4e585db15618ab6e78b368be456aa8c86ad",
                 "shasum": ""
             },
             "require": {
@@ -8004,7 +8003,7 @@
                 "illuminate/support": "^6.0 || ^7.0 || ^8.0",
                 "mockery/mockery": "^0.9 || ^1.0",
                 "php": "^7.2",
-                "phpstan/phpstan": "^0.12.28",
+                "phpstan/phpstan": "^0.12.34",
                 "symfony/process": "^4.3 || ^5.0"
             },
             "require-dev": {
@@ -8069,68 +8068,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-06-20T12:11:51+00:00"
-        },
-        {
-            "name": "ocramius/package-versions",
-            "version": "1.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Ocramius/PackageVersions.git",
-                "reference": "94c9d42a466c57f91390cdd49c81313264f49d85"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Ocramius/PackageVersions/zipball/94c9d42a466c57f91390cdd49c81313264f49d85",
-                "reference": "94c9d42a466c57f91390cdd49c81313264f49d85",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1.0 || ^2.0",
-                "php": "^7.4.0"
-            },
-            "require-dev": {
-                "composer/composer": "^1.9.3 || ^2.0@dev",
-                "doctrine/coding-standard": "^7.0.2",
-                "ext-zip": "^1.15.0",
-                "infection/infection": "^0.15.3",
-                "phpunit/phpunit": "^9.1.1",
-                "vimeo/psalm": "^3.9.3"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "PackageVersions\\Installer",
-                "branch-alias": {
-                    "dev-master": "1.99.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PackageVersions\\": "src/PackageVersions"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                }
-            ],
-            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "funding": [
-                {
-                    "url": "https://github.com/Ocramius",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ocramius/package-versions",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-06-22T14:15:44+00:00"
+            "time": "2020-07-30T19:33:12+00:00"
         },
         {
             "name": "openlss/lib-array2xml",
@@ -8630,16 +8568,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.33",
+            "version": "0.12.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "46e698a0452526a05c4a351d7c47c4b8c37a548d"
+                "reference": "ad75388d71fb0b4a954f71a852fd989915a51cb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/46e698a0452526a05c4a351d7c47c4b8c37a548d",
-                "reference": "46e698a0452526a05c4a351d7c47c4b8c37a548d",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ad75388d71fb0b4a954f71a852fd989915a51cb7",
+                "reference": "ad75388d71fb0b4a954f71a852fd989915a51cb7",
                 "shasum": ""
             },
             "require": {
@@ -8682,7 +8620,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-19T22:10:11+00:00"
+            "time": "2020-07-30T15:31:10+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -10538,16 +10476,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.13.0",
+            "version": "3.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "5635070ec6ddf3d9369a798ed19c5f7d90229908"
+                "reference": "afd8874a9e4562eac42a02de90e42e430c3a1db1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/5635070ec6ddf3d9369a798ed19c5f7d90229908",
-                "reference": "5635070ec6ddf3d9369a798ed19c5f7d90229908",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/afd8874a9e4562eac42a02de90e42e430c3a1db1",
+                "reference": "afd8874a9e4562eac42a02de90e42e430c3a1db1",
                 "shasum": ""
             },
             "require": {
@@ -10630,7 +10568,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2020-07-30T16:11:28+00:00"
+            "time": "2020-07-30T19:42:34+00:00"
         },
         {
             "name": "webmozart/assert",
