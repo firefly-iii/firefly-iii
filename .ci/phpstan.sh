@@ -2,11 +2,12 @@
 
 echo $PWD
 
-composer global require phpstan/phpstan
-composer global require ergebnis/phpstan-rules
-composer global require nunomaduro/larastan
-composer global require phpstan/phpstan-deprecation-rules
-composer global require thecodingmachine/phpstan-strict-rules
-composer global require nette/coding-standard
+composer global require hirak/prestissimo --no-plugins --no-scripts
+composer global require phpstan/phpstan --no-plugins --no-scripts
+composer global require ergebnis/phpstan-rules --no-plugins --no-scripts
+composer global require nunomaduro/larastan --no-plugins --no-scripts
+composer global require phpstan/phpstan-deprecation-rules --no-plugins --no-scripts
+composer global require thecodingmachine/phpstan-strict-rules --no-plugins --no-scripts
+composer global require nette/coding-standard --no-plugins --no-scripts
 
-~/.composer/vendor/bin/phpstan analyse -c .ci/phpstan.neon
+~/.config/composer/vendor/bin/phpstan analyse -c .ci/phpstan.neon
