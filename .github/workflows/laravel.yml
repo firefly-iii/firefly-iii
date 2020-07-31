@@ -116,6 +116,7 @@ jobs:
       - name: install depenencies
         run: |
           composer global require nette/coding-standard
+          composer global require symplify/easy-coding-standard
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
@@ -147,9 +148,9 @@ jobs:
         with:
           name: composer
           path: ~/.composer
-      - name: install depenencies
+      - name: Install depenencies
         run: |
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
-      - name: Execute tests (Unit and Feature tests) via PHPUnit
+      - name: Execute PHPStan
         run: vendor/bin/phpstan analyse
