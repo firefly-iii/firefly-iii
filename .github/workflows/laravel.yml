@@ -118,8 +118,8 @@ jobs:
           composer global require nette/coding-standard
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
-      - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: /home/runner/work/firefly-iii/firefly-iii/vendor/bin/ecs check app tests --config ~/.composer/vendor/nette/coding-standard/coding-standard-php71.yml
+      - name: Execute code standard
+        run: /home/runner/.composer/vendor/bin/ecs check app tests --config ~/.composer/vendor/nette/coding-standard/coding-standard-php71.yml
 
   phpstan:
 
