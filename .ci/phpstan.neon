@@ -10,12 +10,9 @@ parameters:
     - '#is neither abstract nor final#'
   paths:
     - ../app
-    - ../config
     - ../database
-    - ../resources
     - ../routes
     - ../bootstrap/app.php
-
 
   # The level 8 is the highest level. original was 5
   level: 0
