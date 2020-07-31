@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Console\Commands\Correction;
 
 use Exception;
@@ -46,6 +45,7 @@ class CreateAccessTokens extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:create-access-tokens';
+
 
     /**
      * Execute the console command.

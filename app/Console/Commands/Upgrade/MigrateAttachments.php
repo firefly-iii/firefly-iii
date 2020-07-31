@@ -48,6 +48,7 @@ class MigrateAttachments extends Command
      */
     protected $signature = 'firefly-iii:migrate-attachments {--F|force : Force the execution of this command.}';
 
+
     /**
      * Execute the console command.
      *

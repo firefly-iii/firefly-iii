@@ -48,6 +48,7 @@ class CorrectDatabase extends Command
      */
     protected $signature = 'firefly-iii:correct-database';
 
+
     /**
      * Execute the console command.
      */
@@ -76,7 +77,7 @@ class CorrectDatabase extends Command
             'firefly-iii:fix-long-descriptions',
             'firefly-iii:fix-recurring-transactions',
             'firefly-iii:restore-oauth-keys',
-            'firefly-iii:fix-transaction-types'
+            'firefly-iii:fix-transaction-types',
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));

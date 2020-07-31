@@ -49,6 +49,7 @@ class ReportIntegrity extends Command
      */
     protected $signature = 'firefly-iii:report-integrity';
 
+
     /**
      * Execute the console command.
      */

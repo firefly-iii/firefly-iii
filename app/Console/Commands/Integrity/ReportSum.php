@@ -45,6 +45,7 @@ class ReportSum extends Command
      */
     protected $signature = 'firefly-iii:report-sum';
 
+
     /**
      * Execute the console command.
      *

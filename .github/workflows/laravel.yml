@@ -82,10 +82,10 @@ jobs:
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: PHPUnit tests
-        uses: php-actions/phpunit@v9
+        uses: php-actions/phpunit@v1
         with:
           config: phpunit.xml
-          memory: 2048M
+          memory: 512M
 
   coding-standards:
 

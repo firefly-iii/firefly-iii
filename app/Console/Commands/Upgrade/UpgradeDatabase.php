@@ -48,6 +48,7 @@ class UpgradeDatabase extends Command
      */
     protected $signature = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
+
     /**
      * Execute the console command.
      *

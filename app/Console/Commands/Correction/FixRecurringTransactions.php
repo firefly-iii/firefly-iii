@@ -54,6 +54,7 @@ class FixRecurringTransactions extends Command
     /** @var UserRepositoryInterface */
     private $userRepos;
 
+
     /**
      * Execute the console command.
      *

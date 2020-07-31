@@ -48,6 +48,7 @@ class ReportEmptyObjects extends Command
      */
     protected $signature = 'firefly-iii:report-empty-objects';
 
+
     /**
      * Execute the console command.
      *

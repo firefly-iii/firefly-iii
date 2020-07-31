@@ -78,6 +78,7 @@ class TransferCurrenciesCorrections extends Command
     /** @var Transaction The source transaction of the current journal. */
     private $sourceTransaction;
 
+
     /**
      * Execute the console command.
      *
@@ -185,7 +186,6 @@ class TransferCurrenciesCorrections extends Command
      * If the destination account currency is the same as the source currency,
      * both foreign_amount and foreign_currency_id fields must be NULL
      * for both transactions (because foreign currency info would not make sense)
-     *
      */
     private function fixInvalidForeignCurrency(): void
     {

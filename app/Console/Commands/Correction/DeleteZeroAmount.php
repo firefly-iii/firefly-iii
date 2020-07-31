@@ -47,6 +47,7 @@ class DeleteZeroAmount extends Command
      */
     protected $signature = 'firefly-iii:delete-zero-amount';
 
+
     /**
      * Execute the console command.
      *

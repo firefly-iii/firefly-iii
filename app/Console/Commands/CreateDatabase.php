@@ -47,6 +47,7 @@ class CreateDatabase extends Command
      */
     protected $signature = 'firefly-iii:create-database';
 
+
     /**
      * Execute the console command.
      *

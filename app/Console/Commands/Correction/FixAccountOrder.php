@@ -49,6 +49,7 @@ class FixAccountOrder extends Command
 
     private AccountRepositoryInterface $repository;
 
+
     /**
      * Execute the console command.
      *

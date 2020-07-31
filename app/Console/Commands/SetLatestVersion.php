@@ -44,6 +44,7 @@ class SetLatestVersion extends Command
      */
     protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
 
+
     /**
      * Execute the console command.
      *

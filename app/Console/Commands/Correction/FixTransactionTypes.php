@@ -29,6 +29,7 @@ class FixTransactionTypes extends Command
      */
     protected $signature = 'firefly-iii:fix-transaction-types';
 
+
     /**
      * Execute the console command.
      *

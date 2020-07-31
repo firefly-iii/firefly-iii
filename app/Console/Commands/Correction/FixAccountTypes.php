@@ -58,6 +58,7 @@ class FixAccountTypes extends Command
     /** @var array */
     private $fixable;
 
+
     /**
      * Execute the console command.
      *

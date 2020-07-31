@@ -63,6 +63,7 @@ class MigrateToRules extends Command
     /** @var UserRepositoryInterface */
     private $userRepository;
 
+
     /**
      * Execute the console command.
      *

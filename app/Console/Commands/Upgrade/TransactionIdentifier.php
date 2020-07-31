@@ -57,6 +57,7 @@ class TransactionIdentifier extends Command
     /** @var JournalRepositoryInterface */
     private $journalRepository;
 
+
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
      * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.

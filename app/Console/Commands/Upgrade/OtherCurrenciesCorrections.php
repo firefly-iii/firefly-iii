@@ -66,6 +66,7 @@ class OtherCurrenciesCorrections extends Command
     /** @var JournalRepositoryInterface */
     private $journalRepos;
 
+
     /**
      * Execute the console command.
      *
@@ -265,7 +266,6 @@ class OtherCurrenciesCorrections extends Command
      *
      * Both source and destination must match the respective currency preference of the related asset account.
      * So FF3 must verify all transactions.
-     *
      */
     private function updateOtherJournalsCurrencies(): void
     {

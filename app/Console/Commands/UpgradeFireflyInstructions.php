@@ -49,6 +49,7 @@ class UpgradeFireflyInstructions extends Command
      */
     protected $signature = 'firefly:instructions {task}';
 
+
     /**
      * Execute the console command.
      */
@@ -69,7 +70,7 @@ class UpgradeFireflyInstructions extends Command
         app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
         app('telemetry')->feature('system.os.is_docker', $isDocker);
         app('telemetry')->feature('system.command.executed', $this->signature);
-        app('telemetry')->feature('system.users.count', (string)User::count());
+        app('telemetry')->feature('system.users.count', (string) User::count());
 
         return 0;
     }

@@ -47,6 +47,7 @@ class BudgetLimitCurrency extends Command
      */
     protected $signature = 'firefly-iii:bl-currency {--F|force : Force the execution of this command.}';
 
+
     /**
      * Execute the console command.
      *

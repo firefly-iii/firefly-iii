@@ -34,7 +34,6 @@ use JsonException;
 use Log;
 
 /**
- *
  * Class DecryptDatabase
  */
 class DecryptDatabase extends Command
@@ -51,6 +50,7 @@ class DecryptDatabase extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:decrypt-all';
+
 
     /**
      * Execute the console command.
