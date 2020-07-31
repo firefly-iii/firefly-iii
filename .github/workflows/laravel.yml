@@ -116,11 +116,10 @@ jobs:
       - name: install depenencies
         run: |
           composer global require nette/coding-standard
-          composer global require symplify/easy-coding-standard
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: ecs check app tests --config ~/.composer/vendor/nette/coding-standard/coding-standard-php71.yml
+        run: ./vendor/bin/ecs check app tests --config ~/.composer/vendor/nette/coding-standard/coding-standard-php71.yml
 
   phpstan:
 
