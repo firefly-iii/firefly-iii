@@ -43,9 +43,7 @@ use League\Fractal\Resource\Item;
  */
 class UserController extends Controller
 {
-
-    /** @var UserRepositoryInterface The user repository */
-    private $repository;
+    private UserRepositoryInterface $repository;
 
     /**
      * UserController constructor.
