@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-echo $PWD
+FF_DIR=$PWD
 
 # single line install command
 composer global require hirak/prestissimo \
                         --no-plugins --no-scripts
+
+cd $FF_DIR
 
 ./vendor/bin/phpstan analyse -c .ci/phpstan.neon
