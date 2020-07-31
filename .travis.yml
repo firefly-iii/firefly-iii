@@ -1,20 +1,21 @@
 language: php
 php:
-  - '7.4'
+- '7.4'
 dist: xenial
 os: linux
-
 cache:
   directories:
-    - /home/travis/.config
-    - /home/travis/build/firefly-iii/firefly-iii/vendor
+  - "/home/travis/.config"
+  - "/home/travis/build/firefly-iii/firefly-iii/vendor"
 
 branches:
   only:
-    - develop
+  - develop
 
 before_script:
-  - phpenv config-rm xdebug.ini || return 0
+- phpenv config-rm xdebug.ini || return 0
+- composer global require hirak/prestissimo --no-plugins --no-scripts
+
 
 script:
-  - ./.ci/phpstan.sh
+- "./.ci/phpstan.sh"

@@ -14,7 +14,6 @@ parameters:
     - ../database
     - ../resources
     - ../routes
-    - ../tests
     - ../bootstrap/app.php
 
 
