@@ -152,4 +152,4 @@ jobs:
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
 
       - name: Execute PHPStan
-        run: vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse -c .ci/phpstan.neon
