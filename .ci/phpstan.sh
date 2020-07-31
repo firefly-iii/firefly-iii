@@ -8,4 +8,6 @@ composer global require hirak/prestissimo \
 
 cd $FF_DIR
 
+echo "Changed back to '$FF_DIR'"
+
 ./vendor/bin/phpstan analyse -c .ci/phpstan.neon
