@@ -1,4 +1,6 @@
-language: shell
+language: php
+php:
+  - '7.4'
 dist: xenial
 os: linux
 
