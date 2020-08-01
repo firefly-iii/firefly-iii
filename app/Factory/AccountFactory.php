@@ -42,13 +42,12 @@ class AccountFactory
 {
     use AccountServiceTrait, LocationServiceTrait;
 
-    /** @var AccountRepositoryInterface */
-    protected       $accountRepository;
-    protected array $validAssetFields;
-    protected array $validCCFields;
-    protected array $validFields;
-    private array   $canHaveVirtual;
-    private User    $user;
+    protected AccountRepositoryInterface      $accountRepository;
+    protected array                           $validAssetFields;
+    protected array                           $validCCFields;
+    protected array                           $validFields;
+    private array                             $canHaveVirtual;
+    private User                              $user;
 
     /**
      * AccountFactory constructor.
@@ -71,17 +70,15 @@ class AccountFactory
     /**
      * @param array $data
      *
-     * @throws FireflyException
      * @return Account
+     * @throws FireflyException
      */
     public function create(array $data): Account
     {
         $type = $this->getAccountType($data['account_type_id'], $data['account_type']);
 
         if (null === $type) {
-            throw new FireflyException(
-                sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'], $data['account_type'])
-            );
+            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'], $data['account_type']));
         }
 
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
@@ -92,18 +89,9 @@ class AccountFactory
 
         if (null === $return) {
             // create it:
-            $databaseData
-                = [
-                'user_id'         => $this->user->id,
-                'account_type_id' => $type->id,
-                'name'            => $data['name'],
-                'order'           => $data['order'] ?? 0,
-                'virtual_balance' => $data['virtual_balance'] ?? null,
-                'active'          => true === $data['active'],
-                'iban'            => $data['iban'],
-            ];
+            $databaseData = ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => $data['name'], 'order' => $data['order'] ?? 0, 'virtual_balance' => $data['virtual_balance'] ?? null, 'active' => true === $data['active'], 'iban' => $data['iban'],];
 
-            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;
 
@@ -113,7 +101,7 @@ class AccountFactory
             }
 
             // fix virtual balance when it's empty
-            if ('' === (string) $databaseData['virtual_balance']) {
+            if ('' === (string)$databaseData['virtual_balance']) {
                 $databaseData['virtual_balance'] = null;
             }
 
@@ -155,30 +143,19 @@ class AccountFactory
      * @param string $accountName
      * @param string $accountType
      *
-     * @throws FireflyException
      * @return Account
+     * @throws FireflyException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
         Log::debug(sprintf('Searching for "%s" of type "%s"', $accountName, $accountType));
         /** @var AccountType $type */
         $type   = AccountType::whereType($accountType)->first();
-        $return = $this->user->accounts->where('account_type_id', $type->id)
-                                       ->where('name', $accountName)->first();
+        $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
-            $return = $this->create(
-                [
-                    'user_id'         => $this->user->id,
-                    'name'            => $accountName,
-                    'account_type_id' => $type->id,
-                    'account_type'    => null,
-                    'virtual_balance' => '0',
-                    'iban'            => null,
-                    'active'          => true,
-                ]
-            );
+            $return = $this->create(['user_id' => $this->user->id, 'name' => $accountName, 'account_type_id' => $type->id, 'account_type' => null, 'virtual_balance' => '0', 'iban' => null, 'active' => true,]);
         }
 
         return $return;
@@ -200,7 +177,7 @@ class AccountFactory
      */
     protected function getAccountType(?int $accountTypeId, ?string $accountType): ?AccountType
     {
-        $accountTypeId = (int) $accountTypeId;
+        $accountTypeId = (int)$accountTypeId;
         $result        = null;
         if ($accountTypeId > 0) {
             $result = AccountType::find($accountTypeId);

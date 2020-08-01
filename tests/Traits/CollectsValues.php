@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Traits;
 
 
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 
 /**
@@ -36,7 +37,7 @@ trait CollectsValues
      */
     public function user(): User
     {
-        return User::where('email','james@firefly')->first();
+        return User::where('email', 'james@firefly')->first();
     }
 
     /**
@@ -44,6 +45,14 @@ trait CollectsValues
      */
     public function nonAdminUser(): User
     {
-        return User::where('email','no_admin@firefly')->first();
+        return User::where('email', 'no_admin@firefly')->first();
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getEuro(): TransactionCurrency
+    {
+        return TransactionCurrency::whereCode('EUR')->first();
     }
 }
