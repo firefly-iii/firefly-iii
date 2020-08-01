@@ -98,6 +98,52 @@ class AccountFactoryTest extends TestCase
         $account->forceDelete();
     }
 
+
+    /**
+     * Test minimal set of data to make factory work (asset account).
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateAssetLocation(): void
+    {
+        $data = [
+            'account_type_id' => null,
+            'account_type'    => 'asset',
+            'iban'            => null,
+            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance' => null,
+            'active'          => true,
+            'account_role'    => 'defaultAsset',
+            'store_location' => true,
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(1, $account->locations()->get());
+
+        $account->forceDelete();
+    }
+
     /**
      * Submit invalid IBAN, so assume NULL on final result.
      *
@@ -226,6 +272,97 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(0, $account->order);
         $this->assertNull($account->virtual_balance);
         $this->assertCount(1, $account->transactions()->get());
+
+        $account->forceDelete();
+    }
+    /**
+     * Create asset, include opening balance.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateAssetNegOb(): void
+    {
+        $data = [
+            'account_type_id'      => null,
+            'account_type'         => 'asset',
+            'iban'                 => null,
+            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance'      => null,
+            'active'               => true,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '-1234.56',
+            'opening_balance_date' => today(),
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(1, $account->transactions()->get());
+
+        $account->forceDelete();
+    }
+
+    /**
+     * Create asset, include opening balance.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateAssetZeroOb(): void
+    {
+        $data = [
+            'account_type_id'      => null,
+            'account_type'         => 'asset',
+            'iban'                 => null,
+            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance'      => null,
+            'active'               => true,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '0',
+            'opening_balance_date' => today(),
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(0, $account->transactions()->get());
 
         $account->forceDelete();
     }

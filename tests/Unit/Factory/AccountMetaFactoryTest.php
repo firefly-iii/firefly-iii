@@ -32,9 +32,6 @@ use Tests\TestCase;
 /**
  *
  * Class AccountMetaFactoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountMetaFactoryTest extends TestCase
 {
@@ -43,9 +40,6 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -55,6 +49,7 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCreate(): void
     {
+        // make new account, or get one from DB?
         $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,

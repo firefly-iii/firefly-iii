@@ -7,4 +7,4 @@ cp .ci/.env.ci ../.env
 wget --quiet https://raw.githubusercontent.com/firefly-iii/test-data/main/test_db.sqlite -o storage/database/test_db.sqlite
 
 # run phpunit
-./vendor/bin/phpunit
+./vendor/bin/phpunit --configuration phpunit.coverage.xml

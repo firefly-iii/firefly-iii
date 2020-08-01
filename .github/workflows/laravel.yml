@@ -2,17 +2,8 @@ name: Firefly III
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - feature/*
-      - features/*
-  pull_request:
-    branches:
-      - main
-      - develop
-      - feature/*
-      - features/*
+    branches-ignore:
+      - '**'
 
 jobs:
   prepare:
