@@ -48,12 +48,9 @@ class ApiDemoUser
         if (null === $user) {
             return $next($request);
         }
-
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-
-        if ($repository->hasRole($user, 'demo')) {
+        if ($user->hasRole('demo')) {
             return response('', 403);
+
         }
 
         return $next($request);

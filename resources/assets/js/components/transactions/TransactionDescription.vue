@@ -19,104 +19,112 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-        <div class="col-sm-12 text-sm">
-            {{ $t('firefly.description') }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-                <input
-                        type="text"
-                        class="form-control"
-                        name="description[]"
-                        :title="$t('firefly.description')"
-                        v-on:keypress="handleEnter"
-                        v-on:submit.prevent
-                        ref="descr"
-                        autocomplete="off"
-                        v-bind:placeholder="$t('firefly.description')"
-                        :value="value" @input="handleInput"
-                >
-                <span class="input-group-btn">
-            <button
-                    v-on:click="clearDescription"
-                    tabIndex="-1"
-                    class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-            </div>
-            <typeahead
-                    :open-on-empty=true
-                    :open-on-focus=true
-                    v-on:input="selectedItem"
-                    :async-src="descriptionAutoCompleteURI"
-                    v-model="name"
-                    :target="target"
-                    item-key="description"
-            ></typeahead>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+    <div class="col-sm-12 text-sm">
+      {{ $t('firefly.description') }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input
+            type="text"
+            class="form-control"
+            name="description[]"
+            :title="$t('firefly.description')"
+            v-on:keypress="handleEnter"
+            v-on:submit.prevent
+            ref="descr"
+            autocomplete="off"
+            v-bind:placeholder="$t('firefly.description')"
+            :value="value" @input="handleInput"
+        >
+        <span class="input-group-btn">
+            <button
+                v-on:click="clearDescription"
+                tabIndex="-1"
+                class="btn btn-default"
+                type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+      <typeahead
+          :open-on-empty=true
+          :open-on-focus=true
+          v-on:input="selectedItem"
+          :async-function="aSyncFunction"
+          v-model="name"
+          :target="target"
+          item-key="description"
+      ></typeahead>
+      <ul class="list-unstyled" v-for="error in this.error">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        props: ['error', 'value', 'index'],
-        name: "TransactionDescription",
-        mounted() {
-            this.target = this.$refs.descr;
-            this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/transactions?query=";
-            this.$refs.descr.focus();
-        },
-        components: {
-        },
-        data() {
-            return {
-                descriptionAutoCompleteURI: null,
-                name: null,
-                description: null,
-                target: null,
-            }
-        },
-        methods: {
-            search: function(input) {
-                return ['ab','cd'];
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            clearDescription: function () {
-                //props.value = '';
-                this.description = '';
-                this.$refs.descr.value = '';
-                this.$emit('input', this.$refs.descr.value);
-                // some event?
-                this.$emit('clear:description')
-            },
-            handleInput(e) {
-                this.$emit('input', this.$refs.descr.value);
-            },
-            handleEnter: function (e) {
-                // todo feels sloppy
-
-                if (e.keyCode === 13) {
-                    //e.preventDefault();
-                }
-            },
-            selectedItem: function (e) {
-                if (typeof this.name === 'undefined') {
-                    return;
-                }
-                if (typeof this.name === 'string') {
-                    return;
-                }
-                this.$refs.descr.value = this.name.description;
-                this.$emit('input', this.$refs.descr.value);
-            },
-        }
+export default {
+  props: ['error', 'value', 'index'],
+  name: "TransactionDescription",
+  mounted() {
+    this.target = this.$refs.descr;
+    this.descriptionAutoCompleteURI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/transactions?query=";
+    this.$refs.descr.focus();
+  },
+  components: {},
+  data() {
+    return {
+      descriptionAutoCompleteURI: null,
+      name: null,
+      description: null,
+      target: null,
     }
+  },
+  methods: {
+    aSyncFunction: function (query, done) {
+      axios.get(this.descriptionAutoCompleteURI + query)
+          .then(res => {
+            done(res.data);
+          })
+          .catch(err => {
+            // any error handler
+          })
+    },
+    search: function (input) {
+      return ['ab', 'cd'];
+    },
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    clearDescription: function () {
+      //props.value = '';
+      this.description = '';
+      this.$refs.descr.value = '';
+      this.$emit('input', this.$refs.descr.value);
+      // some event?
+      this.$emit('clear:description')
+    },
+    handleInput(e) {
+      this.$emit('input', this.$refs.descr.value);
+    },
+    handleEnter: function (e) {
+      // todo feels sloppy
+
+      if (e.keyCode === 13) {
+        //e.preventDefault();
+      }
+    },
+    selectedItem: function (e) {
+      if (typeof this.name === 'undefined') {
+        return;
+      }
+      if (typeof this.name === 'string') {
+        return;
+      }
+      this.$refs.descr.value = this.name.description;
+      this.$emit('input', this.$refs.descr.value);
+    },
+  }
+}
 </script>
 
 <style scoped>
