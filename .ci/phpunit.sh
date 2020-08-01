@@ -8,3 +8,5 @@ wget --quiet https://raw.githubusercontent.com/firefly-iii/test-data/main/test_d
 
 # run phpunit
 ./vendor/bin/phpunit --configuration phpunit.coverage.xml
+
+return 0
