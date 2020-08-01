@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Příslušná pravidla',
     'active'                  => 'Aktivní?',
     'percentage'              => 'pct.',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Příští splatnost',
     'transaction_type'        => 'Typ',
     'lastActivity'            => 'Poslední aktivita',

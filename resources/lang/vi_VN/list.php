@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Quy tắc liên quan',
     'active'                  => 'Đang hoạt động?',
     'percentage'              => 'phần trăm.',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Kỳ hạn tiếp theo',
     'transaction_type'        => 'Loại giao dịch',
     'lastActivity'            => 'Hoạt động cuối cùng',

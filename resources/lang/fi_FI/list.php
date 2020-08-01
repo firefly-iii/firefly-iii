@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Linkitetty sääntöihin',
     'active'                  => 'Aktiivinen?',
     'percentage'              => 'pros.',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Seuraava eräpäivä',
     'transaction_type'        => 'Tyyppi',
     'lastActivity'            => 'Viimeisin tapahtuma',

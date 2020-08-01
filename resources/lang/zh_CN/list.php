@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => '相关规则',
     'active'                  => '是否启用？',
     'percentage'              => '%',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => '下次到期日',
     'transaction_type'        => '类别',
     'lastActivity'            => '上次活动',

@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Vonatkozó szabályok',
     'active'                  => 'Aktív?',
     'percentage'              => '%',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Következő esedékesség',
     'transaction_type'        => 'Típus',
     'lastActivity'            => 'Utolsó aktivitás',

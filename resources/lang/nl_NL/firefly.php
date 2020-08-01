@@ -105,6 +105,7 @@ return [
     'registered'                                 => 'Je bent geregistreerd!',
     'Default asset account'                      => 'Standaard betaalrekening',
     'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
+    'no_bill_pointer'                            => 'You seem to have no bills yet. You should create some on the <a href="/budgets">budgets</a>-page. Bills can help you keep track of expenses.',
     'Savings account'                            => 'Spaarrekening',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Bronrekening|Bronrekeningen',
@@ -624,7 +625,7 @@ return [
     'optional_field_meta_business'          => 'Zakelijk',
     'optional_field_attachments'            => 'Bijlagen',
     'optional_field_meta_data'              => 'Optionele meta-gegevens',
-    'external_uri'                          => 'External URI',
+    'external_uri'                          => 'Externe url',
 
     // profile:
     'delete_stuff_header'                   => 'Gegevens verwijderen uit Firefly III',
@@ -1093,6 +1094,7 @@ return [
     'cannot_edit_other_fields'                  => 'Je kan andere velden dan de velden die je hier ziet niet groepsgewijs wijzigen. Er is geen ruimte om ze te laten zien. Als je deze velden toch wilt wijzigen, volg dan de link naast de transactie en wijzig ze stuk voor stuk.',
     'cannot_change_amount_reconciled'           => 'Je kan het bedrag van een afgestemde transactie niet aanpassen.',
     'no_budget'                                 => '(geen budget)',
+    'no_bill'                                   => '(no bill)',
     'account_per_budget'                        => 'Rekening per budget',
     'account_per_category'                      => 'Rekening per categorie',
     'create_new_object'                         => 'Opslaan',
@@ -1637,6 +1639,7 @@ return [
     'created_withdrawals'                   => 'Gemaakte uitgaven',
     'created_deposits'                      => 'Gemaakte inkomsten',
     'created_transfers'                     => 'Gemaakte overschrijvingen',
+    'recurring_info'                        => 'Recurring transaction :count / :total',
     'created_from_recurrence'               => 'Gemaakt door periodieke transactie ":title" (#:id)',
     'recurring_never_cron'                  => 'Het lijkt er op dat je cronjob die nodig is voor periodieke transacties nog nooit gedraaid heeft. Niet zo gek natuurlijk als je Firefly III echt net geïnstalleerd hebt, maar denk eraan dat je dit regelt. Check de helppagina\'s via het (?)-icoontje rechtsboven.',
     'recurring_cron_long_ago'               => 'Het lijkt er op dat het meer dan 36 uur geleden is sinds de cronjob heeft gedraaid die je nodig hebt voor het maken van periodieke transacties. Weet je zeker dat deze goed is ingesteld? Check de helppagina\'s onder het (?)-icoontje rechtsboven voor meer informatie.',

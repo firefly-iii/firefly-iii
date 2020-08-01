@@ -38,6 +38,7 @@ return [
 İlgili kurallar',
     'active'                  => 'Aktif mi?',
     'percentage'              => 'yzd.',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Sonraki ödeme',
     'transaction_type'        => 'Tip',
     'lastActivity'            => 'Son Etkinlik',

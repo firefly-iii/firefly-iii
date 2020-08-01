@@ -1,6 +1,6 @@
 
 <!--
-  - Budget.vue
+  - Bill.vue
   - Copyright (c) 2019 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,24 +24,24 @@
          v-bind:class="{ 'has-error': hasError()}"
          v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
         <div class="col-sm-12 text-sm">
-            {{ $t('firefly.budget') }}
+            {{ $t('firefly.bill') }}
         </div>
         <div class="col-sm-12">
             <select
-            name="budget[]"
-            ref="budget"
+            name="bill[]"
+            ref="bill"
             v-model="selected"
             @input="handleInput"
             v-on:change="signalChange"
-            :title="$t('firefly.budget')"
+            :title="$t('firefly.bill')"
             class="form-control"
-             v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets"
-                    :label="cBudget.name"
-                    :value="cBudget.id">{{cBudget.name}}
+             v-if="this.bills.length > 0">
+                <option v-for="cBill in this.bills"
+                    :label="cBill.name"
+                    :value="cBill.id">{{ cBill.name }}
                 </option>
             </select>
-            <p class="help-block" v-if="this.budgets.length === 1" v-html="$t('firefly.no_budget_pointer')"></p>
+            <p class="help-block" v-if="this.bills.length === 1" v-html="$t('firefly.no_bill_pointer')"></p>
             <ul class="list-unstyled" v-for="error in this.error">
                 <li class="text-danger">{{ error }}</li>
             </ul>
@@ -51,7 +51,7 @@
 
 <script>
     export default {
-        name: "Budget",
+        name: "Bill",
         props: {
             transactionType: String,
             value: {
@@ -59,40 +59,40 @@
                 default: 0
             },
             error: Array,
-            no_budget: String,
+            no_bill: String,
         },
         mounted() {
-            this.loadBudgets();
+            this.loadBills();
         },
         data() {
             return {
                 selected: this.value ?? 0,
-                budgets: [],
+                bills: [],
             }
         },
         methods: {
-            // Fixes edit change budget not updating on every broswer
+            // Fixes edit change bill not updating on every broswer
             signalChange: function(e) {
-                this.$emit('input', this.$refs.budget.value);
+                this.$emit('input', this.$refs.bill.value);
             },
             handleInput(e) {
-                this.$emit('input', this.$refs.budget.value);
+                this.$emit('input', this.$refs.bill.value);
             },
             hasError: function () {
                 return this.error.length > 0;
             },
-            loadBudgets: function () {
-                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets?limit=1337';
+            loadBills: function () {
+                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/bills?limit=1337';
                 axios.get(URI, {}).then((res) => {
-                        this.budgets = [
+                        this.bills = [
                             {
-                                name: this.no_budget,
+                                name: this.no_bill,
                                 id: 0,
                             }
                         ];
                     for (const key in res.data) {
                         if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                            this.budgets.push(res.data[key]);
+                            this.bills.push(res.data[key]);
                         }
                     }
                 });

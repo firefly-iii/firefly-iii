@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Reguli relevante',
     'active'                  => 'Este activ?',
     'percentage'              => 'procent %',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Următoarea scadență',
     'transaction_type'        => 'Tip',
     'lastActivity'            => 'Ultima activitate',

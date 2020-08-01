@@ -37,6 +37,7 @@ return [
     'linked_to_rules'         => 'Relevanta regler',
     'active'                  => 'Är aktiv?',
     'percentage'              => 'procent',
+    'recurring_transaction'   => 'Recurring transaction',
     'next_due'                => 'Nästa förfallodag',
     'transaction_type'        => 'Typ',
     'lastActivity'            => 'Senaste aktivitet',
