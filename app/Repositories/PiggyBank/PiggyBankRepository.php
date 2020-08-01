@@ -239,7 +239,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getMaxOrder(): int
     {
-        return (int)$this->user->piggyBanks()->max('order');
+        return (int)$this->user->piggyBanks()->max('piggy_banks.order');
     }
 
     /**
