@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Règles applicables',
     'active'                  => 'Actif ?',
     'percentage'              => 'pct.',
-    'recurring_transaction'   => 'Recurring transaction',
+    'recurring_transaction'   => 'Opération périodique',
     'next_due'                => 'Prochaine échéance',
     'transaction_type'        => 'Type',
     'lastActivity'            => 'Activité récente',
