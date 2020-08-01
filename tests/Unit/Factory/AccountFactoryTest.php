@@ -62,13 +62,9 @@ class AccountFactoryTest extends TestCase
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
      * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreate(): void
+    public function testCreateNoMockery(): void
     {
         // mock repositories
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
         $data            = [
             'account_type_id' => null,
             'account_type'    => 'asset',
@@ -78,16 +74,6 @@ class AccountFactoryTest extends TestCase
             'active'          => true,
             'account_role'    => 'defaultAsset',
         ];
-
-        // no currency submitted means: find the EURO:
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($euro);
-
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-
-        // get opening balance group (null for new accounts)
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
