@@ -269,7 +269,6 @@ class TransactionGroupTwig extends AbstractExtension
      * Generate normal amount for transaction from a transaction group.
      *
      * @param array $array
-     * @param Account $account
      *
      * @return string
      */
