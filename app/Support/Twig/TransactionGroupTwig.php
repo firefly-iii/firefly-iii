@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -63,7 +62,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction(
             'groupAmount',
-            function (array $array, Account $account): string {
+            function (array $array): string {
                 $sums    = $array['sums'];
                 $return  = [];
                 $first   = reset($array['transactions']);
@@ -79,8 +78,7 @@ class TransactionGroupTwig extends AbstractExtension
                     $amount = $sum['amount'];
 
                     $sourceType = $first['source_account_type'] ?? 'invalid';
-                    $sourceAccountId = $first['source_account_id'];
-                    $amount = $this->signAmountFromAccountPOV($amount, $type, $sourceType, $sourceAccountId, $account->id);
+                    $amount = $this->signAmount($amount, $type, $sourceType);
 
                     $return[] = app('amount')->formatFlat($sum['currency_symbol'], (int)$sum['currency_decimal_places'], $amount, $colored);
                 }
@@ -172,12 +170,12 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction(
             'journalArrayAmount',
-            function (array $journal, Account $account): string {
+            function (array $array): string {
                 // if is not a withdrawal, amount positive.
-                $result = $this->normalJournalArrayAmount($journal, $account);
+                $result = $this->normalJournalArrayAmount($array);
                 // now append foreign amount, if any.
-                if (null !== $journal['foreign_amount']) {
-                    $foreign = $this->foreignJournalArrayAmount($journal, $account);
+                if (null !== $array['foreign_amount']) {
+                    $foreign = $this->foreignJournalArrayAmount($array);
                     $result  = sprintf('%s (%s)', $result, $foreign);
                 }
 
@@ -213,25 +211,23 @@ class TransactionGroupTwig extends AbstractExtension
     /**
      * Generate foreign amount for transaction from a transaction group.
      *
-     * @param array $journal
-     * @param Account $account
+     * @param array $array
      *
      * @return string
      */
-    private function foreignJournalArrayAmount(array $journal, Account $account): string
+    private function foreignJournalArrayAmount(array $array): string
     {
-        $type    = $journal['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $journal['foreign_amount'] ?? '0';
+        $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $amount  = $array['foreign_amount'] ?? '0';
         $colored = true;
 
-        $sourceType = $journal['source_account_type'] ?? 'invalid';
-        $sourceAccountId = $journal['source_account_id'];
-        $amount = $this->signAmountFromAccountPOV($amount, $type, $sourceType, $sourceAccountId, $account->id);
+        $sourceType = $array['source_account_type'] ?? 'invalid';
+        $amount = $this->signAmount($amount, $type, $sourceType);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($journal['foreign_currency_symbol'], (int)$journal['foreign_currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -277,14 +273,13 @@ class TransactionGroupTwig extends AbstractExtension
      *
      * @return string
      */
-    private function normalJournalArrayAmount(array $journal, Account $account): string
+    private function normalJournalArrayAmount(array $journal): string
     {
         $type    = $journal['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $journal['amount'] ?? '0';
         $colored = true;
         $sourceType = $journal['source_account_type'] ?? 'invalid';
-        $sourceAccountId = $journal['source_account_id'];
-        $amount = $this->signAmount($amount, $type, $sourceType, $sourceAccountId, $account->id);
+        $amount = $this->signAmount($amount, $type, $sourceType);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
@@ -356,18 +351,6 @@ class TransactionGroupTwig extends AbstractExtension
             $amount = bcmul($amount, '-1');
         }
 
-        return $amount;
-    }
-
-    private function signAmountFromAccountPOV(string $amount, string $transactionType, string $sourceType, int $sourceAccountId, $displayedAccountId): string {
-        $amount = $this->signAmount( $amount, $transactionType, $sourceType );
-
-        // transfers stay negative from source point of view
-        if ($transactionType === TransactionType::TRANSFER
-            && $sourceAccountId === $displayedAccountId) {
-            $amount = bcmul($amount, '-1');
-        }
-        
         return $amount;
     }
 }
