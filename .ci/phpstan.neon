@@ -8,6 +8,7 @@ parameters:
   ignoreErrors:
     - '#is not allowed to extend#'
     - '#is neither abstract nor final#'
+    - '#Control structures using switch should not be used\.#'
   paths:
     - ../app
     - ../database

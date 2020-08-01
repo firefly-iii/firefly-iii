@@ -59,15 +59,15 @@ class BillFactory
     /**
      * @param array $data
      *
-     * @throws FireflyException
      * @return Bill|null
+     * @throws FireflyException
      */
     public function create(array $data): ?Bill
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
-        $currency = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
 
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
@@ -95,8 +95,8 @@ class BillFactory
             throw new FireflyException('400000: Could not store bill.');
         }
 
-        if (isset($data['notes'])) {
-            $this->updateNote($bill, $data['notes']);
+        if (array_key_exists('notes', $data)) {
+            $this->updateNote($bill, (string)$data['notes']);
         }
 
         $objectGroupTitle = $data['object_group'] ?? '';
@@ -108,7 +108,7 @@ class BillFactory
             }
         }
         // try also with ID:
-        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        $objectGroupId = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -128,8 +128,8 @@ class BillFactory
      */
     public function find(?int $billId, ?string $billName): ?Bill
     {
-        $billId   = (int) $billId;
-        $billName = (string) $billName;
+        $billId   = (int)$billId;
+        $billName = (string)$billName;
         $bill     = null;
         // first find by ID:
         if ($billId > 0) {

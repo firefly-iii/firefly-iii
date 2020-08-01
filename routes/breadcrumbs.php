@@ -1198,4 +1198,5 @@ try {
     );
 
 } catch (DuplicateBreadcrumbException $e) {
+    // @ignoreException
 }

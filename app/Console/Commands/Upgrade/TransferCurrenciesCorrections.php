@@ -335,10 +335,10 @@ class TransferCurrenciesCorrections extends Command
     private function getCurrency(Account $account): ?TransactionCurrency
     {
         $accountId = $account->id;
-        if (isset($this->accountCurrencies[$accountId]) && 0 === $this->accountCurrencies[$accountId]) {
+        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null; // @codeCoverageIgnore
         }
-        if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
+        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
         }
         $currency = $this->accountRepos->getAccountCurrency($account);

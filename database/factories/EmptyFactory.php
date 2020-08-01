@@ -1,11 +1,11 @@
 <?php
-
+declare(strict_types=1);
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use Faker\Generator as Faker;
-use FireflyIII\Model;
+use FireflyIII\User;
 
-$factory->define(Model::class, function (Faker $faker) {
+$factory->define(User::class, function (Faker $faker) {
     return [
         //
     ];

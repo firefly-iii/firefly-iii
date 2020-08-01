@@ -57,8 +57,8 @@ class TransactionJournalFactory
     use JournalServiceTrait;
 
     private AccountRepositoryInterface $accountRepository;
-    private AccountValidator $accountValidator;
-    private BillRepositoryInterface $billRepository;
+    private AccountValidator           $accountValidator;
+    private BillRepositoryInterface    $billRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var bool */
@@ -87,7 +87,7 @@ class TransactionJournalFactory
     {
         $this->errorOnHash = false;
         // TODO move valid meta fields to config.
-        $this->fields      = [
+        $this->fields = [
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
             'sepa_db', 'sepa_country', 'sepa_ep',
@@ -128,9 +128,9 @@ class TransactionJournalFactory
      *
      * @param array $data
      *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
      * @return Collection
+     * @throws FireflyException
+     * @throws DuplicateTransactionException
      */
     public function create(array $data): Collection
     {
@@ -246,9 +246,9 @@ class TransactionJournalFactory
     /**
      * @param NullArrayObject $row
      *
-     * @throws FireflyException
-     * @throws DuplicateTransactionException
      * @return TransactionJournal|null
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -306,10 +306,10 @@ class TransactionJournalFactory
         Log::debug('Now calling getAccount for the destination.');
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
         Log::debug('Done with getAccount(2x)');
-        $currency           = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
-        $foreignCurrency    = $this->compareCurrencies($currency, $foreignCurrency);
-        $foreignCurrency    = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
-        $description        = $this->getDescription($description);
+        $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
+        $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
+        $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
+        $description     = $this->getDescription($description);
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -596,8 +596,8 @@ class TransactionJournalFactory
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = isset($data['source_id']) ? (int) $data['source_id'] : null;
-        $sourceName  = isset($data['source_name']) ? (string) $data['source_name'] : null;
+        $sourceId    = array_key_exists('source_id', $data) ? (int) $data['source_id'] : null;
+        $sourceName  = array_key_exists('source_name', $data) ? (string) $data['source_name'] : null;
         $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
@@ -606,8 +606,8 @@ class TransactionJournalFactory
         }
         Log::debug('Source seems valid.');
         // validate destination account
-        $destinationId    = isset($data['destination_id']) ? (int) $data['destination_id'] : null;
-        $destinationName  = isset($data['destination_name']) ? (string) $data['destination_name'] : null;
+        $destinationId    = array_key_exists('destination_id', $data) ? (int) $data['destination_id'] : null;
+        $destinationName  = array_key_exists('destination_name', $data) ? (string) $data['destination_name'] : null;
         $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
