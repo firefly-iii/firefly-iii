@@ -78,9 +78,9 @@ class TransactionGroupTwig extends AbstractExtension
                 foreach ($sums as $sum) {
                     $amount = $sum['amount'];
 
-                    $destinationType = $first['destination_account_type'] ?? 'invalid';
+                    $sourceType = $first['source_account_type'] ?? 'invalid';
                     $sourceAccountId = $first['source_account_id'];
-                    $amount = $this->signAmount($amount, $type, $destinationType, $sourceAccountId, $account->id);
+                    $amount = $this->signAmountFromAccountPOV($amount, $type, $sourceType, $sourceAccountId, $account->id);
 
                     $return[] = app('amount')->formatFlat($sum['currency_symbol'], (int)$sum['currency_decimal_places'], $amount, $colored);
                 }
@@ -224,9 +224,9 @@ class TransactionGroupTwig extends AbstractExtension
         $amount  = $journal['foreign_amount'] ?? '0';
         $colored = true;
 
-        $destinationType = $journal['destination_account_type'] ?? 'invalid';
+        $sourceType = $journal['source_account_type'] ?? 'invalid';
         $sourceAccountId = $journal['source_account_id'];
-        $amount = $this->signAmount($amount, $type, $destinationType, $sourceAccountId, $account->id);
+        $amount = $this->signAmountFromAccountPOV($amount, $type, $sourceType, $sourceAccountId, $account->id);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
@@ -254,8 +254,9 @@ class TransactionGroupTwig extends AbstractExtension
         $currency = $first->foreignCurrency;
         $amount   = $first->foreign_amount ?? '0';
         $colored  = true;
-
-        $amount = $this->signAmount($amount, $type);
+        $sourceType = $first->account()->first()->accountType()->first()->type;
+        
+        $amount = $this->signAmount($amount, $type, $sourceType);
 
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
@@ -281,9 +282,9 @@ class TransactionGroupTwig extends AbstractExtension
         $type    = $journal['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $journal['amount'] ?? '0';
         $colored = true;
-        $destinationType = $journal['destination_account_type'] ?? 'invalid';
+        $sourceType = $journal['source_account_type'] ?? 'invalid';
         $sourceAccountId = $journal['source_account_id'];
-        $amount = $this->signAmount($amount, $type, $destinationType, $sourceAccountId, $account->id);
+        $amount = $this->signAmount($amount, $type, $sourceType, $sourceAccountId, $account->id);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
@@ -311,8 +312,9 @@ class TransactionGroupTwig extends AbstractExtension
         $currency = $journal->transactionCurrency;
         $amount   = $first->amount ?? '0';
         $colored  = true;
+        $sourceType = $first->account()->first()->accountType()->first()->type;
         
-        $amount = $this->signAmount($amount, $type,);
+        $amount = $this->signAmount($amount, $type, $sourceType);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
@@ -337,29 +339,35 @@ class TransactionGroupTwig extends AbstractExtension
         return null !== $first->foreign_amount;
     }
 
-    static function signAmount(string $amount, string $type, string $destinationType = null, int $sourceAccountId = null, int $displayedAccountId = null): string {
+    private function signAmount( string $amount, string $transactionType, string $sourceType ): string {
 
         // withdrawals stay negative
-        if ($type !== TransactionType::WITHDRAWAL) {
+        if ($transactionType !== TransactionType::WITHDRAWAL) {
             $amount = bcmul($amount, '-1');
         }
 
-        // opening balance and it goes to initial balance? its expense.
-        if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
+        // opening balance and it comes from initial balance? its expense.
+        if ($transactionType === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE !== $sourceType) {
             $amount = bcmul($amount, '-1');
         }
+
+        // reconciliation and it comes from reconciliation?
+        if ($transactionType === TransactionType::RECONCILIATION && AccountType::RECONCILIATION !== $sourceType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
+    }
+
+    private function signAmountFromAccountPOV(string $amount, string $transactionType, string $sourceType, int $sourceAccountId, $displayedAccountId): string {
+        $amount = $this->signAmount( $amount, $transactionType, $sourceType );
 
         // transfers stay negative from source point of view
-        if ($type === TransactionType::TRANSFER
-            && !is_null($sourceAccountId) && $sourceAccountId === $displayedAccountId) {
+        if ($transactionType === TransactionType::TRANSFER
+            && $sourceAccountId === $displayedAccountId) {
             $amount = bcmul($amount, '-1');
         }
-
-        // reconciliation and it goes to reconciliation?
-        if ($type === TransactionType::RECONCILIATION && AccountType::RECONCILIATION === $destinationType) {
-            $amount = bcmul($amount, '-1');
-        }
-
+        
         return $amount;
     }
 }
