@@ -75,10 +75,10 @@ class AccountFactory
      */
     public function create(array $data): Account
     {
-        $type = $this->getAccountType($data['account_type_id'], $data['account_type']);
+        $type = $this->getAccountType($data['account_type_id'] ?? null, $data['account_type'] ?? null);
 
         if (null === $type) {
-            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'], $data['account_type']));
+            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'] ?? null, $data['account_type'] ?? null));
         }
 
         $data['iban'] = $this->filterIban($data['iban'] ?? null);

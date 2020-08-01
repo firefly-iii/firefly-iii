@@ -42,19 +42,7 @@ use Storage;
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(__METHOD__);
-        }
-    }
+    private User $user;
 
     /**
      * @param Category $category
