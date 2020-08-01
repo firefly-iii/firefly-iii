@@ -137,10 +137,22 @@
                                             <input class="form-control" placeholder="" name="tags" autocomplete="off" type="text" value="">
                                         </td>
                                         <td>
-                                            <div class="checkbox">
+                                            <div class="radio">
                                                 <label>
-                                                    <input name="ignore_tags" type="checkbox" value="1" checked>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_nothing" value="no_nothing" checked />
                                                     {{ 'no_bulk_tags'|_ }}
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_replace" value="do_replace" />
+                                                    {{ 'replace_with_these_tags'|_ }}
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="tags_action" id="tags_action_do_append" value="do_append" />
+                                                    {{ 'append_these_tags'|_ }}
                                                 </label>
                                             </div>
                                         </td>

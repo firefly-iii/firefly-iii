@@ -1088,6 +1088,8 @@ return [
     'no_bulk_category'                          => 'Don\'t update category',
     'no_bulk_budget'                            => 'Don\'t update budget',
     'no_bulk_tags'                              => 'Don\'t update tag(s)',
+    'replace_with_these_tags'                   => 'Replace with these tags',
+    'append_these_tags'                         => 'Add these tags',
     'mass_edit'                                 => 'Edit selected individually',
     'bulk_edit'                                 => 'Edit selected in bulk',
     'mass_delete'                               => 'Delete selected',

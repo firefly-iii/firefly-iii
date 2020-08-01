@@ -59,9 +59,9 @@ trait ConvertsDataTypes
      *
      * @return int
      */
-    protected function integer(string $field): int
+    public function integer(string $field): int
     {
-        return (int) $this->get($field);
+        return (int)$this->get($field);
     }
 
 
@@ -79,7 +79,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float) $res;
+        return (float)$res;
     }
 
 
@@ -120,7 +120,6 @@ trait ConvertsDataTypes
 
         return null;
     }
-
 
 
     /**
@@ -181,7 +180,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (int) $string;
+        return (int)$string;
     }
 
     /**
@@ -193,7 +192,7 @@ trait ConvertsDataTypes
      */
     protected function nlString(string $field): string
     {
-        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
+        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
     }
 
     /**
@@ -209,12 +208,12 @@ trait ConvertsDataTypes
             return null;
         }
 
-        $value = (string) $this->get($field);
+        $value = (string)$this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int) $value;
+        return (int)$value;
     }
 
     /**
@@ -230,7 +229,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return app('steam')->nlCleanString((string) ($this->get($field) ?? ''));
+        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
     }
 
 
@@ -275,7 +274,7 @@ trait ConvertsDataTypes
         if (!$this->has($field)) {
             return null;
         }
-        $res = trim(app('steam')->cleanString((string) ($this->get($field) ?? '')));
+        $res = trim(app('steam')->cleanString((string)($this->get($field) ?? '')));
         if ('' === $res) {
             return null;
         }
@@ -290,8 +289,8 @@ trait ConvertsDataTypes
      *
      * @return string
      */
-    protected function string(string $field): string
+    public function string(string $field): string
     {
-        return app('steam')->cleanString((string) ($this->get($field) ?? ''));
+        return app('steam')->cleanString((string)($this->get($field) ?? ''));
     }
 }
