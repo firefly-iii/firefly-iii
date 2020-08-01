@@ -273,19 +273,19 @@ class TransactionGroupTwig extends AbstractExtension
      *
      * @return string
      */
-    private function normalJournalArrayAmount(array $journal): string
+    private function normalJournalArrayAmount(array $array): string
     {
-        $type    = $journal['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $journal['amount'] ?? '0';
+        $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $amount  = $array['amount'] ?? '0';
         $colored = true;
-        $sourceType = $journal['source_account_type'] ?? 'invalid';
+        $sourceType = $array['source_account_type'] ?? 'invalid';
         $amount = $this->signAmount($amount, $type, $sourceType);
         
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
 
-        $result = app('amount')->formatFlat($journal['currency_symbol'], (int)$journal['currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
