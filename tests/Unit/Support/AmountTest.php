@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Support;
+namespace Tests\Unit\Support;
 
 use FireflyIII\Support\Amount;
 use Tests\TestCase;
@@ -8,7 +8,6 @@ use Steam;
 
 /**
  * Class AmountTest
- * TODO move to correct directory.
  */
 class AmountTest extends TestCase
 {
