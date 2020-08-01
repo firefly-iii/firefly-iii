@@ -111,7 +111,7 @@
     "nunomaduro/larastan": "^0.6.2",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
-    "phpunit/phpunit": "^8.5",
+    "phpunit/phpunit": "^9.2",
     "psalm/plugin-laravel": "^1.1",
     "roave/security-advisories": "dev-master",
     "thecodingmachine/phpstan-strict-rules": "^0.12.0",
