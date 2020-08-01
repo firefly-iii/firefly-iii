@@ -49,7 +49,6 @@ use Tests\TestCase;
  */
 class BudgetControllerTest extends TestCase
 {
-    use TestDataTrait;
     /**
      *
      */

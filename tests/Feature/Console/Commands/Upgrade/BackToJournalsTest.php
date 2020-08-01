@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Console\Commands\Upgrade;
+namespace Tests\Feature\Console\Commands\Upgrade;
 
 
 use FireflyConfig;

@@ -52,7 +52,6 @@ use Tests\TestCase;
  */
 class IndexControllerTest extends TestCase
 {
-    use TestDataTrait;
     /**
      *
      */

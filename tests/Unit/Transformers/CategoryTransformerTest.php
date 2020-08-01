@@ -41,7 +41,6 @@ use Tests\TestCase;
  */
 class CategoryTransformerTest extends TestCase
 {
-    use TestDataTrait;
 
     /**
      *

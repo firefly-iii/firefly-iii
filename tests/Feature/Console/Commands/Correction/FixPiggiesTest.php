@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Console\Commands\Correction;
+namespace Tests\Feature\Console\Commands\Correction;
 
 
 use FireflyIII\Models\PiggyBank;

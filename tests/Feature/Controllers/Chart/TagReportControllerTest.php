@@ -45,7 +45,6 @@ use Tests\TestCase;
  */
 class TagReportControllerTest extends TestCase
 {
-    use TestDataTrait;
     /**
      *
      */

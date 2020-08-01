@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Feature\Support;
 
 use FireflyIII\Support\Amount;
 use Tests\TestCase;

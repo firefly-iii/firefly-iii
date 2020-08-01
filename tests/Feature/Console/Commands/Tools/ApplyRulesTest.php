@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Console\Commands\Tools;
+namespace Tests\Feature\Console\Commands\Tools;
 
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;

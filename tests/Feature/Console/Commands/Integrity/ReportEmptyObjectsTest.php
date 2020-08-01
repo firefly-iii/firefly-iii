@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Console\Commands\Integrity;
+namespace Tests\Feature\Console\Commands\Integrity;
 
 
 use FireflyIII\Models\Account;

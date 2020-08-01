@@ -42,7 +42,6 @@ use Tests\TestCase;
  */
 class CategoryReportControllerTest extends TestCase
 {
-    use TestDataTrait;
     /**
      *
      */
