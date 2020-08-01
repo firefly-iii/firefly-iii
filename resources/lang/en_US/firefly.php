@@ -105,7 +105,7 @@ return [
     'registered'                                 => 'You have registered successfully!',
     'Default asset account'                      => 'Default asset account',
     'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href="/budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
-    'no_bill_pointer'                            => 'You seem to have no bills yet. You should create some on the <a href="/budgets">budgets</a>-page. Bills can help you keep track of expenses.',
+    'no_bill_pointer'                            => 'You seem to have no bills yet. You should create some on the <a href="/bills">bills</a>-page. Bills can help you keep track of expenses.',
     'Savings account'                            => 'Savings account',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Source account|Source accounts',
