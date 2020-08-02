@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III ondersteunt meerdere talen. Welke heeft jouw voorkeur?',
     'pref_locale_help'                          => 'Firefly III kan andere lokale instellingen gebruiken, die bepalen hoe valuta, nummers en datums worden weergegeven. De lijst hieronder is compleet maar niet alles wordt ondersteund door jouw systeem. Het kan zijn dat Firefly III bepaalde lokale instellingen niet lekker weergeeft; neem dan contact met me op.',
     'pref_locale_no_windows'                    => 'Deze functie werkt mogelijk niet op Windows.',
-    'pref_locale_no_docker'                     => 'Het Docker image heeft maar een paar geïnstalleerde locales.',
     'pref_locale_no_demo'                       => 'Deze functie werkt niet voor de demo-gebruiker.',
     'pref_custom_fiscal_year'                   => 'Instellingen voor boekjaar',
     'pref_custom_fiscal_year_label'             => 'Ingeschakeld',

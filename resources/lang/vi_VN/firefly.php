@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III hỗ trợ một số ngôn ngữ. Bạn thích cái nào hơn?',
     'pref_locale_help'                          => 'Firefly III cho phép bạn đặt các cài đặt cục bộ khác, như cách định dạng tiền tệ, số và ngày. Các mục trong danh sách này có thể không được hệ thống của bạn hỗ trợ. Firefly III không có cài đặt ngày chính xác cho mọi miền; liên hệ với tôi để cải thiện.',
     'pref_locale_no_windows'                    => 'Tính năng này có thể không hoạt động trên Windows.',
-    'pref_locale_no_docker'                     => 'Hình ảnh Docker chỉ có một tập hợp nhỏ các vị trí được cài đặt.',
     'pref_locale_no_demo'                       => 'Tính năng này sẽ không hoạt động cho người dùng demo.',
     'pref_custom_fiscal_year'                   => 'Cài đặt năm tài chính',
     'pref_custom_fiscal_year_label'             => 'Đã bật',

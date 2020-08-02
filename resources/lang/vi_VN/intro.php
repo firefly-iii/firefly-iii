@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Để tạo giao dịch, tài khoản mới hoặc những thứ khác, hãy sử dụng menu dưới biểu tượng này.',
     'index_cash_account'                              => 'Đây là những tài khoản được tạo ra cho đến nay. Bạn có thể sử dụng tài khoản tiền mặt để theo dõi chi phí tiền mặt nhưng tất nhiên đó không phải là bắt buộc.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Chọn tài khoản hoặc tài sản yêu thích của bạn từ danh sách thả xuống này.',
-    'transactions_create_withdrawal_destination'      => 'Chọn một tài khoản chi phí ở đây. Để trống nếu bạn muốn kiếm tiền.',
-    'transactions_create_withdrawal_foreign_currency' => 'Sử dụng trường này để đặt ngoại tệ và số tiền.',
-    'transactions_create_withdrawal_more_meta'        => 'Rất nhiều dữ liệu meta khác bạn đặt trong các trường này.',
-    'transactions_create_withdrawal_split_add'        => 'Nếu bạn muốn phân tách một giao dịch, hãy thêm nhiều phân tách bằng nút này',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Chọn hoặc nhập người nhận thanh toán trong hộp thả xuống / hộp văn bản tự động hoàn thành này. Để trống nếu bạn muốn gửi tiền mặt.',
-    'transactions_create_deposit_destination'         => 'Chọn một tài sản hoặc tài khoản nợ ở đây.',
-    'transactions_create_deposit_foreign_currency'    => 'Sử dụng trường này để đặt ngoại tệ và số tiền.',
-    'transactions_create_deposit_more_meta'           => 'Rất nhiều dữ liệu meta khác bạn đặt trong các trường này.',
-    'transactions_create_deposit_split_add'           => 'Nếu bạn muốn phân tách một giao dịch, hãy thêm nhiều lần chia tách bằng nút này',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Chọn tài khoản nguồn tại đây.',
-    'transactions_create_transfer_destination'        => 'Chọn tài khoản đích ở đây.',
-    'transactions_create_transfer_foreign_currency'   => 'Sử dụng trường này để đặt ngoại tệ và số tiền.',
-    'transactions_create_transfer_more_meta'          => 'Rất nhiều dữ liệu meta khác bạn đặt trong các trường này.',
-    'transactions_create_transfer_split_add'          => 'Nếu bạn muốn phân tách một giao dịch, hãy thêm nhiều lần chia tách bằng nút này',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Cung cấp cho tài khoản của bạn một IBAN hợp lệ. Điều này có thể làm cho việc nhập dữ liệu rất dễ dàng trong tương lai.',

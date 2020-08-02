@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'För att skapa nya transaktioner, konton eller andra saker, använd menyn under den här ikonen.',
     'index_cash_account'                              => 'Dessa är de konton som skapats hittills. Använd kontantkonto för att spåra kontantutgifter men det är naturligtvis inte obligatoriskt.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Välj ditt favorit tillgång eller skuldkonto från rullgardinsmenyn.',
-    'transactions_create_withdrawal_destination'      => 'Välj skuldkonto här. Lämna tomt om det är ett kontantuttag.',
-    'transactions_create_withdrawal_foreign_currency' => 'Använd detta fält för utländsk valuta och summa.',
-    'transactions_create_withdrawal_more_meta'        => 'Massor av andra metadata som kan anges i dessa fält.',
-    'transactions_create_withdrawal_split_add'        => 'Om du vill dela en transaktion, lägg till fler delar via denna knapp',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Välj eller skriv mottagare i denna auto-ifyllnads rullgardin/textrutan. Lämna tom om det är en kontant insättning.',
-    'transactions_create_deposit_destination'         => 'Välj ett tillgång- eller belastningskonto här.',
-    'transactions_create_deposit_foreign_currency'    => 'Använd detta fält för utländsk valuta och summa.',
-    'transactions_create_deposit_more_meta'           => 'Massor av olika metadata kan anges i dessa fält.',
-    'transactions_create_deposit_split_add'           => 'Om du vill dela en transaktion, lägg till fler delar via denna knapp',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Välj källtillgångskontot här.',
-    'transactions_create_transfer_destination'        => 'Välj destinationstillgångskontot här.',
-    'transactions_create_transfer_foreign_currency'   => 'Använd detta fält för utländsk valuta och summa.',
-    'transactions_create_transfer_more_meta'          => 'Massor av olika metadata kan anges i dessa fält.',
-    'transactions_create_transfer_split_add'          => 'Om du vill dela en transaktion, lägg till fler delar via denna knapp',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Ge dina konton giltig IBAN. Detta kan förenkla för dataimport i framtiden.',

@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III 支援多种语言，您倾向使用何者？',
     'pref_locale_help'                          => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'                    => 'This feature may not work on Windows.',
-    'pref_locale_no_docker'                     => 'The Docker image only has a small set of installed locales.',
     'pref_locale_no_demo'                       => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'                   => '财政年度设定',
     'pref_custom_fiscal_year_label'             => '已启用',

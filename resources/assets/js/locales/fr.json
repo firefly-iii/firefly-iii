@@ -7,7 +7,7 @@
         "split_transaction_title": "Description de l'op\u00e9ration ventil\u00e9e",
         "errors_submission": "Certaines informations ne sont pas correctes dans votre formulaire. Veuillez v\u00e9rifier les erreurs ci-dessous.",
         "split": "Ventiler",
-        "single_split": "Split",
+        "single_split": "Ventilation",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID} (\"{title}\")<\/a> a \u00e9t\u00e9 enregistr\u00e9e.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> a \u00e9t\u00e9 mise \u00e0 jour.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> a \u00e9t\u00e9 enregistr\u00e9e.",

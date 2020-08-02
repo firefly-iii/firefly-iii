@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III obsługuje kilka języków. Który wolisz?',
     'pref_locale_help'                          => 'Firefly III pozwala na ustawienie innych ustawień lokalnych, takich jak formatowanie walut, liczb i dat. Wpisy na tej liście mogą nie być obsługiwane przez Twój system. Firefly III nie ma poprawnych ustawień daty dla każdego miejsca; skontaktuj się ze mną, abym mógł to ulepszyć.',
     'pref_locale_no_windows'                    => 'Ta funkcja może nie działać w systemie Windows.',
-    'pref_locale_no_docker'                     => 'Obraz Dockera ma zainstalowany tylko mały zestaw wersji lokalnych.',
     'pref_locale_no_demo'                       => 'Ta funkcja nie zadziała dla użytkownika demonstracyjnego.',
     'pref_custom_fiscal_year'                   => 'Ustawienia roku podatkowego',
     'pref_custom_fiscal_year_label'             => 'Włączone',

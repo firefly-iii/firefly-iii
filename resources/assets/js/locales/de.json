@@ -7,7 +7,7 @@
         "split_transaction_title": "Beschreibung der Splittbuchung",
         "errors_submission": "Problem bei der \u00dcbermittlung. Bitte \u00fcberpr\u00fcfen Sie die nachfolgenden Fehler.",
         "split": "Teilen",
-        "single_split": "Split",
+        "single_split": "Teil",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID} (\"{title}\")<\/a> wurde gespeichert.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Buchung#{ID}<\/a> wurde aktualisiert.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID}<\/a> wurde gespeichert.",

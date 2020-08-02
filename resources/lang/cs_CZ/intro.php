@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Nabídku pod touto ikonou použijte pro vytváření nových transakcí, účtů a ostatní věcí.',
     'index_cash_account'                              => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Vyberte svůj oblíbený účet aktiv nebo závazků z této rozbalovací nabídky.',
-    'transactions_create_withdrawal_destination'      => 'Zde vyberte výdajový účet. Nevyplňujte, pokud chcete vydat v hotovosti.',
-    'transactions_create_withdrawal_foreign_currency' => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
-    'transactions_create_withdrawal_more_meta'        => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_withdrawal_split_add'        => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Select or type the payee in this auto-completing dropdown/textbox. Leave it empty if you want to make a cash deposit.',
-    'transactions_create_deposit_destination'         => 'Zde vyberte účet aktiv nebo závazků.',
-    'transactions_create_deposit_foreign_currency'    => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
-    'transactions_create_deposit_more_meta'           => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_deposit_split_add'           => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Zde vyberte zdrojový účet aktiv.',
-    'transactions_create_transfer_destination'        => 'Zde vyberte cílový účet aktiv.',
-    'transactions_create_transfer_foreign_currency'   => 'Tuto kolonku použijte pro zadání cizí měny a částky.',
-    'transactions_create_transfer_more_meta'          => 'Plenty of other meta data you set in these fields.',
-    'transactions_create_transfer_split_add'          => 'Pokud chcete transakci rozúčtovat, přidejte další rozúčtování pomocí tohoto tlačítka',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Zadejte u svých účtů platný IBAN identifikátor. To by v budoucnu mohlo velmi ulehčit import dat.',

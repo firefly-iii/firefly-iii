@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III tukee useita kieliä. Mitä niistä haluat käyttää?',
     'pref_locale_help'                          => 'Firefly III antaa sinun asettaa erikseen paikallisia asetuksia, kuten valuuttojen, numeroiden ja päivämäärien muotoilun. Järjestelmäsi ei ehkä tue kaikkia tämän luettelon alueasetuksia. Firefly III:lla ei ole oikeita päivämääräasetuksia jokaiselle alueelle; ota minuun yhteyttä saadaksesi parannuksia.',
     'pref_locale_no_windows'                    => 'Tämä ominaisuus ei välttämättä toimi Windowsissa.',
-    'pref_locale_no_docker'                     => 'Docker imagessa on vain pieni määrä asennettuja lokalisaatioita.',
     'pref_locale_no_demo'                       => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'                   => 'Tilikauden asetukset',
     'pref_custom_fiscal_year_label'             => 'Käytössä',

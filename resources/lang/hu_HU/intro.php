@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Az ez alatt az ikon alatt megnyíló menü használható új tranzakciók, bankszámlák vagy egyéb dolgok létrehozásához.',
     'index_cash_account'                              => 'Ezek az eddig létrehozott számlák. A készpénzszámla használható a készpénzes költések követésére, de ez természetesen nem kötelező.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Válassza ki a kedvenc forrásszámlát a lenyíló listából.',
-    'transactions_create_withdrawal_destination'      => 'Válassza ki a célszámlát. Hagyja üresen, hogy készpénzkifizetésként legyen elkönyvelve.',
-    'transactions_create_withdrawal_foreign_currency' => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
-    'transactions_create_withdrawal_more_meta'        => 'További metaadatok megadhatók ebben a mezőben.',
-    'transactions_create_withdrawal_split_add'        => 'A tranzakció további szétválasztásához használja ezt a gombot',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Válassza ki vagy kezdje begépelni a befizetőt ebbe a lenyíló menüben, amely egyben szövegdoboz is. Hagyja üresen, ha készpénzbefizetésként legyen elkönyvelve.',
-    'transactions_create_deposit_destination'         => 'Válasszon számlát.',
-    'transactions_create_deposit_foreign_currency'    => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
-    'transactions_create_deposit_more_meta'           => 'További metaadatok megadhatók ebben a mezőben.',
-    'transactions_create_deposit_split_add'           => 'A tranzakció további szétválasztásához használja ezt a gombot',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Válassza ki a forrásszámlát.',
-    'transactions_create_transfer_destination'        => 'Válassza ki a célszámlát.',
-    'transactions_create_transfer_foreign_currency'   => 'Ezt a mezőt használja a devizanem és az érték megadásához.',
-    'transactions_create_transfer_more_meta'          => 'További metaadatok megadhatók ebben a mezőben.',
-    'transactions_create_transfer_split_add'          => 'A tranzakció további szétválasztásához használja ezt a gombot',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Érvényes IBAN hozzáadása a számlához. Ez a jövőben nagyon egyszerűvé teheti az adatok importálását.',

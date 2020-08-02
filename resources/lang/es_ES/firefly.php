@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III apoya varios idiomas. cual usted prefiere?',
     'pref_locale_help'                          => 'Firefly III le permite configurar otros ajustes locales, como cómo se da formato a las monedas, números y fechas. Las entradas en esta lista pueden no ser soportadas por su sistema. Firefly III no tiene los ajustes de fecha correctos para cada local; póngase en contacto conmigo para obtener mejoras.',
     'pref_locale_no_windows'                    => 'Esta característica puede no funcionar en Windows.',
-    'pref_locale_no_docker'                     => 'La imagen de Docker sólo tiene un pequeño conjunto de locales instalados.',
     'pref_locale_no_demo'                       => 'Esta característica no funcionará para el usuario demo.',
     'pref_custom_fiscal_year'                   => 'Configuraciónes del año fiscal',
     'pref_custom_fiscal_year_label'             => 'Habilitado',

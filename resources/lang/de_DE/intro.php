@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Um neue Transaktionen, Konten oder andere Dinge zu erstellen, verwenden Sie das Menü unter diesem Symbol.',
     'index_cash_account'                              => 'Dies sind die bisher angelegten Konten. Sie können das Geldkonto verwenden, um die Barausgaben zu verfolgen, aber es ist natürlich nicht zwingend erforderlich.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Wählen Sie aus dieser Auswahlliste Ihr bevorzugtes Anlagenkonto oder Ihre bevorzugte Verbindlichkeit aus.',
-    'transactions_create_withdrawal_destination'      => 'Wählen Sie hier ein Aufwandskonto. Lassen Sie es leer, wenn Sie eine Barauslage buchen möchten.',
-    'transactions_create_withdrawal_foreign_currency' => 'Verwenden Sie dieses Feld, um eine Fremdwährung und einen Betrag festzulegen.',
-    'transactions_create_withdrawal_more_meta'        => 'Viele weitere Metadaten, die Sie in diesen Feldern festlegen.',
-    'transactions_create_withdrawal_split_add'        => 'Wenn Sie eine Buchung aufteilen möchten, können Sie mit dieser Schaltfläche weitere Aufteilungen hinzufügen',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Zahlungsempfänger in dieser Auswahlliste/Textbox für das automatische Vervollständigen auswählen oder eingeben. Leer lassen, wenn Sie eine Bareinzahlung buchen möchten.',
-    'transactions_create_deposit_destination'         => 'Wählen Sie hier ein Aktiv- oder Passivkonto aus.',
-    'transactions_create_deposit_foreign_currency'    => 'Verwenden Sie dieses Feld, um eine Fremdwährung und einen Betrag festzulegen.',
-    'transactions_create_deposit_more_meta'           => 'Viele weitere Metadaten, die Sie in diesen Feldern festlegen.',
-    'transactions_create_deposit_split_add'           => 'Wenn Sie eine Buchung aufteilen möchten, können Sie mit dieser Schaltfläche weitere Aufteilungen hinzufügen',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Wählen Sie hier das Quell-Anlagenkonto aus.',
-    'transactions_create_transfer_destination'        => 'Wählen Sie hier das Ziel-Anlagenkonto aus.',
-    'transactions_create_transfer_foreign_currency'   => 'Verwenden Sie dieses Feld, um eine Fremdwährung und einen Betrag festzulegen.',
-    'transactions_create_transfer_more_meta'          => 'Viele weitere Metadaten, die Sie in diesen Feldern festlegen.',
-    'transactions_create_transfer_split_add'          => 'Wenn Sie eine Buchung aufteilen möchten, können Sie mit dieser Schaltfläche weitere Aufteilungen hinzufügen',
+    // transactions
+    'transactions_create_basic_info'                  => 'Geben Sie die wesentlichen Informationen zu Ihrer Buchung ein. Quelle, Ziel, Datum und Beschreibung.',
+    'transactions_create_amount_info'                 => 'Geben Sie den Betrag der Buchung ein. Falls erforderlich, werden die Felder für Auslandsbetragsinformationen automatisch aktualisiert.',
+    'transactions_create_optional_info'               => 'Alle diese Felder sind optional. Wenn Sie hier zusätzlich Informationen eingeben, werden Ihre Buchungen besser organisiert.',
+    'transactions_create_split'                       => 'Wenn Sie eine Buchung aufteilen möchten, fügen Sie mit dieser Schaltfläche weitere Aufteilungen hinzu',
 
     // create account:
     'accounts_create_iban'                            => 'Geben Sie Ihren Konten eine gültige IBAN. Dies könnte einen Datenimport in Zukunft sehr einfach machen.',

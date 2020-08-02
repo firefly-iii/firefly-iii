@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'A Firefly III több nyelven is elérhető. Melyiket szeretné használni?',
     'pref_locale_help'                          => 'Firefly III allows you to set other local settings, like how currencies, numbers and dates are formatted. Entries in this list may not be supported by your system. Firefly III doesn\'t have the correct date settings for every locale; contact me for improvements.',
     'pref_locale_no_windows'                    => 'Lehet, hogy ez a szolgáltatás nem működik Windows rendszeren.',
-    'pref_locale_no_docker'                     => 'A Docker-képfájlnak kevés előretelepített regionális beállítása van.',
     'pref_locale_no_demo'                       => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'                   => 'Költségvetési év beállításai',
     'pref_custom_fiscal_year_label'             => 'Engedélyezett',

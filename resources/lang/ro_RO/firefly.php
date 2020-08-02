@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III acceptă mai multe limbi. Pe care o preferați?',
     'pref_locale_help'                          => 'Firefly III vă permite să setați alte setări locale, cum ar fi modul în care valutele, numerele și datele sunt formatate. Este posibil ca intrările din această listă să nu fie acceptate de sistemul dumneavoastră. Firefly III nu are setările de date corecte pentru fiecare local; contactați-mă pentru îmbunătățiri.',
     'pref_locale_no_windows'                    => 'Este posibil ca această funcție să nu funcționeze pe Windows.',
-    'pref_locale_no_docker'                     => 'Imaginea Docker are doar un mic set de localizări instalate.',
     'pref_locale_no_demo'                       => 'Această funcție nu va funcționa pentru utilizatorul demo.',
     'pref_custom_fiscal_year'                   => 'Setări an fiscal',
     'pref_custom_fiscal_year_label'             => 'Activat',

@@ -574,7 +574,6 @@ return [
     'pref_languages_help'                       => 'Firefly III podporuje několik jazyků – ve kterém ho chcete používat?',
     'pref_locale_help'                          => 'Firefly III vám umožňuje nastavit další lokální nastavení, jako je formátování měn, čísel a dat. Položky v tomto seznamu nemusí být podporovány vaším systémem. Firefly III nemá správné nastavení data pro každé lokální místo. Pro vylepšení mě kontaktujte.',
     'pref_locale_no_windows'                    => 'This feature may not work on Windows.',
-    'pref_locale_no_docker'                     => 'The Docker image only has a small set of installed locales.',
     'pref_locale_no_demo'                       => 'This feature won\'t work for the demo user.',
     'pref_custom_fiscal_year'                   => 'Nastavení fiskálního roku',
     'pref_custom_fiscal_year_label'             => 'Zapnuto',
