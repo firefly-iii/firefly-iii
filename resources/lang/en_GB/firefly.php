@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Edit',
     'delete'                                     => 'Delete',
     'split'                                      => 'Split',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Clone',
     'last_seven_days'                            => 'Last seven days',
     'last_thirty_days'                           => 'Last thirty days',

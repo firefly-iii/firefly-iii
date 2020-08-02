@@ -7,6 +7,7 @@
         "split_transaction_title": "M\u00f4 t\u1ea3 giao d\u1ecbch t\u00e1ch",
         "errors_submission": "C\u00f3 g\u00ec \u0111\u00f3 sai. Vui l\u00f2ng ki\u1ec3m tra c\u00e1c l\u1ed7i d\u01b0\u1edbi \u0111\u00e2y.",
         "split": "Chia ra",
+        "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Giao d\u1ecbch #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Giao d\u1ecbch#{ID}<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\"> Giao d\u1ecbch #{ID}<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",

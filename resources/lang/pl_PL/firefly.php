@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Modyfikuj',
     'delete'                                     => 'Usuń',
     'split'                                      => 'Podziel',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Sklonuj',
     'last_seven_days'                            => 'Ostatnie 7 dni',
     'last_thirty_days'                           => 'Ostanie 30 dni',

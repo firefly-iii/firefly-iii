@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Szerkesztés',
     'delete'                                     => 'Törlés',
     'split'                                      => 'Felosztás',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Másolás',
     'last_seven_days'                            => 'Utolsó hét nap',
     'last_thirty_days'                           => 'Elmúlt harminc nap',

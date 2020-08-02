@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Rediger',
     'delete'                                     => 'Slett',
     'split'                                      => 'Del opp',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Klon',
     'last_seven_days'                            => 'Syv siste dager',
     'last_thirty_days'                           => 'Tredve siste dager',

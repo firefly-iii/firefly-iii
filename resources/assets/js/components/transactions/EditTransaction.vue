@@ -47,7 +47,7 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title splitTitle">
-                <span v-if="transactions.length > 1">{{ $t('firefly.split') }} {{ index + 1 }} / {{
+                <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{
                     transactions.length
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>

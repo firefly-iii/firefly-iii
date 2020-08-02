@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Editează',
     'delete'                                     => 'Șterge',
     'split'                                      => 'Împarte',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Clonă',
     'last_seven_days'                            => 'Ultimele 7 zile',
     'last_thirty_days'                           => 'Ultimele 30 de zile',

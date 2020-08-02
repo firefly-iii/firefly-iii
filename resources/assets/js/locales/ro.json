@@ -7,6 +7,7 @@
         "split_transaction_title": "Descrierea tranzac\u021biei divizate",
         "errors_submission": "A fost ceva \u00een neregul\u0103 cu transmiterea dvs. V\u0103 rug\u0103m s\u0103 consulta\u021bi erorile de mai jos.",
         "split": "\u00cemparte",
+        "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID} (\"{title}\")<\/a> a fost stocat\u0103.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID}<\/a> a fost actualizat\u0103.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID}<\/a> a fost stocat\u0103.",

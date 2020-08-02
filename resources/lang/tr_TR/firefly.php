@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Düzenle',
     'delete'                                     => 'Sil',
     'split'                                      => 'Böl',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Klonla',
     'last_seven_days'                            => 'Son yedi gün',
     'last_thirty_days'                           => 'Son otuz gün',

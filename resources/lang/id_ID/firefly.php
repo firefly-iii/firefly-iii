@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Edit',
     'delete'                                     => 'Menghapus',
     'split'                                      => 'Pisah',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Duplikasi',
     'last_seven_days'                            => '7 hari terakhir',
     'last_thirty_days'                           => '30 hari terakhir',

@@ -7,6 +7,7 @@
         "split_transaction_title": "Descrizione della transazione suddivisa",
         "errors_submission": "Errore durante l'invio. Controlla gli errori segnalati qui sotto.",
         "split": "Dividi",
+        "single_split": "Split",
         "transaction_stored_link": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID} (\"{title}\")<\/a> \u00e8 stata salvata.",
         "transaction_updated_link": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> \u00e8 stata aggiornata.",
         "transaction_new_stored_link": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> \u00e8 stata salvata.",

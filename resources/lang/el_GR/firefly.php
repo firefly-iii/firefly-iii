@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Επεξεργασία',
     'delete'                                     => 'Διαγραφή',
     'split'                                      => 'Διαχωρισμός',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Κλωνοποίηση',
     'last_seven_days'                            => 'Τελευταίες επτά ημέρες',
     'last_thirty_days'                           => 'Τελευταίες τριάντα ημέρες',

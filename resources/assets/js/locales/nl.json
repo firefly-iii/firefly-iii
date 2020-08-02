@@ -7,6 +7,7 @@
         "split_transaction_title": "Beschrijving van de gesplitste transactie",
         "errors_submission": "Er ging iets mis. Check de errors.",
         "split": "Splitsen",
+        "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID} (\"{title}\")<\/a> is opgeslagen.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> is ge\u00fcpdatet.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> is opgeslagen.",

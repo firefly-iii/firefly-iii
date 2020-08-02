@@ -7,6 +7,7 @@
         "split_transaction_title": "Opis podzielonej transakcji",
         "errors_submission": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119 sprawd\u017a b\u0142\u0119dy poni\u017cej.",
         "split": "Podziel",
+        "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID} (\"{title}\")<\/a> zosta\u0142a zapisana.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> zosta\u0142a zaktualizowana.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> zosta\u0142a zapisana.",

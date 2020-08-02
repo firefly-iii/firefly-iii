@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Sửa',
     'delete'                                     => 'Xóa',
     'split'                                      => 'Chia ra',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Nhân ra',
     'last_seven_days'                            => 'Bảy ngày gần đây',
     'last_thirty_days'                           => 'Ba mươi ngày gần đây',

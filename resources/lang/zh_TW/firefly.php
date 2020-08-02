@@ -29,6 +29,7 @@ return [
     'edit'                                       => '編輯',
     'delete'                                     => '刪除',
     'split'                                      => '分割',
+    'single_split'                               => 'Split',
     'clone'                                      => '複製',
     'last_seven_days'                            => '最近7天',
     'last_thirty_days'                           => '最近30天',

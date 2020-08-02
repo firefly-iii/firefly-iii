@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Upravit',
     'delete'                                     => 'Odstranit',
     'split'                                      => 'Rozdělit',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Klonovat',
     'last_seven_days'                            => 'Uplynulých 7 dnů',
     'last_thirty_days'                           => 'Uplynulých 30 dní',

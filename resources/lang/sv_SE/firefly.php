@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Redigera',
     'delete'                                     => 'Ta bort',
     'split'                                      => 'Dela',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Klona',
     'last_seven_days'                            => 'Senaste 7 dagarna',
     'last_thirty_days'                           => 'Senaste 30 dagarna',

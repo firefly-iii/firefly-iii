@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Muokkaa',
     'delete'                                     => 'Poista',
     'split'                                      => 'Jaa',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Kopioi',
     'last_seven_days'                            => 'Viimeiset 7 päivää',
     'last_thirty_days'                           => 'Viimeiset 30 päivää',

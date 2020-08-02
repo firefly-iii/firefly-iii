@@ -46,7 +46,7 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title splitTitle">
-                <span v-if="transactions.length > 1">{{ $t('firefly.split') }} {{ index + 1 }} / {{
+                <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{
                     transactions.length
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
@@ -58,7 +58,7 @@
             </div>
             <div class="box-body">
               <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-4" id="transaction-info">
                   <transaction-description
                       v-model="transaction.description"
                       :index="index"
@@ -105,7 +105,7 @@
                     ></transaction-type>
                   </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4" id="amount-info">
                   <amount
                       :source="transaction.source_account"
                       :destination="transaction.destination_account"
@@ -122,7 +122,7 @@
                       v-bind:title="$t('form.foreign_amount')"
                   ></foreign-amount>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4" id="optional-info">
                   <budget
                       :transactionType="transactionType"
                       v-model="transaction.budget"

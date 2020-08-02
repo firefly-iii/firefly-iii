@@ -7,6 +7,7 @@
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
         "errors_submission": "Hubo algo malo con su env\u00edo. Por favor, revise los errores de abajo.",
         "split": "Separar",
+        "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID} (\"{title}\")<\/a> ha sido almacenada.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> ha sido actualizada.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> ha sido guardada.",

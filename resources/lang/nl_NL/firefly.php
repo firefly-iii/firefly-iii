@@ -29,6 +29,7 @@ return [
     'edit'                                       => 'Wijzig',
     'delete'                                     => 'Verwijder',
     'split'                                      => 'Splitsen',
+    'single_split'                               => 'Split',
     'clone'                                      => 'Dupliceren',
     'last_seven_days'                            => 'Laatste zeven dagen',
     'last_thirty_days'                           => 'Laatste dertig dagen',
