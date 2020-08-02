@@ -337,29 +337,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
-        $budgetLimit->amount = $data['amount'] ?? $budgetLimit->amount;
-        $budgetLimit->save();
-
-        return $budgetLimit;
-    }
-
-    /**
-     * @param BudgetLimit $budgetLimit
-     * @param array       $data
-     *
-     * @return BudgetLimit
-     * @throws Exception
-     * @deprecated
-     */
-    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit
-    {
-        /** @var Budget $budget */
-        $budget = $data['budget'];
-
-        $budgetLimit->budget()->associate($budget);
-        $budgetLimit->start_date = $data['start']->format('Y-m-d 00:00:00');
-        $budgetLimit->end_date   = $data['end']->format('Y-m-d 00:00:00');
-        $budgetLimit->amount     = $data['amount'];
+        $budgetLimit->amount     = $data['amount'] ?? $budgetLimit->amount;
+        $budgetLimit->budget_id  = $data['budget_id'] ?? $budgetLimit->id;
+        $budgetLimit->budget_id  = $data['budget'] ? $data['budget']->id : $budgetLimit->budget_id;
+        $budgetLimit->start_date = $data['start'] ? $data['start']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
+        $budgetLimit->end_date   = $data['end'] ? $data['end']->format('Y-m-d 00:00:00') : $budgetLimit->end_date;
 
         // if no currency has been provided, use the user's default currency:
         /** @var TransactionCurrencyFactory $factory */
@@ -370,9 +352,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         }
         $currency->enabled = true;
         $currency->save();
-        $budgetLimit->transaction_currency_id = $currency->id;
 
+        $budgetLimit->transaction_currency_id = $currency->id;
         $budgetLimit->save();
+
         Log::debug(sprintf('Updated budget limit with ID #%d and amount %s', $budgetLimit->id, $data['amount']));
 
         return $budgetLimit;

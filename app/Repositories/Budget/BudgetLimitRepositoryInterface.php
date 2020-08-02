@@ -120,15 +120,6 @@ interface BudgetLimitRepositoryInterface
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit;
 
     /**
-     * @param BudgetLimit $budgetLimit
-     * @param array       $data
-     *
-     * @return BudgetLimit
-     * @deprecated
-     */
-    public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
-
-    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
