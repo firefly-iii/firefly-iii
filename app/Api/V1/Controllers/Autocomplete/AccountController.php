@@ -61,7 +61,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, ];
+        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
     }
 
     /**
@@ -103,6 +103,16 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
             ];
         }
+
+        // custom order.
+        $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
+
+
+        usort($return, function ($a, $b) use ($order) {
+            $pos_a = array_search($a['type'], $order);
+            $pos_b = array_search($b['type'], $order);
+            return $pos_a - $pos_b;
+        });
 
         return response()->json($return);
     }
