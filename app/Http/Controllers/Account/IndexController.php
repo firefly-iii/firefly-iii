@@ -152,12 +152,14 @@ class IndexController extends Controller
         }
 
         $collection    = $this->repository->getActiveAccountsByType($types);
+
+
+
         $total         = $collection->count();
         $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
-
 
         unset($collection);
         /** @var Carbon $start */
@@ -173,6 +175,7 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
+                // TODO lots of queries executed in this block.
                 $account->lastActivityDate  = $this->isInArray($activities, $account->id);
                 $account->startBalance      = $this->isInArray($startBalances, $account->id);
                 $account->endBalance        = $this->isInArray($endBalances, $account->id);
@@ -183,7 +186,6 @@ class IndexController extends Controller
                 $account->location          = $this->repository->getLocation($account);
             }
         );
-
         // make paginator:
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));

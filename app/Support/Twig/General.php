@@ -225,6 +225,8 @@ class General extends AbstractExtension
 
     /**
      * @return TwigFunction
+     * @deprecated  because it uses a query in a view
+     * TODO remove me.
      */
     protected function getMetaField(): TwigFunction
     {
