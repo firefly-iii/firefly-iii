@@ -214,7 +214,7 @@ class BudgetController extends Controller
         $return = [];
         /** @var array|null $arr */
         foreach ($expenses as $arr) {
-            if (null !== $arr) {
+            if ([] !== $arr) {
                 $return[] = $arr;
             }
         }
@@ -263,9 +263,9 @@ class BudgetController extends Controller
     /**
      * @param BudgetLimit $limit
      *
-     * @return array|null
+     * @return array
      */
-    private function getExpensesForLimit(BudgetLimit $limit): ?array
+    private function getExpensesForLimit(BudgetLimit $limit): array
     {
         $budget   = $limit->budget;
         $spent    = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $limit->transactionCurrency);
@@ -273,7 +273,7 @@ class BudgetController extends Controller
         // when limited to a currency, the count is always one. Or it's empty.
         $set = array_shift($spent);
         if (null === $set) {
-            return null;
+            return [];
         }
         $return                            = [
             'label'                   => sprintf('%s (%s)', $budget->name, $set['currency_name']),
