@@ -61,7 +61,7 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    protected function buildParams(): string
+    final protected function buildParams(): string
     {
         $return = '?';
         $params = [];
@@ -83,7 +83,7 @@ abstract class Controller extends BaseController
     /**
      * @return Manager
      */
-    protected function getManager(): Manager
+    final protected function getManager(): Manager
     {
         // create some objects:
         $manager = new Manager;

@@ -157,16 +157,16 @@ class RecurrenceUpdateRequest extends FormRequest
     /**
      * Returns the repetition data as it is found in the submitted data.
      *
-     * @return array|null
+     * @return array
      */
-    private function getRepetitionData(): ?array
+    private function getRepetitionData(): array
     {
         $return = [];
         // repetition data:
         /** @var array $repetitions */
         $repetitions = $this->get('repetitions');
         if (null === $repetitions) {
-            return null;
+            return [];
         }
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
@@ -185,16 +185,16 @@ class RecurrenceUpdateRequest extends FormRequest
      * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
      * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
      *
-     * @return array|null
+     * @return array
      */
-    private function getTransactionData(): ?array
+    private function getTransactionData(): array
     {
         $return = [];
         // transaction data:
         /** @var array $transactions */
         $transactions = $this->get('transactions');
         if (null === $transactions) {
-            return null;
+            return [];
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
