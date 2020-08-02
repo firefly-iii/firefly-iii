@@ -148,12 +148,6 @@
                       :error="transaction.errors.budget_id"
                       :no_budget="$t('firefly.none_in_select_list')"
                   ></budget>
-                  <bill
-                      :transactionType="transactionType"
-                      v-model="transaction.bill"
-                      :error="transaction.errors.bill_id"
-                      :no_bill="$t('firefly.none_in_select_list')"
-                  ></bill>
                   <category
                       :transactionType="transactionType"
                       v-model="transaction.category"
@@ -165,6 +159,12 @@
                       v-model="transaction.tags"
                       :error="transaction.errors.tags"
                   ></tags>
+                  <bill
+                      :transactionType="transactionType"
+                      v-model="transaction.bill"
+                      :error="transaction.errors.bill_id"
+                      :no_bill="$t('firefly.none_in_select_list')"
+                  ></bill>
                   <custom-transaction-fields
                       v-model="transaction.custom_fields"
                       :error="transaction.errors.custom_errors"

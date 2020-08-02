@@ -596,8 +596,8 @@ class TransactionJournalFactory
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = array_key_exists('source_id', $data) ? (int) $data['source_id'] : null;
-        $sourceName  = array_key_exists('source_name', $data) ? (string) $data['source_name'] : null;
+        $sourceId    = property_exists($data, 'source_id') ? (int) $data['source_id'] : null;
+        $sourceName  = property_exists($data, 'source_name') ? (string) $data['source_name'] : null;
         $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
@@ -606,8 +606,8 @@ class TransactionJournalFactory
         }
         Log::debug('Source seems valid.');
         // validate destination account
-        $destinationId    = array_key_exists('destination_id', $data) ? (int) $data['destination_id'] : null;
-        $destinationName  = array_key_exists('destination_name', $data) ? (string) $data['destination_name'] : null;
+        $destinationId    = property_exists($data, 'destination_id') ? (int) $data['destination_id'] : null;
+        $destinationName  = property_exists($data, 'destination_name') ? (string) $data['destination_name'] : null;
         $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
