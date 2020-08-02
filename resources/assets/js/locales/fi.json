@@ -12,7 +12,7 @@
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Tapahtumatiedot",
         "no_budget_pointer": "Sinulla ei n\u00e4ytt\u00e4isi olevan viel\u00e4 yht\u00e4\u00e4n budjettia. Sinun kannattaisi luoda niit\u00e4 <a href=\"\/budgets\">budjetit<\/a>-sivulla. Budjetit voivat auttaa sinua pit\u00e4m\u00e4\u00e4n kirjaa kuluistasi.",
-        "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Bills can help you keep track of expenses.",
+        "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"\/bills\">bills<\/a>-page. Bills can help you keep track of expenses.",
         "source_account": "L\u00e4hdetili",
         "hidden_fields_preferences": "Voit aktivoida lis\u00e4\u00e4 tapahtumavalintoja <a href=\"\/preferences\">asetuksissa<\/a>.",
         "destination_account": "Kohdetili",

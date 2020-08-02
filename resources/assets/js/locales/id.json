@@ -12,7 +12,7 @@
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Informasi transaksi",
         "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
-        "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"\/budgets\">budgets<\/a>-page. Bills can help you keep track of expenses.",
+        "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"\/bills\">bills<\/a>-page. Bills can help you keep track of expenses.",
         "source_account": "Source account",
         "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"\/preferences\">settings<\/a>.",
         "destination_account": "Destination account",
