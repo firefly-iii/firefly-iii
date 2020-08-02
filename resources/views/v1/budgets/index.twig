@@ -202,227 +202,227 @@
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% else %}
-
+    
         <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'budgets'|_ }}</h3>
-                </div>
-                <div class="box-body no-padding">
-                    <div style="padding:8px;">
-                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                     </div>
-                    <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
-                        <thead>
-                        <tr>
-                            <th class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
-                            <th>{{ 'budget'|_ }}</th>
-                            <th style="width:25%;">{{ 'budgeted'|_ }}</th>
-                            <th class="hidden-sm hidden-xs">{{ 'spent'|_ }} ({{ 'per_day'|_|lower }})</th>
-                            <th>{{ 'left'|_ }} ({{ 'per_day'|_|lower }})</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for budget in budgets %}
-                            <tr data-id="{{ budget.id }}">
-                                <td class="hidden-sm hidden-xs">
-                                    <div class="btn-group btn-group-xs">
-                                        <a href="#" class="handle object-handle btn btn-default"><i class="fa fa-fw fa-bars"></i></a>
-                                        <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                                        <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
-                                    {% if budget.auto_budget %}
-                                    {% if 1 == budget.auto_budget.auto_budget_type %}
-                                        <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>
-                                    {% endif %}
-                                    {% if 2 == budget.auto_budget.auto_budget_type %}
-                                        <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
-                                    {% endif %}
-                                    {% endif %}
-                                    {% if budget.attachments.count > 0 %}
-                                        <i class="fa fa-paperclip"></i>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if 0==budget.budgeted|length %}
-                                        <div class="input-group">
-                                            <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
-                                            <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                            <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
-                                                   data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
-                                                   type="number">
+                    <div class="box-body no-padding">
+                        <div style="padding:8px;">
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+                        </div>
+                        <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
+                            <thead>
+                            <tr>
+                                <th class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
+                                <th>{{ 'budget'|_ }}</th>
+                                <th style="width:25%;">{{ 'budgeted'|_ }}</th>
+                                <th class="hidden-sm hidden-xs">{{ 'spent'|_ }} ({{ 'per_day'|_|lower }})</th>
+                                <th>{{ 'left'|_ }} ({{ 'per_day'|_|lower }})</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for budget in budgets %}
+                                <tr data-id="{{ budget.id }}">
+                                    <td class="hidden-sm hidden-xs">
+                                        <div class="btn-group btn-group-xs">
+                                            <a href="#" class="handle object-handle btn btn-default"><i class="fa fa-fw fa-bars"></i></a>
+                                            <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                                            <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                                         </div>
-                                        <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                              style="display:none;"></span>
-                                    {% endif %}
-                                    {% if budget.budgeted|length > 0 %}
-                                        {% for budgetLimit in budget.budgeted %}
-                                            <div class="input-group">
-                                                <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
-                                                <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
-                                                       data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
-                                                       autocomplete="off"
-                                                       min="0" name="amount" type="number">
-                                                <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false"><span class="caret"></span></button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            {% if not budgetLimit.in_range %}
-                                            <small class="text-muted">
-                                                {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
-                                            </small><br>
-                                                {% endif %}
-                                            <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                                  style="display:none;"></span>
-                                        {% endfor %}
-                                    {% endif %}
-                                    {% if budget.budgeted|length < currencies.count %}
-                                        <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
-                                            <i class="fa fa-plus-circle"></i>
-                                        </a>
-                                    {% endif %}
-                                </td>
-                                <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
-                                    {% for spentInfo in budget.spent %}
-                                        {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
-                                        ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
-                                        <br/>
-                                    {% endfor %}
-                                    {% for budgetLimit in budget.budgeted %}
-                                        {% if null == budget.spent[budgetLimit.currency_id] %}
-                                            {{ formatAmountBySymbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                        {% if budget.auto_budget %}
+                                        {% if 1 == budget.auto_budget.auto_budget_type %}
+                                            <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>
                                         {% endif %}
-                                    {% endfor %}
-                                </td>
-                                <td class="left" data-id="{{ budget.id }}" style="text-align: right;">
-                                    {% for spentInfo in budget.spent %}
-                                        {% set countLimit = 0 %}
-                                        {% for budgetLimit in budget.budgeted %}
-                                            {% if spentInfo.currency_id == budgetLimit.currency_id %}
-                                                {% set countLimit = countLimit + 1 %}
-                                                <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
-                                                      data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
-                                                    {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
-                                                    {% if spentInfo.spent + budgetLimit.amount > 0 %}
-                                                        ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
-                                                    {% else %}
-                                                        ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                        {% if 2 == budget.auto_budget.auto_budget_type %}
+                                            <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% if budget.attachments.count > 0 %}
+                                            <i class="fa fa-paperclip"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if 0==budget.budgeted|length %}
+                                            <div class="input-group">
+                                                <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
+                                                <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                                <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
+                                                    data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
+                                                    type="number">
+                                            </div>
+                                            <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                style="display:none;"></span>
+                                        {% endif %}
+                                        {% if budget.budgeted|length > 0 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
+                                                    <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
+                                                        data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
+                                                        autocomplete="off"
+                                                        min="0" name="amount" type="number">
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false"><span class="caret"></span></button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                {% if not budgetLimit.in_range %}
+                                                <small class="text-muted">
+                                                    {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
+                                                </small><br>
                                                     {% endif %}
+                                                <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                    style="display:none;"></span>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if budget.budgeted|length < currencies.count %}
+                                            <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
+                                                <i class="fa fa-plus-circle"></i>
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" style="text-align:right;">
+                                        {% for spentInfo in budget.spent %}
+                                            {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                            ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                            <br/>
+                                        {% endfor %}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% if null == budget.spent[budgetLimit.currency_id] %}
+                                                {{ formatAmountBySymbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="left" data-id="{{ budget.id }}" style="text-align: right;">
+                                        {% for spentInfo in budget.spent %}
+                                            {% set countLimit = 0 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id %}
+                                                    {% set countLimit = countLimit + 1 %}
+                                                    <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                        data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                        {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                                        {% if spentInfo.spent + budgetLimit.amount > 0 %}
+                                                            ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% else %}
+                                                            ({{ formatAmountBySymbol(0, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                        {% endif %}
+                                                    </span>
+                                                    <br/>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if countLimit == 0 %}
+                                                <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
+                                                    class="amount_left" data-value="{{ spentInfo.spent }}">
+                                                    {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                                 </span>
                                                 <br/>
                                             {% endif %}
                                         {% endfor %}
-                                        {% if countLimit == 0 %}
-                                            <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
-                                                  class="amount_left" data-value="{{ spentInfo.spent }}">
-                                                {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                        {% for budgetLimit in budget.budgeted %}
+                                            {% if null == budget.spent[budgetLimit.currency_id] %}
+                                            <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
+                                                ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
                                             </span>
                                             <br/>
-                                        {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td><em>{{ 'sum'|_ }}</em></td>
+                                <td style="text-align:right;">
+                                    {% for arr in sums.budgeted %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}<br/>
                                     {% endfor %}
-                                    {% for budgetLimit in budget.budgeted %}
-                                        {% if null == budget.spent[budgetLimit.currency_id] %}
-                                        <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
-                                              data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
-                                            {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
-                                            ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
-                                        </span>
+                                </td>
+                                <td style="text-align:right;">
+                                    {% for arr in sums.spent %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
+                                        ({{ formatAmountBySymbol(arr.amount / activeDaysPassed, arr.currency_symbol, arr.currency_decimal_places) }})
                                         <br/>
-                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td style="text-align: right;">
+                                    {% for arr in sums.left %}
+                                        {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
+                                        ({{ formatAmountBySymbol(arr.amount / activeDaysLeft, arr.currency_symbol, arr.currency_decimal_places) }})
+                                        <br/>
                                     {% endfor %}
                                 </td>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><em>{{ 'sum'|_ }}</em></td>
-                            <td style="text-align:right;">
-                                {% for arr in sums.budgeted %}
-                                    {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}<br/>
-                                {% endfor %}
-                            </td>
-                            <td style="text-align:right;">
-                                {% for arr in sums.spent %}
-                                    {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
-                                    ({{ formatAmountBySymbol(arr.amount / activeDaysPassed, arr.currency_symbol, arr.currency_decimal_places) }})
-                                    <br/>
-                                {% endfor %}
-                            </td>
-                            <td style="text-align: right;">
-                                {% for arr in sums.left %}
-                                    {{ formatAmountBySymbol(arr.amount, arr.currency_symbol, arr.currency_decimal_places) }}
-                                    ({{ formatAmountBySymbol(arr.amount / activeDaysLeft, arr.currency_symbol, arr.currency_decimal_places) }})
-                                    <br/>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="box-footer">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'transactionsWithoutBudget'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p>
-                        <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
-                            {{ trans('firefly.transactions_no_budget', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </div>
-        {% if paginator.count > 0 and inactive.count > 0 %}
+        <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                <div class="box" id="createBudgetBox">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-        {% if inactive|length > 0 %}
-            <div class="col-lg-3 col-sm-4 col-md-6">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
+                        <h3 class="box-title">{{ 'transactionsWithoutBudget'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {% for budget in inactive %}
-                            {% if loop.index == inactive.count() %}
-                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
-                            {% else %}
-                                <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
-                            {% endif %}
-                        {% endfor %}
+                        <p>
+                            <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
+                                {{ trans('firefly.transactions_no_budget', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
-        {% endif %}
-    </div>
+            {% if paginator.count > 0 and inactive.count > 0 %}
+                <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                    <div class="box" id="createBudgetBox">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if inactive|length > 0 %}
+                <div class="col-lg-3 col-sm-4 col-md-6">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
+                        </div>
+                        <div class="box-body">
+                            {% for budget in inactive %}
+                                {% if loop.index == inactive.count() %}
+                                    <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>
+                                {% else %}
+                                    <a href="{{ route('budgets.show',budget.id) }}">{{ budget.name }}</a>,
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     {% endif %}
 
 {% endblock %}
