@@ -614,6 +614,11 @@ class Steam
         if ('equal' === $locale) {
             return $this->getLanguage();
         }
+        
+        // Check for Windows to replace the locale correctly.
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $locale = str_replace('_', '-', $locale);
+        }
 
         return $locale;
     }
@@ -627,7 +632,6 @@ class Steam
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),
-            str_replace('_', '-', $locale), // for Windows.
         ];
     }
 
