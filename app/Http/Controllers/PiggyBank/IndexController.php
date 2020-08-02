@@ -89,13 +89,7 @@ class IndexController extends Controller
         $parameters->set('end', $end);
 
         // make piggy bank groups:
-        $piggyBanks = [
-            0 => [ // the index is the order, not the ID.
-                   'object_group_id'    => 0,
-                   'object_group_title' => (string) trans('firefly.default_group_title_name'),
-                   'piggy_banks'        => [],
-            ],
-        ];
+        $piggyBanks = [];
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -110,8 +104,8 @@ class IndexController extends Controller
             $groupOrder = (int) $array['object_group_order'];
             // make group array if necessary:
             $piggyBanks[$groupOrder] = $piggyBanks[$groupOrder] ?? [
-                    'object_group_id'    => $array['object_group_id'],
-                    'object_group_title' => $array['object_group_title'],
+                    'object_group_id'    => $array['object_group_id'] ?? 0,
+                    'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
                     'piggy_banks'        => [],
                 ];
 
