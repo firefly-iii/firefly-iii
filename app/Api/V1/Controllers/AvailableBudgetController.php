@@ -41,9 +41,7 @@ use League\Fractal\Resource\Item;
  */
 class AvailableBudgetController extends Controller
 {
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
-
+    private AvailableBudgetRepositoryInterface $abRepository;
 
     /**
      * AvailableBudgetController constructor.

@@ -38,12 +38,8 @@ use Illuminate\Support\Collection;
  */
 class AvailableBudgetController extends Controller
 {
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-
-    /** @var BudgetRepositoryInterface */
-    private $repository;
-
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface     $repository;
 
     /**
      * AvailableBudgetController constructor.
@@ -74,18 +70,18 @@ class AvailableBudgetController extends Controller
      */
     public function overview(AvailableBudget $availableBudget): JsonResponse
     {
-        $currency          = $availableBudget->transactionCurrency;
-        $budgets           = $this->repository->getActiveBudgets();
-        $budgetInformation = $this->opsRepository->spentInPeriodMc($budgets, new Collection, $availableBudget->start_date, $availableBudget->end_date);
-        $spent             = 0.0;
+        $currency             = $availableBudget->transactionCurrency;
+        $budgets              = $this->repository->getActiveBudgets();
+        $newBudgetInformation = $this->opsRepository->sumExpenses($availableBudget->start_date, $availableBudget->end_date, null, $budgets);
+        $spent                = '0';
 
-        // get for current currency
-        foreach ($budgetInformation as $spentInfo) {
-            if ($spentInfo['currency_id'] === $availableBudget->transaction_currency_id) {
-                $spent = $spentInfo['amount'];
+        foreach ($newBudgetInformation as $currencyId => $info) {
+            if ($currencyId === (int) $availableBudget->transaction_currency_id) {
+                $spent = $info['sum'];
             }
         }
-        $left = bcadd($availableBudget->amount, (string) $spent);
+
+        $left = bcadd($availableBudget->amount, $spent);
         // left less than zero? Set to zero.
         if (-1 === bccomp($left, '0')) {
             $left = '0';
