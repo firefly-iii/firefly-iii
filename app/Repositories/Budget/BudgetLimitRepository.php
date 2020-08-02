@@ -26,6 +26,7 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -284,23 +285,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      * @param array $data
      *
      * @return BudgetLimit
+     * @throws FireflyException
      */
     public function store(array $data): BudgetLimit
     {
-        return BudgetLimit::create($data);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return BudgetLimit
-     * @deprecated
-     */
-    public function storeBudgetLimit(array $data): BudgetLimit
-    {
-        /** @var Budget $budget */
-        $budget = $data['budget'];
-
         // if no currency has been provided, use the user's default currency:
         /** @var TransactionCurrencyFactory $factory */
         $factory  = app(TransactionCurrencyFactory::class);
@@ -308,16 +296,23 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
+        $currency->enabled = true;
+        $currency->save();
 
-        // find limit with same date range.
-        // if it exists, return that one.
+        // find the budget:
+        $budget = $this->user->budgets()->find((int) $data['budget_id']);
+        if (null === $budget) {
+            throw new FireflyException('200004: Budget does not exist.'); // @codeCoverageIgnore
+        }
+
+        // find limit with same date range and currency.
         $limit = $budget->budgetlimits()
                         ->where('budget_limits.start_date', $data['start']->format('Y-m-d 00:00:00'))
                         ->where('budget_limits.end_date', $data['end']->format('Y-m-d 00:00:00'))
                         ->where('budget_limits.transaction_currency_id', $currency->id)
                         ->get(['budget_limits.*'])->first();
         if (null !== $limit) {
-            return $limit;
+            throw new FireflyException('200027: Budget limit already exists.'); // @codeCoverageIgnore
         }
         Log::debug('No existing budget limit, create a new one');
 

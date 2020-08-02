@@ -35,6 +35,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class BudgetLimitRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *
@@ -53,7 +54,7 @@ class BudgetLimitRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
+        $data = [
             'budget_id'     => $this->integer('budget_id'),
             'start'         => $this->date('start'),
             'end'           => $this->date('end'),
@@ -61,6 +62,12 @@ class BudgetLimitRequest extends FormRequest
             'currency_id'   => $this->integer('currency_id'),
             'currency_code' => $this->string('currency_code'),
         ];
+        // if request has a budget already, drop the rule.
+        $budget = $this->route()->parameter('budget');
+        if (null !== $budget) {
+            $data['budget_id'] = $budget->id;
+        }
+        return $data;
     }
 
     /**

@@ -167,7 +167,7 @@ Route::group(
         Route::get('{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
         Route::put('{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
         Route::delete('{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
-        Route::post('{budget}/limits', ['uses' => 'BudgetController@storeBudgetLimit', 'as' => 'store_budget_limit']);
+        Route::post('{budget}/limits', ['uses' => 'BudgetLimitController@store', 'as' => 'store_budget_limit']);
 
         Route::get('{budget}/transactions', ['uses' => 'BudgetController@transactions', 'as' => 'transactions']);
         Route::get('{budget}/attachments', ['uses' => 'BudgetController@attachments', 'as' => 'attachments']);

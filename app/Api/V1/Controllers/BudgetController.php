@@ -233,31 +233,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param BudgetLimitRequest $request
-     * @param Budget             $budget
-     *
-     * @throws Exception
-     * @return JsonResponse
-     */
-    public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
-    {
-        $data           = $request->getAll();
-        $data['budget'] = $budget;
-        $budgetLimit    = $this->blRepository->storeBudgetLimit($data);
-        $manager        = $this->getManager();
-
-        /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Show all transactions.
      *
      * @param Request $request
