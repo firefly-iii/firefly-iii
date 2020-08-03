@@ -1,9 +1,8 @@
 parameters:
-    indentation: tab
+    indentation: spaces
 
     file_extensions:
         - php
-        - phpt
 
     exclude_files:
         - fixtures/*
