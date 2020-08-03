@@ -30,7 +30,7 @@
         "icheck-bootstrap": "^3.0.1",
         "jquery": "^3.5.1",
         "jquery-ui": "^1.12.1",
-        "overlayscrollbars": "^1.12.0",
+        "overlayscrollbars": "^1.13.0",
         "popper.js": "^1.16.1",
         "vue-chartjs": "^3.5.0",
         "vue-router": "^3.3.4"
