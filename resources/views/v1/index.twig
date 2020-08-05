@@ -54,23 +54,24 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12">
+
             {# TRANSACTIONS #}
             <div id="all_transactions">
                 {% for data in transactions %}
                     <div class="box">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><a href="{{ route('accounts.show', data[1].id) }}">{{ data[1].name }}</a></h3>
+                            <h3 class="box-title"><a href="{{ route('accounts.show', data.account.id) }}">{{ data.account.name }}</a></h3>
                         </div>
 
-                        {% if data[0].count > 0 %}
+                        {% if data.transactions|length > 0 %}
                             <div class="box-body no-padding">
-                                {% include 'list.groups-tiny' with {'groups': data[0],'account': data[1]} %}
+                                {% include 'list.groups-tiny' with {'transactions': data.transactions,'account': data.account} %}
                             </div>
                         {% else %}
                             <div class="box-body">
                                 <p>
                                     <em>
-                                        {{ trans('firefly.no_transactions_account', {name: data[1].name}) }}
+                                        {{ trans('firefly.no_transactions_account', {name: data.account.name}) }}
                                     </em>
                                 </p>
 
@@ -84,23 +85,22 @@
                                     {{ 'sidebar_frontpage_create'|_ }} <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ data[1].id }}">{{ 'create_new_withdrawal'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create', ['deposit']) }}?destination={{ data[1].id }}">{{ 'create_new_deposit'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create', ['transfer']) }}?source={{ data[1].id }}">{{ 'create_new_transfer'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ data.account.id }}">{{ 'create_new_withdrawal'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create', ['deposit']) }}?destination={{ data.account.id }}">{{ 'create_new_deposit'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create', ['transfer']) }}?source={{ data.account.id }}">{{ 'create_new_transfer'|_ }}</a></li>
                                 </ul>
                             </div>
                             <div class="btn-group">
                                 <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                   href="{{ route('accounts.show', [data[1].id]) }}">{{ formatAmountByAccount(data[1], data[1]|balance, false) }}
+                                   href="{{ route('accounts.show', [data.account.id]) }}">{{ formatAmountByAccount(data.account, data.account|balance, false) }}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{{ route('accounts.show', [data[1].id]) }}">{{ 'show'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.reconcile', [data[1].id]) }}">{{ 'reconcile'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.edit', [data[1].id]) }}">{{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.delete', [data[1].id]) }}">{{ 'delete'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.show', [data.account.id]) }}">{{ 'show'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.reconcile', [data.account.id]) }}">{{ 'reconcile'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.edit', [data.account.id]) }}">{{ 'edit'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.delete', [data.account.id]) }}">{{ 'delete'|_ }}</a></li>
                                 </ul>
-
                             </div>
                         </div>
                     </div>
