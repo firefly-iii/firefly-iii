@@ -14,10 +14,20 @@
               {% endif %}
           {% elseif transaction.transaction_type_type == 'Transfer' %}
               <span class="text-info">
-        {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
-                  {% if null != transaction.foreign_amount %}
-                      ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                  {#  transfer away:  #}
+                  {% if transaction.source_account_id == account.id %}
+                      {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                      {% if null != transaction.foreign_amount %}
+                          ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                      {% endif %}
+                  {% else %}
+                      {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                      {% if null != transaction.foreign_amount %}
+                          ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                      {% endif %}
                   {% endif %}
+
+                  {#  transfer to #}
             </span>
           {% elseif transaction.transaction_type_type == 'Opening balance' %}
               {% if transaction.source_account_type == 'Initial balance account' %}

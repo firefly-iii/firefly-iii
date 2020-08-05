@@ -48,7 +48,6 @@ class TransactionGroupTwig extends AbstractExtension
         return [
             $this->journalArrayAmount(),
             $this->journalObjectAmount(),
-            $this->groupAmount(),
             $this->journalHasMeta(),
             $this->journalGetMetaDate(),
             $this->journalGetMetaField(),
