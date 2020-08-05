@@ -25,7 +25,7 @@ class ChangesForV540 extends Migration
 
         Schema::table(
             'accounts', static function (Blueprint $table) {
-            $table->dropColumn('provider');
+            $table->dropColumn('order');
         }
         );
     }
@@ -48,6 +48,9 @@ class ChangesForV540 extends Migration
         }
         );
 
-
+        // make column nullable:
+        Schema::table('oauth_clients', function (Blueprint $table) {
+            $table->string('secret', 100)->nullable()->change();
+        });
     }
 }

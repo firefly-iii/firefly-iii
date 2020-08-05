@@ -7,7 +7,7 @@
         "split_transaction_title": "\u03a0\u03b5\u03c1\u03b9\u03b3\u03c1\u03b1\u03c6\u03ae \u03c4\u03b7\u03c2 \u03c3\u03c5\u03bd\u03b1\u03bb\u03bb\u03b1\u03b3\u03ae\u03c2 \u03bc\u03b5 \u03b4\u03b9\u03b1\u03c7\u03c9\u03c1\u03b9\u03c3\u03bc\u03cc",
         "errors_submission": "\u03a5\u03c0\u03ae\u03c1\u03be\u03b5 \u03ba\u03ac\u03c0\u03bf\u03b9\u03bf \u03bb\u03ac\u03b8\u03bf\u03c2 \u03bc\u03b5 \u03c4\u03b7\u03bd \u03c5\u03c0\u03bf\u03b2\u03bf\u03bb\u03ae \u03c3\u03b1\u03c2. \u0395\u03bb\u03ad\u03b3\u03be\u03c4\u03b5 \u03c4\u03b1 \u03c0\u03b1\u03c1\u03b1\u03ba\u03ac\u03c4\u03c9 \u03c3\u03c6\u03ac\u03bb\u03bc\u03b1\u03c4\u03b1.",
         "split": "\u0394\u03b9\u03b1\u03c7\u03c9\u03c1\u03b9\u03c3\u03bc\u03cc\u03c2",
-        "single_split": "Split",
+        "single_split": "\u0394\u03b9\u03b1\u03c7\u03c9\u03c1\u03b9\u03c3\u03bc\u03cc\u03c2",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u0397 \u03c3\u03c5\u03bd\u03b1\u03bb\u03bb\u03b1\u03b3\u03ae #{ID} (\"{title}\")<\/a> \u03ad\u03c7\u03b5\u03b9 \u03b1\u03c0\u03bf\u03b8\u03b7\u03ba\u03b5\u03c5\u03c4\u03b5\u03af.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">\u0397 \u03c3\u03c5\u03bd\u03b1\u03bb\u03bb\u03b1\u03b3\u03ae #{ID}<\/a> \u03ad\u03c7\u03b5\u03b9 \u03b5\u03bd\u03b7\u03bc\u03b5\u03c1\u03c9\u03b8\u03b5\u03af.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">\u0397 \u03c3\u03c5\u03bd\u03b1\u03bb\u03bb\u03b1\u03b3\u03ae #{ID}<\/a> \u03ad\u03c7\u03b5\u03b9 \u03b1\u03c0\u03bf\u03b8\u03b7\u03ba\u03b5\u03c5\u03c4\u03b5\u03af.",
@@ -26,7 +26,7 @@
         "date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1",
         "tags": "\u0395\u03c4\u03b9\u03ba\u03ad\u03c4\u03b5\u03c2",
         "no_budget": "(\u03c7\u03c9\u03c1\u03af\u03c2 \u03c0\u03c1\u03bf\u03cb\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03bc\u03cc)",
-        "no_bill": "(no bill)",
+        "no_bill": "(\u03c7\u03c9\u03c1\u03af\u03c2 \u03c0\u03ac\u03b3\u03b9\u03bf \u03ad\u03be\u03bf\u03b4\u03bf)",
         "category": "\u039a\u03b1\u03c4\u03b7\u03b3\u03bf\u03c1\u03af\u03b1",
         "attachments": "\u03a3\u03c5\u03bd\u03b7\u03bc\u03bc\u03ad\u03bd\u03b1",
         "notes": "\u03a3\u03b7\u03bc\u03b5\u03b9\u03ce\u03c3\u03b5\u03b9\u03c2",
@@ -77,7 +77,11 @@
         "profile_create": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1",
         "profile_save_changes": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7 \u03b1\u03bb\u03bb\u03b1\u03b3\u03ce\u03bd",
         "default_group_title_name": "(\u03c7\u03c9\u03c1\u03af\u03c2 \u03bf\u03bc\u03ac\u03b4\u03b1)",
-        "piggy_bank": "\u039a\u03bf\u03c5\u03bc\u03c0\u03b1\u03c1\u03ac\u03c2"
+        "piggy_bank": "\u039a\u03bf\u03c5\u03bc\u03c0\u03b1\u03c1\u03ac\u03c2",
+        "profile_oauth_client_secret_title": "Client Secret",
+        "profile_oauth_client_secret_expl": "Here is your new client secret. This is the only time it will be shown so don't lose it! You may now use this secret to make API requests.",
+        "profile_oauth_confidential": "Confidential",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely."
     },
     "form": {
         "interest_date": "\u0397\u03bc\u03b5\u03c1\u03bf\u03bc\u03b7\u03bd\u03af\u03b1 \u03c4\u03bf\u03ba\u03b9\u03c3\u03bc\u03bf\u03cd",

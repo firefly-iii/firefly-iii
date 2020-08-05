@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'To są dotychczas utworzone konta. Możesz użyć konta gotówkowego do śledzenia wydatków gotówkowych, ale oczywiście nie jest to obowiązkowe.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Wprowadź podstawowe informacje o swojej transakcji. Konto źródłowe, konto docelowe, datę i opis.',
+    'transactions_create_amount_info'                 => 'Wprowadź wartość transakcji. Jeśli to konieczne, pola będą automatycznie aktualizować informacje o obcej kwocie.',
+    'transactions_create_optional_info'               => 'Wszystkie te pola są opcjonalne. Dodanie meta-danych sprawi, że Twoje transakcje będą lepiej zorganizowane.',
+    'transactions_create_split'                       => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
 
     // create account:
     'accounts_create_iban'                            => 'Nadaj kontom ważny numer IBAN. Może to ułatwić import danych w przyszłości.',

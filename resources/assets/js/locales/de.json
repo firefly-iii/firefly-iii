@@ -77,7 +77,11 @@
         "profile_create": "Erstellen",
         "profile_save_changes": "\u00c4nderungen speichern",
         "default_group_title_name": "(ohne Gruppierung)",
-        "piggy_bank": "Sparschwein"
+        "piggy_bank": "Sparschwein",
+        "profile_oauth_client_secret_title": "Client Secret",
+        "profile_oauth_client_secret_expl": "Here is your new client secret. This is the only time it will be shown so don't lose it! You may now use this secret to make API requests.",
+        "profile_oauth_confidential": "Confidential",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely."
     },
     "form": {
         "interest_date": "Zinstermin",
