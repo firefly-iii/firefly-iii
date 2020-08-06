@@ -617,7 +617,6 @@ Route::group(
 
         // boxes
         Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
-        Route::get('box/bills', ['uses' => 'Json\BoxController@bills', 'as' => 'box.bills']);
         Route::get('box/available', ['uses' => 'Json\BoxController@available', 'as' => 'box.available']);
         Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
 
