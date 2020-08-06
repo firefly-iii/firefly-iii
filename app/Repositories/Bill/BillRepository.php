@@ -50,6 +50,7 @@ use Storage;
 class BillRepository implements BillRepositoryInterface
 {
     use CreatesObjectGroups;
+
     private User $user;
 
     /**
@@ -101,7 +102,7 @@ class BillRepository implements BillRepositoryInterface
     public function findBill(?int $billId, ?string $billName): ?Bill
     {
         if (null !== $billId) {
-            $searchResult = $this->find((int)$billId);
+            $searchResult = $this->find((int) $billId);
             if (null !== $searchResult) {
                 Log::debug(sprintf('Found bill based on #%d, will return it.', $billId));
 
@@ -109,7 +110,7 @@ class BillRepository implements BillRepositoryInterface
             }
         }
         if (null !== $billName) {
-            $searchResult = $this->findByName((string)$billName);
+            $searchResult = $this->findByName((string) $billName);
             if (null !== $searchResult) {
                 Log::debug(sprintf('Found bill based on "%s", will return it.', $billName));
 
@@ -249,7 +250,7 @@ class BillRepository implements BillRepositoryInterface
             $set = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             if ($set->count() > 0) {
                 $journalIds = $set->pluck('id')->toArray();
-                $amount     = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
+                $amount     = (string) Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
                 $sum        = bcadd($sum, $amount);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $amount, $sum));
             }
@@ -275,10 +276,10 @@ class BillRepository implements BillRepositoryInterface
         foreach ($bills as $bill) {
             /** @var Collection $set */
             $set        = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
-            $currencyId = (int)$bill->transaction_currency_id;
+            $currencyId = (int) $bill->transaction_currency_id;
             if ($set->count() > 0) {
                 $journalIds          = $set->pluck('id')->toArray();
-                $amount              = (string)Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
+                $amount              = (string) Transaction::whereIn('transaction_journal_id', $journalIds)->where('amount', '<', 0)->sum('amount');
                 $return[$currencyId] = $return[$currencyId] ?? '0';
                 $return[$currencyId] = bcadd($amount, $return[$currencyId]);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (currency %d)', $amount, $return[$currencyId], $currencyId));
@@ -311,7 +312,7 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $average = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $multi   = bcmul($average, (string)$total);
+                $multi   = bcmul($average, (string) $total);
                 $sum     = bcadd($sum, $multi);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f', $multi, $sum));
             }
@@ -338,13 +339,13 @@ class BillRepository implements BillRepositoryInterface
             $dates      = $this->getPayDatesInRange($bill, $start, $end);
             $count      = $bill->transactionJournals()->after($start)->before($end)->count();
             $total      = $dates->count() - $count;
-            $currencyId = (int)$bill->transaction_currency_id;
+            $currencyId = (int) $bill->transaction_currency_id;
 
             Log::debug(sprintf('Dates = %d, journalCount = %d, total = %d', $dates->count(), $count, $total));
 
             if ($total > 0) {
                 $average             = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $multi               = bcmul($average, (string)$total);
+                $multi               = bcmul($average, (string) $total);
                 $return[$currencyId] = $return[$currencyId] ?? '0';
                 $return[$currencyId] = bcadd($return[$currencyId], $multi);
                 Log::debug(sprintf('Total > 0, so add to sum %f, which becomes %f (for currency %d)', $multi, $return[$currencyId], $currencyId));
@@ -378,7 +379,7 @@ class BillRepository implements BillRepositoryInterface
         /** @var Note $note */
         $note = $bill->notes()->first();
         if (null !== $note) {
-            return (string)$note->text;
+            return (string) $note->text;
         }
 
         return '';
@@ -387,26 +388,46 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return string
+     * @return array
      */
-    public function getOverallAverage(Bill $bill): string
+    public function getOverallAverage(Bill $bill): array
     {
         /** @var JournalRepositoryInterface $repos */
         $repos = app(JournalRepositoryInterface::class);
         $repos->setUser($this->user);
+
+        // get and sort on currency
+        $result = [];
         $journals = $bill->transactionJournals()->get();
-        $sum      = '0';
-        $count    = (string)$journals->count();
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, $repos->getJournalTotal($journal));
-        }
-        $avg = '0';
-        if ($journals->count() > 0) {
-            $avg = bcdiv($sum, $count);
+            /** @var Transaction $transaction */
+            $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
+            $currencyId                 = (int) $journal->transaction_currency_id;
+            $currency                   = $journal->transactionCurrency;
+            $result[$currencyId]        = $result[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'count'                   => 0,
+                    'avg'                     => '0',
+                    'currency_id'             => $currency->id,
+                    'currency_code'           => $currency->code,
+                    'currency_symbol'         => $currency->symbol,
+                    'currency_decimal_places' => $currency->decimal_places,
+                ];
+            $result[$currencyId]['sum'] = bcadd($result[$currencyId]['sum'], $transaction->amount);
+            $result[$currencyId]['count']++;
         }
 
-        return $avg;
+        // after loop, re-loop for avg.
+        /**
+         * @var int   $currencyId
+         * @var array $arr
+         */
+        foreach ($result as $currencyId => $arr) {
+            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string) $arr['count']);
+        }
+        return $result;
     }
 
     /**
@@ -535,30 +556,50 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill   $bill
      * @param Carbon $date
      *
-     * @return string
+     * @return array
      */
-    public function getYearAverage(Bill $bill, Carbon $date): string
+    public function getYearAverage(Bill $bill, Carbon $date): array
     {
         /** @var JournalRepositoryInterface $repos */
         $repos = app(JournalRepositoryInterface::class);
         $repos->setUser($this->user);
 
+        // get and sort on currency
+        $result = [];
+
         $journals = $bill->transactionJournals()
                          ->where('date', '>=', $date->year . '-01-01 00:00:00')
                          ->where('date', '<=', $date->year . '-12-31 23:59:59')
                          ->get();
-        $sum      = '0';
-        $count    = (string)$journals->count();
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $sum = bcadd($sum, $repos->getJournalTotal($journal));
-        }
-        $avg = '0';
-        if ($journals->count() > 0) {
-            $avg = bcdiv($sum, $count);
+            /** @var Transaction $transaction */
+            $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
+            $currencyId                 = (int) $journal->transaction_currency_id;
+            $currency                   = $journal->transactionCurrency;
+            $result[$currencyId]        = $result[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'count'                   => 0,
+                    'avg'                     => '0',
+                    'currency_id'             => $currency->id,
+                    'currency_code'           => $currency->code,
+                    'currency_symbol'         => $currency->symbol,
+                    'currency_decimal_places' => $currency->decimal_places,
+                ];
+            $result[$currencyId]['sum'] = bcadd($result[$currencyId]['sum'], $transaction->amount);
+            $result[$currencyId]['count']++;
         }
 
-        return $avg;
+        // after loop, re-loop for avg.
+        /**
+         * @var int   $currencyId
+         * @var array $arr
+         */
+        foreach ($result as $currencyId => $arr) {
+            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string) $arr['count']);
+        }
+        return $result;
     }
 
     /**
@@ -571,7 +612,7 @@ class BillRepository implements BillRepositoryInterface
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $journal          = $bill->user->transactionJournals()->find((int)$transaction['transaction_journal_id']);
+            $journal          = $bill->user->transactionJournals()->find((int) $transaction['transaction_journal_id']);
             $journal->bill_id = $bill->id;
             $journal->save();
             Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
@@ -661,7 +702,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
      *
      * @return Collection
      */

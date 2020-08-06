@@ -16,8 +16,8 @@
                         <div class="btn-group">
                             <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit',object.data.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete',object.data.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('bills.edit', object.data.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('bills.delete', object.data.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -55,11 +55,19 @@
                         </tr>
                         <tr>
                             <td>{{ trans('firefly.average_bill_amount_year', {year: year}) }}</td>
-                            <td>{{ formatAmountByCurrency(object.data.currency,yearAverage) }}</td>
+                            <td>
+                                {% for avg in yearAverage %}
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                {% endfor %}
+                            </td>
                         </tr>
                         <tr>
                             <td>{{ 'average_bill_amount_overall'|_ }}</td>
-                            <td>{{ formatAmountByCurrency(object.data.currency, overallAverage) }}</td>
+                            <td>
+                                {% for avg in overallAverage %}
+                                    {{ formatAmountBySymbol(avg.avg, avg.currency_symbol, avg.currency_decimal_places, true) }}<br>
+                                {% endfor %}
+                            </td>
                         </tr>
                     </table>
                 </div>
