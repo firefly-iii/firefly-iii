@@ -114,18 +114,15 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
+     * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function transactionLinks(TransactionGroup $transactionGroup): JsonResponse
+    public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {
-        $manager     = $this->getManager();
-        $journalLinks = new Collection;
-        foreach ($transactionGroup->transactionJournals as $transactionJournal) {
-            $journalLinks = $this->journalAPIRepository->getJournalLinks($transactionJournal)->merge($journalLinks);
-        }
+        $manager      = $this->getManager();
+        $journalLinks = $this->journalAPIRepository->getJournalLinks($transactionJournal);
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
@@ -293,8 +290,8 @@ class TransactionController extends Controller
      *
      * @param TransactionStoreRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {

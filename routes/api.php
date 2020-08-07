@@ -481,9 +481,9 @@ Route::group(
         Route::get('{transactionGroup}', ['uses' => 'TransactionController@show', 'as' => 'show']);
         Route::get('{transactionGroup}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
         Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-        Route::get('{transactionGroup}/transaction_links', ['uses' => 'TransactionController@transactionLinks', 'as' => 'transaction_links']);
+        Route::get('{tj}/transaction_links', ['uses' => 'TransactionController@transactionLinks', 'as' => 'transaction_links']);
         Route::put('{transactionGroup}', ['uses' => 'TransactionController@update', 'as' => 'update']);
-        Route::delete('{transactionGroup}/{transactionJournal}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
+        Route::delete('{transactionGroup}/{tj}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
         Route::delete('{transactionGroup}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
     }
 );
