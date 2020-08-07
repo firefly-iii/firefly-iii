@@ -733,6 +733,10 @@ return [
     'profile_something_wrong'                   => 'Jokin meni vikaan!',
     'profile_try_again'                         => 'Jokin meni vikaan. Yritä uudelleen.',
     'amounts'                                   => 'Amounts',
+    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
+    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
+    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
+    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
 
     // export data:
     'export_data_title'                         => 'Vie tietoja Firefly III:sta',

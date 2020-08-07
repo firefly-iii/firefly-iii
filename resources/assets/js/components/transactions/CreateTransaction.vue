@@ -89,6 +89,18 @@
                       v-on:select:account="selectedDestinationAccount(index, $event)"
                       :error="transaction.errors.destination_account"
                   ></account-select>
+                  <p class="text-warning" v-if="0!== index && (null === transactionType || 'invalid' === transactionType || '' === transactionType)">
+                    {{ $t('firefly.multi_account_warning_unknown') }}
+                  </p>
+                  <p class="text-warning" v-if="0!== index && 'Withdrawal' === transactionType">
+                    {{ $t('firefly.multi_account_warning_withdrawal') }}
+                  </p>
+                  <p class="text-warning" v-if="0!== index && 'Deposit' === transactionType">
+                    {{ $t('firefly.multi_account_warning_deposit') }}
+                  </p>
+                  <p class="text-warning" v-if="0!== index && 'Transfer' === transactionType">
+                    {{ $t('firefly.multi_account_warning_transfer') }}
+                  </p>
                   <standard-date v-if="0===index"
                                  v-model="transaction.date"
                                  :index="index"

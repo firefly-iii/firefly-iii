@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Estas son las cuentas creadas hasta ahora. Puede usar la cuenta de efectivo para vigilar los gastos de efectivo pero, por supuesto, no es obligatorio.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Introduzca la información básica de su transacción. Fuente, destino, fecha y descripción.',
+    'transactions_create_amount_info'                 => 'Introduzca la cantidad de la transacción. Si es necesario, los campos se actualizarán automáticamente para la información de la cantidad extranjera.',
+    'transactions_create_optional_info'               => 'Todos estos campos son opcionales. Añadir meta-datos aquí hará que sus transacciones estén mejor organizadas.',
+    'transactions_create_split'                       => 'Si quiere dividir una transacción, añada más divisiones con este botón',
 
     // create account:
     'accounts_create_iban'                            => 'Indica un IBAN válido en tus cuentas. Esto facilitará la importación de datos en el futuro.',

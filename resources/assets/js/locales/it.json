@@ -78,10 +78,14 @@
         "profile_save_changes": "Salva modifiche",
         "default_group_title_name": "(non in un gruppo)",
         "piggy_bank": "Salvadanaio",
-        "profile_oauth_client_secret_title": "Client Secret",
-        "profile_oauth_client_secret_expl": "Here is your new client secret. This is the only time it will be shown so don't lose it! You may now use this secret to make API requests.",
-        "profile_oauth_confidential": "Confidential",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely."
+        "profile_oauth_client_secret_title": "Segreto del client",
+        "profile_oauth_client_secret_expl": "Ecco il segreto del nuovo client. Questa \u00e8 l'unica occasione in cui viene mostrato pertanto non perderlo! Ora puoi usare questo segreto per effettuare delle richieste alle API.",
+        "profile_oauth_confidential": "Riservato",
+        "profile_oauth_confidential_help": "Richiede al client di autenticarsi con un segreto. I client riservati possono conservare le credenziali in modo sicuro senza esporle a soggetti non autorizzati. Le applicazioni pubbliche, come le applicazioni desktop native o JavaScript SPA, non sono in grado di conservare i segreti in modo sicuro.",
+        "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
+        "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
+        "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
+        "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer."
     },
     "form": {
         "interest_date": "Data interesse",
