@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
