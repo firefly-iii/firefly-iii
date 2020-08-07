@@ -7,7 +7,7 @@ updates:
     target-branch: develop
     labels: ["bug"]
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # yarn / JS updates
   - package-ecosystem: "npm"
@@ -15,7 +15,7 @@ updates:
     target-branch: develop
     labels: ["bug"]
     schedule:
-      interval: "daily"
+      interval: "weekly"
 
   # yarn / JS updates for new frontend
   - package-ecosystem: "npm"
@@ -23,4 +23,4 @@ updates:
     target-branch: develop
     labels: ["bug"]
     schedule:
-      interval: "daily"
+      interval: "weekly"
