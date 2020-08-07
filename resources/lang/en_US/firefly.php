@@ -702,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'This action is not available when authenticating through ":login_provider".',
     'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
     'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',
