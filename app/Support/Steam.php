@@ -612,7 +612,7 @@ class Steam
         /** @var string $language */
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         if ('equal' === $locale) {
-            return $this->getLanguage();
+            $locale = $this->getLanguage();
         }
         
         // Check for Windows to replace the locale correctly.
