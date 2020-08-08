@@ -40,30 +40,19 @@ use Log;
  */
 class Search implements SearchInterface
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
-    /** @var Collection */
-    private $modifiers;
-    /** @var string */
-    private $originalQuery = '';
-    /** @var float */
-    private $startTime;
-    /** @var TagRepositoryInterface */
-    private $tagRepository;
-    /** @var User */
-    private $user;
-    /** @var array */
-    private $validModifiers;
-    /** @var array */
-    private $words = [];
-    /** @var int */
-    private $page;
+    private AccountRepositoryInterface  $accountRepository;
+    private BillRepositoryInterface     $billRepository;
+    private BudgetRepositoryInterface   $budgetRepository;
+    private CategoryRepositoryInterface $categoryRepository;
+    private Collection                  $modifiers;
+    private string                      $originalQuery = '';
+    private float                       $startTime;
+    private int                         $limit;
+    private TagRepositoryInterface      $tagRepository;
+    private User                        $user;
+    private array                       $validModifiers;
+    private array                       $words         = [];
+    private int                         $page;
 
     /**
      * Search constructor.
@@ -72,7 +61,7 @@ class Search implements SearchInterface
     {
         $this->page               = 1;
         $this->modifiers          = new Collection;
-        $this->validModifiers     = (array)config('firefly.search_modifiers');
+        $this->validModifiers     = (array) config('firefly.search_modifiers');
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
         $this->categoryRepository = app(CategoryRepositoryInterface::class);
@@ -154,7 +143,9 @@ class Search implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         Log::debug('Start of searchTransactions()');
-        $pageSize = (int) config('firefly.search_result_limit');
+
+        // get limit from preferences.
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -245,19 +236,19 @@ class Search implements SearchInterface
                     break;
                 case 'amount_is':
                 case 'amount':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountIs($amount);
                     break;
                 case 'amount_max':
                 case 'amount_less':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountLess($amount);
                     break;
                 case 'amount_min':
                 case 'amount_more':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountMore($amount);
                     break;
@@ -312,9 +303,9 @@ class Search implements SearchInterface
     private function extractModifier(string $string): void
     {
         $parts = explode(':', $string);
-        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
-            $type  = strtolower(trim((string)$parts[0]));
-            $value = trim((string)$parts[1]);
+        if (2 === count($parts) && '' !== trim((string) $parts[1]) && '' !== trim((string) $parts[0])) {
+            $type  = strtolower(trim((string) $parts[0]));
+            $value = trim((string) $parts[1]);
             $value = trim(trim($value, '"\''));
             if (in_array($type, $this->validModifiers, true)) {
                 // filter for valid type
