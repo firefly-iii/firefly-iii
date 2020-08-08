@@ -48,8 +48,6 @@ class Search implements SearchInterface
     private $budgetRepository;
     /** @var CategoryRepositoryInterface */
     private $categoryRepository;
-    /** @var int */
-    private $limit = 100;
     /** @var Collection */
     private $modifiers;
     /** @var string */
@@ -156,7 +154,7 @@ class Search implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         Log::debug('Start of searchTransactions()');
-        $pageSize = 50;
+        $pageSize = (int) config('firefly.search_result_limit');
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -170,14 +168,6 @@ class Search implements SearchInterface
 
         return $collector->getPaginatedGroups();
 
-    }
-
-    /**
-     * @param int $limit
-     */
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
     }
 
     /**
