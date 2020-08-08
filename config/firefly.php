@@ -155,7 +155,6 @@ return [
     'fixer_api_key'           => env('FIXER_API_KEY', ''),
     'mapbox_api_key'          => env('MAPBOX_API_KEY', ''),
     'trusted_proxies'         => env('TRUSTED_PROXIES', ''),
-    'search_result_limit'     => env('SEARCH_RESULT_LIMIT', 50),
     'send_report_journals'    => envNonEmpty('SEND_REPORT_JOURNALS', true),
     'tracker_site_id'         => env('TRACKER_SITE_ID', ''),
     'tracker_url'             => env('TRACKER_URL', ''),
