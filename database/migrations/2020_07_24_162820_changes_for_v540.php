@@ -28,6 +28,13 @@ class ChangesForV540 extends Migration
             $table->dropColumn('order');
         }
         );
+
+        Schema::table(
+            'bills', static function (Blueprint $table) {
+            $table->dropColumn('end_date');
+            $table->dropColumn('extension_date');
+        }
+        );
     }
 
     /**
@@ -47,6 +54,13 @@ class ChangesForV540 extends Migration
             $table->string('provider')->nullable();
         }
         );
+        Schema::table(
+            'bills', static function (Blueprint $table) {
+            $table->date('end_date')->nullable()->after('date');
+            $table->date('extension_date')->nullable()->after('end_date');
+        }
+        );
+
 
         // make column nullable:
         Schema::table('oauth_clients', function (Blueprint $table) {
