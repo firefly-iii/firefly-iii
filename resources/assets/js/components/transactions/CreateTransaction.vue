@@ -223,6 +223,8 @@
             <div class="btn-group">
               <button class="btn btn-success" id="submitButton" @click="submit">{{ $t('firefly.submit') }}</button>
             </div>
+            <p class="text-success" v-html="success_message"></p>
+            <p class="text-danger" v-html="error_message"></p>
           </div>
         </div>
       </div>
@@ -680,8 +682,10 @@ export default {
       this.setDefaultErrors();
       this.error_message = "";
       if (typeof errors.errors === 'undefined') {
+        this.success_message = '';
         this.error_message = errors.message;
       } else {
+        this.success_message = '';
         this.error_message = this.$t('firefly.errors_submission');
       }
       let transactionIndex;

@@ -394,11 +394,11 @@ export default {
           newTags.push({text: transaction.tags[key], tiClasses: []});
         }
       }
-      console.log('source allowed types for a ' + transaction.type);
+      // console.log('source allowed types for a ' + transaction.type);
       //console.log(window.expectedSourceTypes.source[transaction.type]);
-      console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
-      console.log('destination allowed types for a ' + transaction.type);
-      console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
+      // console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
+      // console.log('destination allowed types for a ' + transaction.type);
+      // console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
 
       this.transactions.push({
         transaction_journal_id: transaction.transaction_journal_id,
@@ -537,6 +537,16 @@ export default {
       sourceName = row.source_account.name;
       destId = row.destination_account.id;
       destName = row.destination_account.name;
+
+      // depends on the transaction type, where we get the currency.
+      if('withdrawal' === transactionType || 'transfer' === transactionType) {
+        row.currency_id = row.source_account.currency_id;
+        console.log('Overruled currency ID to ' + row.currency_id);
+      }
+      if('deposit' === transactionType) {
+        row.currency_id = row.destination_account.currency_id;
+        console.log('Overruled currency ID to ' + row.currency_id);
+      }
 
       date = row.date;
       if (index > 0) {
@@ -927,7 +937,7 @@ export default {
                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                 break;
               case 'external_uri':
-                console.log('Found ext error in field "' + fieldName + '": ' + errors.errors[key]);
+                //console.log('Found ext error in field "' + fieldName + '": ' + errors.errors[key]);
                 this.transactions[transactionIndex].errors.custom_errors[fieldName] = errors.errors[key];
                 break;
               case 'source_name':
