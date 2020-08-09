@@ -145,7 +145,7 @@ class Search implements SearchInterface
         Log::debug('Start of searchTransactions()');
 
         // get limit from preferences.
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -156,9 +156,7 @@ class Search implements SearchInterface
 
         // Most modifiers can be applied to the collector directly.
         $collector = $this->applyModifiers($collector);
-
         return $collector->getPaginatedGroups();
-
     }
 
     /**
@@ -181,10 +179,6 @@ class Search implements SearchInterface
      */
     private function applyModifiers(GroupCollectorInterface $collector): GroupCollectorInterface
     {
-        /*
-         * TODO:
-         * 'bill'?
-         */
         $totalAccounts = new Collection;
 
         foreach ($this->modifiers as $modifier) {
@@ -199,6 +193,7 @@ class Search implements SearchInterface
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
+                    $collector->setSourceAccounts($totalAccounts);
                     break;
                 case 'to':
                 case 'destination':
@@ -208,6 +203,7 @@ class Search implements SearchInterface
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
+                    $collector->setDestinationAccounts($totalAccounts);
                     break;
                 case 'category':
                     $result = $this->categoryRepository->searchCategory($modifier['value'], 25);
@@ -226,7 +222,6 @@ class Search implements SearchInterface
                     if ($result->count() > 0) {
                         $collector->setTags($result);
                     }
-                    break;
                     break;
                 case 'budget':
                     $result = $this->budgetRepository->searchBudget($modifier['value'], 25);
@@ -292,7 +287,6 @@ class Search implements SearchInterface
                     break;
             }
         }
-        $collector->setAccounts($totalAccounts);
 
         return $collector;
     }
