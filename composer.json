@@ -87,6 +87,7 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
+    "gdbots/query-parser": "^2.0",
     "jc5/google2fa-laravel": "2.0.5",
     "laravel/framework": "^7.0",
     "laravel/passport": "9.*",

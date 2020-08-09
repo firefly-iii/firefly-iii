@@ -5,8 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased (API 1.4.0)] - 2020-xx-xx
 
-- #3200 for account order
-- #3150 New AC end points.
+- [Issue 3200](https://github.com/firefly-iii/firefly-iii/issues/3200) for account order
+- [Issue 3150](https://github.com/firefly-iii/firefly-iii/issues/3150) New AC end points.
 
 
 ## [5.3.3 (API 1.3.0)] - 2020-07-17
