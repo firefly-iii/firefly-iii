@@ -82,10 +82,10 @@
         "profile_oauth_client_secret_expl": "Here is your new client secret. This is the only time it will be shown so don't lose it! You may now use this secret to make API requests.",
         "profile_oauth_confidential": "Confidential",
         "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
-        "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
-        "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
-        "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
-        "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer."
+        "multi_account_warning_unknown": "Abh\u00e4ngig von der Art der Buchung, die Sie anlegen, kann das Quell- und\/oder Zielkonto nachfolgender Aufteilungen durch das \u00fcberschrieben werden, was in der ersten Aufteilung der Buchung definiert wurde.",
+        "multi_account_warning_withdrawal": "Bedenken Sie, dass das Quellkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Abhebung definiert ist, au\u00dfer Kraft gesetzt wird.",
+        "multi_account_warning_deposit": "Bedenken Sie, dass das Zielkonto nachfolgender Aufteilungen von dem, was in der ersten Aufteilung der Einzahlung definiert ist, au\u00dfer Kraft gesetzt wird.",
+        "multi_account_warning_transfer": "Bedenken Sie, dass das Quell- und Zielkonto nachfolgender Aufteilungen durch das, was in der ersten Aufteilung der \u00dcbertragung definiert ist, au\u00dfer Kraft gesetzt wird."
     },
     "form": {
         "interest_date": "Zinstermin",

@@ -557,6 +557,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -703,6 +704,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'login_provider_local_only'                 => 'This action is not available when authenticating through ":login_provider".',
     'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
     'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',

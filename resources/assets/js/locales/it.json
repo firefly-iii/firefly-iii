@@ -82,10 +82,10 @@
         "profile_oauth_client_secret_expl": "Ecco il segreto del nuovo client. Questa \u00e8 l'unica occasione in cui viene mostrato pertanto non perderlo! Ora puoi usare questo segreto per effettuare delle richieste alle API.",
         "profile_oauth_confidential": "Riservato",
         "profile_oauth_confidential_help": "Richiede al client di autenticarsi con un segreto. I client riservati possono conservare le credenziali in modo sicuro senza esporle a soggetti non autorizzati. Le applicazioni pubbliche, come le applicazioni desktop native o JavaScript SPA, non sono in grado di conservare i segreti in modo sicuro.",
-        "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
-        "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
-        "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
-        "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer."
+        "multi_account_warning_unknown": "A seconda del tipo di transazione che hai creato, il conto di origine e\/o destinazione delle successive suddivisioni pu\u00f2 essere sovrascritto da qualsiasi cosa sia definita nella prima suddivisione della transazione.",
+        "multi_account_warning_withdrawal": "Ricorda che il conto di origine delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del prelievo.",
+        "multi_account_warning_deposit": "Ricorda che il conto di destinazione delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del deposito.",
+        "multi_account_warning_transfer": "Ricorda che il conto di origine e il conto di destinazione delle successive suddivisioni verranno sovrascritti da quelli definiti nella prima suddivisione del trasferimento."
     },
     "form": {
         "interest_date": "Data interesse",

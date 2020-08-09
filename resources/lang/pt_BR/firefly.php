@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Não se esqueça de selecionar algumas tags.',
     'deleted_x_tags'                  => ':count etiqueta foi deletada. :count etiquetas foram deletadas.',
     'create_rule_from_transaction'    => 'Criar regra baseada na transação',
+    'create_recurring_from_transaction' => 'Criar transação recorrente baseada na transação',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Esta ação não está disponível durante a autenticação por meio de ":login_provider".',
     'external_user_mgt_disabled'                => 'Esta ação não está disponível quando o Firefly III não é responsável pelo gerenciamento de usuários ou manipulação de autenticação.',
     'delete_local_info_only'                    => "Como o Firefly III não é responsável pelo gerenciamento de usuários ou pela manipulação de autenticação, esta função excluirá apenas informações locais do Firefly III.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clientes OAuth',
     'profile_oauth_no_clients'                  => 'Você não criou nenhum cliente OAuth.',
     'profile_oauth_clients_header'              => 'Clientes',
@@ -733,10 +735,10 @@ return [
     'profile_something_wrong'                   => 'Alguma coisa deu errado!',
     'profile_try_again'                         => 'Something went wrong. Please try again.',
     'amounts'                                   => 'Quantias',
-    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
-    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
-    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
-    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+    'multi_account_warning_unknown'             => 'Dependendo do tipo de transação que você criar, a conta de origem e/ou de destino das divisões subsequentes pode ser sobrescrita pelo que estiver definido na primeira divisão da transação.',
+    'multi_account_warning_withdrawal'          => 'Tenha em mente que a conta de origem das subsequentes divisões será sobrescrita pelo que estiver definido na primeira divisão da retirada.',
+    'multi_account_warning_deposit'             => 'Tenha em mente que a conta de destino das divisões subsequentes será sobrescrita pelo que estiver definido na primeira divisão do depósito.',
+    'multi_account_warning_transfer'            => 'Tenha em mente que a conta de origem + de destino das divisões subsequentes será sobrescrita pelo que for definido na primeira divisão da transferência.',
 
     // export data:
     'export_data_title'                         => 'Exportar dados do Firefly III',

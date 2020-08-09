@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Don\'t forget to select some tags.',
     'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'    => 'Create rule based on transaction',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Denna åtgärd är inte tillgänlig vid autentisiering genom ":login_provider".',
     'external_user_mgt_disabled'                => 'Denna åtgärd är inte tillgänglig när Firefly III inte är ansvarig för användarhantering eller autentiseringshantering.',
     'delete_local_info_only'                    => "Eftersom Firefly III inte är ansvarig för användarhantering eller autentiseringshantering, kommer denna funktion endast ta bort lokal Firefly III-information.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth klienter',
     'profile_oauth_no_clients'                  => 'Du har inte skapat några OAuth klienter.',
     'profile_oauth_clients_header'              => 'Klienter',

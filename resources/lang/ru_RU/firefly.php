@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Не забудьте выбрать несколько меток.',
     'deleted_x_tags'                  => 'Удалена :count метка.|Удалено :count меток.',
     'create_rule_from_transaction'    => 'Создать правило на основе транзакции',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Это действие недоступно при аутентификации через ":login_provider".',
     'external_user_mgt_disabled'                => 'Это действие недоступно, если Firefly III не отвечает за управление пользователями или обработку аутентификации.',
     'delete_local_info_only'                    => "Поскольку Firefly III не отвечает за управление пользователями или обработку аутентификации, эта функция будет удалять только локальную информацию Firefly III.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Клиенты OAuth',
     'profile_oauth_no_clients'                  => 'У вас пока нет клиентов OAuth.',
     'profile_oauth_clients_header'              => 'Клиенты',

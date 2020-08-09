@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Vergeet niet om tags te selecteren.',
     'deleted_x_tags'                  => ':count tag verwijderd.|:count tags verwijderd.',
     'create_rule_from_transaction'    => 'Regel aanmaken op basis van een transactie',
+    'create_recurring_from_transaction' => 'Maak periodieke transactie gebaseerd op transactie',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Je kan dit niet doen als je inlogt via ":login_provider".',
     'external_user_mgt_disabled'                => 'Deze actie is niet beschikbaar wanneer Firefly III niet verantwoordelijk is voor gebruikersbeheer of authenticatie.',
     'delete_local_info_only'                    => "Omdat Firefly III niet verantwoordelijk is voor gebruikersbeheer of authenticatie zal deze functie alleen de lokale Firefly III informatie verwijderen.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Je hebt nog geen OAuth-clients aangemaakt.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -717,12 +719,12 @@ return [
     'profile_authorized_clients'                => 'Geautoriseerde clients',
     'profile_scopes'                            => 'Scopes',
     'profile_revoke'                            => 'Intrekken',
-    'profile_oauth_client_secret_title'         => 'Client Secret',
-    'profile_oauth_client_secret_expl'          => 'Here is your new client secret. This is the only time it will be shown so don\'t lose it! You may now use this secret to make API requests.',
+    'profile_oauth_client_secret_title'         => 'Client secret',
+    'profile_oauth_client_secret_expl'          => 'Hier is je nieuwe client secret. Dit is de enige keer dat deze getoond wordt dus verlies deze niet! Je kan dit secret gebruiken om API-aanvragen te maken.',
     'profile_personal_access_tokens'            => 'Persoonlijke toegangstokens',
     'profile_personal_access_token'             => 'Persoonlijk toegangstoken',
-    'profile_oauth_confidential'                => 'Confidential',
-    'profile_oauth_confidential_help'           => 'Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.',
+    'profile_oauth_confidential'                => 'Vertrouwelijk',
+    'profile_oauth_confidential_help'           => 'Is bedoelt voor clients die geen geheimen kunnen bewaren, zoals native desktop apps of JavaScript SPA\'s.',
     'profile_personal_access_token_explanation' => 'Hier is je nieuwe persoonlijke toegangstoken. Dit is de enige keer dat deze getoond wordt dus verlies deze niet! Je kan deze toegangstoken gebruiken om API-aanvragen te maken.',
     'profile_no_personal_access_token'          => 'Je hebt nog geen persoonlijke toegangstokens aangemaakt.',
     'profile_create_new_token'                  => 'Nieuwe token aanmaken',
@@ -733,10 +735,10 @@ return [
     'profile_something_wrong'                   => 'Er is iets mis gegaan!',
     'profile_try_again'                         => 'Er is iets misgegaan. Probeer het nogmaals.',
     'amounts'                                   => 'Bedragen',
-    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
-    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
-    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
-    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+    'multi_account_warning_unknown'             => 'Afhankelijk van het type transactie wordt de bron- en/of doelrekening overschreven door wat er in de eerste split staat.',
+    'multi_account_warning_withdrawal'          => 'De bronrekening wordt overschreven door wat er in de eerste split staat.',
+    'multi_account_warning_deposit'             => 'De doelrekening wordt overschreven door wat er in de eerste split staat.',
+    'multi_account_warning_transfer'            => 'De bron + doelrekening wordt overschreven door wat er in de eerste split staat.',
 
     // export data:
     'export_data_title'                         => 'Gegevens exporteren uit Firefly III',

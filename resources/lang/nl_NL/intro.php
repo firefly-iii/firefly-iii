@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Dit zijn de rekeningen die tot nu toe zijn gemaakt. Je kan de cashgeldrekening gebruiken om cash geld te volgen, maar dat hoeft natuurlijk niet.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Hier komt de basic info van je transactie. Bron, doel, datum en beschrijving.',
+    'transactions_create_amount_info'                 => 'Hier zet je het bedrag neer. Ook het bedrag in vreemde valuta.',
+    'transactions_create_optional_info'               => 'Al deze velden zijn optioneel, maar door hier dingen in te vullen ben je beter georganiseerd.',
+    'transactions_create_split'                       => 'Als je een transactie wilt splitsen, druk hier!',
 
     // create account:
     'accounts_create_iban'                            => 'Geef je rekeningen een geldige IBAN. Dat scheelt met importeren van data.',

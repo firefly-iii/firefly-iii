@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Đừng quên chọn một số nhãn.',
     'deleted_x_tags'                  => 'Xóa nhãn :count.',
     'create_rule_from_transaction'    => 'Tạo quy tắc dựa trên giao dịch',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Hành động này không khả dụng khi xác thực thông qua ": login_provider".',
     'external_user_mgt_disabled'                => 'Hành động này không khả dụng khi Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực.',
     'delete_local_info_only'                    => "Vì Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực, nên chức năng này sẽ chỉ xóa thông tin Firefly III cục bộ.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'Bạn đã không tạo ra bất kỳ OAuth clients nào.',
     'profile_oauth_clients_header'              => 'Clients',

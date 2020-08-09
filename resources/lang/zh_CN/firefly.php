@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => '别忘了选择一些标签。',
     'deleted_x_tags'                  => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'    => '基于交易创建规则',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => '当藉由 ":login_provider" 验证时，此动作不可用。',
     'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
     'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
     'profile_oauth_no_clients'                  => 'You have not created any OAuth clients.',
     'profile_oauth_clients_header'              => 'Clients',

@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Nu uitați să selectați unele etichete.',
     'deleted_x_tags'                  => 'S-a șters :count tag.| :count tags șterse.',
     'create_rule_from_transaction'    => 'Creați o regulă bazată pe tranzacție',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Această acțiune nu este disponibilă când vă autentificați prin ":login_provider".',
     'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
     'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clienți OAuth',
     'profile_oauth_no_clients'                  => 'Nu ați creat niciun client OAuth.',
     'profile_oauth_clients_header'              => 'Clienți',

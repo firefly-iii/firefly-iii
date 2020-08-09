@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Μην ξεχάσετε να επιλέξετε ορισμένες ετικέτες.',
     'deleted_x_tags'                  => 'Διαγράφηκε :count ετικέτα.|Διαγράφηκαν :count ετικέτες.',
     'create_rule_from_transaction'    => 'Δημιουργία κανόνα που βασίζεται σε συναλλαγή',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν πιστοποιήστε μέσω ":login_provider".',
     'external_user_mgt_disabled'                => 'Αυτή η ενέργεια δεν είναι διαθέσιμη όταν το Firefly III δεν είναι υπεύθυνο για διαχείριση χρηστών ή έλεγχο ταυτότητας.',
     'delete_local_info_only'                    => "Επειδή το Firefly III δεν είναι υπεύθυνο για διαχείριση χρηστών ή έλεγχο ταυτότητας, αυτή η λειτουργία θα διαγράψει μόνο τις τοπικές εγγραφές του Firefly III.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Πελάτες OAuth',
     'profile_oauth_no_clients'                  => 'Δεν έχετε δημιουργήσει πελάτες OAuth.',
     'profile_oauth_clients_header'              => 'Πελάτες',

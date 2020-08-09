@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'Nie zapomnij wybrać tagów.',
     'deleted_x_tags'                  => 'Usunięto :count tag.|Usunięto :count tagów.',
     'create_rule_from_transaction'    => 'Utwórz regułę na podstawie transakcji',
+    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Ta akcja nie jest dostępna gdy uwierzytelniasz się poprzez ":login_provider".',
     'external_user_mgt_disabled'                => 'Ta akcja nie jest dostępna, gdy Firefly III nie jest odpowiedzialny za zarządzanie użytkownikiem lub obsługę uwierzytelniania.',
     'delete_local_info_only'                    => "Ponieważ Firefly III nie jest odpowiedzialny za zarządzanie użytkownikami lub obsługę uwierzytelniania, ta funkcja usunie tylko lokalne informacje Firefly III.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Klienci OAuth',
     'profile_oauth_no_clients'                  => 'Nie utworzyłeś żadnych klientów OAuth.',
     'profile_oauth_clients_header'              => 'Klienci',
@@ -733,7 +735,7 @@ return [
     'profile_something_wrong'                   => 'Coś poszło nie tak!',
     'profile_try_again'                         => 'Coś poszło nie tak. Spróbuj ponownie.',
     'amounts'                                   => 'Kwoty',
-    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
+    'multi_account_warning_unknown'             => 'W zależności od rodzaju transakcji, którą tworzysz, konto źródłowe i/lub docelowe kolejnych podziałów może zostać unieważnione przez dowolny z nich określony w pierwszym podziale transakcji.',
     'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
     'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
     'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',

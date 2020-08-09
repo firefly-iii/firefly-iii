@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Verlinkte Regeln',
     'active'                  => 'Aktiv?',
     'percentage'              => '%',
-    'recurring_transaction'   => 'Regelmäßige Buchung',
+    'recurring_transaction'   => 'Dauerauftrag',
     'next_due'                => 'Nächste Fälligkeit',
     'transaction_type'        => 'Typ',
     'lastActivity'            => 'Letzte Aktivität',

@@ -555,6 +555,7 @@ return [
     'select_tags_to_delete'           => 'N\'oubliez pas de sélectionner des tags.',
     'deleted_x_tags'                  => ':count tag supprimé.|:count tags supprimés.',
     'create_rule_from_transaction'    => 'Créer une règle basée sur une opération',
+    'create_recurring_from_transaction' => 'Créer une opération récurrente sur base d\'une opération',
 
 
     // preferences
@@ -701,6 +702,7 @@ return [
     'login_provider_local_only'                 => 'Cette action n’est pas disponible lors de l’authentification par ":login_provider".',
     'external_user_mgt_disabled'                => 'Cette action n\'est pas disponible lorsque Firefly III n\'est pas responsable de la gestion des utilisateurs ou de l\'authentification.',
     'delete_local_info_only'                    => "Comme Firefly III n'est pas responsable de la gestion des utilisateurs ou de l'authentification, cette fonction ne supprimera que les informations locales de Firefly III.",
+    'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clients OAuth',
     'profile_oauth_no_clients'                  => 'Vous n’avez pas encore créé de client OAuth.',
     'profile_oauth_clients_header'              => 'Clients',
@@ -733,10 +735,10 @@ return [
     'profile_something_wrong'                   => 'Une erreur s\'est produite !',
     'profile_try_again'                         => 'Une erreur s’est produite. Merci d’essayer à nouveau.',
     'amounts'                                   => 'Montants',
-    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
-    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
-    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
-    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+    'multi_account_warning_unknown'             => 'Selon le type d\'opération que vous créez, le(s) compte(s) source et/ou de destination des ventilations suivantes peuvent être remplacés par celui de la première ventilation de l\'opération.',
+    'multi_account_warning_withdrawal'          => 'Gardez en tête que le compte source des ventilations suivantes peut être remplacé par celui de la première ventilation du retrait.',
+    'multi_account_warning_deposit'             => 'Gardez en tête que le compte de destination des ventilations suivantes peut être remplacé par celui de la première ventilation du dépôt.',
+    'multi_account_warning_transfer'            => 'Gardez en tête que les comptes source et de destination des ventilations suivantes peuvent être remplacés par ceux de la première ventilation du transfert.',
 
     // export data:
     'export_data_title'                         => 'Exporter des données depuis Firefly III',
