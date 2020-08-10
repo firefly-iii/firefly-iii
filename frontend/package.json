@@ -33,6 +33,6 @@
         "overlayscrollbars": "^1.13.0",
         "popper.js": "^1.16.1",
         "vue-chartjs": "^3.5.0",
-        "vue-router": "^3.4.1"
+        "vue-router": "^3.4.2"
     }
 }
