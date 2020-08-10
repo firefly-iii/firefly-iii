@@ -453,7 +453,7 @@ return [
     'rule_trigger_foreign_currency_is_choice'    => 'Transaction foreign currency is..',
     'rule_trigger_foreign_currency_is'           => 'Transaction foreign currency is ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Has at least this many attachments',
-    'rule_trigger_has_attachments'               => 'Has at least :count attachment|Has at least :count attachments',
+    'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
     'rule_trigger_store_journal'                 => 'When a transaction is created',
     'rule_trigger_update_journal'                => 'When a transaction is updated',
     'rule_trigger_has_no_category_choice'        => 'Has no category',
