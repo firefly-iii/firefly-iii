@@ -69,15 +69,12 @@ class RemoteUserGuard implements Guard
             return;
         }
         // Get the user identifier from $_SERVER
-        $userID = request()->server('REMOTE_USER') ?? null;
+        $header = config('auth.guard_header', 'REMOTE_USER');
+        $userID = request()->server($header) ?? null;
         if (null === $userID) {
-            Log::debug('No user in REMOTE_USER.');
-            throw new FireflyException('The REMOTE_USER header was unexpectedly empty.');
+            Log::error(sprintf('No user in header "%s".', $header));
+            throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
         }
-
-
-        // do some basic debugging here:
-        // $userID = 'test@firefly';
 
         /** @var User $user */
         $user = $this->provider->retrieveById($userID);
