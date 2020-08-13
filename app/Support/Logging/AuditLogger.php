@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Logging;
 use Illuminate\Log\Logger;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Handler\Handler;
 
 /**
  * Class AuditLogger

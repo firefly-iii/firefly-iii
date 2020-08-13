@@ -124,7 +124,6 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
-
         Log::channel('audit')->info('Show login form.');
 
         $count         = DB::table('users')->count();
