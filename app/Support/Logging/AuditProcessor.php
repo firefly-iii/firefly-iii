@@ -55,3 +55,4 @@ class AuditProcessor
         );
         return $record;
     }
+}
