@@ -58,7 +58,7 @@ return [
         ],
         'audit' => [
             'driver'   => 'stack',
-            'channels' => ['daily_audit', 'stdout'],
+            'channels' => ['daily_audit', 'stdout_daily'],
         ],
         'single'     => [
             'driver' => 'single',
@@ -87,6 +87,12 @@ return [
             'tap'    => [AuditLogger::class],
             'level'  => 'info',
             'days'   => 90,
+        ],
+        'stdout_daily'     => [
+            'driver' => 'single',
+            'path'   => 'php://stdout',
+            'tap'    => [AuditLogger::class],
+            'level'  => 'info',
         ],
         'dailytest'  => [
             'driver' => 'daily',
