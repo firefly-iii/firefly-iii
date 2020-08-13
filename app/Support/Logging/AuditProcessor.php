@@ -44,6 +44,7 @@ class AuditProcessor
                                          app('request')->ip(),
                                          auth()->user()->email,
                                          request()->method(), request()->url()
+            );
 
             return $record;
         }
