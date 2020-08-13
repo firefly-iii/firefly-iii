@@ -78,7 +78,7 @@ return [
             'days'   => 7,
         ],
         'audit'      => [
-            'driver' => 'daily',
+            'driver' => envNonEmpty('AUDIT_LOG_CHANNEL', 'daily'),
             'path'   => storage_path('logs/ff3-audit.log'),
             'tap'    => [AuditLogger::class],
             'level'  => 'info',
