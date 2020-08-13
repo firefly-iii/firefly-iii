@@ -124,7 +124,7 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
-        Log::channel('audit')->info('Show login form.');
+        Log::channel('audit')->info('Show login form (1.0).');
 
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
