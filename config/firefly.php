@@ -327,28 +327,27 @@ return [
      */
     'languages'                    => [
         // currently enabled languages
+        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
+        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
         'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
         'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
-        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
-        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
+        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
+        // 'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
         'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
+        'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
+        'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
-        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
-        'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
-        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
-        'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
-
-        //'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
 
         // currently disabled languages:
         //        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
