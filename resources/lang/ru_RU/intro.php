@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Это ранее созданные счета. Вы можете использовать счёт "Наличные" для отслеживания ваших наличных расходов, но это, в общем-то, не обязательно.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Введите основную информацию о вашей транзакции. Счёт-источник, счёт назначения, дату и описание.',
+    'transactions_create_amount_info'                 => 'Введите сумму транзакции. Если сумма задана в иностранной валюте, эти поля, при необходимости, будут автоматически обновляться.',
+    'transactions_create_optional_info'               => 'Все эти поля являются необязательными. Добавление метаданных сделает ваши транзакции более организованными.',
+    'transactions_create_split'                       => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
 
     // create account:
     'accounts_create_iban'                            => 'Задайте вашим счетам действующий IBAN. В будущем это может сделать импорт данных очень простым.',

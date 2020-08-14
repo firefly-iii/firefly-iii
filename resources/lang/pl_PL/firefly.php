@@ -453,7 +453,7 @@ return [
     'rule_trigger_foreign_currency_is_choice'    => 'Waluta obca transakcji to..',
     'rule_trigger_foreign_currency_is'           => 'Waluta obca transakcji to ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ma co najmniej podaną liczbę załączników',
-    'rule_trigger_has_attachments'               => 'Ma co najmniej :count załącznik|Ma co najmniej :count załączników',
+    'rule_trigger_has_attachments'               => 'Ma co najmniej :trigger_value załącznik(ów)',
     'rule_trigger_store_journal'                 => 'Po utworzeniu transakcji',
     'rule_trigger_update_journal'                => 'Po zmodyfikowaniu transakcji',
     'rule_trigger_has_no_category_choice'        => 'Brak kategorii',
@@ -555,7 +555,7 @@ return [
     'select_tags_to_delete'           => 'Nie zapomnij wybrać tagów.',
     'deleted_x_tags'                  => 'Usunięto :count tag.|Usunięto :count tagów.',
     'create_rule_from_transaction'    => 'Utwórz regułę na podstawie transakcji',
-    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
+    'create_recurring_from_transaction' => 'Utwórz cykliczną transakcję na podstawie transakcji',
 
 
     // preferences
@@ -735,10 +735,10 @@ return [
     'profile_something_wrong'                   => 'Coś poszło nie tak!',
     'profile_try_again'                         => 'Coś poszło nie tak. Spróbuj ponownie.',
     'amounts'                                   => 'Kwoty',
-    'multi_account_warning_unknown'             => 'W zależności od rodzaju transakcji, którą tworzysz, konto źródłowe i/lub docelowe kolejnych podziałów może zostać unieważnione przez dowolny z nich określony w pierwszym podziale transakcji.',
-    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
-    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
-    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+    'multi_account_warning_unknown'             => 'W zależności od rodzaju transakcji, którą tworzysz, konto źródłowe i/lub docelowe kolejnych podziałów może zostać ustawione na konto zdefiniowane w pierwszym podziale transakcji.',
+    'multi_account_warning_withdrawal'          => 'Pamiętaj, że konto źródłowe kolejnych podziałów zostanie ustawione na konto zdefiniowane w pierwszym podziale wypłaty.',
+    'multi_account_warning_deposit'             => 'Pamiętaj, że konto docelowe kolejnych podziałów zostanie ustawione na konto zdefiniowane w pierwszym podziale wpłaty.',
+    'multi_account_warning_transfer'            => 'Pamiętaj, że konta źródłowe i docelowe kolejnych podziałów zostaną ustawione na konto zdefiniowane w pierwszym podziale transferu.',
 
     // export data:
     'export_data_title'                         => 'Eksportuj dane z Firefly III',
@@ -981,9 +981,11 @@ return [
     'expense_accounts'                          => 'Konta wydatków',
     'expense_accounts_inactive'                 => 'Konto wydatków (nieaktywne)',
     'revenue_accounts'                          => 'Konta przychodów',
+    'revenue_accounts_inactive'                 => 'Konta przychodów (nieaktywne)',
     'cash_accounts'                             => 'Konta gotówkowe',
     'Cash account'                              => 'Konto gotówkowe',
     'liabilities_accounts'                      => 'Zobowiązania',
+    'liabilities_accounts_inactive'             => 'Zobowiązania (nieaktywne)',
     'reconcile_account'                         => 'Uzgodnij konto ":account"',
     'overview_of_reconcile_modal'               => 'Przegląd rozrachunku',
     'delete_reconciliation'                     => 'Usuń uzgodnienie',

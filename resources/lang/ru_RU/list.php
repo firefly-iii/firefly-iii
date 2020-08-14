@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Подходящие правила',
     'active'                  => 'Активен?',
     'percentage'              => 'процентов',
-    'recurring_transaction'   => 'Recurring transaction',
+    'recurring_transaction'   => 'Повторяющаяся транзакция',
     'next_due'                => 'Следующий срок',
     'transaction_type'        => 'Тип',
     'lastActivity'            => 'Последняя активность',

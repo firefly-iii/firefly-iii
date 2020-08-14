@@ -82,10 +82,10 @@
         "profile_oauth_client_secret_expl": "Oto tw\u00f3j nowy sekret klienta. Jest to jedyny raz, gdy zostanie wy\u015bwietlony, wi\u0119c nie zgub go! Mo\u017cesz teraz u\u017cy\u0107 tego sekretu, aby wykona\u0107 zapytania API.",
         "profile_oauth_confidential": "Poufne",
         "profile_oauth_confidential_help": "Wymagaj od klienta uwierzytelnienia za pomoc\u0105 sekretu. Poufni klienci mog\u0105 przechowywa\u0107 po\u015bwiadczenia w bezpieczny spos\u00f3b bez nara\u017cania ich na dost\u0119p przez nieuprawnione strony. Publiczne aplikacje, takie jak natywne aplikacje desktopowe lub JavaScript SPA, nie s\u0105 w stanie bezpiecznie trzyma\u0107 sekret\u00f3w.",
-        "multi_account_warning_unknown": "W zale\u017cno\u015bci od rodzaju transakcji, kt\u00f3r\u0105 tworzysz, konto \u017ar\u00f3d\u0142owe i\/lub docelowe kolejnych podzia\u0142\u00f3w mo\u017ce zosta\u0107 uniewa\u017cnione przez dowolny z nich okre\u015blony w pierwszym podziale transakcji.",
-        "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
-        "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
-        "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer."
+        "multi_account_warning_unknown": "W zale\u017cno\u015bci od rodzaju transakcji, kt\u00f3r\u0105 tworzysz, konto \u017ar\u00f3d\u0142owe i\/lub docelowe kolejnych podzia\u0142\u00f3w mo\u017ce zosta\u0107 ustawione na konto zdefiniowane w pierwszym podziale transakcji.",
+        "multi_account_warning_withdrawal": "Pami\u0119taj, \u017ce konto \u017ar\u00f3d\u0142owe kolejnych podzia\u0142\u00f3w zostanie ustawione na konto zdefiniowane w pierwszym podziale wyp\u0142aty.",
+        "multi_account_warning_deposit": "Pami\u0119taj, \u017ce konto docelowe kolejnych podzia\u0142\u00f3w zostanie ustawione na konto zdefiniowane w pierwszym podziale wp\u0142aty.",
+        "multi_account_warning_transfer": "Pami\u0119taj, \u017ce konta \u017ar\u00f3d\u0142owe i docelowe kolejnych podzia\u0142\u00f3w zostan\u0105 ustawione na konto zdefiniowane w pierwszym podziale transferu."
     },
     "form": {
         "interest_date": "Data odsetek",
