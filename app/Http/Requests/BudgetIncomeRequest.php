@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class BudgetIncomeRequest.
  *
  * @codeCoverageIgnore
  */
-class BudgetIncomeRequest extends Request
+class BudgetIncomeRequest extends FormRequest
 {
     /**
      * Verify the request.

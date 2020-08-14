@@ -165,10 +165,11 @@ interface TagRepositoryInterface
      * Search the users tags.
      *
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchTags(string $query): Collection;
+    public function searchTags(string $query, int $limit): Collection;
 
     /**
      * @param User $user

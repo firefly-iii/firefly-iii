@@ -47,6 +47,7 @@ class FixUnevenAmount extends Command
      */
     protected $signature = 'firefly-iii:fix-uneven-amount';
 
+
     /**
      * Execute the console command.
      *

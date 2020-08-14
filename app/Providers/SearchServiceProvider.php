@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Support\Search\Search;
+use FireflyIII\Support\Search\BetterQuerySearch;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -48,8 +48,8 @@ class SearchServiceProvider extends ServiceProvider
         $this->app->bind(
             SearchInterface::class,
             function (Application $app) {
-                /** @var Search $search */
-                $search = app(Search::class);
+                /** @var BetterQuerySearch $search */
+                $search = app(BetterQuerySearch::class);
                 if ($app->auth->check()) {
                     $search->setUser(auth()->user());
                 }

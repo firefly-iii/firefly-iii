@@ -121,4 +121,14 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     {
         $this->user = $user;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getJournalLinks(TransactionJournal $journal): Collection
+    {
+        $collection = $journal->destJournalLinks()->get();
+
+        return $journal->sourceJournalLinks()->get()->merge($collection);
+    }
 }

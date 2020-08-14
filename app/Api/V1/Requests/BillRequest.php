@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
@@ -34,9 +36,9 @@ use Illuminate\Validation\Validator;
  *
  * @codeCoverageIgnore
  */
-class BillRequest extends Request
+class BillRequest extends FormRequest
 {
-
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *
@@ -79,7 +81,6 @@ class BillRequest extends Request
      * The rules that the incoming request must be matched against.
      *
      * @return array
-     *
      */
     public function rules(): array
     {

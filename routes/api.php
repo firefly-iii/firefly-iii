@@ -57,6 +57,27 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete', 'prefix' => 'autocomplete',
+     'as'        => 'api.v1.autocomplete.',],
+    static function () {
+        // Auto complete routes
+        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
+        Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
+        Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
+        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
+        Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);
+        Route::get('currencies-with-code', ['uses' => 'CurrencyController@currenciesWithCode', 'as' => 'currencies-with-code']);
+        Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
+        Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
+        Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
+        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
+        Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
+        Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
+        Route::get('transaction-types', ['uses' => 'TransactionTypeController@transactionTypes', 'as' => 'transaction-types']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
      'as'        => 'api.v1.object-groups.',],
     static function () {
@@ -146,7 +167,7 @@ Route::group(
         Route::get('{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
         Route::put('{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
         Route::delete('{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
-        Route::post('{budget}/limits', ['uses' => 'BudgetController@storeBudgetLimit', 'as' => 'store_budget_limit']);
+        Route::post('{budget}/limits', ['uses' => 'BudgetLimitController@store', 'as' => 'store_budget_limit']);
 
         Route::get('{budget}/transactions', ['uses' => 'BudgetController@transactions', 'as' => 'transactions']);
         Route::get('{budget}/attachments', ['uses' => 'BudgetController@attachments', 'as' => 'attachments']);
@@ -460,8 +481,9 @@ Route::group(
         Route::get('{transactionGroup}', ['uses' => 'TransactionController@show', 'as' => 'show']);
         Route::get('{transactionGroup}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
         Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+        Route::get('{tj}/transaction_links', ['uses' => 'TransactionController@transactionLinks', 'as' => 'transaction_links']);
         Route::put('{transactionGroup}', ['uses' => 'TransactionController@update', 'as' => 'update']);
-        Route::delete('{transactionGroup}/{transactionJournal}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
+        Route::delete('{transactionGroup}/{tj}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
         Route::delete('{transactionGroup}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
     }
 );

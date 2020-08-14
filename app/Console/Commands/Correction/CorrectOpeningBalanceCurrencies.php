@@ -52,6 +52,7 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     protected $signature = 'firefly-iii:fix-ob-currencies';
 
+
     /**
      * Execute the console command.
      *

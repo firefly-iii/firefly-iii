@@ -26,17 +26,20 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * Class RecurrenceUpdateRequest
  */
-class RecurrenceUpdateRequest extends Request
+class RecurrenceUpdateRequest extends FormRequest
 {
-    use RecurrenceValidation, TransactionValidation, CurrencyValidation;
+    use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData;
 
     /**
      * Authorize logged in users.
@@ -154,16 +157,16 @@ class RecurrenceUpdateRequest extends Request
     /**
      * Returns the repetition data as it is found in the submitted data.
      *
-     * @return array|null
+     * @return array
      */
-    private function getRepetitionData(): ?array
+    private function getRepetitionData(): array
     {
         $return = [];
         // repetition data:
         /** @var array $repetitions */
         $repetitions = $this->get('repetitions');
         if (null === $repetitions) {
-            return null;
+            return [];
         }
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
@@ -182,16 +185,16 @@ class RecurrenceUpdateRequest extends Request
      * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
      * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
      *
-     * @return array|null
+     * @return array
      */
-    private function getTransactionData(): ?array
+    private function getTransactionData(): array
     {
         $return = [];
         // transaction data:
         /** @var array $transactions */
         $transactions = $this->get('transactions');
         if (null === $transactions) {
-            return null;
+            return [];
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {

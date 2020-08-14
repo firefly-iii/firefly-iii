@@ -36,8 +36,8 @@ $(document).ready(function () {
     });
 
     $('input[name="tags"]').on('itemAdded', function(event) {
-        $('input[name="ignore_tags"]').attr('checked', false);
-
+        $('#tags_action_do_nothing').attr('checked', false);
+        $('#tags_action_do_replace').attr('checked', true);
     });
 
 

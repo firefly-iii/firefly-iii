@@ -24,12 +24,16 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
+use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TagFormRequest.
  */
-class TagFormRequest extends Request
+class TagFormRequest extends FormRequest
 {
+    use ConvertsDataTypes, AppendsLocationData;
     /**
      * Verify the request.
      *

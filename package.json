@@ -11,15 +11,15 @@
     },
     "devDependencies": {
         "@johmun/vue-tags-input": "^2.1.0",
-        "axios": "^0.18.1",
+        "axios": "^0.19.2",
         "bootstrap-sass": "^3.3.7",
-        "cross-env": "^5.1",
+        "cross-env": "^7.0",
         "font-awesome": "^4.7.0",
         "jquery": "^3.4.1",
         "laravel-mix": "^5.0",
-        "uiv": "^0.34",
+        "uiv": "^0.36",
         "vue": "^2.6",
-        "vue-i18n": "^8.15",
+        "vue-i18n": "^8.20",
         "vue-template-compiler": "^2.6.11"
     }
 }

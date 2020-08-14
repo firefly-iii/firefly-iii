@@ -239,7 +239,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getMaxOrder(): int
     {
-        return (int)$this->user->piggyBanks()->max('order');
+        return (int)$this->user->piggyBanks()->max('piggy_banks.order');
     }
 
     /**
@@ -402,5 +402,20 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function destroyAll(): void
     {
         $this->user->piggyBanks()->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchPiggyBank(string $query, int $limit): Collection
+    {
+        $search = $this->user->piggyBanks();
+        if ('' !== $query) {
+            $search->where('piggy_banks.name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('piggy_banks.order', 'ASC')
+               ->orderBy('piggy_banks.name', 'ASC');
+
+        return $search->take($limit)->get();
     }
 }

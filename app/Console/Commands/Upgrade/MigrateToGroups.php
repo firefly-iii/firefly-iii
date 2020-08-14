@@ -69,6 +69,7 @@ class MigrateToGroups extends Command
     /** @var JournalDestroyService */
     private $service;
 
+
     /**
      * Execute the console command.
      *
@@ -289,7 +290,6 @@ class MigrateToGroups extends Command
      * @param TransactionJournal $journal
      *
      * @throws Exception
-     *
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {

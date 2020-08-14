@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Для создания новый транзакций, счётов или другие элементов, используйте меню под этим значком.',
     'index_cash_account'                              => 'Это ранее созданные счета. Вы можете использовать счёт "Наличные" для отслеживания ваших наличных расходов, но это, в общем-то, не обязательно.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Выберите основной счёт или обязательство, которые вы используете чаще всего, из этого списка.',
-    'transactions_create_withdrawal_destination'      => 'Выберите счёт расходов. Оставьте это поле пустым, если вы хотите создать наличный счёт.',
-    'transactions_create_withdrawal_foreign_currency' => 'Используйте это поле для указания валюты и суммы.',
-    'transactions_create_withdrawal_more_meta'        => 'В этих полях вы можете указать различные дополнительные данные.',
-    'transactions_create_withdrawal_split_add'        => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'В этом поле укажите (или выберите из списка) получателя платежа. Оставьте поле пустым, если вы хотите сделать вклад наличными.',
-    'transactions_create_deposit_destination'         => 'Выберите основной счёт или обязательство.',
-    'transactions_create_deposit_foreign_currency'    => 'Используйте это поле для указания валюты и суммы.',
-    'transactions_create_deposit_more_meta'           => 'В этих полях вы можете указать различные дополнительные данные.',
-    'transactions_create_deposit_split_add'           => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Выберите исходный счёт здесь.',
-    'transactions_create_transfer_destination'        => 'Выберите счёт назначения здесь.',
-    'transactions_create_transfer_foreign_currency'   => 'Используйте это поле для указания валюты и суммы.',
-    'transactions_create_transfer_more_meta'          => 'В этих полях вы можете указать различные дополнительные данные.',
-    'transactions_create_transfer_split_add'          => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
+    // transactions
+    'transactions_create_basic_info'                  => 'Введите основную информацию о вашей транзакции. Счёт-источник, счёт назначения, дату и описание.',
+    'transactions_create_amount_info'                 => 'Введите сумму транзакции. Если сумма задана в иностранной валюте, эти поля, при необходимости, будут автоматически обновляться.',
+    'transactions_create_optional_info'               => 'Все эти поля являются необязательными. Добавление метаданных сделает ваши транзакции более организованными.',
+    'transactions_create_split'                       => 'Если вы хотите разделить транзакцию, добавьте дополнительные фрагменты этой кнопкой',
 
     // create account:
     'accounts_create_iban'                            => 'Задайте вашим счетам действующий IBAN. В будущем это может сделать импорт данных очень простым.',

@@ -603,30 +603,20 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'],
     static function () {
 
-    // for auto complete
-        Route::get('accounts', ['uses' => 'Json\AutoCompleteController@accounts', 'as' => 'autocomplete.accounts']);
-        Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'autocomplete.revenue-accounts']);
-        Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'autocomplete.expense-accounts']);
-        Route::get('asset-accounts', ['uses' => 'Json\AutoCompleteController@assetAccounts', 'as' => 'autocomplete.asset-accounts']);
-        Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'autocomplete.budgets']);
-        Route::get('object-groups', ['uses' => 'Json\AutoCompleteController@objectGroups', 'as' => 'autocomplete.object-groups']);
-        Route::get('bills', ['uses' => 'Json\AutoCompleteController@bills', 'as' => 'autocomplete.bills']);
-        Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'autocomplete.categories']);
-        Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
-        Route::get('piggy-banks', ['uses' => 'Json\AutoCompleteController@piggyBanks', 'as' => 'autocomplete.piggy-banks']);
-        Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
-        Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
-        Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
-        Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
-        Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
+        // for auto complete
+        //        Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
+        //        Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
+        //        Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
 
         // budgets:
-        Route::get('budget/total-budgeted/{currency}/{start_date}/{end_date}', ['uses' => 'Json\BudgetController@getBudgetInformation', 'as' => 'budget.total-budgeted']);
+        Route::get(
+            'budget/total-budgeted/{currency}/{start_date}/{end_date}',
+            ['uses' => 'Json\BudgetController@getBudgetInformation', 'as' => 'budget.total-budgeted']
+        );
 
 
         // boxes
         Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
-        Route::get('box/bills', ['uses' => 'Json\BoxController@bills', 'as' => 'box.bills']);
         Route::get('box/available', ['uses' => 'Json\BoxController@available', 'as' => 'box.available']);
         Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
 
@@ -734,6 +724,7 @@ Route::group(
 
         Route::get('show/{recurrence}', ['uses' => 'Recurring\ShowController@show', 'as' => 'show']);
         Route::get('create', ['uses' => 'Recurring\CreateController@create', 'as' => 'create']);
+        Route::get('create-from-transaction/{tj}', ['uses' => 'Recurring\CreateController@createFromJournal', 'as' => 'create-from-journal']);
         Route::get('edit/{recurrence}', ['uses' => 'Recurring\EditController@edit', 'as' => 'edit']);
         Route::get('delete/{recurrence}', ['uses' => 'Recurring\DeleteController@delete', 'as' => 'delete']);
 

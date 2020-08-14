@@ -89,6 +89,7 @@ class ApplyRules extends Command
     /** @var Carbon */
     private $startDate;
 
+
     /**
      * Execute the console command.
      *

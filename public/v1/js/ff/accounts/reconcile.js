@@ -36,9 +36,9 @@ $(function () {
     Respond to changes in balance statements.
      */
     $('input[type="number"]').on('change', function () {
-        console.log('On type=number change.');
+        //console.log('On type=number change.');
         if (reconcileStarted) {
-            console.log('Reconcile has started.');
+            //console.log('Reconcile has started.');
             calculateBalanceDifference();
             difference = balanceDifference - selectedAmount;
             updateDifference();
@@ -51,9 +51,9 @@ $(function () {
     Respond to changes in the date range.
      */
     $('input[type="date"]').on('change', function () {
-        console.log('On type=date change.');
+        //console.log('On type=date change.');
         if (reconcileStarted) {
-            console.log('Reconcile has started.');
+            //console.log('Reconcile has started.');
             // hide original instructions.
             $('.select_transactions_instruction').hide();
 
@@ -98,38 +98,38 @@ function selectAllReconcile(e) {
         // if checked, add to selected amount
         if (doCheck === true && check.data('younger') === false) {
             selectedAmount = selectedAmount - amount;
-            console.log('checked = true and younger = false so selected amount = ' + selectedAmount);
+            //console.log('checked = true and younger = false so selected amount = ' + selectedAmount);
             localStorage.setItem(identifier, 'true');
         }
         if (doCheck === false && check.data('younger') === false) {
             selectedAmount = selectedAmount + amount;
-            console.log('checked = false and younger = false so selected amount = ' + selectedAmount);
+            //console.log('checked = false and younger = false so selected amount = ' + selectedAmount);
             localStorage.setItem(identifier, 'false');
         }
         difference = balanceDifference - selectedAmount;
-        console.log('Difference is now ' + difference);
+        //console.log('Difference is now ' + difference);
     });
 
     updateDifference();
 }
 
 function storeReconcile() {
-    console.log('in storeReconcile()');
+    //console.log('in storeReconcile()');
     // get modal HTML:
     var ids = [];
     $.each($('.reconcile_checkbox:checked'), function (i, v) {
         var obj = $(v);
         if (obj.data('inrange') === true) {
-            console.log('Added item with amount to list of checked ' + obj.val());
+            //console.log('Added item with amount to list of checked ' + obj.val());
             ids.push(obj.data('id'));
         } else {
-            console.log('Ignored item with amount because is not in range ' + obj.val());
+            //console.log('Ignored item with amount because is not in range ' + obj.val());
         }
     });
     var cleared = [];
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
-        console.log('Added item with amount to list of cleared ' + obj.val());
+        //console.log('Added item with amount to list of cleared ' + obj.val());
         // todo here we need to check previous transactions etc.
         cleared.push(obj.data('id'));
     });
@@ -160,20 +160,20 @@ function checkReconciledBox(e) {
     var amount = parseFloat(el.val());
     var journalId = parseInt(el.data('id'));
     var identifier = 'checked_' + journalId;
-    console.log('in checkReconciledBox(' + journalId + ') with amount ' + amount + ' and selected amount ' + selectedAmount);
+    //console.log('in checkReconciledBox(' + journalId + ') with amount ' + amount + ' and selected amount ' + selectedAmount);
     // if checked, add to selected amount
     if (el.prop('checked') === true && el.data('younger') === false) {
         selectedAmount = selectedAmount - amount;
-        console.log('checked = true and younger = false so selected amount = ' + selectedAmount);
+        //console.log('checked = true and younger = false so selected amount = ' + selectedAmount);
         localStorage.setItem(identifier, 'true');
     }
     if (el.prop('checked') === false && el.data('younger') === false) {
         selectedAmount = selectedAmount + amount;
-        console.log('checked = false and younger = false so selected amount = ' + selectedAmount);
+        //console.log('checked = false and younger = false so selected amount = ' + selectedAmount);
         localStorage.setItem(identifier, 'false');
     }
     difference = balanceDifference - selectedAmount;
-    console.log('Difference is now ' + difference);
+    //console.log('Difference is now ' + difference);
     updateDifference();
 }
 
@@ -183,7 +183,7 @@ function checkReconciledBox(e) {
  * and put it in balanceDifference.
  */
 function calculateBalanceDifference() {
-    console.log('in calculateBalanceDifference()');
+    //console.log('in calculateBalanceDifference()');
     var startBalance = parseFloat($('input[name="start_balance"]').val());
     var endBalance = parseFloat($('input[name="end_balance"]').val());
     balanceDifference = startBalance - endBalance;

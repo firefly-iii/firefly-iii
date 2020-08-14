@@ -56,12 +56,9 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var AccountValidator */
-    private $accountValidator;
-    /** @var BillRepositoryInterface */
-    private $billRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private AccountValidator           $accountValidator;
+    private BillRepositoryInterface    $billRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var bool */
@@ -79,6 +76,7 @@ class TransactionJournalFactory
     /** @var User The user */
     private $user;
 
+
     /**
      * Constructor.
      *
@@ -88,11 +86,12 @@ class TransactionJournalFactory
     public function __construct()
     {
         $this->errorOnHash = false;
-        $this->fields      = [
+        // TODO move valid meta fields to config.
+        $this->fields = [
             // sepa
             'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
             'sepa_db', 'sepa_country', 'sepa_ep',
-            'sepa_ci', 'sepa_batch_id',
+            'sepa_ci', 'sepa_batch_id', 'external_uri',
 
             // dates
             'interest_date', 'book_date', 'process_date',
@@ -100,7 +99,11 @@ class TransactionJournalFactory
 
             // others
             'recurrence_id', 'internal_reference', 'bunq_payment_id',
-            'import_hash', 'import_hash_v2', 'external_id', 'original_source'];
+            'import_hash', 'import_hash_v2', 'external_id', 'original_source',
+
+            // recurring transactions
+            'recurrence_total', 'recurrence_count',
+        ];
 
 
         if ('testing' === config('app.env')) {
@@ -125,9 +128,9 @@ class TransactionJournalFactory
      *
      * @param array $data
      *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
      * @return Collection
+     * @throws FireflyException
+     * @throws DuplicateTransactionException
      */
     public function create(array $data): Collection
     {
@@ -243,9 +246,9 @@ class TransactionJournalFactory
     /**
      * @param NullArrayObject $row
      *
-     * @throws FireflyException
-     * @throws DuplicateTransactionException
      * @return TransactionJournal|null
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -303,10 +306,10 @@ class TransactionJournalFactory
         Log::debug('Now calling getAccount for the destination.');
         $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
         Log::debug('Done with getAccount(2x)');
-        $currency           = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
-        $foreignCurrency    = $this->compareCurrencies($currency, $foreignCurrency);
-        $foreignCurrency    = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
-        $description        = $this->getDescription($description);
+        $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
+        $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
+        $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
+        $description     = $this->getDescription($description);
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -593,8 +596,8 @@ class TransactionJournalFactory
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = isset($data['source_id']) ? (int) $data['source_id'] : null;
-        $sourceName  = isset($data['source_name']) ? (string) $data['source_name'] : null;
+        $sourceId    = $data['source_id'] ? (int) $data['source_id'] : null;
+        $sourceName  = $data['source_name'] ? (string) $data['source_name'] : null;
         $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
 
         // do something with result:
@@ -603,8 +606,8 @@ class TransactionJournalFactory
         }
         Log::debug('Source seems valid.');
         // validate destination account
-        $destinationId    = isset($data['destination_id']) ? (int) $data['destination_id'] : null;
-        $destinationName  = isset($data['destination_name']) ? (string) $data['destination_name'] : null;
+        $destinationId    = $data['destination_id'] ? (int) $data['destination_id'] : null;
+        $destinationName  = $data['destination_name'] ? (string) $data['destination_name'] : null;
         $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {

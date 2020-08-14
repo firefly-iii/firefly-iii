@@ -1,19 +1,65 @@
 <div class="list-group">
-    {% for group in groups %}
-        <a class="list-group-item" href="{{ route('transactions.show', [group.id]) }}">
-            {% for transaction in group.transactions %}
-                {{ transaction.description }}
-                <span class="pull-right small">
-                    {{ journalArrayAmount(transaction) }}
-                </span>
-                <br/>
-            {% endfor %}
-            {% if group.count > 1 %}
-                &nbsp;
-                <span class="pull-right small">
-                {{ groupAmount(group) }}
-            </span>
+    {% for transaction in transactions %}
+        <a class="list-group-item" href="{{ route('transactions.show', [transaction.transaction_group_id]) }}">
+            {% if transaction.transaction_group_title %}
+                {{ transaction.transaction_group_title }}:
             {% endif %}
+            {{ transaction.description }}
+
+            <span class="pull-right small">
+          {% if transaction.transaction_type_type == 'Deposit' %}
+              {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+              {% if null != transaction.foreign_amount %}
+                  ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+              {% endif %}
+          {% elseif transaction.transaction_type_type == 'Transfer' %}
+              <span class="text-info">
+                  {#  transfer away:  #}
+                  {% if transaction.source_account_id == account.id %}
+                      {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                      {% if null != transaction.foreign_amount %}
+                          ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                      {% endif %}
+                  {% else %}
+                      {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                      {% if null != transaction.foreign_amount %}
+                          ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                      {% endif %}
+                  {% endif %}
+
+                  {#  transfer to #}
+            </span>
+          {% elseif transaction.transaction_type_type == 'Opening balance' %}
+              {% if transaction.source_account_type == 'Initial balance account' %}
+                  {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                  {% if null != transaction.foreign_amount %}
+                      ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                  {% endif %}
+              {% else %}
+                  {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                  {% if null != transaction.foreign_amount %}
+                      ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                  {% endif %}
+              {% endif %}
+          {% elseif transaction.transaction_type_type == 'Reconciliation' %}
+              {% if transaction.source_account_type == 'Reconciliation account' %}
+                  {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                  {% if null != transaction.foreign_amount %}
+                      ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                  {% endif %}
+              {% else %}
+                  {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                  {% if null != transaction.foreign_amount %}
+                      ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                  {% endif %}
+              {% endif %}
+          {% else %}
+              {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+              {% if null != transaction.foreign_amount %}
+                  ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+              {% endif %}
+          {% endif %}
+                </span>
         </a>
     {% endfor %}
 </div>

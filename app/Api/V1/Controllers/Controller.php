@@ -39,18 +39,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Class Controller.
  *
  * @codeCoverageIgnore
- *
  */
-class Controller extends BaseController
+abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var ParameterBag Parameters from the URI are stored here. */
-    protected $parameters;
+    protected ParameterBag $parameters;
+
 
     /**
      * Controller constructor.
-     *
      */
     public function __construct()
     {
@@ -62,9 +60,8 @@ class Controller extends BaseController
      * Method to help build URI's.
      *
      * @return string
-     *
      */
-    protected function buildParams(): string
+    final protected function buildParams(): string
     {
         $return = '?';
         $params = [];
@@ -86,7 +83,7 @@ class Controller extends BaseController
     /**
      * @return Manager
      */
-    protected function getManager(): Manager
+    final protected function getManager(): Manager
     {
         // create some objects:
         $manager = new Manager;

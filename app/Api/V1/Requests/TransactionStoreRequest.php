@@ -28,18 +28,20 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionStoreRequest
  */
-class TransactionStoreRequest extends Request
+class TransactionStoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation;
+    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes;
 
     /**
      * Authorize logged in users.
@@ -138,6 +140,7 @@ class TransactionStoreRequest extends Request
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
@@ -271,6 +274,7 @@ class TransactionStoreRequest extends Request
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
                 'bunq_payment_id'       => $this->stringFromValue((string) $object['bunq_payment_id']),
+                'external_uri'          => $this->stringFromValue((string) $object['external_uri']),
 
                 'sepa_cc'       => $this->stringFromValue($object['sepa_cc']),
                 'sepa_ct_op'    => $this->stringFromValue($object['sepa_ct_op']),

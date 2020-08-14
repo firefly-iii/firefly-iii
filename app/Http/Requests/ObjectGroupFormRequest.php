@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\ObjectGroup;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ObjectGroupFormRequest.
  */
-class ObjectGroupFormRequest extends Request
+class ObjectGroupFormRequest extends FormRequest
 {
     /**
      * Verify the request.

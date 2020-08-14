@@ -25,13 +25,17 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Request class for end points that require date parameters.
  *
  * Class DateRequest
  */
-class DateRequest extends Request
+class DateRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

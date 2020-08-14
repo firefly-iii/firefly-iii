@@ -24,15 +24,17 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\ZeroOrMore;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
- *
  * Class PiggyBankStoreRequest
  *
  * @codeCoverageIgnore
  */
-class PiggyBankStoreRequest extends Request
+class PiggyBankStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

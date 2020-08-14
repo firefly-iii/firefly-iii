@@ -59,6 +59,7 @@ class AccountCurrencies extends Command
     /** @var UserRepositoryInterface */
     private $userRepos;
 
+
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *

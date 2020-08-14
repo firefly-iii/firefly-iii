@@ -40,32 +40,19 @@ use Log;
  */
 class Search implements SearchInterface
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
-    /** @var int */
-    private $limit = 100;
-    /** @var Collection */
-    private $modifiers;
-    /** @var string */
-    private $originalQuery = '';
-    /** @var float */
-    private $startTime;
-    /** @var TagRepositoryInterface */
-    private $tagRepository;
-    /** @var User */
-    private $user;
-    /** @var array */
-    private $validModifiers;
-    /** @var array */
-    private $words = [];
-    /** @var int */
-    private $page;
+    private AccountRepositoryInterface  $accountRepository;
+    private BillRepositoryInterface     $billRepository;
+    private BudgetRepositoryInterface   $budgetRepository;
+    private CategoryRepositoryInterface $categoryRepository;
+    private Collection                  $modifiers;
+    private string                      $originalQuery = '';
+    private float                       $startTime;
+    private int                         $limit;
+    private TagRepositoryInterface      $tagRepository;
+    private User                        $user;
+    private array                       $validModifiers;
+    private array                       $words         = [];
+    private int                         $page;
 
     /**
      * Search constructor.
@@ -74,7 +61,7 @@ class Search implements SearchInterface
     {
         $this->page               = 1;
         $this->modifiers          = new Collection;
-        $this->validModifiers     = (array)config('firefly.search_modifiers');
+        $this->validModifiers     = (array) config('firefly.search_modifiers');
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
         $this->categoryRepository = app(CategoryRepositoryInterface::class);
@@ -156,7 +143,9 @@ class Search implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         Log::debug('Start of searchTransactions()');
-        $pageSize = 50;
+
+        // get limit from preferences.
+        $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -167,17 +156,7 @@ class Search implements SearchInterface
 
         // Most modifiers can be applied to the collector directly.
         $collector = $this->applyModifiers($collector);
-
         return $collector->getPaginatedGroups();
-
-    }
-
-    /**
-     * @param int $limit
-     */
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
     }
 
     /**
@@ -200,10 +179,6 @@ class Search implements SearchInterface
      */
     private function applyModifiers(GroupCollectorInterface $collector): GroupCollectorInterface
     {
-        /*
-         * TODO:
-         * 'bill'?
-         */
         $totalAccounts = new Collection;
 
         foreach ($this->modifiers as $modifier) {
@@ -214,28 +189,30 @@ class Search implements SearchInterface
                 case 'source':
                     // source can only be asset, liability or revenue account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
+                    $collector->setSourceAccounts($totalAccounts);
                     break;
                 case 'to':
                 case 'destination':
                     // source can only be asset, liability or expense account:
                     $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
-                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes, 25);
                     if ($accounts->count() > 0) {
                         $totalAccounts = $accounts->merge($totalAccounts);
                     }
+                    $collector->setDestinationAccounts($totalAccounts);
                     break;
                 case 'category':
-                    $result = $this->categoryRepository->searchCategory($modifier['value']);
+                    $result = $this->categoryRepository->searchCategory($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setCategories($result);
                     }
                     break;
                 case 'bill':
-                    $result = $this->billRepository->searchBill($modifier['value']);
+                    $result = $this->billRepository->searchBill($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBills($result);
                     }
@@ -246,28 +223,27 @@ class Search implements SearchInterface
                         $collector->setTags($result);
                     }
                     break;
-                    break;
                 case 'budget':
-                    $result = $this->budgetRepository->searchBudget($modifier['value']);
+                    $result = $this->budgetRepository->searchBudget($modifier['value'], 25);
                     if ($result->count() > 0) {
                         $collector->setBudgets($result);
                     }
                     break;
                 case 'amount_is':
                 case 'amount':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountIs($amount);
                     break;
                 case 'amount_max':
                 case 'amount_less':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountLess($amount);
                     break;
                 case 'amount_min':
                 case 'amount_more':
-                    $amount = app('steam')->positive((string)$modifier['value']);
+                    $amount = app('steam')->positive((string) $modifier['value']);
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $amount));
                     $collector->amountMore($amount);
                     break;
@@ -311,7 +287,6 @@ class Search implements SearchInterface
                     break;
             }
         }
-        $collector->setAccounts($totalAccounts);
 
         return $collector;
     }
@@ -322,9 +297,9 @@ class Search implements SearchInterface
     private function extractModifier(string $string): void
     {
         $parts = explode(':', $string);
-        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
-            $type  = strtolower(trim((string)$parts[0]));
-            $value = trim((string)$parts[1]);
+        if (2 === count($parts) && '' !== trim((string) $parts[1]) && '' !== trim((string) $parts[0])) {
+            $type  = strtolower(trim((string) $parts[0]));
+            $value = trim((string) $parts[1]);
             $value = trim(trim($value, '"\''));
             if (in_array($type, $this->validModifiers, true)) {
                 // filter for valid type

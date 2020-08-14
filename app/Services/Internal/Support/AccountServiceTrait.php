@@ -85,7 +85,7 @@ trait AccountServiceTrait
             $fields = $this->validAssetFields;
         }
         if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
-            $fields = $this->validCCFields;
+            $fields = $this->validCCFields; // @codeCoverageIgnore
         }
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
@@ -96,10 +96,10 @@ trait AccountServiceTrait
 
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
-                    $data[$field] = 0;
+                    $data[$field] = 0; // @codeCoverageIgnore
                 }
                 if (is_bool($data[$field]) && true === $data[$field]) {
-                    $data[$field] = 1;
+                    $data[$field] = 1; // @codeCoverageIgnore
                 }
 
                 $factory->crud($account, $field, (string)$data[$field]);
@@ -150,7 +150,7 @@ trait AccountServiceTrait
     {
         $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
-            $data['opening_balance'] = '';
+            $data['opening_balance'] = ''; // @codeCoverageIgnore
         }
         if ('' !== $data['opening_balance'] && isset($data['opening_balance'], $data['opening_balance_date'])) {
             Log::debug('Array has valid opening balance data.');
@@ -158,6 +158,33 @@ trait AccountServiceTrait
             return true;
         }
         Log::debug('Array does not have valid opening balance data.');
+
+        return false;
+    }
+
+    /**
+     * Returns true if the data in the array is submitted but empty.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function isEmptyOBData(array $data): bool
+    {
+        if (!array_key_exists('opening_balance', $data) &&
+            !array_key_exists('opening_balance_date', $data)
+        ) {
+            // not set, so false.
+            return false;
+        }
+        // if isset, but is empty:
+        if (
+            (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
+            ||
+            (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
+        ) {
+            return true;
+        }
 
         return false;
     }
@@ -190,9 +217,11 @@ trait AccountServiceTrait
             $sourceId = $account->id;
         }
         if (0 === bccomp($amount, '0')) {
+            // @codeCoverageIgnoreStart
             Log::debug('Amount is zero, so will not make an OB group.');
 
             return null;
+            // @codeCoverageIgnoreEnd
         }
         $amount     = app('steam')->positive($amount);
         $submission = [
@@ -306,7 +335,6 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return TransactionGroup|null
-     * @codeCoverageIgnore
      */
     protected function updateOBGroup(Account $account, array $data): ?TransactionGroup
     {

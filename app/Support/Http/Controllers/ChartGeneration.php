@@ -90,8 +90,8 @@ trait ChartGeneration
             $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day', [], $locale));
-                $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
+                $label    = trim($currentStart->formatLocalized((string)trans('config.month_and_day', [], $locale)));
+                $balance  = $range[$format] ?? $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

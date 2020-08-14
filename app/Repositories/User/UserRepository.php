@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
+use Str;
 
 /**
  * Class UserRepository.
@@ -327,7 +328,7 @@ class UserRepository implements UserRepositoryInterface
                 'blocked'      => $data['blocked'] ?? false,
                 'blocked_code' => $data['blocked_code'] ?? null,
                 'email'        => $data['email'],
-                'password'     => str_random(24),
+                'password'     => Str::random(24),
             ]
         );
         $role = $data['role'] ?? '';

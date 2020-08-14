@@ -56,6 +56,10 @@ return [
             'driver'   => 'stack',
             'channels' => ['daily', 'stdout'],
         ],
+        'audit' => [
+            'driver'   => 'stack',
+            'channels' => ['daily_audit', 'stdout_daily'],
+        ],
         'single'     => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
@@ -77,12 +81,18 @@ return [
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
         ],
-        'audit'      => [
+        'daily_audit'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-audit.log'),
             'tap'    => [AuditLogger::class],
             'level'  => 'info',
             'days'   => 90,
+        ],
+        'stdout_daily'     => [
+            'driver' => 'single',
+            'path'   => 'php://stdout',
+            'tap'    => [AuditLogger::class],
+            'level'  => 'info',
         ],
         'dailytest'  => [
             'driver' => 'daily',

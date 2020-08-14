@@ -38,6 +38,7 @@ class CategoryFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *

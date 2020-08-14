@@ -24,6 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Logging;
 
+use Illuminate\Log\Logger;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\AbstractProcessingHandler;
+
 /**
  * Class AuditLogger
  * @codeCoverageIgnore
@@ -33,13 +37,19 @@ class AuditLogger
     /**
      * Customize the given logger instance.
      *
-     * @param  \Illuminate\Log\Logger $logger
+     * @param  Logger $logger
      *
      * @return void
      */
-    public function __invoke($logger)
+    public function __invoke(Logger $logger)
     {
         $processor = new AuditProcessor;
-        $logger->pushProcessor($processor);
+        /** @var AbstractProcessingHandler $handler */
+        foreach ($logger->getHandlers() as $handler) {
+            $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n");
+            $handler->setFormatter($formatter);
+            $handler->pushProcessor($processor);
+        }
+
     }
 }

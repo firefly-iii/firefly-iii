@@ -215,47 +215,6 @@ class BoxController extends Controller
         return response()->json($response);
     }
 
-
-    /**
-     * Bills to pay and paid.
-     *
-     * @param BillRepositoryInterface $repository
-     *
-     * @return JsonResponse
-     */
-    public function bills(BillRepositoryInterface $repository): JsonResponse
-    {
-        /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end = session('end', Carbon::now()->endOfMonth());
-
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('box-bills');
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-
-        /*
-         * Since both this method and the chart use the exact same data, we can suffice
-         * with calling the one method in the bill repository that will get this amount.
-         */
-        $paidAmount   = bcmul($repository->getBillsPaidInRange($start, $end), '-1');
-        $unpaidAmount = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $currency     = app('amount')->getDefaultCurrency();
-
-        $return = [
-            'paid'   => app('amount')->formatAnything($currency, $paidAmount, false),
-            'unpaid' => app('amount')->formatAnything($currency, $unpaidAmount, false),
-        ];
-        $cache->store($return);
-
-        return response()->json($return);
-    }
-
-
     /**
      * Total user net worth.
      *

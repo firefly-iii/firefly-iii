@@ -44,14 +44,10 @@ use Log;
  */
 trait JournalServiceTrait
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
-    /** @var TagFactory */
-    private $tagFactory;
+    private AccountRepositoryInterface  $accountRepository;
+    private BudgetRepositoryInterface   $budgetRepository;
+    private CategoryRepositoryInterface $categoryRepository;
+    private TagFactory                  $tagFactory;
 
 
     /**

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Events\RegisteredUser;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -63,6 +64,13 @@ class RegisterController extends Controller
     {
         parent::__construct();
         $this->middleware('guest');
+
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+
+        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
     }
 
     /**
@@ -105,7 +113,7 @@ class RegisterController extends Controller
         $this->registered($request, $user);
 
         // telemetry
-        \Telemetry::feature('system.users.count', User::count());
+        app('telemetry')->feature('system.users.count', (string)User::count());
 
         return redirect($this->redirectPath());
     }

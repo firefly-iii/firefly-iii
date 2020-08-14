@@ -9,212 +9,252 @@
 
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'options'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p>
-                        {{ trans('firefly.user_id_is',{user: userId})|raw }}
-                    </p>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <ul>
-                                    <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
-                                    <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
-                                    <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
-                                    <li><a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a></li>
-                                    <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
-                                </ul>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="{{ route('profile.index') }}#options" aria-controls="home" role="tab" data-toggle="tab">{{ 'options'|_ }}</a>
+                </li>
+                <li role="presentation">
+                    <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
+                </li>
+                {% if false == externalIdentity %}
+                <li role="presentation">
+                    <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
+                </li>
+                <li role="presentation">
+                    <a href="#mfa" aria-controls="settings" role="tab" data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
+                </li>
+                {% endif %}
+                <li role="presentation">
+                    <a href="#delete" aria-controls="settings" role="tab" data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+
+                <!-- main options -->
+                <div role="tabpanel" class="tab-pane active" id="options">
+                    <div class="box box-default">
+                        <div class="box-body">
+                            <p>
+                                {{ trans('firefly.user_id_is',{user: userId})|raw }}
+                            </p>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <ul>
+                                        {% if false == externalIdentity %}
+                                        <li>
+                                            <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a>
+                                        </li>
+                                        {% endif %}
+                                        <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
+
+                                        {% if false == externalIdentity %}
+                                        <li>
+                                            <a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a>
+                                        </li>
+                                        <li><a class="text-danger"
+                                               href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'command_line_token'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p>
-                        {{ 'explain_command_line_token'|_ }}
-                    </p>
-                    <p>
-                        <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly/>
-
-                    </p>
-                    <p>
-                    <form action="{{ route('profile.regenerate') }}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                        <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_command_line_token'|_ }}</button>
-                    </form>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
-                    {% if enabled2FA == true %}
-                        <p class="text-info">
-                            {{ trans_choice('firefly.pref_two_factor_backup_code_count', mfaBackupCount) }}
-                        </p>
-
-                        <div class="btn-group">
-                            <a class="btn btn-info" href="{{ route('profile.code') }}">
-                                <i class="fa fa-recycle"></i>
-                                {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                            <a class="btn btn-default" href="{{ route('profile.new-backup-codes') }}">
-                                <i class="fa fa-star"></i>
-                                {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
-                            <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
-                                <i class="fa fa-trash"></i>
-                                {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
-                        </div>
-                    {% else %}
-                        <p>
-                        <form action="{{ route('profile.enable2FA') }}" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-info"><i class="fa fa-lock"></i> {{ 'pref_enable_two_factor_auth'|_ }}</button>
-                        </form>
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'delete_stuff_header'|_ }}</h3>
-                </div>
-                <div class="box-header with-border">
-                    <div class="col-lg-12">
-                        <p>
-                            {{ 'permanent_delete_stuff'|_ }}
-                        </p>
-                        <h4>{{ 'financial_control'|_ }}</h4>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_budgets')|escape('html') }}"
-                                    data-type="budgets" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-pie-chart"></i> {{ 'delete_all_budgets'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_bills')|escape('html') }}"
-                                    data-type="bills" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-calendar-o"></i> {{ 'delete_all_bills'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_piggy_banks')|escape('html') }}"
-                                    data-type="piggy_banks" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-bullseye"></i> {{ 'delete_all_piggy_banks'|_ }}</button>
-                        </p>
-                        <h4>{{ 'automation'|_ }}</h4>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_rules')|escape('html') }}"
-                                    data-type="rules" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-random"></i> {{ 'delete_all_rules'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_recurring')|escape('html') }}"
-                                    data-type="recurring" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-paint-brush"></i> {{ 'delete_all_recurring'|_ }}</button>
-                        </p>
-
-                        <h4>{{ 'classification'|_ }}</h4>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_categories')|escape('html') }}"
-                                    data-type="categories" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-bookmark"></i> {{ 'delete_all_categories'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_tags')|escape('html') }}"
-                                    data-type="tags" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-tag"></i> {{ 'delete_all_tags'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_object_groups')|escape('html') }}"
-                                    data-type="object_groups" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-envelope-o"></i> {{ 'delete_all_object_groups'|_ }}</button>
-                        </p>
-
-                        <h4>{{ 'accounts'|_ }}</h4>
-                        <p>
-                            <em class="text-danger">{{ 'also_delete_transactions'|_ }}</em>
-                        </p>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_accounts')|escape('html') }}"
-                                    data-type="accounts" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-credit-card"></i> {{ 'delete_all_accounts'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_asset_accounts')|escape('html') }}"
-                                    data-type="asset_accounts" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-money"></i> {{ 'delete_all_asset_accounts'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_expense_accounts')|escape('html') }}"
-                                    data-type="expense_accounts" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-shopping-cart"></i> {{ 'delete_all_expense_accounts'|_ }}</button>
-                        </p>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_revenue_accounts')|escape('html') }}"
-                                    data-type="revenue_accounts" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-download"></i> {{ 'delete_all_revenue_accounts'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_liabilities')|escape('html') }}"
-                                    data-type="liabilities" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-ticket"></i> {{ 'delete_all_liabilities'|_ }}</button>
-                        </p>
-                        <h4>{{ 'transactions'|_ }}</h4>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_transactions')|escape('html') }}"
-                                    data-type="transactions" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-exchange"></i> {{ 'delete_all_transactions'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_withdrawals')|escape('html') }}"
-                                    data-type="withdrawals" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-long-arrow-left"></i> {{ 'delete_all_withdrawals'|_ }}</button>
-
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_deposits')|escape('html') }}"
-                                    data-type="deposits" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-long-arrow-right"></i> {{ 'delete_all_deposits'|_ }}</button>
-
-
-                        </p>
-                        <p>
-                            <button type="button"
-                                    data-success="{{ trans('firefly.deleted_all_transfers')|escape('html') }}"
-                                    data-type="transfers" class="confirm btn btn-danger btn-sm"><i
-                                        class="fa fa-exchange"></i> {{ 'delete_all_transfers'|_ }}</button>
-                        </p>
                     </div>
                 </div>
+
+                <!-- command line options -->
+                <div role="tabpanel" class="tab-pane" id="cmd">
+                    <div class="box box-default">
+                        <div class="box-body">
+                            <p>
+                                {{ 'explain_command_line_token'|_ }}
+                            </p>
+                            <p>
+                                <input id="token" type="text" class="form-control" name="token"
+                                       value="{{ accessToken.data }}"
+                                       size="32" maxlength="32" readonly/>
+
+                            </p>
+                            <form action="{{ route('profile.regenerate') }}" method="post">
+                                <p>
+
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                                    <button type="submit" class="btn btn-danger btn-xs"><i
+                                                class="fa fa-refresh"></i> {{ 'regenerate_command_line_token'|_ }}
+                                    </button>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {% if false == externalIdentity %}
+                <!-- OAuth -->
+                <div role="tabpanel" class="tab-pane" id="oauth">
+                    <div id="passport_clients"></div>
+                </div>
+
+                <!-- MFA -->
+                <div role="tabpanel" class="tab-pane" id="mfa">
+                    <div class="box box-default">
+                        <div class="box-body">
+                            <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
+                            {% if enabled2FA == true %}
+                                <p class="text-info">
+                                    {{ trans_choice('firefly.pref_two_factor_backup_code_count', mfaBackupCount) }}
+                                </p>
+
+                                <div class="btn-group">
+                                    <a class="btn btn-info" href="{{ route('profile.code') }}">
+                                        <i class="fa fa-recycle"></i>
+                                        {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                    <a class="btn btn-default" href="{{ route('profile.new-backup-codes') }}">
+                                        <i class="fa fa-star"></i>
+                                        {{ 'pref_two_factor_new_backup_codes'|_ }}</a>
+                                    <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
+                                        <i class="fa fa-trash"></i>
+                                        {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
+                                </div>
+                            {% else %}
+                                <p>
+                                <form action="{{ route('profile.enable2FA') }}" method="post">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                                    <button type="submit" class="btn btn-info"><i
+                                                class="fa fa-lock"></i> {{ 'pref_enable_two_factor_auth'|_ }}</button>
+                                </form>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- delete stuff -->
+                <div role="tabpanel" class="tab-pane" id="delete">
+                    <div class="box box-default">
+                        <div class="box-body with-border">
+                            <div class="col-lg-12">
+                                <p>
+                                    {{ 'permanent_delete_stuff'|_ }}
+                                </p>
+                                <h4>{{ 'financial_control'|_ }}</h4>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_budgets')|escape('html') }}"
+                                            data-type="budgets" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-pie-chart"></i> {{ 'delete_all_budgets'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_bills')|escape('html') }}"
+                                            data-type="bills" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-calendar-o"></i> {{ 'delete_all_bills'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_piggy_banks')|escape('html') }}"
+                                            data-type="piggy_banks" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-bullseye"></i> {{ 'delete_all_piggy_banks'|_ }}</button>
+                                </p>
+                                <h4>{{ 'automation'|_ }}</h4>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_rules')|escape('html') }}"
+                                            data-type="rules" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-random"></i> {{ 'delete_all_rules'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_recurring')|escape('html') }}"
+                                            data-type="recurring" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-paint-brush"></i> {{ 'delete_all_recurring'|_ }}</button>
+                                </p>
+
+                                <h4>{{ 'classification'|_ }}</h4>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_categories')|escape('html') }}"
+                                            data-type="categories" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-bookmark"></i> {{ 'delete_all_categories'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_tags')|escape('html') }}"
+                                            data-type="tags" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-tag"></i> {{ 'delete_all_tags'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_object_groups')|escape('html') }}"
+                                            data-type="object_groups" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-envelope-o"></i> {{ 'delete_all_object_groups'|_ }}</button>
+                                </p>
+
+                                <h4>{{ 'accounts'|_ }}</h4>
+                                <p>
+                                    <em class="text-danger">{{ 'also_delete_transactions'|_ }}</em>
+                                </p>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_accounts')|escape('html') }}"
+                                            data-type="accounts" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-credit-card"></i> {{ 'delete_all_accounts'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_asset_accounts')|escape('html') }}"
+                                            data-type="asset_accounts" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-money"></i> {{ 'delete_all_asset_accounts'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_expense_accounts')|escape('html') }}"
+                                            data-type="expense_accounts" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-shopping-cart"></i> {{ 'delete_all_expense_accounts'|_ }}</button>
+                                </p>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_revenue_accounts')|escape('html') }}"
+                                            data-type="revenue_accounts" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-download"></i> {{ 'delete_all_revenue_accounts'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_liabilities')|escape('html') }}"
+                                            data-type="liabilities" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-ticket"></i> {{ 'delete_all_liabilities'|_ }}</button>
+                                </p>
+                                <h4>{{ 'transactions'|_ }}</h4>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_transactions')|escape('html') }}"
+                                            data-type="transactions" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-exchange"></i> {{ 'delete_all_transactions'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_withdrawals')|escape('html') }}"
+                                            data-type="withdrawals" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-long-arrow-left"></i> {{ 'delete_all_withdrawals'|_ }}</button>
+
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_deposits')|escape('html') }}"
+                                            data-type="deposits" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-long-arrow-right"></i> {{ 'delete_all_deposits'|_ }}</button>
+
+
+                                </p>
+                                <p>
+                                    <button type="button"
+                                            data-success="{{ trans('firefly.deleted_all_transfers')|escape('html') }}"
+                                            data-type="transfers" class="confirm btn btn-danger btn-sm"><i
+                                                class="fa fa-exchange"></i> {{ 'delete_all_transfers'|_ }}</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
-
-    <div id="passport_clients"></div>
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
@@ -231,16 +271,16 @@
 
                 // call API:
                 $.ajax({
-                           method: 'DELETE',
-                           url: deleteAPIRoute + '?objects=' + link.data('type'),
-                       }).done(
+                    method: 'DELETE',
+                    url: deleteAPIRoute + '?objects=' + link.data('type'),
+                }).done(
                     function () {
                         // enable button again:
-                        link.prop('disabled',false);
+                        link.prop('disabled', false);
                         link.find('i').removeClass().addClass(classes);
                         alert(link.data('success'));
                     }
-                ).fail(function() {
+                ).fail(function () {
                     link.find('i').removeClass().addClass('fa fa-exclamation-triangle');
                     alert('Could not delete. Sorry.');
                 });

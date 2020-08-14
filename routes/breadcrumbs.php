@@ -851,6 +851,14 @@ try {
         }
     );
 
+    Breadcrumbs::register(
+        'recurring.create-from-journal',
+        static function (BreadcrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('recurring.index');
+            $breadcrumbs->push(trans('firefly.create_new_recurrence'), route('recurring.create'));
+        }
+    );
+
     // Rules
     Breadcrumbs::register(
         'rules.index',
@@ -1198,4 +1206,5 @@ try {
     );
 
 } catch (DuplicateBreadcrumbException $e) {
+    // @ignoreException
 }

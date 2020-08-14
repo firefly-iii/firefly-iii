@@ -46,6 +46,7 @@ class RestoreOAuthKeys extends Command
      */
     protected $signature = 'firefly-iii:restore-oauth-keys';
 
+
     /**
      * Execute the console command.
      *

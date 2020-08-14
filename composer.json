@@ -65,7 +65,7 @@
       },
       {
         "type": "paypal",
-        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"
+        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
       }
     ],
   "require": {
@@ -83,33 +83,40 @@
     "ext-tokenizer": "*",
     "ext-xml": "*",
     "adldap2/adldap2-laravel": "6.*",
-    "bacon/bacon-qr-code": "1.*",
+    "bacon/bacon-qr-code": "2.*",
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
-    "jc5/google2fa-laravel": "2.0.4",
+    "gdbots/query-parser": "^2.0",
+    "jc5/google2fa-laravel": "2.0.5",
     "laravel/framework": "^7.0",
-    "laravel/passport": "8.*",
+    "laravel/passport": "9.*",
     "laravel/ui": "^2.0",
     "laravelcollective/html": "6.*",
     "league/commonmark": "1.*",
     "league/csv": "^9.6",
     "league/fractal": "0.*",
-    "pragmarx/google2fa": "^7.0",
+    "pragmarx/google2fa": "^8.0",
     "pragmarx/recovery": "^0.1.0",
     "predis/predis": "^1.1",
-    "ramsey/uuid": "^3.9",
-    "rcrowe/twigbridge": "^0.11.2"
+    "ramsey/uuid": "^4.1",
+    "rcrowe/twigbridge": "^0.12.1"
   },
   "require-dev": {
+    "barryvdh/laravel-debugbar": "^3.3",
     "barryvdh/laravel-ide-helper": "2.*",
+    "ergebnis/phpstan-rules": "^0.15.0",
     "filp/whoops": "2.*",
     "fzaninotto/faker": "1.*",
     "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
-    "phpunit/phpunit": "^8.5",
+    "nunomaduro/larastan": "^0.6.2",
+    "phpstan/phpstan": "^0.12.34",
+    "phpstan/phpstan-deprecation-rules": "^0.12.5",
+    "phpunit/phpunit": "^9.2",
     "psalm/plugin-laravel": "^1.1",
     "roave/security-advisories": "dev-master",
+    "thecodingmachine/phpstan-strict-rules": "^0.12.0",
     "vimeo/psalm": "^3.10"
   },
   "suggest": {
@@ -180,11 +187,13 @@
       "@php artisan firefly-iii:delete-empty-journals",
       "@php artisan firefly-iii:delete-empty-groups",
       "@php artisan firefly-iii:fix-account-types",
+      "@php artisan firefly-iii:fix-account-order",
       "@php artisan firefly-iii:rename-meta-fields",
       "@php artisan firefly-iii:fix-ob-currencies",
       "@php artisan firefly-iii:fix-long-descriptions",
       "@php artisan firefly-iii:fix-recurring-transactions",
       "@php artisan firefly-iii:unify-group-accounts",
+      "@php artisan firefly-iii:fix-transaction-types",
 
       "@php artisan firefly-iii:report-empty-objects",
       "@php artisan firefly-iii:report-sum",

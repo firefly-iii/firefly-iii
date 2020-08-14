@@ -1,0 +1,250 @@
+parameters:
+    indentation: spaces
+
+    file_extensions:
+        - php
+
+    exclude_files:
+        - fixtures/*
+        - fixtures*/*
+        - temp/*
+        - tmp/*
+
+services:
+    # Checkers bellow aim on 1:1 copy of https://nette.org/en/coding-standard
+
+    # General rules - https://nette.org/en/coding-standard#toc-general-rules
+
+    # use tabs over spaces
+    # PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\DisallowSpaceIndentSniff: ~
+    # PHP code must use only UTF-8 without BOM
+    PhpCsFixer\Fixer\Basic\EncodingFixer: ~
+    # <?php opening tag
+    PhpCsFixer\Fixer\PhpTag\FullOpeningTagFixer: ~
+    # Ensure there is no code on the same line as the PHP open tag.
+    PhpCsFixer\Fixer\PhpTag\LinebreakAfterOpeningTagFixer: ~
+    # The closing ?> tag must be omitted from files containing only PHP.
+    PhpCsFixer\Fixer\PhpTag\NoClosingTagFixer: ~
+    # There must not be trailing whitespace at the end of lines.
+    PhpCsFixer\Fixer\Whitespace\NoTrailingWhitespaceFixer: ~
+    # ...and at the end of blank lines.
+    PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer: ~
+    # All files must end with a single blank line.
+    PhpCsFixer\Fixer\Whitespace\SingleBlankLineAtEofFixer: ~
+    # File name should match class name if possible.
+    PhpCsFixer\Fixer\Basic\Psr4Fixer: ~
+    # Enforces using shorthand scalar typehint variants in phpDocs: `int` instead of `integer` and `bool` instead of `boolean`
+    SlevomatCodingStandard\Sniffs\TypeHints\LongTypeHintsSniff: ~
+
+    # File Header - https://nette.org/en/coding-standard#toc-file-header
+
+    # empty line before namespace
+    PhpCsFixer\Fixer\NamespaceNotation\SingleBlankLineBeforeNamespaceFixer: ~
+    # 1 Use statement per line
+    PhpCsFixer\Fixer\Import\SingleImportPerStatementFixer: ~
+    # Use statements are alphabetically ordered
+    PhpCsFixer\Fixer\Import\OrderedImportsFixer: ~
+    # disallow group use declarations use FooLibrary\Bar\Baz\{ ClassA, ClassB, ClassC, ClassD as Fizbo }
+    SlevomatCodingStandard\Sniffs\Namespaces\DisallowGroupUseSniff: ~
+    # Disallows leading backslash in use statement: use \Foo\Bar;
+    SlevomatCodingStandard\Sniffs\Namespaces\UseDoesNotStartWithBackslashSniff: ~
+    # Looks for unused imports from other namespaces.
+    Nette\CodingStandard\Sniffs\Namespaces\UnusedUsesSniff:
+        searchAnnotations: yes
+        ignoredAnnotationNames: ['@testCase']
+        ignoredAnnotations: ['@internal']
+
+    # Language Construct (should be placed before some other fixers)
+
+    # Functions should be used with `$strict` param set to `true`
+    PhpCsFixer\Fixer\Strict\StrictParamFixer: ~
+    # replaces is_null(parameter) expression with `null === parameter`.
+    PhpCsFixer\Fixer\LanguageConstruct\IsNullFixer:
+        use_yoda_style: true
+    # Calling `unset` on multiple items should be done in one call.
+    PhpCsFixer\Fixer\LanguageConstruct\CombineConsecutiveUnsetsFixer: ~
+    # Replace all `<>` with `!=`.
+    PhpCsFixer\Fixer\Operator\StandardizeNotEqualsFixer: ~
+    # Include/Require and file path should be divided with a single space. File path should not be placed under brackets.
+    PhpCsFixer\Fixer\ControlStructure\IncludeFixer: ~
+    # Requires short ternary operator ?: when possible
+    SlevomatCodingStandard\Sniffs\ControlStructures\RequireShortTernaryOperatorSniff: ~
+
+    # Arrays - https://nette.org/en/coding-standard#toc-arrays
+
+    # use short array fixes
+    PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:
+        syntax: short
+    # use trailing command in last array element
+    PhpCsFixer\Fixer\ArrayNotation\TrailingCommaInMultilineArrayFixer: ~
+    # PHP single-line arrays should not have trailing comma.
+    # PhpCsFixer\Fixer\ArrayNotation\NoTrailingCommaInSinglelineArrayFixer: ~
+    # In array declaration, there MUST NOT be a whitespace before each comma.
+    PhpCsFixer\Fixer\ArrayNotation\NoWhitespaceBeforeCommaInArrayFixer: ~
+    # Arrays should be formatted like function/method arguments, without leading or trailing single line space.
+    PhpCsFixer\Fixer\ArrayNotation\TrimArraySpacesFixer: ~
+    # In array declaration, there MUST be a whitespace after each comma.
+    PhpCsFixer\Fixer\ArrayNotation\WhitespaceAfterCommaInArrayFixer: ~
+
+    # Strings
+
+    # Convert `heredoc` to `nowdoc` where possible.
+    PhpCsFixer\Fixer\StringNotation\HeredocToNowdocFixer: ~
+    # Convert double quotes to single quotes for simple strings.
+    PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer: ~
+
+    # Keywords and True/False/Null - https://nette.org/en/coding-standard#toc-keywords-and-true-false-null
+
+    # PHP keywords must be in lower case
+    PhpCsFixer\Fixer\Casing\LowercaseKeywordsFixer: ~
+    # The PHP constants `true`, `false`, and `null` MUST be in lower case
+    PhpCsFixer\Fixer\Casing\LowercaseConstantsFixer: ~
+
+    # Method and Functions Calls - https://nette.org/en/coding-standard#toc-method-and-function-calls
+
+    # Function defined by PHP should be called using the correct casing
+    PhpCsFixer\Fixer\Casing\NativeFunctionCasingFixer: ~
+    # In the argument list, there must be one space after each comma, and there must no be a space before each comma
+    PhpCsFixer\Fixer\FunctionNotation\MethodArgumentSpaceFixer: ~
+    # This sniff checks that there are two blank lines between functions declarations and single between signatures.
+    #Nette\CodingStandard\Sniffs\WhiteSpace\FunctionSpacingSniff: ~
+
+    # Classes - https://nette.org/en/coding-standard#toc-classes
+
+    # Inside a classy element "self" should be preferred to the class name itself.
+    PhpCsFixer\Fixer\ClassNotation\SelfAccessorFixer: ~
+    # class element order: constants, properties, from public to private
+    PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer:
+        order:
+            - use_trait
+            - constant
+            - constant_public
+            - constant_protected
+            - constant_private
+            - property_public
+            - property_protected
+            - property_private
+
+    # Constants - https://nette.org/en/coding-standard#toc-constants
+
+    # constant names are CAPITALIZED (manuall fixing only :()
+    PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions\UpperCaseConstantNameSniff: ~
+
+    # Class Properties - https://nette.org/en/coding-standard#toc-class-properties
+
+    # There MUST NOT be more than one property declared per statement.
+    PhpCsFixer\Fixer\ClassNotation\SingleClassElementPerStatementFixer:
+        elements: ['property']
+
+    # Methods - https://nette.org/en/coding-standard#toc-methods
+
+    # They must be declared in camelCase.
+    PHP_CodeSniffer\Standards\PSR1\Sniffs\Methods\CamelCapsMethodNameSniff: ~
+    # Checks that there's a single space between a typehint and a parameter name and no whitespace between a nullability symbol and a typehint
+    SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSpacingSniff: ~
+    # Spaces should be properly placed in a function declaration.
+    PhpCsFixer\Fixer\FunctionNotation\FunctionDeclarationFixer: ~
+    # In function arguments there must not be arguments with default values before non-default ones.
+    PhpCsFixer\Fixer\FunctionNotation\NoUnreachableDefaultArgumentValueFixer: ~
+
+    # Constans, Class Properties, Methods
+
+    # Constants and Properties should be separated by 1 blank line
+    #PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer:
+    #    elements: [const, property]
+
+    # Last property and 1st method should be separated by 2 spaces
+    Nette\CodingStandard\Fixer\ClassNotation\LastPropertyAndFirstMethodSeparationFixer:
+        space_count: 2
+
+    # Control Statements - https://nette.org/en/coding-standard#toc-control-statements
+
+    # The keyword `elseif` should be used instead of `else if` so that all control keywords look like single words.
+    PhpCsFixer\Fixer\ControlStructure\ElseifFixer: ~
+    # Remove useless semicolon statements.
+    PhpCsFixer\Fixer\Semicolon\NoEmptyStatementFixer: ~
+    # Remove trailing commas in list() calls.
+    PhpCsFixer\Fixer\ControlStructure\NoTrailingCommaInListCallFixer: ~
+    # Removes unneeded parentheses around control statements.
+    PhpCsFixer\Fixer\ControlStructure\NoUnneededControlParenthesesFixer: ~
+    # A case should be followed by a colon and not a semicolon.
+    PhpCsFixer\Fixer\ControlStructure\SwitchCaseSemicolonToColonFixer: ~
+    # The structure body must be indented once.
+    # The closing brace must be on the next line after the body.
+    # There should not be more than one statement per line.
+    #Nette\CodingStandard\Fixer\Basic\BracesFixer:
+    #    allow_single_line_closure: true
+    # changes if (1 === $cond) to if ($cond === 1)
+    #SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff: ~
+    # finds unreachable catch blocks:
+    SlevomatCodingStandard\Sniffs\Exceptions\DeadCatchSniff: ~
+
+    # Casting
+
+    # A single space or none should be between cast and variable (int) $val
+    PhpCsFixer\Fixer\CastNotation\CastSpacesFixer: ~
+    # Cast should be written in lower case.
+    PhpCsFixer\Fixer\CastNotation\LowercaseCastFixer: ~
+    # Replaces `intval`, `floatval`, `doubleval`, `strval` and `boolval` function calls with according type casting operator
+    PhpCsFixer\Fixer\CastNotation\ModernizeTypesCastingFixer: ~
+    # Short cast `bool` using double exclamation mark should not be used
+    PhpCsFixer\Fixer\CastNotation\NoShortBoolCastFixer: ~
+    # Cast `(boolean)` and `(integer)` should be written as `(bool)` and `(int)`, `(double)` and `(real)` as `(float)`
+    PhpCsFixer\Fixer\CastNotation\ShortScalarCastFixer: ~
+
+    # Language Whitespace
+
+    # Binary operators should be surrounded by at least one space. DO NOT USE
+    #PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer: ~
+    # Unary operators should be placed adjacent to their operands.
+    PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer: ~
+    # No space after the opening parenthesis and before the closing parenthesis
+    PhpCsFixer\Fixer\Whitespace\NoSpacesInsideParenthesisFixer: ~
+    # There MUST NOT be spaces around offset braces $a[0]
+    PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer: ~
+    # There should not be space before or after object `T_OBJECT_OPERATOR` `->`.
+    PhpCsFixer\Fixer\Operator\ObjectOperatorWithoutWhitespaceFixer: ~
+    # Standardize spaces around ternary operator.
+    PhpCsFixer\Fixer\Operator\TernaryOperatorSpacesFixer: ~
+    # Concatenation $a . $b should be spaced according configuration
+    PhpCsFixer\Fixer\Operator\ConcatSpaceFixer:
+        spacing: one
+    # Removes extra spaces between colon and case value.
+    PhpCsFixer\Fixer\ControlStructure\SwitchCaseSpaceFixer: ~
+
+    # Comments
+
+    # Docblocks should have the same indentation as the documented subject.
+    PhpCsFixer\Fixer\Phpdoc\PhpdocIndentFixer: ~
+    # There should not be any empty comments.
+    PhpCsFixer\Fixer\Comment\NoEmptyCommentFixer: ~
+    # There should not be empty PHPDoc blocks.
+    #PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer: ~
+    # Phpdocs should start and end with content, excluding the very first and last line of the docblocks.
+    PhpCsFixer\Fixer\Phpdoc\PhpdocTrimFixer: ~
+    # Single-line comments comments with only one line of actual content should use the `//` syntax.
+    PhpCsFixer\Fixer\Comment\SingleLineCommentStyleFixer:
+        comment_types: ['hash']
+    # Require comments with single-line content to be written as one-liners
+    SlevomatCodingStandard\Sniffs\Commenting\RequireOneLinePropertyDocCommentSniff: ~
+
+
+    # Properties MUST not be explicitly initialized with `null`.
+    #PhpCsFixer\Fixer\ClassNotation\NoNullPropertyInitializationFixer: ~
+
+    PhpCsFixer\Fixer\ControlStructure\NoBreakCommentFixer:
+        comment_text: 'break omitted'
+
+    # declare(strict_types=1);
+    PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer: ~
+    # Enforces consistent formatting of return typehints: function foo(): ?int
+    SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSpacingSniff: ~
+    # Use `null` coalescing operator `??` where possible.
+    PhpCsFixer\Fixer\Operator\TernaryToNullCoalescingFixer: ~
+
+    Nette\CodingStandard\Fixer\ClassNotation\ClassAndTraitVisibilityRequiredFixer:
+        elements: ['const', 'property', 'method']
+
+    # short list() syntax []
+    PhpCsFixer\Fixer\ListNotation\ListSyntaxFixer:
+        syntax: short

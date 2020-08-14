@@ -47,6 +47,7 @@ class RenameMetaFields extends Command
     /** @var int */
     private $count;
 
+
     /**
      * Execute the console command.
      *

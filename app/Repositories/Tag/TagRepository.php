@@ -287,10 +287,11 @@ class TagRepository implements TagRepositoryInterface
      * Search the users tags.
      *
      * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */
-    public function searchTags(string $query): Collection
+    public function searchTags(string $query, int $limit): Collection
     {
         /** @var Collection $tags */
         $tags = $this->user->tags()->orderBy('tag', 'ASC');
@@ -299,7 +300,7 @@ class TagRepository implements TagRepositoryInterface
             $tags->where('tag', 'LIKE', $search);
         }
 
-        return $tags->get();
+        return $tags->take($limit)->get('tags.*');
     }
 
     /**

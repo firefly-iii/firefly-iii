@@ -44,15 +44,17 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class BudgetLimitController.
- *
  */
 class BudgetLimitController extends Controller
 {
     use TransactionFilter;
+
     /** @var BudgetLimitRepositoryInterface */
     private $blRepository;
+
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
+
 
     /**
      * BudgetLimitController constructor.
@@ -156,20 +158,19 @@ class BudgetLimitController extends Controller
      *
      * @param BudgetLimitRequest $request
      *
+     * @return JsonResponse
      * @throws FireflyException
      *
-     * @return JsonResponse
      */
     public function store(BudgetLimitRequest $request): JsonResponse
     {
-        $data   = $request->getAll();
-        $budget = $this->repository->findNull($data['budget_id']);
-        if (null === $budget) {
-            throw new FireflyException('200004: Budget does not exist.'); // @codeCoverageIgnore
-        }
-        $data['budget'] = $budget;
-        $budgetLimit    = $this->blRepository->storeBudgetLimit($data);
-        $manager        = $this->getManager();
+        $data               = $request->getAll();
+        $data['start_date'] = $data['start'];
+        $data['end_date']   = $data['end'];
+
+        $budgetLimit = $this->blRepository->store($data);
+        $manager     = $this->getManager();
+
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -244,8 +245,7 @@ class BudgetLimitController extends Controller
     public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $data           = $request->getAll();
-        $data['budget'] = $budgetLimit->budget;
-        $budgetLimit    = $this->blRepository->updateBudgetLimit($budgetLimit, $data);
+        $budgetLimit    = $this->blRepository->update($budgetLimit, $data);
         $manager        = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */

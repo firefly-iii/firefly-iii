@@ -51,17 +51,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(get_class($this));
-        }
-    }
-
-    /**
      * @return bool
      */
     public function cleanupBudgets(): bool
@@ -171,19 +160,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         $oldest  = null;
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
-            $oldest = $journal->date < $oldest ? $journal->date : $oldest;
+            return $journal->date;
         }
-
-        $transaction = $budget
-            ->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.id')
-            ->orderBy('transaction_journals.date', 'ASC')->first(['transactions.*', 'transaction_journals.date']);
-        if (null !== $transaction) {
-            $carbon = new Carbon($transaction->date);
-            $oldest = $carbon < $oldest ? $carbon : $oldest;
-        }
-
-        return $oldest;
+        return null;
     }
 
     /**
@@ -238,10 +217,11 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchBudget(string $query): Collection
+    public function searchBudget(string $query, int $limit): Collection
     {
 
         $search = $this->user->budgets();
@@ -251,7 +231,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $search->orderBy('order', 'ASC')
         ->orderBy('name', 'ASC')->where('active', 1);
 
-        return $search->get();
+        return $search->take($limit)->get();
     }
 
     /**

@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Pentru a crea noi tranzacții, conturi sau alte lucruri, utilizați meniul de sub această pictogramă.',
     'index_cash_account'                              => 'Acestea sunt conturile create până acum. Puteți utiliza contul de numerar pentru a urmări cheltuielile cu numerar, dar nu este obligatoriu, desigur.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Selectați contul sau provizionul preferat din acest dropdown.',
-    'transactions_create_withdrawal_destination'      => 'Selectați aici un cont de cheltuieli. Lăsați-l gol dacă doriți să faceți o cheltuială cu numerar.',
-    'transactions_create_withdrawal_foreign_currency' => 'Utilizați acest câmp pentru a seta o valută și o sumă străină.',
-    'transactions_create_withdrawal_more_meta'        => 'Ați setat o mulțime de alte meta-date în aceste câmpuri.',
-    'transactions_create_withdrawal_split_add'        => 'Dacă doriți să împărțiți o tranzacție, adăugați mai multe divizări cu acest buton',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Selectați sau tastați beneficiarul în această casetă de completare automată. Lasă-l gol dacă vrei să faci un depozit în numerar.',
-    'transactions_create_deposit_destination'         => 'Selectați un cont de activ sau provizion aici.',
-    'transactions_create_deposit_foreign_currency'    => 'Utilizați acest câmp pentru a seta o valută și o sumă străină.',
-    'transactions_create_deposit_more_meta'           => 'Ați setat o mulțime de alte meta-date în aceste câmpuri.',
-    'transactions_create_deposit_split_add'           => 'Dacă doriți să împărțiți o tranzacție, adăugați mai multe divizări cu acest buton',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Selectați aici contul sursă.',
-    'transactions_create_transfer_destination'        => 'Selectați aici contul de destinație.',
-    'transactions_create_transfer_foreign_currency'   => 'Utilizați acest câmp pentru a seta o valută și o sumă străină.',
-    'transactions_create_transfer_more_meta'          => 'Ați setat o mulțime de alte meta-date în aceste câmpuri.',
-    'transactions_create_transfer_split_add'          => 'Dacă doriți să împărțiți o tranzacție, adăugați mai multe divizări cu acest buton',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Dați conturilor dvs. un IBAN valid. Acest lucru ar putea face ca importul de date să fie foarte ușor în viitor.',

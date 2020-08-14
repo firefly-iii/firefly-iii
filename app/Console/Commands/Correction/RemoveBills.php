@@ -45,6 +45,7 @@ class RemoveBills extends Command
      */
     protected $signature = 'firefly-iii:remove-bills';
 
+
     /**
      * Execute the console command.
      *
@@ -55,6 +56,9 @@ class RemoveBills extends Command
         $start = microtime(true);
         /** @var TransactionType $withdrawal */
         $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+        if(null === $withdrawal) {
+            return 0;
+        }
         $journals   = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

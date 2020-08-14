@@ -33,8 +33,7 @@ use Log;
  */
 class AttachmentTransformer extends AbstractTransformer
 {
-    /** @var AttachmentRepositoryInterface */
-    private $repository;
+    private AttachmentRepositoryInterface $repository;
 
     /**
      * BillTransformer constructor.

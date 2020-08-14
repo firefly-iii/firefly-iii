@@ -45,6 +45,15 @@ interface RecurringRepositoryInterface
     public function destroyAll(): void;
 
     /**
+     * Calculate how many transactions are to be expected from this recurrence.
+     *
+     * @param Recurrence $recurrence
+     * @param RecurrenceRepetition $repetition
+     * @return int
+     */
+    public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int;
+
+    /**
      * Destroy a recurring transaction.
      *
      * @param Recurrence $recurrence

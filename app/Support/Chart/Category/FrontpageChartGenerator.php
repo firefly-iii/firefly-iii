@@ -89,18 +89,16 @@ class FrontpageChartGenerator
         foreach ($categories as $category) {
             // get expenses
             $collection[] = $this->collectExpenses($category, $accounts);
-            //$collection[] = $this->collectIncome($category, $accounts);
         }
 
         // collect for no-category:
         $collection[] = $this->collectNoCatExpenses($accounts);
-        //$collection[] = $this->collectNoCatIncome($accounts);
 
         $tempData = array_merge(...$collection);
 
         // sort temp array by amount.
         $amounts = array_column($tempData, 'sum_float');
-        array_multisort($amounts, SORT_DESC, $tempData);
+        array_multisort($amounts, SORT_ASC, $tempData);
 
         $currencyData = $this->createCurrencyGroups($tempData);
 
@@ -147,29 +145,6 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    private function collectIncome(Category $category, Collection $accounts): array
-    {
-        $spent    = $this->opsRepos->sumIncome($this->start, $this->end, $accounts, new Collection([$category]));
-        $tempData = [];
-        foreach ($spent as $currency) {
-            $this->addCurrency($currency);
-            $tempData[] = [
-                'name'        => $category->name,
-                'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => (int) $currency['currency_id'],
-            ];
-        }
-
-        return $tempData;
-    }
-
-    /**
      * @param Collection $accounts
      *
      * @return array
@@ -184,28 +159,8 @@ class FrontpageChartGenerator
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
                 'sum_float'   => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
-                'currency_id' => (int) $currency['currency_id'],];
-        }
-
-        return $tempData;
-    }
-
-    /**
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    private function collectNoCatIncome(Collection $accounts): array
-    {
-        $noCatExp = $this->noCatRepos->sumIncome($this->start, $this->end, $accounts);
-        $tempData = [];
-        foreach ($noCatExp as $currency) {
-            $this->addCurrency($currency);
-            $tempData[] = [
-                'name'        => trans('firefly.no_category'),
-                'sum'         => $currency['sum'],
-                'sum_float'   => round($currency['sum'], $currency['currency_decimal_places'] ?? 2),
-                'currency_id' => (int) $currency['currency_id'],];
+                'currency_id' => (int) $currency['currency_id'],
+            ];
         }
 
         return $tempData;
@@ -231,14 +186,6 @@ class FrontpageChartGenerator
                 'currency_symbol' => $currency['currency_symbol'],
                 'entries'         => $names,
             ];
-            //            $key          = sprintf('earned-%d', $currencyId);
-            //            $return[$key] = [
-            //                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currency['currency_name']),
-            //                'type'            => 'bar',
-            //                'currency_symbol' => $currency['currency_symbol'],
-            //                'data_type'       => 'earned',
-            //                'entries'         => $names,
-            //            ];
         }
 
         return $return;

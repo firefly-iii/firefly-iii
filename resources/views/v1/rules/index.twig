@@ -154,7 +154,7 @@
                                                                     {% if not rule.active %}
                                                                         class="text-muted"
                                                                     {% endif %}
-                                                                    data-id="{{ trigger.id }}">{{ trans_choice(('firefly.rule_trigger_' ~ trigger.trigger_type), trigger.trigger_value, {trigger_value: trigger.trigger_value}) }}
+                                                                    data-id="{{ trigger.id }}">{{ trans(('firefly.rule_trigger_' ~ trigger.trigger_type), {trigger_value: trigger.trigger_value}) }}
 
                                                                 {% if trigger.stop_processing %}
                                                                     <i class="fa fa-stop-circle-o"></i>

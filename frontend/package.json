@@ -14,25 +14,25 @@
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.1",
         "laravel-mix-bundle-analyzer": "^1.0.5",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.20",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.26.10",
-        "sass-loader": "^8.0.0",
+        "sass-loader": "^9.0.3",
         "vue": "^2.6",
-        "vue-i18n": "^8.15",
+        "vue-i18n": "^8.20",
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
         "@popperjs/core": "^2.4.4",
-        "bootstrap": "^4.5.0",
+        "bootstrap": "^4.5.2",
         "chart.js": "^2.9.3",
         "icheck-bootstrap": "^3.0.1",
         "jquery": "^3.5.1",
         "jquery-ui": "^1.12.1",
-        "overlayscrollbars": "^1.12.0",
+        "overlayscrollbars": "^1.13.0",
         "popper.js": "^1.16.1",
         "vue-chartjs": "^3.5.0",
-        "vue-router": "^3.3.4"
+        "vue-router": "^3.4.2"
     }
 }

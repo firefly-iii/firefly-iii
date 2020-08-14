@@ -54,7 +54,6 @@ class PiggyBankEventFactory
      * @param PiggyBank|null     $piggyBank
      *
      * @return PiggyBankEvent|null
-     *
      */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): ?PiggyBankEvent
     {

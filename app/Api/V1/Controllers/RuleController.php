@@ -46,14 +46,15 @@ use Log;
 
 /**
  * Class RuleController
- *
  */
 class RuleController extends Controller
 {
     /** @var AccountRepositoryInterface Account repository */
     private $accountRepository;
+
     /** @var RuleRepositoryInterface The rule repository */
     private $ruleRepository;
+
 
     /**
      * RuleController constructor.

@@ -48,8 +48,10 @@ use Log;
 class RecurrenceController extends Controller
 {
     use TransactionFilter;
+
     /** @var RecurringRepositoryInterface The recurring transaction repository */
     private $repository;
+
 
     /**
      * RecurrenceController constructor.
@@ -236,7 +238,7 @@ class RecurrenceController extends Controller
             $result = $recurring->fire();
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
-            throw new FireflyException('200022: Error in cron job.');
+            throw new FireflyException('200022: Error in cron job.',0, $e);
         }
         if (false === $result) {
             return response()->json([], 204);

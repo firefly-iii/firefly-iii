@@ -30,9 +30,11 @@
                             </div>
                         </div>
                     </form>
+                    {% if '' != query %}
                     <p>
                         {{ trans('firefly.search_for_query', {query: query|escape})|raw}}
                     </p>
+                    {% endif %}
                     {% if modifiers|length > 0 %}
                         <p>{{ trans('firefly.modifiers_applies_are') }}</p>
                         <ul>
@@ -45,7 +47,7 @@
             </div>
         </div>
     </div>
-    {% if query %}
+    {% if query or modifiers|length > 0 %}
         <div class="row result_row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
@@ -98,7 +100,7 @@
             </div>
         </div>
     {% endif %}
-    {% if query == "" %}
+    {% if query == "" and modifiers|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">

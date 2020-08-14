@@ -43,9 +43,9 @@ class CurrencyExchangeRateController extends Controller
     /** @var CurrencyRepositoryInterface The currency repository */
     private $repository;
 
+
     /**
      * CurrencyExchangeRateController constructor.
-     *
      */
     public function __construct()
     {

@@ -38,6 +38,15 @@ use Tests\TestCase;
 class RuleGroupTransformerTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        self::markTestIncomplete('Incomplete for refactor.');
+
+        return;
+    }
+    /**
      * Test basic tag transformer
      *
      * @covers \FireflyIII\Transformers\RuleGroupTransformer

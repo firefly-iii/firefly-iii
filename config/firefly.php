@@ -133,49 +133,48 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration' => [
+    'configuration'                => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags' => [
+    'feature_flags'                => [
         'export'    => true,
         'telemetry' => true,
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                 => '5.3.3',
-    'api_version'             => '1.3.0',
-    'db_version'              => 15,
-    'maxUploadSize'           => 1073741824, // 1 GB
-    'send_error_message'      => env('SEND_ERROR_MESSAGE', true),
-    'site_owner'              => env('SITE_OWNER', ''),
-    'send_registration_mail'  => env('SEND_REGISTRATION_MAIL', true),
-    'demo_username'           => env('DEMO_USERNAME', ''),
-    'demo_password'           => env('DEMO_PASSWORD', ''),
-    'fixer_api_key'           => env('FIXER_API_KEY', ''),
-    'mapbox_api_key'          => env('MAPBOX_API_KEY', ''),
-    'trusted_proxies'         => env('TRUSTED_PROXIES', ''),
-    'search_result_limit'     => env('SEARCH_RESULT_LIMIT', 50),
-    'send_report_journals'    => envNonEmpty('SEND_REPORT_JOURNALS', true),
-    'tracker_site_id'         => env('TRACKER_SITE_ID', ''),
-    'tracker_url'             => env('TRACKER_URL', ''),
-    'disable_frame_header'    => env('DISABLE_FRAME_HEADER', false),
-    'disable_csp_header'      => env('DISABLE_CSP_HEADER', false),
-    'login_provider'          => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
-    'authentication_guard'    => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
-    'custom_logout_uri'       => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
-    'cer_provider'            => envNonEmpty('CER_PROVIDER', 'fixer'),
-    'update_endpoint'         => 'https://version.firefly-iii.org/index.json',
-    'send_telemetry'          => env('SEND_TELEMETRY', false),
-    'telemetry_endpoint'      => 'https://telemetry.firefly-iii.org',
-    'layout'                  => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
-    'update_minimum_age'      => 6,
-    'default_location'        => [
+    'version'                      => '5.4.0-alpha.1',
+    'api_version'                  => '1.4.0',
+    'db_version'                   => 15,
+    'maxUploadSize'                => 1073741824, // 1 GB
+    'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
+    'site_owner'                   => env('SITE_OWNER', ''),
+    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
+    'demo_username'                => env('DEMO_USERNAME', ''),
+    'demo_password'                => env('DEMO_PASSWORD', ''),
+    'fixer_api_key'                => env('FIXER_API_KEY', ''),
+    'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
+    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
+    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
+    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
+    'tracker_url'                  => env('TRACKER_URL', ''),
+    'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
+    'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
+    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
+    'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
+    'send_telemetry'               => env('SEND_TELEMETRY', false),
+    'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
+    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
+    'update_minimum_age'           => 6,
+    'default_location'             => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
-    'valid_attachment_models' => [
+    'valid_attachment_models'      => [
         Account::class,
         Bill::class,
         Budget::class,
@@ -186,7 +185,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
-    'allowedMimes'            => [
+    'allowedMimes'                 => [
         /* plain files */
         'text/plain',
 
@@ -348,6 +347,8 @@ return [
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
         'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
         'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
+
+        //'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
 
         // currently disabled languages:
         //        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
@@ -616,7 +617,7 @@ return [
     'allowed_opposing_types'    => [
         'source'      => [
             AccountType::ASSET           => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE,
-                                             AccountType::LOAN, AccountType::RECONCILIATION,],
+                                             AccountType::LOAN, AccountType::RECONCILIATION, AccountType::MORTGAGE],
             AccountType::CASH            => [AccountType::ASSET],
             AccountType::DEBT            => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
                                              AccountType::MORTGAGE,],

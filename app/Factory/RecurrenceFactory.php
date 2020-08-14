@@ -39,12 +39,13 @@ use Log;
  */
 class RecurrenceFactory
 {
+
+    use TransactionTypeTrait, RecurringTransactionTrait;
     /** @var MessageBag */
     private $errors;
     /** @var User */
     private $user;
 
-    use TransactionTypeTrait, RecurringTransactionTrait;
 
     /**
      * Constructor.

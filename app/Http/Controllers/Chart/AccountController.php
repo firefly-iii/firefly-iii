@@ -154,6 +154,7 @@ class AccountController extends Controller
                 'label'           => (string) trans('firefly.spent'),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
                 'entries'         => $this->expandNames($tempData),
             ];
             $chartData[$currencyId] = $dataSet;
@@ -209,6 +210,7 @@ class AccountController extends Controller
                     'budget_id'       => $budgetId,
                     'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             }
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
@@ -220,7 +222,7 @@ class AccountController extends Controller
             $budgetId          = $row['budget_id'];
             $name              = $names[$budgetId];
             $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
         $data = $this->generator->multiCurrencyPieChart($chartData);
@@ -281,6 +283,7 @@ class AccountController extends Controller
                     'category_id'     => (int) $journal['category_id'],
                     'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             }
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
@@ -291,7 +294,7 @@ class AccountController extends Controller
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
             $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
         $data = $this->generator->multiCurrencyPieChart($chartData);
@@ -379,6 +382,7 @@ class AccountController extends Controller
                     'category_id'     => $journal['category_id'],
                     'currency_name'   => $journal['currency_name'],
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code' => $journal['currency_code'],
                 ];
             }
             $result[$key]['total'] = bcadd($journal['amount'], $result[$key]['total']);
@@ -389,7 +393,7 @@ class AccountController extends Controller
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
             $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol']];
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
         $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
@@ -530,7 +534,7 @@ class AccountController extends Controller
 
         // sort temp array by amount.
         $amounts = array_column($tempData, 'diff_float');
-        array_multisort($amounts, SORT_DESC, $tempData);
+        array_multisort($amounts, SORT_ASC, $tempData);
 
         // loop all found currencies and build the data array for the chart.
         /**
@@ -543,6 +547,7 @@ class AccountController extends Controller
                 'label'           => (string) trans('firefly.earned'),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
                 'entries'         => $this->expandNames($tempData),
             ];
             $chartData[$currencyId] = $dataSet;
@@ -576,6 +581,7 @@ class AccountController extends Controller
         $result  = [
             'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
             'currency_symbol' => $currency->symbol,
+            'currency_code'   => $currency->code,
             'entries'         => [],
         ];
         $entries = [];

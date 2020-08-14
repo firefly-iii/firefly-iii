@@ -24,14 +24,17 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsValidAttachmentModel;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AttachmentStoreRequest
  *
  * @codeCoverageIgnore
  */
-class AttachmentStoreRequest extends Request
+class AttachmentStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *

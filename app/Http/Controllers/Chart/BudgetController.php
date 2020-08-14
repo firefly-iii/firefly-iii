@@ -137,6 +137,7 @@ class BudgetController extends Controller
                 'label'           => count($currencies) > 1 ? sprintf('%s (%s)', $budget->name, $currency['currency_name']) : $budget->name,
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
+                'currency_code'   => $currency['currency_code'],
                 'entries'         => $defaultEntries,
             ];
             foreach ($currency['spent'] as $label => $spent) {
@@ -193,6 +194,7 @@ class BudgetController extends Controller
         $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
         // add currency symbol from budget limit:
         $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
+        $data['datasets'][0]['currency_code']   = $budgetLimit->transactionCurrency->code;
         $cache->store($data);
 
         return response()->json($data);
@@ -241,6 +243,7 @@ class BudgetController extends Controller
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                     'currency_name'   => $journal['currency_name'],
                 ];
             $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
@@ -255,6 +258,7 @@ class BudgetController extends Controller
                      = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
+                'currency_code' => $info['currency_code'],
             ];
         }
 
@@ -305,6 +309,8 @@ class BudgetController extends Controller
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
+                    'currency_symbol' => $journal['currency_symbol'],
                     'currency_name'   => $journal['currency_name'],
                 ];
             $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
@@ -318,6 +324,7 @@ class BudgetController extends Controller
             $chartData[$title] = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
+                'currency_code' => $info['currency_code'],
             ];
         }
         $data = $this->generator->multiCurrencyPieChart($chartData);
@@ -369,6 +376,7 @@ class BudgetController extends Controller
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                     'currency_name'   => $journal['currency_name'],
                 ];
             $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
@@ -383,6 +391,7 @@ class BudgetController extends Controller
             $chartData[$title] = [
                 'amount'          => $info['amount'],
                 'currency_symbol' => $info['currency_symbol'],
+                'currency_code' => $info['currency_code'],
             ];
         }
 
@@ -501,15 +510,17 @@ class BudgetController extends Controller
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         $chartData      = [
             [
-                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'entries'         => [],
                 'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
             ],
             [
-                'label'           => (string)trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
+                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
+                'currency_code'   => $currency->code,
                 'entries'         => [],
             ],
         ];

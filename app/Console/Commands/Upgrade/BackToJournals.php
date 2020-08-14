@@ -51,6 +51,7 @@ class BackToJournals extends Command
      */
     protected $signature = 'firefly-iii:back-to-journals {--F|force : Force the execution of this command.}';
 
+
     /**
      * Execute the console command.
      *

@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Για τη δημιουργία νέων συναλλαγών, λογαριασμών ή άλλων αντικειμένων, χρησιμοποιήστε το μενού κάτω από αυτό το εικονίδιο.',
     'index_cash_account'                              => 'Αυτοί είναι οι δημιουργημένοι λογαριασμοί ως τώρα. Μπορείτε να χρησιμοποιήσετε το λογαριασμό μετρητών για καταγραφή δαπανών αλλά δεν είναι και υποχρεωτικό.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Επιλέξτε τον αγαπημένο σας λογαριασμό κεφαλαίου ή υποχρέωση από αυτή τη λίστα.',
-    'transactions_create_withdrawal_destination'      => 'Επιλέξτε εδώ έναν λογαριασμό δαπανών. Αφήστε το κενό εάν θέλετε να κάνετε μια δαπάνη με μετρητά.',
-    'transactions_create_withdrawal_foreign_currency' => 'Χρησιμοποιήστε αυτό το πεδίο για να ορίσετε ένα ξένο νόμισμα και ποσό.',
-    'transactions_create_withdrawal_more_meta'        => 'Σε αυτά τα πεδία ορίζετε πληθώρα άλλων μεταδεδομένων.',
-    'transactions_create_withdrawal_split_add'        => 'Εάν θέλετε να διαχωρίσετε μια συναλλαγή, προσθέστε περισσότερους διαχωρισμούς με αυτό το κουμπί',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Επιλέξτε ή πληκτρολογήστε τον πληρωτή στην αυτόματη λίστα/κουτάκι. Αφήστε το κενό εάν θέλετε να κάνετε μια κατάθεση μετρητών.',
-    'transactions_create_deposit_destination'         => 'Επιλέξτε έναν λογαριασμό κεφαλαίου ή υποχρεώσεων εδώ.',
-    'transactions_create_deposit_foreign_currency'    => 'Χρησιμοποιήστε αυτό το πεδίο για να ορίσετε ένα ξένο νόμισμα και ποσό.',
-    'transactions_create_deposit_more_meta'           => 'Σε αυτά τα πεδία ορίζετε πληθώρα άλλων μεταδεδομένων.',
-    'transactions_create_deposit_split_add'           => 'Εάν θέλετε να διαχωρίσετε μια συναλλαγή, προσθέστε περισσότερους διαχωρισμούς με αυτό το κουμπί',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Επιλέξτε τον λογαριασμό κεφαλαίου προέλευσης εδώ.',
-    'transactions_create_transfer_destination'        => 'Επιλέξτε τον λογαριασμό κεφαλαίου προορισμού εδώ.',
-    'transactions_create_transfer_foreign_currency'   => 'Χρησιμοποιήστε αυτό το πεδίο για να ορίσετε ένα ξένο νόμισμα και ποσό.',
-    'transactions_create_transfer_more_meta'          => 'Σε αυτά τα πεδία ορίζετε πληθώρα άλλων μεταδεδομένων.',
-    'transactions_create_transfer_split_add'          => 'Εάν θέλετε να διαχωρίσετε μια συναλλαγή, προσθέστε περισσότερους διαχωρισμούς με αυτό το κουμπί',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Δώστε στους λογαριασμού σας έναν έγκυρο IBAN. Αυτό θα κάνει την εισαγωγή δεδομένων πολύ πιο εύκολη στο μέλλον.',

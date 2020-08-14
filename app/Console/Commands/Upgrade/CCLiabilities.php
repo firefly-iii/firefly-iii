@@ -50,6 +50,7 @@ class CCLiabilities extends Command
      */
     protected $signature = 'firefly-iii:cc-liabilities {--F|force : Force the execution of this command.}';
 
+
     /**
      * Execute the console command.
      *

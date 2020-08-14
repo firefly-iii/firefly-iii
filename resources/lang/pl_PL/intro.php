@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Aby utworzyć nowe transakcje, konta lub inne rzeczy, użyj menu pod tą ikoną.',
     'index_cash_account'                              => 'To są dotychczas utworzone konta. Możesz użyć konta gotówkowego do śledzenia wydatków gotówkowych, ale oczywiście nie jest to obowiązkowe.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Wybierz swoje ulubione konto aktywów lub zobowiązanie z tej listy rozwijalnej.',
-    'transactions_create_withdrawal_destination'      => 'Wybierz konto wydatków. Zostaw puste, jeśli chcesz zapisać wydatek gotówkowy.',
-    'transactions_create_withdrawal_foreign_currency' => 'Użyj tego pola aby ustawić obcą walutę i jej ilość.',
-    'transactions_create_withdrawal_more_meta'        => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
-    'transactions_create_withdrawal_split_add'        => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Wybierz lub wpisz odbiorcę. Pozostaw puste, jeśli chcesz dokonać wpłaty gotówkowej.',
-    'transactions_create_deposit_destination'         => 'Wybierz konto aktywów lub zobowiązań.',
-    'transactions_create_deposit_foreign_currency'    => 'Użyj tego pola aby ustawić obcą walutę i jej kwotę.',
-    'transactions_create_deposit_more_meta'           => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
-    'transactions_create_deposit_split_add'           => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Wybierz źródłowe konto aktywów.',
-    'transactions_create_transfer_destination'        => 'Wybierz docelowe konto aktywów.',
-    'transactions_create_transfer_foreign_currency'   => 'Użyj tego pola aby ustawić obcą walutę i jej kwotę.',
-    'transactions_create_transfer_more_meta'          => 'Mnóstwo innych metadanych, które ustawiasz w tych polach.',
-    'transactions_create_transfer_split_add'          => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
+    // transactions
+    'transactions_create_basic_info'                  => 'Wprowadź podstawowe informacje o swojej transakcji. Konto źródłowe, konto docelowe, datę i opis.',
+    'transactions_create_amount_info'                 => 'Wprowadź wartość transakcji. Jeśli to konieczne, pola będą automatycznie aktualizować informacje o obcej kwocie.',
+    'transactions_create_optional_info'               => 'Wszystkie te pola są opcjonalne. Dodanie meta-danych sprawi, że Twoje transakcje będą lepiej zorganizowane.',
+    'transactions_create_split'                       => 'Jeżeli chcesz podzielić transakcję, dodaj więcej podziałów używając tego przycisku',
 
     // create account:
     'accounts_create_iban'                            => 'Nadaj kontom ważny numer IBAN. Może to ułatwić import danych w przyszłości.',

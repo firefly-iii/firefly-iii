@@ -25,15 +25,17 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- *
  * Class TransactionLinkRequest
  */
-class TransactionLinkRequest extends Request
+class TransactionLinkRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Authorize logged in users.
      *
@@ -62,7 +64,6 @@ class TransactionLinkRequest extends Request
     }
 
     /**
-     *
      * The rules that the incoming request must be matched against.
      *
      * @return array

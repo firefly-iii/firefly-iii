@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Contracts\View\Factory;
@@ -65,6 +66,13 @@ class LoginController extends Controller
     {
         parent::__construct();
         $this->middleware('guest')->except('logout');
+
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+
+        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
     }
 
 
@@ -73,9 +81,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse
      *
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -112,7 +120,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-        Log::channel('audit')->info(sprintf('Login attempt for user "%s" failed.', $request->get('email')));
+        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get('email')));
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -124,13 +132,14 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
+        Log::channel('audit')->info('Show login form (1.0).');
+
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
         $title         = (string) trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
-
 
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
@@ -160,9 +169,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return Response
      *
+     * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)
     {

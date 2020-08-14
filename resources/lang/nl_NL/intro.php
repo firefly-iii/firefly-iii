@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Nieuwe transacties, rekeningen en andere dingen maak je met het menu onder deze knop.',
     'index_cash_account'                              => 'Dit zijn de rekeningen die tot nu toe zijn gemaakt. Je kan de cashgeldrekening gebruiken om cash geld te volgen, maar dat hoeft natuurlijk niet.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Kies je lievelingsrekening of passiva uit deze lijst.',
-    'transactions_create_withdrawal_destination'      => 'Kies hier een debiteur. Laat deze leeg als het een cashbetaling is.',
-    'transactions_create_withdrawal_foreign_currency' => 'Gebruik dit veld voor vreemde valuta.',
-    'transactions_create_withdrawal_more_meta'        => 'Alle andere meta-gegevens stop je in deze velden.',
-    'transactions_create_withdrawal_split_add'        => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Selecteer of type de naam van degene die jou betaalt. Laat deze leeg als het om een contante storting gaat.',
-    'transactions_create_deposit_destination'         => 'Kies hier een betaalrekening of passiva.',
-    'transactions_create_deposit_foreign_currency'    => 'Gebruik dit veld voor vreemde valuta.',
-    'transactions_create_deposit_more_meta'           => 'Alle andere meta-gegevens stop je in deze velden.',
-    'transactions_create_deposit_split_add'           => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Selecteer hier de bronbetaalrekening.',
-    'transactions_create_transfer_destination'        => 'Selecteer hier de doelrekening.',
-    'transactions_create_transfer_foreign_currency'   => 'Gebruik dit veld voor vreemde valuta.',
-    'transactions_create_transfer_more_meta'          => 'Alle andere meta-gegevens stop je in deze velden.',
-    'transactions_create_transfer_split_add'          => 'Als je een transactie wilt splitsen, gebruik dan deze knop om meer splits toe te voegen',
+    // transactions
+    'transactions_create_basic_info'                  => 'Hier komt de basic info van je transactie. Bron, doel, datum en beschrijving.',
+    'transactions_create_amount_info'                 => 'Hier zet je het bedrag neer. Ook het bedrag in vreemde valuta.',
+    'transactions_create_optional_info'               => 'Al deze velden zijn optioneel, maar door hier dingen in te vullen ben je beter georganiseerd.',
+    'transactions_create_split'                       => 'Als je een transactie wilt splitsen, druk hier!',
 
     // create account:
     'accounts_create_iban'                            => 'Geef je rekeningen een geldige IBAN. Dat scheelt met importeren van data.',

@@ -50,6 +50,10 @@
                 v-model="value.attachments" v-if="this.fields.attachments" name="attachments[]" v-bind:title="$t('firefly.attachments')" v-bind:is="attachmentComponent"></component>
 
         <component
+                :error="error.external_uri"
+                v-model="value.external_uri" v-if="this.fields.external_uri" name="external_uri[]" v-bind:title="$t('firefly.external_uri')" v-bind:is="uriComponent"></component>
+
+        <component
                 :error="error.notes"
                 v-model="value.notes" v-if="this.fields.notes" name="notes[]" v-bind:title="$t('firefly.notes')" v-bind:is="textareaComponent"></component>
     </div>
@@ -75,7 +79,8 @@
                         "invoice_date": false,
                         "internal_reference": false,
                         "notes": false,
-                        "attachments": false
+                        "attachments": false,
+                        "external_uri": false
                     }
                 ]
             };
@@ -93,6 +98,9 @@
             },
             textareaComponent () {
                 return 'custom-textarea';
+            },
+            uriComponent () {
+                return 'custom-uri';
             }
         },
         methods: {

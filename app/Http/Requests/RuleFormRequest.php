@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Rule;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class RuleFormRequest.
  */
-class RuleFormRequest extends Request
+class RuleFormRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *

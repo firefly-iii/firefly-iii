@@ -45,6 +45,7 @@ class AccountController extends Controller
 
     private array $validFields;
 
+
     public function __construct()
     {
         parent::__construct();

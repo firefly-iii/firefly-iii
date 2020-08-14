@@ -61,10 +61,11 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function search(string $query): Collection
+    public function search(string $query, int $limit): Collection
     {
         $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
         if ('' !== $query) {
@@ -77,7 +78,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
 
         }
 
-        return $dbQuery->get(['object_groups.*']);
+        return $dbQuery->take($limit)->get(['object_groups.*']);
     }
 
     /**

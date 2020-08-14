@@ -198,9 +198,9 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return string
+     * @return array
      */
-    public function getOverallAverage(Bill $bill): string;
+    public function getOverallAverage(Bill $bill): array;
 
     /**
      * @param int $size
@@ -254,14 +254,14 @@ interface BillRepositoryInterface
      * @param Bill   $bill
      * @param Carbon $date
      *
-     * @return string
+     * @return array
      */
-    public function getYearAverage(Bill $bill, Carbon $date): string;
+    public function getYearAverage(Bill $bill, Carbon $date): array;
 
     /**
      * Link a set of journals to a bill.
      *
-     * @param Bill       $bill
+     * @param Bill  $bill
      * @param array $transactions
      */
     public function linkCollectionToBill(Bill $bill, array $transactions): void;
@@ -287,10 +287,11 @@ interface BillRepositoryInterface
 
     /**
      * @param string $query
+     * @param int    $limit
      *
      * @return Collection
      */
-    public function searchBill(string $query): Collection;
+    public function searchBill(string $query, int $limit): Collection;
 
     /**
      * @param User $user

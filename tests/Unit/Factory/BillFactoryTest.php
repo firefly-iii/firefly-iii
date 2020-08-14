@@ -24,17 +24,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
-use Amount;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\BillFactory;
-use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Models\ObjectGroup;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class BillFactoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BillFactoryTest extends TestCase
 {
@@ -48,16 +45,12 @@ class BillFactoryTest extends TestCase
     }
 
     /**
-     * Create basic bill with minimum data.
-     *
      * @covers \FireflyIII\Factory\BillFactory
      * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
      */
     public function testCreateBasic(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
-        $data            = [
+        $data = [
             'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
             'currency_id'   => 1,
@@ -71,13 +64,14 @@ class BillFactoryTest extends TestCase
             'notes'         => 'Hello!',
         ];
 
-        $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([1, ''])->andReturn($euro);
-
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
-        $bill = $factory->create($data);
+        try {
+            $bill = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $this->assertEquals($data['name'], $bill->name);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
@@ -89,56 +83,117 @@ class BillFactoryTest extends TestCase
     }
 
     /**
-     * Create basic bill with minimum data.
-     *
      * @covers \FireflyIII\Factory\BillFactory
      * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
      */
-    public function testCreateDifferentCurrency(): void
+    public function testCreateQueryException(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $dollar          = $this->getDollar();
-        $data            = [
+        $data = [
             'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
-            'currency_code' => $dollar->code,
+            'currency_id'   => 1,
+            'currency_code' => '',
             'amount_max'    => '10',
             'date'          => '2018-01-01',
             'repeat_freq'   => 'monthly',
             'skip'          => 0,
             'automatch'     => true,
-            'active'        => true,
+            'active'        => 'I AM A STRING',
             'notes'         => 'Hello!',
         ];
-
-        $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([0, $dollar->code])->andReturn($dollar);
 
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
-        $bill = $factory->create($data);
-
-        $this->assertEquals($data['name'], $bill->name);
-        $this->assertEquals($data['amount_min'], $bill->amount_min);
-        $this->assertEquals($dollar->id, $bill->transaction_currency_id);
-        $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
-        $note = $bill->notes()->first();
-        $this->assertEquals($data['notes'], $note->text);
-
+        try {
+            $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('400000: Could not store bill.', $e->getMessage());
+        }
     }
 
     /**
-     * Create basic bill with minimum data.
-     *
+     * @covers \FireflyIII\Factory\BillFactory
+     * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
+     * @covers \FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups
+     */
+    public function testCreateObjectGroup(): void
+    {
+        $data = [
+            'name'         => sprintf('Some new bill #%d', $this->randomInt()),
+            'amount_min'   => '5',
+            'amount_max'   => '10',
+            'date'         => '2018-01-01',
+            'repeat_freq'  => 'monthly',
+            'skip'         => 0,
+            'object_group' => 'Test',
+            'automatch'    => true,
+            'active'       => 1,
+            'notes'        => 'Hello!',
+        ];
+
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $bill = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertFalse(true, $e->getMessage());
+            return;
+        }
+        $this->assertCount(1, $bill->objectGroups()->get());
+    }
+
+
+    /**
+     * @covers \FireflyIII\Factory\BillFactory
+     * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
+     * @covers \FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups
+     */
+    public function testCreateObjectGroupById(): void
+    {
+        $group = ObjectGroup::create(
+            [
+                'user_id' => $this->user()->id,
+                'title'   => sprintf('Random object group #%d', $this->randomInt()),
+                'order'   => 1,
+            ]
+        );
+        $data  = [
+            'name'            => sprintf('Some new bill #%d', $this->randomInt()),
+            'amount_min'      => '5',
+            'currency_id'     => 1,
+            'amount_max'      => '10',
+            'date'            => '2018-01-01',
+            'repeat_freq'     => 'monthly',
+            'skip'            => 0,
+            'object_group_id' => $group->id,
+            'automatch'       => true,
+            'active'          => 1,
+            'notes'           => 'Hello!',
+        ];
+
+        /** @var BillFactory $factory */
+        $factory = app(BillFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $bill = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertFalse(true, $e->getMessage());
+            return;
+        }
+        $this->assertCount(1, $bill->objectGroups()->get());
+    }
+
+
+    /**
      * @covers \FireflyIII\Factory\BillFactory
      * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
      */
     public function testCreateEmptyNotes(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
-        $data            = [
+        $euro = $this->getEuro();
+        $data = [
             'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
             'amount_max'    => '10',
@@ -152,62 +207,20 @@ class BillFactoryTest extends TestCase
             'notes'         => '',
         ];
 
-        $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([1, ''])->andReturn($euro);
-
-
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
-        $bill = $factory->create($data);
+        try {
+            $bill = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $this->assertEquals($data['name'], $bill->name);
         $this->assertEquals($euro->id, $bill->transaction_currency_id);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $this->assertEquals(0, $bill->notes()->count());
-
-    }
-
-    /**
-     * Create basic bill with minimum data.
-     *
-     * @covers \FireflyIII\Factory\BillFactory
-     * @covers \FireflyIII\Services\Internal\Support\BillServiceTrait
-     */
-    public function testCreateNoCurrency(): void
-    {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $dollar          = $this->getDollar();
-        $data            = [
-            'name'        => sprintf('Some new bill #%d', $this->randomInt()),
-            'amount_min'  => '5',
-            'amount_max'  => '10',
-            'date'        => '2018-01-01',
-            'repeat_freq' => 'monthly',
-            'skip'        => 0,
-            'automatch'   => true,
-            'active'      => true,
-            'notes'       => 'Hello!',
-        ];
-
-        $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([0, ''])->andReturnNull();
-
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($dollar);
-
-
-        /** @var BillFactory $factory */
-        $factory = app(BillFactory::class);
-        $factory->setUser($this->user());
-        $bill = $factory->create($data);
-
-        $this->assertEquals($data['name'], $bill->name);
-        $this->assertEquals($data['amount_min'], $bill->amount_min);
-        $this->assertEquals($dollar->id, $bill->transaction_currency_id);
-        $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
-        $note = $bill->notes()->first();
-        $this->assertEquals($data['notes'], $note->text);
 
     }
 
@@ -219,8 +232,7 @@ class BillFactoryTest extends TestCase
      */
     public function testFindById(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $existing        = $this->user()->piggyBanks()->first();
+        $existing = $this->user()->piggyBanks()->first();
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
@@ -236,8 +248,7 @@ class BillFactoryTest extends TestCase
      */
     public function testFindByName(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $existing        = $this->user()->bills()->first();
+        $existing = $this->user()->bills()->first();
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
@@ -254,7 +265,6 @@ class BillFactoryTest extends TestCase
      */
     public function testFindByUnknownName(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
@@ -271,7 +281,6 @@ class BillFactoryTest extends TestCase
      */
     public function testFindNull(): void
     {
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());

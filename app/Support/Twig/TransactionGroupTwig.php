@@ -48,47 +48,10 @@ class TransactionGroupTwig extends AbstractExtension
         return [
             $this->journalArrayAmount(),
             $this->journalObjectAmount(),
-            $this->groupAmount(),
             $this->journalHasMeta(),
             $this->journalGetMetaDate(),
             $this->journalGetMetaField(),
         ];
-    }
-
-    /**
-     * @return TwigFunction
-     */
-    public function groupAmount(): TwigFunction
-    {
-        return new TwigFunction(
-            'groupAmount',
-            static function (array $array): string {
-                $sums    = $array['sums'];
-                $return  = [];
-                $first   = reset($array['transactions']);
-                $type    = $first['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-                $colored = true;
-                if ($type === TransactionType::TRANSFER) {
-                    $colored = false;
-                }
-
-
-                /** @var array $sum */
-                foreach ($sums as $sum) {
-                    $amount = $sum['amount'];
-
-                    // do multiplication thing.
-                    if ($type !== TransactionType::WITHDRAWAL) {
-                        $amount = bcmul($amount, '-1');
-                    }
-
-                    $return[] = app('amount')->formatFlat($sum['currency_symbol'], (int)$sum['currency_decimal_places'], $amount, $colored);
-                }
-
-                return implode(', ', $return);
-            },
-            ['is_safe' => ['html']]
-        );
     }
 
     /**
@@ -194,7 +157,6 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalObjectAmount',
             function (TransactionJournal $journal): string {
-                // if is not a withdrawal, amount positive.
                 $result = $this->normalJournalObjectAmount($journal);
                 // now append foreign amount, if any.
                 if ($this->journalObjectHasForeign($journal)) {
@@ -220,13 +182,14 @@ class TransactionGroupTwig extends AbstractExtension
         $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $array['foreign_amount'] ?? '0';
         $colored = true;
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
+
+        $sourceType = $array['source_account_type'] ?? 'invalid';
+        $amount     = $this->signAmount($amount, $type, $sourceType);
+
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -245,17 +208,18 @@ class TransactionGroupTwig extends AbstractExtension
     {
         $type = $journal->transactionType->type;
         /** @var Transaction $first */
-        $first    = $journal->transactions()->where('amount', '<', 0)->first();
-        $currency = $first->foreignCurrency;
-        $amount   = $first->foreign_amount ?? '0';
-        $colored  = true;
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $first->foreignCurrency;
+        $amount     = $first->foreign_amount ?? '0';
+        $colored    = true;
+        $sourceType = $first->account()->first()->accountType()->first()->type;
+
+        $amount = $this->signAmount($amount, $type, $sourceType);
+
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, (int) $currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -272,23 +236,17 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function normalJournalArrayAmount(array $array): string
     {
-        $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $array['amount'] ?? '0';
-        $colored = true;
-        // withdrawals are negative
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
-        $destinationType = $array['destination_account_type'] ?? 'invalid';
-        if ($type === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE === $destinationType) {
-            $amount = bcmul($amount, '-1');
-        }
+        $type       = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $amount     = $array['amount'] ?? '0';
+        $colored    = true;
+        $sourceType = $array['source_account_type'] ?? 'invalid';
+        $amount     = $this->signAmount($amount, $type, $sourceType);
 
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
 
-        $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
+        $result = app('amount')->formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -305,18 +263,19 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function normalJournalObjectAmount(TransactionJournal $journal): string
     {
-        $type     = $journal->transactionType->type;
-        $first    = $journal->transactions()->where('amount', '<', 0)->first();
-        $currency = $journal->transactionCurrency;
-        $amount   = $first->amount ?? '0';
-        $colored  = true;
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
+        $type       = $journal->transactionType->type;
+        $first      = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency   = $journal->transactionCurrency;
+        $amount     = $first->amount ?? '0';
+        $colored    = true;
+        $sourceType = $first->account()->first()->accountType()->first()->type;
+
+        $amount = $this->signAmount($amount, $type, $sourceType);
+
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, (int) $currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }
@@ -334,5 +293,32 @@ class TransactionGroupTwig extends AbstractExtension
         $first = $journal->transactions()->where('amount', '<', 0)->first();
 
         return null !== $first->foreign_amount;
+    }
+
+    /**
+     * @param string $amount
+     * @param string $transactionType
+     * @param string $sourceType
+     * @return string
+     */
+    private function signAmount(string $amount, string $transactionType, string $sourceType): string
+    {
+
+        // withdrawals stay negative
+        if ($transactionType !== TransactionType::WITHDRAWAL) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // opening balance and it comes from initial balance? its expense.
+        if ($transactionType === TransactionType::OPENING_BALANCE && AccountType::INITIAL_BALANCE !== $sourceType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        // reconciliation and it comes from reconciliation?
+        if ($transactionType === TransactionType::RECONCILIATION && AccountType::RECONCILIATION !== $sourceType) {
+            $amount = bcmul($amount, '-1');
+        }
+
+        return $amount;
     }
 }

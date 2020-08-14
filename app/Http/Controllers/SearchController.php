@@ -88,7 +88,6 @@ class SearchController extends Controller
 
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
-        $searcher->setLimit((int) config('firefly.search_result_limit'));
         $groups     = $searcher->searchTransactions();
         $hasPages   = $groups->hasPages();
         $searchTime = round($searcher->searchTime(), 3); // in seconds

@@ -32,26 +32,11 @@ return [
     'index_sidebar-toggle'                            => 'Luo uusia tapahtumia, tilejä tai muita juttuja käyttämällä tämän kuvakkeen alla olevaa valikkoa.',
     'index_cash_account'                              => 'Tässä ovat tähän mennessä luodut tilit. Käteistilillä voit seurata käteiskuluja, mutta se ei tietenkään ole pakollista.',
 
-    // transactions (withdrawal)
-    'transactions_create_withdrawal_source'           => 'Valitse suosikkiomaisuustilisi tai -vastuutilisi tästä alasvetovalikosta.',
-    'transactions_create_withdrawal_destination'      => 'Valitse tästä kulutustili. Jätä se tyhjäksi, jos haluat tehdä käteismaksun.',
-    'transactions_create_withdrawal_foreign_currency' => 'Tämän kentän avulla voit asettaa valuutan ja summan.',
-    'transactions_create_withdrawal_more_meta'        => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_withdrawal_split_add'        => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää osia tällä painikkeella',
-
-    // transactions (deposit)
-    'transactions_create_deposit_source'              => 'Valitse tai kirjoita maksunsaaja tässä automaattitäydennys-pudotusvalikko-tekstikentässä. Jätä kenttä tyhjäksi jos haluat tehdä käteistalletuksen.',
-    'transactions_create_deposit_destination'         => 'Valitse omaisuus- tai vastuutili täältä.',
-    'transactions_create_deposit_foreign_currency'    => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
-    'transactions_create_deposit_more_meta'           => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_deposit_split_add'           => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää tapahtumaan osia tällä painikkeella',
-
-    // transactions (transfer)
-    'transactions_create_transfer_source'             => 'Valitse lähdetili täältä.',
-    'transactions_create_transfer_destination'        => 'Valitse kohdetili täältä.',
-    'transactions_create_transfer_foreign_currency'   => 'Tämän kentän avulla voit asettaa ulkomaan valuutan ja summan.',
-    'transactions_create_transfer_more_meta'          => 'Paljon muita lisätietoja joita voit asettaa näissä kentissä.',
-    'transactions_create_transfer_split_add'          => 'Jos haluat jakaa tapahtuman useampaan osaan, lisää tapahtumaan osia tällä painikkeella',
+    // transactions
+    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
+    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
+    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
 
     // create account:
     'accounts_create_iban'                            => 'Anna tilillesi kelvollinen IBAN-tunnus. Tämä voi tehdä tietojen automaattisesta tuonnista jatkossa tosi helppoa.',

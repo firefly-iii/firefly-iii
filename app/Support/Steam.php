@@ -40,6 +40,8 @@ class Steam
 {
 
     /**
+     * Gets balance at the end of current month by default
+     *
      * @param \FireflyIII\Models\Account $account
      * @param \Carbon\Carbon             $date
      *
@@ -362,8 +364,10 @@ class Steam
      * Remove weird chars from strings.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function cleanString(string $string): string
     {
@@ -425,8 +429,10 @@ class Steam
      * Remove weird chars from strings, but keep newlines and tabs.
      *
      * @param string $string
+     * TODO migrate to trait.
      *
      * @return string
+     * @deprecated
      */
     public function nlCleanString(string $string): string
     {
@@ -606,7 +612,12 @@ class Steam
         /** @var string $language */
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         if ('equal' === $locale) {
-            return $this->getLanguage();
+            $locale = $this->getLanguage();
+        }
+        
+        // Check for Windows to replace the locale correctly.
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $locale = str_replace('_', '-', $locale);
         }
 
         return $locale;

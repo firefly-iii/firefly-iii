@@ -42,13 +42,14 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class CategoryController.
- *
  */
 class CategoryController extends Controller
 {
     use TransactionFilter;
+
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
+
 
     /**
      * CategoryController constructor.

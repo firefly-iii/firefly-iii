@@ -49,6 +49,7 @@ class MigrateJournalNotes extends Command
      */
     protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
 
+
     /**
      * Execute the console command.
      *

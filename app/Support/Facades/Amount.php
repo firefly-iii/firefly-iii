@@ -38,7 +38,6 @@ use Illuminate\Support\Facades\Facade;
  * @method string getCurrencySymbol()
  * @method TransactionCurrency getDefaultCurrency()
  * @method TransactionCurrency getDefaultCurrencyByUser(User $user)
- * @method array getJsConfig(array $config)
  */
 class Amount extends Facade
 {

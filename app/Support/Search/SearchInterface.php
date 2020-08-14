@@ -67,11 +67,6 @@ interface SearchInterface
     public function searchTransactions(): LengthAwarePaginator;
 
     /**
-     * @param int $limit
-     */
-    public function setLimit(int $limit);
-
-    /**
      * @param User $user
      */
     public function setUser(User $user);

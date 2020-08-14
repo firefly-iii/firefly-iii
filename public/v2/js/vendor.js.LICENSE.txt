@@ -1,11 +1,11 @@
 /*!
-  * Bootstrap v4.5.0 (https://getbootstrap.com/)
+  * Bootstrap v4.5.2 (https://getbootstrap.com/)
   * Copyright 2011-2020 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
-  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
 /*!
-  * vue-router v3.3.4
+  * vue-router v3.4.3
   * (c) 2020 Evan You
   * @license MIT
   */
@@ -27,13 +27,13 @@
  * OverlayScrollbars
  * https://github.com/KingSora/OverlayScrollbars
  *
- * Version: 1.12.0
+ * Version: 1.13.0
  *
  * Copyright KingSora | Rene Haas.
  * https://github.com/KingSora
  *
  * Released under the MIT license.
- * Date: 05.04.2020
+ * Date: 02.08.2020
  */
 
 /*!
@@ -75,6 +75,17 @@
  * Released under the MIT license.
  * http://jquery.org/license
  */
+
+/*! 
+ * portal-vue © Thorsten Lünborg, 2019 
+ * 
+ * Version: 2.1.7
+ * 
+ * LICENCE: MIT 
+ * 
+ * https://github.com/linusborg/portal-vue
+ * 
+*/
 
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.

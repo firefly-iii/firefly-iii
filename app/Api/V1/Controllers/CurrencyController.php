@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\CurrencyRequest;
@@ -64,15 +63,17 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class CurrencyController.
- *
  */
 class CurrencyController extends Controller
 {
     use AccountFilter, TransactionFilter;
+
     /** @var CurrencyRepositoryInterface The currency repository */
     private $repository;
+
     /** @var UserRepositoryInterface The user repository */
     private $userRepository;
+
 
     /**
      * CurrencyRepository constructor.
@@ -578,7 +579,7 @@ class CurrencyController extends Controller
         $manager  = $this->getManager();
         $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $currency);
-        
+
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);

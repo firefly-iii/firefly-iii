@@ -182,7 +182,7 @@ return [
     'deposit_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
     'deposit_dest_need_data'   => 'É necessário obter obter um ID de conta de destino válido e/ou nome de conta de destino válido para continuar.',
     'deposit_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
-    'deposit_dest_wrong_type'  => 'The submitted destination account is not of the right type.',
+    'deposit_dest_wrong_type'  => 'A conta de destino enviada não é do tipo certo.',
 
     'transfer_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
     'transfer_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
@@ -197,7 +197,7 @@ return [
     'generic_invalid_source'      => 'Você não pode usar esta conta como conta de origem.',
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
-    'gte.numeric' => 'The :attribute must be greater than or equal to :value.',
+    'gte.numeric' => ':attribute deve ser maior ou igual a :value.',
     'gt.numeric'  => 'The :attribute must be greater than :value.',
     'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
     'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',

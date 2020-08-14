@@ -55,7 +55,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -74,7 +74,7 @@ class BulkController extends Controller
      */
     public function edit(array $journals)
     {
-        $subTitle = (string) trans('firefly.mass_bulk_journals');
+        $subTitle = (string)trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUri('transactions.bulk-edit.uri');
 
@@ -100,17 +100,18 @@ class BulkController extends Controller
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int) $request->get('ignore_category');
-        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
-        $ignoreTags     = 1 === (int) $request->get('ignore_tags');
-        $count          = 0;
+        $ignoreCategory = 1 === (int)$request->get('ignore_category');
+        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
+        $tagsAction     = $request->get('tags_action');
+
+        $count = 0;
 
         foreach ($journalIds as $journalId) {
-            $journalId = (int) $journalId;
+            $journalId = (int)$journalId;
             $journal   = $this->repository->findNull($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
-                $resultB = $this->updateJournalTags($journal, $ignoreTags, explode(',', $request->string('tags')));
+                $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->string('tags')));
                 $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->string('category'));
                 if ($resultA || $resultB || $resultC) {
                     $count++;
@@ -118,7 +119,7 @@ class BulkController extends Controller
             }
         }
         app('preferences')->mark();
-        $request->session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count));
+        $request->session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));
@@ -162,20 +163,22 @@ class BulkController extends Controller
 
     /**
      * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
+     * @param string             $action
      * @param array              $tags
      *
      * @return bool
      */
-    private function updateJournalTags(TransactionJournal $journal, bool $ignoreUpdate, array $tags): bool
+    private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
-
-        if (true === $ignoreUpdate) {
-            return false;
+        if ('do_replace' === $action) {
+            Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
+            $this->repository->updateTags($journal, $tags);
         }
-        Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
-        $this->repository->updateTags($journal, $tags);
-
+        if ('do_append' === $action) {
+            $existing = $journal->tags->pluck('tag')->toArray();
+            $new      = array_unique(array_merge($tags, $existing));
+            $this->repository->updateTags($journal, $new);
+        }
         return true;
     }
 }

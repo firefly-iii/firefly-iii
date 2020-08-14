@@ -76,7 +76,9 @@ class AmountFormat extends AbstractExtension
     /**
      * Will format the amount by the currency related to the given account.
      *
-     * @return TwigFunction;
+     * @return TwigFunction
+     * @deprecated
+     * TODO remove me because it executes a query in a view.
      */
     protected function formatAmountByAccount(): TwigFunction
     {

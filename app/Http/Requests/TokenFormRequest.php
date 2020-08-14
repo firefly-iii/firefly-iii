@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class TokenFormRequest.
  *
  * @codeCoverageIgnore
  */
-class TokenFormRequest extends Request
+class TokenFormRequest extends FormRequest
 {
     /**
      * Verify the request.

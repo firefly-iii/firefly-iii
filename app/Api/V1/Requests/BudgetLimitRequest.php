@@ -23,14 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class BudgetLimitRequest
  *
  * @codeCoverageIgnore
  * TODO AFTER 4.8,0: split this into two request classes.
  */
-class BudgetLimitRequest extends Request
+class BudgetLimitRequest extends FormRequest
 {
+    use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *
@@ -49,7 +54,7 @@ class BudgetLimitRequest extends Request
      */
     public function getAll(): array
     {
-        return [
+        $data = [
             'budget_id'     => $this->integer('budget_id'),
             'start'         => $this->date('start'),
             'end'           => $this->date('end'),
@@ -57,6 +62,12 @@ class BudgetLimitRequest extends Request
             'currency_id'   => $this->integer('currency_id'),
             'currency_code' => $this->string('currency_code'),
         ];
+        // if request has a budget already, drop the rule.
+        $budget = $this->route()->parameter('budget');
+        if (null !== $budget) {
+            $data['budget_id'] = $budget->id;
+        }
+        return $data;
     }
 
     /**

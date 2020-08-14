@@ -24,13 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Rules\ValidJournals;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 use Log;
 
 /**
  * Class ReconciliationStoreRequest
  */
-class ReconciliationStoreRequest extends Request
+class ReconciliationStoreRequest extends FormRequest
 {
+    use ConvertsDataTypes;
     /**
      * Verify the request.
      *

@@ -1,0 +1,19 @@
+includes:
+  - ../vendor/nunomaduro/larastan/extension.neon
+  - ../vendor/ergebnis/phpstan-rules/rules.neon
+  - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
+  - ../vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+
+parameters:
+  ignoreErrors:
+    - '#is not allowed to extend#'
+    - '#is neither abstract nor final#'
+    - '#Control structures using switch should not be used\.#'
+  paths:
+    - ../app
+    - ../database
+    - ../routes
+    - ../bootstrap/app.php
+
+  # The level 8 is the highest level. original was 5
+  level: 0

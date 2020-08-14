@@ -39,6 +39,7 @@ class AttachmentFactory
     /** @var User */
     private $user;
 
+
     /**
      * Constructor.
      *

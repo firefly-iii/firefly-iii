@@ -1,0 +1,146 @@
+name: Firefly III
+
+on:
+  push:
+    branches-ignore:
+      - '**'
+
+jobs:
+  prepare:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy .env
+        run: test -f .env || cp .ci/.env.ci .env
+      - name: Prepare dependencies
+        run: |
+          set -euxo pipefail
+          export PATH=$PATH:$HOME/.composer/vendor/bin/
+          composer global require hirak/prestissimo --no-plugins --no-scripts
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
+
+          touch ./storage/database/database.sqlite
+      - name: Prepare Firefly III
+        run: |
+          chmod -R 777 storage bootstrap/cache
+          php artisan migrate --seed
+          php artisan firefly-iii:upgrade-database
+      - name: Upload database
+        uses: actions/upload-artifact@v2
+        with:
+          name: database
+          path: storage/database/database.sqlite
+      - name: Upload cache
+        uses: actions/upload-artifact@v2
+        with:
+          name: cache
+          path: bootstrap/cache/
+      - name: Upload composer cache
+        uses: actions/upload-artifact@v2
+        with:
+          name: composer
+          path: ~/.composer
+
+  laravel-tests:
+
+    runs-on: ubuntu-latest
+
+    needs:
+      - prepare
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy .env
+        run: test -f .env || cp .ci/.env.ci .env
+      - name: Download database
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: storage/database/database.sqlite
+      - name: Download cache
+        uses: actions/download-artifact@v2
+        with:
+          name: cache
+          path: bootstrap/cache/
+      - name: Download vendor
+        uses: actions/download-artifact@v2
+        with:
+          name: composer
+          path: ~/.composer
+      - name: Install composer
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
+
+      - name: PHPUnit tests
+        uses: php-actions/phpunit@v1
+        with:
+          config: phpunit.xml
+          memory: 512M
+
+  coding-standards:
+
+    runs-on: ubuntu-latest
+
+    needs:
+      - prepare
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy .env
+        run: test -f .env || cp .ci/.env.ci .env
+      - name: Download database
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: storage/database/database.sqlite
+      - name: Download cache
+        uses: actions/download-artifact@v2
+        with:
+          name: cache
+          path: bootstrap/cache/
+      - name: Download vendor
+        uses: actions/download-artifact@v2
+        with:
+          name: composer
+          path: ~/.composer
+      - name: install depenencies
+        run: |
+          composer global require nette/coding-standard
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
+
+      - name: Execute code standard
+        run: /home/runner/.composer/vendor/bin/ecs check app tests --config ./.ci/firefly-iii-standard.yml
+
+  phpstan:
+
+    runs-on: ubuntu-latest
+
+    needs:
+      - prepare
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy .env
+        run: test -f .env || cp .ci/.env.ci .env
+      - name: Download database
+        uses: actions/download-artifact@v2
+        with:
+          name: database
+          path: storage/database/database.sqlite
+      - name: Download cache
+        uses: actions/download-artifact@v2
+        with:
+          name: cache
+          path: bootstrap/cache/
+      - name: Download vendor
+        uses: actions/download-artifact@v2
+        with:
+          name: composer
+          path: ~/.composer
+      - name: Install depenencies
+        run: |
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --no-suggest
+
+      - name: Execute PHPStan
+        run: vendor/bin/phpstan analyse -c .ci/phpstan.neon

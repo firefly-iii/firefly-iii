@@ -1,6 +1,6 @@
 version: 2
 updates:
-  
+
   # composer updates
   - package-ecosystem: "composer"
     directory: "/" # Location of package manifests

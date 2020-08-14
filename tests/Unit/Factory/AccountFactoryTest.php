@@ -43,9 +43,6 @@ use Tests\TestCase;
 
 /**
  * Class AccountFactoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountFactoryTest extends TestCase
 {
@@ -63,14 +60,10 @@ class AccountFactoryTest extends TestCase
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreate(): void
+    public function testCreateAsset(): void
     {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $euro = $this->getEuro();
         $data = [
             'account_type_id' => null,
             'account_type'    => 'asset',
@@ -81,16 +74,6 @@ class AccountFactoryTest extends TestCase
             'account_role'    => 'defaultAsset',
         ];
 
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($euro);
-
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());
@@ -109,223 +92,32 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(AccountType::ASSET, $account->accountType->type);
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
 
         $account->forceDelete();
     }
 
-    /**
-     * Test creation of CC asset.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateCC(): void
-    {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-
-
-        $data = [
-            'account_type_id'         => null,
-            'account_type'            => 'asset',
-            'iban'                    => null,
-            'name'                    => sprintf('Basic CC account #%d', $this->randomInt()),
-            'virtual_balance'         => null,
-            'active'                  => true,
-            'account_role'            => 'ccAsset',
-            'cc_monthly_payment_date' => '2018-01-01',
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'ccAsset'])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'cc_monthly_payment_date', '2018-01-01'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'cc_type', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        $account->forceDelete();
-    }
 
     /**
      * Test minimal set of data to make factory work (asset account).
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreateCurrencyCode(): void
+    public function testCreateAssetLocation(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory  = $this->mock(AccountMetaFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-
-        $currency = $this->getDollar();
-        $data     = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'iban'            => null,
-            'currency_code'   => $currency->code,
-            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', $currency->id])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, 'USD'])->atLeast()->once()->andReturn($currency);
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-
-    }
-
-    /**
-     * Test minimal set of data to make factory work (asset account).
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateCurrencyId(): void
-    {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $currency = $this->getDollar();
-        $data     = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'iban'            => null,
-            'currency_id'     => $currency->id,
-            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', $currency->id])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([7, ''])->atLeast()->once()->andReturn($currency);
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-    }
-
-    /**
-     * Leave virtual balance empty.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateEmptyVb(): void
-    {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-
-        $this->mock(TransactionGroupFactory::class);
         $data = [
             'account_type_id' => null,
             'account_type'    => 'asset',
             'iban'            => null,
             'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => '',
+            'virtual_balance' => null,
             'active'          => true,
             'account_role'    => 'defaultAsset',
+            'store_location' => true,
         ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -345,86 +137,31 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(AccountType::ASSET, $account->accountType->type);
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(1, $account->locations()->get());
 
         $account->forceDelete();
     }
 
     /**
-     * Should return existing account.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     */
-    public function testCreateExisting(): void
-    {
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $this->mock(AccountMetaFactory::class);
-        $existing = $this->getRandomAsset();
-        $data     = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'name'            => $existing->name,
-            'virtual_balance' => null,
-            'iban'            => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-        ];
-
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->id, $existing->id);
-    }
-
-    /**
-     * Create an expense account. This overrules the virtual balance.
-     * Role should not be set.
+     * Submit invalid IBAN, so assume NULL on final result.
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreateExpense(): void
+    public function testCreateInvalidIBAN(): void
     {
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-
-        $metaFactory = $this->mock(AccountMetaFactory::class);
-        $data        = [
+        $data = [
             'account_type_id' => null,
-            'account_type'    => 'expense',
-            'iban'            => null,
-            'name'            => sprintf('Basic expense account #%d', $this->randomInt()),
-            'virtual_balance' => '1243',
+            'account_type'    => 'asset',
+            'iban'            => 'IAMINVALID',
+            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance' => null,
             'active'          => true,
             'account_role'    => 'defaultAsset',
         ];
-
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -441,57 +178,37 @@ class AccountFactoryTest extends TestCase
 
         // assert stuff about account:
         $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::EXPENSE, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
         $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertNull($account->iban);
 
-        // get the role:
-        /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
-        $this->assertNull($meta);
         $account->forceDelete();
     }
 
     /**
-     * Create an expense account. This overrules the virtual balance.
-     * Role should not be set. This time set type name, not ID.
+     * Submit invalid IBAN, so assume NULL on final result.
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreateExpenseFullType(): void
+    public function testCreateValidIBAN(): void
     {
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $data            = [
+        $data = [
             'account_type_id' => null,
-            'account_type'    => 'Expense account',
-            'iban'            => null,
-            'name'            => sprintf('Basic expense account #%d', $this->randomInt()),
-            'virtual_balance' => '1243',
+            'account_type'    => 'asset',
+            'iban'            => 'NL83ABNA8548609842', // fake IBAN, ABN AMRO IBAN's are always "ABNA0".
+            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance' => null,
             'active'          => true,
             'account_role'    => 'defaultAsset',
         ];
 
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());
-
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
-        ////$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
@@ -504,149 +221,25 @@ class AccountFactoryTest extends TestCase
 
         // assert stuff about account:
         $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::EXPENSE, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        // get the role:
-        /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
-        $this->assertNull($meta);
-        $account->forceDelete();
-    }
-
-    /**
-     * Add valid IBAN.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateIban(): void
-    {
-        Log::info(sprintf('Now in test %s', __METHOD__));
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $data = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'iban'            => 'NL02ABNA0870809585',
-            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-        ];
-
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
         $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('NL02ABNA0870809585', $account->iban);
         $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertEquals($data['iban'], $account->iban);
 
         $account->forceDelete();
     }
 
     /**
-     * Add invalid IBAN.
+     * Create asset, include opening balance.
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreateInvalidIban(): void
+    public function testCreateAssetOpeningBalance(): void
     {
-        Log::info(sprintf('Now in test %s', __METHOD__));
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
         $data = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'iban'            => 'NL1XRABO032674X238',
-            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-    }
-
-    /**
-     * Submit IB data for asset account.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateNegativeIB(): void
-    {
-        Log::info(sprintf('Now in test %s', __METHOD__));
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $groupFactory    = $this->mock(TransactionGroupFactory::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
-        $data            = [
             'account_type_id'      => null,
             'account_type'         => 'asset',
             'iban'                 => null,
@@ -654,33 +247,18 @@ class AccountFactoryTest extends TestCase
             'virtual_balance'      => null,
             'active'               => true,
             'account_role'         => 'defaultAsset',
-            'opening_balance'      => '-100',
-            'opening_balance_date' => new Carbon('2018-01-01'),
-            'currency_id'          => 1,
+            'opening_balance'      => '1234.56',
+            'opening_balance_date' => today(),
         ];
-
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($langPreference);
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $groupFactory->shouldReceive('setUser')->atLeast()->once();
-        $groupFactory->shouldReceive('create')->atLeast()->once();
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());
-
         try {
             $account = $factory->create($data);
         } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
 
             return;
@@ -691,35 +269,170 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(AccountType::ASSET, $account->accountType->type);
         $this->assertEquals('', $account->iban);
         $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(1, $account->transactions()->get());
+
+        $account->forceDelete();
+    }
+    /**
+     * Create asset, include opening balance.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateAssetNegOb(): void
+    {
+        $data = [
+            'account_type_id'      => null,
+            'account_type'         => 'asset',
+            'iban'                 => null,
+            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance'      => null,
+            'active'               => true,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '-1234.56',
+            'opening_balance_date' => today(),
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(1, $account->transactions()->get());
 
         $account->forceDelete();
     }
 
     /**
-     * Can't find account type.
+     * Create asset, include opening balance.
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
-    public function testCreateNoType(): void
+    public function testCreateAssetZeroOb(): void
     {
-        Log::info(sprintf('Now in test %s', __METHOD__));
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $this->mock(AccountMetaFactory::class);
+        $data = [
+            'account_type_id'      => null,
+            'account_type'         => 'asset',
+            'iban'                 => null,
+            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
+            'virtual_balance'      => null,
+            'active'               => true,
+            'account_role'         => 'defaultAsset',
+            'opening_balance'      => '0',
+            'opening_balance_date' => today(),
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+        $this->assertCount(0, $account->transactions()->get());
+
+        $account->forceDelete();
+    }
+
+
+    /**
+     * Create expense account.
+     *
+     * - Virtual balance must become NULL despite being set.
+     * - Account type is found by ID
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateExpense(): void
+    {
+        $expense = AccountType::where('type', AccountType::EXPENSE)->first();
+        $data    = [
+            'account_type_id' => $expense->id ?? null,
+            'iban'            => null,
+            'name'            => sprintf('Basic expense account #%d', $this->randomInt()),
+            'virtual_balance' => '1234.56',
+            'active'          => true,
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $account = $factory->create($data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+
+            return;
+        }
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::EXPENSE, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals(0, $account->order);
+        $this->assertNull($account->virtual_balance);
+
+        $account->forceDelete();
+    }
+
+
+    /**
+     * Unknown type.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
+     */
+    public function testCreateErrorType(): void
+    {
+        // mock repositories
         $data = [
             'account_type_id' => null,
-            'account_type'    => 'bla-bla',
+            'account_type'    => 'bad-type',
             'iban'            => null,
             'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
             'virtual_balance' => null,
             'active'          => true,
             'account_role'    => 'defaultAsset',
         ];
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -727,317 +440,37 @@ class AccountFactoryTest extends TestCase
         try {
             $factory->create($data);
         } catch (FireflyException $e) {
-            $this->assertStringContainsString('AccountFactory::create() was unable to find account type #0 ("bla-bla").', $e->getMessage());
-        }
-    }
-
-    /**
-     * Add some notes to asset account.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateNotes(): void
-    {
-        Log::info(sprintf('Now in test %s', __METHOD__));
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $data = [
-            'account_type_id' => null,
-            'account_type'    => 'asset',
-            'iban'            => null,
-            'name'            => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance' => null,
-            'active'          => true,
-            'account_role'    => 'defaultAsset',
-            'notes'           => 'Hello!',
-        ];
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
+            $this->assertEquals($e->getMessage(), 'AccountFactory::create() was unable to find account type #0 ("bad-type").');
 
             return;
         }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        $note = $account->notes()->first();
-        $this->assertEquals('Hello!', $note->text);
+        $this->assertTrue(false, 'Should not reach here.');
     }
 
     /**
-     * Submit valid opening balance data for asset account.
+     * Find expense account we know doesn't exist.
      *
      * @covers \FireflyIII\Factory\AccountFactory
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateOB(): void
-    {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $groupFactory    = $this->mock(TransactionGroupFactory::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
-        $data            = [
-            'account_type_id'      => null,
-            'account_type'         => 'asset',
-            'iban'                 => null,
-            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance'      => null,
-            'active'               => true,
-            'account_role'         => 'defaultAsset',
-            'opening_balance'      => '100',
-            'opening_balance_date' => new Carbon('2018-01-01'),
-            'currency_id'          => 1,
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $groupFactory->shouldReceive('setUser')->atLeast()->once();
-        $groupFactory->shouldReceive('create')->atLeast()->once();
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
-
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($langPreference);
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-    }
-
-    /**
-     * Submit empty (amount = 0) IB data for asset account.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateOBZero(): void
-    {
-        // mock repositories:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $euro            = $this->getEuro();
-        $data            = [
-            'account_type_id'      => null,
-            'account_type'         => 'asset',
-            'iban'                 => null,
-            'name'                 => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance'      => null,
-            'active'               => true,
-            'account_role'         => 'defaultAsset',
-            'opening_balance'      => '0.0',
-            'opening_balance_date' => new Carbon('2018-01-01'),
-            'currency_id'          => 1,
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([1, ''])->atLeast()->once()->andReturn($euro);
-
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->andReturn($langPreference);
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        $account->forceDelete();
-    }
-
-    /**
-     * Test minimal set of data to make factory work (asset account).
-     *
-     * Add some details
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateWithNumbers(): void
-    {
-        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
-        $metaFactory     = $this->mock(AccountMetaFactory::class);
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-        $this->mock(TransactionGroupFactory::class);
-        $euro = $this->getEuro();
-        $data = [
-            'account_type_id'   => null,
-            'account_type'      => 'asset',
-            'iban'              => null,
-            'name'              => sprintf('Basic asset account #%d', $this->randomInt()),
-            'virtual_balance'   => null,
-            'active'            => true,
-            'account_role'      => 'defaultAsset',
-            'BIC'               => 'BIC',
-            'include_net_worth' => false,
-            'account_number'    => '1234',
-        ];
-
-        // mock calls to the repository:
-        $accountRepos->shouldReceive('getOpeningBalanceGroup')->atLeast()->once()->andReturn(null);
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_role', 'defaultAsset'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', '1234'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', 'BIC'])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', false])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($euro);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-        try {
-            $account = $factory->create($data);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $this->assertTrue(false, $e->getMessage());
-
-            return;
-        }
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        $account->forceDelete();
-    }
-
-    /**
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     * @covers \FireflyIII\Services\Internal\Support\LocationServiceTrait
      */
     public function testFindOrCreate(): void
     {
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $this->mock(AccountMetaFactory::class);
-        /** @var Account $account */
-        $account = $this->getRandomRevenue();
-
+        $name = sprintf('Basic account #%d', $this->randomInt());
+        $type = AccountType::EXPENSE;
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());
-        Log::debug(sprintf('Searching for account #%d with name "%s"', $account->id, $account->name));
 
-        $result = $factory->findOrCreate($account->name, $account->accountType->type);
-        $this->assertEquals($result->id, $account->id);
-    }
-
-    /**
-     * Test only for existing account because the rest has been covered by other tests.
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testFindOrCreateNew(): void
-    {
-        $this->mock(AccountRepositoryInterface::class);
-        $this->mock(TransactionGroupFactory::class);
-        $metaFactory = $this->mock(AccountMetaFactory::class);
-        /** @var Account $account */
-        $account         = $this->getRandomRevenue();
-        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
-
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'account_number', ''])->atLeast()->once()->andReturnNull();
-        $metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'currency_id', '1'])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'BIC', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'include_net_worth', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest', ''])->atLeast()->once()->andReturnNull();
-        //$metaFactory->shouldReceive('crud')->withArgs([Mockery::any(), 'interest_period', ''])->atLeast()->once()->andReturnNull();
-        $currencyFactory->shouldReceive('find')->withArgs([0, ''])->atLeast()->once()->andReturnNull();
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro);
-
-        $name = sprintf('New %s', $account->name);
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-        Log::debug(sprintf('Searching for account #%d with name "%s"', $account->id, $account->name));
-
-        $result = $factory->findOrCreate($name, $account->accountType->type);
-        $this->assertNotEquals($result->id, $account->id);
-
-        $result->forceDelete();
+        try {
+            $account = $factory->findOrCreate($name, $type);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+            return;
+        }
+        $this->assertEquals($name, $account->name);
+        $this->assertEquals($type, $account->accountType->type);
 
     }
-
 }

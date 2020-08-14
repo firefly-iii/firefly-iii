@@ -87,6 +87,7 @@ class TransactionController extends Controller
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
@@ -145,6 +146,7 @@ class TransactionController extends Controller
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
 
@@ -204,6 +206,7 @@ class TransactionController extends Controller
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
@@ -262,6 +265,7 @@ class TransactionController extends Controller
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
+                    'currency_code'   => $journal['currency_code'],
                 ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
 

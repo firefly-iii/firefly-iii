@@ -32,9 +32,6 @@ use Tests\TestCase;
 /**
  *
  * Class AccountMetaFactoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountMetaFactoryTest extends TestCase
 {
@@ -52,6 +49,7 @@ class AccountMetaFactoryTest extends TestCase
      */
     public function testCreate(): void
     {
+        // make new account, or get one from DB?
         $account = $this->getRandomAsset();
         $data    = [
             'account_id' => $account->id,

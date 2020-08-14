@@ -57,6 +57,7 @@ class Cron extends Command
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         ';
 
+
     /**
      * @return int
      */
@@ -173,7 +174,7 @@ class Cron extends Command
             // if not configured to do anything with telemetry, do nothing.
             return;
         }
-        $telemetry = new TelemetryCronJob;
+        $telemetry = new TelemetryCronjob;
         $telemetry->setForce($force);
 
         // set date in cron job:

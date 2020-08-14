@@ -113,10 +113,11 @@ interface CategoryRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function searchCategory(string $query): Collection;
+    public function searchCategory(string $query, int $limit): Collection;
 
     /**
      * @param User $user

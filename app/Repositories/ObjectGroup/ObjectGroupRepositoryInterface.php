@@ -39,10 +39,11 @@ interface ObjectGroupRepositoryInterface
 
     /**
      * @param string $query
+     * @param int $limit
      *
      * @return Collection
      */
-    public function search(string $query): Collection;
+    public function search(string $query, int $limit): Collection;
 
     /**
      * Delete empty ones.

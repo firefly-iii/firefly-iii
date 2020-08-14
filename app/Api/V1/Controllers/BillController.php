@@ -44,13 +44,14 @@ use League\Fractal\Resource\Item;
 
 /**
  * Class BillController.
- *
  */
 class BillController extends Controller
 {
     use TransactionFilter;
+
     /** @var BillRepositoryInterface The bill repository */
     private $repository;
+
 
     /**
      * BillController constructor.

@@ -35,6 +35,8 @@ import ForeignAmountSelect from "./components/transactions/ForeignAmountSelect";
 import TransactionType from "./components/transactions/TransactionType";
 import AccountSelect from "./components/transactions/AccountSelect";
 import Budget from "./components/transactions/Budget";
+import CustomUri from "./components/transactions/CustomUri";
+import Bill from "./components/transactions/Bill";
 
 /**
  * First we will load Axios via bootstrap.js
@@ -46,10 +48,12 @@ require('./bootstrap');
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
+Vue.component('bill', Bill);
 Vue.component('custom-date', CustomDate);
 Vue.component('custom-string', CustomString);
 Vue.component('custom-attachments', CustomAttachments);
 Vue.component('custom-textarea', CustomTextarea);
+Vue.component('custom-uri', CustomUri);
 Vue.component('standard-date', StandardDate);
 Vue.component('group-description', GroupDescription);
 Vue.component('transaction-description', TransactionDescription);

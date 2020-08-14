@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index'                          => [
+    'index'               => [
         'intro'          => [],
         'accounts-chart' => ['element' => '#accounts-chart'],
         'box_out_holder' => ['element' => '#box_out_holder'],
@@ -37,29 +37,24 @@ return [
         'outro'          => [],
     ],
     // accounts: create
-    'accounts_create'                => [
+    'accounts_create'     => [
         'iban' => ['element' => '#ffInput_iban'],
     ],
     // transactions: create
+    'transactions_create' => [
+        'basic_info'    => ['element' => '#transaction-info', 'position' => 'right'],
+        'amount_info'   => ['element' => '#amount-info', 'position' => 'bottom'],
+        'optional_info' => ['element' => '#optional-info', 'position' => 'left'],
+        'split'         => ['element' => '.split_add_btn','position' => 'top'],
+    ],
+
     'transactions_create_withdrawal' => [
-        'source'      => ['element' => 'input[name="source[]"]'],
-        'destination' => ['element' => 'input[name="destination[]"]'],
-        'more_meta'   => ['element' => 'input[name="category[]"]'],
-        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
     'transactions_create_deposit' => [
-        'source'      => ['element' => 'input[name="source[]"]'],
-        'destination' => ['element' => 'input[name="destination[]"]'],
-        'more_meta'   => ['element' => 'input[name="category[]"]'],
-        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
     'transactions_create_transfer' => [
-        'source'      => ['element' => 'input[name="source[]"]'],
-        'destination' => ['element' => 'input[name="destination[]"]'],
-        'more_meta'   => ['element' => 'input[name="category[]"]'],
-        'split_add'   => ['element' => '.split_add_btn'],
     ],
 
     // extra text for asset account creation.

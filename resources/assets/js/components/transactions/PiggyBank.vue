@@ -28,7 +28,7 @@
         <div class="col-sm-12">
             <select name="piggy_bank[]" ref="piggy" @input="handleInput" class="form-control">
                 <optgroup v-for="(option, key) in this.piggies" v-bind:label="key">
-                    <option v-for="piggy in option.piggies" :label="piggy.name_with_amount" :value="piggy.id">{{piggy.name_with_amount}}</option>
+                    <option v-for="piggy in option.piggies" :label="piggy.name_with_balance" :value="piggy.id">{{piggy.name_with_balance}}</option>
                 </optgroup>
             </select>
             <ul class="list-unstyled" v-for="error in this.error">
@@ -58,7 +58,7 @@
                 return this.error.length > 0;
             },
             loadPiggies: function () {
-                let URI = document.getElementsByTagName('base')[0].href + "json/piggy-banks";
+                let URI = document.getElementsByTagName('base')[0].href + "api/v1/autocomplete/piggy-banks-with-balance?limit=1337";
                 axios.get(URI, {}).then((res) => {
                     let tempList = {
                         0: {
@@ -67,7 +67,7 @@
                             },
                             piggies: [
                                 {
-                                    name_with_amount: this.no_piggy_bank,
+                                    name_with_balance: this.no_piggy_bank,
                                     id: 0,
                                 }
                             ],
@@ -87,11 +87,11 @@
                                         piggies: [],
                                     };
                                 }
-                                tempList[groupOrder].piggies.push({name_with_amount: currentPiggy.name_with_amount, id: currentPiggy.id});
+                                tempList[groupOrder].piggies.push({name_with_balance: currentPiggy.name_with_balance, id: currentPiggy.id});
                             }
                             if (!currentPiggy.objectGroup) {
                                 // add to empty one:
-                                tempList[0].piggies.push({name_with_amount: currentPiggy.name_with_amount, id: currentPiggy.id});
+                                tempList[0].piggies.push({name_with_balance: currentPiggy.name_with_balance, id: currentPiggy.id});
                             }
                             //console.log(currentPiggy);
                             this.piggies.push(res.data[key]);

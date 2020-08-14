@@ -87,6 +87,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -122,6 +123,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -157,6 +159,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -193,6 +196,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -228,6 +232,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -270,6 +275,7 @@ class TagReportController extends Controller
                     ),
                     'type'            => 'bar',
                     'currency_symbol' => $currency['currency_symbol'],
+                    'currency_code'   => $currency['currency_code'],
                     'currency_id'     => $currency['currency_id'],
                     'entries'         => $this->makeEntries($start, $end),
                 ];
@@ -296,6 +302,7 @@ class TagReportController extends Controller
                     ),
                     'type'            => 'bar',
                     'currency_symbol' => $currency['currency_symbol'],
+                    'currency_code'   => $currency['currency_code'],
                     'currency_id'     => $currency['currency_id'],
                     'entries'         => $this->makeEntries($start, $end),
                 ];
@@ -338,6 +345,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -373,6 +381,7 @@ class TagReportController extends Controller
                     $result[$title]           = $result[$title] ?? [
                             'amount'          => '0',
                             'currency_symbol' => $currency['currency_symbol'],
+                            'currency_code'   => $currency['currency_code'],
                         ];
                     $amount                   = app('steam')->positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
@@ -406,6 +415,7 @@ class TagReportController extends Controller
                 $result[$title] = $result[$title] ?? [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
+                        'currency_code'   => $currency['currency_code'],
                     ];
                 foreach ($tag['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);
@@ -440,6 +450,7 @@ class TagReportController extends Controller
                 $result[$title] = $result[$title] ?? [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
+                        'currency_code'   => $currency['currency_code'],
                     ];
                 foreach ($tag['transaction_journals'] as $journal) {
                     $amount                   = app('steam')->positive($journal['amount']);

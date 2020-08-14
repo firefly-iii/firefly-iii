@@ -42,8 +42,11 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use ApiSupport;
+
     private CurrencyRepositoryInterface $currencyRepository;
+
     private AccountRepositoryInterface $repository;
+
 
     /**
      * AccountController constructor.
@@ -207,7 +210,7 @@ class AccountController extends Controller
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->format('Y-m-d');
-                $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
+                $balance  = array_key_exists($format, $range) ? round($range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;

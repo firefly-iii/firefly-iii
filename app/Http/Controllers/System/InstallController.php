@@ -71,7 +71,7 @@ class InstallController extends Controller
             'firefly-iii:restore-oauth-keys'           => [],
             'generate-keys'                            => [], // an exception :(
 
-            // there are 14 upgrade commands.
+            // upgrade commands
             'firefly-iii:transaction-identifiers'      => [],
             'firefly-iii:migrate-to-groups'            => [],
             'firefly-iii:account-currencies'           => [],
@@ -87,7 +87,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-recurrence-meta'      => [],
             'firefly-iii:migrate-tag-locations'        => [],
 
-            // there are 16 verify commands.
+            // verify commands
             'firefly-iii:fix-piggies'                  => [],
             'firefly-iii:create-link-types'            => [],
             'firefly-iii:create-access-tokens'         => [],
@@ -100,11 +100,13 @@ class InstallController extends Controller
             'firefly-iii:delete-empty-journals'        => [],
             'firefly-iii:delete-empty-groups'          => [],
             'firefly-iii:fix-account-types'            => [],
+            'firefly-iii:fix-account-order'            => [],
             'firefly-iii:rename-meta-fields'           => [],
             'firefly-iii:fix-ob-currencies'            => [],
             'firefly-iii:fix-long-descriptions'        => [],
             'firefly-iii:fix-recurring-transactions'   => [],
             'firefly-iii:unify-group-accounts'         => [],
+            'firefly-iii:fix-transaction-types'        => [],
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],

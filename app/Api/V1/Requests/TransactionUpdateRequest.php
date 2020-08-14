@@ -28,30 +28,38 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use Log;
 
 /**
  * Class TransactionUpdateRequest
  */
-class TransactionUpdateRequest extends Request
+class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes;
 
     /** @var array Array values. */
     private $arrayFields;
+
     /** @var array Boolean values. */
     private $booleanFields;
+
     /** @var array Fields that contain date values. */
     private $dateFields;
+
     /** @var array Fields that contain integer values. */
     private $integerFields;
+
     /** @var array Fields that contain string values. */
     private $stringFields;
+
     /** @var array Fields that contain text (with newlines) */
     private $textareaFields;
+
 
     /**
      * Authorize logged in users.
@@ -127,6 +135,7 @@ class TransactionUpdateRequest extends Request
             'sepa_ep',
             'sepa_ci',
             'sepa_batch_id',
+            'external_uri',
         ];
         $this->booleanFields = [
             'reconciled',
@@ -204,6 +213,7 @@ class TransactionUpdateRequest extends Request
             'transactions.*.external_id'           => 'min:1,max:255|nullable',
             'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
             'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+            'transactions.*.external_uri'          => 'min:1,max:255|nullable|url',
 
             // SEPA fields:
             'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
