@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Contracts\View\Factory;
@@ -65,6 +66,13 @@ class LoginController extends Controller
     {
         parent::__construct();
         $this->middleware('guest')->except('logout');
+
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+
+        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
     }
 
 
@@ -73,9 +81,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse
      *
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -133,7 +141,6 @@ class LoginController extends Controller
             return redirect(route('register')); // @codeCoverageIgnore
         }
 
-
         // is allowed to?
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
@@ -162,9 +169,9 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @throws ValidationException
      * @return Response
      *
+     * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)
     {

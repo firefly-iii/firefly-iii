@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ConfirmsPasswords;
@@ -62,5 +63,12 @@ class ConfirmPasswordController extends Controller
     {
         parent::__construct();
         $this->middleware('auth');
+
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+
+        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
     }
 }

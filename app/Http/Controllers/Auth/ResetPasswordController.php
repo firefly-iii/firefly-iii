@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -60,6 +61,13 @@ class ResetPasswordController extends Controller
     {
         parent::__construct();
         $this->middleware('guest');
+
+        $loginProvider = config('firefly.login_provider');
+        $authGuard     = config('firefly.authentication_guard');
+
+        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+            throw new FireflyException('Using external identity provider. Cannot continue.');
+        }
     }
 
     /**
@@ -67,9 +75,9 @@ class ResetPasswordController extends Controller
      *
      * @param Request $request
      *
+     * @return Factory|JsonResponse|RedirectResponse|View
      * @throws \Illuminate\Validation\ValidationException
      *
-     * @return Factory|JsonResponse|RedirectResponse|View
      */
     public function reset(Request $request)
     {

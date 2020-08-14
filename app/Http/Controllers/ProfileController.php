@@ -82,6 +82,7 @@ class ProfileController extends Controller
         $loginProvider          = config('firefly.login_provider');
         $authGuard              = config('firefly.authentication_guard');
         $this->externalIdentity = 'eloquent' !== $loginProvider || 'web' !== $authGuard;
+        $this->externalIdentity = true;
 
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
@@ -222,9 +223,9 @@ class ProfileController extends Controller
      * @param UserRepositoryInterface $repository
      * @param string                  $token
      *
-     * @throws FireflyException
      * @return RedirectResponse|Redirector
      *
+     * @throws FireflyException
      */
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
     {
@@ -338,10 +339,13 @@ class ProfileController extends Controller
     public function index()
     {
         /** @var User $user */
-        $user          = auth()->user();
-        $loginProvider = config('firefly.login_provider');
-        // check if client token thing exists (default one)
-        $count = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
+        $user             = auth()->user();
+        $externalIdentity = $this->externalIdentity;
+        $count            = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
+        $subTitle         = $user->email;
+        $userId           = $user->id;
+        $enabled2FA       = null !== $user->mfa_secret;
+        $mfaBackupCount   = count(app('preferences')->get('mfa_recovery', [])->data);
 
         $this->createOAuthKeys();
 
@@ -350,19 +354,14 @@ class ProfileController extends Controller
             $repository = app(ClientRepository::class);
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
-        $subTitle       = $user->email;
-        $userId         = $user->id;
-        $enabled2FA     = null !== $user->mfa_secret;
-        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
 
-        // get access token or create one.
         $accessToken = app('preferences')->get('access_token', null);
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
             $accessToken = app('preferences')->set('access_token', $token);
         }
 
-        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'loginProvider'));
+        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'externalIdentity'));
     }
 
     /**
@@ -381,7 +380,7 @@ class ProfileController extends Controller
         $recoveryCodes = $recovery->lowercase()
                                   ->setCount(8)     // Generate 8 codes
                                   ->setBlocks(2)    // Every code must have 7 blocks
-                                  ->setChars(6)    // Each block must have 16 chars
+                                  ->setChars(6)     // Each block must have 16 chars
                                   ->toArray();
         $codes         = implode("\r\n", $recoveryCodes);
 
@@ -583,9 +582,9 @@ class ProfileController extends Controller
      * @param string                  $token
      * @param string                  $hash
      *
-     * @throws FireflyException
      * @return RedirectResponse|Redirector
      *
+     * @throws FireflyException
      */
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {

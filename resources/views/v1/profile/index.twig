@@ -18,12 +18,14 @@
                 <li role="presentation">
                     <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
                 </li>
+                {% if false == externalIdentity %}
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
                 <li role="presentation">
                     <a href="#mfa" aria-controls="settings" role="tab" data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
                 </li>
+                {% endif %}
                 <li role="presentation">
                     <a href="#delete" aria-controls="settings" role="tab" data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
                 </li>
@@ -40,29 +42,29 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul>
+                                        {% if false == externalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a>
                                         </li>
+                                        {% endif %}
                                         <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
+
+                                        {% if false == externalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a>
                                         </li>
                                         <li><a class="text-danger"
                                                href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a>
                                         </li>
+                                        {% endif %}
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- OAuth -->
-                <div role="tabpanel" class="tab-pane" id="oauth">
-                    <div id="passport_clients"></div>
                 </div>
 
                 <!-- command line options -->
@@ -89,6 +91,12 @@
                             </form>
                         </div>
                     </div>
+                </div>
+
+                {% if false == externalIdentity %}
+                <!-- OAuth -->
+                <div role="tabpanel" class="tab-pane" id="oauth">
+                    <div id="passport_clients"></div>
                 </div>
 
                 <!-- MFA -->
@@ -124,6 +132,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- delete stuff -->
                 <div role="tabpanel" class="tab-pane" id="delete">
@@ -246,38 +255,6 @@
 
         </div>
     </div>
-
-    {#
-    <!-- all tabs -->
-
-
-        <!-- command line opt -->
-
-
-    </div>
-
-
-
-
-</div>
-
-</div>
-    #}
-
-
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-
-        </div>
-    </div>
-
-    {#  #}
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
