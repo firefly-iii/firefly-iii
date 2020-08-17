@@ -336,18 +336,23 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
-        $budgetLimit->amount     = $data['amount'] ?? $budgetLimit->amount;
-        $budgetLimit->budget_id  = $data['budget_id'] ?? $budgetLimit->id;
-        $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id']->id : $budgetLimit->budget_id;
+        $budgetLimit->amount     = array_key_exists('amount',$data) ? $data['amount'] : $budgetLimit->amount;
+        $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->id;
         $budgetLimit->start_date = array_key_exists('start_date', $data) ? $data['start_date']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
         $budgetLimit->end_date   = array_key_exists('end_date', $data) ? $data['end_date']->format('Y-m-d 00:00:00') : $budgetLimit->end_date;
 
         // if no currency has been provided, use the user's default currency:
-        /** @var TransactionCurrencyFactory $factory */
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency = null;
+
+        // update if relevant:
+        if(array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            /** @var TransactionCurrencyFactory $factory */
+            $factory  = app(TransactionCurrencyFactory::class);
+            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+        }
+        // catch unexpected null:
+        if(null === $currency) {
+            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getDefaultCurrencyByUser($this->user);
         }
         $currency->enabled = true;
         $currency->save();
