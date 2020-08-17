@@ -42,8 +42,7 @@ use Log;
  */
 class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -307,8 +306,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         // find limit with same date range and currency.
         $limit = $budget->budgetlimits()
-                        ->where('budget_limits.start_date', $data['start']->format('Y-m-d 00:00:00'))
-                        ->where('budget_limits.end_date', $data['end']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.start_date', $data['start_date']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.end_date', $data['end_date']->format('Y-m-d 00:00:00'))
                         ->where('budget_limits.transaction_currency_id', $currency->id)
                         ->get(['budget_limits.*'])->first();
         if (null !== $limit) {
@@ -319,8 +318,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date              = $data['start']->format('Y-m-d 00:00:00');
-        $limit->end_date                = $data['end']->format('Y-m-d 00:00:00');
+        $limit->start_date              = $data['start_date']->format('Y-m-d 00:00:00');
+        $limit->end_date                = $data['end_date']->format('Y-m-d 00:00:00');
         $limit->amount                  = $data['amount'];
         $limit->transaction_currency_id = $currency->id;
         $limit->save();
