@@ -24,6 +24,7 @@ namespace FireflyIII\Support\Search;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -33,6 +34,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
+use Gdbots\QueryParser\Node\Phrase;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
 use Gdbots\QueryParser\QueryParser;
@@ -42,7 +44,6 @@ use Log;
 
 /**
  * Class BetterQuerySearch
- * @package FireflyIII\Support\Search
  */
 class BetterQuerySearch implements SearchInterface
 {
@@ -60,12 +61,17 @@ class BetterQuerySearch implements SearchInterface
     private float                            $startTime;
     private Collection                       $modifiers;
 
+    /**
+     * BetterQuerySearch constructor.
+     * @codeCoverageIgnore
+     */
     public function __construct()
     {
+        Log::debug('Constructed BetterQuerySearch');
         $this->modifiers          = new Collection;
         $this->page               = 1;
         $this->words              = [];
-        $this->validOperators     = config('firefly.search_modifiers');
+        $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
         $this->categoryRepository = app(CategoryRepositoryInterface::class);
@@ -76,6 +82,7 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function getModifiers(): Collection
     {
@@ -84,6 +91,7 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function getWordsAsString(): string
     {
@@ -92,6 +100,7 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function setPage(int $page): void
     {
@@ -100,25 +109,31 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function hasModifiers(): bool
     {
-        // TODO: Implement hasModifiers() method.
         die(__METHOD__);
     }
 
     /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function parseQuery(string $query)
     {
+        Log::debug(sprintf('Now in parseQuery(%s)', $query));
         $parser      = new QueryParser();
         $this->query = $parser->parse($query);
 
         // get limit from preferences.
-        $pageSize = (int) app('preferences')->getForUser($this->user, 'listPageSize', 50)->data;
+        $pageSize        = (int) app('preferences')->getForUser($this->user, 'listPageSize', 50)->data;
         $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setLimit($pageSize)->setPage($this->page)->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
+        $this->collector->setUser($this->user);
+        $this->collector->setLimit($pageSize)->setPage($this->page);
+        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
+
+        Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
 
         foreach ($this->query->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
@@ -130,6 +145,7 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function searchTime(): float
     {
@@ -146,6 +162,7 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
@@ -165,11 +182,18 @@ class BetterQuerySearch implements SearchInterface
         $class = get_class($searchNode);
         switch ($class) {
             default:
+                Log::error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Word::class:
+                Log::debug(sprintf('Now handle %s', $class));
+                $this->words[] = $searchNode->getValue();
+                break;
+            case Phrase::class:
+                Log::debug(sprintf('Now handle %s', $class));
                 $this->words[] = $searchNode->getValue();
                 break;
             case Field::class:
+                Log::debug(sprintf('Now handle %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
                 $operator = $searchNode->getValue();
@@ -178,9 +202,9 @@ class BetterQuerySearch implements SearchInterface
                 if (in_array($operator, $this->validOperators, true)) {
                     $this->updateCollector($operator, $value);
                     $this->modifiers->push([
-                        'type'  => $operator,
-                        'value' => $value,
-                    ]);
+                                               'type'  => $operator,
+                                               'value' => $value,
+                                           ]);
                 }
                 break;
         }
@@ -190,13 +214,27 @@ class BetterQuerySearch implements SearchInterface
     /**
      * @param string $operator
      * @param string $value
+     * @throws FireflyException
      */
     private function updateCollector(string $operator, string $value): void
     {
+        Log::debug(sprintf('updateCollector(%s, %s)', $operator, $value));
         $allAccounts = new Collection;
         switch ($operator) {
             default:
-                die(sprintf('Unsupported search operator: "%s"', $operator));
+                Log::error(sprintf('No such operator: %s', $operator));
+                throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
+            // some search operators are ignored, basically:
+            case 'user_action':
+                Log::info(sprintf('Ignore search operator "%s"', $operator));
+                break;
+            case 'from_account_starts':
+                $this->fromAccountStarts($value);
+                break;
+            case 'from_account_ends':
+                $this->fromAccountEnds($value);
+                break;
+            case 'from_account_contains':
             case 'from':
             case 'source':
                 // source can only be asset, liability or revenue account:
@@ -298,5 +336,55 @@ class BetterQuerySearch implements SearchInterface
                 $this->collector->setInternalReference($value);
                 break;
         }
+    }
+
+    /**
+     * @param string $value
+     */
+    private function fromAccountStarts(string $value): void
+    {
+        Log::debug(sprintf('fromAccountStarts(%s)', $value));
+        // source can only be asset, liability or revenue account:
+        $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
+        if (0 === $accounts->count()) {
+            Log::debug('Found zero, return.');
+            return;
+        }
+        Log::debug(sprintf('Found %d, filter.', $accounts->count()));
+        $filtered = $accounts->filter(function (Account $account) use ($value) {
+            return str_starts_with($account->name, $value);
+        });
+        if (0 === $filtered->count()) {
+            Log::debug('Left with zero, return.');
+            return;
+        }
+        Log::debug(sprintf('Left with %d, set.', $accounts->count()));
+        $this->collector->setSourceAccounts($filtered);
+    }
+
+    /**
+     * @param string $value
+     */
+    private function fromAccountEnds(string $value): void
+    {
+        Log::debug(sprintf('fromAccountEnds(%s)', $value));
+        // source can only be asset, liability or revenue account:
+        $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
+        if (0 === $accounts->count()) {
+            Log::debug('Found zero, return.');
+            return;
+        }
+        Log::debug(sprintf('Found %d, filter.', $accounts->count()));
+        $filtered = $accounts->filter(function (Account $account) use ($value) {
+            return str_ends_with($account->name, $value);
+        });
+        if (0 === $filtered->count()) {
+            Log::debug('Left with zero, return.');
+            return;
+        }
+        Log::debug(sprintf('Left with %d, set.', $accounts->count()));
+        $this->collector->setSourceAccounts($filtered);
     }
 }

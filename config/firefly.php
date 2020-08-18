@@ -492,6 +492,11 @@ return [
         'notes_are'                => NotesAre::class,
         'no_notes'                 => NotesEmpty::class,
         'any_notes'                => NotesAny::class,
+        'bill_is'                  => BillIs::class, // TODO
+        'created_on'               => CreatedOn::class, // TODO
+        'updated_on'               => UpdatedOn::class,// TODO
+        'external_id'              => ExternalId::class,// TODO
+        'internal_reference'       => InternalReference::class, // TODO
     ],
     'rule-actions'                 => [
         'set_category'            => SetCategory::class,
@@ -572,9 +577,106 @@ return [
     'default_currency' => 'EUR',
     'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
     'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
-    'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
-                           'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
-                           'updated_on', 'external_id', 'internal_reference',],
+
+    'search' => [
+        'operators' => [
+            'user_action'              => ['alias' => false, 'trigger_class' => UserAction::class],
+            'from_account_starts'      => ['alias' => false, 'trigger_class' => FromAccountStarts::class],
+            'from_account_ends'        => ['alias' => false, 'trigger_class' => FromAccountEnds::class],
+            'from_account_contains'    => ['alias' => false, 'trigger_class' => FromAccountContains::class],
+            'from_account_nr_starts'   => ['alias' => false, 'trigger_class' => FromAccountNumberStarts::class],
+            'from_account_nr_ends'     => ['alias' => false, 'trigger_class' => FromAccountNumberEnds::class],
+            'from_account_nr_is'       => ['alias' => false, 'trigger_class' => FromAccountNumberIs::class],
+            'from_account_nr_contains' => ['alias' => false, 'trigger_class' => FromAccountNumberContains::class],
+            'to_account_starts'        => ['alias' => false, 'trigger_class' => ToAccountStarts::class],
+            'to_account_ends'          => ['alias' => false, 'trigger_class' => ToAccountEnds::class],
+            'to_account_contains'      => ['alias' => false, 'trigger_class' => ToAccountContains::class],
+            'to_account_nr_starts'     => ['alias' => false, 'trigger_class' => ToAccountNumberStarts::class],
+            'to_account_nr_ends'       => ['alias' => false, 'trigger_class' => ToAccountNumberEnds::class],
+            'to_account_nr_is'         => ['alias' => false, 'trigger_class' => ToAccountNumberIs::class],
+            'to_account_nr_contains'   => ['alias' => false, 'trigger_class' => ToAccountNumberContains::class],
+            'description_starts'       => ['alias' => false, 'trigger_class' => DescriptionStarts::class],
+            'description_ends'         => ['alias' => false, 'trigger_class' => DescriptionEnds::class],
+            'description_contains'     => ['alias' => false, 'trigger_class' => DescriptionContains::class],
+            'description_is'           => ['alias' => false, 'trigger_class' => DescriptionIs::class],
+            'currency_is'              => ['alias' => false, 'trigger_class' => CurrencyIs::class],
+            'foreign_currency_is'      => ['alias' => false, 'trigger_class' => ForeignCurrencyIs::class],
+            'has_attachments'          => ['alias' => false, 'trigger_class' => HasAttachment::class],
+            'has_no_category'          => ['alias' => false, 'trigger_class' => HasNoCategory::class],
+            'has_any_category'         => ['alias' => false, 'trigger_class' => HasAnyCategory::class],
+            'has_no_budget'            => ['alias' => false, 'trigger_class' => HasNoBudget::class],
+            'has_any_budget'           => ['alias' => false, 'trigger_class' => HasAnyBudget::class],
+            'has_no_tag'               => ['alias' => false, 'trigger_class' => HasNoTag::class],
+            'has_any_tag'              => ['alias' => false, 'trigger_class' => HasAnyTag::class],
+            'notes_contain'            => ['alias' => false, 'trigger_class' => NotesContain::class],
+            'notes_start'              => ['alias' => false, 'trigger_class' => NotesStart::class],
+            'notes_end'                => ['alias' => false, 'trigger_class' => NotesEnd::class],
+            'notes_are'                => ['alias' => false, 'trigger_class' => NotesAre::class],
+            'no_notes'                 => ['alias' => false, 'trigger_class' => NotesEmpty::class],
+            'any_notes'                => ['alias' => false, 'trigger_class' => NotesAny::class],
+
+            // exact amount
+            'amount_exactly'           => ['alias' => false, 'trigger_class' => AmountExactly::class],
+            'amount_is'                => ['alias' => true, 'alias_for' => 'amount_exactly'],
+            'amount'                   => ['alias' => true, 'alias_for' => 'amount_exactly'],
+
+            // is less than
+            'amount_less'              => ['alias' => false, 'trigger_class' => AmountLess::class],
+            'amount_max'               => ['alias' => true, 'alias_for' => 'amount_less'],
+
+            // is more than
+            'amount_more'              => ['alias' => false, 'trigger_class' => AmountMore::class],
+            'amount_min'               => ['alias' => true, 'alias_for' => 'amount_more'],
+
+            // source account
+            'from_account_is'          => ['alias' => false, 'trigger_class' => FromAccountIs::class],
+            'source'                   => ['alias' => true, 'alias_for' => 'from_account_is'],
+            'from'                     => ['alias' => true, 'alias_for' => 'from_account_is'],
+
+            // destination account
+            'to_account_is'            => ['alias' => false, 'trigger_class' => ToAccountIs::class],
+            'destination'              => ['alias' => true, 'alias_for' => 'to_account_is'],
+            'to'                       => ['alias' => true, 'alias_for' => 'to_account_is'],
+
+            // category
+            'category_is'              => ['alias' => false, 'trigger_class' => CategoryIs::class],
+            'category'                 => ['alias' => true, 'alias_for' => 'category_is'],
+
+            // budget
+            'budget_is'                => ['alias' => false, 'trigger_class' => BudgetIs::class],
+            'budget'                   => ['alias' => true, 'alias_for' => 'budget_is'],
+
+            // bill
+            'bill_is'                  => ['alias' => false, 'trigger_class' => BillIs::class], // TODO
+            'bill'                     => ['alias' => true, 'alias_for' => 'bill_is'],
+
+            // type
+            'transaction_type'         => ['alias' => false, 'trigger_class' => TransactionType::class],
+            'type'                     => ['alias' => true, 'alias_for' => 'transaction_type'],
+
+            // date:
+            'date_is'                  => ['alias' => false, 'trigger_class' => DateIs::class],
+            'date'                     => ['alias' => true, 'alias_for' => 'date_is'],
+            'on'                       => ['alias' => true, 'alias_for' => 'date_is'],
+            'date_before'              => ['alias' => false, 'trigger_class' => DateBefore::class],
+            'before'                   => ['alias' => true, 'alias_for' => 'date_before'],
+            'date_after'               => ['alias' => false, 'trigger_class' => DateAfter::class],
+            'after'                    => ['alias' => true, 'alias_for' => 'date_after'],
+            // other interesting fields
+            'tag_is'                   => ['alias' => false, 'trigger_class' => TagIs::class],
+            'tag'                      => ['alias' => true, 'alias_for' => 'tag'],
+            'created_on'               => ['alias' => false, 'trigger_class' => CreatedOn::class], // TODO
+            'updated_on'               => ['alias' => false, 'trigger_class' => UpdatedOn::class], // TODO
+            'external_id'              => ['alias' => false, 'trigger_class' => ExternalId::class], // TODO
+            'internal_reference'       => ['alias' => false, 'trigger_class' => InternalReference::class], // TODO
+
+        ],
+    ],
+
+    'search_modifiers' => [
+        'amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
+        'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after', 'from', 'to', 'tag', 'created_on',
+        'updated_on', 'external_id', 'internal_reference',],
 
     // TODO notes has_attachments
 

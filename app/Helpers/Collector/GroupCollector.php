@@ -55,9 +55,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
         $this->hasBudgetInformation = false;
