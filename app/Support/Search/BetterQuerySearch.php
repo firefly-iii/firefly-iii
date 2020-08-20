@@ -185,9 +185,6 @@ class BetterQuerySearch implements SearchInterface
                 Log::error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Word::class:
-                Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = $searchNode->getValue();
-                break;
             case Phrase::class:
                 Log::debug(sprintf('Now handle %s', $class));
                 $this->words[] = $searchNode->getValue();
