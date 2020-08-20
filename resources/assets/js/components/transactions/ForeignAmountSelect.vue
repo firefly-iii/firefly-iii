@@ -198,7 +198,7 @@
                     for (const key in res.data.data) {
                         if (res.data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                             if (res.data.data[key].attributes.enabled) {
-                                console.log(res.data.data[key].attributes);
+                                // console.log(res.data.data[key].attributes);
                                 this.currencies.push(res.data.data[key]);
                                 this.enabledCurrencies.push(res.data.data[key]);
                             }

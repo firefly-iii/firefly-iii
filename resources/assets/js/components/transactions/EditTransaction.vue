@@ -541,11 +541,11 @@ export default {
       // depends on the transaction type, where we get the currency.
       if('withdrawal' === transactionType || 'transfer' === transactionType) {
         row.currency_id = row.source_account.currency_id;
-        console.log('Overruled currency ID to ' + row.currency_id);
+        // console.log('Overruled currency ID to ' + row.currency_id);
       }
       if('deposit' === transactionType) {
         row.currency_id = row.destination_account.currency_id;
-        console.log('Overruled currency ID to ' + row.currency_id);
+        // console.log('Overruled currency ID to ' + row.currency_id);
       }
 
       date = row.date;

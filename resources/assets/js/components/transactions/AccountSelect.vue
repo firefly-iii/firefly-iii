@@ -148,7 +148,7 @@
                         '?types=' +
                         types +
                         '&query=';
-                    console.log('Auto complete URI is now ' + this.accountAutoCompleteURI);
+                    // console.log('Auto complete URI is now ' + this.accountAutoCompleteURI);
                 },
                 hasError: function () {
                     return this.error.length > 0;

@@ -105,7 +105,7 @@
                     // final list:
 
                     this.piggies = ordered;
-                    console.log(ordered);
+                    // console.log(ordered);
                 });
             }
         }
