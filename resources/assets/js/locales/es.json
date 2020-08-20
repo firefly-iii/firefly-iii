@@ -82,10 +82,10 @@
         "profile_oauth_client_secret_expl": "Aqu\u00ed est\u00e1 su nuevo secreto de cliente. Esta es la \u00fanica vez que se mostrar\u00e1 as\u00ed que no lo pierda! Ahora puede usar este secreto para hacer solicitudes de API.",
         "profile_oauth_confidential": "Confidencial",
         "profile_oauth_confidential_help": "Requerir que el cliente se autentifique con un secreto. Los clientes confidenciales pueden mantener las credenciales de forma segura sin exponerlas a partes no autorizadas. Las aplicaciones p\u00fablicas, como aplicaciones de escritorio nativo o SPA de JavaScript, no pueden guardar secretos de forma segura.",
-        "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
-        "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
-        "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
-        "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer."
+        "multi_account_warning_unknown": "Dependiendo del tipo de transacci\u00f3n que cree, la cuenta de origen y\/o destino de divisiones posteriores puede ser anulada por lo que se define en la primera divisi\u00f3n de la transacci\u00f3n.",
+        "multi_account_warning_withdrawal": "Tenga en cuenta que la cuenta de origen de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
+        "multi_account_warning_deposit": "Tenga en cuenta que la cuenta de destino de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",
+        "multi_account_warning_transfer": "Tenga en cuenta que la cuenta de origen + destino de divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n de la transferencia."
     },
     "form": {
         "interest_date": "Fecha de inter\u00e9s",

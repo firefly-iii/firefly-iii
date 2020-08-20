@@ -453,7 +453,7 @@ return [
     'rule_trigger_foreign_currency_is_choice'    => 'La transacción en moneda extranjera es..',
     'rule_trigger_foreign_currency_is'           => 'La transacción en moneda extranjera es ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Tiene al menos tantos archivos adjuntos',
-    'rule_trigger_has_attachments'               => 'Has at least :trigger_value attachment(s)',
+    'rule_trigger_has_attachments'               => 'Tiene al menos :trigger_value anexo(s)',
     'rule_trigger_store_journal'                 => 'Cuando la transacción es creada',
     'rule_trigger_update_journal'                => 'Cuando la transacción es actualizada',
     'rule_trigger_has_no_category_choice'        => 'No tiene categoría',
@@ -555,7 +555,7 @@ return [
     'select_tags_to_delete'           => 'No olvide seleccionar algunas etiquetas.',
     'deleted_x_tags'                  => 'Eliminado :count etiqueta.|Eliminado :count etiquetas.',
     'create_rule_from_transaction'    => 'Crear regla basada en la transacción',
-    'create_recurring_from_transaction' => 'Create recurring transaction based on transaction',
+    'create_recurring_from_transaction' => 'Crear una transacción recurrente basada en la transacción',
 
 
     // preferences
@@ -735,10 +735,10 @@ return [
     'profile_something_wrong'                   => '¡Algo salió mal!',
     'profile_try_again'                         => 'Algo salió mal. Por favor, vuelva a intentarlo.',
     'amounts'                                   => 'Importes',
-    'multi_account_warning_unknown'             => 'Depending on the type of transaction you create, the source and/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.',
-    'multi_account_warning_withdrawal'          => 'Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.',
-    'multi_account_warning_deposit'             => 'Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.',
-    'multi_account_warning_transfer'            => 'Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.',
+    'multi_account_warning_unknown'             => 'Dependiendo del tipo de transacción que cree, la cuenta de origen y/o destino de divisiones posteriores puede ser anulada por lo que se define en la primera división de la transacción.',
+    'multi_account_warning_withdrawal'          => 'Tenga en cuenta que la cuenta de origen de las divisiones posteriores será anulada por lo que se defina en la primera división del retiro.',
+    'multi_account_warning_deposit'             => 'Tenga en cuenta que la cuenta de destino de las divisiones posteriores será anulada por lo que se defina en la primera división del retiro.',
+    'multi_account_warning_transfer'            => 'Tenga en cuenta que la cuenta de origen + destino de divisiones posteriores será anulada por lo que se defina en la primera división de la transferencia.',
 
     // export data:
     'export_data_title'                         => 'Exportar datos de Firefly III',
@@ -981,11 +981,11 @@ return [
     'expense_accounts'                          => 'Cuentas de gastos',
     'expense_accounts_inactive'                 => 'Cuentas de gastos (inactivas)',
     'revenue_accounts'                          => 'Cuentas de ingresos',
-    'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
+    'revenue_accounts_inactive'                 => 'Cuentas de ingresos (inactivas)',
     'cash_accounts'                             => 'Cuentas de efectivo',
     'Cash account'                              => 'Cuenta de efectivo',
     'liabilities_accounts'                      => 'Pasivos',
-    'liabilities_accounts_inactive'             => 'Liabilities (inactive)',
+    'liabilities_accounts_inactive'             => 'Pasivos (inactivos)',
     'reconcile_account'                         => 'Reconciliar cuenta ":account"',
     'overview_of_reconcile_modal'               => 'Resumen de reconciliación',
     'delete_reconciliation'                     => 'Eliminar reconciliacion',
