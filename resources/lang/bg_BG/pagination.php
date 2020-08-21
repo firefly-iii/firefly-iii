@@ -1,8 +1,8 @@
 <?php
 
 /**
- * TransactionSearch.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * pagination.php
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,21 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Search;
-
-use Illuminate\Support\Collection;
-
-/**
- * Class TransactionSearch
- */
-class TransactionSearch implements GenericSearchInterface
-{
-
-    /**
-     * @inheritDoc
-     */
-    public function search(): Collection
-    {
-        // TODO: Implement search() method.
-    }
-}
+return [
+    'previous' => '&laquo; Предишна',
+    'next'     => 'Следваща &raquo;',
+];

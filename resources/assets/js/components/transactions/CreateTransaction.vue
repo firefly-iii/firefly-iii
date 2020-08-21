@@ -482,7 +482,7 @@ export default {
         this.parseErrors(error.response.data);
 
         // something.
-        console.log('enable button again.')
+        // console.log('enable button again.')
         button.removeAttr('disabled');
       });
 
@@ -516,7 +516,7 @@ export default {
         // clear errors:
         this.setDefaultErrors();
 
-        console.log('enable button again.')
+        // console.log('enable button again.')
         let button = $('#submitButton');
         button.removeAttr('disabled');
       } else {
@@ -741,6 +741,8 @@ export default {
     resetTransactions: function () {
       // console.log('Now in resetTransactions()');
       this.transactions = [];
+      this.group_title = '';
+
     },
     addTransactionToArray: function (e) {
       // console.log('Now in addTransactionToArray()');
@@ -865,7 +867,7 @@ export default {
     },
 
     selectedSourceAccount: function (index, model) {
-      console.log('Now in selectedSourceAccount()');
+      // console.log('Now in selectedSourceAccount()');
       if (typeof model === 'string') {
         //console.log('model is string.')
         // cant change types, only name.
@@ -980,6 +982,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

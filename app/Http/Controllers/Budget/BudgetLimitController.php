@@ -156,8 +156,8 @@ class BudgetLimitController extends Controller
                 [
                     'budget_id'               => $request->get('budget_id'),
                     'transaction_currency_id' => $request->get('transaction_currency_id'),
-                    'start_date'              => $request->get('start'),
-                    'end_date'                => $request->get('end'),
+                    'start_date'              => $start,
+                    'end_date'                => $end,
                     'amount'                  => $request->get('amount'),
                 ]
             );

@@ -329,8 +329,8 @@ class TransactionUpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
                 Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
 

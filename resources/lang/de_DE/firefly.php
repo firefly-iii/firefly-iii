@@ -620,12 +620,12 @@ return [
     'pref_optional_tj_internal_reference'   => 'Interner Verweis',
     'pref_optional_tj_notes'                => 'Notizen',
     'pref_optional_tj_attachments'          => 'Anhänge',
-    'pref_optional_tj_external_uri'         => 'External URI',
+    'pref_optional_tj_external_uri'         => 'Externe URI',
     'optional_field_meta_dates'             => 'Daten',
     'optional_field_meta_business'          => 'Geschäftlich',
     'optional_field_attachments'            => 'Anhänge',
     'optional_field_meta_data'              => 'Optionale Metadaten',
-    'external_uri'                          => 'External URI',
+    'external_uri'                          => 'Externe URI',
 
     // profile:
     'delete_stuff_header'                   => 'Daten aus Firefly III löschen',
@@ -720,10 +720,10 @@ return [
     'profile_scopes'                            => 'Bereiche',
     'profile_revoke'                            => 'Widerrufen',
     'profile_oauth_client_secret_title'         => 'Client Secret',
-    'profile_oauth_client_secret_expl'          => 'Here is your new client secret. This is the only time it will be shown so don\'t lose it! You may now use this secret to make API requests.',
+    'profile_oauth_client_secret_expl'          => 'Hier ist Ihr neuer persönlicher Zugangsschlüssel. Dies ist das einzige Mal, dass er angezeigt wird, also verlieren Sie ihn nicht! Sie können diesen Token jetzt verwenden, um API-Anfragen zu stellen.',
     'profile_personal_access_tokens'            => 'Persönliche Zugangs-Tokens',
     'profile_personal_access_token'             => 'Persönlicher Zugangs-Token',
-    'profile_oauth_confidential'                => 'Confidential',
+    'profile_oauth_confidential'                => 'Vertraulich',
     'profile_oauth_confidential_help'           => 'Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.',
     'profile_personal_access_token_explanation' => 'Hier ist Ihr neues persönlicher Zugangsschlüssel. Dies ist das einzige Mal, dass er angezeigt wird, also verlieren Sie ihn nicht! Sie können dieses Token jetzt verwenden, um API-Anfragen zu stellen.',
     'profile_no_personal_access_token'          => 'Sie haben keine persönlichen Zugangsschlüssel erstellt.',
@@ -947,7 +947,7 @@ return [
     'bill_expected_date'                        => 'Voraussichtlich :date',
 
     // accounts:
-    'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können. Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',
+    'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können.|Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',
     'all_accounts_inactive'                     => 'Dies sind Ihre inaktiven Konten.',
     'active_account_link'                       => 'Diese Verknüpfung führt zurück zu Ihren aktiven Konten.',
     'account_missing_transaction'               => 'Konto #:id („:name”) kann nicht direkt angezeigt werden, da Firefly III Weiterleitungsinformationen fehlen.',

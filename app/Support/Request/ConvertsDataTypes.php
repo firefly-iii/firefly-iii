@@ -142,6 +142,7 @@ trait ConvertsDataTypes
 
             return null;
         }
+        Log::debug(sprintf('Date object: %s (%s)',$carbon->toW3cString() , $carbon->getTimezone()));
 
         return $carbon;
     }

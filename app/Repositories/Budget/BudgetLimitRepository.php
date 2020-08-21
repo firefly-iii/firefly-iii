@@ -42,8 +42,7 @@ use Log;
  */
 class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -307,8 +306,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         // find limit with same date range and currency.
         $limit = $budget->budgetlimits()
-                        ->where('budget_limits.start_date', $data['start']->format('Y-m-d 00:00:00'))
-                        ->where('budget_limits.end_date', $data['end']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.start_date', $data['start_date']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.end_date', $data['end_date']->format('Y-m-d 00:00:00'))
                         ->where('budget_limits.transaction_currency_id', $currency->id)
                         ->get(['budget_limits.*'])->first();
         if (null !== $limit) {
@@ -319,8 +318,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date              = $data['start']->format('Y-m-d 00:00:00');
-        $limit->end_date                = $data['end']->format('Y-m-d 00:00:00');
+        $limit->start_date              = $data['start_date']->format('Y-m-d 00:00:00');
+        $limit->end_date                = $data['end_date']->format('Y-m-d 00:00:00');
         $limit->amount                  = $data['amount'];
         $limit->transaction_currency_id = $currency->id;
         $limit->save();
@@ -337,18 +336,23 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
-        $budgetLimit->amount     = $data['amount'] ?? $budgetLimit->amount;
-        $budgetLimit->budget_id  = $data['budget_id'] ?? $budgetLimit->id;
-        $budgetLimit->budget_id  = $data['budget'] ? $data['budget']->id : $budgetLimit->budget_id;
-        $budgetLimit->start_date = $data['start'] ? $data['start']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
-        $budgetLimit->end_date   = $data['end'] ? $data['end']->format('Y-m-d 00:00:00') : $budgetLimit->end_date;
+        $budgetLimit->amount     = array_key_exists('amount',$data) ? $data['amount'] : $budgetLimit->amount;
+        $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->id;
+        $budgetLimit->start_date = array_key_exists('start_date', $data) ? $data['start_date']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
+        $budgetLimit->end_date   = array_key_exists('end_date', $data) ? $data['end_date']->format('Y-m-d 00:00:00') : $budgetLimit->end_date;
 
         // if no currency has been provided, use the user's default currency:
-        /** @var TransactionCurrencyFactory $factory */
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency = null;
+
+        // update if relevant:
+        if(array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            /** @var TransactionCurrencyFactory $factory */
+            $factory  = app(TransactionCurrencyFactory::class);
+            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+        }
+        // catch unexpected null:
+        if(null === $currency) {
+            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getDefaultCurrencyByUser($this->user);
         }
         $currency->enabled = true;
         $currency->save();
