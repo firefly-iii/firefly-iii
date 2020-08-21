@@ -1,7 +1,7 @@
 <?php
-/**
- * Domain.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * GetRuleConfiguration.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,37 +18,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Support;
+namespace FireflyIII\Support\Request;
 
 /**
- * Class Domain.
- * @codeCoverageIgnore
+ * Trait GetRuleConfiguration
  */
-class Domain
+trait GetRuleConfiguration
 {
-    /**
-     * @return array
-     */
-    public static function getBindables(): array
-    {
-        return config('firefly.bindables');
-    }
 
     /**
      * @return array
      */
-    public static function getRuleActions(): array
-    {
-        return config('firefly.rule-actions');
-    }
-
-    /**
-     * @return array
-     */
-    public static function getRuleTriggers(): array
+    protected function getTriggers(): array
     {
         return array_keys(config('firefly.search.operators'));
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTriggersWithContext(): array
+    {
+        $list   = config('firefly.search.operators');
+        $return = [];
+        foreach ($list as $key => $info) {
+            if (true === $info['needs_context']) {
+                $return[] = $key;
+            }
+        }
+        return $return;
     }
 }

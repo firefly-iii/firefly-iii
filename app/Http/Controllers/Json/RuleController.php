@@ -73,7 +73,7 @@ class RuleController extends Controller
     public function trigger(Request $request): JsonResponse
     {
         $count    = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
-        $keys     = array_keys(config('firefly.rule-triggers'));
+        $keys     = array_keys(config('firefly.search.operators'));
         $triggers = [];
         foreach ($keys as $key) {
             if ('user_action' !== $key) {

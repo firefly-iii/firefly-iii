@@ -37,7 +37,7 @@ use Log;
 class TriggerFactory
 {
     /** @var array array with trigger types */
-    protected static $triggerTypes = [];
+    protected static array $triggerTypes = [];
 
     /**
      * Returns the trigger for the given type and journal. This method returns the actual implementation
