@@ -12,15 +12,15 @@
     "devDependencies": {
         "axios": "^0.19",
         "cross-env": "^7.0",
-        "laravel-mix": "^5.0.1",
+        "laravel-mix": "^5.0.5",
         "laravel-mix-bundle-analyzer": "^1.0.5",
         "lodash": "^4.17.20",
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.26.10",
         "sass-loader": "^9.0.3",
-        "vue": "^2.6",
+        "vue": "^2.6.12",
         "vue-i18n": "^8.21",
-        "vue-template-compiler": "^2.6.11"
+        "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.14.0",
