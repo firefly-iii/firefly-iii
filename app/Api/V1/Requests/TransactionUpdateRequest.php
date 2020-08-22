@@ -42,23 +42,12 @@ class TransactionUpdateRequest extends FormRequest
 {
     use TransactionValidation, GroupValidation, ConvertsDataTypes;
 
-    /** @var array Array values. */
-    private $arrayFields;
-
-    /** @var array Boolean values. */
-    private $booleanFields;
-
-    /** @var array Fields that contain date values. */
-    private $dateFields;
-
-    /** @var array Fields that contain integer values. */
-    private $integerFields;
-
-    /** @var array Fields that contain string values. */
-    private $stringFields;
-
-    /** @var array Fields that contain text (with newlines) */
-    private $textareaFields;
+    private array $arrayFields;
+    private array $booleanFields;
+    private array $dateFields;
+    private array $integerFields;
+    private array $stringFields;
+    private array $textareaFields;
 
 
     /**

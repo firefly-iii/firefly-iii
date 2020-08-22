@@ -539,11 +539,11 @@ export default {
       destName = row.destination_account.name;
 
       // depends on the transaction type, where we get the currency.
-      if('withdrawal' === transactionType || 'transfer' === transactionType) {
+      if ('withdrawal' === transactionType || 'transfer' === transactionType) {
         row.currency_id = row.source_account.currency_id;
         // console.log('Overruled currency ID to ' + row.currency_id);
       }
-      if('deposit' === transactionType) {
+      if ('deposit' === transactionType) {
         row.currency_id = row.destination_account.currency_id;
         // console.log('Overruled currency ID to ' + row.currency_id);
       }
@@ -576,7 +576,7 @@ export default {
       }
 
       tagList = [];
-      foreignAmount = null;
+      foreignAmount = '0';
       foreignCurrency = null;
       // loop tags
       for (let tagKey in row.tags) {
@@ -638,10 +638,10 @@ export default {
             notes: row.custom_fields.notes,
             tags: tagList
           };
-      if (null !== foreignAmount) {
-        currentArray.foreign_amount = foreignAmount;
-        currentArray.foreign_currency_id = foreignCurrency;
-      }
+      // always submit foreign amount info.
+      currentArray.foreign_amount = foreignAmount;
+      currentArray.foreign_currency_id = foreignCurrency;
+
       // set budget id and piggy ID.
       currentArray.budget_id = parseInt(row.budget);
       currentArray.bill_id = parseInt(row.bill);
