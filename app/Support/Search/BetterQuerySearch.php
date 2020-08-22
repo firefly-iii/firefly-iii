@@ -96,7 +96,7 @@ class BetterQuerySearch implements SearchInterface
      */
     public function getModifiers(): Collection
     {
-        die(__METHOD__);
+        return $this->getOperators();
     }
 
     /**
