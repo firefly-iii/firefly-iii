@@ -1,6 +1,6 @@
 <?php
 /*
- * BetterQuerySearch.php
+ * OperatorQuerySearch.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
+use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
@@ -47,9 +48,9 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class BetterQuerySearch
+ * Class OperatorQuerySearch
  */
-class BetterQuerySearch implements SearchInterface
+class OperatorQuerySearch implements SearchInterface
 {
     private AccountRepositoryInterface         $accountRepository;
     private BillRepositoryInterface            $billRepository;
@@ -69,12 +70,12 @@ class BetterQuerySearch implements SearchInterface
     private Collection                         $operators;
 
     /**
-     * BetterQuerySearch constructor.
+     * OperatorQuerySearch constructor.
      * @codeCoverageIgnore
      */
     public function __construct()
     {
-        Log::debug('Constructed BetterQuerySearch');
+        Log::debug('Constructed OperatorQuerySearch');
         $this->modifiers          = new Collection; // obsolete
         $this->operators          = new Collection;
         $this->page               = 1;
@@ -231,7 +232,7 @@ class BetterQuerySearch implements SearchInterface
                     if ($this->updateCollector($operator, $value)) {
                         $this->operators->push(
                             [
-                                'type'  => $operator,
+                                'type'  => $this->getRootOperator($operator),
                                 'value' => $value,
                             ]
                         );
@@ -291,8 +292,8 @@ class BetterQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
-                if(null !== $account) {
+                $account = $this->accountRepository->findNull((int) $value);
+                if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
                 break;
@@ -321,14 +322,14 @@ class BetterQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
-                if(null !== $account) {
+                $account = $this->accountRepository->findNull((int) $value);
+                if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
                 break;
             case 'account_id':
-                $account = $this->accountRepository->findNull((int)$value);
-                if(null !== $account) {
+                $account = $this->accountRepository->findNull((int) $value);
+                if (null !== $account) {
                     $this->collector->setAccounts(new Collection([$account]));
                 }
                 break;
@@ -474,20 +475,35 @@ class BetterQuerySearch implements SearchInterface
             // dates
             //
             case 'date_is':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $start = new Carbon($value);
-                $this->collector->setRange($start, $start);
-                break;
+                $range = $this->parseDateRange($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                $this->collector->setRange($range['start'], $range['end']);
+
+                // add to operators manually:
+                $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
+                $this->operators->push(['type' => 'date_after', 'value' => $range['end']->format('Y-m-d'),]);
+
+                return false;
             case 'date_before':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $before = new Carbon($value);
-                $this->collector->setBefore($before);
-                break;
+                $range = $this->parseDateRange($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                $this->collector->setRange($range['start'], $range['end']);
+
+                // add to operators manually:
+                $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
+                $this->collector->setBefore($range['start']);
+
+                return false;
             case 'date_after':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $after = new Carbon($value);
-                $this->collector->setAfter($after);
-                break;
+                $range = $this->parseDateRange($value);
+                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                $this->collector->setRange($range['start'], $range['end']);
+
+                // add to operators manually:
+                $this->operators->push(['type' => 'date_before', 'value' => $range['end']->format('Y-m-d'),]);
+                $this->collector->setAfter($range['end']);
+
+                return false;
             case 'created_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $createdAt = new Carbon($value);
@@ -661,6 +677,24 @@ class BetterQuerySearch implements SearchInterface
         Log::debug(sprintf('"%s" is not an alias.', $operator));
 
         return $operator;
+    }
+
+    /**
+     * @param string $value
+     * @return array
+     * @throws FireflyException
+     */
+    private function parseDateRange(string $value): array
+    {
+        $parser = new ParseDateString;
+        if ($parser->isDateRange($value)) {
+            return $parser->parseRange($value, today(config('app.timezone')));
+        }
+        $date = $parser->parseDate($value);
+        return [
+            'start' => $date,
+            'end'   => $date,
+        ];
     }
 
 }

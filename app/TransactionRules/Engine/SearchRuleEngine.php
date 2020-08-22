@@ -1,6 +1,6 @@
 <?php
 /*
- * RuleEngineInterface.php
+ * SearchRuleEngine.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,32 +21,10 @@
 
 namespace FireflyIII\TransactionRules\Engine;
 
-use Illuminate\Support\Collection;
-
 /**
- * Interface RuleEngineInterface
+ * Class SearchRuleEngine
  */
-interface RuleEngineInterface
+class SearchRuleEngine implements RuleEngineInterface
 {
-    /**
-     * Add rules for the engine to execute.
-     *
-     * @param Collection $rules
-     */
-    public function setRules(Collection $rules): void;
-
-    /**
-     * Add entire rule groups for the engine to execute.
-     *
-     * @param Collection $ruleGroups
-     */
-    public function setRuleGroups(Collection $ruleGroups): void;
-
-    /**
-     * Add operators added to each search by the rule engine.
-     *
-     * @param array $operator
-     */
-    public function addOperator(array $operator): void;
 
 }

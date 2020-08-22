@@ -1,6 +1,6 @@
 <?php
 /*
- * BetterQuerySearchTest.php
+ * OperatorQuerySearchTest.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,7 +24,7 @@ namespace Tests\Unit\Support\Search;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Support\Search\BetterQuerySearch;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use Log;
 use Tests\TestCase;
 use DB;
@@ -35,7 +35,7 @@ use DB;
  * - some weird combi's
  * - invalid stuff?
  */
-class BetterQuerySearchTest extends TestCase
+class OperatorQuerySearchTest extends TestCase
 {
     /**
      *
@@ -48,7 +48,7 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testParseQuery(): void
     {
@@ -190,7 +190,7 @@ class BetterQuerySearchTest extends TestCase
 
             $query = sprintf('test %s:%s', $operator, $values[$operator]);
 
-            $object = new BetterQuerySearch;
+            $object = new OperatorQuerySearch;
             $object->setUser($this->user());
             $object->setPage(1);
             try {
@@ -207,13 +207,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testUserAction(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'user_action:anything';
@@ -237,13 +237,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testFromAccountStarts(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_starts:from_acct_strts_9';
@@ -275,13 +275,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testAmountIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'amount_exactly:23.45';
@@ -313,13 +313,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testAmountLess(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'amount_less:5.55';
@@ -351,13 +351,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testAmountMore(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'amount_more:555.55';
@@ -389,13 +389,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testTransactionType(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'transaction_type:withdrawal';
@@ -426,13 +426,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountStarts(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_starts:Dest1A';
@@ -464,13 +464,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDateExact(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'on:2019-02-02';
@@ -502,13 +502,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDateBefore(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'before:2018-02-02';
@@ -540,7 +540,7 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testCreatedAt(): void
     {
@@ -549,7 +549,7 @@ class BetterQuerySearchTest extends TestCase
         // update one journal to have a very specific created_on date:
         DB::table('transaction_journals')->where('id',1)->update(['created_at' => '2020-08-12 00:00:00']);
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'created_at:2020-08-12';
@@ -582,7 +582,7 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testUpdatedAt(): void
     {
@@ -591,7 +591,7 @@ class BetterQuerySearchTest extends TestCase
         // update one journal to have a very specific created_on date:
         DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'updated_at:2020-08-12';
@@ -623,7 +623,7 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testExternalId(): void
     {
@@ -632,7 +632,7 @@ class BetterQuerySearchTest extends TestCase
         // update one journal to have a very specific created_on date:
         DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'external_id:some_ext_id';
@@ -661,7 +661,7 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testInternalReference(): void
     {
@@ -670,7 +670,7 @@ class BetterQuerySearchTest extends TestCase
         // update one journal to have a very specific created_on date:
         DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'internal_reference:some_internal_ref';
@@ -698,13 +698,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDateAfter(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'after:2018-05-02';
@@ -733,13 +733,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountEnds(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_ends:3Thing';
@@ -771,13 +771,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountContains(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_contains:2Test3';
@@ -809,13 +809,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestination(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'destination:2Test3';
@@ -847,13 +847,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_is:Dest1Acct2Test3Thing';
@@ -886,13 +886,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasAttachments(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_attachments:empty';
@@ -924,13 +924,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasAnyCategory(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_any_category:true';
@@ -962,13 +962,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasAnyTag(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_any_tag:true';
@@ -1002,13 +1002,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasAnyBudget(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_any_budget:true';
@@ -1041,13 +1041,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testCategory(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'category:"Search cat thing"';
@@ -1080,13 +1080,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testTag(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'tag:searchTestTag';
@@ -1120,13 +1120,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testBudget(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'budget:"Search budget thing"';
@@ -1159,13 +1159,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testBill(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'bill:TestBill';
@@ -1197,13 +1197,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasNoCategory(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_no_category:true';
@@ -1235,13 +1235,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasNoBudget(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_no_budget:true';
@@ -1273,13 +1273,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testHasNoTag(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'has_no_tag:true';
@@ -1311,7 +1311,7 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountIdIs(): void
     {
@@ -1320,7 +1320,7 @@ class BetterQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'Dest2Acct3Test4Thing')->first();
         $accountId = (int) $account->id;
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('destination_account_id:%d', $accountId);
@@ -1353,7 +1353,7 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountIdIs(): void
     {
@@ -1362,7 +1362,7 @@ class BetterQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'from_acct_NL30ABNA_test')->first();
         $accountId = (int) $account->id;
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('source_account_id:%d', $accountId);
@@ -1394,7 +1394,7 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testAccountIdIs(): void
     {
@@ -1403,7 +1403,7 @@ class BetterQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'from_acct_NL30ABNA_test')->first();
         $accountId = (int) $account->id;
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('account_id:%d', $accountId);
@@ -1435,13 +1435,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrStartsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_starts:NL45RABO';
@@ -1473,13 +1473,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrStartsNumber(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_starts:NL30AB';
@@ -1511,13 +1511,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrEndsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_ends:29221';
@@ -1549,13 +1549,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrEndsNumber(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_ends:8035321';
@@ -1588,13 +1588,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrIsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_is:NL45RABO5319829221';
@@ -1626,13 +1626,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrIsNumber(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_is:NL28ABNA1938035321';
@@ -1664,13 +1664,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrContainsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_contains:O53198';
@@ -1702,13 +1702,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountNrContainsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_nr_contains:L98RABO';
@@ -1740,13 +1740,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountNrIsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_nr_is:NL98RABO9223011655';
@@ -1778,13 +1778,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountNrStartsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_nr_starts:NL98RABO';
@@ -1816,13 +1816,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDestinationAccountNrEndsIban(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'to_account_nr_ends:011655';
@@ -1854,13 +1854,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountNrContainsNumber(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_nr_contains:8ABNA1';
@@ -1893,13 +1893,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_is:from_acct_strts_928_ends_Test';
@@ -1931,13 +1931,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountContains(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_contains:t_strts_928';
@@ -1969,13 +1969,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSource(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'source:t_strts_928';
@@ -2007,13 +2007,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDescriptionStarts(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'description_starts:8uStartTest';
@@ -2045,13 +2045,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDescriptionEnds(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'description_ends:22end33';
@@ -2083,13 +2083,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDescriptionContains(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'description_contains:76tte32';
@@ -2122,13 +2122,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testNotesContain(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'notes_contain:rch5No';
@@ -2160,13 +2160,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testNotesStart(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'notes_start:Test4';
@@ -2198,13 +2198,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testNotesEnd(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'notes_end:6Thing';
@@ -2236,13 +2236,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testNotesAre(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'notes_are:Test4Search5Notes6Thing';
@@ -2274,13 +2274,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testAnyNotes(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'any_notes:true';
@@ -2313,13 +2313,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testNoNotes(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'no_notes:true';
@@ -2347,13 +2347,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testDescriptionIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'description_is:"Groceries descr is 3291"';
@@ -2386,13 +2386,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testCurrencyIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'currency_is:HUF';
@@ -2424,13 +2424,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testCurrencyNameIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'currency_is:"Hungarian forint"';
@@ -2463,13 +2463,13 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testForeignCurrencyIs(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'foreign_currency_is:USD';
@@ -2501,13 +2501,13 @@ class BetterQuerySearchTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testSourceAccountEnds(): void
     {
         $this->be($this->user());
 
-        $object = new BetterQuerySearch;
+        $object = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = 'from_account_ends:28_ends_Test';
@@ -2540,12 +2540,12 @@ class BetterQuerySearchTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Support\Search\BetterQuerySearch
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
     public function testGetWordsAsString(): void
     {
 
-        $object = new BetterQuerySearch();
+        $object = new OperatorQuerySearch();
         $this->assertEquals('', $object->getWordsAsString());
     }
 }
