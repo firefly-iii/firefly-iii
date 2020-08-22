@@ -62,6 +62,7 @@ class OperatorQuerySearch implements SearchInterface
     private User                               $user;
     private ParsedQuery                        $query;
     private int                                $page;
+    private int                                $limit;
     private array                              $words;
     private array                              $validOperators;
     private GroupCollectorInterface            $collector;
@@ -80,6 +81,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->operators          = new Collection;
         $this->page               = 1;
         $this->words              = [];
+        $this->limit              = 25;
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -154,11 +156,9 @@ class OperatorQuerySearch implements SearchInterface
         $parser      = new QueryParser();
         $this->query = $parser->parse($query);
 
-        // get limit from preferences.
-        $pageSize        = (int) app('preferences')->getForUser($this->user, 'listPageSize', 50)->data;
         $this->collector = app(GroupCollectorInterface::class);
         $this->collector->setUser($this->user);
-        $this->collector->setLimit($pageSize)->setPage($this->page);
+        $this->collector->setLimit($this->limit)->setPage($this->page);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
         Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
@@ -203,6 +203,8 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
+
+        $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
     }
 
     /**
@@ -328,9 +330,16 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             case 'account_id':
-                $account = $this->accountRepository->findNull((int) $value);
-                if (null !== $account) {
-                    $this->collector->setAccounts(new Collection([$account]));
+                $parts      = explode(',', $value);
+                $collection = new Collection;
+                foreach ($parts as $accountId) {
+                    $account = $this->accountRepository->findNull((int) $value);
+                    if (null !== $account) {
+                        $collection->push($account);
+                    }
+                }
+                if ($collection->count() > 0) {
+                    $this->collector->setAccounts($collection);
                 }
                 break;
             //
@@ -695,4 +704,11 @@ class OperatorQuerySearch implements SearchInterface
         ];
     }
 
+    /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit): void
+    {
+        $this->limit = $limit;
+    }
 }

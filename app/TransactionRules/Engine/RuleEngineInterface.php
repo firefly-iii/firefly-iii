@@ -21,6 +21,7 @@
 
 namespace FireflyIII\TransactionRules\Engine;
 
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -28,6 +29,10 @@ use Illuminate\Support\Collection;
  */
 interface RuleEngineInterface
 {
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
     /**
      * Add rules for the engine to execute.
      *
@@ -48,5 +53,10 @@ interface RuleEngineInterface
      * @param array $operator
      */
     public function addOperator(array $operator): void;
+
+    /**
+     * Fire the rule engine.
+     */
+    public function fire(): void;
 
 }

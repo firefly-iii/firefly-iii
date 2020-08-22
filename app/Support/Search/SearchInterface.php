@@ -52,6 +52,11 @@ interface SearchInterface
     public function setPage(int $page): void;
 
     /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit): void;
+
+    /**
      * @return bool
      */
     public function hasModifiers(): bool;

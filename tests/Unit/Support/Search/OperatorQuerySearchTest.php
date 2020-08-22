@@ -483,7 +483,7 @@ class OperatorQuerySearchTest extends TestCase
         $this->assertCount(0, $object->getWords());
 
         // operator is assumed to be included.
-        $this->assertCount(1, $object->getOperators());
+        $this->assertCount(2, $object->getOperators());
 
         $result = ['transactions' => []];
         // execute search should work:

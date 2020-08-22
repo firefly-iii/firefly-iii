@@ -45,4 +45,12 @@ interface ActionInterface
      * @return bool
      */
     public function act(TransactionJournal $journal): bool;
+
+    /**
+     * Execute the action on an array.
+     *
+     * @param array $journal
+     * @return bool
+     */
+    public function actOnArray(array $journal): bool;
 }

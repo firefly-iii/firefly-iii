@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Log;
 
 /**
@@ -32,8 +34,7 @@ use Log;
  */
 class AddTag implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -46,11 +47,8 @@ class AddTag implements ActionInterface
     }
 
     /**
-     * Add a tag
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
+     * @deprecated
      */
     public function act(TransactionJournal $journal): bool
     {
@@ -74,6 +72,38 @@ class AddTag implements ActionInterface
             return true;
         }
         Log::debug(sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal->id));
+
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // journal has this tag maybe?
+        /** @var TagFactory $factory */
+        $factory = app(TagFactory::class);
+        $factory->setUser(User::find($journal['user_id']));
+        $tag = $factory->findOrCreate($this->action->action_value);
+        if (null === $tag) {
+            // could not find, could not create tag.
+            Log::error(sprintf('RuleAction AddTag. Could not find or create tag "%s"', $this->action->action_value));
+
+            return false;
+        }
+        $count = DB::table('tag_transaction_journal')
+                   ->where('tag_id', $tag->id)
+                   ->where('transaction_journal_id', $journal['transaction_journal_id'])
+                   ->count();
+        if (0 === $count) {
+            // add to journal:
+            DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
+            Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+
+            return true;
+        }
+        Log::debug(sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
 
         return false;
     }

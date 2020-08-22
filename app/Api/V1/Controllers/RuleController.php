@@ -33,12 +33,14 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -215,8 +217,8 @@ class RuleController extends Controller
      * @param RuleTestRequest $request
      * @param Rule            $rule
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function testRule(RuleTestRequest $request, Rule $rule): JsonResponse
     {
@@ -265,27 +267,26 @@ class RuleController extends Controller
         // Get parameters specified by the user
         $parameters = $request->getTriggerParameters();
 
-        /** @var RuleEngine $ruleEngine */
-        $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser(auth()->user());
+        /** @var RuleEngineInterface $ruleEngine */
+        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine->setRules(new Collection([$rule]));
 
-        $rules = [$rule->id];
-
-        $ruleEngine->setRulesToApply($rules);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($parameters['accounts']);
-        $collector->setRange($parameters['start_date'], $parameters['end_date']);
-        $journals = $collector->getExtractedJournals();
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            Log::debug('Start of new journal.');
-            $ruleEngine->processJournalArray($journal);
-            Log::debug('Done with all rules for this group + done with journal.');
+        // overrule the rule(s) if necessary.
+        if (array_key_exists('start', $parameters) && null !== $parameters['start'] ) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
+
+        if (array_key_exists('end', $parameters)  && null !== $parameters['end']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
+        }
+        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+            $ruleEngine->addOperator(['type' => 'account_id', 'value' => $parameters['accounts']]);
+        }
+
+        // file the rule(s)
+        $ruleEngine->fire();
 
         return response()->json([], 204);
     }

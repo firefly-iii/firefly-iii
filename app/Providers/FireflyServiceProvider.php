@@ -63,6 +63,8 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Telemetry;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
+use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -189,6 +191,19 @@ class FireflyServiceProvider extends ServiceProvider
                 }
 
                 return $repository;
+            }
+        );
+
+        $this->app->bind(
+            RuleEngineInterface::class,
+            static function (Application $app) {
+                /** @var SearchRuleEngine $engine */
+                $engine = app(SearchRuleEngine::class);
+                if ($app->auth->check()) {
+                    $engine->setUser(auth()->user());
+                }
+
+                return $engine;
             }
         );
 
