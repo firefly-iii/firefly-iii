@@ -166,12 +166,12 @@ class TransactionUpdateRequest extends FormRequest
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
+            'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
+            'transactions.*.foreign_currency_code' => 'nullable|min:3|max:3|exists:transaction_currencies,code',
 
             // amount
             'transactions.*.amount'                => 'numeric|gt:0|max:100000000000',
-            'transactions.*.foreign_amount'        => 'numeric|gte:0',
+            'transactions.*.foreign_amount'        => 'nullable|numeric|gte:0',
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
