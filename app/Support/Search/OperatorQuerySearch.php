@@ -487,7 +487,6 @@ class OperatorQuerySearch implements SearchInterface
             case 'date_before':
                 $range = $this->parseDateRange($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
-                $this->collector->setRange($range['start'], $range['end']);
 
                 // add to operators manually:
                 $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
@@ -497,10 +496,9 @@ class OperatorQuerySearch implements SearchInterface
             case 'date_after':
                 $range = $this->parseDateRange($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
-                $this->collector->setRange($range['start'], $range['end']);
 
                 // add to operators manually:
-                $this->operators->push(['type' => 'date_before', 'value' => $range['end']->format('Y-m-d'),]);
+                $this->operators->push(['type' => 'date_after', 'value' => $range['end']->format('Y-m-d'),]);
                 $this->collector->setAfter($range['end']);
 
                 return false;
