@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class HasNoTag.
+ * @deprecated
  */
 final class HasNoTag extends AbstractTrigger implements TriggerInterface
 {

@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class AmountExactly.
+ * @deprecated
  */
 final class AmountExactly extends AbstractTrigger implements TriggerInterface
 {

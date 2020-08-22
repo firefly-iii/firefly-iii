@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class DescriptionEnds.
+ * @deprecated
  */
 final class DescriptionEnds extends AbstractTrigger implements TriggerInterface
 {

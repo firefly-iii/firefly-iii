@@ -26,6 +26,7 @@ use FireflyIII\Models\TransactionJournal;
 
 /**
  * Interface TriggerInterface.
+ * @deprecated
  */
 interface TriggerInterface
 {

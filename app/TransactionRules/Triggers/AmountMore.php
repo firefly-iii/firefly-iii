@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class AmountMore.
+ * @deprecated
  */
 final class AmountMore extends AbstractTrigger implements TriggerInterface
 {

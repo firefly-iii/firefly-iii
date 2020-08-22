@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class DateBefore.
+ * @deprecated
  */
 final class DateBefore extends AbstractTrigger implements TriggerInterface
 {

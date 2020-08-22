@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
  *
  * Class AbstractTrigger
  * @method bool triggered($object)
+ * @deprecated
  */
 abstract class AbstractTrigger
 {

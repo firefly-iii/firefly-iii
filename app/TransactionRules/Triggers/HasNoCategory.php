@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class HasNoCategory.
+ * @deprecated
  */
 final class HasNoCategory extends AbstractTrigger implements TriggerInterface
 {

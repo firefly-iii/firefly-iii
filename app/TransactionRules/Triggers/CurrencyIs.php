@@ -29,6 +29,7 @@ use Log;
 
 /**
  * Class CurrencyIs.
+ * @deprecated
  */
 final class CurrencyIs extends AbstractTrigger implements TriggerInterface
 {

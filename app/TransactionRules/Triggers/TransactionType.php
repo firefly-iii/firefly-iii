@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class TransactionType.
+ * @deprecated
  */
 final class TransactionType extends AbstractTrigger implements TriggerInterface
 {

@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class BudgetIs.
+ * @deprecated
  */
 final class BudgetIs extends AbstractTrigger implements TriggerInterface
 {

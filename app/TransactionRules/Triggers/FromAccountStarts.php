@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class FromAccountStarts.
+ * @deprecated
  */
 final class FromAccountStarts extends AbstractTrigger implements TriggerInterface
 {

@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class HasAttachment
+ * @deprecated
  */
 class HasAttachment extends AbstractTrigger implements TriggerInterface
 {

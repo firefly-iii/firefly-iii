@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class UserAction.
+ * @deprecated
  */
 final class UserAction extends AbstractTrigger implements TriggerInterface
 {

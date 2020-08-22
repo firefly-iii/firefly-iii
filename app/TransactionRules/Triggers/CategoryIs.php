@@ -27,6 +27,7 @@ use Log;
 
 /**
  * Class CategoryIs.
+ * @deprecated
  */
 final class CategoryIs extends AbstractTrigger implements TriggerInterface
 {

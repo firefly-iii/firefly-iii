@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class NotesStart.
+ * @deprecated
  */
 final class NotesStart extends AbstractTrigger implements TriggerInterface
 {

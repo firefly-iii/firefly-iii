@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class TagIs.
+ * @deprecated
  */
 final class TagIs extends AbstractTrigger implements TriggerInterface
 {

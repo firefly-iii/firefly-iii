@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class HasNoBudget.
+ * @deprecated
  */
 final class HasNoBudget extends AbstractTrigger implements TriggerInterface
 {
