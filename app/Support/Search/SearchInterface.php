@@ -37,6 +37,11 @@ interface SearchInterface
     public function getModifiers(): Collection;
 
     /**
+     * @return Collection
+     */
+    public function getOperators(): Collection;
+
+    /**
      * @return string
      */
     public function getWordsAsString(): string;

@@ -98,6 +98,7 @@ class ApplyRules extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $this->stupidLaravel();
         // @codeCoverageIgnoreStart
         if (!$this->verifyAccessToken()) {
@@ -152,6 +153,8 @@ class ApplyRules extends Command
         $ruleEngine->setUser($this->getUser());
         $ruleEngine->setRulesToApply($rulesToApply);
 
+        app('telemetry')->feature('system.command.executed', $this->signature);
+
         // for this call, the rule engine only includes "store" rules:
         $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
 
@@ -166,9 +169,9 @@ class ApplyRules extends Command
             $bar->advance();
         }
         $this->line('');
-        $this->line('Done!');
+        $end = round(microtime(true) - $start, 2);
+        $this->line(sprintf('Done in %s seconds!', $end));
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
         return 0;
     }
 

@@ -41,6 +41,7 @@ use Log;
  * Set the user, then apply an array to setRulesToApply(array) or call addRuleIdToApply(int) or addRuleToApply(Rule).
  * Then call process() to make the magic happen.
  *
+ * @deprecated
  */
 class RuleEngine
 {
@@ -50,18 +51,12 @@ class RuleEngine
     public const TRIGGER_UPDATE = 2;
     /** @var int */
     public const TRIGGER_BOTH = 3;
-    /** @var bool */
-    private $allRules;
-    /** @var RuleGroupRepository */
-    private $ruleGroupRepository;
-    /** @var Collection */
-    private $ruleGroups;
-    /** @var array */
-    private $rulesToApply;
-    /** @var int */
-    private $triggerMode;
-    /** @var User */
-    private $user;
+    private bool                $allRules;
+    private RuleGroupRepository $ruleGroupRepository;
+    private Collection          $ruleGroups;
+    private array               $rulesToApply;
+    private int                 $triggerMode;
+    private User                $user;
 
     /**
      * RuleEngine constructor.
@@ -230,7 +225,7 @@ class RuleEngine
 
         $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode)
                         || ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode)
-            || $this->triggerMode === self::TRIGGER_BOTH;
+                        || $this->triggerMode === self::TRIGGER_BOTH;
 
         return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true)) && true === $rule->active;
     }

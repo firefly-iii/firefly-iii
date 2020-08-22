@@ -62,7 +62,7 @@ trait AmountCollection
     {
         $this->query->where(
             function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '<', app('steam')->positive($amount));
+                $q->where('destination.amount', '<=', app('steam')->positive($amount));
             }
         );
 
@@ -80,7 +80,7 @@ trait AmountCollection
     {
         $this->query->where(
             function (EloquentBuilder $q) use ($amount) {
-                $q->where('destination.amount', '>', app('steam')->positive($amount));
+                $q->where('destination.amount', '>=', app('steam')->positive($amount));
             }
         );
 

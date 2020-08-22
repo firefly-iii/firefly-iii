@@ -25,12 +25,16 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
@@ -47,19 +51,22 @@ use Log;
  */
 class BetterQuerySearch implements SearchInterface
 {
-    private AccountRepositoryInterface       $accountRepository;
-    private BillRepositoryInterface          $billRepository;
-    private BudgetRepositoryInterface        $budgetRepository;
-    private CategoryRepositoryInterface      $categoryRepository;
-    private TagRepositoryInterface           $tagRepository;
-    private User                             $user;
-    private ParsedQuery                      $query;
-    private int                              $page;
-    private array                            $words;
-    private array                            $validOperators;
-    private GroupCollectorInterface          $collector;
-    private float                            $startTime;
-    private Collection                       $modifiers;
+    private AccountRepositoryInterface         $accountRepository;
+    private BillRepositoryInterface            $billRepository;
+    private BudgetRepositoryInterface          $budgetRepository;
+    private CategoryRepositoryInterface        $categoryRepository;
+    private TagRepositoryInterface             $tagRepository;
+    private CurrencyRepositoryInterface        $currencyRepository;
+    private TransactionTypeRepositoryInterface $typeRepository;
+    private User                               $user;
+    private ParsedQuery                        $query;
+    private int                                $page;
+    private array                              $words;
+    private array                              $validOperators;
+    private GroupCollectorInterface            $collector;
+    private float                              $startTime;
+    private Collection                         $modifiers; // obsolete
+    private Collection                         $operators;
 
     /**
      * BetterQuerySearch constructor.
@@ -68,7 +75,8 @@ class BetterQuerySearch implements SearchInterface
     public function __construct()
     {
         Log::debug('Constructed BetterQuerySearch');
-        $this->modifiers          = new Collection;
+        $this->modifiers          = new Collection; // obsolete
+        $this->operators          = new Collection;
         $this->page               = 1;
         $this->words              = [];
         $this->validOperators     = array_keys(config('firefly.search.operators'));
@@ -78,6 +86,8 @@ class BetterQuerySearch implements SearchInterface
         $this->budgetRepository   = app(BudgetRepositoryInterface::class);
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->tagRepository      = app(TagRepositoryInterface::class);
+        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+        $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
     }
 
     /**
@@ -86,7 +96,16 @@ class BetterQuerySearch implements SearchInterface
      */
     public function getModifiers(): Collection
     {
-        return $this->modifiers;
+        die(__METHOD__);
+    }
+
+    /**
+     * @inheritDoc
+     * @codeCoverageIgnore
+     */
+    public function getOperators(): Collection
+    {
+        return $this->operators;
     }
 
     /**
@@ -96,6 +115,14 @@ class BetterQuerySearch implements SearchInterface
     public function getWordsAsString(): string
     {
         return implode(' ', $this->words);
+    }
+
+    /**
+     * @return array
+     */
+    public function getWords(): array
+    {
+        return $this->words;
     }
 
     /**
@@ -154,9 +181,13 @@ class BetterQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
+     * @throws FireflyException
      */
     public function searchTransactions(): LengthAwarePaginator
     {
+        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
+            throw new FireflyException('Search query is empty.');
+        }
         return $this->collector->getPaginatedGroups();
     }
 
@@ -197,11 +228,14 @@ class BetterQuerySearch implements SearchInterface
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
                 if (in_array($operator, $this->validOperators, true)) {
-                    $this->updateCollector($operator, $value);
-                    $this->modifiers->push([
-                                               'type'  => $operator,
-                                               'value' => $value,
-                                           ]);
+                    if ($this->updateCollector($operator, $value)) {
+                        $this->operators->push(
+                            [
+                                'type'  => $operator,
+                                'value' => $value,
+                            ]
+                        );
+                    }
                 }
                 break;
         }
@@ -211,12 +245,16 @@ class BetterQuerySearch implements SearchInterface
     /**
      * @param string $operator
      * @param string $value
+     * @return bool
      * @throws FireflyException
      */
-    private function updateCollector(string $operator, string $value): void
+    private function updateCollector(string $operator, string $value): bool
     {
         Log::debug(sprintf('updateCollector(%s, %s)', $operator, $value));
-        $allAccounts = new Collection;
+
+        // check if alias, replace if necessary:
+        $operator = $this->getRootOperator($operator);
+
         switch ($operator) {
             default:
                 Log::error(sprintf('No such operator: %s', $operator));
@@ -224,45 +262,161 @@ class BetterQuerySearch implements SearchInterface
             // some search operators are ignored, basically:
             case 'user_action':
                 Log::info(sprintf('Ignore search operator "%s"', $operator));
+                return false;
+            //
+            // all account related searches:
+            //
+            case 'source_account_starts':
+                $this->searchAccount($value, 1, 1);
                 break;
-            case 'from_account_starts':
-                $this->fromAccountStarts($value);
+            case 'source_account_ends':
+                $this->searchAccount($value, 1, 2);
                 break;
-            case 'from_account_ends':
-                $this->fromAccountEnds($value);
+            case 'source_account_is':
+                $this->searchAccount($value, 1, 4);
                 break;
-            case 'from_account_contains':
-            case 'from':
-            case 'source':
-                // source can only be asset, liability or revenue account:
-                $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-                $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
-                if ($accounts->count() > 0) {
-                    $allAccounts = $accounts->merge($allAccounts);
+            case 'source_account_nr_starts':
+                $this->searchAccountNr($value, 1, 1);
+                break;
+            case 'source_account_nr_ends':
+                $this->searchAccountNr($value, 1, 2);
+                break;
+            case 'source_account_nr_is':
+                $this->searchAccountNr($value, 1, 4);
+                break;
+            case 'source_account_nr_contains':
+                $this->searchAccountNr($value, 1, 3);
+                break;
+            case 'source_account_contains':
+                $this->searchAccount($value, 1, 3);
+                break;
+            case 'source_account_id':
+                $account = $this->accountRepository->findNull((int)$value);
+                if(null !== $account) {
+                    $this->collector->setSourceAccounts(new Collection([$account]));
                 }
-                $this->collector->setSourceAccounts($allAccounts);
                 break;
-            case 'to':
-            case 'destination':
-                // source can only be asset, liability or expense account:
-                $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
-                $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
-                if ($accounts->count() > 0) {
-                    $allAccounts = $accounts->merge($allAccounts);
+            case 'destination_account_starts':
+                $this->searchAccount($value, 2, 1);
+                break;
+            case 'destination_account_ends':
+                $this->searchAccount($value, 2, 2);
+                break;
+            case 'destination_account_nr_starts':
+                $this->searchAccountNr($value, 2, 1);
+                break;
+            case 'destination_account_nr_ends':
+                $this->searchAccountNr($value, 2, 2);
+                break;
+            case 'destination_account_nr_is':
+                $this->searchAccountNr($value, 2, 4);
+                break;
+            case 'destination_account_is':
+                $this->searchAccount($value, 2, 4);
+                break;
+            case 'destination_account_nr_contains':
+                $this->searchAccountNr($value, 2, 3);
+                break;
+            case 'destination_account_contains':
+                $this->searchAccount($value, 2, 3);
+                break;
+            case 'destination_account_id':
+                $account = $this->accountRepository->findNull((int)$value);
+                if(null !== $account) {
+                    $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
-                $this->collector->setDestinationAccounts($allAccounts);
                 break;
-            case 'category':
+            case 'account_id':
+                $account = $this->accountRepository->findNull((int)$value);
+                if(null !== $account) {
+                    $this->collector->setAccounts(new Collection([$account]));
+                }
+                break;
+            //
+            // description
+            //
+            case 'description_starts':
+                $this->collector->descriptionStarts([$value]);
+                break;
+            case 'description_ends':
+                $this->collector->descriptionEnds([$value]);
+                break;
+            case 'description_contains':
+                $this->words[] = $value;
+                return false;
+            case 'description_is':
+                $this->collector->descriptionIs($value);
+                break;
+            //
+            // currency
+            //
+            case 'currency_is':
+                $currency = $this->findCurrency($value);
+                if (null !== $currency) {
+                    $this->collector->setCurrency($currency);
+                }
+                break;
+            case 'foreign_currency_is':
+                $currency = $this->findCurrency($value);
+                if (null !== $currency) {
+                    $this->collector->setForeignCurrency($currency);
+                }
+                break;
+            //
+            // attachments
+            //
+            case 'has_attachments':
+                Log::debug('Set collector to filter on attachments.');
+                $this->collector->hasAttachments();
+                break;
+            //
+            // categories
+            case 'has_no_category':
+                $this->collector->withoutCategory();
+                break;
+            case 'has_any_category':
+                $this->collector->withCategory();
+                break;
+            case 'category_is':
                 $result = $this->categoryRepository->searchCategory($value, 25);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
                 break;
+            //
+            // budgets
+            //
+            case 'has_no_budget':
+                $this->collector->withoutBudget();
+                break;
+            case 'has_any_budget':
+                $this->collector->withBudget();
+                break;
+            case 'budget':
+            case 'budget_is':
+                $result = $this->budgetRepository->searchBudget($value, 25);
+                if ($result->count() > 0) {
+                    $this->collector->setBudgets($result);
+                }
+                break;
+            //
+            // bill
+            //
             case 'bill':
+            case 'bill_is':
                 $result = $this->billRepository->searchBill($value, 25);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
+                break;
+            //
+            // tags
+            //
+            case 'has_no_tag':
+                $this->collector->withoutTags();
+                break;
+            case 'has_any_tag':
+                $this->collector->hasAnyTag();
                 break;
             case 'tag':
                 $result = $this->tagRepository->searchTag($value);
@@ -270,48 +424,66 @@ class BetterQuerySearch implements SearchInterface
                     $this->collector->setTags($result);
                 }
                 break;
-            case 'budget':
-                $result = $this->budgetRepository->searchBudget($value, 25);
-                if ($result->count() > 0) {
-                    $this->collector->setBudgets($result);
-                }
+            //
+            // notes
+            //
+            case 'notes_contain':
+                $this->collector->notesContain($value);
                 break;
-            case 'amount_is':
-            case 'amount':
+            case 'notes_start':
+                $this->collector->notesStartWith($value);
+                break;
+            case 'notes_end':
+                $this->collector->notesEndWith($value);
+                break;
+            case 'notes_are':
+                $this->collector->notesExactly($value);
+                break;
+            case 'no_notes':
+                $this->collector->withoutNotes();
+                break;
+            case 'any_notes':
+                $this->collector->withAnyNotes();
+                break;
+            //
+            // amount
+            //
+            case 'amount_exactly':
                 $amount = app('steam')->positive((string) $value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
-            case 'amount_max':
             case 'amount_less':
                 $amount = app('steam')->positive((string) $value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
-            case 'amount_min':
             case 'amount_more':
                 $amount = app('steam')->positive((string) $value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
-            case 'type':
+            //
+            // transaction type
+            //
+            case 'transaction_type':
                 $this->collector->setTypes([ucfirst($value)]);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
-            case 'date':
-            case 'on':
+            //
+            // dates
+            //
+            case 'date_is':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $start = new Carbon($value);
                 $this->collector->setRange($start, $start);
                 break;
             case 'date_before':
-            case 'before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $before = new Carbon($value);
                 $this->collector->setBefore($before);
                 break;
             case 'date_after':
-            case 'after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $after = new Carbon($value);
                 $this->collector->setAfter($after);
@@ -326,6 +498,9 @@ class BetterQuerySearch implements SearchInterface
                 $updatedAt = new Carbon($value);
                 $this->collector->setUpdatedAt($updatedAt);
                 break;
+            //
+            // other fields
+            //
             case 'external_id':
                 $this->collector->setExternalId($value);
                 break;
@@ -333,55 +508,159 @@ class BetterQuerySearch implements SearchInterface
                 $this->collector->setInternalReference($value);
                 break;
         }
+        return true;
     }
 
     /**
+     * searchDirection: 1 = source (default), 2 = destination
+     * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      * @param string $value
+     * @param int    $searchDirection
+     * @param int    $stringPosition
      */
-    private function fromAccountStarts(string $value): void
+    private function searchAccount(string $value, int $searchDirection, int $stringPosition): void
     {
-        Log::debug(sprintf('fromAccountStarts(%s)', $value));
-        // source can only be asset, liability or revenue account:
-        $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-        $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
+        Log::debug(sprintf('searchAccount(%s, %d, %d)', $value, $stringPosition, $searchDirection));
+
+        // search direction (default): for source accounts
+        $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $collectorMethod = 'setSourceAccounts';
+
+        // search direction: for destination accounts
+        if (2 === $searchDirection) {
+            // destination can be
+            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
+            $collectorMethod = 'setDestinationAccounts';
+        }
+        // string position (default): starts with:
+        $stringMethod = 'str_starts_with';
+
+        // string position: ends with:
+        if (2 === $stringPosition) {
+            $stringMethod = 'str_ends_with';
+        }
+        if (3 === $stringPosition) {
+            $stringMethod = 'str_contains';
+        }
+        if (4 === $stringPosition) {
+            $stringMethod = 'str_is_equal';
+        }
+
+        // get accounts:
+        $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero, return.');
+            Log::debug('Found zero accounts, do nothing.');
             return;
         }
-        Log::debug(sprintf('Found %d, filter.', $accounts->count()));
-        $filtered = $accounts->filter(function (Account $account) use ($value) {
-            return str_starts_with($account->name, $value);
+        Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
+        $filtered = $accounts->filter(function (Account $account) use ($value, $stringMethod) {
+            return $stringMethod(strtolower($account->name), strtolower($value));
         });
+
+        if (0 === $filtered->count()) {
+            Log::debug('Left with zero accounts, return.');
+            return;
+        }
+        Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
+        $this->collector->$collectorMethod($filtered);
+    }
+
+
+    /**
+     * searchDirection: 1 = source (default), 2 = destination
+     * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
+     * @param string $value
+     * @param int    $searchDirection
+     * @param int    $stringPosition
+     */
+    private function searchAccountNr(string $value, int $searchDirection, int $stringPosition): void
+    {
+        Log::debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
+
+        // search direction (default): for source accounts
+        $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+        $collectorMethod = 'setSourceAccounts';
+
+        // search direction: for destination accounts
+        if (2 === $searchDirection) {
+            // destination can be
+            $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
+            $collectorMethod = 'setDestinationAccounts';
+        }
+        // string position (default): starts with:
+        $stringMethod = 'str_starts_with';
+
+        // string position: ends with:
+        if (2 === $stringPosition) {
+            $stringMethod = 'str_ends_with';
+        }
+        if (3 === $stringPosition) {
+            $stringMethod = 'str_contains';
+        }
+        if (4 === $stringPosition) {
+            $stringMethod = 'str_is_equal';
+        }
+
+        // search for accounts:
+        $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
+        if (0 === $accounts->count()) {
+            Log::debug('Found zero accounts, do nothing.');
+            return;
+        }
+
+        // if found, do filter
+        Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
+        $filtered = $accounts->filter(function (Account $account) use ($value, $stringMethod) {
+            // either IBAN or account number!
+            $ibanMatch      = $stringMethod(strtolower($account->iban), strtolower($value));
+            $accountNrMatch = false;
+            /** @var AccountMeta $meta */
+            foreach ($account->accountMeta as $meta) {
+                if ('account_number' === $meta->name && $stringMethod(strtolower($meta->data), strtolower($value))) {
+                    $accountNrMatch = true;
+                }
+            }
+            return $ibanMatch || $accountNrMatch;
+        });
+
         if (0 === $filtered->count()) {
             Log::debug('Left with zero, return.');
             return;
         }
-        Log::debug(sprintf('Left with %d, set.', $accounts->count()));
-        $this->collector->setSourceAccounts($filtered);
+        Log::debug('Left with zero accounts, return.');
+        $this->collector->$collectorMethod($filtered);
     }
 
     /**
      * @param string $value
+     * @return TransactionCurrency|null
      */
-    private function fromAccountEnds(string $value): void
+    private function findCurrency(string $value): ?TransactionCurrency
     {
-        Log::debug(sprintf('fromAccountEnds(%s)', $value));
-        // source can only be asset, liability or revenue account:
-        $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
-        $accounts    = $this->accountRepository->searchAccount($value, $searchTypes, 25);
-        if (0 === $accounts->count()) {
-            Log::debug('Found zero, return.');
-            return;
+        $result = $this->currencyRepository->findByCodeNull($value);
+        if (null === $result) {
+            $result = $this->currencyRepository->findByNameNull($value);
         }
-        Log::debug(sprintf('Found %d, filter.', $accounts->count()));
-        $filtered = $accounts->filter(function (Account $account) use ($value) {
-            return str_ends_with($account->name, $value);
-        });
-        if (0 === $filtered->count()) {
-            Log::debug('Left with zero, return.');
-            return;
-        }
-        Log::debug(sprintf('Left with %d, set.', $accounts->count()));
-        $this->collector->setSourceAccounts($filtered);
+        return $result;
     }
+
+    /**
+     * @param string $operator
+     * @return string
+     */
+    private function getRootOperator(string $operator): string
+    {
+        $config = config(sprintf('firefly.search.operators.%s', $operator));
+        if (null === $config) {
+            throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
+        }
+        if (true === $config['alias']) {
+            Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $operator, $config['alias_for']));
+            return $config['alias_for'];
+        }
+        Log::debug(sprintf('"%s" is not an alias.', $operator));
+
+        return $operator;
+    }
+
 }
