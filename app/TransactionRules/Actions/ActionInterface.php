@@ -39,6 +39,7 @@ interface ActionInterface
 
     /**
      * Execute the action.
+     * @deprecated
      *
      * @param TransactionJournal $journal
      *
