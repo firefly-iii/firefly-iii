@@ -69,8 +69,8 @@ class LoginController extends Controller
 
         $loginProvider = config('firefly.login_provider');
         $authGuard     = config('firefly.authentication_guard');
-
-        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+        $route         = request()->route()->getName();
+        if (('eloquent' !== $loginProvider || 'web' !== $authGuard) && 'logout' !== $route) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
     }
