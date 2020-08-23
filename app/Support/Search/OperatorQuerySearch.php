@@ -428,7 +428,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'has_any_tag':
                 $this->collector->hasAnyTag();
                 break;
-            case 'tag':
+            case 'tag_is':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
                     $this->collector->setTags($result);

@@ -622,7 +622,7 @@ return [
 
             // other interesting fields
             'tag_is'                          => ['alias' => false, 'trigger_class' => TagIs::class, 'needs_context' => true,],
-            'tag'                             => ['alias' => true, 'alias_for' => 'tag', 'needs_context' => true,],
+            'tag'                             => ['alias' => true, 'alias_for' => 'tag_is', 'needs_context' => true,],
 
             'created_on'                      => ['alias' => false, 'trigger_class' => CreatedOn::class, 'needs_context' => true,],
             'created_at'                      => ['alias' => true, 'alias_for' => 'created_on', 'needs_context' => true,],
