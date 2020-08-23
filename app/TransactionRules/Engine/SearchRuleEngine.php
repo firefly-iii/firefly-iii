@@ -42,7 +42,8 @@ class SearchRuleEngine implements RuleEngineInterface
 
     public function __construct()
     {
-        $this->rules = new Collection;
+        $this->rules     = new Collection;
+        $this->operators = [];
     }
 
     /**
