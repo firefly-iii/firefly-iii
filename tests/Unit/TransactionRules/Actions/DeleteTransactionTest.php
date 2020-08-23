@@ -1,6 +1,6 @@
 <?php
 /**
- * LinkToBillTest.php
+ * DeleteTransactionTest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,21 +18,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-
+use Exception;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\TransactionRules\Actions\LinkToBill;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Actions\DeleteTransaction;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class LinkToBillTest
+ * Class AddTagTest
  */
-class LinkToBillTest extends TestCase
+class DeleteTransactionTest extends TestCase
 {
     /**
      *
@@ -44,33 +44,37 @@ class LinkToBillTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\LinkToBill
+     * @covers \FireflyIII\TransactionRules\Actions\DeleteTransaction
      */
-    public function testBasic(): void
+    public function testAct(): void
     {
-        $withdrawal = $this->getRandomWithdrawal();
-        $bill       = $this->getRandomBill();
+        $journal = TransactionJournal::whereDescription('Withdrawal to DELETE.')->first();
+
+
+        // fire the action:
+        $ruleAction               = new RuleAction;
+        $ruleAction->action_value = null;
+        $action                   = new DeleteTransaction($ruleAction);
 
         $array = [
-            'transaction_journal_id' => $withdrawal->id,
-            'transaction_type_type'  => $withdrawal->transactionType->type,
-            'user_id'                => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+            'transaction_group_id'   => $journal->transaction_group_id,
+            'description'            => $journal->description,
         ];
 
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_type  = 'link_to_bill';
-        $ruleAction->action_value = $bill->name;
-
-        $action = new LinkToBill($ruleAction);
-        $result = $action->actOnArray($array);
-
+        try {
+            $result = $action->actOnArray($array);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $this->assertTrue(false, $e->getMessage());
+        }
         $this->assertTrue($result);
-        // withdrawal has bill id.
-        $withdrawal->refresh();
-        $this->assertEquals($bill->id, $withdrawal->bill_id);
 
-        $withdrawal->bill_id = null;
-        $withdrawal->save();
+        // assert result
+        $journal->refresh();
+        $this->assertNotNull($journal->deleted_at);
     }
+
 
 }

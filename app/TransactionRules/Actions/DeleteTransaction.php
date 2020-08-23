@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use Exception;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
@@ -45,11 +46,12 @@ class DeleteTransaction implements ActionInterface
 
     /**
      * Will delete transaction journal. Also the group if no other journals are in the group.
-     *
      * @param TransactionJournal $journal
      *
-     * @throws Exception
      * @return bool
+     * @throws Exception
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function act(TransactionJournal $journal): bool
     {
@@ -84,6 +86,30 @@ class DeleteTransaction implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        // TODO: Implement actOnArray() method.
+        $count = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+
+        // destroy entire group.
+        if (1 === $count) {
+            Log::debug(
+                sprintf(
+                    'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
+                    $journal['transaction_journal_id'], $journal['description']
+                )
+            );
+            $group = TransactionGroup::find($journal['transaction_group_id']);
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($group);
+
+            return true;
+        }
+        Log::debug(sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description']));
+
+        // trigger delete factory:
+        $journal = TransactionJournal::find($journal['transaction_group_id']);
+        /** @var JournalDestroyService $service */
+        $service = app(JournalDestroyService::class);
+        $service->destroy($journal);
+
+        return true;
     }
 }

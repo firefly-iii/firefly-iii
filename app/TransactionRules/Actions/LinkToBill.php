@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\User;
 use Log;
 
 /**
@@ -50,17 +52,18 @@ class LinkToBill implements ActionInterface
 
     /**
      * Set bill to be X.
-     *
      * @param TransactionJournal $journal
      *
      * @return bool
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function act(TransactionJournal $journal): bool
     {
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($this->action->rule->user);
-        $billName = (string)$this->action->action_value;
+        $billName = (string) $this->action->action_value;
         $bill     = $repository->findByName($billName);
 
         if (null !== $bill && $journal->transactionType->type === TransactionType::WITHDRAWAL) {
@@ -82,6 +85,25 @@ class LinkToBill implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        // TODO: Implement actOnArray() method.
+        $user = User::find($journal['user_id']);
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $repository->setUser($user);
+        $billName = (string) $this->action->action_value;
+        $bill     = $repository->findByName($billName);
+
+        if (null !== $bill && $journal['transaction_type_type'] === TransactionType::WITHDRAWAL) {
+            DB::table('transaction_journals')
+              ->where('id', '=', $journal['transaction_journal_id'])
+              ->update(['bill_id' => $bill->id]);
+            Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name));
+
+            return true;
+        }
+
+        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.', $journal['transaction_journal_id'], $billName));
+
+
+        return false;
     }
 }
