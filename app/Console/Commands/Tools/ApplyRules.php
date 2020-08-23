@@ -130,6 +130,18 @@ class ApplyRules extends Command
         $ruleEngine->setRules($rulesToApply);
         $ruleEngine->setUser($this->getUser());
 
+        // add the accounts as filter:
+        $accounts = [];
+        foreach($this->accounts as $account) {
+            $accounts[] = $account->id;
+        }
+        $list = implode(',', $accounts);
+        $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
+
+        // add the date as a filter:
+        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type' => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
+
         // start running rules.
         $this->line(sprintf('Will apply %d rule(s) to your transaction(s).', $count));
 
