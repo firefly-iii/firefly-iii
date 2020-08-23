@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\SetDescription;
 use Tests\TestCase;
 
@@ -33,36 +32,33 @@ use Tests\TestCase;
 class SetDescriptionTest extends TestCase
 {
     /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
-
-    /**
      * @covers \FireflyIII\TransactionRules\Actions\SetDescription
      */
     public function testAct(): void
     {
+        $withdrawal     = $this->getRandomWithdrawal();
+        $newDescription = sprintf('new description #%d', $this->randomInt());
+        $oldDescription = $withdrawal->description;
+
         // get journal, give fixed description
-        $description          = 'text' . $this->randomInt();
-        $newDescription       = 'new description' . $this->randomInt();
-        $journal              = $this->getRandomWithdrawal();
-        $journal->description = $description;
-        $journal->save();
+        $array = [
+            'description'            => $oldDescription,
+            'transaction_journal_id' => $withdrawal->id,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $newDescription;
         $action                   = new SetDescription($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
-        $journal = TransactionJournal::find($journal->id);
+
+        $withdrawal->refresh();
 
         // assert result
-        $this->assertEquals($newDescription, $journal->description);
+        $this->assertEquals($newDescription, $withdrawal->description);
+
+        $withdrawal->description = $oldDescription;
+        $withdrawal->save();
     }
 }
