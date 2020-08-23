@@ -27,7 +27,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
-
+use DB;
 /**
  * Class ClearNotes.
  */
@@ -46,7 +46,8 @@ class ClearNotes implements ActionInterface
      * Remove notes
      *
      * @param TransactionJournal $journal
-     *
+     * @codeCoverageIgnore
+     * @deprecated
      * @return bool
      * @throws Exception
      */
@@ -60,6 +61,19 @@ class ClearNotes implements ActionInterface
         }
         $journal->touch();
 
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        DB::table('notes')
+            ->where('noteable_id', $journal['transaction_journal_id'])
+            ->where('noteable_type', TransactionJournal::class)
+            ->delete();
+        Log::debug(sprintf('RuleAction ClearNotes removed all notes.'));
         return true;
     }
 }

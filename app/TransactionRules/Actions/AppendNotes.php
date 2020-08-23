@@ -46,9 +46,9 @@ class AppendNotes implements ActionInterface
     }
 
     /**
-     * Append notes with X
-     *
      * @param TransactionJournal $journal
+     * @deprecated
+     * @codeCoverageIgnore
      *
      * @return bool
      */
@@ -84,8 +84,6 @@ class AppendNotes implements ActionInterface
             $dbNote->noteable_id   = (int) $journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
-
-
         }
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $dbNote->text));
         $text = sprintf('%s%s', $dbNote->text, $this->action->action_value);

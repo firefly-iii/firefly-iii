@@ -48,7 +48,8 @@ class AppendDescription implements ActionInterface
      * Append description with X
      *
      * @param TransactionJournal $journal
-     *
+     * @codeCoverageIgnore
+     * @deprecated
      * @return bool
      */
     public function act(TransactionJournal $journal): bool

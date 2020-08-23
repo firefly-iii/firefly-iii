@@ -158,4 +158,12 @@ class SetSourceAccount implements ActionInterface
         Log::debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
         $this->newSourceAccount = $account;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // TODO: Implement actOnArray() method.
+    }
 }

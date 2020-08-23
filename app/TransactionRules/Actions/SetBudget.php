@@ -83,4 +83,12 @@ class SetBudget implements ActionInterface
 
         return true;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // TODO: Implement actOnArray() method.
+    }
 }

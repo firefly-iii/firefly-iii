@@ -25,11 +25,11 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 
 use Exception;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use Log;
 use Tests\TestCase;
@@ -48,9 +48,6 @@ class ConvertToTransferTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -62,30 +59,33 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActDeposit(): void
     {
-        $deposit = $this->getRandomDeposit();
+        /** @var TransactionJournal $deposit */
+        $deposit = $this->user()->transactionJournals()->where('description', 'Deposit for ConvertToTransferTest.')->first();
 
-        // make sure that $asset is not the destination account of $deposit:
-        $forbiddenId = (int)$deposit->transactions()->where('amount', '>', 0)->first()->account_id;
-        $asset       = $this->getRandomAsset($forbiddenId);
+        // get new source account (replaces the revenue account):
+        $newSource   = Account::whereName('Savings Account')->first();
+        $destination = Account::whereName('Checking Account')->first();
+        // journal is a withdrawal:
+        $this->assertEquals(TransactionType::DEPOSIT, $deposit->transactionType->type);
 
-        // mock used stuff:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs(
-            [$asset->name,
-             [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]]
-        )->andReturn($asset);
+        // make the required array:
+        $array = [
+            'transaction_journal_id' => $deposit->id,
+            'transaction_type_type'  => $deposit->transactionType->type,
+            'user_id'                => 1,
+            'destination_account_id' => $destination->id,
+        ];
 
         // fire the action:
         $rule                     = new Rule;
         $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $asset->name;
+        $ruleAction->action_value = 'Savings Account';
         $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {
-            $result = $action->act($deposit);
+            $result = $action->actOnArray($array);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -105,27 +105,30 @@ class ConvertToTransferTest extends TestCase
      */
     public function testActWithdrawal(): void
     {
-        $withdrawal = $this->getRandomWithdrawal();
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('description', 'Withdrawal for ConvertToTransferTest.')->first();
 
-        // make sure that $asset is not the source account of $withdrawal:
-        $forbiddenId = (int)$withdrawal->transactions()->where('amount', '<', 0)->first()->account_id;
-        $asset       = $this->getRandomAsset($forbiddenId);
-
-        // mock used stuff:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
+        // new asset to link to destination of withdrawal:
+        $newDestination = Account::whereName('Savings Account')->first();
+        $source         = Account::whereName('Checking Account')->first();
+        // array with necessary data:
+        $array = [
+            'transaction_journal_id' => $withdrawal->id,
+            'transaction_type_type'  => $withdrawal->transactionType->type,
+            'user_id'                => 1,
+            'source_account_id'      => $source->id,
+        ];
 
         // fire the action:
         $rule                     = new Rule;
         $rule->title              = 'OK';
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $asset->name;
+        $ruleAction->action_value = $newDestination->name;
         $ruleAction->rule         = $rule;
         $action                   = new ConvertToTransfer($ruleAction);
 
         try {
-            $result = $action->act($withdrawal);
+            $result = $action->actOnArray($array);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

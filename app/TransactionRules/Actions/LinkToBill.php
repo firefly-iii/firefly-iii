@@ -76,4 +76,12 @@ class LinkToBill implements ActionInterface
 
         return false;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // TODO: Implement actOnArray() method.
+    }
 }

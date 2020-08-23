@@ -184,4 +184,12 @@ class UpdatePiggybank implements ActionInterface
         $repository->removeAmount($piggyBank, $amount);
         $repository->createEventWithJournal($piggyBank, app('steam')->negative($amount), $journal);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // TODO: Implement actOnArray() method.
+    }
 }

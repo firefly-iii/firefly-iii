@@ -49,6 +49,7 @@ class AddTag implements ActionInterface
     /**
      * @inheritDoc
      * @deprecated
+     * @codeCoverageIgnore
      */
     public function act(TransactionJournal $journal): bool
     {
@@ -57,6 +58,7 @@ class AddTag implements ActionInterface
         $factory = app(TagFactory::class);
         $factory->setUser($journal->user);
         $tag = $factory->findOrCreate($this->action->action_value);
+
         if (null === $tag) {
             // could not find, could not create tag.
             Log::error(sprintf('RuleAction AddTag. Could not find or create tag "%s"', $this->action->action_value));
@@ -86,12 +88,14 @@ class AddTag implements ActionInterface
         $factory = app(TagFactory::class);
         $factory->setUser(User::find($journal['user_id']));
         $tag = $factory->findOrCreate($this->action->action_value);
+        // @codeCoverageIgnoreStart
         if (null === $tag) {
             // could not find, could not create tag.
             Log::error(sprintf('RuleAction AddTag. Could not find or create tag "%s"', $this->action->action_value));
 
             return false;
         }
+        // @codeCoverageIgnoreEnd
         $count = DB::table('tag_transaction_journal')
                    ->where('tag_id', $tag->id)
                    ->where('transaction_journal_id', $journal['transaction_journal_id'])

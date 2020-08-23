@@ -28,12 +28,9 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
 use Log;
 use Tests\TestCase;
-
+use DB;
 /**
  * Class AppendNotesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AppendNotesTest extends TestCase
 {
@@ -42,9 +39,6 @@ class AppendNotesTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -52,52 +46,29 @@ class AppendNotesTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes
      */
-    public function testAct(): void
+    public function testActOnArray(): void
     {
         // give journal some notes.
-        $journal  = $this->getRandomWithdrawal();
-        $note     = $journal->notes()->first();
-        $start    = 'Default note text';
-        $toAppend = 'This is appended';
-        if (null === $note) {
-            $note = new Note();
-            $note->noteable()->associate($journal);
-        }
-        $note->text = $start;
-        $note->save();
+        $journal = $this->user()->transactionJournals()->where('description','Rule action note test transaction.')->first();
+
+        // make sure all notes deleted:
+        DB::table('notes')->where('noteable_id', $journal->id)->where('noteable_type', TransactionJournal::class)->delete();
+
+        // array for action:
+        $array = [
+            'transaction_journal_id' => $journal->id
+        ];
+        $toAppend = 'Text to append to note.';
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $toAppend;
         $action                   = new AppendNotes($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertTrue($result);
-
-        $newNote = $journal->notes()->first();
-        $this->assertEquals($start . $toAppend, $newNote->text);
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\AppendNotes
-     */
-    public function testActNewNote(): void
-    {
-        // give journal some notes.
-        $journal = TransactionJournal::find(4);
-        $note    = $journal->notes()->first();
-        if (null !== $note) {
-            $note->forceDelete();
-        }
-        $toAppend = 'This is appended';
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $toAppend;
-        $action                   = new AppendNotes($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         $newNote = $journal->notes()->first();
         $this->assertEquals($toAppend, $newNote->text);
     }
+
 }

@@ -168,4 +168,12 @@ class SetDestinationAccount implements ActionInterface
         Log::debug(sprintf('Found or created expense account #%d ("%s")', $account->id, $account->name));
         $this->newDestinationAccount = $account;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        // TODO: Implement actOnArray() method.
+    }
 }
