@@ -30,21 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class SetBudgetTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetBudgetTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
 
     /**
      * @covers \FireflyIII\TransactionRules\Actions\SetBudget
@@ -52,8 +40,14 @@ class SetBudgetTest extends TestCase
     public function testAct(): void
     {
         // get journal, remove all budgets
-        $journal     = $this->getRandomWithdrawal();
+        $journal     = $this->user()->transactionJournals()->where('description','Groceries with no budget')->first();
         $budget      = $this->getRandomBudget();
+
+        $array = [
+            'user_id' => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+            'transaction_type_type' => $journal->transactionType->type,
+        ];
 
         $journal->budgets()->sync([]);
         $this->assertEquals(0, $journal->budgets()->count());
@@ -62,50 +56,12 @@ class SetBudgetTest extends TestCase
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $budget->name;
         $action                   = new SetBudget($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
         $this->assertEquals(1, $journal->budgets()->count());
-    }
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget
-     */
-    public function testActNull(): void
-    {
-        // get journal, remove all budgets
-        $journal     = $this->getRandomWithdrawal();
 
         $journal->budgets()->sync([]);
         $this->assertEquals(0, $journal->budgets()->count());
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'non-existing budget #' . $this->randomInt();
-        $action                   = new SetBudget($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertFalse($result);
-        $this->assertEquals(0, $journal->budgets()->count());
     }
 
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget
-     */
-    public function testActDeposit(): void
-    {
-        // get journal, remove all budgets
-        $journal     = $this->getRandomDeposit();
-        $budget      = $this->getRandomBudget();
-
-        $journal->budgets()->detach();
-        $this->assertEquals(0, $journal->budgets()->count());
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $budget->name;
-        $action                   = new SetBudget($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertTrue($result);
-        $this->assertEquals(0, $journal->budgets()->count());
-    }
 }

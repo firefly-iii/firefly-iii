@@ -24,47 +24,40 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use Tests\TestCase;
 
 /**
  * Class PrependDescriptionTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PrependDescriptionTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
     /**
      * @covers \FireflyIII\TransactionRules\Actions\PrependDescription
      */
     public function testAct(): void
     {
-        // get journal, give fixed description
-        $description          = 'text' . $this->randomInt();
-        $prepend              = 'prepend' . $this->randomInt();
-        $journal              = $this->getRandomWithdrawal();
-        $journal->description = $description;
-        $journal->save();
+        /** @var TransactionJournal $journal */
+        $journal  = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
+        $original = $journal->description;
 
-        // fire the action:
+
+        $array = [
+            'transaction_journal_id' => $journal->id,
+            'description'            => $original,
+        ];
+
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $prepend;
+        $ruleAction->action_value = 'PREPEND';
         $action                   = new PrependDescription($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
-        $journal = TransactionJournal::find($journal->id);
 
-        // assert result
-        $this->assertEquals($prepend . $description, $journal->description);
+        $journal = TransactionJournal::find($journal->id);
+        $this->assertEquals(sprintf('%s%s', $ruleAction->action_value, $original), $journal->description);
+
+        $journal->description = $original;
+        $journal->save();
     }
 }

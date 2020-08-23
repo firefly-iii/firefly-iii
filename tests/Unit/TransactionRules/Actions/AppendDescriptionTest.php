@@ -45,7 +45,7 @@ class AppendDescriptionTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
      */
-    public function testActExistingTag(): void
+    public function testAct(): void
     {
         /** @var TransactionJournal $journal */
         $journal  = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();

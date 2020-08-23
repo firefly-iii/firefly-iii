@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
+use DB;
 
 /**
  * Class PrependDescription.
@@ -46,6 +47,8 @@ class PrependDescription implements ActionInterface
 
     /**
      * Prepend description with X
+     * @codeCoverageIgnore
+     * @deprecated
      *
      * @param TransactionJournal $journal
      *
@@ -65,6 +68,8 @@ class PrependDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        // TODO: Implement actOnArray() method.
+        $description = sprintf('%s%s', $this->action->action_value, $journal['description']);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+        return true;
     }
 }

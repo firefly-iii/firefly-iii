@@ -22,48 +22,37 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
 use Tests\TestCase;
 
 /**
  * Class RemoveAllTagsTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveAllTagsTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
-
     /**
      * @covers \FireflyIII\TransactionRules\Actions\RemoveAllTags
      */
     public function testAct(): void
     {
-        // find journal with at least one tag
-        $journalIds = DB::table('tag_transaction_journal')->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $journalId  = (int)$journalIds[0];
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::find($journalId);
+        // find journal
+        $withdrawal = $this->getRandomWithdrawal();
+        $tag        = $this->getRandomTag();
+
+        $withdrawal->tags()->sync([$tag->id]);
+
+        $array = [
+            'transaction_journal_id' => $withdrawal->id,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = null;
         $action                   = new RemoveAllTags($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
-        $this->assertEquals(0, $journal->tags()->count());
+        $this->assertEquals(0, $withdrawal->tags()->count());
     }
 }

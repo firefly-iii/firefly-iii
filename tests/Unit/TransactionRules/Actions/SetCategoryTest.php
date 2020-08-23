@@ -29,70 +29,36 @@ use Tests\TestCase;
 
 /**
  * Class SetCategoryTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetCategoryTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
-
     /**
      * @covers \FireflyIII\TransactionRules\Actions\SetCategory
      */
     public function testAct(): void
     {
         // get journal, remove all budgets
-        $journal  = $this->getRandomWithdrawal();
-        $category = $this->getRandomCategory();
+        $journal     = $this->user()->transactionJournals()->where('description','Groceries with no category')->first();
+        $category      = $this->getRandomCategory();
 
-        $factory = $this->mock(CategoryFactory::class);
-        $factory->shouldReceive('setUser');
-        $factory->shouldReceive('findOrCreate')->andReturn($category);
+        $array = [
+            'user_id' => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+            'transaction_type_type' => $journal->transactionType->type,
+        ];
 
-        $journal->categories()->detach();
+        $journal->budgets()->sync([]);
         $this->assertEquals(0, $journal->categories()->count());
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $category->name;
         $action                   = new SetCategory($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
-
         $this->assertEquals(1, $journal->categories()->count());
-    }
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetCategory
-     */
-    public function testActNull(): void
-    {
-        $factory = $this->mock(CategoryFactory::class);
-        $factory->shouldReceive('setUser');
-        $factory->shouldReceive('findOrCreate')->andReturnNull();
 
-
-        // get journal, remove all budgets
-        $journal  = $this->getRandomWithdrawal();
-        $category = $this->getRandomCategory();
-        $journal->categories()->detach();
-        $this->assertEquals(0, $journal->categories()->count());
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $category->name;
-        $action                   = new SetCategory($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertFalse($result);
-
+        $journal->categories()->sync([]);
         $this->assertEquals(0, $journal->categories()->count());
     }
 }
