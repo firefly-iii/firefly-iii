@@ -58,6 +58,7 @@ class ConvertToDeposit implements ActionInterface
      *
      * @param TransactionJournal $journal
      * @deprecated
+     * @codeCoverageIgnore
      * @return bool
      * @throws FireflyException
      */

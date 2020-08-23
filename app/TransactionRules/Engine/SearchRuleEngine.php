@@ -94,6 +94,7 @@ class SearchRuleEngine implements RuleEngineInterface
         foreach ($this->rules as $rule) {
             $this->fireRule($rule);
         }
+        Log::debug('SearchRuleEngine:: done processing all rules!');
     }
 
     /**
@@ -102,14 +103,17 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function fireRule(Rule $rule): void
     {
+        Log::debug(sprintf('SearchRuleEngine::fireRule(%d)!', $rule->id));
         $searchArray = [];
         /** @var RuleTrigger $ruleTrigger */
         foreach ($rule->ruleTriggers as $ruleTrigger) {
+            Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
             $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
         }
 
         // add local operators:
         foreach ($this->operators as $operator) {
+            Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
             $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
         }
         $toJoin = [];
@@ -118,20 +122,21 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         $searchQuery = join(' ', $toJoin);
-        Log::debug(sprintf('Search query for rule #%d ("%s") = %s', $rule->id, $rule->title, $searchQuery));
+        Log::debug(sprintf('SearchRuleEngine:: Search query for rule #%d ("%s") = %s', $rule->id, $rule->title, $searchQuery));
 
         // build and run the search engine.
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
         $searchEngine->setPage(1);
-        $searchEngine->setLimit(1337);
+        $searchEngine->setLimit(31337);
         $searchEngine->parseQuery($searchQuery);
 
         $result     = $searchEngine->searchTransactions();
         $collection = $result->getCollection();
-        Log::debug(sprintf('Found %d transactions using search engine.', $collection->count()));
+        Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine with query "%s".', $collection->count(), $searchQuery));
 
         $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: done processing rule #%d', $rule->id));
     }
 
     /**
@@ -141,7 +146,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function processResults(Rule $rule, Collection $collection): void
     {
-        Log::debug('Going to process results.');
+        Log::debug(sprintf('SearchRuleEngine:: Going to process %d results.', $collection->count()));
         /** @var array $group */
         foreach ($collection as $group) {
             $this->processTransactionGroup($rule, $group);
@@ -155,7 +160,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function processTransactionGroup(Rule $rule, array $group): void
     {
-        Log::debug(sprintf('Will now execute actions on transaction group #%d', $group['id']));
+        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction group #%d', $group['id']));
         /** @var array $transaction */
         foreach ($group['transactions'] as $transaction) {
             $this->processTransactionJournal($rule, $transaction);
@@ -169,7 +174,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function processTransactionJournal(Rule $rule, array $transaction): void
     {
-        Log::debug(sprintf('Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
+        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
         /** @var RuleAction $ruleAction */
         foreach ($rule->ruleActions as $ruleAction) {
             $break = $this->processRuleAction($ruleAction, $transaction);

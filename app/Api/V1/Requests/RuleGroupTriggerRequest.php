@@ -40,6 +40,7 @@ use Log;
 class RuleGroupTriggerRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *
@@ -57,9 +58,9 @@ class RuleGroupTriggerRequest extends FormRequest
     public function getTriggerParameters(): array
     {
         return [
-            'start_date' => $this->getDate('start_date'),
-            'end_date'   => $this->getDate('end_date'),
-            'accounts'   => $this->getAccounts(),
+            'start'    => $this->getDate('start'),
+            'end'      => $this->getDate('end'),
+            'accounts' => $this->getAccounts(),
         ];
     }
 
@@ -69,33 +70,17 @@ class RuleGroupTriggerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_date' => 'required|date',
-            'end_date'   => 'required|date|after:start_date',
+            'start' => 'date',
+            'end'   => 'date|after:start',
         ];
     }
 
     /**
-     * @return Collection
+     * @return string
      */
-    private function getAccounts(): Collection
+    private function getAccounts(): string
     {
-        $accountList = '' === (string) $this->query('accounts') ? [] : explode(',', $this->query('accounts'));
-        $accounts    = new Collection;
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-
-        foreach ($accountList as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $accountRepository->findNull((int) $accountId);
-            if ($this->validAccount($account)) {
-                /** @noinspection NullPointerExceptionInspection */
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $accounts->push($account);
-            }
-        }
-
-        return $accounts;
+        return (string) $this->query('accounts');
     }
 
     /**
@@ -106,19 +91,7 @@ class RuleGroupTriggerRequest extends FormRequest
     private function getDate(string $field): ?Carbon
     {
         /** @var Carbon $result */
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-
-        return $result;
-    }
-
-    /**
-     * @param Account|null $account
-     *
-     * @return bool
-     */
-    private function validAccount(?Account $account): bool
-    {
-        return null !== $account && AccountType::ASSET === $account->accountType->type;
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 
 }
