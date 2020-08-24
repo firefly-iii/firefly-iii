@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers\Rule;
 
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -131,10 +130,6 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
      * using the URL parameters (GET), and are usually put there using a Javascript thing.
      *
-     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
-     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
-     * a maximum number of transactions to return (limit) are set as well.
-     *
      * @param TestRuleFormRequest $request
      *
      * @return JsonResponse
@@ -170,7 +165,7 @@ class SelectController extends Controller
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
         $collection = $newRuleEngine->find();
-        $collection = $collection->slice(0,20);
+        $collection = $collection->slice(0, 20);
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
@@ -198,10 +193,6 @@ class SelectController extends Controller
      * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
      * the rule itself.
      *
-     * This method will parse and validate those rules and create a "TransactionMatcher" which will attempt
-     * to find transaction journals matching the users input. A maximum range of transactions to try (range) and
-     * a maximum number of transactions to return (limit) are set as well.
-     *
      * @param Rule $rule
      *
      * @return JsonResponse
@@ -215,37 +206,23 @@ class SelectController extends Controller
             return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit                = (int) config('firefly.test-triggers.limit');
-        $range                = (int) config('firefly.test-triggers.range');
-        $matchingTransactions = new Collection;
 
-        /** @var TransactionMatcher $matcher */
-        $matcher = app(TransactionMatcher::class);
-        $matcher->setTriggeredLimit($limit);
-        $matcher->setSearchLimit($range);
-        $matcher->setRule($rule);
-        try {
-            $matchingTransactions = $matcher->findTransactionsByRule();
-            // @codeCoverageIgnoreStart
-        } catch (FireflyException $exception) {
-            Log::error(sprintf('Could not grab transactions in testTriggersByRule(): %s', $exception->getMessage()));
-            Log::error($exception->getTraceAsString());
-        }
-        // @codeCoverageIgnoreEnd
+        // create new rule engine:
+        $newRuleEngine = app(RuleEngineInterface::class);
 
-        // Warn the user if only a subset of transactions is returned
-        $warning = '';
-        if (count($matchingTransactions) === $limit) {
-            $warning = (string) trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
-        }
-        if (0 === count($matchingTransactions)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
+        // set rules:
+        $newRuleEngine->setRules(new Collection([$rule]));
+        $collection = $newRuleEngine->find();
+        $collection = $collection->slice(0, 20);
+
+        if (0 === count($collection)) {
+            $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));

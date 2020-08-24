@@ -26,8 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -67,8 +65,10 @@ class RuleTriggerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start' => 'date',
-            'end'   => 'date|after:start',
+            'start'      => 'date',
+            'end'        => 'date|after:start',
+            'accounts'   => '',
+            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
         ];
     }
 

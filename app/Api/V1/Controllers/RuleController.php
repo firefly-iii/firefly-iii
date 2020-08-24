@@ -28,13 +28,10 @@ use FireflyIII\Api\V1\Requests\RuleTestRequest;
 use FireflyIII\Api\V1\Requests\RuleTriggerRequest;
 use FireflyIII\Api\V1\Requests\RuleUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
-use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -44,7 +41,6 @@ use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use Log;
 
 /**
  * Class RuleController
@@ -222,24 +218,32 @@ class RuleController extends Controller
      */
     public function testRule(RuleTestRequest $request, Rule $rule): JsonResponse
     {
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $parameters = $request->getTestParameters();
-        /** @var Rule $rule */
-        Log::debug(sprintf('Now testing rule #%d, "%s"', $rule->id, $rule->title));
-        /** @var TransactionMatcher $matcher */
-        $matcher = app(TransactionMatcher::class);
-        // set all parameters:
-        $matcher->setRule($rule);
-        $matcher->setStartDate($parameters['start_date']);
-        $matcher->setEndDate($parameters['end_date']);
-        $matcher->setSearchLimit($parameters['search_limit']);
-        $matcher->setTriggeredLimit($parameters['trigger_limit']);
-        $matcher->setAccounts($parameters['accounts']);
 
-        $matchingTransactions = $matcher->findTransactionsByRule();
-        $count                = count($matchingTransactions);
-        $transactions         = array_slice($matchingTransactions, ($parameters['page'] - 1) * $pageSize, $pageSize);
-        $paginator            = new LengthAwarePaginator($transactions, $count, $pageSize, $this->parameters->get('page'));
+        /** @var RuleEngineInterface $ruleEngine */
+        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine->setRules(new Collection([$rule]));
+
+
+        // overrule the rule(s) if necessary.
+        if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
+        }
+
+        if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
+        }
+        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+            $ruleEngine->addOperator(['type' => 'account_id', 'value' => $parameters['accounts']]);
+        }
+
+        // file the rule(s)
+        $transactions = $ruleEngine->find();
+        $count        = $transactions->count();
+
+        $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
 
         // resulting list is presented as JSON thing.
@@ -248,7 +252,7 @@ class RuleController extends Controller
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -272,12 +276,12 @@ class RuleController extends Controller
         $ruleEngine->setRules(new Collection([$rule]));
 
         // overrule the rule(s) if necessary.
-        if (array_key_exists('start', $parameters) && null !== $parameters['start'] ) {
+        if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
             // add a range:
             $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
 
-        if (array_key_exists('end', $parameters)  && null !== $parameters['end']) {
+        if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
             // add a range:
             $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
