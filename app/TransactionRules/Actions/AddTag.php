@@ -57,6 +57,10 @@ class AddTag implements ActionInterface
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
         $factory->setUser($journal->user);
+
+        // TODO explode value on comma?
+
+
         $tag = $factory->findOrCreate($this->action->action_value);
 
         if (null === $tag) {

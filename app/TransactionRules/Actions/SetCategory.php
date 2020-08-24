@@ -84,7 +84,10 @@ class SetCategory implements ActionInterface
         $user = User::find($journal['user_id']);
         $search = $this->action->action_value;
 
-        $category = $user->categories()->where('name', $search)->first();
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($user);
+        $category = $factory->findOrCreate(null, $search);
         if (null === $category) {
             Log::debug(sprintf('RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'], $search));
 

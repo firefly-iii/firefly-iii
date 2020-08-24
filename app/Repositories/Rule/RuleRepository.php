@@ -497,4 +497,42 @@ class RuleRepository implements RuleRepositoryInterface
 
         return $rule;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStoreRules(): Collection
+    {
+        $collection = $this->user->rules()->with(['ruleGroup','ruleTriggers'])->get();
+        $filtered = new Collection;
+        /** @var Rule $rule */
+        foreach($collection as $rule) {
+            /** @var RuleTrigger $ruleTrigger */
+            foreach($rule->ruleTriggers as $ruleTrigger) {
+                if('user_action' === $ruleTrigger->trigger_type && 'store-journal' === $ruleTrigger->trigger_value) {
+                    $filtered->push($rule);
+                }
+            }
+        }
+        return $filtered;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUpdateRules(): Collection
+    {
+        $collection = $this->user->rules()->with(['ruleGroup','ruleTriggers'])->get();
+        $filtered = new Collection;
+        /** @var Rule $rule */
+        foreach($collection as $rule) {
+            /** @var RuleTrigger $ruleTrigger */
+            foreach($rule->ruleTriggers as $ruleTrigger) {
+                if('user_action' === $ruleTrigger->trigger_type && 'update-journal' === $ruleTrigger->trigger_value) {
+                    $filtered->push($rule);
+                }
+            }
+        }
+        return $filtered;
+    }
 }

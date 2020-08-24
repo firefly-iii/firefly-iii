@@ -24,7 +24,9 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Log;
 
 /**
@@ -46,17 +48,26 @@ class StoredGroupEventHandler
         }
         Log::debug('Now in StoredGroupEventHandler::processRules()');
 
-        /** @var RuleEngine $ruleEngine */
-        $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser($storedGroupEvent->transactionGroup->user);
-        $ruleEngine->setAllRules(true);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
         $journals = $storedGroupEvent->transactionGroup->transactionJournals;
-
+        $array    = [];
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $ruleEngine->processTransactionJournal($journal);
+            $array[] = $journal->id;
         }
+        $journalIds = implode(',', $array);
+        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+
+        // collect rules:
+        $ruleRepository = app(RuleRepositoryInterface::class);
+        $ruleRepository->setUser($storedGroupEvent->transactionGroup->user);
+        $rules = $ruleRepository->getStoreRules();
+
+        // file rule engine.
+        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine->setUser($storedGroupEvent->transactionGroup->user);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->setRules($rules);
+        $newRuleEngine->fire();
     }
 
 }

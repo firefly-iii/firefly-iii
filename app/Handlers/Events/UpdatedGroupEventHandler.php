@@ -27,7 +27,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Log;
 
 /**
@@ -88,17 +90,26 @@ class UpdatedGroupEventHandler
             return;
         }
 
-        /** @var RuleEngine $ruleEngine */
-        $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser($updatedGroupEvent->transactionGroup->user);
-        $ruleEngine->setAllRules(true);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_UPDATE);
         $journals = $updatedGroupEvent->transactionGroup->transactionJournals;
-
+        $array    = [];
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $ruleEngine->processTransactionJournal($journal);
+            $array[] = $journal->id;
         }
+        $journalIds = implode(',', $array);
+        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+
+        // collect rules:
+        $ruleRepository = app(RuleRepositoryInterface::class);
+        $ruleRepository->setUser($updatedGroupEvent->transactionGroup->user);
+        $rules = $ruleRepository->getUpdateRules();
+
+        // file rule engine.
+        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->setRules($rules);
+        $newRuleEngine->fire();
     }
 
 }

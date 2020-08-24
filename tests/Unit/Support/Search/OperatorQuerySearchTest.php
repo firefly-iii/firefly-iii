@@ -100,6 +100,9 @@ class OperatorQuerySearchTest extends TestCase
             'destination_account_id'          => '1',
             'to_account_id'                   => '1',
 
+            // journal test
+            'journal_id'                      => '1',
+
             // destination account nr
             'to_account_nr_starts'            => 'test',
             'destination_account_nr_starts'   => 'test',
@@ -201,9 +204,6 @@ class OperatorQuerySearchTest extends TestCase
             }
             $this->assertTrue(true);
         }
-
-
-        //$groups     = $object->searchTransactions();
     }
 
     /**
@@ -657,6 +657,40 @@ class OperatorQuerySearchTest extends TestCase
 
         // one result, grab first transaction:
         $this->assertCount(1, $result);
+    }
+
+    /**
+     * @covers \FireflyIII\Support\Search\OperatorQuerySearch
+     */
+    public function testJournalId(): void
+    {
+        $this->be($this->user());
+
+        $object = new OperatorQuerySearch;
+        $object->setUser($this->user());
+        $object->setPage(1);
+        $query = 'journal_id:1,2';
+        Log::debug(sprintf('Trying to parse query "%s"', $query));
+        try {
+            $object->parseQuery($query);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+        $this->assertCount(0, $object->getWords());
+
+        // operator is assumed to be included.
+        $this->assertCount(1, $object->getOperators());
+
+        $result = ['transactions' => []];
+        // execute search should work:
+        try {
+            $result = $object->searchTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // two results
+        $this->assertCount(2, $result);
     }
 
 

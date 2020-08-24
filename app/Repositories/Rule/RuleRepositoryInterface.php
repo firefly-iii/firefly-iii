@@ -77,6 +77,20 @@ interface RuleRepositoryInterface
     public function getAll(): Collection;
 
     /**
+     * Get all the users rules that trigger on storage.
+     *
+     * @return Collection
+     */
+    public function getStoreRules(): Collection;
+
+    /**
+     * Get all the users rules that trigger on update.
+     *
+     * @return Collection
+     */
+    public function getUpdateRules(): Collection;
+
+    /**
      * @return RuleGroup
      */
     public function getFirstRuleGroup(): RuleGroup;

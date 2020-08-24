@@ -503,6 +503,9 @@ return [
             'no_notes'                        => ['alias' => false, 'trigger_class' => NotesEmpty::class, 'needs_context' => false,],
             'any_notes'                       => ['alias' => false, 'trigger_class' => NotesAny::class, 'needs_context' => false,],
 
+            // one exact (or array of) journals:
+            'journal_id'                      => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
+
             // exact amount
             'amount_exactly'                  => ['alias' => false, 'trigger_class' => AmountExactly::class, 'needs_context' => true,],
             'amount_is'                       => ['alias' => true, 'alias_for' => 'amount_exactly', 'needs_context' => true,],

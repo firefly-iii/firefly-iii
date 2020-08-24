@@ -299,6 +299,10 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
                 break;
+            case 'journal_id':
+                $parts = explode(',', $value);
+                $this->collector->setJournalIds($parts);
+                break;
             case 'destination_account_starts':
                 $this->searchAccount($value, 2, 1);
                 break;
@@ -402,7 +406,6 @@ class OperatorQuerySearch implements SearchInterface
             case 'has_any_budget':
                 $this->collector->withBudget();
                 break;
-            case 'budget':
             case 'budget_is':
                 $result = $this->budgetRepository->searchBudget($value, 25);
                 if ($result->count() > 0) {
@@ -412,7 +415,6 @@ class OperatorQuerySearch implements SearchInterface
             //
             // bill
             //
-            case 'bill':
             case 'bill_is':
                 $result = $this->billRepository->searchBill($value, 25);
                 if ($result->count() > 0) {
