@@ -215,12 +215,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
         $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
-        $class = (string) config(sprintf('firefly.cer_providers.%s', (string) config('firefly.cer_provider')));
-        if ('' === $class) {
-            throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');
-        }
-        $this->app->bind(ExchangeRateInterface::class, $class);
-
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
 
