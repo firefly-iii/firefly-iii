@@ -26,16 +26,14 @@ namespace FireflyIII\Http\Controllers\Rule;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
-use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Models\Rule;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
-use FireflyIII\TransactionRules\Engine\RuleEngine;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -53,8 +51,6 @@ use Throwable;
 class SelectController extends Controller
 {
     use RuleManagement, RequestInformation;
-    /** @var AccountRepositoryInterface The account repository */
-    private $accountRepos;
 
     /**
      * RuleController constructor.
@@ -67,8 +63,6 @@ class SelectController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
-
-                $this->accountRepos = app(AccountRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -88,29 +82,22 @@ class SelectController extends Controller
         // Get parameters specified by the user
         /** @var User $user */
         $user      = auth()->user();
-        $accounts  = $this->accountRepos->getAccountsById($request->get('accounts'));
-        $startDate = new Carbon($request->get('start_date'));
-        $endDate   = new Carbon($request->get('end_date'));
-        $rules     = [$rule->id];
+        $accounts  = implode(',', $request->get('accounts'));
+        $startDate = new Carbon($request->get('start'));
+        $endDate   = new Carbon($request->get('end'));
 
-        /** @var RuleEngine $ruleEngine */
-        $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser(auth()->user());
-        $ruleEngine->setRulesToApply($rules);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_BOTH);
+        // create new rule engine:
+        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine->setUser($user);
 
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts);
-        $collector->setRange($startDate, $endDate);
-        $journals = $collector->getExtractedJournals();
+        // add extra operators:
+        $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+        $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+        $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            Log::debug('Start of new journal.');
-            $ruleEngine->processJournalArray($journal);
-            Log::debug('Done with all rules for this group + done with journal.');
-        }
+        // set rules:
+        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->fire();
 
         // Tell the user that the job is queued
         session()->flash('success', (string) trans('firefly.applied_rule_selection', ['title' => $rule->title]));
@@ -128,8 +115,8 @@ class SelectController extends Controller
      */
     public function selectTransactions(Rule $rule)
     {
-        if(false===$rule->active) {
-            session()->flash('warning',trans('firefly.cannot_fire_inactive_rules'));
+        if (false === $rule->active) {
+            session()->flash('warning', trans('firefly.cannot_fire_inactive_rules'));
             return redirect(route('rules.index'));
         }
         // does the user have shared accounts?
@@ -155,46 +142,46 @@ class SelectController extends Controller
      */
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
-        // build trigger array from response
-        $triggers = $this->getValidTriggerList($request);
+        // build fake rule
+        $rule         = new Rule;
+        $triggers     = new Collection;
+        $rule->strict = '1' === $request->get('strict');
 
-        if (0 === count($triggers)) {
+        // build trigger array from response
+        $textTriggers = $this->getValidTriggerList($request);
+
+        // warn if nothing.
+        if (0 === count($textTriggers)) {
             return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
-        $limit                = (int) config('firefly.test-triggers.limit');
-        $range                = (int) config('firefly.test-triggers.range');
-        $matchingTransactions = new Collection;
-        $strict               = '1' === $request->get('strict');
-        /** @var TransactionMatcher $matcher */
-        $matcher = app(TransactionMatcher::class);
-        $matcher->setSearchLimit($range);
-        $matcher->setTriggeredLimit($limit);
-        $matcher->setTriggers($triggers);
-        $matcher->setStrict($strict);
-        try {
-            $matchingTransactions = $matcher->findTransactionsByTriggers();
-            // @codeCoverageIgnoreStart
-        } catch (FireflyException $exception) {
-            Log::error(sprintf('Could not grab transactions in testTriggers(): %s', $exception->getMessage()));
-            Log::error($exception->getTraceAsString());
+        foreach ($textTriggers as $textTrigger) {
+            $trigger                = new RuleTrigger;
+            $trigger->trigger_type  = $textTrigger['type'];
+            $trigger->trigger_value = $textTrigger['value'];
+            $triggers->push($trigger);
         }
-        // @codeCoverageIgnoreStart
 
+        $rule->ruleTriggers = $triggers;
+
+        // create new rule engine:
+        $newRuleEngine = app(RuleEngineInterface::class);
+
+        // set rules:
+        $newRuleEngine->setRules(new Collection([$rule]));
+        $collection = $newRuleEngine->find();
+        $collection = $collection->slice(0,20);
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if (count($matchingTransactions) === $limit) {
-            $warning = (string) trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
-        }
-        if (0 === count($matchingTransactions)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
+        if (0 === count($collection)) {
+            $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));

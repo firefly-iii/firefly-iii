@@ -57,8 +57,8 @@ class SelectTransactionsRequest extends FormRequest
         $today        = Carbon::now()->addDay()->format('Y-m-d');
 
         return [
-            'start_date' => 'required|date|after:' . $first,
-            'end_date'   => 'required|date|before:' . $today,
+            'start'      => 'required|date|after:' . $first,
+            'end'        => 'required|date|before:' . $today,
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];

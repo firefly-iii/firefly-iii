@@ -35,6 +35,7 @@ use Log;
 /**
  * Class TransactionMatcher is used to find a list of
  * transaction matching a set of triggers.
+ * @deprecated
  */
 class TransactionMatcher
 {

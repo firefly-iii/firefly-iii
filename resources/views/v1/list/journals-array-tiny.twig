@@ -1,10 +1,12 @@
 <div class="list-group">
-    {% for journal in journals %}
-        <a class="list-group-item" href="{{ route('transactions.show', [journal.transaction_group_id]) }}">
-            {{ journal.description }}
-            <span class="pull-right small">
-                    {{ journalArrayAmount(journal) }}
+    {% for group in groups %}
+        {% for transaction in group.transactions %}
+            <a class="list-group-item" href="{{ route('transactions.show', [transaction.transaction_group_id]) }}">
+                {{ transaction.description }}
+                <span class="pull-right small">
+                    X
                 </span>
-        </a>
+            </a>
+        {% endfor %}
     {% endfor %}
 </div>

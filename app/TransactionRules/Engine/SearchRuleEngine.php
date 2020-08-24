@@ -99,16 +99,38 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
+     *
+     */
+    public function find(): Collection
+    {
+        Log::debug('SearchRuleEngine::find()');
+        $collection = new Collection;
+        foreach ($this->rules as $rule) {
+            $found = new Collection;
+            if (true === $rule->strict) {
+                $found = $this->findStrictRule($rule);
+            }
+            if (false === $rule->strict) {
+                $found = $this->findNonStrictRule($rule);
+            }
+            $collection = $collection->merge($found);
+        }
+        $collection = $collection->unique();
+
+        return $collection;
+    }
+
+    /**
      * @param Rule $rule
      * @throws FireflyException
      */
     private function fireRule(Rule $rule): void
     {
         if (true === $rule->strict) {
-            $this->fileStrictRule($rule);
+            $this->fireStrictRule($rule);
             return;
         }
-        $this->fileNonStrictRule($rule);
+        $this->fireNonStrictRule($rule);
     }
 
     /**
@@ -178,9 +200,34 @@ class SearchRuleEngine implements RuleEngineInterface
      * @param Rule $rule
      * @throws FireflyException
      */
-    private function fileStrictRule(Rule $rule): void
+    private function fireStrictRule(Rule $rule): void
     {
-        Log::debug(sprintf('SearchRuleEngine::fileStrictRule(%d)!', $rule->id));
+        Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
+        $collection = $this->findStrictRule($rule);
+
+        $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
+    }
+
+    /**
+     * @param Rule $rule
+     * @throws FireflyException
+     */
+    private function fireNonStrictRule(Rule $rule): void
+    {
+        Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
+        $collection = $this->findNonStrictRule($rule);
+
+        $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
+    }
+
+    /**
+     * @param Rule $rule
+     * @return Collection
+     */
+    private function findStrictRule(Rule $rule): Collection
+    {
         $searchArray = [];
         /** @var RuleTrigger $ruleTrigger */
         foreach ($rule->ruleTriggers as $ruleTrigger) {
@@ -212,18 +259,15 @@ class SearchRuleEngine implements RuleEngineInterface
         $collection = $result->getCollection();
         Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine with query "%s".', $collection->count(), $searchQuery));
 
-        $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
+        return $collection;
     }
 
     /**
      * @param Rule $rule
-     * @throws FireflyException
+     * @return Collection
      */
-    private function fileNonStrictRule(Rule $rule): void
+    private function findNonStrictRule(Rule $rule): Collection
     {
-        Log::debug(sprintf('SearchRuleEngine::fileNonStrictRule(%d)!', $rule->id));
-
         // start a search query for individual each trigger:
         $total = new Collection;
         $count = 0;
@@ -280,8 +324,6 @@ class SearchRuleEngine implements RuleEngineInterface
         });
 
         Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine.', $unique->count()));
-
-        $this->processResults($rule, $unique);
-        Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
+        return $unique;
     }
 }

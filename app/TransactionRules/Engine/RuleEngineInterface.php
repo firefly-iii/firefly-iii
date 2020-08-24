@@ -59,4 +59,9 @@ interface RuleEngineInterface
      */
     public function fire(): void;
 
+    /**
+     * Find all transactions only, dont apply anything.
+     */
+    public function find(): Collection;
+
 }
