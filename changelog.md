@@ -4,9 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.4.0 (API 1.4.0)] - 2020-08-xx
 
+Some warnings before you install this version
+
+- ⚠️ Some changes in this release may be backwards incompatible or work differently than you expect.
+- ⚠️ Invalid triggers in a non-strict rule will cause Firefly III to select ALL transactions.
+
 Several alpha and beta releases preceded this release.
 
 - 5.4.0-alpha.1 on 2020-08-14
+- 5.4.0-alpha.2 on 2020-08-??
 
 ### Added
 - [Issue 3187](https://github.com/firefly-iii/firefly-iii/issues/3187) A new field for transaction URL's.
@@ -30,10 +36,12 @@ Several alpha and beta releases preceded this release.
 - Support for Bulgarian! 🇧🇬
 
 ### Changed
+- ⚠️ All auto-complete code now uses the API; let me know if errors occur.
+- ⚠️ New rule processing engine, which is much faster than the old one, especially on large datasets. Expect several magnitudes of time improvements.
+- ⚠️ Many new search operators, which are documented [in the documentation]().
 - [Issue 3578](https://github.com/firefly-iii/firefly-iii/issues/3578) Use php-intl to do currency formatting, made by @hoshsadiq
 - [Issue 3586](https://github.com/firefly-iii/firefly-iii/issues/3586) Removed features that aren't necessary when using third party auth providers.
 - [Issue 3659](https://github.com/firefly-iii/firefly-iii/issues/3659) Update the readme to include third party apps.
-- All auto-complete code now uses the API; let me know if errors occur.
 - Fixed audit logs.
 
 ### Fixed
