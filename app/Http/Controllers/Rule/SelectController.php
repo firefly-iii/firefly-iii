@@ -215,6 +215,7 @@ class SelectController extends Controller
         $collection = $newRuleEngine->find();
         $collection = $collection->slice(0, 20);
 
+        $warning = '';
         if (0 === count($collection)) {
             $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
         }
