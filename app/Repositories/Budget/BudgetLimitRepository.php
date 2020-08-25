@@ -337,7 +337,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
         $budgetLimit->amount     = array_key_exists('amount',$data) ? $data['amount'] : $budgetLimit->amount;
-        $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->id;
+        $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->budget_id;
         $budgetLimit->start_date = array_key_exists('start_date', $data) ? $data['start_date']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
         $budgetLimit->end_date   = array_key_exists('end_date', $data) ? $data['end_date']->format('Y-m-d 00:00:00') : $budgetLimit->end_date;
 
