@@ -39,11 +39,8 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
-
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
+    private BudgetRepositoryInterface $repository;
+    private AttachmentHelperInterface $attachments;
 
     /**
      * CreateController constructor.

@@ -317,8 +317,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             [
                 'budget_id'               => $newBudget->id,
                 'transaction_currency_id' => $autoBudget->transaction_currency_id,
-                'start_date'              => $start->format('Y-m-d'),
-                'end_date'                => $end->format('Y-m-d'),
+                'start_date'              => $start,
+                'end_date'                => $end,
                 'amount'                  => $autoBudget->amount,
             ]
         );
