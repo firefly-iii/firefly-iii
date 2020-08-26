@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Scopes\LdapFilterScope;
+
 use Adldap\Laravel\Events\Authenticated;
 use Adldap\Laravel\Events\AuthenticatedModelTrashed;
 use Adldap\Laravel\Events\AuthenticatedWithWindows;
@@ -49,13 +51,17 @@ use Adldap\Laravel\Scopes\UpnScope;
 
 // default OpenLDAP scopes.
 $scopes = [
+    LdapFilterScope::class,
     UidScope::class,
 ];
 if ('FreeIPA' === env('ADLDAP_CONNECTION_SCHEME')) {
-    $scopes = [];
+    $scopes = [
+        LdapFilterScope::class,
+    ];
 }
 if ('ActiveDirectory' === env('ADLDAP_CONNECTION_SCHEME')) {
     $scopes = [
+        LdapFilterScope::class,
         UpnScope::class,
     ];
 }
@@ -373,5 +379,17 @@ return [
 
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom LDAP Filter
+    |--------------------------------------------------------------------------
+    |
+    | This value can be optionally provided to restrict LDAP queries to the
+    | given filter. It should be in LDAP filter format, and will be
+    | applied in the LdapFilterScope.
+    |
+    */
+    'custom_filter' => env('ADLDAP_AUTH_FILTER', ''),
 
 ];
