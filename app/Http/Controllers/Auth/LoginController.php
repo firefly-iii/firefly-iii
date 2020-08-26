@@ -158,7 +158,11 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        // todo must forget 2FA if user ends up here.
+        $storeInCookie = config('google2fa.store_in_cookie', false);
+        if (false !== $storeInCookie) {
+            $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+            request()->cookies->set($cookieName, 'invalid');
+        }
 
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
