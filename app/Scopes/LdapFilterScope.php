@@ -13,8 +13,8 @@ class LdapFilterScope implements ScopeInterface {
      */
     public function apply(Builder $query)
     {
-        $filter = config('ldap_auth.custom_filter');
-        if ( $filter ) {
+        $filter = (string) config('ldap_auth.custom_filter');
+        if ( '' !== $filter ) {
             $query->rawFilter($filter);
         }
     }
