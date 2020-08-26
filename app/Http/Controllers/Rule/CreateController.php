@@ -143,6 +143,12 @@ class CreateController extends Controller
         $oldTriggers = $this->getTriggersForBill($bill);
         $oldActions  = $this->getActionsForBill($bill);
 
+        // restore actions and triggers from old input:
+        if ($request->old()) {
+            $oldTriggers = $this->getPreviousTriggers($request);
+            $oldActions  = $this->getPreviousActions($request);
+        }
+
         $triggerCount = count($oldTriggers);
         $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
@@ -179,8 +185,6 @@ class CreateController extends Controller
         // get triggers and actions for journal.
         $oldTriggers  = $this->getTriggersForJournal($journal);
         $oldActions   = [];
-        $triggerCount = count($oldTriggers);
-        $actionCount  = count($oldActions);
 
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
@@ -191,6 +195,15 @@ class CreateController extends Controller
             'title'       => (string) trans('firefly.new_rule_for_journal_title', ['description' => $journal->description]),
             'description' => (string) trans('firefly.new_rule_for_journal_description', ['description' => $journal->description]),
         ];
+
+        // restore actions and triggers from old input:
+        if ($request->old()) {
+            $oldTriggers = $this->getPreviousTriggers($request);
+            $oldActions  = $this->getPreviousActions($request);
+        }
+
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
 
         // flash old data
         $request->session()->flash('preFilled', $preFilled);
