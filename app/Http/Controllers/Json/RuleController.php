@@ -82,18 +82,14 @@ class RuleController extends Controller
             }
         }
         asort($triggers);
-        var_dump($triggers);exit;
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
-            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
 
-        // @codeCoverageIgnoreEnd
-        echo $view;exit;
 
         return response()->json(['html' => $view]);
     }
