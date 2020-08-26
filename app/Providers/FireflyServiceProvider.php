@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
@@ -45,11 +44,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use FireflyIII\Services\IP\IpifyOrg;
-use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
@@ -217,9 +213,6 @@ class FireflyServiceProvider extends ServiceProvider
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
-
-        // IP thing:
-        $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
 
         // net worth thing.
         $this->app->bind(NetWorthInterface::class, NetWorth::class);
