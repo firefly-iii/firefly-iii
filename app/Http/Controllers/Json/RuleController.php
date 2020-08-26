@@ -72,15 +72,17 @@ class RuleController extends Controller
      */
     public function trigger(Request $request): JsonResponse
     {
-        $count    = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
-        $keys     = array_keys(config('firefly.search.operators'));
-        $triggers = [];
-        foreach ($keys as $key) {
-            if ('user_action' !== $key) {
-                $triggers[$key] = (string) trans('firefly.rule_trigger_' . $key . '_choice');
+        $count     = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
+        $operators = config('firefly.search.operators');
+        $triggers  = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
+        var_dump($triggers);exit;
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
@@ -91,6 +93,7 @@ class RuleController extends Controller
         }
 
         // @codeCoverageIgnoreEnd
+        echo $view;exit;
 
         return response()->json(['html' => $view]);
     }

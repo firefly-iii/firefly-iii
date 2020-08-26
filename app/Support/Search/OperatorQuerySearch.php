@@ -347,6 +347,21 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 break;
             //
+            // cash account
+            //
+            case 'source_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->setSourceAccounts(new Collection([$account]));
+                break;
+            case 'destination_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->setDestinationAccounts(new Collection([$account]));
+                break;
+            case 'account_is_cash':
+                $account = $this->getCashAccount();
+                $this->collector->setAccounts(new Collection([$account]));
+                break;
+            //
             // description
             //
             case 'description_starts':
@@ -712,5 +727,13 @@ class OperatorQuerySearch implements SearchInterface
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
+    }
+
+    /**
+     * @return Account
+     */
+    private function getCashAccount(): Account
+    {
+        return $this->accountRepository->getCashAccount();
     }
 }

@@ -435,8 +435,8 @@ return [
         'append_notes',
         'prepend_notes',
         'link_to_bill',
-        //'convert_withdrawal',
-        //'convert_deposit',
+        //        'convert_withdrawal',
+        //        'convert_deposit',
         'convert_transfer',
     ],
 
@@ -491,6 +491,11 @@ return [
             'source_account_is'               => ['alias' => false, 'needs_context' => true,],
             'from_account_is'                 => ['alias' => true, 'alias_for' => 'source_account_is', 'needs_context' => true,],
 
+            // source or dest is cash account?
+            'source_is_cash'                  => ['alias' => false, 'needs_context' => false],
+            'destination_is_cash'             => ['alias' => false, 'needs_context' => false],
+            'account_is_cash'                 => ['alias' => false, 'needs_context' => false],
+
             // source account name contains + alias
             'source_account_contains'         => ['alias' => false, 'needs_context' => true,],
             'from_account_contains'           => ['alias' => true, 'alias_for' => 'source_account_contains', 'needs_context' => true,],
@@ -511,7 +516,7 @@ return [
 
             // source account number is
             'source_account_nr_is'            => ['alias' => false, 'needs_context' => true,],
-            'from_account_nr_is'              => ['alias' => true, 'needs_context' => true,],
+            'from_account_nr_is'              => ['alias' => true, 'alias_for' => 'source_account_nr_is', 'needs_context' => true,],
 
             // source account number contains
             'source_account_nr_contains'      => ['alias' => false, 'needs_context' => true,],

@@ -22,12 +22,13 @@
 namespace Tests\Unit\Support\Search;
 
 
+use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Log;
 use Tests\TestCase;
-use DB;
+
 /**
  * Test:
  *
@@ -52,8 +53,6 @@ class OperatorQuerySearchTest extends TestCase
      */
     public function testParseQuery(): void
     {
-        $this->assertTrue(true);
-        return;
         $this->be($this->user());
         // mock some of the used classes to verify results.
 
@@ -75,6 +74,9 @@ class OperatorQuerySearchTest extends TestCase
             'from'                            => 'test',
             'source_account_id'               => '1',
             'from_account_id'                 => '1',
+            'source_is_cash'                  => true,
+            'destination_is_cash'             => true,
+            'account_is_cash'                 => true,
 
             // source account nr
             'from_account_nr_starts'          => 'test',
@@ -138,7 +140,6 @@ class OperatorQuerySearchTest extends TestCase
             'any_notes'                       => 'test',
 
 
-
             // exact amount
             'amount_exactly'                  => '0',
             'amount_is'                       => '0',
@@ -182,6 +183,8 @@ class OperatorQuerySearchTest extends TestCase
             'tag'                             => 'abc',
             'created_on'                      => '2020-01-01',
             'updated_on'                      => '2020-01-01',
+            'created_at'                      => '2020-01-01',
+            'updated_at'                      => '2020-01-01',
             'external_id'                     => 'abc',
             'internal_reference'              => 'def',
         ];
@@ -424,7 +427,6 @@ class OperatorQuerySearchTest extends TestCase
     }
 
 
-
     /**
      * @covers \FireflyIII\Support\Search\OperatorQuerySearch
      */
@@ -547,7 +549,7 @@ class OperatorQuerySearchTest extends TestCase
         $this->be($this->user());
 
         // update one journal to have a very specific created_on date:
-        DB::table('transaction_journals')->where('id',1)->update(['created_at' => '2020-08-12 00:00:00']);
+        DB::table('transaction_journals')->where('id', 1)->update(['created_at' => '2020-08-12 00:00:00']);
 
         $object = new OperatorQuerySearch;
         $object->setUser($this->user());
@@ -589,7 +591,7 @@ class OperatorQuerySearchTest extends TestCase
         $this->be($this->user());
 
         // update one journal to have a very specific created_on date:
-        DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
+        DB::table('transaction_journals')->where('id', 1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
         $object = new OperatorQuerySearch;
         $object->setUser($this->user());
@@ -630,7 +632,7 @@ class OperatorQuerySearchTest extends TestCase
         $this->be($this->user());
 
         // update one journal to have a very specific created_on date:
-        DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
+        DB::table('transaction_journals')->where('id', 1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
         $object = new OperatorQuerySearch;
         $object->setUser($this->user());
@@ -702,7 +704,7 @@ class OperatorQuerySearchTest extends TestCase
         $this->be($this->user());
 
         // update one journal to have a very specific created_on date:
-        DB::table('transaction_journals')->where('id',1)->update(['updated_at' => '2020-08-12 00:00:00']);
+        DB::table('transaction_journals')->where('id', 1)->update(['updated_at' => '2020-08-12 00:00:00']);
 
         $object = new OperatorQuerySearch;
         $object->setUser($this->user());
@@ -1027,8 +1029,8 @@ class OperatorQuerySearchTest extends TestCase
 
         // the first one should say "Groceries".
         $transaction = array_shift($result->first()['transactions']);
-        $tags = $transaction['tags'] ?? [];
-        $singleTag= array_shift($tags);
+        $tags        = $transaction['tags'] ?? [];
+        $singleTag   = array_shift($tags);
         $this->assertEquals('searchTestTag', $singleTag['name'] ?? '');
     }
 
@@ -1099,7 +1101,7 @@ class OperatorQuerySearchTest extends TestCase
         }
 
         // many results, tricky to verify.
-        $this->assertCount(1,$result);
+        $this->assertCount(1, $result);
 
         // the first one should say "Groceries".
         $transaction = array_shift($result->first()['transactions']);
@@ -1138,12 +1140,12 @@ class OperatorQuerySearchTest extends TestCase
         }
 
         // many results, tricky to verify.
-        $this->assertCount(1,$result);
+        $this->assertCount(1, $result);
 
         // the first one should hav this tag.
         $transaction = array_shift($result->first()['transactions']);
-        $tags = $transaction['tags'] ?? [];
-        $singleTag= array_shift($tags);
+        $tags        = $transaction['tags'] ?? [];
+        $singleTag   = array_shift($tags);
         $this->assertEquals('searchTestTag', $singleTag['name'] ?? '');
     }
 
@@ -1178,7 +1180,7 @@ class OperatorQuerySearchTest extends TestCase
         }
 
         // many results, tricky to verify.
-        $this->assertCount(1,$result);
+        $this->assertCount(1, $result);
 
         // the first one should say "Groceries".
         $transaction = array_shift($result->first()['transactions']);
@@ -1217,7 +1219,7 @@ class OperatorQuerySearchTest extends TestCase
         }
 
         // many results, tricky to verify.
-        $this->assertCount(1,$result);
+        $this->assertCount(1, $result);
 
         // the first one should say "Groceries".
         $transaction = array_shift($result->first()['transactions']);
@@ -1331,7 +1333,7 @@ class OperatorQuerySearchTest extends TestCase
         }
 
         // could have many results, grab first transaction:
-        $this->assertTrue( count($result) > 1);
+        $this->assertTrue(count($result) > 1);
 
         // todo better verification
     }
@@ -1346,7 +1348,7 @@ class OperatorQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'Dest2Acct3Test4Thing')->first();
         $accountId = (int) $account->id;
-        $object = new OperatorQuerySearch;
+        $object    = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('destination_account_id:%d', $accountId);
@@ -1388,7 +1390,7 @@ class OperatorQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'from_acct_NL30ABNA_test')->first();
         $accountId = (int) $account->id;
-        $object = new OperatorQuerySearch;
+        $object    = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('source_account_id:%d', $accountId);
@@ -1429,7 +1431,7 @@ class OperatorQuerySearchTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('name', 'from_acct_NL30ABNA_test')->first();
         $accountId = (int) $account->id;
-        $object = new OperatorQuerySearch;
+        $object    = new OperatorQuerySearch;
         $object->setUser($this->user());
         $object->setPage(1);
         $query = sprintf('account_id:%d', $accountId);
