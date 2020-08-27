@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    {% if query or modifiers|length > 0 %}
+    {% if query or operators|length > 0 %}
         <div class="row result_row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box search_box">
@@ -107,7 +107,7 @@
             </div>
         </div>
     {% endif %}
-    {% if query == "" and modifiers|length == 0 %}
+    {% if query == "" and operators|length == 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
