@@ -32,11 +32,15 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
+use FireflyIII\Support\Search\OperatorQuerySearch;
+use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use Log;
+use Throwable;
 
 /**
  * Class CreateController
@@ -44,6 +48,7 @@ use Illuminate\View\View;
 class CreateController extends Controller
 {
     use RuleManagement, ModelInformation;
+
     /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
@@ -85,6 +90,20 @@ class CreateController extends Controller
         ];
         $oldTriggers = [];
         $oldActions  = [];
+
+        // build triggers from query, if present.
+        $query = (string) $request->get('from_query');
+        if ('' !== $query) {
+            $search = app(SearchInterface::class);
+            $search->parseQuery($query);
+            $words     = $search->getWordsAsString();
+            $operators = $search->getOperators()->toArray();
+            if ('' !== $words) {
+                session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
+                array_push($operators, ['type' => 'description_contains', 'value' => $words]);
+            }
+            $oldTriggers = $this->parseFromOperators($operators);
+        }
 
         // restore actions and triggers from old input:
         if ($request->old()) {
@@ -183,8 +202,8 @@ class CreateController extends Controller
         $subTitle     = (string) trans('firefly.make_new_rule_no_group');
 
         // get triggers and actions for journal.
-        $oldTriggers  = $this->getTriggersForJournal($journal);
-        $oldActions   = [];
+        $oldTriggers = $this->getTriggersForJournal($journal);
+        $oldActions  = [];
 
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
@@ -270,5 +289,46 @@ class CreateController extends Controller
         }
 
         return $redirect;
+    }
+
+    /**
+     * @param array $submittedOperators
+     * @return array
+     */
+    private function parseFromOperators(array $submittedOperators): array
+    {
+        // TODO duplicated code.
+        $operators       = config('firefly.search.operators');
+        $renderedEntries = [];
+        $triggers        = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+            }
+        }
+        asort($triggers);
+
+        $index = 0;
+        foreach ($submittedOperators as $operator) {
+            try {
+                $renderedEntries[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
+                        'oldValue'   => $operator['value'],
+                        'oldChecked' => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
+                        'count'      => $index + 1,
+                        'triggers'   => $triggers,
+                    ]
+                )->render();
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
+            }
+            $index++;
+        }
+
+        return $renderedEntries;
     }
 }

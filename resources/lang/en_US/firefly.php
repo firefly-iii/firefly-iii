@@ -320,6 +320,8 @@ return [
     'search_modifier_tag_is'                              => 'Tag is ":value"',
     'update_rule_from_query'                              => 'Update rule ":rule" from search query',
     'create_rule_from_query'                              => 'Create new rule from search query',
+    'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
+
 
     // END
     'modifiers_applies_are'                               => 'The following modifiers are applied to the search as well:',

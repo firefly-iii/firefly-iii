@@ -28,9 +28,9 @@
                             <div class="col-sm-offset-1 col-sm-10">
                                 <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> {{ 'search'|_ }}</button>
                                 {% if ruleId > 0 and ruleChanged %}
-                                <a href="#" class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
+                                <a href="{{ route('rules.edit', [ruleId]) }}?from_query={{ fullQuery }}" class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
                                 {% endif %}
-                                <a href="#" class="btn btn-default">{{ 'create_rule_from_query'|_ }}</a>
+                                <a href="{{ route('rules.create') }}?from_query={{ fullQuery }}" class="btn btn-default">{{ 'create_rule_from_query'|_ }}</a>
                             </div>
                         </div>
                         {% if 0 != ruleId %}
