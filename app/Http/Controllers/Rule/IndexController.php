@@ -92,14 +92,7 @@ class IndexController extends Controller
     public function search(Rule $rule): RedirectResponse
     {
         $route  = route('search.index');
-        $params = [];
-        /** @var RuleTrigger $trigger */
-        foreach ($rule->ruleTriggers as $trigger) {
-            if ('user_action' !== $trigger->trigger_type) {
-                $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
-            }
-        }
-        $query = implode(' ', $params);
+        $query = $this->ruleRepos->getSearchQuery($rule);
         $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
 
         return redirect($route);

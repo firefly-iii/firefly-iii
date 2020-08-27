@@ -40,6 +40,14 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
+     * Return search query for rule.
+     *
+     * @param Rule $rule
+     * @return string
+     */
+    public function getSearchQuery(Rule $rule): string;
+
+    /**
      * @param Rule      $rule
      * @param RuleGroup $ruleGroup
      * @param int       $order

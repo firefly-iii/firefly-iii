@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, query) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, fullQuery) }}
 {% endblock %}
 
 {% block content %}
@@ -26,20 +26,27 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-1 col-sm-10">
-                                <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> {{ 'search'|_ }}</button>
+                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> {{ 'search'|_ }}</button>
+                                {% if ruleId > 0 and ruleChanged %}
+                                <a href="#" class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
+                                {% endif %}
+                                <a href="#" class="btn btn-default">{{ 'create_rule_from_query'|_ }}</a>
                             </div>
                         </div>
+                        {% if 0 != ruleId %}
+                            <input type="hidden" name="rule" value="{{ ruleId }}" />
+                        {% endif %}
                     </form>
                     {% if '' != query %}
                     <p>
                         {{ trans('firefly.search_for_query', {query: query|escape})|raw}}
                     </p>
                     {% endif %}
-                    {% if modifiers|length > 0 %}
+                    {% if operators|length > 0 %}
                         <p>{{ trans('firefly.modifiers_applies_are') }}</p>
                         <ul>
-                            {% for modifier in modifiers %}
-                                <li>{{ trans('firefly.search_modifier_'~modifier.type, {value: modifier.value}) }}</li>
+                            {% for operator in operators %}
+                                <li>{{ trans('firefly.search_modifier_'~operator.type, {value: operator.value}) }}</li>
                             {% endfor %}
                         </ul>
                     {% endif %}

@@ -27,6 +27,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -119,7 +120,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
-        return (int)$ruleGroup->rules()->max('order');
+        return (int) $ruleGroup->rules()->max('order');
     }
 
     /**
@@ -461,8 +462,8 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function duplicate(Rule $rule): Rule
     {
-        $newRule = $rule->replicate();
-        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule        = $rule->replicate();
+        $newRule->title = (string) trans('firefly.rule_copy_of', ['title' => $rule->title]);
         $newRule->save();
 
         // replicate all triggers
@@ -503,13 +504,13 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getStoreRules(): Collection
     {
-        $collection = $this->user->rules()->with(['ruleGroup','ruleTriggers'])->get();
-        $filtered = new Collection;
+        $collection = $this->user->rules()->with(['ruleGroup', 'ruleTriggers'])->get();
+        $filtered   = new Collection;
         /** @var Rule $rule */
-        foreach($collection as $rule) {
+        foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
-            foreach($rule->ruleTriggers as $ruleTrigger) {
-                if('user_action' === $ruleTrigger->trigger_type && 'store-journal' === $ruleTrigger->trigger_value) {
+            foreach ($rule->ruleTriggers as $ruleTrigger) {
+                if ('user_action' === $ruleTrigger->trigger_type && 'store-journal' === $ruleTrigger->trigger_value) {
                     $filtered->push($rule);
                 }
             }
@@ -522,17 +523,33 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getUpdateRules(): Collection
     {
-        $collection = $this->user->rules()->with(['ruleGroup','ruleTriggers'])->get();
-        $filtered = new Collection;
+        $collection = $this->user->rules()->with(['ruleGroup', 'ruleTriggers'])->get();
+        $filtered   = new Collection;
         /** @var Rule $rule */
-        foreach($collection as $rule) {
+        foreach ($collection as $rule) {
             /** @var RuleTrigger $ruleTrigger */
-            foreach($rule->ruleTriggers as $ruleTrigger) {
-                if('user_action' === $ruleTrigger->trigger_type && 'update-journal' === $ruleTrigger->trigger_value) {
+            foreach ($rule->ruleTriggers as $ruleTrigger) {
+                if ('user_action' === $ruleTrigger->trigger_type && 'update-journal' === $ruleTrigger->trigger_value) {
                     $filtered->push($rule);
                 }
             }
         }
         return $filtered;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSearchQuery(Rule $rule): string
+    {
+        $params = [];
+        /** @var RuleTrigger $trigger */
+        foreach ($rule->ruleTriggers as $trigger) {
+            if ('user_action' !== $trigger->trigger_type) {
+                $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
+            }
+        }
+        return implode(' ', $params);
+
     }
 }

@@ -920,6 +920,7 @@ Route::group(
         // select controller
         Route::get('test', ['uses' => 'Rule\SelectController@testTriggers', 'as' => 'test-triggers']);
         Route::get('test-rule/{rule}', ['uses' => 'Rule\SelectController@testTriggersByRule', 'as' => 'test-triggers-rule']);
+        Route::get('search/{rule}', ['uses' => 'Rule\IndexController@search', 'as' => 'search']);
         Route::get('select/{rule}', ['uses' => 'Rule\SelectController@selectTransactions', 'as' => 'select-transactions']);
         Route::post('execute/{rule}', ['uses' => 'Rule\SelectController@execute', 'as' => 'execute']);
 

@@ -189,4 +189,51 @@ class SelectController extends Controller
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
 
+    /**
+     * This method allows the user to test a certain set of rule triggers. The rule triggers are grabbed from
+     * the rule itself.
+     *
+     * @param Rule $rule
+     *
+     * @return JsonResponse
+     *
+     */
+    public function testTriggersByRule(Rule $rule): JsonResponse
+    {
+        $triggers = $rule->ruleTriggers;
+
+        if (0 === count($triggers)) {
+            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+        }
+
+
+        // create new rule engine:
+        $newRuleEngine = app(RuleEngineInterface::class);
+
+        // set rules:
+        $newRuleEngine->setRules(new Collection([$rule]));
+        $collection = $newRuleEngine->find();
+        $collection = $collection->slice(0, 20);
+
+        $warning = '';
+        if (0 === count($collection)) {
+            $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
+        }
+
+        // Return json response
+        $view = 'ERROR, see logs.';
+        try {
+            $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $exception) {
+            Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
+            Log::error($exception->getTraceAsString());
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return response()->json(['html' => $view, 'warning' => $warning]);
+    }
+
+
 }

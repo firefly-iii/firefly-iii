@@ -318,6 +318,8 @@ return [
     'search_modifier_bill_is'                             => 'Bill is ":value"',
     'search_modifier_transaction_type'                    => 'Transaction type is ":value"',
     'search_modifier_tag_is'                              => 'Tag is ":value"',
+    'update_rule_from_query'                              => 'Update rule ":rule" from search query',
+    'create_rule_from_query'                              => 'Create new rule from search query',
 
     // END
     'modifiers_applies_are'                               => 'The following modifiers are applied to the search as well:',
