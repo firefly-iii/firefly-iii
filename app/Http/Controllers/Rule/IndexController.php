@@ -25,12 +25,15 @@ namespace FireflyIII\Http\Controllers\Rule;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -40,10 +43,9 @@ use Illuminate\View\View;
 class IndexController extends Controller
 {
     use RuleManagement;
-    /** @var RuleGroupRepositoryInterface Rule group repository */
-    private $ruleGroupRepos;
-    /** @var RuleRepositoryInterface Rule repository. */
-    private $ruleRepos;
+
+    private RuleGroupRepositoryInterface $ruleGroupRepos;
+    private RuleRepositoryInterface      $ruleRepos;
 
     /**
      * RuleController constructor.
@@ -80,6 +82,27 @@ class IndexController extends Controller
         $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
 
         return view('rules.index', compact('ruleGroups'));
+    }
+
+    /**
+     * @param Rule $rule
+     * @return RedirectResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    public function search(Rule $rule): RedirectResponse
+    {
+        $route  = route('search.index');
+        $params = [];
+        /** @var RuleTrigger $trigger */
+        foreach ($rule->ruleTriggers as $trigger) {
+            if ('user_action' !== $trigger->trigger_type) {
+                $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
+            }
+        }
+        $query = implode(' ', $params);
+        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
+
+        return redirect($route);
     }
 
     /**
