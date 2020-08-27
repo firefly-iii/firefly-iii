@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use Log;
 use Throwable;
 
@@ -64,9 +65,9 @@ trait RenderPartialViews
             foreach ($revenue as $otherAccount) {
                 if (
                     (
-                    ($otherAccount->name === $account->name)
-                    ||
-                    (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
+                        ($otherAccount->name === $account->name)
+                        ||
+                        (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
                     )
                     && $otherAccount->id !== $account->id
                 ) {
@@ -102,10 +103,10 @@ trait RenderPartialViews
 
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budget           = $budgetRepository->findNull((int)$attributes['budgetId']);
+        $budget           = $budgetRepository->findNull((int) $attributes['budgetId']);
 
         $accountRepos = app(AccountRepositoryInterface::class);
-        $account      = $accountRepos->findNull((int)$attributes['accountId']);
+        $account      = $accountRepos->findNull((int) $attributes['accountId']);
 
         $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
         // @codeCoverageIgnoreStart
@@ -159,7 +160,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $budget = $budgetRepository->findNull((int)$attributes['budgetId']);
+        $budget = $budgetRepository->findNull((int) $attributes['budgetId']);
         if (null === $budget) {
             $budget = new Budget;
         }
@@ -191,7 +192,7 @@ trait RenderPartialViews
 
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = app(CategoryRepositoryInterface::class);
-        $category           = $categoryRepository->findNull((int)$attributes['categoryId']);
+        $category           = $categoryRepository->findNull((int) $attributes['categoryId']);
         $journals           = $popupHelper->byCategory($category, $attributes);
         if (null === $category) {
             return 'This is an unknown category. Apologies.';
@@ -247,7 +248,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $account = $accountRepository->findNull((int)$attributes['accountId']);
+        $account = $accountRepository->findNull((int) $attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown account. Apologies.';
@@ -315,8 +316,20 @@ trait RenderPartialViews
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
-        $index    = 0;
-        $triggers = [];
+        // TODO duplicated code.
+        $operators = config('firefly.search.operators');
+        $triggers  = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+            }
+        }
+        asort($triggers);
+
+
+        $index           = 0;
+        $renderedEntries = [];
         // todo must be repos
         $currentTriggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $entry */
@@ -324,13 +337,14 @@ trait RenderPartialViews
             if ('user_action' !== $entry->trigger_type) {
                 $count = ($index + 1);
                 try {
-                    $triggers[] = view(
+                    $renderedEntries[] = view(
                         'rules.partials.trigger',
                         [
-                            'oldTrigger' => $entry->trigger_type,
+                            'oldTrigger' => OperatorQuerySearch::getRootOperator($entry->trigger_type),
                             'oldValue'   => $entry->trigger_value,
                             'oldChecked' => $entry->stop_processing,
                             'count'      => $count,
+                            'triggers'   => $triggers,
                         ]
                     )->render();
                     // @codeCoverageIgnoreStart
@@ -343,7 +357,7 @@ trait RenderPartialViews
             }
         }
 
-        return $triggers;
+        return $renderedEntries;
     }
 
     /**
@@ -360,7 +374,7 @@ trait RenderPartialViews
 
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
-        $account     = $accountRepository->findNull((int)$attributes['accountId']);
+        $account     = $accountRepository->findNull((int) $attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown category. Apologies.';

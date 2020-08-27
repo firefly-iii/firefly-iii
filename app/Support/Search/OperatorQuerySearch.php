@@ -234,7 +234,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($this->updateCollector($operator, $value)) {
                         $this->operators->push(
                             [
-                                'type'  => $this->getRootOperator($operator),
+                                'type'  => self::getRootOperator($operator),
                                 'value' => $value,
                             ]
                         );
@@ -256,7 +256,7 @@ class OperatorQuerySearch implements SearchInterface
         Log::debug(sprintf('updateCollector(%s, %s)', $operator, $value));
 
         // check if alias, replace if necessary:
-        $operator = $this->getRootOperator($operator);
+        $operator = self::getRootOperator($operator);
 
         switch ($operator) {
             default:
@@ -687,8 +687,9 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @param string $operator
      * @return string
+     * @throws FireflyException
      */
-    private function getRootOperator(string $operator): string
+    public static function getRootOperator(string $operator): string
     {
         $config = config(sprintf('firefly.search.operators.%s', $operator));
         if (null === $config) {
