@@ -101,7 +101,10 @@ return [
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
+
+    // send emails?
     'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
+    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
     'demo_username'                => env('DEMO_USERNAME', ''),
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
@@ -450,14 +453,14 @@ return [
 
     'search'                    => [
         'operators' => [
-            'user_action'                     => ['alias' => false, 'needs_context' => true,],
-            'description_starts'              => ['alias' => false, 'needs_context' => true,],
-            'description_ends'                => ['alias' => false, 'needs_context' => true,],
-            'description_contains'            => ['alias' => false, 'needs_context' => true,],
-            'description_is'                  => ['alias' => false, 'needs_context' => true,],
+            'user_action'          => ['alias' => false, 'needs_context' => true,],
+            'description_starts'   => ['alias' => false, 'needs_context' => true,],
+            'description_ends'     => ['alias' => false, 'needs_context' => true,],
+            'description_contains' => ['alias' => false, 'needs_context' => true,],
+            'description_is'       => ['alias' => false, 'needs_context' => true,],
 
-            'currency_is'                     => ['alias' => false, 'needs_context' => true,],
-            'foreign_currency_is'             => ['alias' => false, 'needs_context' => true,],
+            'currency_is'         => ['alias' => false, 'needs_context' => true,],
+            'foreign_currency_is' => ['alias' => false, 'needs_context' => true,],
 
             'has_attachments'                 => ['alias' => false, 'needs_context' => false,],
             'has_no_category'                 => ['alias' => false, 'needs_context' => false,],

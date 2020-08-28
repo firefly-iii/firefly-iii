@@ -168,7 +168,7 @@ class UserEventHandler
         $preference = array_values($preference);
         app('preferences')->setForUser($user, 'login_ip_history', $preference);
 
-        if (false === $inArray) {
+        if (false === $inArray && true === config('firefly.warn_new_ip')) {
             event(new DetectedNewIPAddress($user, $ip));
         }
 
