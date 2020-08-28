@@ -51,7 +51,6 @@ class RemoteUserGuard implements Guard
      */
     public function __construct(UserProvider $provider, Application $app)
     {
-        Log::debug('Constructed RemoteUserGuard');
         $this->application = $app;
         $this->provider    = $provider;
         $this->user        = null;

@@ -33,6 +33,11 @@ return [
     'admin_test_subject'               => 'A test message from your Firefly III installation',
     'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
 
+    // new IP
+    'login_from_new_ip'                => 'You logged in from an unknown IP address.',
+    'new_ip_body'                      => 'You logged in from a new, unknown IP address:',
+    'new_ip_warning'                   => 'If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+
     // access token created
     'access_token_created_subject'     => 'A new access token was created',
     'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',

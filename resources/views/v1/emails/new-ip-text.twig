@@ -1,0 +1,8 @@
+{% include 'emails.header-text' %}
+{{ trans('email.new_ip_body') }}
+
+{{ ipAddress }}
+
+{{ trans('email.new_ip_warning') }}
+
+{% include 'emails.footer-text' %}

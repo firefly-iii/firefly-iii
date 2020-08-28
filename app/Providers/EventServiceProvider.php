@@ -24,6 +24,7 @@ namespace FireflyIII\Providers;
 
 use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
@@ -67,6 +68,10 @@ class EventServiceProvider extends ServiceProvider
             Login::class                       => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
+                'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
+            ],
+            DetectedNewIPAddress::class => [
+                'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
             ],
             RequestedVersionCheckStatus::class => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
