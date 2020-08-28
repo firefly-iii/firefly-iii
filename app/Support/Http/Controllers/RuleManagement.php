@@ -36,6 +36,46 @@ use Throwable;
  */
 trait RuleManagement
 {
+    /**
+     * @param array $submittedOperators
+     * @return array
+     */
+    protected function parseFromOperators(array $submittedOperators): array
+    {
+        // TODO duplicated code.
+        $operators       = config('firefly.search.operators');
+        $renderedEntries = [];
+        $triggers        = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+            }
+        }
+        asort($triggers);
+
+        $index = 0;
+        foreach ($submittedOperators as $operator) {
+            try {
+                $renderedEntries[] = view(
+                    'rules.partials.trigger',
+                    [
+                        'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
+                        'oldValue'   => $operator['value'],
+                        'oldChecked' => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
+                        'count'      => $index + 1,
+                        'triggers'   => $triggers,
+                    ]
+                )->render();
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
+            }
+            $index++;
+        }
+
+        return $renderedEntries;
+    }
 
     /**
      *

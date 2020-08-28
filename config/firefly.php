@@ -455,8 +455,10 @@ return [
             'description_ends'                => ['alias' => false, 'needs_context' => true,],
             'description_contains'            => ['alias' => false, 'needs_context' => true,],
             'description_is'                  => ['alias' => false, 'needs_context' => true,],
+
             'currency_is'                     => ['alias' => false, 'needs_context' => true,],
             'foreign_currency_is'             => ['alias' => false, 'needs_context' => true,],
+
             'has_attachments'                 => ['alias' => false, 'needs_context' => false,],
             'has_no_category'                 => ['alias' => false, 'needs_context' => false,],
             'has_any_category'                => ['alias' => false, 'needs_context' => false,],

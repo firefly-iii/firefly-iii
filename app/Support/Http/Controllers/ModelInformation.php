@@ -70,7 +70,7 @@ trait ModelInformation
     }
 
     /**
-     * @codeCoverageIgnore 
+     * @codeCoverageIgnore
      *
      * @return string[]
      *
@@ -86,9 +86,9 @@ trait ModelInformation
         $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         /** @noinspection NullPointerExceptionInspection */
         $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
         ];
         asort($liabilityTypes);
 
@@ -103,7 +103,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -122,8 +122,8 @@ trait ModelInformation
         $triggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values   = [
             $bill->transactionCurrency()->first()->name,
-            round((float)$bill->amount_min, 12),
-            round((float)$bill->amount_max, 12),
+            round((float) $bill->amount_min, 12),
+            round((float) $bill->amount_max, 12),
             $bill->name,
         ];
         foreach ($triggers as $index => $trigger) {
@@ -160,10 +160,21 @@ trait ModelInformation
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
-        $result   = [];
-        $triggers = [];
-        $values   = [];
-        $index    = 0;
+        // TODO duplicated code.
+        $operators       = config('firefly.search.operators');
+        $triggers        = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+            }
+        }
+        asort($triggers);
+
+        $result          = [];
+        $journalTriggers = [];
+        $values          = [];
+        $index           = 0;
         // amount, description, category, budget, tags, source, destination, notes, currency type
         //,type
         /** @var Transaction $source */
@@ -174,66 +185,65 @@ trait ModelInformation
             return $result;
         }
         // type
-        $triggers[$index] = 'transaction_type';
-        $values[$index]   = $journal->transactionType->type;
+        $journalTriggers[$index] = 'transaction_type';
+        $values[$index]          = $journal->transactionType->type;
         $index++;
 
         // currency
-        $triggers[$index] = 'currency_is';
-        $values[$index]   = sprintf('%s (%s)', $journal->transactionCurrency->name, $journal->transactionCurrency->code);
+        $journalTriggers[$index] = 'currency_is';
+        $values[$index]          = sprintf('%s (%s)', $journal->transactionCurrency->name, $journal->transactionCurrency->code);
         $index++;
 
         // amount_exactly:
-        $triggers[$index] = 'amount_exactly';
-        $values[$index]   = $destination->amount;
+        $journalTriggers[$index] = 'amount_exactly';
+        $values[$index]          = $destination->amount;
         $index++;
 
         // description_is:
-        $triggers[$index] = 'description_is';
-        $values[$index]   = $journal->description;
+        $journalTriggers[$index] = 'description_is';
+        $values[$index]          = $journal->description;
         $index++;
 
         // from_account_is
-        $triggers[$index] = 'from_account_is';
-        $values[$index]   = $source->account->name;
+        $journalTriggers[$index] = 'source_account_is';
+        $values[$index]          = $source->account->name;
         $index++;
 
         // to_account_is
-        $triggers[$index] = 'to_account_is';
-        $values[$index]   = $destination->account->name;
+        $journalTriggers[$index] = 'destination_account_is';
+        $values[$index]          = $destination->account->name;
         $index++;
 
         // category (if)
         $category = $journal->categories()->first();
         if (null !== $category) {
-            $triggers[$index] = 'category_is';
-            $values[$index]   = $category->name;
+            $journalTriggers[$index] = 'category_is';
+            $values[$index]          = $category->name;
             $index++;
         }
         // budget (if)
         $budget = $journal->budgets()->first();
         if (null !== $budget) {
-            $triggers[$index] = 'budget_is';
-            $values[$index]   = $budget->name;
+            $journalTriggers[$index] = 'budget_is';
+            $values[$index]          = $budget->name;
             $index++;
         }
         // tags (if)
         $tags = $journal->tags()->get();
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $triggers[$index] = 'tag_is';
-            $values[$index]   = $tag->tag;
+            $journalTriggers[$index] = 'tag_is';
+            $values[$index]          = $tag->tag;
             $index++;
         }
         // notes (if)
         $notes = $journal->notes()->first();
         if (null !== $notes) {
-            $triggers[$index] = 'notes_are';
-            $values[$index]   = $notes->text;
-            $index++;
+            $journalTriggers[$index] = 'notes_are';
+            $values[$index]          = $notes->text;
         }
 
-        foreach ($triggers as $index => $trigger) {
+        foreach ($journalTriggers as $index => $trigger) {
             try {
                 $string = view(
                     'rules.partials.trigger',
@@ -242,6 +252,7 @@ trait ModelInformation
                         'oldValue'   => $values[$index],
                         'oldChecked' => false,
                         'count'      => $index + 1,
+                        'triggers'   => $triggers,
                     ]
                 )->render();
                 // @codeCoverageIgnoreStart
