@@ -118,15 +118,26 @@ trait ModelInformation
      */
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
-        $result   = [];
-        $triggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
-        $values   = [
+        // TODO duplicated code.
+        $operators = config('firefly.search.operators');
+        $triggers  = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+            }
+        }
+        asort($triggers);
+
+        $result       = [];
+        $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
+        $values       = [
             $bill->transactionCurrency()->first()->name,
             round((float) $bill->amount_min, 12),
             round((float) $bill->amount_max, 12),
             $bill->name,
         ];
-        foreach ($triggers as $index => $trigger) {
+        foreach ($billTriggers as $index => $trigger) {
             try {
                 $string = view(
                     'rules.partials.trigger',
@@ -135,6 +146,7 @@ trait ModelInformation
                         'oldValue'   => $values[$index],
                         'oldChecked' => false,
                         'count'      => $index + 1,
+                        'triggers'   => $triggers,
                     ]
                 )->render();
                 // @codeCoverageIgnoreStart
@@ -161,8 +173,8 @@ trait ModelInformation
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
         // TODO duplicated code.
-        $operators       = config('firefly.search.operators');
-        $triggers        = [];
+        $operators = config('firefly.search.operators');
+        $triggers  = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
 
