@@ -381,7 +381,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">{{ 'attachments'|_ }}</h3>
                         </div>
-                        <div class="box-body table-responsive no-padding">
+                        <div class="box-body no-padding">
                             {% include 'list.attachments' with {attachments: attachments[journal.transaction_journal_id]} %}
                         </div>
                     </div>
@@ -393,7 +393,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">{{ 'piggy_events'|_ }}</h3>
                         </div>
-                        <div class="box-body table-responsive no-padding">
+                        <div class="box-body no-padding">
                             <table class="table table-hover">
                                 {% for event in events[journal.transaction_journal_id] %}
                                     <tr>

@@ -30,8 +30,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="box-body table-responsive no-padding">
-                    <table class="table table-hover" id="piggyDetails">
+                <div class="box-body no-padding">
+                    <table class="table table-responsive table-hover" id="piggyDetails">
                         <tr>
                             <td style="width:40%;">{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
@@ -96,7 +96,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
-                <div class="box-body table-responsive no-padding" id="piggyEvents">
+                <div class="box-body no-padding" id="piggyEvents">
                     {% include 'list/piggy-bank-events' %}
                 </div>
             </div>
@@ -125,7 +125,7 @@
                             {{ 'attachments'|_ }}
                         </h3>
                     </div>
-                    <div class="box-body table-responsive no-padding">
+                    <div class="box-body no-padding">
                         {% include 'list.attachments' %}
                     </div>
                 </div>
