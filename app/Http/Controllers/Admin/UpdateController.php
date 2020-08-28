@@ -61,9 +61,9 @@ class UpdateController extends Controller
     /**
      * Show page with update options.
      *
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerExceptionInterface
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index()
     {
@@ -100,6 +100,11 @@ class UpdateController extends Controller
         $checkForUpdates = (int) $request->get('check_for_updates');
         $channel         = $request->get('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
+
+        // store as telemetry
+        app('telemetry')->feature('admin.update.channel', $channel);
+        app('telemetry')->feature('admin.update.permission', (string) $checkForUpdates);
+
         app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
         app('fireflyconfig')->set('last_update_check', time());
         app('fireflyconfig')->set('update_channel', $channel);
