@@ -677,6 +677,13 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function findCurrency(string $value): ?TransactionCurrency
     {
+        if(str_contains($value,'(') && str_contains($value,')')) {
+            // bad method to split and get the currency code:
+            $parts = explode(' ', $value);
+            $value = trim($parts[count($parts) -1], "() \t\n\r\0\x0B");
+        }
+
+
         $result = $this->currencyRepository->findByCodeNull($value);
         if (null === $result) {
             $result = $this->currencyRepository->findByNameNull($value);
