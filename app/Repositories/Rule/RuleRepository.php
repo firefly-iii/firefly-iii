@@ -413,6 +413,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
             ];
+            app('telemetry')->feature('rules.actions.uses_action', $action['type']);
 
             $this->storeAction($rule, $actionValues);
         }
@@ -449,6 +450,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
             ];
+            app('telemetry')->feature('rules.triggers.uses_trigger', $trigger['type']);
 
             $this->storeTrigger($rule, $triggerValues);
             ++$order;
