@@ -43,28 +43,6 @@ class ClearNotes implements ActionInterface
     }
 
     /**
-     * Remove notes
-     *
-     * @param TransactionJournal $journal
-     * @codeCoverageIgnore
-     * @deprecated
-     * @return bool
-     * @throws Exception
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        Log::debug(sprintf('RuleAction ClearNotes removed all notes.'));
-        $notes = $journal->notes()->get();
-        /** @var Note $note */
-        foreach ($notes as $note) {
-            $note->delete();
-        }
-        $journal->touch();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

@@ -45,32 +45,6 @@ class RemoveTag implements ActionInterface
     }
 
     /**
-     * Remove tag X
-     * @deprecated
-     * @codeCoverageIgnore
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        // if tag does not exist, no need to continue:
-        $name = $this->action->action_value;
-        $tag  = $journal->user->tags()->where('tag', $name)->first();
-
-        if (null !== $tag) {
-            Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal->id));
-            $journal->tags()->detach([$tag->id]);
-            $journal->touch();
-
-            return true;
-        }
-        Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal->id));
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

@@ -42,30 +42,6 @@ class ClearBudget implements ActionInterface
     }
 
     /**
-     * Clear all budgets
-     *
-     * @param TransactionJournal $journal
-     * @codeCoverageIgnore
-     * @return bool
-     * @deprecated
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $journal->budgets()->detach();
-        $journal->touch();
-
-        // also remove budgets from transactions (although no longer necessary)
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->budgets()->detach();
-        }
-
-        Log::debug(sprintf('RuleAction ClearBudget removed all budgets from journal %d.', $journal->id));
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

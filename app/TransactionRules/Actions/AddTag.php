@@ -48,42 +48,6 @@ class AddTag implements ActionInterface
 
     /**
      * @inheritDoc
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        // journal has this tag maybe?
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($journal->user);
-
-        // TODO explode value on comma?
-
-
-        $tag = $factory->findOrCreate($this->action->action_value);
-
-        if (null === $tag) {
-            // could not find, could not create tag.
-            Log::error(sprintf('RuleAction AddTag. Could not find or create tag "%s"', $this->action->action_value));
-
-            return false;
-        }
-        $count = $journal->tags()->where('tag_id', $tag->id)->count();
-        if (0 === $count) {
-            $journal->tags()->save($tag);
-            $journal->touch();
-            Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal->id));
-
-            return true;
-        }
-        Log::debug(sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal->id));
-
-        return false;
-    }
-
-    /**
-     * @inheritDoc
      */
     public function actOnArray(array $journal): bool
     {

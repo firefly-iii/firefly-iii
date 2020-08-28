@@ -45,43 +45,6 @@ class DeleteTransaction implements ActionInterface
     }
 
     /**
-     * Will delete transaction journal. Also the group if no other journals are in the group.
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     * @throws Exception
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-
-        $count = $journal->transactionGroup->transactionJournals()->count();
-
-        // destroy entire group.
-        if (1 === $count) {
-            Log::debug(
-                sprintf(
-                    'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                    $journal->id, $journal->description
-                )
-            );
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($journal->transactionGroup);
-
-            return true;
-        }
-        Log::debug(sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal->id, $journal->description));
-
-        // trigger delete factory:
-        /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-        $service->destroy($journal);
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

@@ -46,24 +46,6 @@ class PrependDescription implements ActionInterface
     }
 
     /**
-     * Prepend description with X
-     * @codeCoverageIgnore
-     * @deprecated
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        Log::debug(sprintf('RuleAction PrependDescription prepended "%s" to "%s".', $this->action->action_value, $journal->description));
-        $journal->description = $this->action->action_value . $journal->description;
-        $journal->save();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

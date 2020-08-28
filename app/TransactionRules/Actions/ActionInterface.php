@@ -38,16 +38,6 @@ interface ActionInterface
     public function __construct(RuleAction $action);
 
     /**
-     * Execute the action.
-     * @deprecated
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool;
-
-    /**
      * Execute the action on an array.
      *
      * @param array $journal

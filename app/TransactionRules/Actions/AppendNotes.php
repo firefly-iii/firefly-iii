@@ -46,30 +46,6 @@ class AppendNotes implements ActionInterface
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @deprecated
-     * @codeCoverageIgnore
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $dbNote = $journal->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($journal);
-        }
-        $notes = $dbNote->text;
-        Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $notes));
-        $notes        .= $this->action->action_value;
-        $dbNote->text = $notes;
-        $dbNote->save();
-        $journal->save();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

@@ -337,7 +337,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->findNull((int) $value);
+                    $account = $this->accountRepository->findNull((int) $accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }

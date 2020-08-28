@@ -42,31 +42,6 @@ class ClearCategory implements ActionInterface
     }
 
     /**
-     * Clear all categories
-     *
-     * @param TransactionJournal $journal
-     * @codeCoverageIgnore
-     * @deprecated 
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $journal->categories()->detach();
-        $journal->touch();
-
-        // also remove categories from transactions:
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->categories()->detach();
-        }
-
-        Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal %d.', $journal->id));
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

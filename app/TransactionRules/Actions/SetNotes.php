@@ -45,31 +45,6 @@ class SetNotes implements ActionInterface
     }
 
     /**
-     * Set notes to X
-     *
-     * @param TransactionJournal $journal
-     * @return bool
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $dbNote = $journal->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($journal);
-        }
-        $oldNotes     = $dbNote->text;
-        $dbNote->text = $this->action->action_value;
-        $dbNote->save();
-        $journal->save();
-
-        Log::debug(sprintf('RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".', $journal->id, $oldNotes, $this->action->action_value));
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

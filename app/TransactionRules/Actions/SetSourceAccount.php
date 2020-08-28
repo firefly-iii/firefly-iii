@@ -50,19 +50,6 @@ class SetSourceAccount implements ActionInterface
     }
 
     /**
-     * Set source account to X
-     *
-     * @param TransactionJournal $journal
-     * @return bool
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        return false;
-    }
-
-    /**
      * @param string $type
      *
      * @return Account|null

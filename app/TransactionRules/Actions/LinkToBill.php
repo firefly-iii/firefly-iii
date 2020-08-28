@@ -51,36 +51,6 @@ class LinkToBill implements ActionInterface
     }
 
     /**
-     * Set bill to be X.
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->setUser($this->action->rule->user);
-        $billName = (string) $this->action->action_value;
-        $bill     = $repository->findByName($billName);
-
-        if (null !== $bill && $journal->transactionType->type === TransactionType::WITHDRAWAL) {
-            $journal->bill()->associate($bill);
-            $journal->save();
-            Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal->id, $bill->id, $bill->name));
-
-            return true;
-        }
-
-        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found!', $journal->id, $billName));
-
-
-        return false;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

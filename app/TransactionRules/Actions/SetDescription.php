@@ -45,33 +45,6 @@ class SetDescription implements ActionInterface
     }
 
     /**
-     * Set description to X
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $oldDescription       = $journal->description;
-        $journal->description = $this->action->action_value;
-        $journal->save();
-
-        Log::debug(
-            sprintf(
-                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
-                $journal->id,
-                $oldDescription,
-                $this->action->action_value
-            )
-        );
-        $journal->touch();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

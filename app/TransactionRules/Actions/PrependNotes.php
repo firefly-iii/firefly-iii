@@ -46,30 +46,6 @@ class PrependNotes implements ActionInterface
     }
 
     /**
-     * Prepend notes with X
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $dbNote = $journal->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($journal);
-        }
-        $notes = $dbNote->text;
-        Log::debug(sprintf('RuleAction PrependNotes prepended "%s" with "%s".', $notes, $this->action->action_value));
-        $notes        = $this->action->action_value . $notes;
-        $dbNote->text = $notes;
-        $dbNote->save();
-        $journal->save();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

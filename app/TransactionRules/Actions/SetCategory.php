@@ -48,35 +48,6 @@ class SetCategory implements ActionInterface
     }
 
     /**
-     * Set category X
-     *
-     * @param TransactionJournal $journal
-     * @deprecated 
-     * @codeCoverageIgnore 
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $name = $this->action->action_value;
-
-        /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
-        $factory->setUser($journal->user);
-        $category = $factory->findOrCreate(null, $name);
-        if (null === $category) {
-            Log::error(sprintf('Action SetCategory did not fire because "%s" did not result in a valid category.', $name));
-
-            return false;
-        }
-
-        $journal->categories()->sync([$category->id]);
-
-        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal->id, $category->id, $category->name));
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

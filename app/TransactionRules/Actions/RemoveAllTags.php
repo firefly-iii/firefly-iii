@@ -43,23 +43,6 @@ class RemoveAllTags implements ActionInterface
     }
 
     /**
-     * Remove all tags
-     *
-     * @param TransactionJournal $journal
-     * @deprecated
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        Log::debug(sprintf('RuleAction ClearCategory removed all tags from journal %d.', $journal->id));
-        $journal->tags()->detach();
-        $journal->touch();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

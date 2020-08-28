@@ -47,46 +47,6 @@ class SetBudget implements ActionInterface
     }
 
     /**
-     * Set budget.
-     *
-     * @param TransactionJournal $journal
-     * @deprecated
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        $search = $this->action->action_value;
-
-        $budget = $journal->user->budgets()->where('name', $search)->first();
-        if (null === $budget) {
-            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
-
-            return false;
-        }
-
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
-            Log::debug(
-                sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
-                    $journal->id,
-                    $search,
-                    $journal->transactionType->type
-                )
-            );
-
-            return true;
-        }
-
-        Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
-
-        $journal->budgets()->sync([$budget->id]);
-        $journal->touch();
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

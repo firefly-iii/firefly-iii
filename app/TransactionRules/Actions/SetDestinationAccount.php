@@ -50,19 +50,6 @@ class SetDestinationAccount implements ActionInterface
     }
 
     /**
-     * Set destination account to X
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     * @deprecated
-     * @codeCoverageIgnore
-     */
-    public function act(TransactionJournal $journal): bool
-    {
-        return false;
-    }
-
-    /**
      * @return Account|null
      */
     private function findExpenseAccount(): ?Account

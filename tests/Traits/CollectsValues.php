@@ -31,6 +31,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -82,6 +83,14 @@ trait CollectsValues
         return $this->user()->bills()->inRandomOrder()->first();
     }
 
+    /**
+     * @return PiggyBank
+     */
+    public function getRandomPiggyBank(): PiggyBank
+    {
+        return $this->user()->piggyBanks()->inRandomOrder()->first();
+    }
+
 
     /**
      * @return Tag
@@ -97,6 +106,14 @@ trait CollectsValues
     public function getRandomWithdrawal(): TransactionJournal
     {
         return $this->getRandomJournal(TransactionType::WITHDRAWAL);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomTransfer(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::TRANSFER);
     }
 
     /**
