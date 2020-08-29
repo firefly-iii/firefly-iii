@@ -318,9 +318,9 @@ return [
     'search_modifier_bill_is'                             => 'Rachunek to ":value"',
     'search_modifier_transaction_type'                    => 'Transakcja jest typu ":value"',
     'search_modifier_tag_is'                              => 'Tag to ":value"',
-    'update_rule_from_query'                              => 'Update rule ":rule" from search query',
-    'create_rule_from_query'                              => 'Create new rule from search query',
-    'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
+    'update_rule_from_query'                              => 'Aktualizuj regułę ":rule" z zapytania wyszukiwania',
+    'create_rule_from_query'                              => 'Utwórz nową regułę z zapytania wyszukiwania',
+    'rule_from_search_words'                              => 'Silnik reguł ma problemy z obsługą ":string". Sugerowana reguła, która pasuje do Twojego zapytania może dawać różne wyniki. Proszę dokładnie sprawdź wyzwalacze reguł.',
 
 
     // END

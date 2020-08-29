@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Testiviesti Firefly III applikaatioltasi',
     'admin_test_body'                  => 'Tämä on testiviesti Firefly III instanssiltasi. Se lähetettiin osoitteeseen :email.',
 
+    // new IP
+    'login_from_new_ip'                => 'New login on Firefly III',
+    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
+    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+    'ip_address'                       => 'IP address',
+    'host_name'                        => 'Host',
+    'date_time'                        => 'Date + time',
+
     // access token created
     'access_token_created_subject'     => 'Uusi käyttöoikeustunnus luotiin',
     'access_token_created_body'        => 'Joku (toivottavasti sinä) loi juuri uuden Firefly III käyttöoikeustunnuksen käyttäjätilillesi.',

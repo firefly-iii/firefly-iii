@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Un message de test de votre installation de Firefly III',
     'admin_test_body'                  => 'Ceci est un message de test de votre instance Firefly III. Il a été envoyé à :email.',
 
+    // new IP
+    'login_from_new_ip'                => 'Nouvelle connexion sur Firefly III',
+    'new_ip_body'                      => 'Firefly III a détecté une nouvelle connexion sur votre compte à partir d\'une adresse IP inconnue. Si vous ne vous êtes jamais connecté depuis l\'adresse IP ci-dessous, ou si ça fait plus de six mois, Firefly III vous avertira.',
+    'new_ip_warning'                   => 'Si vous reconnaissez cette adresse IP ou la connexion, vous pouvez ignorer ce message. Si vous ne vous êtes pas connecté, si vous n\'avez aucune idée de quoi il s\'agit, vérifiez la sécurité de votre mot de passe, modifiez-la et déconnectez toutes les autres sessions. Pour cela, allez sur votre page de profil. Bien sûr, vous avez déjà activé l\'A2F, n\'est-ce pas ? Soyez prudent !',
+    'ip_address'                       => 'Adresse IP',
+    'host_name'                        => 'Hôte',
+    'date_time'                        => 'Date + heure',
+
     // access token created
     'access_token_created_subject'     => 'Un nouveau jeton d\'accès a été créé',
     'access_token_created_body'        => 'Quelqu\'un (espérons vous) vient de créer un nouveau jeton d\'accès à l\'API Firefly III pour votre compte utilisateur.',

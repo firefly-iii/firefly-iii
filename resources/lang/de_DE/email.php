@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Eine Textnachricht von Ihrer Firefly III Installation',
     'admin_test_body'                  => 'Dies ist eine Testnachricht von Ihrer Firefly III-Instanz. Sie wurde an :email gesendet.',
 
+    // new IP
+    'login_from_new_ip'                => 'Neue Anmeldung bei Firefly III',
+    'new_ip_body'                      => 'Firefly III hat eine neue Anmeldung auf Ihrem Konto von einer unbekannten IP-Adresse erkannt. Wenn Sie sich noch nie von der unten angegebenen IP-Adresse aus angemeldet haben oder dies mehr als sechs Monate her ist, warnt Sie Firefly III.',
+    'new_ip_warning'                   => 'Wenn Sie diese IP-Adresse oder diese Anmeldung erkennen, können Sie diese Meldung ignorieren. Wenn Sie sich nicht angemeldet haben, oder wenn Sie keine Ahnung haben, worum es hier geht, überprüfen Sie die Sicherheit Ihres Passworts, ändern Sie es und melden Sie alle anderen Sitzungen ab. Rufen Sie dazu Ihre Profilseite auf. Es wird empfohlen die Zwei-Faktor-Authentifizierung (2FA) zu aktivieren. Bleiben Sie geschützt!',
+    'ip_address'                       => 'IP-Adresse',
+    'host_name'                        => 'Host',
+    'date_time'                        => 'Datum und Uhrzeit',
+
     // access token created
     'access_token_created_subject'     => 'Ein neuer Zugriffstoken wurde erstellt',
     'access_token_created_body'        => 'Jemand (hoffentlich Sie) hat gerade einen neuen Firefly III API Zugangstoken für Ihr Benutzerkonto erstellt.',

@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Een testbericht van je Firefly III-installatie',
     'admin_test_body'                  => 'Dit is een testbericht vanaf jouw Firefly III-installatie. Het is verstuurd naar :email.',
 
+    // new IP
+    'login_from_new_ip'                => 'Nieuwe login op Firefly III',
+    'new_ip_body'                      => 'Firefly III heeft een nieuwe login op je account gedetecteerd van een onbekend IP-adres. Je krijgt deze waarschuwing omdat je nooit hebt ingelogd vanaf het onderstaande IP-adres, of dat was meer dan zes maanden geleden.',
+    'new_ip_warning'                   => 'Je mag dit bericht negeren als je het IP adres herkent. Als je niet hebt ingelogd of je hebt geen flauw idee waar dit over gaat, zorg dan dat je je wachtwoord verandert en al je andere sessies uitlogt. Dit kan op je profielpagina. Je hebt 2FA al aanstaan toch? Stay safe!',
+    'ip_address'                       => 'IP adres',
+    'host_name'                        => 'Host',
+    'date_time'                        => 'Datum & tijd',
+
     // access token created
     'access_token_created_subject'     => 'Er is een nieuw access token gegenereerd',
     'access_token_created_body'        => 'Zojuist heeft iemand (hopelijk jij) voor jouw gebruikersaccount een nieuw Firefly III API Access Token gemaakt.',

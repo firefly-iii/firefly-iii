@@ -320,7 +320,7 @@ return [
     'search_modifier_tag_is'                              => 'Schlagwort ist „:value”',
     'update_rule_from_query'                              => 'Regel „:rule” aus Suchanfrage aktualisieren',
     'create_rule_from_query'                              => 'Neue Regel aus Suchanfrage erstellen',
-    'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
+    'rule_from_search_words'                              => 'Die Regel-Modul hat Schwierigkeiten „:string” zu verarbeiten. Die vorgeschlagene Regel, die Ihrer Suchanfrage entspricht, kann zu unterschiedlichen Ergebnissen führen. Bitte überprüfen Sie die Regelauslöser sorgfältig.',
 
 
     // END
