@@ -112,6 +112,8 @@ class LoginController extends Controller
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
+            // if you just logged in, it can't be that you have a valid 2FA cookie.
+
             return $this->sendLoginResponse($request);
         }
 

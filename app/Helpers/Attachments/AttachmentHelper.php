@@ -306,7 +306,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $content = $fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
-            // store it:
+            // store it without encryption.
             $this->uploadDisk->put($attachment->fileName(), $content);
             $attachment->uploaded = true; // update attachment
             $attachment->save();
