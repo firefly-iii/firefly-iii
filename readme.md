@@ -30,7 +30,7 @@
 - [About Firefly III](#about-firefly-iii)
   - [Purpose](#purpose)
   - [Features](#features)
-  - [Who's it for?](#whos-it-for)
+  - [Who's it for?](#-whos-it-for)
   - [The Firefly III eco-system](#the-firefly-iii-eco-system)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
