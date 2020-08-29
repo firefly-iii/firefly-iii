@@ -34,9 +34,12 @@ return [
     'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
 
     // new IP
-    'login_from_new_ip'                => 'You logged in from an unknown IP address.',
-    'new_ip_body'                      => 'You logged in from a new, unknown IP address. If you never logged in from the IP address below, or it has been more than six months, Firefly III will warn you.',
-    'new_ip_warning'                   => 'If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+    'login_from_new_ip'                => 'New login on Firefly III',
+    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
+    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+    'ip_address'                       => 'IP address',
+    'host_name'                        => 'Host',
+    'date_time'                        => 'Date + time',
 
     // access token created
     'access_token_created_subject'     => 'A new access token was created',
