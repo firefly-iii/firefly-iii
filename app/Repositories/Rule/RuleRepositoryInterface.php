@@ -40,6 +40,14 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
+     * Return search query for rule.
+     *
+     * @param Rule $rule
+     * @return string
+     */
+    public function getSearchQuery(Rule $rule): string;
+
+    /**
      * @param Rule      $rule
      * @param RuleGroup $ruleGroup
      * @param int       $order
@@ -75,6 +83,20 @@ interface RuleRepositoryInterface
      * @return Collection
      */
     public function getAll(): Collection;
+
+    /**
+     * Get all the users rules that trigger on storage.
+     *
+     * @return Collection
+     */
+    public function getStoreRules(): Collection;
+
+    /**
+     * Get all the users rules that trigger on update.
+     *
+     * @return Collection
+     */
+    public function getUpdateRules(): Collection;
 
     /**
      * @return RuleGroup

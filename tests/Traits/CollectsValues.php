@@ -28,6 +28,11 @@ use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -55,11 +60,68 @@ trait CollectsValues
     }
 
     /**
+     * @return Budget
+     */
+    public function getRandomBudget(): Budget
+    {
+        return $this->user()->budgets()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Category
+     */
+    public function getRandomCategory(): Category
+    {
+        return $this->user()->categories()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Bill
+     */
+    public function getRandomBill(): Bill
+    {
+        return $this->user()->bills()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return PiggyBank
+     */
+    public function getRandomPiggyBank(): PiggyBank
+    {
+        return $this->user()->piggyBanks()->inRandomOrder()->first();
+    }
+
+
+    /**
+     * @return Tag
+     */
+    public function getRandomTag(): Tag
+    {
+        return $this->user()->tags()->inRandomOrder()->first();
+    }
+
+    /**
      * @return TransactionJournal
      */
     public function getRandomWithdrawal(): TransactionJournal
     {
         return $this->getRandomJournal(TransactionType::WITHDRAWAL);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomTransfer(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::TRANSFER);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomDeposit(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::DEPOSIT);
     }
 
     /**
@@ -90,7 +152,7 @@ trait CollectsValues
             throw new FireflyException(sprintf('Cannot find suitable %s to use.', $type));
         }
 
-        return TransactionJournal::find((int)$result->transaction_journal_id);
+        return TransactionJournal::find((int) $result->transaction_journal_id);
 
     }
 

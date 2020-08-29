@@ -26,7 +26,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
-
+use DB;
 /**
  * Class ClearBudget.
  */
@@ -42,24 +42,13 @@ class ClearBudget implements ActionInterface
     }
 
     /**
-     * Clear all budgets
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        $journal->budgets()->detach();
-        $journal->touch();
+        DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
-        // also remove budgets from transactions (although no longer necessary)
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->budgets()->detach();
-        }
-
-        Log::debug(sprintf('RuleAction ClearBudget removed all budgets from journal %d.', $journal->id));
+        Log::debug(sprintf('RuleAction ClearBudget removed all budgets from journal %d.', $journal['transaction_journal_id']));
 
         return true;
     }

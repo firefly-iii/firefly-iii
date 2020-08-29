@@ -92,11 +92,6 @@ class ShowController extends Controller
     {
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
-        // temp catch for layout.
-        if ('v2' === config('firefly.layout')) {
-            return view('accounts.empty-index', compact('objectType'));
-        }
-
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }

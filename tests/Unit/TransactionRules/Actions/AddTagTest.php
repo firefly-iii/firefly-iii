@@ -22,18 +22,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class AddTagTest
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AddTagTest extends TestCase
 {
@@ -42,9 +39,6 @@ class AddTagTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -54,9 +48,11 @@ class AddTagTest extends TestCase
      */
     public function testActExistingTag(): void
     {
-        $tagFactory = $this->mock(TagFactory::class);
-        $tag        = $this->getRandomTag();
-        $journal    = $this->getRandomWithdrawal();
+        /** @var Tag $tag */
+        $tag = $this->user()->tags()->where('tag', 'RuleActionTag')->first();
+
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
 
         // make sure journal has no tags:
         $journal->tags()->sync([]);
@@ -65,18 +61,20 @@ class AddTagTest extends TestCase
         // add single existing tag:
         $journal->tags()->sync([$tag->id]);
 
-
-        $tagFactory->shouldReceive('setUser')->once();
-        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$tag->tag])->andReturn($tag);
-
         // assert connection exists.
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
 
-        // file action
+        // array with data required:
+        $array = [
+            'user_id'                => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+        ];
+
+        // run the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $tag->tag;
-        $action = new AddTag($ruleAction);
-        $result = $action->act($journal);
+        $action                   = new AddTag($ruleAction);
+        $result                   = $action->actOnArray($array);
         $this->assertFalse($result);
 
         // assert DB is unchanged.
@@ -89,28 +87,30 @@ class AddTagTest extends TestCase
      */
     public function testActNewTag(): void
     {
-        $tagFactory = $this->mock(TagFactory::class);
-        $tag        = $this->getRandomTag();
-        $journal    = $this->getRandomWithdrawal();
+        /** @var Tag $tag */
+        $tag = $this->user()->tags()->where('tag', 'RuleActionTag')->first();
+
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
 
         // make sure journal has no tags:
         $journal->tags()->sync([]);
         $journal->save();
 
-        $tagFactory->shouldReceive('setUser')->once();
-        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$tag->tag])->andReturn($tag);
+        // array with data required:
+        $array = [
+            'user_id'                => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+        ];
 
-        // assert connection does not exist.
-        $this->assertDatabaseMissing('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
-
-        // file action
+        // run the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $tag->tag;
-        $action = new AddTag($ruleAction);
-        $result = $action->act($journal);
+        $action                   = new AddTag($ruleAction);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
-        // assert DB is unchanged.
+        // assert DB is updated! Yay!
         $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
     }
 
@@ -119,19 +119,34 @@ class AddTagTest extends TestCase
      */
     public function testActNullTag(): void
     {
-        // try to add non-existing tag
-        $tagFactory = $this->mock(TagFactory::class);
-        $newTagName = 'TestTag-' . $this->randomInt();
+        $newTagName = sprintf('TestTag-%d', $this->randomInt());
 
-        // should return null:
-        $tagFactory->shouldReceive('setUser')->once();
-        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$newTagName])->andReturnNull();
+        /** @var TransactionJournal $journal */
+        $journal = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
 
-        $journal                  = $this->getRandomWithdrawal();
+        // make sure journal has no tags:
+        $journal->tags()->sync([]);
+        $journal->save();
+
+        // array with data required:
+        $array = [
+            'user_id'                => $this->user()->id,
+            'transaction_journal_id' => $journal->id,
+        ];
+
+        // run the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $newTagName;
         $action                   = new AddTag($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertFalse($result);
+        $result                   = $action->actOnArray($array);
+        $this->assertTrue($result);
+
+        // find the tag in the DB:
+        $this->assertDatabaseHas('tags', ['tag' => $newTagName]);
+
+        $tag = Tag::whereTag($newTagName)->first();
+
+        // assert DB is updated! Yay!
+        $this->assertDatabaseHas('tag_transaction_journal', ['tag_id' => $tag->id, 'transaction_journal_id' => $journal->id]);
     }
 }

@@ -32,9 +32,6 @@ use Tests\TestCase;
 
 /**
  * Class ClearNotesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearNotesTest extends TestCase
 {
@@ -43,9 +40,6 @@ class ClearNotesTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -56,7 +50,7 @@ class ClearNotesTest extends TestCase
     public function testAct(): void
     {
         // give journal a note:
-        $journal = $this->getRandomWithdrawal();
+        $journal  = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
         $note    = $journal->notes()->first();
         if (null === $note) {
             $note = new Note;
@@ -70,8 +64,13 @@ class ClearNotesTest extends TestCase
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = null;
         $action                   = new ClearNotes($ruleAction);
+
+        $array = [
+            'transaction_journal_id' => $journal->id
+        ];
+
         try {
-            $result = $action->act($journal);
+            $result = $action->actOnArray($array);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

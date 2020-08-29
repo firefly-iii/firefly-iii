@@ -26,8 +26,10 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 use Exception;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
 use Log;
@@ -36,9 +38,6 @@ use Tests\TestCase;
 /**
  *
  * Class ConvertToDepositTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ConvertToDepositTest extends TestCase
 {
@@ -47,9 +46,6 @@ class ConvertToDepositTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -61,35 +57,36 @@ class ConvertToDepositTest extends TestCase
      */
     public function testActTransfer(): void
     {
-        $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . $this->randomInt();
-        $journal = $this->getRandomTransfer();
+        /** @var TransactionJournal $transfer */
+        $transfer = $this->user()->transactionJournals()->where('description', 'Transfer for convertToDeposit.')->first();
+        $name     = sprintf('Random revenue #%d', $this->randomInt());
 
         // journal is a transfer:
-        $this->assertEquals(TransactionType::TRANSFER, $journal->transactionType->type);
+        $this->assertEquals(TransactionType::TRANSFER, $transfer->transactionType->type);
 
-        // mock used stuff:
-        $factory = $this->mock(AccountFactory::class);
-        $factory->shouldReceive('setUser')->once();
-        $factory->shouldReceive('findOrCreate')->once()->withArgs([$name, AccountType::REVENUE])->andReturn($revenue);
-
+        // make array for action:
+        $array = [
+            'transaction_journal_id' => $transfer->id,
+            'transaction_type_type'  => $transfer->transactionType->type,
+            'user_id'                => $this->user()->id,
+            'source_account_name'    => 'Checking Account',
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $name;
         $action                   = new ConvertToDeposit($ruleAction);
         try {
-            $result = $action->act($journal);
+            $result = $action->actOnArray($array);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
-
-        // journal is now a deposit.
-        $journal->refresh();
-        $this->assertEquals(TransactionType::DEPOSIT, $journal->transactionType->type);
+        // get journal:
+        $transfer->refresh();
+        $this->assertEquals(TransactionType::DEPOSIT, $transfer->transactionType->type);
     }
 
     /**
@@ -99,36 +96,39 @@ class ConvertToDepositTest extends TestCase
      */
     public function testActWithdrawal(): void
     {
-        $revenue = $this->getRandomRevenue();
-        $name    = 'Random revenue #' . $this->randomInt();
-        $journal = $this->getRandomWithdrawal();
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('description', 'Withdrawal for convertToDeposit.')->first();
+        $name       = sprintf('Random revenue #%d', $this->randomInt());
 
         // journal is a withdrawal:
-        $this->assertEquals(TransactionType::WITHDRAWAL, $journal->transactionType->type);
+        $this->assertEquals(TransactionType::WITHDRAWAL, $withdrawal->transactionType->type);
 
-        // mock used stuff:
-        $factory = $this->mock(AccountFactory::class);
-        $factory->shouldReceive('setUser')->once();
-        $factory->shouldReceive('findOrCreate')->once()->withArgs([$name, AccountType::REVENUE])->andReturn($revenue);
+        // quick DB search for original source:
+        $source = Account::where('name', 'Checking Account')->first();
 
+        // make array for action:
+        $array = [
+            'transaction_journal_id'   => $withdrawal->id,
+            'transaction_type_type'    => $withdrawal->transactionType->type,
+            'user_id'                  => $this->user()->id,
+            'destination_account_name' => 'SuperMarket',
+            'source_account_id'        => $source->id,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = $name;
         $action                   = new ConvertToDeposit($ruleAction);
         try {
-            $result = $action->act($journal);
+            $result = $action->actOnArray($array);
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->assertTrue(false, $e->getMessage());
         }
         $this->assertTrue($result);
-
-        // journal is now a deposit.
-        $journal->refresh();
-        $this->assertEquals(TransactionType::DEPOSIT, $journal->transactionType->type);
+        // get journal:
+        $withdrawal->refresh();
+        $this->assertEquals(TransactionType::DEPOSIT, $withdrawal->transactionType->type);
     }
-
-
 }

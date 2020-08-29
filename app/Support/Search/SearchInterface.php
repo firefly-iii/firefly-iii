@@ -37,6 +37,11 @@ interface SearchInterface
     public function getModifiers(): Collection;
 
     /**
+     * @return Collection
+     */
+    public function getOperators(): Collection;
+
+    /**
      * @return string
      */
     public function getWordsAsString(): string;
@@ -45,6 +50,11 @@ interface SearchInterface
      * @param int $page
      */
     public function setPage(int $page): void;
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit): void;
 
     /**
      * @return bool

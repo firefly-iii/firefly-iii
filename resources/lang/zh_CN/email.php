@@ -33,6 +33,14 @@ return [
     'admin_test_subject'               => 'Firefly III 安装的测试消息',
     'admin_test_body'                  => '这是来自 Firefly III 实例的测试消息。它已被发送到 :email。',
 
+    // new IP
+    'login_from_new_ip'                => 'New login on Firefly III',
+    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
+    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+    'ip_address'                       => 'IP address',
+    'host_name'                        => 'Host',
+    'date_time'                        => 'Date + time',
+
     // access token created
     'access_token_created_subject'     => '创建了一个新的访问令牌',
     'access_token_created_body'        => '某人(希望是你) 刚刚为你的用户帐户创建了一个新的 Firefly III API 访问令牌。',

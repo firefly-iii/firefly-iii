@@ -28,13 +28,10 @@ use FireflyIII\Api\V1\Requests\RuleGroupRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTestRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\TransactionRules\Engine\RuleEngine;
-use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -45,7 +42,6 @@ use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use Log;
 
 /**
  * Class RuleGroupController
@@ -248,54 +244,51 @@ class RuleGroupController extends Controller
      * @param RuleGroupTestRequest $request
      * @param RuleGroup            $group
      *
+     * @return JsonResponse
      * @throws FireflyException
      *
-     * @return JsonResponse
      */
     public function testGroup(RuleGroupTestRequest $request, RuleGroup $group): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        Log::debug('Now in testGroup()');
         /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('200023: No rules in this rule group.');
         }
-        $parameters           = $request->getTestParameters();
-        $matchingTransactions = [];
+        $parameters = $request->getTestParameters();
 
-        Log::debug(sprintf('Going to test %d rules', $rules->count()));
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
-            Log::debug(sprintf('Now testing rule #%d, "%s"', $rule->id, $rule->title));
-            /** @var TransactionMatcher $matcher */
-            $matcher = app(TransactionMatcher::class);
-            // set all parameters:
-            $matcher->setRule($rule);
-            $matcher->setStartDate($parameters['start_date']);
-            $matcher->setEndDate($parameters['end_date']);
-            $matcher->setSearchLimit($parameters['search_limit']);
-            $matcher->setTriggeredLimit($parameters['trigger_limit']);
-            $matcher->setAccounts($parameters['accounts']);
+        /** @var RuleEngineInterface $ruleEngine */
+        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine->setRules($rules);
 
-            $result = $matcher->findTransactionsByRule();
-            /** @noinspection AdditionOperationOnArraysInspection */
-            $matchingTransactions = $result + $matchingTransactions;
+        // overrule the rule(s) if necessary.
+        if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
 
-        // make paginator out of results.
-        $count        = count($matchingTransactions);
-        $transactions = array_slice($matchingTransactions, ($parameters['page'] - 1) * $pageSize, $pageSize);
+        if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
+        }
+        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+            $ruleEngine->addOperator(['type' => 'account_id', 'value' => $parameters['accounts']]);
+        }
 
-        // make paginator:
-        $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $parameters['page']);
+        // file the rule(s)
+        $transactions = $ruleEngine->find();
+        $count        = $transactions->count();
+
+        $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]) . $this->buildParams());
 
-        $manager     = $this->getManager();
+        // resulting list is presented as JSON thing.
+        $manager = $this->getManager();
+        /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -307,40 +300,40 @@ class RuleGroupController extends Controller
      * @param RuleGroupTriggerRequest $request
      * @param RuleGroup               $group
      *
-     * @throws Exception
      * @return JsonResponse
+     * @throws Exception
      */
     public function triggerGroup(RuleGroupTriggerRequest $request, RuleGroup $group): JsonResponse
     {
+        /** @var Collection $rules */
+        $rules = $this->ruleGroupRepository->getActiveRules($group);
+        if (0 === $rules->count()) {
+            throw new FireflyException('200023: No rules in this rule group.');
+        }
+
+        // Get parameters specified by the user
         $parameters = $request->getTriggerParameters();
 
-        /** @var Collection $collection */
-        $collection = $this->ruleGroupRepository->getActiveRules($group);
-        $rules      = [];
-        /** @var Rule $item */
-        foreach ($collection as $item) {
-            $rules[] = $item->id;
+        /** @var RuleEngineInterface $ruleEngine */
+        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine->setRules($rules);
+
+        // overrule the rule(s) if necessary.
+        if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
 
-        // start looping.
-        /** @var RuleEngine $ruleEngine */
-        $ruleEngine = app(RuleEngine::class);
-        $ruleEngine->setUser(auth()->user());
-        $ruleEngine->setRulesToApply($rules);
-        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($parameters['accounts']);
-        $collector->setRange($parameters['start_date'], $parameters['end_date']);
-        $journals = $collector->getExtractedJournals();
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            Log::debug('Start of new journal.');
-            $ruleEngine->processJournalArray($journal);
-            Log::debug('Done with all rules for this group + done with journal.');
+        if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
+            // add a range:
+            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
+        if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
+            $ruleEngine->addOperator(['type' => 'account_id', 'value' => $parameters['accounts']]);
+        }
+
+        // file the rule(s)
+        $ruleEngine->fire();
 
         return response()->json([], 204);
     }

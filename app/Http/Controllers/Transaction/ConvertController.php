@@ -54,8 +54,7 @@ class ConvertController extends Controller
 {
     use ModelInformation, UserNavigation;
 
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * ConvertController constructor.
@@ -260,7 +259,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance  = app('steam')->balance($account);
+            $balance  = app('steam')->balance($account, today());
             $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
             $role     = (string) $repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
@@ -289,7 +288,7 @@ class ConvertController extends Controller
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance                     = app('steam')->balance($account);
+            $balance                     = app('steam')->balance($account, today());
             $currency                    = $repository->getAccountCurrency($account) ?? $defaultCurrency;
             $role                        = 'l_' . $account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_' . $role);

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,6 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TestRuleFormRequest extends FormRequest
 {
+    use GetRuleConfiguration;
     /**
      * Verify the request.
      *
@@ -51,7 +53,7 @@ class TestRuleFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        $validTriggers = array_keys(config('firefly.rule-triggers'));
+        $validTriggers = $this->getTriggers();
         $rules         = [
             'rule-trigger.*'       => 'required|min:1|in:' . implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',

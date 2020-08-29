@@ -36,6 +36,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use Log;
 use Mockery;
 use Preferences;
@@ -95,7 +96,10 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(0, $account->order);
         $this->assertNull($account->virtual_balance);
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
+
     }
 
 
@@ -141,7 +145,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertCount(1, $account->locations()->get());
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
     /**
@@ -184,7 +190,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertNull($account->iban);
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
     /**
@@ -227,7 +235,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertEquals($data['iban'], $account->iban);
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
     /**
@@ -273,7 +283,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertCount(1, $account->transactions()->get());
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
     /**
      * Create asset, include opening balance.
@@ -318,7 +330,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertCount(1, $account->transactions()->get());
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
     /**
@@ -364,7 +378,9 @@ class AccountFactoryTest extends TestCase
         $this->assertNull($account->virtual_balance);
         $this->assertCount(0, $account->transactions()->get());
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
 
@@ -410,7 +426,9 @@ class AccountFactoryTest extends TestCase
         $this->assertEquals(0, $account->order);
         $this->assertNull($account->virtual_balance);
 
-        $account->forceDelete();
+        // use delete service:
+        $service = app(AccountDestroyService::class);
+        $service->destroy($account, null);
     }
 
 

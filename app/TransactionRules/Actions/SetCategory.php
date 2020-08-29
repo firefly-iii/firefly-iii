@@ -25,15 +25,17 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Log;
+use DB;
 
 /**
  * Class SetCategory.
  */
 class SetCategory implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -46,29 +48,27 @@ class SetCategory implements ActionInterface
     }
 
     /**
-     * Set category X
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        $name = $this->action->action_value;
+        $user = User::find($journal['user_id']);
+        $search = $this->action->action_value;
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);
-        $factory->setUser($journal->user);
-        $category = $factory->findOrCreate(null, $name);
+        $factory->setUser($user);
+        $category = $factory->findOrCreate(null, $search);
         if (null === $category) {
-            Log::error(sprintf('Action SetCategory did not fire because "%s" did not result in a valid category.', $name));
+            Log::debug(sprintf('RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'], $search));
 
             return false;
         }
 
-        $journal->categories()->sync([$category->id]);
+        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal['transaction_journal_id'], $category->id, $category->name));
 
-        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal->id, $category->id, $category->name));
+        DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
         return true;
     }

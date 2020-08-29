@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use Tests\TestCase;
 
@@ -35,21 +32,9 @@ use Tests\TestCase;
  * Try split journal
  *
  * Class SetDestinationAccountTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetDestinationAccountTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
     /**
      * Give deposit existing asset account.
      *
@@ -57,31 +42,41 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActDepositExisting(): void
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $deposit       = $this->getRandomDeposit();
-        $destinationTr = $deposit->transactions()->where('amount', '>', 0)->first();
-        $destination   = $destinationTr->account;
-        $user          = $deposit->user;
-        $accountType   = AccountType::whereType(AccountType::ASSET)->first();
-        $account       = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $destination->id)->first();
-        $this->assertNotEquals($destination->id, $account->id);
+        // get random deposit:
+        $deposit        = $this->getRandomDeposit();
+        $destinationTr  = $deposit->transactions()->where('amount', '>', 0)->first();
+        $destination    = $destinationTr->account;
+        $oldDestination = $destinationTr->account_id;
 
-        // find account? Return account:
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findByName')->andReturn($account);
+        // grab unused asset account:
+        $user           = $deposit->user;
+        $accountType    = AccountType::whereType(AccountType::ASSET)->first();
+        $newDestination = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $destination->id)->first();
+        $this->assertNotEquals($destination->id, $newDestination->id);
+
+        // array with info:
+        $array = [
+            'transaction_journal_id' => $deposit->id,
+            'user_id'                => $this->user()->id,
+            'transaction_type_type'  => TransactionType::DEPOSIT,
+            'source_account_type'    => AccountType::REVENUE,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $account->name;
+        $ruleAction->action_value = $newDestination->name;
         $action                   = new SetDestinationAccount($ruleAction);
-        $result                   = $action->act($deposit);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         // test journal for new account
-        $destinationTr  = $deposit->transactions()->where('amount', '>', 0)->first();
-        $newDestination = $destinationTr->account;
-        $this->assertNotEquals($destination->id, $newDestination->id);
-        $this->assertEquals($newDestination->id, $account->id);
+        $destinationTr->refresh();
+        $updatedDestination = $destinationTr->account;
+        $this->assertEquals($newDestination->id, $updatedDestination->id);
+        $this->assertEquals($destinationTr->account_id, $newDestination->id);
+
+        $destinationTr->account_id = $oldDestination;
+        $destinationTr->save();
     }
 
     /**
@@ -91,19 +86,29 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActDepositNotExisting(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $deposit      = $this->getRandomDeposit();
+        // get random deposit:
+        $deposit        = $this->getRandomDeposit();
+        $destinationTr  = $deposit->transactions()->where('amount', '>', 0)->first();
+        $oldDestination = $destinationTr->account;
 
-        // find account? Return account:
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        // array with info:
+        $array = [
+            'transaction_journal_id' => $deposit->id,
+            'user_id'                => $this->user()->id,
+            'transaction_type_type'  => TransactionType::DEPOSIT,
+            'source_account_type'    => AccountType::REVENUE,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Not existing asset account #' . $this->randomInt();
+        $ruleAction->action_value = sprintf('Not existing asset account #%d', $this->randomInt());
         $action                   = new SetDestinationAccount($ruleAction);
-        $result                   = $action->act($deposit);
+        $result                   = $action->actOnArray($array);
         $this->assertFalse($result);
+
+        // test journal for new account
+        $destinationTr->refresh();
+        $this->assertEquals($destinationTr->account_id, $oldDestination->id);
     }
 
     /**
@@ -113,22 +118,32 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActWithDrawalNotExisting(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->getRandomExpense();
-        $withdrawal   = $this->getRandomWithdrawal();
-
-        // find account? Return account:
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findByName')->andReturn(null);
-        $accountRepos->shouldReceive('store')->once()->andReturn($account);
+        // get random withdrawal:
+        $withdrawal     = $this->getRandomWithdrawal();
+        $destinationTr  = $withdrawal->transactions()->where('amount', '>', 0)->first();
+        $oldDestination = $destinationTr->account;
+        // array with info:
+        $array = [
+            'transaction_journal_id' => $withdrawal->id,
+            'user_id'                => $this->user()->id,
+            'transaction_type_type'  => TransactionType::WITHDRAWAL,
+            'source_account_type'    => AccountType::ASSET,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'Not existing expense account #' . $this->randomInt();
+        $ruleAction->action_value = sprintf('Not existing expense account #%d', $this->randomInt());
         $action                   = new SetDestinationAccount($ruleAction);
-        $result                   = $action->act($withdrawal);
-
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
+
+        // test journal for new account
+        $destinationTr->refresh();
+        $newDestination = $destinationTr->account;
+        $this->assertEquals($newDestination->name, $ruleAction->action_value);
+
+        $destinationTr->account_id = $oldDestination;
+        $destinationTr->save();
     }
 
     /**
@@ -138,31 +153,31 @@ class SetDestinationAccountTest extends TestCase
      */
     public function testActWithdrawalExisting(): void
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $withdrawal    = $this->getRandomWithdrawal();
-        $destinationTr = $withdrawal->transactions()->where('amount', '>', 0)->first();
-        $destination   = $destinationTr->account;
-        $user          = $withdrawal->user;
-        $accountType   = AccountType::whereType(AccountType::EXPENSE)->first();
-        $account       = $user->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $destination->id)->first();
-        $this->assertNotEquals($destination->id, $account->id);
+        // get random withdrawal:
+        $withdrawal     = $this->getRandomWithdrawal();
+        $destinationTr  = $withdrawal->transactions()->where('amount', '>', 0)->first();
+        $oldDestination = $destinationTr->account;
+        $newDestination = $this->user()->accounts()->where('id', '!=', $oldDestination->id)->first();
 
-        // find account? Return account:
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findByName')->andReturn($account);
+        // array with info:
+        $array = [
+            'transaction_journal_id' => $withdrawal->id,
+            'user_id'                => $this->user()->id,
+            'transaction_type_type'  => TransactionType::WITHDRAWAL,
+            'source_account_type'    => AccountType::ASSET,
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $account->name;
+        $ruleAction->action_value = $newDestination->name;
         $action                   = new SetDestinationAccount($ruleAction);
-        $result                   = $action->act($withdrawal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         // test journal for new account
-        $destinationTr  = $withdrawal->transactions()->where('amount', '>', 0)->first();
+        $destinationTr->refresh();
         $newDestination = $destinationTr->account;
-        $this->assertNotEquals($destination->id, $newDestination->id);
-        $this->assertEquals($newDestination->id, $account->id);
+        $this->assertEquals($newDestination->name, $ruleAction->action_value);
     }
 
 }

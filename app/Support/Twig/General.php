@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\CommonMarkConverter;
 use Route;
 use Twig\Extension\AbstractExtension;
@@ -64,7 +65,18 @@ class General extends AbstractExtension
             $this->formatDate(),
             $this->getMetaField(),
             $this->hasRole(),
+            $this->getRootSearchOperator(),
         ];
+    }
+
+    protected function getRootSearchOperator(): TwigFunction
+    {
+        return new TwigFunction(
+            'getRootSearchOperator',
+            static function (string $operator): string {
+                return OperatorQuerySearch::getRootOperator($operator);
+            }
+        );
     }
 
     /**

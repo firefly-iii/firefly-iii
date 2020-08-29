@@ -136,7 +136,7 @@ class AccountValidator
         switch ($this->transactionType) {
             default:
                 $result            = false;
-                $this->sourceError = 'Firefly III cannot validate the account information you submitted.';
+                $this->sourceError = trans('validation.invalid_account_info');
                 Log::error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will always return false.', $this->transactionType));
                 break;
             case TransactionType::WITHDRAWAL:

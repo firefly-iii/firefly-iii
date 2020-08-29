@@ -25,15 +25,16 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\User;
 use Log;
+use DB;
 
 /**
  * Class SetBudget.
  */
 class SetBudget implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -46,40 +47,37 @@ class SetBudget implements ActionInterface
     }
 
     /**
-     * Set budget.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
+        $user = User::find($journal['user_id']);
         $search = $this->action->action_value;
 
-        $budget = $journal->user->budgets()->where('name', $search)->first();
+        $budget = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
-            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal->id, $search));
+            Log::debug(sprintf('RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.', $journal['transaction_journal_id'], $search));
 
             return false;
         }
 
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+        if (TransactionType::WITHDRAWAL !== $journal['transaction_type_type']) {
             Log::debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
-                    $journal->id,
+                    $journal['transaction_journal_id'],
                     $search,
-                    $journal->transactionType->type
+                    $journal['transaction_type_type']
                 )
             );
 
             return true;
         }
 
-        Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal->id, $budget->id, $budget->name));
+        Log::debug(sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name));
 
-        $journal->budgets()->sync([$budget->id]);
-        $journal->touch();
+        DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
 
         return true;
     }

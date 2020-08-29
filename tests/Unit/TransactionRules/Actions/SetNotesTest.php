@@ -30,22 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class SetNotesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class SetNotesTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
-
     /**
      * @covers \FireflyIII\TransactionRules\Actions\SetNotes
      */
@@ -64,7 +51,7 @@ class SetNotesTest extends TestCase
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'These are new notes ' . $this->randomInt();
+        $ruleAction->action_value = sprintf('These are new notes #%d', $this->randomInt());
         $action                   = new SetNotes($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
@@ -72,6 +59,7 @@ class SetNotesTest extends TestCase
         // assert result
         $this->assertEquals(1, $journal->notes()->count());
         $this->assertEquals($note->id, $journal->notes()->first()->id);
+        $journal->notes()->delete();
     }
 
     /**

@@ -50,7 +50,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 /**
  * Class TransactionController
  */
@@ -59,9 +58,7 @@ class TransactionController extends Controller
     use TransactionFilter;
 
     private TransactionGroupRepositoryInterface $groupRepository;
-
     private JournalAPIRepositoryInterface       $journalAPIRepository;
-
     private JournalRepositoryInterface          $repository;
 
 

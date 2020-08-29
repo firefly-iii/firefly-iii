@@ -72,25 +72,24 @@ class RuleController extends Controller
      */
     public function trigger(Request $request): JsonResponse
     {
-        $count    = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
-        $keys     = array_keys(config('firefly.rule-triggers'));
-        $triggers = [];
-        foreach ($keys as $key) {
-            if ('user_action' !== $key) {
-                $triggers[$key] = (string) trans('firefly.rule_trigger_' . $key . '_choice');
+        $count     = (int) $request->get('count') > 0 ? (int) $request->get('count') : 1;
+        $operators = config('firefly.search.operators');
+        $triggers  = [];
+        foreach ($operators as $key => $operator) {
+            if ('user_action' !== $key && false === $operator['alias']) {
+
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
-            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
 
-        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view]);
     }

@@ -73,6 +73,7 @@ class AttachmentFactoryTest extends TestCase
         $this->assertEquals($data['title'], $result->title);
         $this->assertEquals(1, $result->notes()->count());
 
+        $result->forceDelete();
 
     }
 
@@ -103,6 +104,8 @@ class AttachmentFactoryTest extends TestCase
         $this->assertEquals($data['title'], $result->title);
         $this->assertEquals(1, $result->notes()->count());
         $this->assertEquals($journal->id, $result->attachable_id);
+
+        $result->forceDelete();
 
 
     }

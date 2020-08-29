@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use Exception;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
@@ -44,34 +45,30 @@ class DeleteTransaction implements ActionInterface
     }
 
     /**
-     * Will delete transaction journal. Also the group if no other journals are in the group.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @throws Exception
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-
-        $count = $journal->transactionGroup->transactionJournals()->count();
+        $count = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
 
         // destroy entire group.
         if (1 === $count) {
             Log::debug(
                 sprintf(
                     'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                    $journal->id, $journal->description
+                    $journal['transaction_journal_id'], $journal['description']
                 )
             );
+            $group = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($journal->transactionGroup);
+            $service->destroy($group);
 
             return true;
         }
-        Log::debug(sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal->id, $journal->description));
+        Log::debug(sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description']));
 
         // trigger delete factory:
+        $journal = TransactionJournal::find($journal['transaction_group_id']);
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         $service->destroy($journal);

@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
+use DB;
 
 /**
  * Class PrependDescription.
@@ -45,18 +46,12 @@ class PrependDescription implements ActionInterface
     }
 
     /**
-     * Prepend description with X
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        Log::debug(sprintf('RuleAction PrependDescription prepended "%s" to "%s".', $this->action->action_value, $journal->description));
-        $journal->description = $this->action->action_value . $journal->description;
-        $journal->save();
-
+        $description = sprintf('%s%s', $this->action->action_value, $journal['description']);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
         return true;
     }
 }

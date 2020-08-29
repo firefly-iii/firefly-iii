@@ -31,7 +31,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Contracts\View\Factory;
@@ -73,14 +73,15 @@ class ShowController extends Controller
             }
         );
     }
+
     /**
      * Rescan bills for transactions.
      *
      * @param Request $request
      * @param Bill    $bill
      *
-     * @throws FireflyException
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function rescan(Request $request, Bill $bill)
     {
@@ -104,25 +105,19 @@ class ShowController extends Controller
         // unlink all journals:
         $this->repository->unlinkAll($bill);
 
-        foreach ($set as $rule) {
-            // simply fire off all rules?
-            /** @var TransactionMatcher $matcher */
-            $matcher = app(TransactionMatcher::class);
-            $matcher->setSearchLimit(100000); // large upper limit
-            $matcher->setTriggeredLimit(100000); // large upper limit
-            $matcher->setRule($rule);
-            $matchingTransactions = $matcher->findTransactionsByRule();
-            $total                += count($matchingTransactions);
-            $this->repository->linkCollectionToBill($bill, $matchingTransactions);
-        }
+        // fire the rules:
+        /** @var RuleEngineInterface $ruleEngine */
+        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine->setRules($set);
 
+        // file the rule(s)
+        $ruleEngine->fire();
 
         $request->session()->flash('success', (string) trans_choice('firefly.rescanned_bill', $total));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));
     }
-
 
 
     /**

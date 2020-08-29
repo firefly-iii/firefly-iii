@@ -49,6 +49,6 @@ class Domain
      */
     public static function getRuleTriggers(): array
     {
-        return config('firefly.rule-triggers');
+        return array_keys(config('firefly.search.operators'));
     }
 }

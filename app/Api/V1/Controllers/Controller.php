@@ -54,6 +54,15 @@ abstract class Controller extends BaseController
     {
         // get global parameters
         $this->parameters = $this->getParameters();
+        $this->middleware(
+            function ($request, $next) {
+                if (auth()->check()) {
+                    $language = app('steam')->getLanguage();
+                    app()->setLocale($language);
+                }
+                return $next($request);
+            });
+
     }
 
     /**

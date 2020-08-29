@@ -25,16 +25,12 @@ namespace Tests\Unit\TransactionRules\Actions;
 
 
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class LinkToBillTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkToBillTest extends TestCase
 {
@@ -43,9 +39,6 @@ class LinkToBillTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -55,49 +48,29 @@ class LinkToBillTest extends TestCase
      */
     public function testBasic(): void
     {
-        $repos                    = $this->mock(BillRepositoryInterface::class);
-        $withdrawal               = $this->getRandomWithdrawal();
-        $rule                     = $this->getRandomRule();
-        $bill                     = $this->getRandomBill();
+        $withdrawal = $this->getRandomWithdrawal();
+        $bill       = $this->getRandomBill();
+
+        $array = [
+            'transaction_journal_id' => $withdrawal->id,
+            'transaction_type_type'  => $withdrawal->transactionType->type,
+            'user_id'                => $this->user()->id,
+        ];
+
         $ruleAction               = new RuleAction;
-        $ruleAction->rule         = $rule;
         $ruleAction->action_type  = 'link_to_bill';
         $ruleAction->action_value = $bill->name;
 
-        $repos->shouldReceive('setUser');
-        $repos->shouldReceive('findByName')->withArgs([$bill->name])->andReturn($bill);
-
         $action = new LinkToBill($ruleAction);
-        $result = $action->act($withdrawal);
+        $result = $action->actOnArray($array);
 
         $this->assertTrue($result);
+        // withdrawal has bill id.
+        $withdrawal->refresh();
+        $this->assertEquals($bill->id, $withdrawal->bill_id);
 
-
+        $withdrawal->bill_id = null;
+        $withdrawal->save();
     }
 
-
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\LinkToBill
-     */
-    public function testNoBill(): void
-    {
-        $repos                    = $this->mock(BillRepositoryInterface::class);
-        $withdrawal               = $this->getRandomWithdrawal();
-        $rule                     = $this->getRandomRule();
-        $bill                     = $this->getRandomBill();
-        $ruleAction               = new RuleAction;
-        $ruleAction->rule         = $rule;
-        $ruleAction->action_type  = 'link_to_bill';
-        $ruleAction->action_value = $bill->name;
-
-        $repos->shouldReceive('setUser');
-        $repos->shouldReceive('findByName')->withArgs([$bill->name])->andReturnNull();
-
-        $action = new LinkToBill($ruleAction);
-        $result = $action->act($withdrawal);
-
-        $this->assertFalse($result);
-
-
-    }
 }

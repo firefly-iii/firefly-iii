@@ -30,9 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class ClearBudgetTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ClearBudgetTest extends TestCase
 {
@@ -41,9 +38,6 @@ class ClearBudgetTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -54,26 +48,25 @@ class ClearBudgetTest extends TestCase
     public function testAct(): void
     {
         // associate budget with journal:
-        $journal = $this->getRandomWithdrawal();
-        $budget  = $this->getRandomBudget();
+        $journal = $this->user()->transactionJournals()->where('description','Rule action test transaction.')->first();
+        $budget  = $this->user()->budgets()->inRandomOrder()->first();
+
+        // link a budget.
         $journal->budgets()->save($budget);
         $this->assertGreaterThan(0, $journal->budgets()->count());
+
+        $array = [
+            'transaction_journal_id' => $journal->id
+        ];
 
         // fire the action:
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = null;
         $action                   = new ClearBudget($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         // assert result
         $this->assertEquals(0, $journal->budgets()->count());
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $this->assertEquals(0, $transaction->budgets()->count());
-        }
-
-
     }
 }

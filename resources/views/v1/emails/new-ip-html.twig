@@ -1,0 +1,16 @@
+{% include 'emails.header-html' %}
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    {{ trans('email.new_ip_body') }}
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    {{ trans('email.ip_address') }}: <strong>{{ ipAddress }}</strong><br />
+    {% if ''!= host %}{{ trans('email.host_name') }}: {{ host }}<br />{% endif %}
+    {{ trans('email.date_time') }}: {{ time }}<br />
+</p>
+
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    {{ trans('email.new_ip_warning') }}
+</p>
+
+{% include 'emails.footer-html' %}

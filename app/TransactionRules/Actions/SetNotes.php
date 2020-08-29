@@ -32,8 +32,7 @@ use Log;
  */
 class SetNotes implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleACtion $action;
 
     /**
      * TriggerInterface constructor.
@@ -46,25 +45,23 @@ class SetNotes implements ActionInterface
     }
 
     /**
-     * Set notes to X
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        $dbNote = $journal->notes()->first();
+        $dbNote = Note::where('noteable_id', $journal['transaction_journal_id'])
+                      ->where('noteable_type', TransactionJournal::class)->first();
         if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($journal);
+            $dbNote                = new Note;
+            $dbNote->noteable_id   = $journal['transaction_journal_id'];
+            $dbNote->noteable_type = TransactionJournal::class;
+            $dbNote->text          = '';
         }
         $oldNotes     = $dbNote->text;
         $dbNote->text = $this->action->action_value;
         $dbNote->save();
-        $journal->save();
 
-        Log::debug(sprintf('RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".', $journal->id, $oldNotes, $this->action->action_value));
+        Log::debug(sprintf('RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".', $journal['transaction_journal_id'], $oldNotes, $this->action->action_value));
 
         return true;
     }

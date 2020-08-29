@@ -26,7 +26,7 @@ return [
     'home'                   => '首页',
     'edit_currency'          => '编辑货币 ":name"',
     'delete_currency'        => '删除货币 ":name"',
-    'newPiggyBank'           => '创建一个新的存钱罐',
+    'newPiggyBank'           => '创建一个新的小猪存钱罐',
     'edit_piggyBank'         => '编辑存钱罐 ":name"',
     'preferences'            => '设置',
     'profile'                => '个人档案',
@@ -59,7 +59,7 @@ return [
     'delete_journal_link'    => '删除交易记录之间的连结',
     'telemetry_index'        => '遥测',
     'telemetry_view'         => '查看遥测',
-    'edit_object_group'      => 'Edit group ":title"',
-    'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'edit_object_group'      => '编辑组 ":title"',
+    'delete_object_group'    => '删除组 ":title"',
+    'logout_others'          => '注销其他会话'
 ];

@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Rule;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,7 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, GetRuleConfiguration;
     /**
      * Verify the request.
      *
@@ -73,14 +74,14 @@ class RuleFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = array_keys(config('firefly.rule-triggers'));
+        $validTriggers = $this->getTriggers();
         $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some actions require text (aka context):
         $contextActions = implode(',', config('firefly.context-rule-actions'));
 
         // some triggers require text (aka context):
-        $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
+        $contextTriggers = implode(',', $this->getTriggersWithContext());
 
         // initial set of rules:
         $rules = [

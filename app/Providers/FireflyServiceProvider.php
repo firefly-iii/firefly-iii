@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
@@ -45,11 +44,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Services\Currency\ExchangeRateInterface;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use FireflyIII\Services\IP\IpifyOrg;
-use FireflyIII\Services\IP\IPRetrievalInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\Amount;
@@ -63,6 +59,8 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Telemetry;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
+use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -192,6 +190,19 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
 
+        $this->app->bind(
+            RuleEngineInterface::class,
+            static function (Application $app) {
+                /** @var SearchRuleEngine $engine */
+                $engine = app(SearchRuleEngine::class);
+                if ($app->auth->check()) {
+                    $engine->setUser(auth()->user());
+                }
+
+                return $engine;
+            }
+        );
+
         // more generators:
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
         $this->app->bind(HelpInterface::class, Help::class);
@@ -200,17 +211,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
         $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
-        $class = (string) config(sprintf('firefly.cer_providers.%s', (string) config('firefly.cer_provider')));
-        if ('' === $class) {
-            throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');
-        }
-        $this->app->bind(ExchangeRateInterface::class, $class);
-
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
-
-        // IP thing:
-        $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
 
         // net worth thing.
         $this->app->bind(NetWorthInterface::class, NetWorth::class);

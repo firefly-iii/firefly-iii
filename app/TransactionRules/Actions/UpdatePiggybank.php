@@ -55,60 +55,14 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * @param array     $journalArray
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
      */
-    public function act(TransactionJournal $journal): bool
+    private function addAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
     {
-        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal->id));
-        if (TransactionType::TRANSFER !== $journal->transactionType->type) {
-            Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal->id, $journal->transactionType->type));
-
-            return false;
-        }
-        $piggyBank = $this->findPiggybank($journal->user);
-        if (null === $piggyBank) {
-            Log::info(
-                sprintf(
-                    'No piggy bank names "%s", cant execute action #%d of rule #%d ("%s")',
-                    $this->action->value, $this->action->id, $this->action->rule_id, $this->action->rule->title,
-                )
-            );
-
-            return false;
-        }
-
-        Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
-
-        /** @var Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
-
-        if ((int) $source->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so remove amount.');
-            $this->removeAmount($journal, $piggyBank, $destination->amount);
-
-
-            return true;
-        }
-        if ((int) $destination->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so add amount.');
-            $this->addAmount($journal, $piggyBank, $destination->amount);
-
-            return true;
-        }
-        Log::info('Piggy bank is not linked to source or destination, so no action will be taken.');
-
-        return true;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param PiggyBank          $piggyBank
-     * @param string             $amount
-     */
-    private function addAmount(TransactionJournal $journal, PiggyBank $piggyBank, string $amount): void
-    {
+        $user = User::find($journalArray['user_id']);
+        $journal = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
 
@@ -150,12 +104,14 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param PiggyBank          $piggyBank
-     * @param string             $amount
+     * @param array     $journalArray
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
      */
-    private function removeAmount(TransactionJournal $journal, PiggyBank $piggyBank, string $amount): void
+    private function removeAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
     {
+        $user = User::find($journalArray['user_id']);
+        $journal = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
 
@@ -183,5 +139,49 @@ class UpdatePiggybank implements ActionInterface
 
         $repository->removeAmount($piggyBank, $amount);
         $repository->createEventWithJournal($piggyBank, app('steam')->negative($amount), $journal);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
+        if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
+            Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal['transaction_journal_id'], $journal['transaction_type_type']));
+
+            return false;
+        }
+        $user = User::find($journal['user_id']);
+
+        $piggyBank = $this->findPiggybank($user);
+        if (null === $piggyBank) {
+            Log::info(sprintf('No piggy bank names "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id));
+
+            return false;
+        }
+
+        Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
+
+        /** @var Transaction $source */
+        $source = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
+        $destination = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '>', 0)->first();
+
+        if ((int) $source->account_id === (int) $piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so remove amount.');
+            $this->removeAmount($journal, $piggyBank, $destination->amount);
+
+            return true;
+        }
+        if ((int) $destination->account_id === (int) $piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so add amount.');
+            $this->addAmount($journal, $piggyBank, $destination->amount);
+
+            return true;
+        }
+        Log::info('Piggy bank is not linked to source or destination, so no action will be taken.');
+
+        return true;
     }
 }

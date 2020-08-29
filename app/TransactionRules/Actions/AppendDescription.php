@@ -25,14 +25,14 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Log;
+use DB;
 
 /**
  * Class AppendDescription.
  */
 class AppendDescription implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -45,18 +45,12 @@ class AppendDescription implements ActionInterface
     }
 
     /**
-     * Append description with X
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        Log::debug(sprintf('RuleAction AppendDescription appended "%s" to "%s".', $this->action->action_value, $journal->description));
-        $journal->description .= $this->action->action_value;
-        $journal->save();
-
+        $description = sprintf('%s%s', $journal['description'], $this->action->action_value);
+        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
         return true;
     }
 }

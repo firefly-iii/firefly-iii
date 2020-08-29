@@ -27,74 +27,40 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use Tests\TestCase;
+use DB;
 
 /**
  * Class PrependNotesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * TODO doesnt test if prepends or appends.
  */
 class PrependNotesTest extends TestCase
 {
-    /**
-     * Set up test
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-    }
-
     /**
      * @covers \FireflyIII\TransactionRules\Actions\PrependNotes
      */
     public function testAct(): void
     {
         // give journal some notes.
-        $journal   = $this->getRandomWithdrawal();
-        $note      = $journal->notes()->first();
-        $start     = 'Default note text';
-        $toPrepend = 'This is prepended';
-        if (null === $note) {
-            $note = new Note();
-            $note->noteable()->associate($journal);
-        }
-        $note->text = $start;
-        $note->save();
+        $journal = $this->user()->transactionJournals()->where('description','Rule action note test transaction.')->first();
+
+        // make sure all notes deleted:
+        DB::table('notes')->where('noteable_id', $journal->id)->where('noteable_type', TransactionJournal::class)->delete();
+
+        // array for action:
+        $array = [
+            'transaction_journal_id' => $journal->id
+        ];
+        $toAppend = 'Text to append to note.';
 
         // fire the action:
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $toPrepend;
+        $ruleAction->action_value = $toAppend;
         $action                   = new PrependNotes($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         $newNote = $journal->notes()->first();
-        $this->assertEquals($toPrepend . $start, $newNote->text);
+        $this->assertEquals($toAppend, $newNote->text);
     }
 
-    /**
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes
-     */
-    public function testActNewNote(): void
-    {
-        // give journal some notes.
-        $journal = $this->getRandomWithdrawal();
-        $note    = $journal->notes()->first();
-        if (null !== $note) {
-            $note->forceDelete();
-        }
-        $toPrepend = 'This is appended';
-
-        // fire the action:
-        $ruleAction               = new RuleAction;
-        $ruleAction->action_value = $toPrepend;
-        $action                   = new PrependNotes($ruleAction);
-        $result                   = $action->act($journal);
-        $this->assertTrue($result);
-
-        $newNote = $journal->notes()->first();
-        $this->assertEquals($toPrepend, $newNote->text);
-    }
 }

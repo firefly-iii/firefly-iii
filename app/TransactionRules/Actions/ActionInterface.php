@@ -38,11 +38,10 @@ interface ActionInterface
     public function __construct(RuleAction $action);
 
     /**
-     * Execute the action.
+     * Execute the action on an array.
      *
-     * @param TransactionJournal $journal
-     *
+     * @param array $journal
      * @return bool
      */
-    public function act(TransactionJournal $journal): bool;
+    public function actOnArray(array $journal): bool;
 }

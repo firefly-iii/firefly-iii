@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
-
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -42,24 +42,13 @@ class ClearCategory implements ActionInterface
     }
 
     /**
-     * Clear all categories
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function act(TransactionJournal $journal): bool
+    public function actOnArray(array $journal): bool
     {
-        $journal->categories()->detach();
-        $journal->touch();
+        DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
-        // also remove categories from transactions:
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $transaction->categories()->detach();
-        }
-
-        Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal %d.', $journal->id));
+        Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal %d.', $journal['transaction_journal_id']));
 
         return true;
     }

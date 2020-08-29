@@ -24,7 +24,7 @@
                         </div>
                     </div>
 
-                    <div class="box-body table-responsive no-padding">
+                    <div class="box-body no-padding">
                         <div style="padding:8px;">
                             <a href="{{ route('recurring.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_recurring')|_ }}
                             </a>
@@ -34,7 +34,7 @@
                         <div style="padding-left:8px;">
                             {{ paginator.render|raw }}
                         </div>
-                        <table class="table table-hover sortable">
+                        <table class="table table-responsive  table-hover sortable">
                             <thead>
                             <tr>
                                 <th class="hidden-sm hidden-xs" data-defaultsort="disabled">&nbsp;</th>

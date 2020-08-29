@@ -69,8 +69,8 @@ class LoginController extends Controller
 
         $loginProvider = config('firefly.login_provider');
         $authGuard     = config('firefly.authentication_guard');
-
-        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
+        $route         = request()->route()->getName();
+        if (('eloquent' !== $loginProvider || 'web' !== $authGuard) && 'logout' !== $route) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
     }
@@ -111,6 +111,8 @@ class LoginController extends Controller
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
+
+            // if you just logged in, it can't be that you have a valid 2FA cookie.
 
             return $this->sendLoginResponse($request);
         }
@@ -158,7 +160,11 @@ class LoginController extends Controller
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        // todo must forget 2FA if user ends up here.
+        $storeInCookie = config('google2fa.store_in_cookie', false);
+        if (false !== $storeInCookie) {
+            $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+            request()->cookies->set($cookieName, 'invalid');
+        }
 
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));

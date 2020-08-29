@@ -61,6 +61,73 @@ trait MetaCollection
         return $this;
     }
 
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function notesContain(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where('notes', 'LIKE', sprintf('%%%s%%', $value));
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function notesEndWith(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where('notes', 'LIKE', sprintf('%%%s', $value));
+        return $this;
+    }
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function withoutNotes(): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->whereNull('notes');
+        return $this;
+    }
+
+
+    /**
+     * @return GroupCollectorInterface
+     */
+    public function withAnyNotes(): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->whereNotNull('notes');
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function notesExactly(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where('notes', '=', sprintf('%s', $value));
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return GroupCollectorInterface
+     */
+    public function notesStartWith(string $value): GroupCollectorInterface
+    {
+        $this->withNotes();
+        $this->query->where('notes', 'LIKE', sprintf('%s%%', $value));
+
+         return $this;
+    }
+
     /**
      * Limit the search to a specific bill.
      *
@@ -186,6 +253,32 @@ trait MetaCollection
     }
 
     /**
+     * Where has no tags.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutTags(): GroupCollectorInterface
+    {
+        $this->withTagInformation();
+        $this->query->whereNull('tag_transaction_journal.tag_id');
+
+        return $this;
+    }
+
+    /**
+     * Where has no tags.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function hasAnyTag(): GroupCollectorInterface
+    {
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        return $this;
+    }
+
+    /**
      * Will include bill name + ID, if any.
      *
      * @return GroupCollectorInterface
@@ -272,11 +365,20 @@ trait MetaCollection
     public function withoutBudget(): GroupCollectorInterface
     {
         $this->withBudgetInformation();
-        $this->query->where(
-            function (EloquentBuilder $q) {
-                $q->whereNull('budget_transaction_journal.budget_id');
-            }
-        );
+        $this->query->whereNull('budget_transaction_journal.budget_id');
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a transactions without a budget..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudget(): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->whereNotNull('budget_transaction_journal.budget_id');
 
         return $this;
     }
@@ -289,11 +391,20 @@ trait MetaCollection
     public function withoutCategory(): GroupCollectorInterface
     {
         $this->withCategoryInformation();
-        $this->query->where(
-            function (EloquentBuilder $q) {
-                $q->whereNull('category_transaction_journal.category_id');
-            }
-        );
+        $this->query->whereNull('category_transaction_journal.category_id');
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a transactions without a category.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategory(): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+        $this->query->whereNotNull('category_transaction_journal.category_id');
 
         return $this;
     }

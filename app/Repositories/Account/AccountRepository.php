@@ -38,6 +38,7 @@ use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use \Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -346,7 +347,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
         if (1 === $result->count()) {
-            return (string)$result->first()->data;
+            return (string) $result->first()->data;
         }
         return null;
     }
@@ -703,5 +704,39 @@ class AccountRepository implements AccountRepositoryInterface
             $account->order = $index + 1;
             $account->save();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchAccountNr(string $query, array $types, int $limit): Collection
+    {
+        $dbQuery = $this->user->accounts()->distinct()
+                              ->leftJoin('account_meta', 'accounts.id', 'account_meta.account_id')
+                              ->where('accounts.active', 1)
+                              ->orderBy('accounts.order', 'ASC')
+                              ->orderBy('accounts.account_type_id', 'ASC')
+                              ->orderBy('accounts.name', 'ASC')
+                              ->with(['accountType', 'accountMeta']);
+        if ('' !== $query) {
+            // split query on spaces just in case:
+            $parts = explode(' ', $query);
+            foreach ($parts as $part) {
+                $search = sprintf('%%%s%%', $part);
+                $dbQuery->where(function (EloquentBuilder $q1) use ($search) {
+                    $q1->where('accounts.iban', 'LIKE', $search);
+                    $q1->orWhere(function (EloquentBuilder $q2) use ($search) {
+                        $q2->where('account_meta.name', '=', 'account_number');
+                        $q2->where('account_meta.data', 'LIKE', $search);
+                    });
+                });
+            }
+        }
+        if (count($types) > 0) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+
+        return $dbQuery->take($limit)->get(['accounts.*']);
     }
 }

@@ -30,9 +30,6 @@ use Tests\TestCase;
 
 /**
  * Class AppendDescriptionTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AppendDescriptionTest extends TestCase
 {
@@ -41,9 +38,6 @@ class AppendDescriptionTest extends TestCase
      */
     public function setUp(): void
     {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
         parent::setUp();
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
@@ -51,17 +45,28 @@ class AppendDescriptionTest extends TestCase
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
      */
-    public function testActExistingTag(): void
+    public function testAct(): void
     {
+        /** @var TransactionJournal $journal */
+        $journal  = $this->user()->transactionJournals()->where('description', 'Rule action test transaction.')->first();
+        $original = $journal->description;
+
+
+        $array = [
+            'transaction_journal_id' => $journal->id,
+            'description'            => $original,
+        ];
+
         $ruleAction               = new RuleAction;
         $ruleAction->action_value = 'APPEND';
-        $journal                  = $this->getRandomWithdrawal();
-        $oldDescription           = $journal->description;
         $action                   = new AppendDescription($ruleAction);
-        $result                   = $action->act($journal);
+        $result                   = $action->actOnArray($array);
         $this->assertTrue($result);
 
         $journal = TransactionJournal::find($journal->id);
-        $this->assertEquals($oldDescription . 'APPEND', $journal->description);
+        $this->assertEquals(sprintf('%s%s', $original, $ruleAction->action_value), $journal->description);
+
+        $journal->description = $original;
+        $journal->save();
     }
 }
