@@ -27,6 +27,7 @@ var defaultMultiSelect = {
     nSelectedText: nSelectedText,
     allSelectedText: allSelectedText,
     includeSelectAllOption: true,
+    enableClickableOptGroups: true,
     enableFiltering: true,
     enableCaseInsensitiveFiltering: true,
     filterPlaceholder: filterPlaceholder
