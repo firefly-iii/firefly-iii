@@ -52,14 +52,10 @@ class BudgetLimitController extends Controller
 {
     use DateCalculation;
 
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * AmountController constructor.
