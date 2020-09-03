@@ -13,13 +13,17 @@ TODO: hide and show columns
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
             <div class="btn-group btn-group-xs action-menu pull-right" style="display: none;">
-                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                     {{ 'actions'|_ }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'mass_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i> <span>{{ 'bulk_edit'|_ }}</span></a></li>
-                    <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'mass_delete'|_ }}</span></a></li>
+                    <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i>
+                            <span>{{ 'mass_edit'|_ }}</span></a></li>
+                    <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i>
+                            <span>{{ 'bulk_edit'|_ }}</span></a></li>
+                    <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i>
+                            <span>{{ 'mass_delete'|_ }}</span></a></li>
                 </ul>
             </div>
         </td>
@@ -52,7 +56,8 @@ TODO: hide and show columns
             <tr style="border-top:1px #aaa solid;">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>
-                            <a href="{{ route('transactions.show', [group.id]) }}" title="{{ group.title }}">{{ group.title }}</a>
+                            <a href="{{ route('transactions.show', [group.id]) }}"
+                               title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
                 <td colspan="2" style="border-top:1px #aaa solid;">
@@ -76,12 +81,16 @@ TODO: hide and show columns
                 {% endif %}
                 <td style="border-top:1px #aaa solid;" class="hidden-xs">
                     <div class="btn-group btn-group-xs pull-right">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
+                            <li><a href="{{ route('transactions.edit', [group.id]) }}"><i
+                                            class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                            <li><a href="{{ route('transactions.delete', [group.id]) }}"><i
+                                            class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                            <li><a href="{{ route('transactions.clone', [group.id]) }}"><i
+                                            class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
                         </ul>
                     </div>
                 </td>
@@ -178,12 +187,20 @@ TODO: hide and show columns
                     {{ transaction.date.formatLocalized(monthAndDayFormat) }}
                 </td>
                 <td style=" {{ style|raw }}">
-                    <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
-                       title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
+                    {% if 'Cash account' == transaction.source_account_type %}
+                        <span class="text-success">({{ 'cash'|_ }})</span>
+                    {% else %}
+                        <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
+                           title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
+                    {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
-                    <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
-                       title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
+                    {% if 'Cash account' == transaction.destination_account_type %}
+                        <span class="text-success">({{ 'cash'|_ }})</span>
+                    {% else %}
+                        <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
+                           title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
+                    {% endif %}
                 </td>
                 {% if showCategory %}
                     <td style=" {{ style|raw }}" class="hidden-xs">
@@ -205,14 +222,20 @@ TODO: hide and show columns
                 {% if group.count == 1 %}
                     <td style=" {{ style|raw }};" class="hidden-xs">
                         <div class="btn-group btn-group-xs pull-right">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li><a href="{{ route('transactions.edit', [group.id]) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.clone', [group.id]) }}"><i class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
-                                <li><a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><i
-                                                class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.edit', [group.id]) }}"><i
+                                                class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><i
+                                                class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.clone', [group.id]) }}"><i
+                                                class="fa fa-copy fa-fw"></i> {{ 'clone'|_ }}</a></li>
+                                <li>
+                                    <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><i
+                                                class="fa fa-fw fa-random"></i> {{ 'create_rule_from_transaction'|_ }}
+                                    </a></li>
                             </ul>
                         </div>
                     </td>
@@ -225,9 +248,11 @@ TODO: hide and show columns
                 {% endif %}
                 <td style="{{ style|raw }}" class="hidden-xs">
                     <div class="pull-right">
-                        <input id="list_{{ transaction.transaction_journal_id }}" value="{{ transaction.transaction_journal_id }}"
+                        <input id="list_{{ transaction.transaction_journal_id }}"
+                               value="{{ transaction.transaction_journal_id }}"
                                name="journals[{{ transaction.transaction_journal_id }}]"
-                               type="checkbox" class="mass-select form-check-inline" data-value="{{ transaction.transaction_journal_id }}"/>
+                               type="checkbox" class="mass-select form-check-inline"
+                               data-value="{{ transaction.transaction_journal_id }}"/>
                     </div>
                 </td>
             </tr>
@@ -240,13 +265,17 @@ TODO: hide and show columns
             <div class="pull-right">
                 <!-- Single button -->
                 <div class="btn-group action-menu btn-group-xs pull-right" style="display:none;">
-                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu btn-group-xs dropdown-menu-right">
-                        <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'mass_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i> <span>{{ 'bulk_edit'|_ }}</span></a></li>
-                        <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'mass_delete'|_ }}</span></a></li>
+                        <li><a href="#" class="mass-edit"><i class="fa fa-fw fa-pencil"></i>
+                                <span>{{ 'mass_edit'|_ }}</span></a></li>
+                        <li><a href="#" class="bulk-edit"><i class="fa fa-fw fa-pencil-square-o"></i>
+                                <span>{{ 'bulk_edit'|_ }}</span></a></li>
+                        <li><a href="#" class="mass-delete"><i class="fa fa-fw fa-trash"></i>
+                                <span>{{ 'mass_delete'|_ }}</span></a></li>
                     </ul>
                 </div>
             </div>
