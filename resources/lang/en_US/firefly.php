@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'This bill has no rules associated to it.',
     'go_to_asset_accounts'                                => 'View your asset accounts',
     'go_to_budgets'                                       => 'Go to your budgets',
-    'new_clone_instructions'                              => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => 'Go to your categories',
     'go_to_bills'                                         => 'Go to your bills',

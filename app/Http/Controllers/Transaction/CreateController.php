@@ -71,8 +71,9 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-
+        $link = route('transactions.show', [$newGroup->id]);
         session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
+        session()->flash('success_uri', $link);
 
         return redirect(route('transactions.show', [$newGroup->id]));
     }
