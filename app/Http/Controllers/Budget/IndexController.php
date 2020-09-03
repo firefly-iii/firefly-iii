@@ -49,16 +49,11 @@ use Log;
 class IndexController extends Controller
 {
     use DateCalculation;
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private AvailableBudgetRepositoryInterface $abRepository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
