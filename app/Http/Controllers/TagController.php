@@ -180,8 +180,9 @@ class TagController extends Controller
     public function index(TagRepositoryInterface $repository)
     {
         // start with oldest tag
-        $oldestTagDate = null === $repository->oldestTag() ? clone session('first') : $repository->oldestTag()->date;
-        $newestTagDate = null === $repository->newestTag() ? new Carbon : $repository->newestTag()->date;
+        $first = session('first', today()) ?? today();
+        $oldestTagDate = null === $repository->oldestTag() ? clone $first : $repository->oldestTag()->date;
+        $newestTagDate = null === $repository->newestTag() ? today() : $repository->newestTag()->date;
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
         $tags            = [];
