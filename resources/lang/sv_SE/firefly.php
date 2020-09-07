@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Notan saknar associerade regler.',
     'go_to_asset_accounts'                                => 'Visa dina tillgångskonton',
     'go_to_budgets'                                       => 'Gå till dina budgetar',
-    'new_clone_instructions'                              => 'Denna knapp kommer automatiskt att klona transaktionen och ställa in datumet till idag. Är du säker?',
     'clones_journal_x'                                    => 'Denna transaktion är en klon av ":description" (#:id)',
     'go_to_categories'                                    => 'Gå till dina kategorier',
     'go_to_bills'                                         => 'Gå till dina notor',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Var försikt med dessa knappar. Ta bort saker är permanent.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Ta bort ALLA dina budgetar',

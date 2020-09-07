@@ -83,7 +83,7 @@
         "profile_oauth_confidential": "Confidentiel",
         "profile_oauth_confidential_help": "Exiger que le client s'authentifie avec un secret. Les clients confidentiels peuvent d\u00e9tenir des informations d'identification de mani\u00e8re s\u00e9curis\u00e9e sans les exposer \u00e0 des tiers non autoris\u00e9s. Les applications publiques, telles que les applications de bureau natif ou les SPA JavaScript, ne peuvent pas tenir des secrets en toute s\u00e9curit\u00e9.",
         "multi_account_warning_unknown": "Selon le type d'op\u00e9ration que vous cr\u00e9ez, le(s) compte(s) source et\/ou de destination des ventilations suivantes peuvent \u00eatre remplac\u00e9s par celui de la premi\u00e8re ventilation de l'op\u00e9ration.",
-        "multi_account_warning_withdrawal": "Gardez en t\u00eate que le compte source des ventilations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re ventilation du retrait.",
+        "multi_account_warning_withdrawal": "Gardez en t\u00eate que le compte source des ventilations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re ventilation de la d\u00e9pense.",
         "multi_account_warning_deposit": "Gardez en t\u00eate que le compte de destination des ventilations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re ventilation du d\u00e9p\u00f4t.",
         "multi_account_warning_transfer": "Gardez en t\u00eate que les comptes source et de destination des ventilations suivantes peuvent \u00eatre remplac\u00e9s par ceux de la premi\u00e8re ventilation du transfert."
     },

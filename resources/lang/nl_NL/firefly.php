@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                                => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                                       => 'Ga naar je budgetten',
-    'new_clone_instructions'                              => 'Deze knop zal de transactie automatisch klonen en de datum instellen op vandaag. Doen?',
     'clones_journal_x'                                    => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                                    => 'Ga naar je categorieën',
     'go_to_bills'                                         => 'Ga naar je contracten',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Externe URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Gegevens verwijderen uit Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Wees voorzichtig met deze knoppen. Het verwijderen van dingen is permanent.',
     'other_sessions_logged_out'                 => 'Al je andere sessies zijn uitgelogd.',
     'delete_all_budgets'                        => 'Verwijder ALLE budgetten',

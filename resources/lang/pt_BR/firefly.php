@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Esta conta não tem regras associadas a ela.',
     'go_to_asset_accounts'                                => 'Veja suas contas ativas',
     'go_to_budgets'                                       => 'Vá para seus orçamentos',
-    'new_clone_instructions'                              => 'Este botão irá clonar automaticamente a transação e definir a data para hoje. Tem certeza?',
     'clones_journal_x'                                    => 'Esta transação é um clone de ":description" (#:id)',
     'go_to_categories'                                    => 'Vá para suas categorias',
     'go_to_bills'                                         => 'Vá para suas faturas',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'URI externo',
 
     // profile:
-    'delete_stuff_header'                       => 'Excluir dados do Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Tenha cuidado com estes botões. A exclusão de coisas é permanente.',
     'other_sessions_logged_out'                 => 'Todas as suas outras sessões foram desconectadas.',
     'delete_all_budgets'                        => 'Excluir TODOS os seus orçamentos',

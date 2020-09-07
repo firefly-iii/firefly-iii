@@ -23,12 +23,12 @@
 declare(strict_types=1);
 
 return [
-    'iban'                           => 'Ez nem egy érvényes IBAN.',
+    'iban'                           => 'Ez nem egy érvényes IBAN számlaszám.',
     'zero_or_more'                   => 'Az érték nem lehet negatív.',
     'date_or_time'                   => 'Az értéknek érvényes dátum vagy időformátumúnak kell lennie (ISO 8601).',
     'source_equals_destination'      => 'A forrásszámla egyenlő a célszámlával.',
-    'unique_account_number_for_user' => 'Úgy néz ki, hogy ez a számlaszám már használatban van.',
-    'unique_iban_for_user'           => 'Úgy néz ki, hogy ez a számlaszám már használatban van.',
+    'unique_account_number_for_user' => 'Úgy tűnik, hogy ez a számlaszám már használatban van.',
+    'unique_iban_for_user'           => 'Úgy tűnik, hogy ez a számlaszám már használatban van.',
     'deleted_user'                   => 'Biztonsági megkötések miatt ezzel az email címmel nem lehet regisztrálni.',
     'rule_trigger_value'             => 'Ez az érték érvénytelen a kiválasztott eseményindítóhoz.',
     'rule_action_value'              => 'Ez az érték érvénytelen a kiválasztott művelethez.',
@@ -129,7 +129,7 @@ return [
     'amount_zero'                    => 'A teljes mennyiség nem lehet nulla.',
     'current_target_amount'          => 'A megadott értéknek kevesebbnek kell lennie, mint a célérték.',
     'unique_piggy_bank_for_user'     => 'A malacpersely nevének egyedinek kell lennie.',
-    'unique_object_group'            => 'The group name must be unique',
+    'unique_object_group'            => 'Csoport neve már foglalt',
 
     'secure_password'                => 'Ez nem biztonságos jelszó. Kérlek próbáld meg újra. További információért lásd: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Érvénytelen ismétléstípus az ismétlődő tranzakciókhoz.',
@@ -198,7 +198,7 @@ return [
     'generic_invalid_destination' => 'Nem használhatod ezt a fiókot célfiókként.',
 
     'gte.numeric' => ':attribute attribútumnak :value értéknél nagyobbnak vagy vele egyenlőnek kell lennie.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
+    'gt.numeric'  => 'A(z) :attribute nagyobb kell, hogy legyen, mint :value.',
     'gte.file'    => ':attribute attribútumnak :value kilobájtnál nagyobb vagy egyenlőnek kell lennie.',
     'gte.string'  => ':attribute attribútumnak :value karakternél nagyobb vagy egyenlőnek kell lennie.',
     'gte.array'   => 'A(z) :attribute legalább :value elemet kell, hogy tartalmazzon.',

@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Tento účet nemá přiřazena žádná pravidla.',
     'go_to_asset_accounts'                                => 'Zobrazit účty s aktivy',
     'go_to_budgets'                                       => 'Přejít k rozpočtům',
-    'new_clone_instructions'                              => 'Toto tlačítko automaticky zkopíruje transakci a nastaví dnešní datum. Jste si jisti?',
     'clones_journal_x'                                    => 'Tato transakce je kopií „:description“ (#:id)',
     'go_to_categories'                                    => 'Přejít ke kategoriím',
     'go_to_bills'                                         => 'Přejít k účtům',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',

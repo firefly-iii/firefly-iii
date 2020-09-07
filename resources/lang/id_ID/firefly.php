@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Bill ini tidak terkait dengan aturan yang telah ada.',
     'go_to_asset_accounts'                                => 'Menampilkan rekening aset',
     'go_to_budgets'                                       => 'Pergi ke anggaran mu',
-    'new_clone_instructions'                              => 'Tombol ini secara otomatis menyalin transaksi dan mengatur tanggal dengan tanggal hari ini. Apakah ada yakin?',
     'clones_journal_x'                                    => 'Transaksi ini adalah salinan dari ":description" (#:id)',
     'go_to_categories'                                    => 'Menuju ke kategori yang anda miliki',
     'go_to_bills'                                         => 'Menuju ke bill yang anda miliki',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',

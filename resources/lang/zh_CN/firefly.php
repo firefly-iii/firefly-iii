@@ -54,12 +54,11 @@ return [
     'create_new_stuff'                                    => '建立新内容',
     'new_withdrawal'                                      => '新提款',
     'create_new_transaction'                              => '建立新交易',
-    'sidebar_frontpage_create'                            => 'Create',
+    'sidebar_frontpage_create'                            => '创建',
     'new_transaction'                                     => '新交易',
     'no_rules_for_bill'                                   => '该账单没有与之相关的规则。',
     'go_to_asset_accounts'                                => '检视您的资产帐户',
     'go_to_budgets'                                       => '前往您的预算',
-    'new_clone_instructions'                              => '此按钮将自动克隆交易并将日期设为今天。您确定吗？',
     'clones_journal_x'                                    => '此交易是 ":description" (#:id) 的克隆。',
     'go_to_categories'                                    => '前往您的分类',
     'go_to_bills'                                         => '前往您的帐单',
@@ -215,7 +214,7 @@ return [
     'average_per_bill'                                    => '每张帐单的平均数',
     'expected_total'                                      => '期望总数',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
-    'saved'                                               => 'Saved',
+    'saved'                                               => '已保存',
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授权请求',
@@ -252,7 +251,7 @@ return [
     'update_check_error'                                  => '检查更新时发生错误：:error',
     'unknown_error'                                       => '未知错误。抱歉。',
     'just_new_release'                                    => '有一个新版本可用！版本 :version 在 :date 发布。这个版本非常新。等待几天后新版本才能稳定。',
-    'disabled_but_check'                                  => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
+    'disabled_but_check'                                  => '您已禁用更新检查。所以请不要忘记手动检查更新。谢谢！',
     'admin_update_channel_title'                          => '更新通道',
     'admin_update_channel_explain'                        => 'Firefly III具有三个更新“通道”，这些通道确定您在功能，增强功能和错误方面都处于最新。 如果您喜欢冒险，请使用“ beta”频道；如果您不惧危险，请使用“ alpha”频道。',
     'update_channel_stable'                               => '稳定版。一切应该都如预期的那样运行。',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => '小心使用这些按钮。删除内容是永久性的。',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => '删除所有您的预算',

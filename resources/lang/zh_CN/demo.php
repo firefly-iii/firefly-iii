@@ -23,9 +23,9 @@
 declare(strict_types=1);
 
 return [
-    'no_demo_text'           => '抱歉，没有额外的展示说明文字可供 <abbr title=":route">此页</abbr>。',
-    'see_help_icon'          => '不过，右上角的这个 <i class="fa fa-question-circle"></i>-图示或许可以告诉你更多资讯。',
-    'index'                  => '欢迎来到 <strong>Firefly III</strong>！您可在此页快速概览您的财务状况。如需更多资， 请前往帐户 &rarr; <a href=":asset">资产帐户</a> 亦或是 <a href=":budgets">预算</a> 以及 <a href=":reports">报表</a> 页面。您也可以继续浏览此页。',
+    'no_demo_text'           => '对不起， <abbr title=":route">此页面</abbr> 没有额外的示范解释文本。',
+    'see_help_icon'          => '然而，右上角的 <i class="fa fa-question-circle"></i>-图标可能会告诉您更多。',
+    'index'                  => '欢迎来到 <strong>Firefly III</strong>！您可在此页快速概览您的财务状况。如需更多信息， 请前往帐户 &rarr; <a href=":asset">资产帐户</a> 亦或是 <a href=":budgets">预算</a> 以及 <a href=":reports">报表</a> 页面。您也可以继续浏览此页。',
     'accounts-index'         => '资产帐户是您的个人银行帐户。支出帐户是您花费金钱的帐户，如商家或其他友人。收入帐户是您获得收入的地方，如您的工作、政府或其他收入源。债务是您的借贷，如信用卡帐单或学生贷款。在此页面您可以编辑或删除这些项目。',
     'budgets-index'          => '此页面显示您的预算概览。上方横条显示可用预算额，它可随时透过点选右方的总额进行客製化。您已花费的额度则显示在下方横条，而以下则是每条预算的支出以及您已编列的预算。',
     'reports-index-start'    => 'Firefly III 支持数种不同的报表形式，您可以点选右上方的 <i class="fa fa-question-circle"></i>-图示获得更多资讯。',

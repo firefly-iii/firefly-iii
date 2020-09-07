@@ -44,7 +44,7 @@ return [
     'transfer_list'          => 'Virements',
     'transfers_list'         => 'Virements',
     'reconciliation_list'    => 'Rapprochements',
-    'create_withdrawal'      => 'Créer un nouveau retrait',
+    'create_withdrawal'      => 'Créer une nouvelle dépense',
     'create_deposit'         => 'Créer un nouveau versement',
     'create_transfer'        => 'Créer un nouveau virement',
     'create_new_transaction' => 'Créer une nouvelle opération',

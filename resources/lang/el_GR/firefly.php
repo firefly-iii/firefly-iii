@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Αυτό το πάγιο έξοδο δεν έχει σχετιζόμενους κανόνες.',
     'go_to_asset_accounts'                                => 'Δείτε τους λογαριασμούς κεφαλαίου σας',
     'go_to_budgets'                                       => 'Πηγαίνετε στους προϋπολογισμούς σας',
-    'new_clone_instructions'                              => 'Αυτό το κουμπί θα κλωνοποιήσει αυτόματα τη συναλλαγή και θα ορίσει σημερινή ημερομηνία. Είσαι σίγουρος;',
     'clones_journal_x'                                    => 'Αυτή η συναλλαγή είναι ένας κλώνος του ":description" (#:id)',
     'go_to_categories'                                    => 'Πηγαίνετε στις κατηγορίες σας',
     'go_to_bills'                                         => 'Πηγαίνετε στα πάγια έξοδα',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Εξωτερικό URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Διαγραφή δεδομένων από το Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Προσοχή με αυτά τα κουμπιά. Η διαγραφή είναι μόνιμη.',
     'other_sessions_logged_out'                 => 'Όλες οι άλλες συνεδρίες σας έχουν αποσυνδεθεί.',
     'delete_all_budgets'                        => 'Διαγραφή ΟΛΩΝ των προϋπολογισμών σας',
