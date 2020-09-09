@@ -39,6 +39,7 @@ use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
+use Gdbots\QueryParser\Node\Numbr;
 use Gdbots\QueryParser\Node\Phrase;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
@@ -220,8 +221,9 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Word::class:
             case Phrase::class:
+            case Numbr::class:
                 Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = $searchNode->getValue();
+                $this->words[] = (string) $searchNode->getValue();
                 break;
             case Field::class:
                 Log::debug(sprintf('Now handle %s', $class));
@@ -259,7 +261,7 @@ class OperatorQuerySearch implements SearchInterface
         $operator = self::getRootOperator($operator);
 
         app('telemetry')->feature('search.operators.uses_operator', $operator);
-        
+
         switch ($operator) {
             default:
                 Log::error(sprintf('No such operator: %s', $operator));
@@ -679,10 +681,10 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function findCurrency(string $value): ?TransactionCurrency
     {
-        if(str_contains($value,'(') && str_contains($value,')')) {
+        if (str_contains($value, '(') && str_contains($value, ')')) {
             // bad method to split and get the currency code:
             $parts = explode(' ', $value);
-            $value = trim($parts[count($parts) -1], "() \t\n\r\0\x0B");
+            $value = trim($parts[count($parts) - 1], "() \t\n\r\0\x0B");
         }
 
 
