@@ -41,6 +41,7 @@ use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
 use Gdbots\QueryParser\Node\Numbr;
 use Gdbots\QueryParser\Node\Phrase;
+use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
 use Gdbots\QueryParser\QueryParser;
@@ -222,6 +223,7 @@ class OperatorQuerySearch implements SearchInterface
             case Word::class:
             case Phrase::class:
             case Numbr::class:
+            case Url::class:
                 Log::debug(sprintf('Now handle %s', $class));
                 $this->words[] = (string) $searchNode->getValue();
                 break;
