@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Gdbots\QueryParser\Node\Date;
 use Gdbots\QueryParser\Node\Field;
 use Gdbots\QueryParser\Node\Node;
 use Gdbots\QueryParser\Node\Numbr;
@@ -224,6 +225,7 @@ class OperatorQuerySearch implements SearchInterface
             case Phrase::class:
             case Numbr::class:
             case Url::class:
+            case Date::class:
                 Log::debug(sprintf('Now handle %s', $class));
                 $this->words[] = (string) $searchNode->getValue();
                 break;
