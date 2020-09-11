@@ -129,8 +129,8 @@ class ShowController extends Controller
         $subTitle = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
         /** @var Carbon $start */
-        $start = $first ?? new Carbon;
-        $end   = new Carbon;
+        $start = $first ?? today(config('app.timezone'));
+        $end   = today(config('app.timezone'));
         $path  = route('categories.show.all', [$category->id]);
         $attachments  = $this->repository->getAttachments($category);
 

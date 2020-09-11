@@ -101,7 +101,7 @@ trait ModifiesPiggyBanks
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $leftOnAccount = $this->leftOnAccount($piggyBank, new Carbon);
+        $leftOnAccount = $this->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = (string) $this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = (string) min(round($leftOnAccount, 12), round($leftToSave, 12));

@@ -96,7 +96,7 @@ class CreateController extends Controller
     {
         $data = $request->getPiggyBankData();
         if (null === $data['startdate']) {
-            $data['startdate'] = new Carbon;
+            $data['startdate'] = today(config('app.timezone'));
         }
         $piggyBank = $this->piggyRepos->store($data);
 

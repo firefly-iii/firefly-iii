@@ -54,7 +54,7 @@ trait FormSupport
         /** @var Carbon $date */
         $date = null;
         try {
-            $date = new Carbon;
+            $date = today(config('app.timezone'));
         } catch (Exception $e) {
             $e->getMessage();
         }

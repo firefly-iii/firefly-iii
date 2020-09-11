@@ -151,7 +151,7 @@ class SubmitTelemetryData implements ShouldQueue
     {
         $telemetry->each(
             static function (Telemetry $entry) {
-                $entry->submitted = new Carbon;
+                $entry->submitted = today(config('app.timezone'));
                 $entry->save();
             }
         );

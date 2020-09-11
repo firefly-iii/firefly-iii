@@ -328,7 +328,7 @@ class SummaryController extends Controller
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
         $return    = [];
-        $today     = new Carbon;
+        $today     = today(config('app.timezone'));
         $available = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
         $budgets   = $this->budgetRepository->getActiveBudgets();
         $spent     = $this->opsRepository->sumExpenses($start, $end, null, $budgets);

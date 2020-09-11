@@ -71,7 +71,7 @@ class TransactionGroupTwig extends AbstractExtension
                            ->whereNull('deleted_at')
                            ->first();
                 if (null === $entry) {
-                    return new Carbon;
+                    return today(config('app.timezone'));
                 }
 
                 return new Carbon(json_decode($entry->data, false));

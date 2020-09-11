@@ -307,7 +307,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget->save();
 
         // create initial budget limit.
-        $today = new Carbon;
+        $today = today(config('app.timezone'));
         $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
         $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
 

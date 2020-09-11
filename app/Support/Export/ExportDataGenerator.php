@@ -84,9 +84,9 @@ class ExportDataGenerator
 
     public function __construct()
     {
-        $this->start = new Carbon;
+        $this->start = today(config('app.timezone'));
         $this->start->subYear();
-        $this->end                = new Carbon;
+        $this->end                = today(config('app.timezone'));
         $this->exportTransactions = false;
         $this->exportAccounts     = false;
         $this->exportBudgets      = false;

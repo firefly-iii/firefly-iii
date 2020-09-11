@@ -87,7 +87,7 @@ class TelemetryController extends Controller
     public function submit()
     {
         $job = app(SubmitTelemetryData::class);
-        $job->setDate(new Carbon);
+        $job->setDate(today(config('app.timezone')));
         $job->setForce(true);
         $job->handle();
         session()->flash('info', trans('firefly.telemetry_submission_executed'));

@@ -106,7 +106,7 @@ class ShowController extends Controller
         }
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
-        $today            = new Carbon;
+        $today            = today(config('app.timezone'));
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
         $page             = (int) $request->get('page');
         $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
@@ -173,8 +173,8 @@ class ShowController extends Controller
         $isLiability  = $this->repository->isLiability($account);
         $attachments      = $this->repository->getAttachments($account);
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $end          = new Carbon;
-        $today        = new Carbon;
+        $end          = today(config('app.timezone'));
+        $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int) $request->get('page');

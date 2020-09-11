@@ -76,7 +76,7 @@ class AmountController extends Controller
      */
     public function add(PiggyBank $piggyBank)
     {
-        $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, new Carbon);
+        $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = min($leftOnAccount, $leftToSave);
@@ -95,7 +95,7 @@ class AmountController extends Controller
     public function addMobile(PiggyBank $piggyBank)
     {
         /** @var Carbon $date */
-        $date          = session('end', new Carbon);
+        $date          = session('end', today(config('app.timezone')));
         $leftOnAccount = $this->piggyRepos->leftOnAccount($piggyBank, $date);
         $savedSoFar    = $this->piggyRepos->getCurrentAmount($piggyBank);
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);

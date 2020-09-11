@@ -126,7 +126,7 @@ class NoCategoryController extends Controller
         $subTitle = (string) trans('firefly.all_journals_without_category');
         $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon : $first->date;
-        $end      = new Carbon;
+        $end      = today(config('app.timezone'));
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 

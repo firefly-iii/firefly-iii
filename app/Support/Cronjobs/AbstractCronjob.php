@@ -49,7 +49,7 @@ abstract class AbstractCronjob
     public function __construct()
     {
         $this->force = false;
-        $this->date  = new Carbon;
+        $this->date  = today(config('app.timezone'));
     }
 
 

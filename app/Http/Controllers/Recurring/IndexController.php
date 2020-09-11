@@ -85,8 +85,8 @@ class IndexController extends Controller
         $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
-        $today      = new Carbon;
-        $year       = new Carbon;
+        $today      = today(config('app.timezone'));
+        $year       = today(config('app.timezone'));
 
         // split collection
         $total = $collection->count();

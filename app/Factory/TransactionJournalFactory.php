@@ -258,7 +258,7 @@ class TransactionJournalFactory
 
         /** Some basic fields */
         $type            = $this->typeRepository->findTransactionType(null, $row['type']);
-        $carbon          = $row['date'] ?? new Carbon;
+        $carbon          = $row['date'] ?? today(config('app.timezone'));
         $order           = $row['order'] ?? 0;
         $currency        = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);

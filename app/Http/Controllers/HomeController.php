@@ -126,7 +126,7 @@ class HomeController extends Controller
         $end = session('end', Carbon::now()->endOfMonth());
         /** @noinspection NullPointerExceptionInspection */
         $accounts = $repository->getAccountsById($frontPage->data);
-        $today    = new Carbon;
+        $today    = today(config('app.timezone'));
 
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);

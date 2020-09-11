@@ -230,7 +230,7 @@ class CategoryController extends Controller
     {
         $carbon = null;
         try {
-            $carbon = new Carbon;
+            $carbon = today(config('app.timezone'));
         } catch (Exception $e) {
             $e->getMessage();
         }

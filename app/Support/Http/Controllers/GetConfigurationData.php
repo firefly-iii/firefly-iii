@@ -101,7 +101,7 @@ trait GetConfigurationData
         $first    = session('first');
         $title    = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
         $isCustom = true === session('is_custom_range', false);
-        $today    = new Carbon;
+        $today    = today(config('app.timezone'));
         $ranges   = [
             // first range is the current range:
             $title => [$start, $end],

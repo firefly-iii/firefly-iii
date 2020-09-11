@@ -144,7 +144,7 @@ class IndexController extends Controller
         $first        = $repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
         $last         = $this->repository->getLast();
-        $end          = $last ? $last->date : new Carbon;
+        $end          = $last ? $last->date : today(config('app.timezone'));
         $subTitle     = (string) trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */

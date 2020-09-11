@@ -79,7 +79,7 @@ class IndexController extends Controller
         $generator->setExportTransactions(true);
 
         // get first transaction in DB:
-        $firstDate = new Carbon;
+        $firstDate = today(config('app.timezone'));
         $firstDate->subYear();
         $journal = $this->journalRepository->firstNull();
         if (null !== $journal) {
