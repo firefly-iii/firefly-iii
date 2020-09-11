@@ -14,12 +14,15 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
+                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
                                 <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                    </a></li>
                             </ul>
                         </div>
                     </div>
@@ -44,22 +47,105 @@
                                 </td>
                             </tr>
                         {% endif %}
-                        <tr>
-                            <td>{{ trans('list.sum') }}</td>
-                            <td> {{ (sums.Withdrawal + sums.Transfer + sums.Deposit)|formatAmount }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.sum_excluding_transfers') }}</td>
-                            <td> {{ (sums.Withdrawal + sums.Deposit)|formatAmount }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.sum_withdrawals') }}</td>
-                            <td> {{ sums.Withdrawal|formatAmount }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ trans('list.sum_deposits') }}</td>
-                            <td> {{ sums.Deposit|formatAmount }}</td>
-                        </tr>
+
+                        {# total amount #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Withdrawal + set.Transfer + set.Deposit %}
+                        {% endfor %}
+
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Withdrawal + set.Transfer + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {# total expense excl. transfer #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Withdrawal + set.Deposit %}
+                        {% endfor %}
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum_excluding_transfers') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Withdrawal + set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {# withdrawals #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Withdrawal %}
+                        {% endfor %}
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum_withdrawals') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Withdrawal, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {# deposits #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Deposit %}
+                        {% endfor %}
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum_deposits') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Deposit, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {# transfers #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Transfer %}
+                        {% endfor %}
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum_transfers') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Transfer, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {# reconciliation #}
+                        {% set currentSum = 0 %}
+                        {% for set in sums %}
+                            {% set currentSum = currentSum + set.Reconciliation %}
+                        {% endfor %}
+                        {% if currentSum != 0 %}
+                            <tr>
+                                <td style="width:40%;">{{ trans('list.sum_reconciliations') }}</td>
+                                <td>
+                                    {% for set in sums %}
+                                        {{ formatAmountBySymbol(set.Reconciliation, set.currency_symbol, set.currency_decimal_places, true) }}{% if loop.index != sums|length %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endif %}
+
+                        {#
                         {% if sums.Transfer != 0 %}
                             <tr>
                                 <td>{{ trans('list.sum_transfers') }}</td>
@@ -72,12 +158,15 @@
                                 <td> {{ sums.Reconciliation|formatAmount }}</td>
                             </tr>
                         {% endif %}
+                        #}
                     </table>
                 </div>
                 <div class="box-footer">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default"><i class="fa fa-pencil fa-fw"></i></a>
-                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i></a>
+                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default"><i
+                                    class="fa fa-pencil fa-fw"></i></a>
+                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><i
+                                    class="fa fa-trash fa-fw"></i></a>
                     </div>
                     <p class="text-muted">
                         <small>{{ 'sums_apply_to_range'|_ }}</small>
@@ -91,12 +180,15 @@
                     <h3 class="box-title">{{ 'location'|_ }}</h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
+                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
                                 <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                    </a></li>
                             </ul>
                         </div>
                     </div>
@@ -112,26 +204,27 @@
         </div>
     </div>
     {% if attachments.count > 0 %}
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        {{ 'attachments'|_ }}
-                    </h3>
-                </div>
-                <div class="box-body no-padding">
-                    {% include 'list.attachments' %}
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            {{ 'attachments'|_ }}
+                        </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        {% include 'list.attachments' %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a
+                            href="{{ route('tags.show',[tag.id,'all']) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -144,12 +237,15 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
+                                        class="fa fa-ellipsis-v"></i></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
+                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
                                 <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}</a></li>
+                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                    </a></li>
                             </ul>
                         </div>
                     </div>
@@ -184,7 +280,8 @@
     {% if periods|length > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('tags.show',[tag.id]) }}">{{ 'showEverything'|_ }}</a>
+                </p>
             </div>
         </div>
     {% endif %}
@@ -197,12 +294,12 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         // location stuff
         {% if location %}
-            var latitude = {{ location.latitude|default("52.3167") }};
-            var longitude = {{ location.longitude|default("5.5500") }};
-            var zoomLevel = {{ location.zoom_level|default("6") }};
-            var doPlaceMarker = true;
-            // token for Mapbox:
-            var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
+        var latitude = {{ location.latitude|default("52.3167") }};
+        var longitude = {{ location.longitude|default("5.5500") }};
+        var zoomLevel = {{ location.zoom_level|default("6") }};
+        var doPlaceMarker = true;
+        // token for Mapbox:
+        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
         {% endif %}
     </script>
     <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

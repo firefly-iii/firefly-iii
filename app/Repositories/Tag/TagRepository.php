@@ -352,24 +352,54 @@ class TagRepository implements TagRepositoryInterface
         $collector->setTag($tag)->withAccountInformation();
         $journals = $collector->getExtractedJournals();
 
-        $sums = [
-            TransactionType::WITHDRAWAL      => '0',
-            TransactionType::DEPOSIT         => '0',
-            TransactionType::TRANSFER        => '0',
-            TransactionType::RECONCILIATION  => '0',
-            TransactionType::OPENING_BALANCE => '0',
-        ];
+        $sums = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $amount = app('steam')->positive((string)$journal['amount']);
+            $currencyId        = (int) $journal['currency_id'];
+            $sums[$currencyId] = $sums[$currencyId] ?? [
+                    'currency_id'                    => $currencyId,
+                    'currency_name'                  => $journal['currency_name'],
+                    'currency_symbol'                => $journal['currency_symbol'],
+                    'currency_decimal_places'        => $journal['currency_decimal_places'],
+                    TransactionType::WITHDRAWAL      => '0',
+                    TransactionType::DEPOSIT         => '0',
+                    TransactionType::TRANSFER        => '0',
+                    TransactionType::RECONCILIATION  => '0',
+                    TransactionType::OPENING_BALANCE => '0',
+                ];
+
+            // add amount to correct type:
+            $amount = app('steam')->positive((string) $journal['amount']);
             $type   = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
             }
-            $sums[$type] = bcadd($sums[$type], $amount);
-        }
+            $sums[$currencyId][$type] = bcadd($sums[$currencyId][$type], $amount);
 
+            $foreignCurrencyId = $journal['foreign_currency_id'];
+            if (null !== $foreignCurrencyId) {
+                $sums[$foreignCurrencyId] = $sums[$foreignCurrencyId] ?? [
+                        'currency_id'                    => $foreignCurrencyId,
+                        'currency_name'                  => $journal['foreign_currency_name'],
+                        'currency_symbol'                => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places'        => $journal['foreign_currency_decimal_places'],
+                        TransactionType::WITHDRAWAL      => '0',
+                        TransactionType::DEPOSIT         => '0',
+                        TransactionType::TRANSFER        => '0',
+                        TransactionType::RECONCILIATION  => '0',
+                        TransactionType::OPENING_BALANCE => '0',
+                    ];
+                // add foreign amount to correct type:
+                $amount = app('steam')->positive((string) $journal['foreign_amount']);
+                $type   = $journal['transaction_type_type'];
+                if (TransactionType::WITHDRAWAL === $type) {
+                    $amount = bcmul($amount, '-1');
+                }
+                $sums[$foreignCurrencyId][$type] = bcadd($sums[$foreignCurrencyId][$type], $amount);
+
+            }
+        }
         return $sums;
     }
 
@@ -404,7 +434,7 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount       = (string)$tag->amount_sum;
+            $amount       = (string) $tag->amount_sum;
             $amount       = '' === $amount ? '0' : $amount;
             $amountMin    = bcsub($amount, $min);
             $pointsForTag = bcmul($amountMin, $pointsPerCoin);
@@ -496,7 +526,7 @@ class TagRepository implements TagRepositoryInterface
         $max = '0';
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount = (string)$tag->amount_sum;
+            $amount = (string) $tag->amount_sum;
             $amount = '' === $amount ? '0' : $amount;
             $max    = 1 === bccomp($amount, $max) ? $amount : $max;
 
@@ -518,7 +548,7 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $amount = (string)$tag->amount_sum;
+            $amount = (string) $tag->amount_sum;
             $amount = '' === $amount ? '0' : $amount;
 
             if (null === $min) {
@@ -541,7 +571,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function getAttachments(Tag $tag): Collection
     {
-        $set= $tag->attachments()->get();
+        $set = $tag->attachments()->get();
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
