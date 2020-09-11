@@ -229,7 +229,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Now handle %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
-                $operator = $searchNode->getValue();
+                $operator = strtolower($searchNode->getValue());
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
                 if (in_array($operator, $this->validOperators, true)) {
