@@ -73,7 +73,7 @@ if (false !== $useSSL && null !== $useSSL) {
 }
 
 return [
-    'default'     => envNonEmpty('DB_CONNECTION', 'pgsql'),
+    'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
