@@ -38,6 +38,10 @@ function searchFailure() {
 }
 
 function presentSearchResults(data) {
+    if(typeof data === 'undefined') {
+        searchFailure();
+        return;
+    }
     $('.search_ongoing').hide();
     $('.search_box').find('.overlay').remove();
     $('.search_results').html(data.html).show();

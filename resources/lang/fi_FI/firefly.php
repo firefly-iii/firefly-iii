@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Tälle laskulle ei ole lisätty yhtään sääntöä.',
     'go_to_asset_accounts'                                => 'Tarkastele omaisuustilejäsi',
     'go_to_budgets'                                       => 'Avaa omat budjetit',
-    'new_clone_instructions'                              => 'Tämä nappi kopioi tapahtuman automaattiseti ja asettaa päivämääräksi tämän päivän. Oletko varma?',
     'clones_journal_x'                                    => 'Tämä on kopio tapahtumasta ":description" (#:id)',
     'go_to_categories'                                    => 'Avaa omat kategoriat',
     'go_to_bills'                                         => 'Avaa omat laskut',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Ole varovainen näiden valintojen kanssa, poistaminen on lopullista.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Poista KAIKKI budjettisi',

@@ -37,7 +37,7 @@
                             {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
                                 <!-- since 5.1.0 -->
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}" id="clone_button"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -209,7 +209,7 @@
                                 {% if groupArray.transactions[0].type != 'opening balance' and groupArray.transactions[0].type != 'reconciliation' %}
                                     <!-- since 5.1.0 -->
                                     <li role="separator" class="divider"></li>
-                                    <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}" id="clone_button"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a></li>
                                 {% endif %}
 
                                 <li><a href="#" class="link-modal" data-journal="{{ journal.transaction_journal_id }}"><i class="fa fa-fw fa-link"></i>{{ 'link_transaction'|_ }}</a></li>
@@ -425,7 +425,6 @@
         var modalDialogURI = '{{ route('transactions.link.modal', ['%JOURNAL%']) }}';
         var acURI = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURI = '{{ route('transactions.show',['%GROUP%']) }}';
-        var newCloneInstructions = '{{ 'new_clone_instructions'|_|escape('js') }}';
     </script>
     <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/show.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

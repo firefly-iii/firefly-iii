@@ -37,9 +37,16 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
+use Gdbots\QueryParser\Node\Date;
+use Gdbots\QueryParser\Node\Emoji;
+use Gdbots\QueryParser\Node\Emoticon;
 use Gdbots\QueryParser\Node\Field;
+use Gdbots\QueryParser\Node\Hashtag;
+use Gdbots\QueryParser\Node\Mention;
 use Gdbots\QueryParser\Node\Node;
+use Gdbots\QueryParser\Node\Numbr;
 use Gdbots\QueryParser\Node\Phrase;
+use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
 use Gdbots\QueryParser\QueryParser;
@@ -220,14 +227,21 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Word::class:
             case Phrase::class:
+            case Numbr::class:
+            case Url::class:
+            case Date::class:
+            case Hashtag::class:
+            case Emoticon::class:
+            case Emoji::class:
+            case Mention::class:
                 Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = $searchNode->getValue();
+                $this->words[] = (string) $searchNode->getValue();
                 break;
             case Field::class:
                 Log::debug(sprintf('Now handle %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
-                $operator = $searchNode->getValue();
+                $operator = strtolower($searchNode->getValue());
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
                 if (in_array($operator, $this->validOperators, true)) {
@@ -259,7 +273,7 @@ class OperatorQuerySearch implements SearchInterface
         $operator = self::getRootOperator($operator);
 
         app('telemetry')->feature('search.operators.uses_operator', $operator);
-        
+
         switch ($operator) {
             default:
                 Log::error(sprintf('No such operator: %s', $operator));
@@ -679,10 +693,10 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function findCurrency(string $value): ?TransactionCurrency
     {
-        if(str_contains($value,'(') && str_contains($value,')')) {
+        if (str_contains($value, '(') && str_contains($value, ')')) {
             // bad method to split and get the currency code:
             $parts = explode(' ', $value);
-            $value = trim($parts[count($parts) -1], "() \t\n\r\0\x0B");
+            $value = trim($parts[count($parts) - 1], "() \t\n\r\0\x0B");
         }
 
 

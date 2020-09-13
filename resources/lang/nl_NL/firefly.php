@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                                => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                                       => 'Ga naar je budgetten',
-    'new_clone_instructions'                              => 'Deze knop zal de transactie automatisch klonen en de datum instellen op vandaag. Doen?',
     'clones_journal_x'                                    => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                                    => 'Ga naar je categorieën',
     'go_to_bills'                                         => 'Ga naar je contracten',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Externe URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Gegevens verwijderen uit Firefly III',
+    'delete_stuff_header'                       => 'Verwijder gegevens',
     'permanent_delete_stuff'                    => 'Wees voorzichtig met deze knoppen. Het verwijderen van dingen is permanent.',
     'other_sessions_logged_out'                 => 'Al je andere sessies zijn uitgelogd.',
     'delete_all_budgets'                        => 'Verwijder ALLE budgetten',
@@ -776,7 +775,7 @@ return [
     'profile_personal_access_tokens'            => 'Persoonlijke toegangstokens',
     'profile_personal_access_token'             => 'Persoonlijk toegangstoken',
     'profile_oauth_confidential'                => 'Vertrouwelijk',
-    'profile_oauth_confidential_help'           => 'Is bedoelt voor clients die geen geheimen kunnen bewaren, zoals native desktop apps of JavaScript SPA\'s.',
+    'profile_oauth_confidential_help'           => 'Dit vinkje is bedoeld voor applicaties die geheimen kunnen bewaren. Applicaties zoals sommige desktop-apps en Javascript apps kunnen dit niet. In zo\'n geval haal je het vinkje weg.',
     'profile_personal_access_token_explanation' => 'Hier is je nieuwe persoonlijke toegangstoken. Dit is de enige keer dat deze getoond wordt dus verlies deze niet! Je kan deze toegangstoken gebruiken om API-aanvragen te maken.',
     'profile_no_personal_access_token'          => 'Je hebt nog geen persoonlijke toegangstokens aangemaakt.',
     'profile_create_new_token'                  => 'Nieuwe token aanmaken',

@@ -60,7 +60,6 @@ return [
     'go_to_asset_accounts'                                => 'Varlık hesaplarınızı görüntüleyin
 ',
     'go_to_budgets'                                       => 'Bütçelerine git',
-    'new_clone_instructions'                              => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => 'Kategorilerinize gidin',
     'go_to_bills'                                         => 'Faturalarına git',
@@ -681,7 +680,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',

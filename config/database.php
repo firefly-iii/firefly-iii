@@ -50,7 +50,8 @@ $mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER', null);
 $mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
 
 $mySqlSSLOptions = [];
-if (false !== envNonEmpty('MYSQL_USE_SSL', false)) {
+$useSSL = envNonEmpty('MYSQL_USE_SSL', false);
+if (false !== $useSSL && null !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
         $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
     }
@@ -72,7 +73,7 @@ if (false !== envNonEmpty('MYSQL_USE_SSL', false)) {
 }
 
 return [
-    'default'     => envNonEmpty('DB_CONNECTION', 'pgsql'),
+    'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',

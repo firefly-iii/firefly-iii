@@ -84,7 +84,7 @@ class ShowController extends Controller
 
         $array                 = $transformer->transform($recurrence);
         $groups                = $this->recurring->getTransactions($recurrence);
-        $today                 = new Carbon;
+        $today                 = today(config('app.timezone'));
         $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
 
         // transform dates back to Carbon objects:

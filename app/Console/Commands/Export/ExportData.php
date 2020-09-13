@@ -230,7 +230,7 @@ class ExportData extends Command
             return $date;
         }
         if ('end' === $field) {
-            $date = new Carbon;
+            $date = today(config('app.timezone'));
             $date->endOfDay();
 
             return $date;

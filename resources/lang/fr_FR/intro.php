@@ -80,8 +80,8 @@ return [
     // create transaction
     'transactions_create_switch_box'                          => 'Utilisez ces boutons pour changer rapidement le type d\'opération que vous souhaitez enregistrer.',
     'transactions_create_ffInput_category'                    => 'Vous pouvez saisir librement ce champ. Les catégories créées précédemment seront suggérées.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Reliez votre retrait à un budget pour un meilleur contrôle financier.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Utilisez ce menu déroulant lorsque votre retrait est dans une autre devise.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Reliez votre dépense à un budget pour un meilleur contrôle financier.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Utilisez ce menu déroulant lorsque votre dépense est dans une autre devise.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Utilisez ce menu déroulant lorsque votre dépôt est dans une autre devise.',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Sélectionnez une tirelire et reliez ce transfert à vos économies.',
 

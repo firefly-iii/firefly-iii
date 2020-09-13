@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Hóa đơn này không có quy tắc nào liên quan đến nó.',
     'go_to_asset_accounts'                                => 'Xem tài khoản của bạn',
     'go_to_budgets'                                       => 'Chuyển đến ngân sách của bạn',
-    'new_clone_instructions'                              => 'Nút nhấn này sẽ tự động nhân bản giao dịch và đặt ngày là ngày hôm nay. Bạn có chắc không?',
     'clones_journal_x'                                    => 'Giao dịch này là một bản sao của ":description" (#:id)',
     'go_to_categories'                                    => 'Đi đến danh mục của bạn',
     'go_to_bills'                                         => 'Đi đến hóa đơn của bạn',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Hãy cẩn thận với các nút này. Xóa nội dung là vĩnh viễn.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Xóa TẤT CẢ ngân sách của bạn',

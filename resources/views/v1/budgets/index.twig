@@ -306,7 +306,7 @@
                                         {% for spentInfo in budget.spent %}
                                             {% set countLimit = 0 %}
                                             {% for budgetLimit in budget.budgeted %}
-                                                {% if spentInfo.currency_id == budgetLimit.currency_id %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id and budgetLimit.in_range %}
                                                     {% set countLimit = countLimit + 1 %}
                                                     <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                                         data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
@@ -333,7 +333,11 @@
                                             <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                                 data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
-                                                ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                {% if budgetLimit.in_range %}
+                                                    ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                {% else %}
+                                                    X
+                                                {% endif %}
                                             </span>
                                             <br/>
                                             {% endif %}

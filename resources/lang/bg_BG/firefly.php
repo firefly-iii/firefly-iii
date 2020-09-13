@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'С тази сметка няма свързани правила.',
     'go_to_asset_accounts'                                => 'Вижте активите си',
     'go_to_budgets'                                       => 'Вижте бюджетите си',
-    'new_clone_instructions'                              => 'Този бутон автоматично копира транзакцията с днешна дата. Сигурен ли си?',
     'clones_journal_x'                                    => 'Тази транзакция е копирана от ":description" (#:id)',
     'go_to_categories'                                    => 'Виж категориите си',
     'go_to_bills'                                         => 'Виж сметките си',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Външно URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Изтрий данни от Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Внимавайте с тези бутони. Изтриването на неща е завинаги.',
     'other_sessions_logged_out'                 => 'Всички други ваши сесии бяха затворени.',
     'delete_all_budgets'                        => 'Изтрийте ВСИЧКИ ваши бюджети',

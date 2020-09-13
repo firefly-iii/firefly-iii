@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Dieser Rechnung sind keine Regeln zugeordnet.',
     'go_to_asset_accounts'                                => 'Bestandskonten anzeigen',
     'go_to_budgets'                                       => 'Budgets anzeigen',
-    'new_clone_instructions'                              => 'Mit dieser Schaltfläche wird die Buchung automatisch dupliziert und das Datum auf heute festgelegt. Möchten Sie fortfahren?',
     'clones_journal_x'                                    => 'Diese Buchung ist ein Duplikat von ":description" (#:id)',
     'go_to_categories'                                    => 'Kategorien anzeigen',
     'go_to_bills'                                         => 'Rechnungen anzeigen',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Externe URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Daten aus Firefly III löschen',
+    'delete_stuff_header'                       => 'Daten löschen',
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
     'other_sessions_logged_out'                 => 'Alle Ihre anderen Sitzungen wurden abgemeldet.',
     'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',

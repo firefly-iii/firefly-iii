@@ -79,7 +79,7 @@ class PiggyBankController extends Controller
         $locale =app('steam')->getLocale();
 
         // get first event or start date of piggy bank or today
-        $startDate = $piggyBank->start_date ?? new Carbon;
+        $startDate = $piggyBank->start_date ?? today(config('app.timezone'));
 
         /** @var PiggyBankEvent $first */
         $firstEvent = $set->first();
@@ -87,7 +87,7 @@ class PiggyBankController extends Controller
 
         // which ever is older:
         $oldest = $startDate->lt($firstDate) ? $startDate : $firstDate;
-        $today  = new Carbon;
+        $today  = today(config('app.timezone'));
         // depending on diff, do something with range of chart.
         $step = $this->calculateStep($oldest, $today);
 

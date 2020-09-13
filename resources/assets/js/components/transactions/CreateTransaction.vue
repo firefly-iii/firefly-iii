@@ -529,6 +529,8 @@ export default {
       // console.log('Now incollectAttachmentData()');
       let groupId = response.data.data.id;
 
+      // reverse list of transactions?
+      response.data.data.attributes.transactions = response.data.data.attributes.transactions.reverse();
       // array of all files to be uploaded:
       let toBeUploaded = [];
 

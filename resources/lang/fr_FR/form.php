@@ -84,7 +84,7 @@ return [
     'interest_period'             => 'Période d’intérêt',
 
     'type'               => 'Type',
-    'convert_Withdrawal' => 'Convertir le retrait',
+    'convert_Withdrawal' => 'Convertir la dépense',
     'convert_Deposit'    => 'Convertir le dépôt',
     'convert_Transfer'   => 'Convertir le transfert',
 
@@ -120,8 +120,8 @@ return [
     'stop_processing'             => 'Arrêter le traitement',
     'start_date'                  => 'Début de l\'étendue',
     'end_date'                    => 'Fin de l\'étendue',
-    'start'                       => 'Start of range',
-    'end'                         => 'End of range',
+    'start'                       => 'Début de l\'étendue',
+    'end'                         => 'Fin de l\'étendue',
     'delete_account'              => 'Supprimer le compte ":name"',
     'delete_bill'                 => 'Supprimer la facture ":name"',
     'delete_budget'               => 'Supprimer le budget ":name"',

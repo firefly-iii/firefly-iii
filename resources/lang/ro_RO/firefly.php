@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Acestă factură nu are asociate reguli.',
     'go_to_asset_accounts'                                => 'Vizualizați conturile de active',
     'go_to_budgets'                                       => 'Mergi la bugete',
-    'new_clone_instructions'                              => 'Acest buton va clona automat tranzacția și va seta data astăzi. Esti sigur?',
     'clones_journal_x'                                    => 'Această tranzacție este o clonă a ":description" (#:id)',
     'go_to_categories'                                    => 'Mergi la categorii',
     'go_to_bills'                                         => 'Mergi la facturi',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Fii atent cu aceste butoane. Ștergerea lucrurilor este permanentă.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Șterge toate bugetele',

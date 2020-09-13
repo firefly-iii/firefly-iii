@@ -123,7 +123,7 @@ class ShowController extends Controller
         $subTitle = (string) trans('firefly.all_journals_without_budget');
         $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon : $first->date;
-        $end      = new Carbon;
+        $end      = today(config('app.timezone'));
         $page     = (int) $request->get('page');
         $pageSize = (int) app('preferences')->get('listPageSize', 50)->data;
 
@@ -150,11 +150,7 @@ class ShowController extends Controller
     {
         /** @var Carbon $start */
         $allStart = session('first', Carbon::now()->startOfYear());
-        $allEnd   = new Carbon;
-
-        // use session range:
-        $start = session('start');
-        $end   = session('end');
+        $allEnd   = today();
 
 
         $page       = (int) $request->get('page');
@@ -166,7 +162,7 @@ class ShowController extends Controller
         // collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setBudget($budget)
+        $collector->setRange($allStart, $allEnd)->setBudget($budget)
                   ->withAccountInformation()
                   ->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
@@ -215,7 +211,7 @@ class ShowController extends Controller
         $groups->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
         /** @var Carbon $start */
         $start  = session('first', Carbon::now()->startOfYear());
-        $end    = new Carbon;
+        $end    = today(config('app.timezone'));
         $attachments = $this->repository->getAttachments($budget);
         $limits = $this->getLimits($budget, $start, $end);
 

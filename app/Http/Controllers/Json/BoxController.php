@@ -68,7 +68,7 @@ class BoxController extends Controller
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', Carbon::now()->endOfMonth());
-        $today    = new Carbon;
+        $today    = today(config('app.timezone'));
         $display  = 2; // see method docs.
         $boxTitle = (string) trans('firefly.spent');
 

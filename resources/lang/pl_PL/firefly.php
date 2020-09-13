@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => 'Ten rachunek nie ma przypisanych do niego reguł.',
     'go_to_asset_accounts'                                => 'Zobacz swoje konta aktywów',
     'go_to_budgets'                                       => 'Przejdź do swoich budżetów',
-    'new_clone_instructions'                              => 'Ten przycisk automatycznie sklonuje transakcję i ustawi datę transakcji na dziś. Czy jesteś pewien?',
     'clones_journal_x'                                    => 'Ta transakcja jest sklonowana z transakcji ":description" (#:id)',
     'go_to_categories'                                    => 'Przejdź do swoich kategorii',
     'go_to_bills'                                         => 'Przejdź do swoich rachunków',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'Zewnętrzne URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Usuń dane z Firefly III',
+    'delete_stuff_header'                       => 'Usuń dane',
     'permanent_delete_stuff'                    => 'Uważaj z tymi przyciskami. Usuwanie rzeczy jest trwałe.',
     'other_sessions_logged_out'                 => 'Wszystkie twoje inne sesje zostały wylogowane.',
     'delete_all_budgets'                        => 'Usuń WSZYSTKIE budżety',

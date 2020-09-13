@@ -59,7 +59,6 @@ return [
     'no_rules_for_bill'                                   => '此帳單未設定相關的規則。',
     'go_to_asset_accounts'                                => '檢視您的資產帳戶',
     'go_to_budgets'                                       => '前往您的預算',
-    'new_clone_instructions'                              => 'This button will automatically clone the transaction and set the date to today. Are you sure?',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => '前往您的分類',
     'go_to_bills'                                         => '前往您的帳單',
@@ -680,7 +679,7 @@ return [
     'external_uri'                              => 'External URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data from Firefly III',
+    'delete_stuff_header'                       => 'Delete data',
     'permanent_delete_stuff'                    => 'Be careful with these buttons. Deleting stuff is permanent.',
     'other_sessions_logged_out'                 => 'All your other sessions have been logged out.',
     'delete_all_budgets'                        => 'Delete ALL your budgets',

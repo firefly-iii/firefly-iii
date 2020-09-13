@@ -151,7 +151,7 @@ class ReportFormRequest extends FormRequest
      */
     public function getEndDate(): Carbon
     {
-        $date  = new Carbon;
+        $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
@@ -179,7 +179,7 @@ class ReportFormRequest extends FormRequest
      */
     public function getStartDate(): Carbon
     {
-        $date  = new Carbon;
+        $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {

@@ -240,10 +240,11 @@ export default {
     groupId: Number
   },
   mounted() {
+    console.log('EditTransaction: mounted()');
     this.getGroup();
   },
   ready() {
-    // console.log('Ready Group ID: ' + this.groupId);
+    console.log('EditTransaction: ready()');
   },
   methods: {
     positiveAmount(amount) {
@@ -349,12 +350,12 @@ export default {
       // console.log(this.transactions[index].destination_account.allowed_types);
     },
     getGroup() {
-
+      console.log('EditTransaction: getGroup()');
       const page = window.location.href.split('/');
       const groupId = page[page.length - 1];
 
 
-      const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+      const uri = './api/v1/transactions/' + groupId;
       // console.log(uri);
 
       // fill in transactions array.
@@ -363,11 +364,12 @@ export default {
             this.processIncomingGroup(response.data.data);
           })
           .catch(error => {
-            //console.error('Some error.');
+            console.error('Some error when getting axios');
+            console.error(error);
           });
     },
     processIncomingGroup(data) {
-      // console.log(data);
+      console.log('EditTransaction: processIncomingGroup()');
       this.group_title = data.attributes.group_title;
       let transactions = data.attributes.transactions.reverse();
       for (let key in transactions) {
@@ -385,7 +387,7 @@ export default {
       return null;
     },
     processIncomingGroupRow(transaction) {
-      // console.log(transaction);
+      console.log('EditTransaction: processIncomingGroupRow()');
       this.setTransactionType(transaction.type);
 
       let newTags = [];

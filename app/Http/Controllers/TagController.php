@@ -180,8 +180,9 @@ class TagController extends Controller
     public function index(TagRepositoryInterface $repository)
     {
         // start with oldest tag
-        $oldestTagDate = null === $repository->oldestTag() ? clone session('first') : $repository->oldestTag()->date;
-        $newestTagDate = null === $repository->newestTag() ? new Carbon : $repository->newestTag()->date;
+        $first = session('first', today()) ?? today();
+        $oldestTagDate = null === $repository->oldestTag() ? clone $first : $repository->oldestTag()->date;
+        $newestTagDate = null === $repository->newestTag() ? today() : $repository->newestTag()->date;
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
         $tags            = [];
@@ -250,7 +251,7 @@ class TagController extends Controller
         );
 
         $startPeriod = $this->repository->firstUseDate($tag);
-        $startPeriod = $startPeriod ?? new Carbon;
+        $startPeriod = $startPeriod ?? today(config('app.timezone'));
         $endPeriod   = clone $end;
         $periods     = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
         $path        = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
@@ -284,8 +285,8 @@ class TagController extends Controller
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
-        $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
-        $end          = $this->repository->lastUseDate($tag) ?? new Carbon;
+        $start        = $this->repository->firstUseDate($tag) ?? today(config('app.timezone'));
+        $end          = $this->repository->lastUseDate($tag) ?? today(config('app.timezone'));
         $attachments  = $this->repository->getAttachments($tag);
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);

@@ -67,8 +67,8 @@ class RatesApiIOv1 implements ExchangeRateInterface
         $exchangeRate->toCurrency()->associate($toCurrency);
         $exchangeRate->date       = $date;
         $exchangeRate->rate       = $rate;
-        $exchangeRate->updated_at = new Carbon;
-        $exchangeRate->created_at = new Carbon;
+        $exchangeRate->updated_at = today(config('app.timezone'));
+        $exchangeRate->created_at = today(config('app.timezone'));
 
         // build URI
         $uri = sprintf(
