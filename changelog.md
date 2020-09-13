@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Some warnings before you install this version
 
-- ⚠️ Some changes in this release may be backwards incompatible or work differently than you expect.
+- ⚠️ Some changes in this release may be backwards incompatible or work differently than you expect (see below).
 - ⚠️ Invalid triggers in a non-strict rule will cause Firefly III to select ALL transactions.
 
 Several alpha and beta releases preceded this release.
@@ -14,6 +14,7 @@ Several alpha and beta releases preceded this release.
 - 5.4.0-alpha.1 on 2020-08-14
 - 5.4.0-alpha.2 on 2020-08-21
 - 5.4.0-alpha.3 on 2020-08-21
+- 5.4.0-beta.1 on 2020-09-13
 
 ### Added
 - [Issue 3187](https://github.com/firefly-iii/firefly-iii/issues/3187) A new field for transaction URL's.
@@ -33,6 +34,8 @@ Several alpha and beta releases preceded this release.
 - [Issue 3642](https://github.com/firefly-iii/firefly-iii/issues/3642) Redis now supports Unix sockets.
 - [Issue 3648](https://github.com/firefly-iii/firefly-iii/issues/3648) Add a basic copy/paste feature.
 - [Issue 3651](https://github.com/firefly-iii/firefly-iii/issues/3651) Now supports public clients.
+- [Issue 3755](https://github.com/firefly-iii/firefly-iii/issues/3755) You can now click option groups in the report pages.
+- [Issue 3765](https://github.com/firefly-iii/firefly-iii/issues/3765) Tag page sum list is now currency aware.
 - A new integrity check that makes sure all transaction types are correct.
 - Support for Bulgarian! 🇧🇬
 
@@ -61,9 +64,19 @@ Several alpha and beta releases preceded this release.
 - [Issue 3678](https://github.com/firefly-iii/firefly-iii/issues/3678) Search did not distinguish between source and destination.
 - [Issue 3679](https://github.com/firefly-iii/firefly-iii/issues/3679) Polish and Russian translations were broken on the `/rules` page, fixed by @sephrat
 - [Issue 3681](https://github.com/firefly-iii/firefly-iii/issues/3681) Fix Czech translations missing file on `/profile` page.
-- [Issue 3696](https://github.com/firefly-iii/firefly-iii/issues/3696) Fix missing translations, by @sephrat
 - [Issue 3693](https://github.com/firefly-iii/firefly-iii/issues/3693) Creating users through the API was impossible.
+- [Issue 3696](https://github.com/firefly-iii/firefly-iii/issues/3696) Fix missing translations, by @sephrat
 - [Issue 3710](https://github.com/firefly-iii/firefly-iii/issues/3710) When you create a split transaction, the title isn't correctly reset.
+- [Issue 3745](https://github.com/firefly-iii/firefly-iii/issues/3745) In some cases, piggy bank events were not created.
+- [Issue 3746](https://github.com/firefly-iii/firefly-iii/issues/3746) Bad anchor link in readme, thanks @GrayStrider
+- [Issue 3748](https://github.com/firefly-iii/firefly-iii/issues/3748) Typo's in autocomplete URL, thanks @psychowood
+- [Issue 3759](https://github.com/firefly-iii/firefly-iii/issues/3759) Bad budget calculations when using out-of-sync budgets.
+- [Issue 3761](https://github.com/firefly-iii/firefly-iii/issues/3761) Could not create a transfer and refer to a piggy bank by name. 
+- [Issue 3768](https://github.com/firefly-iii/firefly-iii/issues/3768) Attachments were uploaded out of order in split transactions.
+- [Issue 3770](https://github.com/firefly-iii/firefly-iii/issues/3770) Null pointer exception when creating transaction.
+- [Issue 3772](https://github.com/firefly-iii/firefly-iii/issues/3772) Some strings were translated badly.
+- [Issue 3789](https://github.com/firefly-iii/firefly-iii/issues/3789) Heroku installation failed because of bad DB code.
+- [Issue 3791](https://github.com/firefly-iii/firefly-iii/issues/3791) Several issues on the budgets page fixed.
 - Reconciliation transactions now show the amount correctly.
 
 ### API

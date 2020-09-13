@@ -679,7 +679,7 @@ return [
     'external_uri'                              => 'Externe URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Daten löschen',
     'permanent_delete_stuff'                    => 'Seien Sie vorsichtig mit diesen Schaltflächen. Das Löschen kann nicht widerrufen werden.',
     'other_sessions_logged_out'                 => 'Alle Ihre anderen Sitzungen wurden abgemeldet.',
     'delete_all_budgets'                        => 'ALLE Ihre Budgets löschen',

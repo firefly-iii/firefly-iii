@@ -159,7 +159,7 @@ return [
     'also_delete_connections'     => 'A csak ezzel a kapcsolattípussal rendelkező tranzakciók elveszítik az összerendelésüket. | Mind a :count tranzakció, amely ezzel a hivatkozástípussal kapcsolódik elveszíti az összrendelését.',
     'also_delete_rules'           => 'A szabálycsoporthoz tartozó egyetlen szabály is törölve lesz. | Az ezen szabálycsoporthoz tartozó :count szabály is törölve lesz.',
     'also_delete_piggyBanks'      => 'A bankszámlához tartozó egyetlen malacpersely is törölve lesz. | Az ehhez a bankszámlához tartozó :count malacpersely is törölve lesz.',
-    'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
+    'not_delete_piggy_banks'      => 'A csoporthoz tartozó malacpersely nem lesz törölve. | Az ehhez a csoporthoz tartozó :count malacpersely nem lesz törölve.',
     'bill_keep_transactions'      => 'A számlához tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a számlához tartozó :count tranzakció nem lesz törölve.',
     'budget_keep_transactions'    => 'A költségkerethez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a költségkerethez tartozó :count tranzakció nem lesz törölve.',
     'category_keep_transactions'  => 'A kategóriához tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a kategóriához tartozó :count tranzakció nem lesz törölve.',

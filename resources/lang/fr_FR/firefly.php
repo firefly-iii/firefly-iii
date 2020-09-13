@@ -679,7 +679,7 @@ return [
     'external_uri'                              => 'URI externe',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Suppression de données',
     'permanent_delete_stuff'                    => 'Attention à ces boutons. Ce que vous supprimez l\'est de façon définitive.',
     'other_sessions_logged_out'                 => 'Toutes vos autres sessions ont été déconnectées.',
     'delete_all_budgets'                        => 'Supprimer TOUS vos budgets',

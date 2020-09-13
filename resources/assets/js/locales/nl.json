@@ -81,7 +81,7 @@
         "profile_oauth_client_secret_title": "Client secret",
         "profile_oauth_client_secret_expl": "Hier is je nieuwe client secret. Dit is de enige keer dat deze getoond wordt dus verlies deze niet! Je kan dit secret gebruiken om API-aanvragen te maken.",
         "profile_oauth_confidential": "Vertrouwelijk",
-        "profile_oauth_confidential_help": "Is bedoelt voor clients die geen geheimen kunnen bewaren, zoals native desktop apps of JavaScript SPA's.",
+        "profile_oauth_confidential_help": "Dit vinkje is bedoeld voor applicaties die geheimen kunnen bewaren. Applicaties zoals sommige desktop-apps en Javascript apps kunnen dit niet. In zo'n geval haal je het vinkje weg.",
         "multi_account_warning_unknown": "Afhankelijk van het type transactie wordt de bron- en\/of doelrekening overschreven door wat er in de eerste split staat.",
         "multi_account_warning_withdrawal": "De bronrekening wordt overschreven door wat er in de eerste split staat.",
         "multi_account_warning_deposit": "De doelrekening wordt overschreven door wat er in de eerste split staat.",
