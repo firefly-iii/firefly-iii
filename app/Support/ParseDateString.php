@@ -89,6 +89,10 @@ class ParseDateString
             // cant handle date ranges.
             return new Carbon('1984-09-17');
         }
+        // maybe a year, nothing else?
+        if (4 === strlen($date) && is_numeric($date) && (int) $date > 1000 && (int) $date <= 3000) {
+            return new Carbon(sprintf('%d-01-01', $date));
+        }
 
         throw new FireflyException(sprintf('[d]Not a recognised date format: "%s"', $date));
     }
