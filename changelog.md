@@ -2,12 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.4.0 (API 1.4.0)] - 2020-08-xx
+## [5.4.0 (API 1.4.0)] - 2020-09-21
 
-Some warnings before you install this version
+Some warnings before you install this version:
 
-- ⚠️ Some changes in this release may be backwards incompatible or work differently than you expect (see below).
+- ⚠️ Some changes in this release may be backwards incompatible (see below).
 - ⚠️ Invalid triggers in a non-strict rule will cause Firefly III to select ALL transactions.
+- ⚠️ The `export` volume is no longer used (Docker).
+- ⚠️ The `upload` volume is now located at `/var/www/public/storage/upload` (Docker).
 
 Several alpha and beta releases preceded this release.
 

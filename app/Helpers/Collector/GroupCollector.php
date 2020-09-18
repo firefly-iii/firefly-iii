@@ -494,7 +494,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToInteger(array $array): array
     {
         foreach ($this->integerFields as $field) {
-            $array[$field] = isset($array[$field]) ? (int) $array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) ? (int) $array[$field] : null;
         }
 
         return $array;
@@ -541,7 +541,7 @@ class GroupCollector implements GroupCollectorInterface
     private function mergeAttachments(array $existingJournal, TransactionJournal $newJournal): array
     {
         $newArray = $newJournal->toArray();
-        if (isset($newArray['attachment_id'])) {
+        if (array_key_exists('attachment_id', $newArray)) {
             $attachmentId                                  = (int) $newJournal['tag_id'];
             $existingJournal['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
@@ -560,7 +560,7 @@ class GroupCollector implements GroupCollectorInterface
     private function mergeTags(array $existingJournal, TransactionJournal $newJournal): array
     {
         $newArray = $newJournal->toArray();
-        if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
+        if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
             $tagId = (int) $newJournal['tag_id'];
 
             $tagDate = null;
@@ -593,7 +593,7 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($collection as $augumentedJournal) {
             $groupId = $augumentedJournal->transaction_group_id;
 
-            if (!isset($groups[$groupId])) {
+            if (!array_key_exists($groupId, $groups)) {
                 // make new array
                 $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
                 $groupArray                             = [
@@ -614,13 +614,13 @@ class GroupCollector implements GroupCollectorInterface
             $journalId = (int) $augumentedJournal->transaction_journal_id;
 
 
-            if (isset($groups[$groupId]['transactions'][$journalId])) {
+            if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeAttachments($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
             }
 
-            if (!isset($groups[$groupId]['transactions'][$journalId])) {
+            if (!array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // create second, third, fourth split:
                 $groups[$groupId]['count']++;
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);

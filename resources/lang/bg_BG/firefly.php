@@ -679,7 +679,7 @@ return [
     'external_uri'                              => 'Външно URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Изтрий данните',
     'permanent_delete_stuff'                    => 'Внимавайте с тези бутони. Изтриването на неща е завинаги.',
     'other_sessions_logged_out'                 => 'Всички други ваши сесии бяха затворени.',
     'delete_all_budgets'                        => 'Изтрийте ВСИЧКИ ваши бюджети',

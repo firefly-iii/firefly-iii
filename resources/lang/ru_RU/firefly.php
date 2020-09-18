@@ -523,8 +523,8 @@ return [
     'rule_trigger_notes_end'                              => 'Заметки заканчиваются на ":trigger_value"',
     'rule_trigger_bill_is_choice'                         => 'Счёт на оплату = ..',
     'rule_trigger_bill_is'                                => 'Bill is ":trigger_value"',
-    'rule_trigger_external_id_choice'                     => 'External ID is..',
-    'rule_trigger_external_id'                            => 'External ID is ":trigger_value"',
+    'rule_trigger_external_id_choice'                     => 'Внешний ID..',
+    'rule_trigger_external_id'                            => 'Внешний ID - ":trigger_value"',
     'rule_trigger_internal_reference_choice'              => 'Internal reference is..',
     'rule_trigger_internal_reference'                     => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
@@ -679,7 +679,7 @@ return [
     'external_uri'                              => 'Внешний URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Удалить данные',
     'permanent_delete_stuff'                    => 'Будьте осторожны с этими кнопками. Удаление нельзя будет отменить.',
     'other_sessions_logged_out'                 => 'Все прочие ваши сессии были прекращены.',
     'delete_all_budgets'                        => 'Удалить ВСЕ ваши бюджеты',

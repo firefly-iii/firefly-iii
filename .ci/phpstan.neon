@@ -9,6 +9,7 @@ parameters:
     - '#is not allowed to extend#'
     - '#is neither abstract nor final#'
     - '#Control structures using switch should not be used\.#'
+    - '#has a nullable return type declaration#'
   paths:
     - ../app
     - ../database
@@ -16,4 +17,4 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 0
+  level: 5
