@@ -3,3 +3,6 @@
 *.scss linguist-vendored
 *.js linguist-vendored
 CHANGELOG.md export-ignore
+/tests       export-ignore
+/phpunit.xml export-ignore
+/.ci export-ignore
