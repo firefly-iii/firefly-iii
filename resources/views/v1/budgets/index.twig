@@ -261,6 +261,11 @@
                                         {% endif %}
                                         {% if budget.budgeted|length > 0 %}
                                             {% for budgetLimit in budget.budgeted %}
+                                                {% if not budgetLimit.in_range %}
+                                                    <small class="text-muted">
+                                                        {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
+                                                    </small><br>
+                                                {% endif %}
                                                 <div class="input-group">
                                                     <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
                                                     <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
@@ -275,11 +280,6 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                {% if not budgetLimit.in_range %}
-                                                <small class="text-muted">
-                                                    {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
-                                                </small><br>
-                                                    {% endif %}
                                                 <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
                                                     style="display:none;"></span>
                                             {% endfor %}
@@ -335,8 +335,6 @@
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
                                                 {% if budgetLimit.in_range %}
                                                     ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
-                                                {% else %}
-                                                    X
                                                 {% endif %}
                                             </span>
                                             <br/>

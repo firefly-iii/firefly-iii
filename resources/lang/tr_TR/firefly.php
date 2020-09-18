@@ -909,7 +909,7 @@ return [
     'options'                                   => 'Seçenekler',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',
     'see_below'                                 => 'see below',

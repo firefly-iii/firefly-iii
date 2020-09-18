@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Valinnat',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Budjetissa jäljellä (välillä :start ja :end)',
     'total_available_budget_in_currency'        => 'Budjetissa jäljellä valuutassa :currency',
     'see_below'                                 => 'katso alla',

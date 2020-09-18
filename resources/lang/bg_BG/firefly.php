@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Настройки',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Тази сума се отнася за периода от :start до :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Общ наличен бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Общ наличен бюджет в :currency',
     'see_below'                                 => 'виж по-долу',

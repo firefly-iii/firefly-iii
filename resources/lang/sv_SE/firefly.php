@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Alternativ',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Detta belopp gäller från :start till :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total tillgänglig budget (mellan :start och :end)',
     'total_available_budget_in_currency'        => 'Total tillgänglig budget i :currency',
     'see_below'                                 => 'se nedan',

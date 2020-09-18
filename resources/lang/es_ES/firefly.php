@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Opciones',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Esta cantidad se aplica de :start a :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Presupuesto total disponible (entre :start y :end)',
     'total_available_budget_in_currency'        => 'Presupuesto total disponible en :currency',
     'see_below'                                 => 'ver abajo',
