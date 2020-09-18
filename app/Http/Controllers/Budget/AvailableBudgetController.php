@@ -198,7 +198,8 @@ class AvailableBudgetController extends Controller
 
             return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
         }
-
+        $start->startOfDay();
+        $end->endOfDay();
         // find existing AB
         $existing = $this->abRepository->find($currency, $start, $end);
         if (null === $existing) {

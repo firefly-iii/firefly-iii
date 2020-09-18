@@ -39,19 +39,7 @@ use Log;
  */
 class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(get_class($this));
-        }
-    }
+    private User $user;
 
     /**
      * @param AvailableBudget $availableBudget
@@ -99,7 +87,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $query->where(
                 static function (Builder $q1) use ($start, $end) {
                     $q1->where('start_date', '=', $start->format('Y-m-d 00:00:00'));
-                    $q1->where('end_date', '=', $end->format('Y-m-d 00:00:00'));
+                    $q1->where('end_date', '=', $end->format('Y-m-d 23:59:59'));
                 }
             );
         }
