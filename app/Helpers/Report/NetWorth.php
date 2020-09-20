@@ -117,7 +117,7 @@ class NetWorth implements NetWorthInterface
 
             Log::debug(sprintf('Balance corrected to %s because of virtual balance (%s)', $balance, $virtualBalance));
 
-            if (!isset($netWorth[$currencyId])) {
+            if (!array_key_exists($currencyId, $netWorth)) {
                 $netWorth[$currencyId] = '0';
             }
             $netWorth[$currencyId] = bcadd($balance, $netWorth[$currencyId]);
