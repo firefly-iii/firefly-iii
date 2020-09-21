@@ -82,6 +82,7 @@ class ProfileController extends Controller
         $loginProvider          = config('firefly.login_provider');
         $authGuard              = config('firefly.authentication_guard');
         $this->externalIdentity = 'eloquent' !== $loginProvider || 'web' !== $authGuard;
+        Log::debug(sprintf('ProfileController::__construct(). Login provider is "%s", authentication guard is "%s"',$loginProvider, $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
@@ -345,7 +346,6 @@ class ProfileController extends Controller
         $userId           = $user->id;
         $enabled2FA       = null !== $user->mfa_secret;
         $mfaBackupCount   = count(app('preferences')->get('mfa_recovery', [])->data);
-
         $this->createOAuthKeys();
 
         if (0 === $count) {
