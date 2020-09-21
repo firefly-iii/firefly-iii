@@ -2,7 +2,7 @@
 This document describes the versioning and release process of Firefly III. This document is a living document, contents will be updated according to each release.
 
 ## Releases
-Firefly III releases will be versioned using dotted triples, similar to [Semantic Version](http://semver.org/). For this specific document, we will refer to the respective components of this triple as `<major>.<minor>.<patch>`. The version number may have additional information, such as "-alpha.1,-beta.2" to mark alpha and beta versions for earlier access. Such releases will be considered as "pre-releases".
+Firefly III releases will be versioned using dotted triples, similar to [Semantic Version](http://semver.org/). For this specific document, we will refer to the respective components of this triple as `<major>.<minor>.<patch>`. The version number may have additional information, such as "-alpha.1", "-beta.2" to mark alpha and beta versions for earlier access. Such releases will be considered as "pre-releases".
 
 ### Major and Minor Releases
 Major and minor releases of Firefly III will be tagged in `main` when the release reaches the necessary state. The tag format should follow `<major>.<minor>.0`. For example, once the release `5.0.0` is no longer pre-release, a tag will be created with the format `5.0.0` and the new version will be released. The Docker images will be updated shortly after. 
@@ -16,11 +16,11 @@ The different alpha and beta builds will be compiled from their corresponding ta
 ### Minor Release Support Matrix
 | Version | Supported          |
 | ------- | ------------------ |
-| Firefly III v5.3.x   | :white_check_mark: |
+| Firefly III v5.4.x   | :white_check_mark: |
+| Firefly III v5.3.x   | :x: |
 | Firefly III v5.2.x   | :x: |
 | Firefly III v5.1.x   | :x: |
-| Firefly III v5.0.x   | :x: |
-| Firefly III v4.8.2 (and earlier)   | :x: |
+| Firefly III v5.0.x (and earlier)   | :x: |
 
 ### Upgrade path and support policy
 The upgrade path for Firefly III is:

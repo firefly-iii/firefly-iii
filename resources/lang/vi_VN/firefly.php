@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Tùy chọn',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Số tiền này áp dụng từ :start đến :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Tổng ngân sách có sẵn (giữa :start và :end)',
     'total_available_budget_in_currency'        => 'Tổng ngân sách có sẵn bằng: tiền tệ',
     'see_below'                                 => 'xem bên dưới',

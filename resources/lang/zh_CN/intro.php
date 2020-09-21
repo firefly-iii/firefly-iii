@@ -33,16 +33,16 @@ return [
     'index_cash_account'                              => '这些是迄今创建的账户。您可以使用现金账户追踪现金支出，但当然不是强制性的。',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => '输入您交易的基本信息。包括来源帐户、目标帐户、日期和描述。',
+    'transactions_create_amount_info'                 => '在此输入交易金额。 如有必要，这些字段会自动更新以获取外币信息。',
+    'transactions_create_optional_info'               => '这些字段都是可选的。在此处添加数据会使您的交易更有条理。',
+    'transactions_create_split'                       => '如果您想要拆分交易，按此按钮增加一笔拆分',
 
     // create account:
     'accounts_create_iban'                            => '给您的帐户一个有效的 IBAN，可使未来资料导入变得更容易。',
-    'accounts_create_asset_opening_balance'           => '资产帐户可能有一个 "初始馀额"，表示此帐户在 Firefly III 中的纪录开始。',
+    'accounts_create_asset_opening_balance'           => '资产帐户可能有一个 "初始余额"，表示此帐户在 Firefly III 中的纪录开始。',
     'accounts_create_asset_currency'                  => 'Fireflly III 支持多种货币。资产帐户有一种主要货币，您必须在此处设定。',
-    'accounts_create_asset_virtual'                   => '有时，它可以协助赋予你的帐户一个虚拟额度：一个总是增加至实际馀额中，或自其中删减的固定金额。',
+    'accounts_create_asset_virtual'                   => '有时，它可以协助赋予你的帐户一个虚拟额度：一个总是增加至实际余额中，或自其中删减的固定金额。',
 
     // budgets index
     'budgets_index_intro'                             => '预算是用来管理你的财务，也是 Firefly III 的核心功能之一。',

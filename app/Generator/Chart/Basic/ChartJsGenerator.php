@@ -138,16 +138,16 @@ class ChartJsGenerator implements GeneratorInterface
                 'type'  => $set['type'] ?? 'line',
                 'data'  => array_values($set['entries']),
             ];
-            if (isset($set['yAxisID'])) {
+            if (array_key_exists('yAxisID', $set)) {
                 $currentSet['yAxisID'] = $set['yAxisID'];
             }
-            if (isset($set['fill'])) {
+            if (array_key_exists('fill', $set)) {
                 $currentSet['fill'] = $set['fill'];
             }
-            if (isset($set['currency_symbol'])) {
+            if (array_key_exists('currency_symbol', $set)) {
                 $currentSet['currency_symbol'] = $set['currency_symbol'];
             }
-            if (isset($set['backgroundColor'])) {
+            if (array_key_exists('backgroundColor', $set)) {
                 $currentSet['backgroundColor'] = $set['backgroundColor'];
             }
             $chartData['datasets'][] = $currentSet;

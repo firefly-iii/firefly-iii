@@ -2,12 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.4.0 (API 1.4.0)] - 2020-08-xx
+## [5.4.0 (API 1.4.0)] - 2020-09-21
 
-Some warnings before you install this version
+Some warnings before you install this version:
 
-- ⚠️ Some changes in this release may be backwards incompatible or work differently than you expect (see below).
+- ⚠️ Some changes in this release may be backwards incompatible (see below).
 - ⚠️ Invalid triggers in a non-strict rule will cause Firefly III to select ALL transactions.
+- ⚠️ The `export` volume is no longer used (Docker).
+- ⚠️ The `upload` volume is now located at `/var/www/public/storage/upload` (Docker).
 
 Several alpha and beta releases preceded this release.
 
@@ -15,6 +17,12 @@ Several alpha and beta releases preceded this release.
 - 5.4.0-alpha.2 on 2020-08-21
 - 5.4.0-alpha.3 on 2020-08-21
 - 5.4.0-beta.1 on 2020-09-13
+
+### Known issues
+
+Yep, unfortunately.
+
+- [Issue 3808](https://github.com/firefly-iii/firefly-iii/issues/3808) When using the remote authentication features of Firefly III, autocomplete endpoints will fail.
 
 ### Added
 - [Issue 3187](https://github.com/firefly-iii/firefly-iii/issues/3187) A new field for transaction URL's.

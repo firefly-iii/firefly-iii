@@ -30,10 +30,10 @@ return [
     'index_help'                                      => 'Bir sayfa veya formla ilgili yardıma ihtiyacınız varsa, bu düğmeye basın.',
     'index_outro'                                     => 'Firefly III\'ün çoğu sayfası bunun gibi küçük bir turla başlayacak. Sorularınız ve yorumlarınız olursa lütfen benimle iletişime geçin. Keyfini çıkarın!',
     'index_sidebar-toggle'                            => 'Yeni işlemler, hesaplar veya başka şeyler oluşturmak için bu simgenin altındaki menüyü kullanın.',
-    'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
+    'index_cash_account'                              => 'Bunlar şimdiye kadar oluşturulmuş hesaplardır. Nakit harcamaları takip etmek için nakit hesabını kullanabilirsiniz ancak elbette zorunlu değildir.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_basic_info'                  => 'İşleminizin temel bilgilerini giriniz. Gönderen, alıcı, tarih ve tanım.',
     'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
     'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
     'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',

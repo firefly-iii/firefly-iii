@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Beállítások',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Teljes elérhető költségkeret (:start és :end között)',
     'total_available_budget_in_currency'        => 'Teljes elérhető költségkeret :currency pénznemben',
     'see_below'                                 => 'lásd lentebb',

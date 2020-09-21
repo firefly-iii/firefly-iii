@@ -679,7 +679,7 @@ return [
     'external_uri'                              => 'Външно URI',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Изтрий данните',
     'permanent_delete_stuff'                    => 'Внимавайте с тези бутони. Изтриването на неща е завинаги.',
     'other_sessions_logged_out'                 => 'Всички други ваши сесии бяха затворени.',
     'delete_all_budgets'                        => 'Изтрийте ВСИЧКИ ваши бюджети',
@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Настройки',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Тази сума се отнася за периода от :start до :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Общ наличен бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Общ наличен бюджет в :currency',
     'see_below'                                 => 'виж по-долу',

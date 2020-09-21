@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Možnosti',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Celkový rozpočet k dispozici v :currency',
     'see_below'                                 => 'viz níže',

@@ -55,7 +55,7 @@ class CreateDatabase extends Command
      */
     public function handle(): int
     {
-        if ('mysql' !== env('DB_CONNECTION')) {
+        if ('mysql' !== env('DB_CONNECTION', 'mysql')) {
             $this->info(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
 
             return 0;

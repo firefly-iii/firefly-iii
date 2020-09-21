@@ -908,7 +908,7 @@ return [
     'options'                                   => '选项',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => '可用预算总额 (:start 和 :end之间)',
     'total_available_budget_in_currency'        => '可用预算总额 以:currency为单位',
     'see_below'                                 => '请在下方查看',

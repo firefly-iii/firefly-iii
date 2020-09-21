@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Επιλογές',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Αυτό το ποσό ισχύει από :start έως :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Συνολικός διαθέσιμος προϋπολογισμός (μεταξύ :start και :end)',
     'total_available_budget_in_currency'        => 'Συνολικός διαθέσιμος προϋπολογισμός σε :currency',
     'see_below'                                 => 'δες παρακάτω',

@@ -908,7 +908,7 @@ return [
     'options'                                   => 'Opțiuni',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'Această sumă se aplică de la :start la :end.',
+    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Buget total disponibil (între :start și :end)',
     'total_available_budget_in_currency'        => 'Buget total disponibil în :currency',
     'see_below'                                 => 'vezi mai jos',

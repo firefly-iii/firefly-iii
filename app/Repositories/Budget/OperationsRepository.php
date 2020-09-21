@@ -41,19 +41,7 @@ use Log;
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(get_class($this));
-        }
-    }
+    private User $user;
 
     /**
      * A method that returns the amount of money budgeted per day for this budget,
