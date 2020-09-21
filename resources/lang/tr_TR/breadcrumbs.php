@@ -51,15 +51,15 @@ return [
     'edit_journal'           => '":description" işlemini düzenle',
     'edit_reconciliation'    => '":description" açıklamasını düzenle',
     'delete_journal'         => '":description" işlemini sil',
-    'delete_group'           => 'Delete transaction ":description"',
+    'delete_group'           => '":description" işlemini sil',
     'tags'                   => 'Etiketler',
     'createTag'              => 'Yeni etiket oluştur',
     'edit_tag'               => '":tag" etiketini düzenle',
     'delete_tag'             => '":tag" etiketini sil',
     'delete_journal_link'    => 'Hesap hareketleri arasındaki bağlantıyı sil',
-    'telemetry_index'        => 'Telemetry',
-    'telemetry_view'         => 'View telemetry',
-    'edit_object_group'      => 'Edit group ":title"',
-    'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'telemetry_index'        => 'Telemetri',
+    'telemetry_view'         => 'Telemetriye bak',
+    'edit_object_group'      => '":title" grubunu düzenle',
+    'delete_object_group'    => '":title" grubunu sil',
+    'logout_others'          => 'Diğer tüm oturumlardan çıkış yap'
 ];

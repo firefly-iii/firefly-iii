@@ -18,6 +18,12 @@ Several alpha and beta releases preceded this release.
 - 5.4.0-alpha.3 on 2020-08-21
 - 5.4.0-beta.1 on 2020-09-13
 
+### Known issues
+
+Yep, unfortunately.
+
+- [Issue 3808](https://github.com/firefly-iii/firefly-iii/issues/3808) When using the remote authentication features of Firefly III, autocomplete endpoints will fail.
+
 ### Added
 - [Issue 3187](https://github.com/firefly-iii/firefly-iii/issues/3187) A new field for transaction URL's.
 - [Issue 3200](https://github.com/firefly-iii/firefly-iii/issues/3200) The ability to sort your accounts as you see fit.
