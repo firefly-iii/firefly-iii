@@ -8867,16 +8867,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.42",
+            "version": "0.12.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "7c43b7c2d5ca6554f6231e82e342a710163ac5f4"
+                "reference": "54221b44766cb4bdfe40d1828d5bba5dd79c38c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7c43b7c2d5ca6554f6231e82e342a710163ac5f4",
-                "reference": "7c43b7c2d5ca6554f6231e82e342a710163ac5f4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/54221b44766cb4bdfe40d1828d5bba5dd79c38c6",
+                "reference": "54221b44766cb4bdfe40d1828d5bba5dd79c38c6",
                 "shasum": ""
             },
             "require": {
@@ -8919,7 +8919,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-02T13:14:53+00:00"
+            "time": "2020-09-19T21:19:38+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -9436,12 +9436,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "88de753349e4deedb32796fc94bddf9b2db2dd1f"
+                "reference": "81cb95735a719403eddb77fc78e21362b56d9ea9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/88de753349e4deedb32796fc94bddf9b2db2dd1f",
-                "reference": "88de753349e4deedb32796fc94bddf9b2db2dd1f",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/81cb95735a719403eddb77fc78e21362b56d9ea9",
+                "reference": "81cb95735a719403eddb77fc78e21362b56d9ea9",
                 "shasum": ""
             },
             "conflict": {
@@ -9487,8 +9487,8 @@
                 "doctrine/orm": ">=2,<2.4.8|>=2.5,<2.5.1",
                 "dolibarr/dolibarr": "<11.0.4",
                 "dompdf/dompdf": ">=0.6,<0.6.2",
-                "drupal/core": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
-                "drupal/drupal": ">=7,<7.72|>=8,<8.8.8|>=8.9,<8.9.1|>=9,<9.0.1",
+                "drupal/core": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
+                "drupal/drupal": ">=7,<7.73|>=8,<8.8.10|>=8.9,<8.9.6|>=9,<9.0.6",
                 "endroid/qr-code-bundle": "<3.4.2",
                 "enshrined/svg-sanitize": "<0.13.1",
                 "erusev/parsedown": "<1.7.2",
@@ -9730,7 +9730,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-18T05:02:13+00:00"
+            "time": "2020-09-18T13:01:53+00:00"
         },
         {
             "name": "sebastian/cli-parser",
