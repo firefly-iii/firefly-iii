@@ -5,6 +5,13 @@
 {% endblock %}
 
 {% block content %}
+    {{ dump(accounts.count) }}
+    {{ dump(accounts.count()) }}
+    {{ dump(accounts.getCollection.count()) }}
+    {{ dump(accounts.getCollection().count()) }}
+    {{ dump(accounts) }}
+
+
     {% if accounts.count > 0 %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
