@@ -142,6 +142,10 @@ class DebugController extends Controller
         $bcscale              = bcscale();
         $layout               = env('FIREFLY_III_LAYOUT');
 
+        // expected + found DB version:
+        $expectedDBversion = config('firefly.db_version');
+        $foundDBversion = \FireflyConfig::get('db_version',1)->data;
+
         // some new vars.
         $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
         $defaultLanguage = (string) config('firefly.default_language');
@@ -190,6 +194,8 @@ class DebugController extends Controller
             compact(
                 'phpVersion',
                 'localeAttempts',
+                'expectedDBversion',
+                'foundDBversion',
                 'appEnv',
                 'appDebug',
                 'logChannel',
