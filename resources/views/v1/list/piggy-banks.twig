@@ -41,7 +41,7 @@
                     </td>
                     <td>
                         <a href="{{ route('piggy-banks.show', piggy.id) }}" title="{{ piggy.account_name }}">{{ piggy.name }}</a>
-                        {% if piggy.attachments.count > 0 %}
+                        {% if piggy.attachments.count() > 0 %}
                             <i class="fa fa-fw fa-paperclip"></i>
                         {% endif %}
 

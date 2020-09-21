@@ -90,7 +90,7 @@ return [
 
     'providers' => [
         'users'                => [
-            'driver' => envNonEmpty('LOGIN_PROVIDER', 'eloquent'), //'adldap',
+            'driver' => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
             'model'  => FireflyIII\User::class,
         ],
         'remote_user_provider' => [

@@ -55,7 +55,7 @@
                             <em>{{ ruleGroup.description }}</em>
                         </p>
 
-                        {% if ruleGroup.rules.count > 0 %}
+                        {% if ruleGroup.rules.count() > 0 %}
                             <table class="table table-hover table-striped group-rules">
                                 <thead>
                                 <tr>
@@ -120,7 +120,7 @@
                                             <small><br />{% if rule.strict %}<span class="text-danger">{{ 'rule_is_strict'|_ }}</span>{% else %}<span class="text-success">{{ 'rule_is_not_strict'|_ }}</span>{% endif %}</small>
                                         </td>
                                         <td class="hidden-xs">
-                                            {% if rule.ruleTriggers.count > 0 %}
+                                            {% if rule.ruleTriggers.count() > 0 %}
                                                 <ul class="small" data-id="{{ rule.id }}">
                                                     {% for trigger in rule.ruleTriggers %}
                                                         {% if trigger.trigger_type != "user_action" %}
@@ -141,7 +141,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="hidden-xs">
-                                            {% if rule.ruleActions.count > 0 %}
+                                            {% if rule.ruleActions.count() > 0 %}
                                                 <ul class="small" data-id="{{ rule.id }}">
                                                     {% for action in rule.ruleActions %}
                                                         <li

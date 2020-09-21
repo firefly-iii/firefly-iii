@@ -25,8 +25,8 @@
                         </p>
 
                         <p>
-                            {% if budget.transactionjournals.count > 0 %}
-                                {{ Lang.choice('form.budget_keep_transactions', budget.transactionjournals.count, {count: budget.transactionjournals.count }) }}
+                            {% if budget.transactionjournals.count() > 0 %}
+                                {{ Lang.choice('form.budget_keep_transactions', budget.transactionjournals.count(), {count: budget.transactionjournals.count() }) }}
                             {% endif %}
                         </p>
 

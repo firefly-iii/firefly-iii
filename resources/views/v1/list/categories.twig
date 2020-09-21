@@ -25,7 +25,7 @@
             </td>
             <td data-value="{{ category.name }}">
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
-                {% if category.attachments.count > 0 %}
+                {% if category.attachments.count() > 0 %}
                     <i class="fa fa-fw fa-paperclip"></i>
                 {% endif %}
             </td>

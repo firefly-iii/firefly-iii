@@ -127,14 +127,6 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
-        $loginProvider = config('firefly.login_provider');
-        $authGuard     = config('firefly.authentication_guard');
-        $route         = request()->route()->getName();
-        if (('eloquent' !== $loginProvider || 'web' !== $authGuard) && 'logout' !== $route) {
-            throw new FireflyException('Using external identity provider. Cannot continue.');
-        }
-
-
         Log::channel('audit')->info('Show login form (1.1).');
 
         $count         = DB::table('users')->count();

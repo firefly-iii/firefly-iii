@@ -24,8 +24,8 @@
                         </p>
 
                         <p>
-                            {% if tag.transactionjournals.count > 0 %}
-                                {{ Lang.choice('form.tag_keep_transactions', tag.transactionjournals.count, {count: tag.transactionjournals.count}) }}
+                            {% if tag.transactionjournals.count() > 0 %}
+                                {{ Lang.choice('form.tag_keep_transactions', tag.transactionjournals.count(), {count: tag.transactionjournals.count()}) }}
                             {% endif %}
                         </p>
                     </div>
