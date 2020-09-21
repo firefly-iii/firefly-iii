@@ -36,7 +36,7 @@
                 {% if account.location %}
                     <i class="fa fa-fw fa-map-marker"></i>
                 {% endif %}
-                {% if account.attachments.count > 0 %}
+                {% if account.attachments.count() > 0 %}
                     <i class="fa fa-fw fa-paperclip"></i>
                 {% endif %}
             </td>

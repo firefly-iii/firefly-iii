@@ -1,8 +1,8 @@
 <p class="search_count">
     {% if hasPages %}
-        {{ trans('firefly.search_found_more_transactions', {count: groups.perPage, time: searchTime}) }}
+        {{ trans('firefly.search_found_more_transactions', {count: groups.count(), time: searchTime}) }}
     {% else %}
-        {{ trans_choice('firefly.search_found_transactions', groups.count, {time: searchTime}) }}
+        {{ trans_choice('firefly.search_found_transactions', groups.perPage(), {time: searchTime}) }}
     {% endif %}
 </p>
 

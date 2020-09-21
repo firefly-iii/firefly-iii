@@ -24,8 +24,8 @@
                         </p>
 
                         <p>
-                            {% if category.transactionjournals.count > 0 %}
-                                {{ Lang.choice('form.category_keep_transactions', category.transactionjournals.count, {count: category.transactionjournals.count }) }}
+                            {% if category.transactionjournals.count() > 0 %}
+                                {{ Lang.choice('form.category_keep_transactions', category.transactionjournals.count(), {count: category.transactionjournals.count() }) }}
                             {% endif %}
                         </p>
                     </div>

@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="{% if attachments.count == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
+        <div class="{% if attachments.count() == 0 %}col-lg-12 col-md-12 col-sm-12 col-xs-12{% else %}col-lg-8 col-md-6 col-sm-12 col-xs-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -38,7 +38,7 @@
                 {% endif %}
             </div>
         </div>
-        {% if attachments.count > 0 %}
+        {% if attachments.count() > 0 %}
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">

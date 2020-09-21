@@ -197,7 +197,7 @@
             {% endif %}
         </div>
     {% endif %}
-    {% if budgets|length == 0 and inactive.count == 0 %}
+    {% if budgets|length == 0 and inactive.count() == 0 %}
         {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
@@ -243,7 +243,7 @@
                                             <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
                                         {% endif %}
                                         {% endif %}
-                                        {% if budget.attachments.count > 0 %}
+                                        {% if budget.attachments.count() > 0 %}
                                             <i class="fa fa-paperclip"></i>
                                         {% endif %}
                                     </td>
@@ -284,7 +284,7 @@
                                                     style="display:none;"></span>
                                             {% endfor %}
                                         {% endif %}
-                                        {% if budget.budgeted|length < currencies.count %}
+                                        {% if budget.budgeted|length < currencies.count() %}
                                             <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
                                                 <i class="fa fa-plus-circle"></i>
                                             </a>
@@ -394,7 +394,7 @@
                     </div>
                 </div>
             </div>
-            {% if paginator.count > 0 and inactive.count > 0 %}
+            {% if paginator.count() > 0 and inactive.count() > 0 %}
                 <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
                     <div class="box" id="createBudgetBox">
                         <div class="box-header with-border">
