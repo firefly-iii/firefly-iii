@@ -311,7 +311,7 @@
                             {% if null != journal.notes and '' != journal.notes %}
                                 <tr>
                                     <td>{{ trans('list.notes') }}</td>
-                                    <td class="markdown">{{ journal.notes|markdown }}</td>
+                                    <td class="markdown">{{ journal.notes|default('')|markdown }}</td>
                                 </tr>
                             {% endif %}
                             {% if journalHasMeta(journal.transaction_journal_id, 'recurring_total') and journalHasMeta(journal.transaction_journal_id, 'recurring_count')  %}

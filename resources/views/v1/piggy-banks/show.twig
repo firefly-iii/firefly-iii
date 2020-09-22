@@ -111,7 +111,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ trans('form.notes') }}</h3>
                     </div>
-                    <div class="box-body markdown">{{ piggy.notes|markdown }}
+                    <div class="box-body markdown">{{ piggy.notes|default('')|markdown }}
                     </div>
                 </div>
 

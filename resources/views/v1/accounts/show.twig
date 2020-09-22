@@ -122,7 +122,7 @@
                         <h3 class="box-title">{{ 'notes'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ account.notes.first.text|markdown }}
+                        {{ account.notes.first.text|default('')|markdown }}
                     </div>
                 </div>
             </div>
