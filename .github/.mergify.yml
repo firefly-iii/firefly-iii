@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: PR on main is never approved.
+    conditions:
+      - base=main
+    actions:
+      close:
+        message: Please reopen this PR on the `develop` branch. Thank you.

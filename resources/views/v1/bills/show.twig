@@ -110,7 +110,7 @@
                     <h3 class="box-title">{{ 'notes'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ object.data.notes|markdown }}
+                    {{ object.data.notes|default('')|markdown }}
                 </div>
             </div>
             {% endif %}
