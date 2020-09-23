@@ -646,7 +646,9 @@ export default {
 
       // set budget id and piggy ID.
       currentArray.budget_id = parseInt(row.budget);
-      currentArray.bill_id = parseInt(row.bill);
+      if (parseInt(row.bill) > 0) {
+        currentArray.bill_id = parseInt(row.bill);
+      }
 
       if (parseInt(row.piggy_bank) > 0) {
         currentArray.piggy_bank_id = parseInt(row.piggy_bank);
