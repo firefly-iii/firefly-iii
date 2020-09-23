@@ -52,7 +52,7 @@ TODO: hide and show columns
     </thead>
     <tbody>
     {% for group in groups %}
-        {% if group.count > 1 %}
+        {% if group.count() > 1 %}
             <tr style="border-top:1px #aaa solid;">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>

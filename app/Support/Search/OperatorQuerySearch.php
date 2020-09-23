@@ -246,11 +246,11 @@ class OperatorQuerySearch implements SearchInterface
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
                 if (in_array($operator, $this->validOperators, true)) {
-                    if ($this->updateCollector($operator, $value)) {
+                    if ($this->updateCollector($operator, (string) $value)) {
                         $this->operators->push(
                             [
                                 'type'  => self::getRootOperator($operator),
-                                'value' => $value,
+                                'value' => (string) $value,
                             ]
                         );
                     }
