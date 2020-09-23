@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Destination account name starts with ":value"',
     'search_modifier_destination_account_ends'            => 'Destination account name ends with ":value"',
     'search_modifier_destination_account_id'              => 'Destination account ID is :value',
+    'search_modifier_destination_is_cash'                 => 'Destination is cash',
+    'search_modifier_source_is_cash'                      => 'Source is cash',
     'search_modifier_destination_account_nr_is'           => 'Destination account number (IBAN) is ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Destination account number (IBAN) contains ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Destination account number (IBAN) starts with ":value"',
