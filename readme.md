@@ -137,7 +137,7 @@ OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin
 
 I'm also very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**.
 
-Thank you for considering donating to Firefly III!
+Thank you for considering donating to Firefly III! And remember, if you wish to make a one-time donation just cancel your patronage after the first withdrawal.
 
 ## License
 
