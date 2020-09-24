@@ -1,6 +1,7 @@
 {
     "name": "Firefly III",
     "short_name": "Firefly III",
+    "start_url": "/",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
