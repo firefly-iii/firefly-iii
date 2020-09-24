@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Konto docelowe zaczyna się od ":value"',
     'search_modifier_destination_account_ends'            => 'Konto docelowe kończy się na ":value"',
     'search_modifier_destination_account_id'              => 'ID konta docelowego to :value',
+    'search_modifier_destination_is_cash'                 => 'Konto docelowe to konto (gotówka)',
+    'search_modifier_source_is_cash'                      => 'Konto źródłowe to konto (gotówka)',
     'search_modifier_destination_account_nr_is'           => 'Numer konta docelowego (IBAN) to ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Numer konta docelowego (IBAN) zawiera ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Numer konta docelowego (IBAN) zaczyna się od ":value"',

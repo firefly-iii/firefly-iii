@@ -2,12 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.4.2 (API 1.4.0) - 2020-09-23
+## 5.4.2 (API 1.4.0) - 2020-09-24
 
 Fixes exotic and regression bugs.
 
 ### Added
 - [Issue 3828](https://github.com/firefly-iii/firefly-iii/issues/3828) The admin pages now respect LDAP.
+
 
 ### Fixed
 - LDAP and 2FA should work again.
@@ -15,6 +16,13 @@ Fixes exotic and regression bugs.
 - [Issue 3823](https://github.com/firefly-iii/firefly-iii/issues/3823) [issue 3837](https://github.com/firefly-iii/firefly-iii/issues/3837) Several pages fail when no notes are present in the object.
 - [Issue 3826](https://github.com/firefly-iii/firefly-iii/issues/3826) Long non-English words could break the login page.
 - [Issue 3831](https://github.com/firefly-iii/firefly-iii/issues/3831) Filtering on notes did not work properly.
+- [Issue 3839](https://github.com/firefly-iii/firefly-iii/issues/3839) Cannot display tag details
+- [Issue 3840](https://github.com/firefly-iii/firefly-iii/issues/3840) Search + rule engine breaks for various filters
+- [Issue 3841](https://github.com/firefly-iii/firefly-iii/issues/3841) "Bill" value required on split transaction
+- [Issue 3842](https://github.com/firefly-iii/firefly-iii/issues/3842) Missing translations.
+- [Issue 3843](https://github.com/firefly-iii/firefly-iii/issues/3843) Can't use boolean filters in rule creation
+- [Issue 3844](https://github.com/firefly-iii/firefly-iii/issues/3844) Correct filter use from rule engine
+- [Issue 3847](https://github.com/firefly-iii/firefly-iii/issues/3847) Setting available amount did not work.
 
 ## 5.4.1 (API 1.4.0) - 2020-09-21
 

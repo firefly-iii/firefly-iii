@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Zielkontoname beginnt mit „:value”',
     'search_modifier_destination_account_ends'            => 'Zielkontoname endet mit „:value”',
     'search_modifier_destination_account_id'              => 'Zielkonto ID ist :value',
+    'search_modifier_destination_is_cash'                 => 'Zielkonto ist ein (Bar-)Konto',
+    'search_modifier_source_is_cash'                      => 'Quellkonto ist ein (Bar-)Konto',
     'search_modifier_destination_account_nr_is'           => 'Zielkontonummer (IBAN) ist „:value”',
     'search_modifier_destination_account_nr_contains'     => 'Zielkontonummer (IBAN) enthält „:value”',
     'search_modifier_destination_account_nr_starts'       => 'Zielkontonummer (IBAN) beginnt mit „:value”',

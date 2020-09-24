@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Le nom du compte de destination commence par ":value"',
     'search_modifier_destination_account_ends'            => 'Le nom du compte de destination se termine par ":value"',
     'search_modifier_destination_account_id'              => 'L\'ID du compte de destination est :value',
+    'search_modifier_destination_is_cash'                 => 'Le compte de destination est un compte (d\'espèces)',
+    'search_modifier_source_is_cash'                      => 'Le compte source est un compte (d\'espèces)',
     'search_modifier_destination_account_nr_is'           => 'Le numéro du compte de destination (IBAN) est ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Le numéro du compte de destination (IBAN) contient ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Le numéro du compte de destination (IBAN) commence par ":value"',
