@@ -37,21 +37,6 @@ use Preferences;
 class TwoFactorController extends Controller
 {
     /**
-     * Create a new controller instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $loginProvider = config('firefly.login_provider');
-        $authGuard     = config('firefly.authentication_guard');
-
-        if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
-            throw new FireflyException('Using external identity provider. Cannot continue.');
-        }
-    }
-
-    /**
      * What to do if 2FA lost?
      *
      * @return mixed

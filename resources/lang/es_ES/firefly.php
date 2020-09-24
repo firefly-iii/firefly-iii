@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'El nombre de cuenta de destino comienza con ":value"',
     'search_modifier_destination_account_ends'            => 'El nombre de la cuenta de destino termina con ":value"',
     'search_modifier_destination_account_id'              => 'El ID de cuenta de destino es :value',
+    'search_modifier_destination_is_cash'                 => 'Destination account is (cash) account',
+    'search_modifier_source_is_cash'                      => 'Source account is (cash) account',
     'search_modifier_destination_account_nr_is'           => 'El número de cuenta de destino (IBAN) es ":value"',
     'search_modifier_destination_account_nr_contains'     => 'El número de cuenta de destino (IBAN) contiene ":value"',
     'search_modifier_destination_account_nr_starts'       => 'El número de cuenta de destino (IBAN) comienza con ":value"',
@@ -679,7 +681,7 @@ return [
     'external_uri'                              => 'URI externa',
 
     // profile:
-    'delete_stuff_header'                       => 'Delete data',
+    'delete_stuff_header'                       => 'Borrar datos',
     'permanent_delete_stuff'                    => 'Tenga cuidado con estos botones. Eliminar cosas es permanente.',
     'other_sessions_logged_out'                 => 'Todas las demás sesiones han sido desconectadas.',
     'delete_all_budgets'                        => 'Eliminar todos sus presupuestos',
@@ -908,7 +910,7 @@ return [
     'options'                                   => 'Opciones',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
+    'budget_limit_not_in_range'                 => 'Esta cantidad se aplica desde :start hasta :end:',
     'total_available_budget'                    => 'Presupuesto total disponible (entre :start y :end)',
     'total_available_budget_in_currency'        => 'Presupuesto total disponible en :currency',
     'see_below'                                 => 'ver abajo',

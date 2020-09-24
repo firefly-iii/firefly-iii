@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Името на приходната сметка започва с ":value"',
     'search_modifier_destination_account_ends'            => 'Името на приходната сметка завършва с ":value"',
     'search_modifier_destination_account_id'              => 'ID на приходната сметка е :value',
+    'search_modifier_destination_is_cash'                 => 'Приходната сметка е сметка (в брой)',
+    'search_modifier_source_is_cash'                      => 'Разходната сметка е сметка (в брой)',
     'search_modifier_destination_account_nr_is'           => 'Номерът на приходната сметка (IBAN) е ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Номерът на приходната сметка (IBAN) съдържа ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Номерът на приходната сметка (IBAN) започва с ":value"',
@@ -908,7 +910,7 @@ return [
     'options'                                   => 'Настройки',
 
     // budgets:
-    'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
+    'budget_limit_not_in_range'                 => 'Тази сума се отнася за периода от :start до :end:',
     'total_available_budget'                    => 'Общ наличен бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Общ наличен бюджет в :currency',
     'see_below'                                 => 'виж по-долу',

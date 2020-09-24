@@ -137,7 +137,7 @@ OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin
 
 I'm also very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**.
 
-Thank you for considering donating to Firefly III!
+Thank you for considering donating to Firefly III! If you wish to make a one-time donation just cancel your patronage after the first withdrawal.
 
 ## License
 
@@ -149,7 +149,7 @@ You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you
 
 ## Acknowledgements
 
-Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors).
+Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their your support and code contributions.
 
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
 [packagist-uri]: https://packagist.org/packages/grumpydictator/firefly-iii

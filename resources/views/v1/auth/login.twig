@@ -63,14 +63,14 @@
                 <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ trans('form.password') }}"/>
             </div>
             <div class="row">
-                <div class="col-xs-8">
+                <div class="col-xs-6">
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1"> {{ trans('form.remember_me') }}
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-6">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'sign_in'|_ }}</button>
                 </div>
             </div>

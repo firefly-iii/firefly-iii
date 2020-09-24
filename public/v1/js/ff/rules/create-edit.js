@@ -345,6 +345,10 @@ function updateTriggerInput(selectList) {
         case 'no_notes':
         case 'any_notes':
         case 'has_any_tag':
+        case 'has_attachments':
+        case 'source_is_cash':
+        case 'destination_is_cash':
+        case 'account_is_cash':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);
             inputResult.typeahead('destroy');

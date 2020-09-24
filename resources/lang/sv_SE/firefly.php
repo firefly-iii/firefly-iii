@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Destinationens kontonamn börjar med ":value"',
     'search_modifier_destination_account_ends'            => 'Destinationens kontonamn slutar med ":value"',
     'search_modifier_destination_account_id'              => 'Destinationskonto ID är :value',
+    'search_modifier_destination_is_cash'                 => 'Destination account is (cash) account',
+    'search_modifier_source_is_cash'                      => 'Source account is (cash) account',
     'search_modifier_destination_account_nr_is'           => 'Destinationskontonummer (IBAN) är ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Destinationskontonummer (IBAN) innehåller ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Destinationskontonummer (IBAN) börjar med ":value"',

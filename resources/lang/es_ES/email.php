@@ -34,12 +34,12 @@ return [
     'admin_test_body'                  => 'Este es un mensaje de prueba de tu instancia de Firefly III. Fue enviado a :email.',
 
     // new IP
-    'login_from_new_ip'                => 'New login on Firefly III',
-    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
-    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
-    'ip_address'                       => 'IP address',
-    'host_name'                        => 'Host',
-    'date_time'                        => 'Date + time',
+    'login_from_new_ip'                => 'Nuevo inicio de sesión en Firefly III',
+    'new_ip_body'                      => 'Firefly III detectó un nuevo inicio de sesión en su cuenta desde una dirección IP desconocida. Si nunca ha iniciado sesión desde la dirección IP de abajo, o fué hace más de seis meses, Firefly III le avisará.',
+    'new_ip_warning'                   => 'Si reconoce esta dirección IP o el inicio de sesión, puede ignorar este mensaje. Si no ha iniciado sesión, o sí no tiene idea de qué es esto, verifique la seguridad de su contraseña, cámbiela y cierre todas las demás sesiones. Para hacer esto, valla a su página de perfil. Por supuesto que ya tiene A2F habilitado, ¿verdad? ¡Manténgase seguro!',
+    'ip_address'                       => 'Dirección IP',
+    'host_name'                        => 'Servidor',
+    'date_time'                        => 'Fecha + hora',
 
     // access token created
     'access_token_created_subject'     => 'Se ha creado un nuevo token de acceso',

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Api\V1\Requests\UserUpdateRequest;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\UserFormRequest;
@@ -36,8 +37,8 @@ use Log;
  */
 class UserController extends Controller
 {
-    /** @var UserRepositoryInterface */
-    private $repository;
+    private UserRepositoryInterface $repository;
+    protected bool                  $externalIdentity;
 
     /**
      * UserController constructor.
@@ -56,17 +57,23 @@ class UserController extends Controller
             }
         );
         $this->middleware(IsDemoUser::class)->except(['index', 'show']);
+        $loginProvider          = config('firefly.login_provider');
+        $authGuard              = config('firefly.authentication_guard');
+        $this->externalIdentity = 'eloquent' !== $loginProvider || 'web' !== $authGuard;
     }
 
     /**
-     * Delete a user.
-     *
      * @param User $user
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|RedirectResponse|Redirector|\Illuminate\View\View
      */
     public function delete(User $user)
     {
+        if ($this->externalIdentity) {
+            request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('admin.users'));
+        }
+
         $subTitle = (string) trans('firefly.delete_user', ['email' => $user->email]);
 
         return view('admin.users.delete', compact('user', 'subTitle'));
@@ -81,6 +88,11 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($this->externalIdentity) {
+            request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('admin.users'));
+        }
         $this->repository->destroy($user);
         session()->flash('success', (string) trans('firefly.user_deleted'));
 
@@ -96,6 +108,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $canEditDetails = true;
+        if ($this->externalIdentity) {
+            $canEditDetails = false;
+        }
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('users.edit.fromUpdate')) {
             $this->rememberPreviousUri('users.edit.uri');
@@ -113,7 +129,7 @@ class UserController extends Controller
             'email_changed' => (string) trans('firefly.block_code_email_changed'),
         ];
 
-        return view('admin.users.edit', compact('user', 'subTitle', 'subTitleIcon', 'codes', 'currentUser','isAdmin'));
+        return view('admin.users.edit', compact('user', 'canEditDetails', 'subTitle', 'subTitleIcon', 'codes', 'currentUser', 'isAdmin'));
     }
 
     /**
@@ -179,8 +195,10 @@ class UserController extends Controller
         Log::debug('Actually here');
         $data = $request->getUserData();
 
+        var_dump($data);
+
         // update password
-        if ('' !== $data['password']) {
+        if (array_key_exists('password', $data) && '' !== $data['password']) {
             $this->repository->changePassword($user, $data['password']);
         }
         if (true === $data['is_owner']) {

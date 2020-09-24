@@ -69,7 +69,7 @@ trait MetaCollection
     public function notesContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where('notes', 'LIKE', sprintf('%%%s%%', $value));
+        $this->query->where('notes.text', 'LIKE', sprintf('%%%s%%', $value));
         return $this;
     }
 
@@ -80,7 +80,7 @@ trait MetaCollection
     public function notesEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where('notes', 'LIKE', sprintf('%%%s', $value));
+        $this->query->where('notes.text', 'LIKE', sprintf('%%%s', $value));
         return $this;
     }
 
@@ -90,7 +90,7 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereNull('notes');
+        $this->query->whereNull('notes.text');
         return $this;
     }
 
@@ -101,7 +101,7 @@ trait MetaCollection
     public function withAnyNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->whereNotNull('notes');
+        $this->query->whereNotNull('notes.text');
         return $this;
     }
 
@@ -112,7 +112,7 @@ trait MetaCollection
     public function notesExactly(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where('notes', '=', sprintf('%s', $value));
+        $this->query->where('notes.text', '=', sprintf('%s', $value));
         return $this;
     }
 
@@ -123,7 +123,7 @@ trait MetaCollection
     public function notesStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where('notes', 'LIKE', sprintf('%s%%', $value));
+        $this->query->where('notes.text', 'LIKE', sprintf('%s%%', $value));
 
          return $this;
     }

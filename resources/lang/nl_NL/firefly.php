@@ -307,6 +307,8 @@ return [
     'search_modifier_destination_account_starts'          => 'Doelrekeningnaam begint met ":value"',
     'search_modifier_destination_account_ends'            => 'Doelrekeningnaam eindigt met ":value"',
     'search_modifier_destination_account_id'              => 'Doelrekening ID is ":value"',
+    'search_modifier_destination_is_cash'                 => 'Destination account is (cash) account',
+    'search_modifier_source_is_cash'                      => 'Source account is (cash) account',
     'search_modifier_destination_account_nr_is'           => 'Doelrekeningnummer (IBAN) is ":value"',
     'search_modifier_destination_account_nr_contains'     => 'Doelrekeningnummer (IBAN) bevat ":value"',
     'search_modifier_destination_account_nr_starts'       => 'Doelrekeningnummer (IBAN) begint met ":value"',

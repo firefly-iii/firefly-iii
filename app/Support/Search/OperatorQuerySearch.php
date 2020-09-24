@@ -246,11 +246,11 @@ class OperatorQuerySearch implements SearchInterface
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
                 if (in_array($operator, $this->validOperators, true)) {
-                    if ($this->updateCollector($operator, $value)) {
+                    if ($this->updateCollector($operator, (string) $value)) {
                         $this->operators->push(
                             [
                                 'type'  => self::getRootOperator($operator),
-                                'value' => $value,
+                                'value' => (string) $value,
                             ]
                         );
                     }
@@ -606,7 +606,11 @@ class OperatorQuerySearch implements SearchInterface
         // get accounts:
         $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero accounts, do nothing.');
+            Log::debug('Found zero accounts, search for invalid account.');
+            $account = new Account;
+            $account->id = 0;
+            $this->collector->$collectorMethod(new Collection([$account]));
+
             return;
         }
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
@@ -615,7 +619,10 @@ class OperatorQuerySearch implements SearchInterface
         });
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero accounts, return.');
+            Log::debug('Left with zero accounts, search for invalid account.');
+            $account = new Account;
+            $account->id = 0;
+            $this->collector->$collectorMethod(new Collection([$account]));
             return;
         }
         Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
@@ -661,7 +668,10 @@ class OperatorQuerySearch implements SearchInterface
         // search for accounts:
         $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero accounts, do nothing.');
+            Log::debug('Found zero accounts, search for invalid account.');
+            $account = new Account;
+            $account->id = 0;
+            $this->collector->$collectorMethod(new Collection([$account]));
             return;
         }
 
@@ -681,10 +691,13 @@ class OperatorQuerySearch implements SearchInterface
         });
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero, return.');
+            Log::debug('Left with zero, search for invalid account');
+            $account = new Account;
+            $account->id = 0;
+            $this->collector->$collectorMethod(new Collection([$account]));
             return;
         }
-        Log::debug('Left with zero accounts, return.');
+        Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
         $this->collector->$collectorMethod($filtered);
     }
 
