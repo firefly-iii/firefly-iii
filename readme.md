@@ -3,6 +3,16 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-uri]
 
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=security_rating)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=ncloc)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
