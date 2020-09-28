@@ -484,16 +484,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.11.0",
+            "version": "2.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "0d4e1a8b29dd987704842f0465aded378f441dca"
+                "reference": "6e6903cd5e3a5be60a79439e3ee8fe126f78fe86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/0d4e1a8b29dd987704842f0465aded378f441dca",
-                "reference": "0d4e1a8b29dd987704842f0465aded378f441dca",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6e6903cd5e3a5be60a79439e3ee8fe126f78fe86",
+                "reference": "6e6903cd5e3a5be60a79439e3ee8fe126f78fe86",
                 "shasum": ""
             },
             "require": {
@@ -588,7 +588,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-20T23:24:53+00:00"
+            "time": "2020-09-27T04:09:41+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -9452,12 +9452,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "8fb9e3b37233994f7cf1aa2d1a5e99cdb14dbf72"
+                "reference": "0749ceaf15c136d085b722a5bb88141398a54142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/8fb9e3b37233994f7cf1aa2d1a5e99cdb14dbf72",
-                "reference": "8fb9e3b37233994f7cf1aa2d1a5e99cdb14dbf72",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0749ceaf15c136d085b722a5bb88141398a54142",
+                "reference": "0749ceaf15c136d085b722a5bb88141398a54142",
                 "shasum": ""
             },
             "conflict": {
@@ -9487,7 +9487,7 @@
                 "composer/composer": "<=1-alpha.11",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/core": ">=2,<3.5.39",
-                "contao/core-bundle": ">=4,<4.4.46|>=4.5,<4.8.6",
+                "contao/core-bundle": ">=4,<4.4.52|>=4.5,<4.9.6|= 4.10.0",
                 "contao/listing-bundle": ">=4,<4.4.8",
                 "datadog/dd-trace": ">=0.30,<0.30.2",
                 "david-garcia/phpwhois": "<=4.3.1",
@@ -9749,7 +9749,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-23T23:02:06+00:00"
+            "time": "2020-09-24T17:02:11+00:00"
         },
         {
             "name": "sebastian/cli-parser",
