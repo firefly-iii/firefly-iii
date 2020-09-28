@@ -1,17 +1,8 @@
 [![Packagist][packagist-shield]][packagist-uri]
 [![License][license-shield]][license-uri]
 [![Stargazers][stars-shield]][stars-url]
-[![Donate][donate-shield]][donate-uri]
-
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=security_rating)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=ncloc)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Donate][donate-shield]][donate-uri]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -136,6 +127,8 @@ Your help is always welcome! Feel free to open issues, ask questions, talk about
 Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 
 I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
+
+Firefly III is constantly scanned for bugs, issues and problems by [sonarcloud](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii). If you want to help improve ff3, check out the latest reports and take your pick!
 
 There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
