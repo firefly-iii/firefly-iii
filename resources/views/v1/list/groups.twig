@@ -283,9 +283,9 @@ TODO: hide and show columns
     </tr>
     <tr>
         {% if showCategory or showBudget %}
-            <td colspan="9" class="no-margin-pagination">{{ groups.render|raw }}</td>
+            <td colspan="9" class="no-margin-pagination">{{ groups.render()|raw }}</td>
         {% else %}
-            <td colspan="8" class="no-margin-pagination">{{ groups.render|raw }}</td>
+            <td colspan="8" class="no-margin-pagination">{{ groups.render()|raw }}</td>
         {% endif %}
     </tr>
     </tfoot>
