@@ -21,7 +21,7 @@
                     </p>
                     {% if currencies|length > 0 %}
                         <div style="padding-left:8px;">
-                            {{ currencies.render|raw }}
+                            {{ currencies.render()|raw }}
                         </div>
                         <table class="table table-hover">
                             <thead>
@@ -87,7 +87,7 @@
                             </tbody>
                         </table>
                         <div style="padding-left:8px;">
-                            {{ currencies.render|raw }}
+                           {{ currencies.render()|raw }}
                         </div>
                     {% endif %}
                 </div>
