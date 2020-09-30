@@ -7,7 +7,9 @@
 {% block content %}
     <div id="edit_transaction"></div>
 {% endblock %}
-{% block scripts %}
+
+
+{% block definitions %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
@@ -17,6 +19,10 @@
         var cashAccountId = {{ cash.id }};
         var previousUri = '{{ previousUri }}';
     </script>
+{% endblock %}
+
+{% block scripts %}
+
 {% endblock %}
 {% block styles %}
 {% endblock %}

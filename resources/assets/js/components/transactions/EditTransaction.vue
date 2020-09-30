@@ -401,6 +401,9 @@ export default {
       // console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
       // console.log('destination allowed types for a ' + transaction.type);
       // console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
+      if(typeof window.expectedSourceTypes === 'undefined') {
+        console.error('window.expectedSourceTypes is unexpectedly empty.')
+      }
 
       this.transactions.push({
         transaction_journal_id: transaction.transaction_journal_id,
