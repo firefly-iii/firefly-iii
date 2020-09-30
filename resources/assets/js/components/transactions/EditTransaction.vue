@@ -616,7 +616,6 @@ export default {
             type: transactionType,
             date: date,
             amount: row.amount,
-            currency_id: row.currency_id,
 
             description: row.description,
 
@@ -643,6 +642,11 @@ export default {
       // always submit foreign amount info.
       currentArray.foreign_amount = foreignAmount;
       currentArray.foreign_currency_id = foreignCurrency;
+
+      // only submit currency ID when not 0:
+      if(0 !== row.currency_id && null !== row.currency_id) {
+        currentArray.currency_id = row.currency_id;
+      }
 
       // set budget id and piggy ID.
       currentArray.budget_id = parseInt(row.budget);

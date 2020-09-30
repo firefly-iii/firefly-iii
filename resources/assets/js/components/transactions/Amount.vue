@@ -51,7 +51,6 @@
             <li class="text-danger">{{ error }}</li>
         </ul>
     </div>
-    </div>
 </template>
 
 <script>
