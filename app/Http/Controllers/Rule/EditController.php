@@ -37,6 +37,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use Throwable;
+use Log;
 
 /**
  * Class EditController
@@ -45,8 +47,7 @@ class EditController extends Controller
 {
     use RuleManagement, RenderPartialViews;
 
-    /** @var RuleRepositoryInterface Rule repository */
-    private $ruleRepos;
+    private RuleRepositoryInterface $ruleRepos;
 
     /**
      * RuleController constructor.

@@ -53,6 +53,7 @@ class PwndVerifierV2 implements Verifier
      */
     public function validPassword(string $password): bool
     {
+        // Yes SHA1 is unsafe but in this context its fine.
         $hash   = sha1($password);
         $prefix = substr($hash, 0, 5);
         $rest   = substr($hash, 5);
