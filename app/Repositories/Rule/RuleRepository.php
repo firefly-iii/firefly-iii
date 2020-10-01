@@ -547,7 +547,14 @@ class RuleRepository implements RuleRepositoryInterface
         $params = [];
         /** @var RuleTrigger $trigger */
         foreach ($rule->ruleTriggers as $trigger) {
-            if ('user_action' !== $trigger->trigger_type) {
+            if ('user_action' === $trigger->trigger_type) {
+                continue;
+            }
+            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $trigger->trigger_type)) ?? true;
+            if (false === $needsContext) {
+                $params[] = sprintf('%s:true', OperatorQuerySearch::getRootOperator($trigger->trigger_type));
+            }
+            if (true === $needsContext) {
                 $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
             }
         }
