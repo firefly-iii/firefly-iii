@@ -194,18 +194,13 @@ trait RenderPartialViews
         $categoryRepository = app(CategoryRepositoryInterface::class);
         $category           = $categoryRepository->findNull((int) $attributes['categoryId']);
         $journals           = $popupHelper->byCategory($category, $attributes);
-        if (null === $category) {
-            return 'This is an unknown category. Apologies.';
-        }
-        // @codeCoverageIgnoreStart
+
         try {
             $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
-
-        // @codeCoverageIgnoreEnd
 
         return $view;
     }
