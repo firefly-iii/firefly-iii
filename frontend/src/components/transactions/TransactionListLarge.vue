@@ -23,11 +23,11 @@
         <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
         <thead>
         <tr>
-            <th class="text-left">{{ $t('firefly.description') }}</th>
-            <th>{{ $t('firefly.opposing_account') }}</th>
-            <th class="text-right">{{ $t('firefly.amount') }}</th>
-            <th>{{ $t('firefly.category') }}</th>
-            <th>{{ $t('firefly.budget') }}</th>
+            <th scope="col" class="text-left">{{ $t('firefly.description') }}</th>
+            <th scope="col">{{ $t('firefly.opposing_account') }}</th>
+            <th scope="col" class="text-right">{{ $t('firefly.amount') }}</th>
+            <th scope="col">{{ $t('firefly.category') }}</th>
+            <th scope="col">{{ $t('firefly.budget') }}</th>
         </tr>
         </thead>
         <tbody>

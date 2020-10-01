@@ -39,9 +39,9 @@
           <table class="table table-responsive table-borderless mb-0">
             <thead>
             <tr>
-              <th>{{ $t('firefly.name') }}</th>
-              <th>{{ $t('firefly.profile_scopes') }}</th>
-              <th></th>
+              <th scope="col">{{ $t('firefly.name') }}</th>
+              <th scope="col">{{ $t('firefly.profile_scopes') }}</th>
+              <th scope="col"></th>
             </tr>
             </thead>
 
