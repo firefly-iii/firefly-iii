@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Edit piggy bank ":name"',
     'preferences'            => 'Preferences',
     'profile'                => 'Profile',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Change your password',
     'change_email'           => 'Change your email address',
     'bills'                  => 'Bills',

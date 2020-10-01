@@ -20,10 +20,11 @@
         "sass-loader": "^10.0.2",
         "vue": "^2.6.12",
         "vue-i18n": "^8.21.1",
-        "vue-template-compiler": "^2.6.12"
+        "vue-template-compiler": "^2.6.12",
+        "node-forge": ">=0.10.0"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.14.0",
+        "@fortawesome/fontawesome-free": "^5.15.0",
         "@popperjs/core": "^2.5.2",
         "bootstrap": "^4.5.2",
         "chart.js": "^2.9.3",
