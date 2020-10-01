@@ -436,17 +436,22 @@
 {% block scripts %}
     <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
+
+        // index route.
         var budgetIndexUri = "{{ route('budgets.index',['START','END']) }}";
+
+        // create available budgets / edit
         var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
 
+        // budget limit create form.
         var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
         var totalBudgetedUri = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
-        {#var budgetAmountUri = "{{ route('budgets.amount','REPLACE') }}";#}
-        {#var updateIncomeUri = "{{ route('budgets.income',[start.format('Y-m-d'),end.format('Y-m-d')]) }}";#}
+
+        // period thing:
         var periodStart = "{{ start.format('Y-m-d') }}";
         var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>

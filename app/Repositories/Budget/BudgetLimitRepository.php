@@ -133,8 +133,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     {
         return $budget->budgetlimits()
                       ->where('transaction_currency_id', $currency->id)
-                      ->where('start_date', $start->format('Y-m-d 00:00:00'))
-                      ->where('end_date', $end->format('Y-m-d 23:59:59'))->first();
+                      ->where('start_date', $start->format('Y-m-d'))
+                      ->where('end_date', $end->format('Y-m-d'))->first();
     }
 
     /**
