@@ -310,7 +310,6 @@ class IndexController extends Controller
             }
             $budgets[] = $array;
         }
-
         return $budgets;
     }
 }

@@ -115,8 +115,8 @@ class BudgetController extends Controller
         while ($end >= $loopStart) {
             /** @var Carbon $currentEnd */
             $loopEnd = app('navigation')->endOfPeriod($loopStart, $step);
-            $spent = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection);
-            $label = trim(app('navigation')->periodShow($loopStart, $step));
+            $spent   = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection);
+            $label   = trim(app('navigation')->periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
                 $currencyId              = $row['currency_id'];
@@ -403,9 +403,6 @@ class BudgetController extends Controller
 
     /**
      * Shows a budget list with spent/left/overspent.
-     *
-     * TODO there are cases when this chart hides expenses: when budget has limits
-     * and limits are found and used, but the expense is in another currency.
      *
      * @return JsonResponse
      *
