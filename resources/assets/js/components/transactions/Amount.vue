@@ -19,129 +19,137 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-        <div class="col-sm-8 col-sm-offset-4 text-sm">
-            {{ $t('firefly.amount') }}
-        </div>
-        <label class="col-sm-4 control-label" ref="cur"></label>
-        <div class="col-sm-8">
-            <div class="input-group">
-                <input type="number"
-                       @input="handleInput"
-                       ref="amount"
-                       :value="value"
-                       step="any"
-                       class="form-control"
-                       name="amount[]"
-                       :title="$t('firefly.amount')"
-                       autocomplete="off"
-                       v-bind:placeholder="$t('firefly.amount')">
-
-                <span class="input-group-btn">
-            <button
-                    v-on:click="clearAmount"
-                    tabIndex="-1"
-                    class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-            </div>
-        </div>
-
-        <ul class="list-unstyled" v-for="error in this.error">
-            <li class="text-danger">{{ error }}</li>
-        </ul>
+  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+    <div class="col-sm-8 col-sm-offset-4 text-sm">
+      {{ $t('firefly.amount') }}
     </div>
+    <label class="col-sm-4 control-label" ref="cur"></label>
+    <div class="col-sm-8">
+      <div class="input-group">
+        <input type="number"
+               @input="handleInput"
+               ref="amount"
+               :value="value"
+               step="any"
+               class="form-control"
+               name="amount[]"
+               :title="$t('firefly.amount')"
+               autocomplete="off"
+               v-bind:placeholder="$t('firefly.amount')">
+
+        <span class="input-group-btn">
+            <button
+                v-on:click="clearAmount"
+                tabIndex="-1"
+                class="btn btn-default"
+                type="button"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <ul class="list-unstyled" v-for="error in this.error">
+      <li class="text-danger">{{ error }}</li>
+    </ul>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Amount",
-        props: ['source', 'destination', 'transactionType', 'value', 'error'],
-        data() {
-            return {
-                sourceAccount: this.source,
-                destinationAccount: this.destination,
-                type: this.transactionType
-            }
-        },
-        methods: {
-            handleInput(e) {
-                this.$emit('input', this.$refs.amount.value);
-            },
-            clearAmount: function () {
-                this.$refs.amount.value = '';
-                this.$emit('input', this.$refs.amount.value);
-                // some event?
-                this.$emit('clear:amount')
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            changeData: function () {
-                let transactionType = this.transactionType;
-                // reset of all are empty:
-                if (!transactionType && !this.source.name && !this.destination.name) {
-                    $(this.$refs.cur).text('');
-
-                    return;
-                }
-                if(null === transactionType) {
-                    transactionType = '';
-                }
-                if ('' === transactionType && '' !== this.source.currency_name) {
-                    $(this.$refs.cur).text(this.source.currency_name);
-                    return;
-                }
-                if ('' === transactionType && '' !== this.destination.currency_name) {
-                    $(this.$refs.cur).text(this.destination.currency_name);
-                    return;
-                }
-                // for normal transactions, the source leads the currency
-                if (transactionType.toLowerCase() === 'withdrawal' ||
-                    transactionType.toLowerCase() === 'reconciliation' ||
-                    transactionType.toLowerCase() === 'transfer') {
-                    $(this.$refs.cur).text(this.source.currency_name);
-                    return;
-                }
-                // for deposits, the destination leads the currency
-                // but source must not be a liability
-                if (transactionType.toLowerCase() === 'deposit'
-                    &&
-                    !('debt' === this.source.type.toLowerCase() ||
-                      'loan' === this.source.type.toLowerCase() ||
-                      'mortgage' === this.source.type.toLowerCase()
-                    )
-                ) {
-                    $(this.$refs.cur).text(this.destination.currency_name);
-                }
-                // for deposits, the destination leads the currency
-                // unless source is liability, then source leads:
-                if (transactionType.toLowerCase() === 'deposit'
-                    &&
-                    ('debt' === this.source.type.toLowerCase() ||
-                      'loan' === this.source.type.toLowerCase() ||
-                      'mortgage' === this.source.type.toLowerCase()
-                    )
-                ) {
-                    $(this.$refs.cur).text(this.source.currency_name);
-                }
-            }
-        },
-        watch: {
-            source: function () {
-                this.changeData();
-            },
-            destination: function () {
-                this.changeData();
-            },
-            transactionType: function () {
-                this.changeData();
-            }
-        },
-        mounted() {
-            this.changeData();
-        }
+export default {
+  name: "Amount",
+  props: ['source', 'destination', 'transactionType', 'value', 'error'],
+  data() {
+    return {
+      sourceAccount: this.source,
+      destinationAccount: this.destination,
+      type: this.transactionType
     }
+  },
+  methods: {
+    handleInput(e) {
+      this.$emit('input', this.$refs.amount.value);
+    },
+    clearAmount: function () {
+      this.$refs.amount.value = '';
+      this.$emit('input', this.$refs.amount.value);
+      // some event?
+      this.$emit('clear:amount')
+    },
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    changeData: function () {
+      console.log('Triggered amount changeData()');
+      let transactionType = this.transactionType;
+      // reset of all are empty:
+      if (!transactionType && !this.source.name && !this.destination.name) {
+        $(this.$refs.cur).text('');
+
+        return;
+      }
+      if (null === transactionType) {
+        transactionType = '';
+      }
+      if ('' === transactionType && '' !== this.source.currency_name) {
+        $(this.$refs.cur).text(this.source.currency_name);
+        return;
+      }
+      if ('' === transactionType && '' !== this.destination.currency_name) {
+        $(this.$refs.cur).text(this.destination.currency_name);
+        return;
+      }
+      // for normal transactions, the source leads the currency
+      if (transactionType.toLowerCase() === 'withdrawal' ||
+          transactionType.toLowerCase() === 'reconciliation' ||
+          transactionType.toLowerCase() === 'transfer') {
+        $(this.$refs.cur).text(this.source.currency_name);
+        return;
+      }
+      // for deposits, the destination leads the currency
+      // but source must not be a liability
+      if (transactionType.toLowerCase() === 'deposit'
+          &&
+          !('debt' === this.source.type.toLowerCase() ||
+              'loan' === this.source.type.toLowerCase() ||
+              'mortgage' === this.source.type.toLowerCase()
+          )
+      ) {
+        $(this.$refs.cur).text(this.destination.currency_name);
+      }
+      // for deposits, the destination leads the currency
+      // unless source is liability, then source leads:
+      if (transactionType.toLowerCase() === 'deposit'
+          &&
+          ('debt' === this.source.type.toLowerCase() ||
+              'loan' === this.source.type.toLowerCase() ||
+              'mortgage' === this.source.type.toLowerCase()
+          )
+      ) {
+        $(this.$refs.cur).text(this.source.currency_name);
+      }
+    }
+  },
+  watch: {
+    source: function () {
+      console.log('amount: watch source triggered');
+      this.changeData();
+    },
+    value: function() {
+      console.log('amount: value changed');
+    },
+    destination: function () {
+      console.log('amount: watch destination triggered');
+      this.changeData();
+    },
+    transactionType: function () {
+      console.log('amount: watch transaction type triggered');
+      this.changeData();
+    }
+  },
+  mounted() {
+    console.log('amount: mounted');
+    this.changeData();
+  }
+}
 </script>
 
 <style scoped>

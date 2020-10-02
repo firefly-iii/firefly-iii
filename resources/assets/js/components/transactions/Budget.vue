@@ -1,4 +1,3 @@
-
 <!--
   - Budget.vue
   - Copyright (c) 2019 james@firefly-iii.org
@@ -20,85 +19,91 @@
   -->
 
 <template>
-    <div class="form-group"
-         v-bind:class="{ 'has-error': hasError()}"
-         v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
-        <div class="col-sm-12 text-sm">
-            {{ $t('firefly.budget') }}
-        </div>
-        <div class="col-sm-12">
-            <select
-            name="budget[]"
-            ref="budget"
-            v-model="selected"
-            @input="handleInput"
-            v-on:change="signalChange"
-            :title="$t('firefly.budget')"
-            class="form-control"
-             v-if="this.budgets.length > 0">
-                <option v-for="cBudget in this.budgets"
-                    :label="cBudget.name"
-                    :value="cBudget.id">{{cBudget.name}}
-                </option>
-            </select>
-            <p class="help-block" v-if="this.budgets.length === 1" v-html="$t('firefly.no_budget_pointer')"></p>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group"
+       v-bind:class="{ 'has-error': hasError()}"
+       v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
+    <div class="col-sm-12 text-sm">
+      {{ $t('firefly.budget') }}
     </div>
+    <div class="col-sm-12">
+      <select
+          name="budget[]"
+          ref="budget"
+          v-model="selected"
+          @input="handleInput"
+          v-on:change="signalChange"
+          :title="$t('firefly.budget')"
+          class="form-control"
+          v-if="this.budgets.length > 0">
+        <option v-for="cBudget in this.budgets"
+                :label="cBudget.name"
+                :value="cBudget.id">{{ cBudget.name }}
+        </option>
+      </select>
+      <p class="help-block" v-if="this.budgets.length === 1" v-html="$t('firefly.no_budget_pointer')"></p>
+      <ul class="list-unstyled" v-for="error in this.error">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Budget",
-        props: {
-            transactionType: String,
-            value: {
-                type: [String, Number],
-                default: 0
-            },
-            error: Array,
-            no_budget: String,
-        },
-        mounted() {
-            this.loadBudgets();
-        },
-        data() {
-            return {
-                selected: this.value ?? 0,
-                budgets: [],
-            }
-        },
-        methods: {
-            // Fixes edit change budget not updating on every broswer
-            signalChange: function(e) {
-                this.$emit('input', this.$refs.budget.value);
-            },
-            handleInput(e) {
-                this.$emit('input', this.$refs.budget.value);
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            loadBudgets: function () {
-                let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets?limit=1337';
-                axios.get(URI, {}).then((res) => {
-                        this.budgets = [
-                            {
-                                name: this.no_budget,
-                                id: 0,
-                            }
-                        ];
-                    for (const key in res.data) {
-                        if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                            this.budgets.push(res.data[key]);
-                        }
-                    }
-                });
-            }
-        }
+export default {
+  name: "Budget",
+  props: {
+    transactionType: String,
+    value: {
+      type: [String, Number],
+      default: 0
+    },
+    error: Array,
+    no_budget: String,
+  },
+  mounted() {
+    this.loadBudgets();
+  },
+  data() {
+    return {
+      selected: this.value ?? 0,
+      budgets: [],
     }
+  },
+  watch: {
+    value: function () {
+      console.log('budget: value changed to ' + this.value);
+      this.selected = this.value;
+    }
+  },
+  methods: {
+    // Fixes edit change budget not updating on every broswer
+    signalChange: function (e) {
+      this.$emit('input', this.$refs.budget.value);
+    },
+    handleInput(e) {
+      this.$emit('input', this.$refs.budget.value);
+    },
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    loadBudgets: function () {
+      let URI = document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/budgets?limit=1337';
+      axios.get(URI, {}).then((res) => {
+        this.budgets = [
+          {
+            name: this.no_budget,
+            id: 0,
+          }
+        ];
+        for (const key in res.data) {
+          if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+            this.budgets.push(res.data[key]);
+          }
+        }
+      });
+    }
+  }
+}
 </script>
 
 <style scoped>
