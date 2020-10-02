@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Αυτοί είναι οι δημιουργημένοι λογαριασμοί ως τώρα. Μπορείτε να χρησιμοποιήσετε το λογαριασμό μετρητών για καταγραφή δαπανών αλλά δεν είναι και υποχρεωτικό.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Εισαγάγετε τις βασικές πληροφορίες για τη συναλλαγή σας. Προέλευση, προορισμός, ημερομηνία και περιγραφή.',
+    'transactions_create_amount_info'                 => 'Εισαγάγετε το ποσό της συναλλαγής. Εάν είναι απαραίτητο, τα πεδία θα ενημερώνονται αυτόματα για πληροφορίες ξένου ποσού.',
+    'transactions_create_optional_info'               => 'Όλα αυτά τα πεδία είναι προαιρετικά. Η προσθήκη μετα-δεδομένων εδώ οργανώσει καλύτερα τις συναλλαγές σας.',
+    'transactions_create_split'                       => 'Εάν θέλετε να διαχωρίσετε μια συναλλαγή, προσθέστε περισσότερους διαχωρισμούς με αυτό το κουμπί',
 
     // create account:
     'accounts_create_iban'                            => 'Δώστε στους λογαριασμού σας έναν έγκυρο IBAN. Αυτό θα κάνει την εισαγωγή δεδομένων πολύ πιο εύκολη στο μέλλον.',

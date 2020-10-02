@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Upravit pokladničku „:name“',
     'preferences'            => 'Předvolby',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Změnit heslo',
     'change_email'           => 'Změnit e-mailovou adresu',
     'bills'                  => 'Účtenky a faktury',

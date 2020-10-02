@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => '":name" kumbarasını düzenle',
     'preferences'            => 'Tercihler',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Şifrenizi değiştirin',
     'change_email'           => 'E-posta adresini değiştir',
     'bills'                  => 'Fatura',

@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => '":name" malacpersely szerkesztése',
     'preferences'            => 'Beállítások',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Jelszó módosítása',
     'change_email'           => 'Email cím módosítása',
     'bills'                  => 'Számlák',

@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => '編輯小豬撲滿 ":name"',
     'preferences'            => '偏好設定',
     'profile'                => '個人檔案',
+    'accounts'               => 'Accounts',
     'changePassword'         => '更改您的密碼',
     'change_email'           => '更改您的電子郵件地址',
     'bills'                  => '帳單',

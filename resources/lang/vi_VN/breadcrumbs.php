@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Sửa heo đất ":name"',
     'preferences'            => 'Quyền ưu tiên',
     'profile'                => 'Hồ sơ',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Đổi mật khẩu',
     'change_email'           => 'Đổi địa chỉ email',
     'bills'                  => 'Hóa đơn',

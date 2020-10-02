@@ -95,7 +95,7 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                      => '5.4.2',
+    'version'                      => '5.4.3',
     'api_version'                  => '1.4.0',
     'db_version'                   => 15,
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -300,6 +300,7 @@ return [
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
+        'sk_SK' => ['name_locale' => 'Slovenčina', 'name_english' => 'Slovak'],
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
         'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],

@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Editar cofrinho ":name"',
     'preferences'            => 'Preferências',
     'profile'                => 'Perfil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Alterar sua senha',
     'change_email'           => 'Altere seu endereço de email',
     'bills'                  => 'Faturas',

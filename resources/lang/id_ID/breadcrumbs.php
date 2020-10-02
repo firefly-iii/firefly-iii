@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Edit celengan ":name"',
     'preferences'            => 'Preferensi',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Ubah kata sandi Anda',
     'change_email'           => 'Ubah alamat email anda',
     'bills'                  => 'Tagihan',
@@ -61,5 +62,5 @@ return [
     'telemetry_view'         => 'Melihat data',
     'edit_object_group'      => 'Edit group ":title"',
     'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'logout_others'          => 'Keluar dari semua sesi'
 ];
