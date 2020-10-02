@@ -224,7 +224,10 @@
           </div>
           <div class="box-footer">
             <div class="btn-group">
-              <button class="btn btn-success" @click="submit" id="submitButton">{{ $t('firefly.update_transaction') }}</button>
+              <button class="btn btn-success" @click="submit" id="submitButton">{{
+                  $t('firefly.update_transaction')
+                }}
+              </button>
             </div>
           </div>
         </div>
@@ -401,7 +404,7 @@ export default {
       // console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
       // console.log('destination allowed types for a ' + transaction.type);
       // console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
-      if(typeof window.expectedSourceTypes === 'undefined') {
+      if (typeof window.expectedSourceTypes === 'undefined') {
         console.error('window.expectedSourceTypes is unexpectedly empty.')
       }
 
@@ -647,7 +650,7 @@ export default {
       currentArray.foreign_currency_id = foreignCurrency;
 
       // only submit currency ID when not 0:
-      if(0 !== row.currency_id && null !== row.currency_id) {
+      if (0 !== row.currency_id && null !== row.currency_id) {
         currentArray.currency_id = row.currency_id;
       }
 
@@ -655,6 +658,9 @@ export default {
       currentArray.budget_id = parseInt(row.budget);
       if (parseInt(row.bill) > 0) {
         currentArray.bill_id = parseInt(row.bill);
+      }
+      if (0 === parseInt(row.bill)) {
+        currentArray.bill_id = null;
       }
 
       if (parseInt(row.piggy_bank) > 0) {
@@ -918,11 +924,11 @@ export default {
       let count = this.transactions.length;
       console.log('Transactions length = ' + count);
       // also set accounts from previous entry, if present.
-      if(this.transactions.length > 1) {
+      if (this.transactions.length > 1) {
         console.log('Adding split.');
-        this.transactions[count-1].source_account = this.transactions[count-2].source_account;
-        this.transactions[count-1].destination_account = this.transactions[count-2].destination_account;
-        this.transactions[count-1].date = this.transactions[count-2].date;
+        this.transactions[count - 1].source_account = this.transactions[count - 2].source_account;
+        this.transactions[count - 1].destination_account = this.transactions[count - 2].destination_account;
+        this.transactions[count - 1].date = this.transactions[count - 2].date;
       }
       console.log('Transactions length now = ' + this.transactions.length);
 
