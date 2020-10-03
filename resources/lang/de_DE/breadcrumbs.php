@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Sparschwein „:name” bearbeiten',
     'preferences'            => 'Einstellungen',
     'profile'                => 'Profil',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Konten',
     'changePassword'         => 'Passwort ändern',
     'change_email'           => 'E-Mail Adresse ändern',
     'bills'                  => 'Rechnungen',

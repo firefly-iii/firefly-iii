@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Modifier la tirelire ":name"',
     'preferences'            => 'Préférences',
     'profile'                => 'Profil',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Comptes',
     'changePassword'         => 'Modifier le mot de passe',
     'change_email'           => 'Changer votre adresse e-mail',
     'bills'                  => 'Factures',
