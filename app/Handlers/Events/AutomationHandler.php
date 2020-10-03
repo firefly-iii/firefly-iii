@@ -56,9 +56,19 @@ class AutomationHandler
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull($event->userId);
         if (null !== $user && 0 !== $event->groups->count()) {
+
+            $email     = $user->email;
+
+            // see if user has alternative email address:
+            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+            if (null !== $pref) {
+                $email = $pref->data;
+            }
+
+
             try {
                 Log::debug('Trying to mail...');
-                Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->groups));
+                Mail::to($user->email)->send(new ReportNewJournalsMail($email, '127.0.0.1', $event->groups));
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::debug('Send message failed! :(');

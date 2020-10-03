@@ -184,6 +184,12 @@ class UserEventHandler
         $ipAddress = $event->ipAddress;
         $list      = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
 
+        // see if user has alternative email address:
+        $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+        if (null !== $pref) {
+            $email = $pref->data;
+        }
+
         /** @var array $entry */
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
@@ -299,6 +305,12 @@ class UserEventHandler
             $email     = $event->user->email;
             $uri       = route('index');
             $ipAddress = $event->ipAddress;
+
+            // see if user has alternative email address:
+            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email', null);
+            if (null !== $pref) {
+                $email = $pref->data;
+            }
 
             // send email.
             try {

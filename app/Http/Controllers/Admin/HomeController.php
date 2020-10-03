@@ -59,8 +59,15 @@ class HomeController extends Controller
         Log::channel('audit')->info('User visits admin index.');
         $title         = (string) trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
+        $email = auth()->user()->email;
+        $pref = app('preferences')->get('remote_guard_alt_email', null);
+        if(null !== $pref) {
+            $email = $pref->data;
+        }
 
-        return view('admin.index', compact('title', 'mainTitleIcon'));
+
+
+        return view('admin.index', compact('title', 'mainTitleIcon','email'));
     }
 
     /**

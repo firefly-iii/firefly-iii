@@ -78,6 +78,15 @@ class RemoteUserGuard implements Guard
         /** @var User $user */
         $user = $this->provider->retrieveById($userID);
 
+        // store email address if present in header and not already set.
+        $header       = config('auth.guard_email');
+        $emailAddress = request()->server($header) ?? null;
+        $preference   = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+
+        if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
+            app('preferences')->setForUser($user, 'remote_guard_alt_email', $emailAddress);
+        }
+
         Log::debug(sprintf('Result of getting user from provider: %s', $user->email));
         $this->user = $user;
     }
