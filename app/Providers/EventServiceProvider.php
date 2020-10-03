@@ -147,6 +147,12 @@ class EventServiceProvider extends ServiceProvider
                 $email     = $user->email;
                 $ipAddress = Request::ip();
 
+                // see if user has alternative email address:
+                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+                if (null !== $pref) {
+                    $email = $pref->data;
+                }
+
                 Log::debug(sprintf('Now in EventServiceProvider::registerCreateEvents. Email is %s, IP is %s', $email, $ipAddress));
                 try {
                     Log::debug('Trying to send message...');

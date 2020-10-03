@@ -2,13 +2,41 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.4.3 (API 1.4.0) - 2020-10-03
+
+### Added
+- [Issue 3592](https://github.com/firefly-iii/firefly-iii/issues/3592) You can now add an alternative email address to users when using the external user guard. See the `.env.example` for instructions.
+- [Issue 3863](https://github.com/firefly-iii/firefly-iii/issues/3863) Sonarcloud.io badges in the readme file, thanks @lastlink
+- Support for Slovak
+
+### Changed
+- [Issue 3875](https://github.com/firefly-iii/firefly-iii/issues/3875) Budgets also count foreign currency transactions.
+- Docker image runs PHP 7.4.11
+
+### Fixed
+- [Issue 3824](https://github.com/firefly-iii/firefly-iii/issues/3824) Hard-coded links broken.
+- [Issue 3850](https://github.com/firefly-iii/firefly-iii/issues/3850) Preview was broken for boolean search operators
+- [Issue 3853](https://github.com/firefly-iii/firefly-iii/issues/3853) Broken rule triggers when handling accounts.
+- [Issue 3855](https://github.com/firefly-iii/firefly-iii/issues/3855) Broken manifest file.
+- [Issue 3858](https://github.com/firefly-iii/firefly-iii/issues/3858) Broken pagination, thanks @sephrat.
+- [Issue 3862](https://github.com/firefly-iii/firefly-iii/issues/3862) Split transactions could not be edited.
+- [Issue 3879](https://github.com/firefly-iii/firefly-iii/issues/3879) Category popup broken.
+- [Issue 3881](https://github.com/firefly-iii/firefly-iii/issues/3881) Could store multiple budget limits due to a broken check.
+- [Issue 3884](https://github.com/firefly-iii/firefly-iii/issues/3884) Transaction edit form was improperly updated when removing splits.
+- [Issue 3887](https://github.com/firefly-iii/firefly-iii/issues/3887) Could not remove bill from transaction.
+- [Issue 3893](https://github.com/firefly-iii/firefly-iii/issues/3893) Fix budget bars.
+- [Issue 3894](https://github.com/firefly-iii/firefly-iii/issues/3894) Fix auto-complete code.
+- Budget overview properly takes weekly budgets into account, even when on a monthly list.
+
+### API
+- [Issue 3880](https://github.com/firefly-iii/firefly-iii/issues/3880) Could not post new amount.
+
 ## 5.4.2 (API 1.4.0) - 2020-09-24
 
 Fixes exotic and regression bugs.
 
 ### Added
 - [Issue 3828](https://github.com/firefly-iii/firefly-iii/issues/3828) The admin pages now respect LDAP.
-
 
 ### Fixed
 - LDAP and 2FA should work again.

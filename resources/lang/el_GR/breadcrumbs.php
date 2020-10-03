@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Επεξεργασία κουμπαρά ":name"',
     'preferences'            => 'Προτιμήσεις',
     'profile'                => 'Προφίλ',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Αλλάξτε τον κωδικό σας',
     'change_email'           => 'Αλλάξτε τη διεύθυνση του email σας',
     'bills'                  => 'Πάγια έξοδα',

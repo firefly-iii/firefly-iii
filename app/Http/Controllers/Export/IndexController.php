@@ -41,8 +41,7 @@ use League\Csv\CannotInsertRecord;
 class IndexController extends Controller
 {
 
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
+    private JournalRepositoryInterface $journalRepository;
 
     /**
      * IndexController constructor.

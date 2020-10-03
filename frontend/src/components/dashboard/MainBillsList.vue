@@ -27,9 +27,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th style="width:35%;">{{ $t('list.name') }}</th>
-                    <th style="width:40%;">{{ $t('list.amount') }}</th>
-                    <th style="width:25%;">{{ $t('list.next_expected_match') }}</th>
+                    <th scope="col" style="width:35%;">{{ $t('list.name') }}</th>
+                    <th scope="col" style="width:40%;">{{ $t('list.amount') }}</th>
+                    <th scope="col" style="width:25%;">{{ $t('list.next_expected_match') }}</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'These are the accounts created so far. You can use the cash account to track cash expenses but it\'s not mandatory of course.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
+    'transactions_create_basic_info'                  => 'Masukkan informasi dasar mengenai transaksi anda. Sumber, tujuan, tanggal dan deskripsi.',
     'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_optional_info'               => 'Semua kolom ini adalah opsional. Menambahkan metadata akan membuat transaksi anda lebih rapi.',
+    'transactions_create_split'                       => 'Jika anda ingin membagi sebuah transaksi, anda dapat melakukannya dengan tombol ini',
 
     // create account:
     'accounts_create_iban'                            => 'Berikan akun anda IBAN yang benar. Hal ini bisa membuat data impor sangat mudah di masa yang akan datang.',

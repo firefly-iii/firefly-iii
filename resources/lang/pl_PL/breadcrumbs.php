@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Modyfikuj skarbonkę ":name"',
     'preferences'            => 'Preferencje',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Zmień swoje hasło',
     'change_email'           => 'Zmień swój adres e-mail',
     'bills'                  => 'Rachunki',

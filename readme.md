@@ -121,11 +121,15 @@ There are many ways to run Firefly III
 
 ## Contributing
 
-Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've created several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/) and [Twitter](https://twitter.com/Firefly_III).
+Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. You can use the community forum over at [reddit](https://www.reddit.com/r/FireflyIII/) or interact on [Twitter](https://twitter.com/Firefly_III).
 
 Of course, there are some [contributing guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/contributing.md) and a [code of conduct](https://github.com/firefly-iii/firefly-iii/blob/main/.github/code_of_conduct.md), which I invite you to check out.
 
 I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
+
+[Sonarcloud](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=alert_status)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
 
 There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
@@ -133,11 +137,9 @@ There is also a [security policy](https://github.com/firefly-iii/firefly-iii/sec
 
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! :tada:
 
-OK that was a joke. You can donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url) or [Patreon](https://www.patreon.com/jc5).
+OK that was a joke. You can donate using the [GitHub Sponsors Program](https://github.com/sponsors/JC5) or [Patreon](https://www.patreon.com/jc5). If you wish to make a one-time donation just cancel your patronage after the first withdrawal.
 
-I'm also very proud to be a part of the **[GitHub Sponsors Program](https://github.com/sponsors/JC5)**.
-
-Thank you for considering donating to Firefly III! If you wish to make a one-time donation just cancel your patronage after the first withdrawal.
+Thank you for considering donating to Firefly III! 
 
 ## License
 

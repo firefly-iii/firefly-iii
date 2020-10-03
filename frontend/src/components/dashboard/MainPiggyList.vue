@@ -27,9 +27,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th style="width:35%;">{{ $t('list.piggy_bank') }}</th>
-                    <th style="width:40%;">{{ $t('list.percentage') }}</th>
-                    <th style="width:25%;text-align: right;">{{ $t('list.amount') }}</th>
+                    <th scope="col" style="width:35%;">{{ $t('list.piggy_bank') }}</th>
+                    <th scope="col" style="width:40%;">{{ $t('list.percentage') }}</th>
+                    <th scope="col" style="width:25%;text-align: right;">{{ $t('list.amount') }}</th>
                 </tr>
                 </thead>
                 <tbody>

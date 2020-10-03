@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Modifica salvadanaio ":name"',
     'preferences'            => 'Preferenze',
     'profile'                => 'Profilo',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Cambia la tua password',
     'change_email'           => 'Cambia il tuo indirizzo email',
     'bills'                  => 'Bollette',

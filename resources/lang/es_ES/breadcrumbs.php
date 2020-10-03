@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Editar hucha ":name"',
     'preferences'            => 'Preferencias',
     'profile'                => 'Perfil',
+    'accounts'               => 'Cuentas',
     'changePassword'         => 'Cambiar contraseña',
     'change_email'           => 'Cambiar su dirección de correo electrónico',
     'bills'                  => 'Facturas',

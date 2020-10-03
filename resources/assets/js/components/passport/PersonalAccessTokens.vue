@@ -45,8 +45,8 @@
           <table class="table table-responsive table-borderless mb-0" v-if="tokens.length > 0">
             <thead>
             <tr>
-              <th>{{ $t('firefly.name') }}</th>
-              <th></th>
+              <th scope="col">{{ $t('firefly.name') }}</th>
+              <th scope="col"></th>
             </tr>
             </thead>
 

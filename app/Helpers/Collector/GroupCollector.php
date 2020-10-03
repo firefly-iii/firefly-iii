@@ -447,9 +447,11 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface
     {
-        $this->user = $user;
-        $this->startQuery();
+        if (null === $this->user) {
+            $this->user = $user;
+            $this->startQuery();
 
+        }
         return $this;
     }
 

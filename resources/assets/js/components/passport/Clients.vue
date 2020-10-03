@@ -45,11 +45,11 @@
         <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
         <thead>
         <tr>
-          <th>{{ $t('firefly.profile_oauth_client_id') }}</th>
-          <th>{{ $t('firefly.name') }}</th>
-          <th>{{ $t('firefly.profile_oauth_client_secret') }}</th>
-          <th></th>
-          <th></th>
+          <th scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
+          <th scope="col">{{ $t('firefly.name') }}</th>
+          <th scope="col">{{ $t('firefly.profile_oauth_client_secret') }}</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
         </thead>
 

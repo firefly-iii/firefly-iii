@@ -52,7 +52,7 @@
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
               </h3>
-              <div class="box-tools pull-right" v-if="transactions.length > 1" x>
+              <div class="box-tools pull-right" v-if="transactions.length > 1">
                 <button type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
                     class="fa fa-trash"></i></button>
               </div>
@@ -224,7 +224,10 @@
           </div>
           <div class="box-footer">
             <div class="btn-group">
-              <button class="btn btn-success" @click="submit">{{ $t('firefly.update_transaction') }}</button>
+              <button class="btn btn-success" @click="submit" id="submitButton">{{
+                  $t('firefly.update_transaction')
+                }}
+              </button>
             </div>
           </div>
         </div>
@@ -401,6 +404,9 @@ export default {
       // console.log(window.expectedSourceTypes.source[this.ucFirst(transaction.type)]);
       // console.log('destination allowed types for a ' + transaction.type);
       // console.log(window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]);
+      if (typeof window.expectedSourceTypes === 'undefined') {
+        console.error('window.expectedSourceTypes is unexpectedly empty.')
+      }
 
       this.transactions.push({
         transaction_journal_id: transaction.transaction_journal_id,
@@ -616,7 +622,6 @@ export default {
             type: transactionType,
             date: date,
             amount: row.amount,
-            currency_id: row.currency_id,
 
             description: row.description,
 
@@ -644,10 +649,18 @@ export default {
       currentArray.foreign_amount = foreignAmount;
       currentArray.foreign_currency_id = foreignCurrency;
 
+      // only submit currency ID when not 0:
+      if (0 !== row.currency_id && null !== row.currency_id) {
+        currentArray.currency_id = row.currency_id;
+      }
+
       // set budget id and piggy ID.
       currentArray.budget_id = parseInt(row.budget);
       if (parseInt(row.bill) > 0) {
         currentArray.bill_id = parseInt(row.bill);
+      }
+      if (0 === parseInt(row.bill)) {
+        currentArray.bill_id = null;
       }
 
       if (parseInt(row.piggy_bank) > 0) {
@@ -657,6 +670,10 @@ export default {
       return currentArray;
     },
     submit: function (e) {
+
+      let button = $('#submitButton');
+      button.prop("disabled", true);
+
       const page = window.location.href.split('/');
       const groupId = page[page.length - 1];
       let uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
@@ -667,9 +684,6 @@ export default {
         method = 'POST';
       }
       const data = this.convertData();
-
-      let button = $('#submitButton');
-      button.prop("disabled", true);
 
       //axios.put(uri, data)
       axios({
@@ -833,6 +847,7 @@ export default {
 
 
     addTransaction: function (e) {
+
       this.transactions.push({
         transaction_journal_id: 0,
         description: "",
@@ -906,6 +921,17 @@ export default {
           allowed_types: []
         }
       });
+      let count = this.transactions.length;
+      console.log('Transactions length = ' + count);
+      // also set accounts from previous entry, if present.
+      if (this.transactions.length > 1) {
+        console.log('Adding split.');
+        this.transactions[count - 1].source_account = this.transactions[count - 2].source_account;
+        this.transactions[count - 1].destination_account = this.transactions[count - 2].destination_account;
+        this.transactions[count - 1].date = this.transactions[count - 2].date;
+      }
+      console.log('Transactions length now = ' + this.transactions.length);
+
       if (e) {
         e.preventDefault();
       }

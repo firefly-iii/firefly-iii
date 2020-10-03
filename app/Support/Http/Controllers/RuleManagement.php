@@ -62,7 +62,7 @@ trait RuleManagement
                     [
                         'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
                         'oldValue'   => $operator['value'],
-                        'oldChecked' => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
+                        'oldChecked' => false,
                         'count'      => $index + 1,
                         'triggers'   => $triggers,
                     ]

@@ -49,7 +49,7 @@ class Breadcrumbs extends AbstractExtension
     {
         return new TwigFunction(
             'ff3bc',
-            static function (array $args): string {
+            static function (?array $args): string {
                 $name = Route::getCurrentRoute()->getName() ?? '';
 
                 // loop for actual breadcrumb:

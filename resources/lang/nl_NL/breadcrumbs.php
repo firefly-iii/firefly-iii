@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Wijzig spaarpotje ":name"',
     'preferences'            => 'Voorkeuren',
     'profile'                => 'Profiel',
+    'accounts'               => 'Rekeningen',
     'changePassword'         => 'Verander je wachtwoord',
     'change_email'           => 'Verander je emailadres',
     'bills'                  => 'Contracten',

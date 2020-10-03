@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => 'Editează pușculița ":name"',
     'preferences'            => 'Preferințe',
     'profile'                => 'Profil',
+    'accounts'               => 'Accounts',
     'changePassword'         => 'Modificare parolă',
     'change_email'           => 'Modificare adresă de email',
     'bills'                  => 'Facturi',

@@ -437,9 +437,9 @@ trait ModifiesPiggyBanks
             //piggy zelf naar 7
             /** @var User $user */
             $user = $this->user;
-            $user->piggyBanks()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+            $user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
                  ->where('piggy_banks.id', '!=', $piggyBank->id)
-                 ->update(['order' => DB::raw('piggy_banks.order-1')]);
+                 ->update(['piggy_banks.order' => DB::raw('piggy_banks.order-1')]);
             $piggyBank->order = $newOrder;
             $piggyBank->save();
         }
@@ -450,9 +450,9 @@ trait ModifiesPiggyBanks
             //       8 naar 2
             /** @var User $user */
             $user = $this->user;
-            $user->piggyBanks()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+            $user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
                  ->where('piggy_banks.id', '!=', $piggyBank->id)
-                 ->update(['order' => DB::raw('piggy_banks.order+1')]);
+                 ->update(['piggy_banks.order' => DB::raw('piggy_banks.order+1')]);
             $piggyBank->order = $newOrder;
             $piggyBank->save();
         }

@@ -37,7 +37,7 @@ return [
     'linked_to_rules'         => 'Σχετικοί κανόνες',
     'active'                  => 'Είναι ενεργό;',
     'percentage'              => 'pct.',
-    'recurring_transaction'   => 'Recurring transaction',
+    'recurring_transaction'   => 'Επαναλαμβανόμενη συναλλαγή',
     'next_due'                => 'Επόμενη προθεσμία',
     'transaction_type'        => 'Τύπος',
     'lastActivity'            => 'Τελευταία δραστηριότητα',

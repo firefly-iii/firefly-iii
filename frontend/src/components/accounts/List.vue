@@ -52,12 +52,12 @@
                     <table class="table table-sm table-striped">
                         <thead>
                         <tr>
-                            <th>&nbsp;</th>
-                            <th>{{ $t('list.name') }}</th>
-                            <th v-if="'asset' === $props.accountTypes">{{ $t('list.role') }}</th>
-                            <th>{{ $t('list.iban') }}</th>
-                            <th style="text-align: right;">{{ $t('list.currentBalance') }}</th>
-                            <th>{{ $t('list.balanceDiff') }}</th>
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">{{ $t('list.name') }}</th>
+                            <th scope="col" v-if="'asset' === $props.accountTypes">{{ $t('list.role') }}</th>
+                            <th scope="col">{{ $t('list.iban') }}</th>
+                            <th scope="col" style="text-align: right;">{{ $t('list.currentBalance') }}</th>
+                            <th scope="col">{{ $t('list.balanceDiff') }}</th>
                         </tr>
                         </thead>
                         <tbody>

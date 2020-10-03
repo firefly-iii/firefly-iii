@@ -38,6 +38,7 @@ return [
         'passwords' => 'users',
     ],
     'guard_header' => envNonEmpty('AUTHENTICATION_GUARD_HEADER', 'REMOTE_USER'),
+    'guard_email'  => envNonEmpty('AUTHENTICATION_GUARD_EMAIL', null),
 
     /*
     |--------------------------------------------------------------------------

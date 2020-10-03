@@ -138,9 +138,9 @@ class BudgetLimitController extends Controller
         $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end   = Carbon::createFromFormat('Y-m-d', $request->get('end'));
         $start->startOfDay();
-        $end->endOfDay();
+        $end->startOfDay();
 
-        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit = $this->blRepository->find($budget, $currency, $start, $end);
         if (null !== $limit) {

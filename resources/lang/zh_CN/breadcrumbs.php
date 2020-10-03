@@ -30,6 +30,7 @@ return [
     'edit_piggyBank'         => '编辑存钱罐 ":name"',
     'preferences'            => '设置',
     'profile'                => '个人档案',
+    'accounts'               => 'Accounts',
     'changePassword'         => '更改您的密码',
     'change_email'           => '更改您的电子邮件地址',
     'bills'                  => '帐单',

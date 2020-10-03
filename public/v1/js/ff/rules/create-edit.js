@@ -303,14 +303,14 @@ function updateTriggerInput(selectList) {
     inputResult.prop('disabled', false);
     inputResult.prop('type', 'text');
     switch (selectList.val()) {
-        case 'from_account_starts':
-        case 'from_account_ends':
-        case 'from_account_is':
-        case 'from_account_contains':
-        case 'to_account_starts':
-        case 'to_account_ends':
-        case 'to_account_is':
-        case 'to_account_contains':
+        case 'source_account_starts':
+        case 'source_account_ends':
+        case 'source_account_is':
+        case 'source_account_contains':
+        case 'destination_account_starts':
+        case 'destination_account_ends':
+        case 'destination_account_is':
+        case 'destination_account_contains':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');
             break;

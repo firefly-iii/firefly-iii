@@ -10,6 +10,8 @@ rm -rf ../public/v2/js
 rm -rf ../public/v2/css
 
 # build new stuff
+npm install
+npm audit fix
 npm upgrade
 npm run prod
 

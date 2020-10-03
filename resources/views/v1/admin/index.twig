@@ -40,7 +40,7 @@
                 <form action="{{ route('admin.test-message') }}" method="post">
                     <div class="box-body">
                         <p>
-                            {{ trans('firefly.send_test_email_text', {email:Auth.user.email})|raw }}
+                            {{ trans('firefly.send_test_email_text', {email:email})|raw }}
                         </p>
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     </div>

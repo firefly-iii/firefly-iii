@@ -37,6 +37,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use Throwable;
+use Log;
 
 /**
  * Class EditController
@@ -45,8 +47,7 @@ class EditController extends Controller
 {
     use RuleManagement, RenderPartialViews;
 
-    /** @var RuleRepositoryInterface Rule repository */
-    private $ruleRepos;
+    private RuleRepositoryInterface $ruleRepos;
 
     /**
      * RuleController constructor.
@@ -191,7 +192,7 @@ class EditController extends Controller
                     [
                         'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
                         'oldValue'   => $operator['value'],
-                        'oldChecked' => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
+                        'oldChecked' => false,
                         'count'      => $index + 1,
                         'triggers'   => $triggers,
                     ]

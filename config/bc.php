@@ -4,7 +4,13 @@ return [
     'index'    => [
         'parent'        => null,
         'title'         => 'breadcrumbs.home',
-        'static_route'  => 'home',
+        'static_route'  => 'index',
+        'dynamic_route' => null,
+    ],
+    'home'    => [
+        'parent'        => null,
+        'title'         => 'breadcrumbs.home',
+        'static_route'  => 'index',
         'dynamic_route' => null,
     ],
     'accounts' => [
