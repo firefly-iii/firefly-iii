@@ -241,13 +241,13 @@ function drawBudgetedBars() {
         if (budgetedTooMuch) {
             // budgeted too much.
             pct = (available / budgeted) * 100;
-            bar.find('.progress-bar-warning').css('width', pct + '%');
-            bar.find('.progress-bar-danger').css('width', (100 - pct) + '%');
+            bar.find('.progress-bar-danger').css('width', pct + '%');
+            bar.find('.progress-bar-warning').css('width', (100 - pct) + '%');
             bar.find('.progress-bar-info').css('width', 0);
         } else {
             pct = (budgeted / available) * 100;
-            bar.find('.progress-bar-warning').css('width', 0);
             bar.find('.progress-bar-danger').css('width', 0);
+            bar.find('.progress-bar-warning').css('width', 0);
             bar.find('.progress-bar-info').css('width', pct + '%');
         }
         //$('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
