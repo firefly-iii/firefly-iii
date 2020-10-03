@@ -56,6 +56,8 @@ class ConfigurationRequest extends FormRequest
     {
         $name = $this->route()->parameter('configName');
         switch ($name) {
+            default:
+                break;
             case 'is_demo_site':
             case 'single_user_mode':
                 return ['value' => $this->boolean('value')];
@@ -75,6 +77,8 @@ class ConfigurationRequest extends FormRequest
     {
         $name = $this->route()->parameter('configName');
         switch ($name) {
+            default:
+                break;
             case 'is_demo_site':
             case 'single_user_mode':
                 return ['value' => ['required', new IsBoolean]];

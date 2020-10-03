@@ -384,11 +384,12 @@ class ReportController extends Controller
         }
 
         switch ($reportType) {
-            case 'category':
-                $uri = route('reports.report.category', [$accounts, $categories, $start, $end]);
-                break;
+            default:
             case 'default':
                 $uri = route('reports.report.default', [$accounts, $start, $end]);
+                break;
+            case 'category':
+                $uri = route('reports.report.category', [$accounts, $categories, $start, $end]);
                 break;
             case 'audit':
                 $uri = route('reports.report.audit', [$accounts, $start, $end]);

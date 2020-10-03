@@ -73,6 +73,7 @@ class AccountSearch implements GenericSearchInterface
         $like          = sprintf('%%%s%%', $this->query);
         $originalQuery = $this->query;
         switch ($this->field) {
+            default:
             case self::SEARCH_ALL:
                 $query->where(
                     static function (Builder $q) use ($like) {

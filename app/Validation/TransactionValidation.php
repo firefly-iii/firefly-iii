@@ -354,6 +354,7 @@ trait TransactionValidation
         $sources = array_unique($sources);
         $dests   = array_unique($dests);
         switch ($type) {
+            default:
             case 'withdrawal':
                 if (count($sources) > 1) {
                     $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
@@ -409,6 +410,7 @@ trait TransactionValidation
         }
         // TODO not the best way to loop this.
         switch ($type) {
+            default:
             case 'withdrawal':
                 if ($this->arrayEqual($comparison['source_id'])) {
                     // source ID's are equal, return void.

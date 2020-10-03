@@ -128,6 +128,8 @@ class OtherCurrenciesCorrections extends Command
         /** @var Transaction $lead */
         $lead = null;
         switch ($journal->transactionType->type) {
+            default:
+                break;
             case TransactionType::WITHDRAWAL:
                 $lead = $journal->transactions()->where('amount', '<', 0)->first();
                 break;

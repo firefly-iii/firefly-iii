@@ -587,6 +587,8 @@ class AccountController extends Controller
         $entries = [];
         $current = clone $start;
         switch ($step) {
+            default:
+                break;
             case '1D':
                 // per day the entire period, balance for every day.
                 $format   = (string) trans('config.month_and_day', [], $locale);
