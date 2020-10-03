@@ -71,7 +71,7 @@ class ConfigurationController extends Controller
     {
         $configData = $this->getConfigData();
 
-        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $configData])->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -88,7 +88,7 @@ class ConfigurationController extends Controller
         app('fireflyconfig')->set($name, $data['value']);
         $configData = $this->getConfigData();
 
-        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $configData])->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**

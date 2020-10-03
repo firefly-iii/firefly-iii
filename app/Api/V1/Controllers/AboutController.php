@@ -60,7 +60,7 @@ class AboutController extends Controller
             'driver'      => $currentDriver,
         ];
 
-        return response()->json(['data' => $data])->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -78,6 +78,6 @@ class AboutController extends Controller
 
         $resource = new Item(auth()->user(), $transformer, 'users');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }

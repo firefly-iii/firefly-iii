@@ -126,7 +126,7 @@ class TransactionLinkController extends Controller
         $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 
@@ -148,7 +148,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 
@@ -179,7 +179,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -209,7 +209,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 }

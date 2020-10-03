@@ -107,7 +107,7 @@ class TransactionController extends Controller
 
         $resource = new FractalCollection($attachments, $transformer, 'attachments');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -127,7 +127,7 @@ class TransactionController extends Controller
 
         $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -208,7 +208,7 @@ class TransactionController extends Controller
         $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -231,7 +231,7 @@ class TransactionController extends Controller
 
         $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -266,7 +266,7 @@ class TransactionController extends Controller
         $transformer->setParameters($this->parameters);
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -352,7 +352,7 @@ class TransactionController extends Controller
         $transformer->setParameters($this->parameters);
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
 
@@ -395,6 +395,6 @@ class TransactionController extends Controller
         $transformer->setParameters($this->parameters);
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }
