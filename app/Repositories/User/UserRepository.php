@@ -37,16 +37,6 @@ use Str;
 class UserRepository implements UserRepositoryInterface
 {
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @return Collection
      */
     public function all(): Collection
