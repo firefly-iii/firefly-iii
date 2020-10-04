@@ -46,7 +46,7 @@ abstract class Controller extends BaseController
 
     protected ParameterBag $parameters;
 
-    protected const CONTENT_TYPE = self::CONTENT_TYPE;
+    protected const CONTENT_TYPE = 'application/vnd.api+json';
 
     /**
      * Controller constructor.
