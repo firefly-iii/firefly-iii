@@ -506,7 +506,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getStoreRules(): Collection
     {
-        $collection = $this->user->rules()->where('active', 1)->with(['ruleGroup', 'ruleTriggers'])->get();
+        $collection = $this->user->rules()->where('rules.active', 1)->with(['ruleGroup', 'ruleTriggers'])->get();
         $filtered   = new Collection;
         /** @var Rule $rule */
         foreach ($collection as $rule) {
@@ -525,7 +525,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getUpdateRules(): Collection
     {
-        $collection = $this->user->rules()->with(['ruleGroup', 'ruleTriggers'])->get();
+        $collection = $this->user->rules()->where('rules.active', 1)->with(['ruleGroup', 'ruleTriggers'])->get();
         $filtered   = new Collection;
         /** @var Rule $rule */
         foreach ($collection as $rule) {
