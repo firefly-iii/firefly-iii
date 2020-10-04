@@ -134,6 +134,7 @@ class TransactionJournalFactory
      */
     public function create(array $data): Collection
     {
+        Log::debug('Now in TransactionJournalFactory::create()');
         // convert to special object.
         $dataObject = new NullArrayObject($data);
 

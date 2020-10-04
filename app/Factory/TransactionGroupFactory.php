@@ -59,6 +59,7 @@ class TransactionGroupFactory
      */
     public function create(array $data): TransactionGroup
     {
+        Log::debug('Now in TransactionGroupFactory::create()');
         $this->journalFactory->setUser($this->user);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
         try {

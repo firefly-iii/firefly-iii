@@ -83,9 +83,9 @@ trait JournalServiceTrait
      * @param string $direction
      * @param array  $data
      *
-     * @throws FireflyException
      * @return Account
      * @codeCoverageIgnore
+     * @throws FireflyException
      */
     protected function getAccount(string $transactionType, string $direction, array $data): Account
     {
@@ -184,7 +184,7 @@ trait JournalServiceTrait
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
-        $notes = (string)$notes;
+        $notes = (string) $notes;
         $note  = $journal->notes()->first();
         if ('' !== $notes) {
             if (null === $note) {
@@ -219,14 +219,17 @@ trait JournalServiceTrait
      */
     protected function storeTags(TransactionJournal $journal, ?array $tags): void
     {
-
+        Log::debug('Now in storeTags()', $tags ?? []);
         $this->tagFactory->setUser($journal->user);
         $set = [];
         if (!is_array($tags)) {
+            Log::debug('Tags is not an array, break.');
             return;
         }
+        Log::debug('Start of loop.');
         foreach ($tags as $string) {
-            $string = (string)$string;
+            $string = (string) $string;
+            Log::debug(sprintf('Now at tag "%s"', $string));
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);
                 if (null !== $tag) {
@@ -234,7 +237,10 @@ trait JournalServiceTrait
                 }
             }
         }
+        Log::debug('End of loop.');
+        Log::debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
         $journal->tags()->sync($set);
+        Log::debug('Done!');
     }
 
     /**
@@ -336,8 +342,8 @@ trait JournalServiceTrait
      * @param array        $data
      * @param string       $preferredType
      *
-     * @throws FireflyException
      * @return Account
+     * @throws FireflyException
      */
     private function createAccount(?Account $account, array $data, string $preferredType): Account
     {
