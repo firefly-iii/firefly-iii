@@ -34,7 +34,7 @@ use Tests\Traits\TestHelpers;
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, MocksDefaultValues, TestHelpers, CollectsValues;
+    use CreatesApplication, CollectsValues;//, MocksDefaultValues, TestHelpers, ;
 
     /**
      * @return array

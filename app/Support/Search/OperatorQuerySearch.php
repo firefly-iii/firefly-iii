@@ -607,7 +607,7 @@ class OperatorQuerySearch implements SearchInterface
         $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
 
@@ -620,7 +620,7 @@ class OperatorQuerySearch implements SearchInterface
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
             return;
@@ -669,7 +669,7 @@ class OperatorQuerySearch implements SearchInterface
         $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
             return;
@@ -679,7 +679,7 @@ class OperatorQuerySearch implements SearchInterface
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(function (Account $account) use ($value, $stringMethod) {
             // either IBAN or account number!
-            $ibanMatch      = $stringMethod(strtolower($account->iban), strtolower($value));
+            $ibanMatch      = $stringMethod(strtolower((string) $account->iban), strtolower((string) $value));
             $accountNrMatch = false;
             /** @var AccountMeta $meta */
             foreach ($account->accountMeta as $meta) {
@@ -692,7 +692,7 @@ class OperatorQuerySearch implements SearchInterface
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero, search for invalid account');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
             return;

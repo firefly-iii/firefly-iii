@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Console\Command;
+use JsonException;
 use Log;
 
 /**
@@ -60,6 +61,7 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     public function handle(): int
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // get all OB journals:
         $set = TransactionJournal
             ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
@@ -70,16 +72,23 @@ class CorrectOpeningBalanceCurrencies extends Command
         $count = 0;
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
+            Log::debug(sprintf('Going to fix journal #%d', $journal->id));
             $count += $this->correctJournal($journal);
+            Log::debug(sprintf('Done, count is now %d', $count));
         }
 
         if ($count > 0) {
-            $this->line(sprintf('Corrected %d opening balance transactions.', $count));
+            $message = sprintf('Corrected %d opening balance transaction(s).', $count);
+            Log::debug($message);
+            $this->line($message);
         }
         if (0 === $count) {
-            $this->info('There was nothing to fix in the opening balance transactions.');
+            $message = 'There was nothing to fix in the opening balance transactions.';
+            Log::debug($message);
+            $this->info($message);
         }
 
+        Log::debug(sprintf('Done with %s', __METHOD__));
         return 0;
     }
 
@@ -94,18 +103,18 @@ class CorrectOpeningBalanceCurrencies extends Command
         // get the asset account for this opening balance:
         $account = $this->getAccount($journal);
         if (null === $account) {
-            $this->warn(sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id));
+            $message = sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id);
+            Log::warning($message);
+            $this->warn($message);
 
             return 0;
         }
-        Log::debug(sprintf('Found %s #%d "%s".', $account->accountType->type, $account->id, $account->name));
+        Log::debug(sprintf('Found "%s" #%d "%s".', $account->accountType->type, $account->id, $account->name));
         $currency = $this->getCurrency($account);
         Log::debug(sprintf('Found currency #%d (%s)', $currency->id, $currency->code));
 
         // update journal and all transactions:
-        $this->setCurrency($journal, $currency);
-
-        return 1;
+        return $this->setCurrency($journal, $currency);
     }
 
     /**
@@ -115,22 +124,27 @@ class CorrectOpeningBalanceCurrencies extends Command
      */
     private function getAccount(TransactionJournal $journal): ?Account
     {
-        $transactions = $journal->transactions()->with(['account', 'account.accountType'])->get();
+        $transactions = $journal->transactions()->get();
+        Log::debug(sprintf('Found %d transactions for journal #%d.', $transactions->count(), $journal->id));
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $account = $transaction->account;
-            if ((null !== $account) && AccountType::INITIAL_BALANCE !== $account->accountType->type) {
+            Log::debug(sprintf('Testing transaction #%d', $transaction->id));
+            /** @var Account $account */
+            $account = $transaction->account()->first();
+            if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
+                Log::debug(sprintf('Account of transaction #%d is opposite of IB account (%s).', $transaction->id, $account->accountType()->first()->type));
                 return $account;
             }
         }
+        Log::debug('Found no IB account in transactions of journal.');
 
         return null;
     }
 
     /**
      * @param Account $account
-     *
      * @return TransactionCurrency
+     * @throws JsonException
      */
     private function getCurrency(Account $account): TransactionCurrency
     {
@@ -144,16 +158,30 @@ class CorrectOpeningBalanceCurrencies extends Command
     /**
      * @param TransactionJournal  $journal
      * @param TransactionCurrency $currency
+     * @return int
      */
-    private function setCurrency(TransactionJournal $journal, TransactionCurrency $currency): void
+    private function setCurrency(TransactionJournal $journal, TransactionCurrency $currency): int
     {
-        $journal->transaction_currency_id = $currency->id;
-        $journal->save();
+        Log::debug('Now in setCurrency');
+        $count = 0;
+        if ((int) $journal->transaction_currency_id !== (int) $currency->id) {
+            Log::debug(sprintf('Currency ID of journal #%d was #%d, now set to #%d', $journal->id, $journal->transaction_currency_id, $currency->id));
+            $journal->transaction_currency_id = $currency->id;
+            $journal->save();
+            $count = 1;
+        }
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            $transaction->transaction_currency_id = $currency->id;
-            $transaction->save();
+            if ((int) $transaction->transaction_currency_id !== (int) $currency->id) {
+                Log::debug(sprintf('Currency ID of transaction #%d was #%d, now set to #%d', $transaction->id, $transaction->transaction_currency_id, $currency->id));
+                $transaction->transaction_currency_id = $currency->id;
+                $transaction->save();
+                $count = 1;
+            }
         }
+        Log::debug(sprintf('Return %d', $count));
+
+        return $count;
     }
 }
