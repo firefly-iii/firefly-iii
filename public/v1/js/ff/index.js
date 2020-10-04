@@ -137,7 +137,7 @@ function getBalanceBox() {
     $.getJSON('json/box/balance').done(function (data) {
         if (data.size === 1) {
             // show balance in "sums", show single entry in list.
-            for (x in data.sums) {
+            for (var x in data.sums) {
                 $('#box-balance-sums').html(data.sums[x]);
                 $('#box-balance-list').html(data.incomes[x] + ' + ' + data.expenses[x]);
             }
