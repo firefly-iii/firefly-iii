@@ -31,25 +31,9 @@ use Tests\TestCase;
 
 /**
  * Class DeleteEmptyJournalsTest
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class DeleteEmptyJournalsTest extends TestCase
 {
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
     /**
      * @covers \FireflyIII\Console\Commands\Correction\DeleteEmptyJournals
      */

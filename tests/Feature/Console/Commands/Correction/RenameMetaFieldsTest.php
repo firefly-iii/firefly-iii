@@ -30,23 +30,9 @@ use Tests\TestCase;
 
 /**
  * Class RenameMetaFieldsTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RenameMetaFieldsTest extends TestCase
 {
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
 
     /**
      * @covers \FireflyIII\Console\Commands\Correction\RenameMetaFields

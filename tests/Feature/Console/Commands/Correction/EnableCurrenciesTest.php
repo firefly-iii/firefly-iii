@@ -26,35 +26,18 @@ namespace Tests\Feature\Console\Commands\Correction;
 
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
-use Log;
 use Tests\TestCase;
 
 /**
  * Class EnableCurrenciesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class EnableCurrenciesTest extends TestCase
 {
     /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-    /**
      * @covers \FireflyIII\Console\Commands\Correction\EnableCurrencies
      */
-    public function testHandle(): void
+    public function testHandleEnabled(): void
     {
-        // assume the current database is intact.
         $count = TransactionCurrency::where('enabled', 1)->count();
 
         $this->artisan('firefly-iii:enable-currencies')
@@ -71,10 +54,14 @@ class EnableCurrenciesTest extends TestCase
     public function testHandleDisabled(): void
     {
         // find a disabled currency, update a budget limit with it.
-        $currency = TransactionCurrency::where('enabled', 0)->first();
-        /** @var BudgetLimit $budgetLimit */
-        $budgetLimit                          = BudgetLimit::inRandomOrder()->first();
+        $currency                             = TransactionCurrency::where('enabled', 0)->first();
+        $budget                               = $this->getRandomBudget();
+        $budgetLimit                          = new BudgetLimit;
         $budgetLimit->transaction_currency_id = $currency->id;
+        $budgetLimit->budget_id               = $budget->id;
+        $budgetLimit->start_date              = '2020-01-01';
+        $budgetLimit->end_date                = '2020-01-02';
+        $budgetLimit->amount                  = '4';
         $budgetLimit->save();
 
         // assume the current database is intact.
@@ -85,6 +72,7 @@ class EnableCurrenciesTest extends TestCase
 
         // assume its been enabled.
         $this->assertCount($count + 1, TransactionCurrency::where('enabled', 1)->get());
+        $budgetLimit->forceDelete();
     }
 
 }

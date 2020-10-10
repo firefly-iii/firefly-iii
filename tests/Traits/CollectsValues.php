@@ -183,6 +183,45 @@ trait CollectsValues
     }
 
     /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomDebt(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::DEBT, $except);
+    }
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomLoan(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::LOAN, $except);
+    }
+
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomRevenue(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::REVENUE, $except);
+    }
+
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomExpense(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::EXPENSE, $except);
+    }
+
+    /**
      * @param string   $type
      *
      * @param int|null $except

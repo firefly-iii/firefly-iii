@@ -81,6 +81,8 @@ class CorrectOpeningBalanceCurrenciesTest extends TestCase
             ->expectsOutput(sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id))
             //->expectsOutput('Cant fix this line.')
              ->assertExitCode(0);
+
+        $journal->forceDelete();
     }
 
 }
