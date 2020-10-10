@@ -43,6 +43,7 @@
 
           <!-- Personal Access Tokens -->
           <table class="table table-responsive table-borderless mb-0" v-if="tokens.length > 0">
+            <caption style="display:none;">{{ $t('firefly.profile_personal_access_tokens') }}</caption>
             <thead>
             <tr>
               <th scope="col">{{ $t('firefly.name') }}</th>

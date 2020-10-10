@@ -50,6 +50,7 @@
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-striped">
+                        <caption style="display:none;">{{ $t('list.name') }}</caption>
                         <thead>
                         <tr>
                             <th scope="col">&nbsp;</th>

@@ -37,6 +37,7 @@
         <div class="box-body">
           <!-- Authorized Tokens -->
           <table class="table table-responsive table-borderless mb-0">
+            <caption style="display:none;">{{ $t('firefly.profile_authorized_apps') }}</caption>
             <thead>
             <tr>
               <th scope="col">{{ $t('firefly.name') }}</th>
