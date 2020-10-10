@@ -57,7 +57,6 @@ class FixGroupAccounts extends Command
      */
     public function handle(): int
     {
-        // select transaction_group_id, count(transaction_group_id) as the_count from transaction_journals group by transaction_group_id having the_count > 1
         $groups = [];
         $res    = TransactionJournal
             ::groupBy('transaction_group_id')

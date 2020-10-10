@@ -39,28 +39,32 @@ $factory->afterCreatingState(TransactionJournal::class, TransactionType::OPENING
         [
             'account_id'             => $obAccount->id,
             'transaction_journal_id' => $journal->id,
+            'amount'                 => '5',
         ]);
 
     $destTransaction = factory(Transaction::class)->create(
         [
             'account_id'             => $assetAccount->id,
             'transaction_journal_id' => $journal->id,
+            'amount'                 => '-5',
         ]);
 });
 
 $factory->afterCreatingState(TransactionJournal::class, 'ob_broken', function ($journal, $faker) {
-    $ob1    = factory(Account::class)->state(AccountType::INITIAL_BALANCE)->create();
-    $ob2      = factory(Account::class)->state(AccountType::INITIAL_BALANCE)->create();
+    $ob1 = factory(Account::class)->state(AccountType::INITIAL_BALANCE)->create();
+    $ob2 = factory(Account::class)->state(AccountType::INITIAL_BALANCE)->create();
 
     $sourceTransaction = factory(Transaction::class)->create(
         [
             'account_id'             => $ob1->id,
             'transaction_journal_id' => $journal->id,
+            'amount'                 => '5',
         ]);
 
     $destTransaction = factory(Transaction::class)->create(
         [
             'account_id'             => $ob2->id,
             'transaction_journal_id' => $journal->id,
+            'amount'                 => '-5',
         ]);
 });

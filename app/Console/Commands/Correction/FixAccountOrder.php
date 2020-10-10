@@ -1,6 +1,6 @@
 <?php
 /**
- * FixAccountTypes.php
+ * FixAccountOrder.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -53,7 +52,6 @@ class FixAccountOrder extends Command
     /**
      * Execute the console command.
      *
-     * @throws FireflyException
      * @return int
      */
     public function handle(): int
@@ -69,6 +67,7 @@ class FixAccountOrder extends Command
                 [AccountType::EXPENSE, AccountType::BENEFICIARY],
                 [AccountType::REVENUE],
                 [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+                [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
             ];
             foreach ($sets as $set) {
                 $this->repository->resetAccountOrder($set);
