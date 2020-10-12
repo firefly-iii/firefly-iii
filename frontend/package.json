@@ -24,7 +24,7 @@
         "node-forge": ">=0.10.0"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.0",
+        "@fortawesome/fontawesome-free": "^5.15.1",
         "@popperjs/core": "^2.5.2",
         "bootstrap": "^4.5.2",
         "chart.js": "^2.9.3",
