@@ -6360,13 +6360,13 @@ uglify-js@3.4.x:
     commander "~2.19.0"
     source-map "~0.6.1"
 
-uiv@^1.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.0.1.tgz#e3215b041f3c2c2ef401de12fe3efab6df01b49b"
-  integrity sha512-foUA3IVZx1J/bTDhNV/BJoKkFp69nHeoHv79+ZYpxFzynX8kw+bHSHh8PAU+yOOImvh+/Pl1515TyZrOr6riMg==
+uiv@^1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.1.1.tgz#b747b18781f95a77b5215957dc21d34caedb320b"
+  integrity sha512-Ny8koCu1jJt83jZAiFIRe0DS6C0fQ2RGV1BevKR6z8ILOwvoqKLWoM/solvU+zWcwLxYVeg0PXpj+ZCiKRONuw==
   dependencies:
     portal-vue "^2.1.7"
-    vue-functional-data-merge "^2.0.3"
+    vue-functional-data-merge "^3.0.0"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
@@ -6550,10 +6550,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-functional-data-merge@^2.0.3:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-2.0.7.tgz#bdee655181eacdcb1f96ce95a4cc14e75313d1da"
-  integrity sha512-pvLc+H+x2prwBj/uSEIITyxjz/7ZUVVK8uYbrYMmhDvMXnzh9OvQvVEwcOSBQjsubd4Eq41/CSJaWzy4hemMNQ==
+vue-functional-data-merge@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+  integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
