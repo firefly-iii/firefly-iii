@@ -81,8 +81,8 @@ class ProfileController extends Controller
         );
         $loginProvider          = config('firefly.login_provider');
         $authGuard              = config('firefly.authentication_guard');
-        $this->externalIdentity = 'eloquent' !== $loginProvider || 'web' !== $authGuard;
-        Log::debug(sprintf('ProfileController::__construct(). Login provider is "%s", authentication guard is "%s"',$loginProvider, $authGuard));
+        $this->externalIdentity = 'web' !== $authGuard;
+        Log::debug(sprintf('ProfileController::__construct(). Login provider is "%s", authentication guard is "%s"', $loginProvider, $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
@@ -339,13 +339,13 @@ class ProfileController extends Controller
     public function index()
     {
         /** @var User $user */
-        $user             = auth()->user();
-        $externalIdentity = $this->externalIdentity;
-        $count            = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
-        $subTitle         = $user->email;
-        $userId           = $user->id;
-        $enabled2FA       = null !== $user->mfa_secret;
-        $mfaBackupCount   = count(app('preferences')->get('mfa_recovery', [])->data);
+        $user               = auth()->user();
+        $isExternalIdentity = $this->externalIdentity;
+        $count              = DB::table('oauth_clients')->where('personal_access_client', 1)->whereNull('user_id')->count();
+        $subTitle           = $user->email;
+        $userId             = $user->id;
+        $enabled2FA         = null !== $user->mfa_secret;
+        $mfaBackupCount     = count(app('preferences')->get('mfa_recovery', [])->data);
         $this->createOAuthKeys();
 
         if (0 === $count) {
@@ -360,7 +360,7 @@ class ProfileController extends Controller
             $accessToken = app('preferences')->set('access_token', $token);
         }
 
-        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'externalIdentity'));
+        return view('profile.index', compact('subTitle', 'mfaBackupCount', 'userId', 'accessToken', 'enabled2FA', 'isExternalIdentity'));
     }
 
     /**
