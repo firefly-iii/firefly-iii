@@ -45,8 +45,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class IndexController extends Controller
 {
     use GetConfigurationData;
-    /** @var RecurringRepositoryInterface Recurring repository */
-    private $recurring;
+    private RecurringRepositoryInterface $recurringRepos;
 
     /**
      * IndexController constructor.
@@ -63,7 +62,7 @@ class IndexController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
                 app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->recurring = app(RecurringRepositoryInterface::class);
+                $this->recurringRepos = app(RecurringRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -84,13 +83,12 @@ class IndexController extends Controller
     {
         $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
-        $collection = $this->recurring->get();
+        $collection = $this->recurringRepos->get();
         $today      = today(config('app.timezone'));
         $year       = today(config('app.timezone'));
 
         // split collection
         $total = $collection->count();
-        /** @var Collection $recurrences */
         $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
         /** @var RecurrenceTransformer $transformer */

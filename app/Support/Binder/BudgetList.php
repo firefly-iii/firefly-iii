@@ -69,7 +69,6 @@ class BudgetList implements BinderInterface
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {
-                //Log::debug('Add empty budget because $list contains 0.');
                 $collection->push(new Budget);
             }
 

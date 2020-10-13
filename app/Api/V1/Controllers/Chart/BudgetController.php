@@ -58,12 +58,9 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                //$this->generator     = app(GeneratorInterface::class);
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
-
-                //$this->nbRepository  = app(NoBudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -195,7 +192,6 @@ class BudgetController extends Controller
     {
         foreach ($sets as $set) {
             $label                                    = $set['label'];
-            //$basic['spent']['entries'][$label]        = $set['entries']['spent'];
             $basic['spent_capped']['entries'][$label] = $set['entries']['spent_capped'];
             $basic['left']['entries'][$label]         = $set['entries']['left'];
             $basic['overspent']['entries'][$label]    = $set['entries']['overspent'];

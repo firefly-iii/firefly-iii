@@ -103,7 +103,7 @@ function updateBudgetedAmount(e) {
             updateTotalBudgetedAmount(data.transaction_currency_id);
 
         }).fail(function () {
-            alert('I failed :(');
+            console.error('I failed :(');
         });
     } else {
         $.post(updateBudgetLimitUri.replace('REPLACEME', budgetLimitId.toString()), {
@@ -119,7 +119,7 @@ function updateBudgetedAmount(e) {
             // update budgeted amount
 
         }).fail(function () {
-            alert('I failed :(');
+            console.error('I failed :(');
         });
     }
 }

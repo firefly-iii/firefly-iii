@@ -58,23 +58,18 @@ class MigrateToGroups extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
-    /** @var JournalCLIRepositoryInterface */
-    private $cliRepository;
-    private $count;
-    /** @var TransactionGroupFactory */
-    private $groupFactory;
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
-    /** @var JournalDestroyService */
-    private $service;
-
+    protected                             $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    private JournalCLIRepositoryInterface $cliRepository;
+    private int                           $count;
+    private TransactionGroupFactory       $groupFactory;
+    private JournalRepositoryInterface    $journalRepository;
+    private JournalDestroyService         $service;
 
     /**
      * Execute the console command.
      *
-     * @throws Exception
      * @return int
+     * @throws Exception
      */
     public function handle(): int
     {
@@ -254,16 +249,16 @@ class MigrateToGroups extends Command
     private function makeGroupsFromAll(): void
     {
         $orphanedJournals = $this->cliRepository->getJournalsWithoutGroup();
-        $count            = count($orphanedJournals);
-        if ($count > 0) {
-            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $count));
-            $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $count));
+        $total            = count($orphanedJournals);
+        if ($total > 0) {
+            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
+            $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $total));
             /** @var array $journal */
             foreach ($orphanedJournals as $array) {
                 $this->giveGroup($array);
             }
         }
-        if (0 === $count) {
+        if (0 === $total) {
             $this->info('No need to convert transaction journals.');
         }
     }

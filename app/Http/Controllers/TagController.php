@@ -43,11 +43,8 @@ class TagController extends Controller
 {
     use PeriodOverview;
 
-    /** @var TagRepositoryInterface The tag repository. */
-    protected $repository;
-
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
+    protected TagRepositoryInterface $repository;
+    private AttachmentHelperInterface $attachmentsHelper;
 
     /**
      * TagController constructor.
@@ -62,7 +59,7 @@ class TagController extends Controller
                 app('view')->share('title', (string) trans('firefly.tags'));
                 app('view')->share('mainTitleIcon', 'fa-tag');
 
-                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->attachmentsHelper = app(AttachmentHelperInterface::class);
                 $this->repository = app(TagRepositoryInterface::class);
 
                 return $next($request);
@@ -323,14 +320,14 @@ class TagController extends Controller
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
-            $this->attachments->saveAttachmentsForModel($result, $files);
+            $this->attachmentsHelper->saveAttachmentsForModel($result, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             session()->flash('info',(string)trans('firefly.no_att_demo_user'));
         }
 
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
 
@@ -366,14 +363,14 @@ class TagController extends Controller
         /** @var array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
-            $this->attachments->saveAttachmentsForModel($tag, $files);
+            $this->attachmentsHelper->saveAttachmentsForModel($tag, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             session()->flash('info',(string)trans('firefly.no_att_demo_user'));
         }
 
-        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+        if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
 

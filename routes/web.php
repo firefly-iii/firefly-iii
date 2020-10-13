@@ -78,10 +78,10 @@ Route::group(
     }
 );
 
-///**
-// * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
-// *
-// */
+/**
+ * For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
+ *
+ */
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
     static function () {
@@ -603,11 +603,6 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'],
     static function () {
 
-        // for auto complete
-        //        Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
-        //        Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
-        //        Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
-
         // budgets:
         Route::get(
             'budget/total-budgeted/{currency}/{start_date}/{end_date}',
@@ -909,8 +904,6 @@ Route::group(
         // index controller
         Route::get('', ['uses' => 'Rule\IndexController@index', 'as' => 'index']);
 
-        //Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
-        //Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
         Route::post('move-rule/{rule}/{ruleGroup}', ['uses' => 'Rule\IndexController@moveRule', 'as' => 'move-rule']);
 
 
@@ -1043,20 +1036,6 @@ Route::group(
         Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
     }
 );
-
-/**
- * Transaction Split Controller.
- */
-//Route::group(
-//    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
-//     'as'         => 'transactions.split.'], static function () {
-//    // TODO improve these routes
-//    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
-//    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
-//    // TODO end of todo.
-//
-//}
-//);
 
 /**
  * Transaction Convert Controller.

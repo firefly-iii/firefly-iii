@@ -39,11 +39,8 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    /** @var CategoryRepositoryInterface The category repository */
-    private $repository;
-
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
+    private CategoryRepositoryInterface $repository;
+    private AttachmentHelperInterface   $attachments;
 
     /**
      * CategoryController constructor.
@@ -58,7 +55,7 @@ class CreateController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
-                $this->repository = app(CategoryRepositoryInterface::class);
+                $this->repository  = app(CategoryRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
@@ -107,7 +104,7 @@ class CreateController extends Controller
             $this->attachments->saveAttachmentsForModel($category, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {

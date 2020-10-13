@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -44,9 +43,8 @@ class CategoryController extends Controller
 {
     use BasicDataSupport;
 
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
+    private OperationsRepositoryInterface $opsRepository;
+    private NoCategoryRepositoryInterface $noCatRepository;
 
     /**
      * ExpenseReportController constructor.
@@ -58,8 +56,8 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
-
+                $this->opsRepository   = app(OperationsRepositoryInterface::class);
+                $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
                 return $next($request);
             }
         );
@@ -505,14 +503,6 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepos */
-        $noCatRepos = app(NoCategoryRepositoryInterface::class);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
@@ -527,8 +517,8 @@ class CategoryController extends Controller
 
         $periods = app('navigation')->listOfPeriods($start, $end);
         $data    = [];
-        $with    = $opsRepository->listExpenses($start, $end, $accounts);
-        $without = $noCatRepos->listExpenses($start, $end, $accounts);
+        $with    = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $without = $this->noCatRepository->listExpenses($start, $end, $accounts);
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
@@ -594,12 +584,6 @@ class CategoryController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepos */
-        $noCatRepos = app(NoCategoryRepositoryInterface::class);
-
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
         $format = app('navigation')->preferredCarbonFormat($start, $end);
@@ -613,8 +597,8 @@ class CategoryController extends Controller
 
         $periods = app('navigation')->listOfPeriods($start, $end);
         $data    = [];
-        $with    = $opsRepository->listIncome($start, $end, $accounts);
-        $without = $noCatRepos->listIncome($start, $end, $accounts);
+        $with    = $this->opsRepository->listIncome($start, $end, $accounts);
+        $without = $this->noCatRepository->listIncome($start, $end, $accounts);
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
@@ -677,19 +661,13 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-             // return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepository */
-        $noCatRepository = app(NoCategoryRepositoryInterface::class);
-
-        $earnedWith    = $opsRepository->listIncome($start, $end, $accounts);
-        $spentWith     = $opsRepository->listExpenses($start, $end, $accounts);
-        $earnedWithout = $noCatRepository->listIncome($start, $end, $accounts);
-        $spentWithout  = $noCatRepository->listExpenses($start, $end, $accounts);
+        $earnedWith    = $this->opsRepository->listIncome($start, $end, $accounts);
+        $spentWith     = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $earnedWithout = $this->noCatRepository->listIncome($start, $end, $accounts);
+        $spentWithout  = $this->noCatRepository->listExpenses($start, $end, $accounts);
 
         $report = [
             'categories' => [],

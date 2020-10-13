@@ -196,7 +196,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
-        // $currency->id === $piggyBankCurrency->id
         $amount = null;
         if ((int)$source->transaction_currency_id === (int)$currency->id) {
             Log::debug('Use normal amount');

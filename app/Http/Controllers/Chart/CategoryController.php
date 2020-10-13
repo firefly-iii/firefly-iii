@@ -45,6 +45,7 @@ use Illuminate\Support\Collection;
 class CategoryController extends Controller
 {
     use DateCalculation, AugumentData, ChartGeneration;
+
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -85,10 +86,10 @@ class CategoryController extends Controller
         $start      = app('navigation')->startOfPeriod($start, $range);
         $end        = $this->getDate();
 
-        /** @var WholePeriodChartGenerator $generator */
-        $generator = app(WholePeriodChartGenerator::class);
-        $chartData = $generator->generate($category, $start, $end);
-        $data      = $this->generator->multiSet($chartData);
+        /** @var WholePeriodChartGenerator $chartGenerator */
+        $chartGenerator = app(WholePeriodChartGenerator::class);
+        $chartData      = $chartGenerator->generate($category, $start, $end);
+        $data           = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -111,14 +112,14 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $frontPageGenerator = new FrontpageChartGenerator($start, $end);
 
 
-        $chartData          = $frontPageGenerator->generate();
-        $data               = $this->generator->multiSet($chartData);
+        $chartData = $frontPageGenerator->generate();
+        $data      = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -210,13 +211,10 @@ class CategoryController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var GeneratorInterface $generator */
-        $generator = app(GeneratorInterface::class);
-
         /** @var WholePeriodChartGenerator $chartGenerator */
         $chartGenerator = app(WholePeriodChartGenerator::class);
         $chartData      = $chartGenerator->generate($category, $start, $end);
-        $data           = $generator->multiSet($chartData);
+        $data           = $this->generator->multiSet($chartData);
 
         $cache->store($data);
 

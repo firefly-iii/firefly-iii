@@ -89,7 +89,6 @@ class RecurrenceUpdateService
         $recurrence->save();
 
         // update all meta data:
-        //$this->updateMetaData($recurrence, $data);
 
         if (isset($data['recurrence']['notes']) && null !== $data['recurrence']['notes']) {
             $this->setNoteText($recurrence, $data['recurrence']['notes']);

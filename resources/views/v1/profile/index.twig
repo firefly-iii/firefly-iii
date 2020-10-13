@@ -18,7 +18,7 @@
                 <li role="presentation">
                     <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
                 </li>
-                {% if false == externalIdentity %}
+                {% if false == isExternalIdentity %}
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
@@ -42,7 +42,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul>
-                                        {% if false == externalIdentity %}
+                                        {% if false == isExternalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>
                                         </li>
@@ -52,7 +52,7 @@
                                         {% endif %}
                                         <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
 
-                                        {% if false == externalIdentity %}
+                                        {% if false == isExternalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a>
                                         </li>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
 
-                {% if false == externalIdentity %}
+                {% if false == isExternalIdentity %}
                 <!-- OAuth -->
                 <div role="tabpanel" class="tab-pane" id="oauth">
                     <div id="passport_clients"></div>

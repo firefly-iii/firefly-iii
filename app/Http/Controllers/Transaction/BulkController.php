@@ -81,9 +81,9 @@ class BulkController extends Controller
         // make amounts positive.
 
         // get list of budgets:
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budgetList = app('expandedform')->makeSelectListWithEmpty($repository->getActiveBudgets());
+        /** @var BudgetRepositoryInterface $budgetRepos */
+        $budgetRepos = app(BudgetRepositoryInterface::class);
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
         return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }

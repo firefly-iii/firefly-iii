@@ -46,14 +46,10 @@ class FixAccountTypes extends Command
      * The name and signature of the console command.
      * @var string
      */
-    protected $signature = 'firefly-iii:fix-account-types';
-    /** @var int */
-    private       $count;
-    private array $expected;
-    /** @var AccountFactory */
-    private $factory;
-    /** @var array */
-    private $fixable;
+    protected              $signature = 'firefly-iii:fix-account-types';
+    private int            $count;
+    private array          $expected;
+    private AccountFactory $factory;
 
 
     /**
@@ -65,19 +61,8 @@ class FixAccountTypes extends Command
     {
         $this->stupidLaravel();
         Log::debug('Now in fix-account-types');
-        $start         = microtime(true);
-        $this->factory = app(AccountFactory::class);
-        // some combinations can be fixed by this script:
-        $this->fixable = [// transfers from asset to liability and vice versa
-                          sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET), sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET),
-
-                          // withdrawals with a revenue account as destination instead of an expense account.
-                          sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE),
-
-                          // deposits with an expense account as source instead of a revenue account.
-                          sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET),];
-
-
+        $start          = microtime(true);
+        $this->factory  = app(AccountFactory::class);
         $this->expected = config('firefly.source_dests');
         $journals       = TransactionJournal::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
         Log::debug(sprintf('Found %d journals to inspect.', $journals->count()));
@@ -203,10 +188,10 @@ class FixAccountTypes extends Command
      */
     private function inspectJournal(TransactionJournal $journal): void
     {
-        $count = $journal->transactions()->count();
-        if (2 !== $count) {
-            Log::debug(sprintf('Journal has %d transactions, so cant fix.', $count));
-            $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $count));
+        $transactions = $journal->transactions()->count();
+        if (2 !== $transactions) {
+            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
+            $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
 
             return;
         }

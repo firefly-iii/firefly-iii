@@ -44,8 +44,7 @@ class RenameMetaFields extends Command
      */
     protected $signature = 'firefly-iii:rename-meta-fields';
 
-    /** @var int */
-    private $count;
+    private int $count;
 
 
     /**
@@ -93,9 +92,9 @@ class RenameMetaFields extends Command
      */
     private function rename(string $original, string $update): void
     {
-        $count       = DB::table('journal_meta')
+        $total       = DB::table('journal_meta')
                          ->where('name', '=', $original)
                          ->update(['name' => $update]);
-        $this->count += $count;
+        $this->count += $total;
     }
 }

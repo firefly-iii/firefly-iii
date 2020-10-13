@@ -53,7 +53,7 @@ trait ReconciliationValidation
 
             return false;
         }
-        // $types depends on type of source:
+        // types depends on type of source:
         $types = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         // if source is reconciliation, destination can't be.
         if (null !== $this->source && AccountType::RECONCILIATION === $this->source->accountType->type) {

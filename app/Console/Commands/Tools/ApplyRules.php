@@ -131,11 +131,11 @@ class ApplyRules extends Command
         $ruleEngine->setUser($this->getUser());
 
         // add the accounts as filter:
-        $accounts = [];
+        $filterAccountList = [];
         foreach($this->accounts as $account) {
-            $accounts[] = $account->id;
+            $filterAccountList[] = $account->id;
         }
-        $list = implode(',', $accounts);
+        $list = implode(',', $filterAccountList);
         $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
@@ -295,7 +295,7 @@ class ApplyRules extends Command
     private function verifyInputDates(): void
     {
         // parse start date.
-        $startDate   = Carbon::now()->startOfMonth();
+        $inputStart   = Carbon::now()->startOfMonth();
         $startString = $this->option('start_date');
         if (null === $startString) {
             /** @var JournalRepositoryInterface $repository */
@@ -303,26 +303,26 @@ class ApplyRules extends Command
             $repository->setUser($this->getUser());
             $first = $repository->firstNull();
             if (null !== $first) {
-                $startDate = $first->date;
+                $inputStart = $first->date;
             }
         }
         if (null !== $startString && '' !== $startString) {
-            $startDate = Carbon::createFromFormat('Y-m-d', $startString);
+            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
         }
 
         // parse end date
-        $endDate   = Carbon::now();
+        $inputEnd   = Carbon::now();
         $endString = $this->option('end_date');
         if (null !== $endString && '' !== $endString) {
-            $endDate = Carbon::createFromFormat('Y-m-d', $endString);
+            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
 
-        if ($startDate > $endDate) {
-            [$endDate, $startDate] = [$startDate, $endDate];
+        if ($inputStart > $inputEnd) {
+            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
         }
 
-        $this->startDate = $startDate;
-        $this->endDate   = $endDate;
+        $this->startDate = $inputStart;
+        $this->endDate   = $inputEnd;
     }
 
     /**
