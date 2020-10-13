@@ -28,6 +28,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -285,8 +287,10 @@ class General extends AbstractExtension
         return new TwigFilter(
             'markdown',
             static function (string $text): string {
-                $converter = new CommonMarkConverter;
+                $environment = Environment::createCommonMarkEnvironment();
+                $environment->addExtension(new GithubFlavoredMarkdownExtension());
 
+                $converter = new CommonMarkConverter([], $environment);
                 return $converter->convertToHtml($text);
             }, ['is_safe' => ['html']]
         );

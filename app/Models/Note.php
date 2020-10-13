@@ -63,6 +63,7 @@ use Illuminate\Database\Query\Builder;
 class Note extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -78,16 +79,6 @@ class Note extends Model
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
-     * @param string|null $value
-     *
-     * @return string|null
-     */
-    public function getTextAttribute(?string $value): ?string
-    {
-        return null === $value ? null : htmlspecialchars_decode($value, ENT_QUOTES);
-    }
-
-    /**
      * @codeCoverageIgnore
      *
      * Get all of the owning noteable models.
@@ -95,15 +86,5 @@ class Note extends Model
     public function noteable(): MorphTo
     {
         return $this->morphTo();
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     */
-    public function setTextAttribute(string $value): void
-    {
-        $this->attributes['text'] = e($value);
     }
 }
