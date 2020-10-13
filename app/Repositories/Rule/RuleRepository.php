@@ -506,7 +506,14 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getStoreRules(): Collection
     {
-        $collection = $this->user->rules()->where('rules.active', 1)->with(['ruleGroup', 'ruleTriggers'])->get();
+        $collection = $this->user->rules()
+                                 ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                                 ->where('rules.active', 1)
+                                 ->where('rule_groups.active', 1)
+                                 ->orderBy('rule_groups.order', 'ASC')
+                                 ->orderBy('rules.order', 'ASC')
+                                 ->orderBy('rules.id', 'ASC')
+                                 ->with(['ruleGroup', 'ruleTriggers'])->get(['rules.*']);
         $filtered   = new Collection;
         /** @var Rule $rule */
         foreach ($collection as $rule) {
@@ -525,7 +532,14 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getUpdateRules(): Collection
     {
-        $collection = $this->user->rules()->where('rules.active', 1)->with(['ruleGroup', 'ruleTriggers'])->get();
+        $collection = $this->user->rules()
+                                 ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
+                                 ->where('rules.active', 1)
+                                 ->where('rule_groups.active', 1)
+                                 ->orderBy('rule_groups.order', 'ASC')
+                                 ->orderBy('rules.order', 'ASC')
+                                 ->orderBy('rules.id', 'ASC')
+                                 ->with(['ruleGroup', 'ruleTriggers'])->get();
         $filtered   = new Collection;
         /** @var Rule $rule */
         foreach ($collection as $rule) {
