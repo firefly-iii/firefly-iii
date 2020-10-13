@@ -528,6 +528,7 @@ class OperatorQuerySearch implements SearchInterface
 
                 return false;
             case 'date_before':
+                Log::debug(sprintf('Value for date_before is "%s"', $value));
                 $range = $this->parseDateRange($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
 
@@ -537,6 +538,7 @@ class OperatorQuerySearch implements SearchInterface
 
                 return false;
             case 'date_after':
+                Log::debug(sprintf('Value for date_after is "%s"', $value));
                 $range = $this->parseDateRange($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
 
