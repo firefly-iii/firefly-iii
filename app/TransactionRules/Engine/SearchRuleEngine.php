@@ -262,10 +262,7 @@ class SearchRuleEngine implements RuleEngineInterface
 
 
         $result     = $searchEngine->searchTransactions();
-        $collection = $result->getCollection();
-        Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine with query "%s".', $collection->count(), $searchQuery));
-
-        return $collection;
+        return $result->getCollection();
     }
 
     /**
