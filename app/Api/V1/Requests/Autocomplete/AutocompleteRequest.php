@@ -60,10 +60,7 @@ class AutocompleteRequest extends FormRequest
         $limit = 0 === $limit ? 10 : $limit;
 
         // remove 'initial balance' from allowed types. its internal
-        if (($key = array_search(AccountType::INITIAL_BALANCE, $array)) !== false) {
-            unset($types[$key]);
-            $array = array_values($array);
-        }
+        $array = array_diff($array, [AccountType::INITIAL_BALANCE]);
 
         return [
             'types' => $array,
