@@ -77,6 +77,7 @@ class OperatorQuerySearch implements SearchInterface
     private float                              $startTime;
     private Collection                         $modifiers; // obsolete
     private Collection                         $operators;
+    private string                             $originalQuery;
 
     /**
      * OperatorQuerySearch constructor.
@@ -90,6 +91,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->page               = 1;
         $this->words              = [];
         $this->limit              = 25;
+        $this->originalQuery      = '';
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -143,6 +145,7 @@ class OperatorQuerySearch implements SearchInterface
     public function setPage(int $page): void
     {
         $this->page = $page;
+        $this->collector->setPage($this->page);
     }
 
     /**
@@ -161,22 +164,16 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser      = new QueryParser();
-        $this->query = $parser->parse($query);
-
-        $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setUser($this->user);
-        $this->collector->setLimit($this->limit)->setPage($this->page);
-        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
+        $parser              = new QueryParser();
+        $this->query         = $parser->parse($query);
+        $this->originalQuery = $query;
 
         Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
-
         foreach ($this->query->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
 
         $this->collector->setSearchWords($this->words);
-
     }
 
     /**
@@ -211,8 +208,12 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
+        $this->collector = app(GroupCollectorInterface::class);
+        $this->collector->setUser($this->user);
+        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
         $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+
     }
 
     /**
@@ -268,7 +269,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function updateCollector(string $operator, string $value): bool
     {
-        Log::debug(sprintf('updateCollector(%s, %s)', $operator, $value));
+        Log::debug(sprintf('updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
@@ -579,7 +580,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function searchAccount(string $value, int $searchDirection, int $stringPosition): void
     {
-        Log::debug(sprintf('searchAccount(%s, %d, %d)', $value, $stringPosition, $searchDirection));
+        Log::debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
@@ -767,6 +768,7 @@ class OperatorQuerySearch implements SearchInterface
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
+        $this->collector->setLimit($this->limit);
     }
 
     /**

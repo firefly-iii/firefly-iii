@@ -459,6 +459,7 @@ return [
             'description_ends'     => ['alias' => false, 'needs_context' => true,],
             'description_contains' => ['alias' => false, 'needs_context' => true,],
             'description_is'       => ['alias' => false, 'needs_context' => true,],
+            'description'          => ['alias' => true, 'alias_for' => 'description_contains', 'needs_context' => true,],
 
             'currency_is'         => ['alias' => false, 'needs_context' => true,],
             'foreign_currency_is' => ['alias' => false, 'needs_context' => true,],
