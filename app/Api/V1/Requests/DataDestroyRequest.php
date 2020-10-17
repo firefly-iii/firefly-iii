@@ -64,7 +64,7 @@ class DataDestroyRequest extends FormRequest
                  ',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers';
 
         return [
-            'objects' => sprintf('min:1|string|in:%s', $valid),
+            'objects' => sprintf('required|min:1|string|in:%s', $valid),
         ];
     }
 }
