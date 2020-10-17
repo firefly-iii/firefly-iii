@@ -44,7 +44,7 @@ import Bill from "./components/transactions/Bill";
  * vue, uiv and vuei18n are in app_vue.js
  */
 
- require('./bootstrap');
+require('./bootstrap');
 
 // components for create and edit transactions.
 Vue.component('budget', Budget);
@@ -72,9 +72,9 @@ const i18n = require('./i18n');
 
 let props = {};
 new Vue({
-            i18n,
-            el: "#edit_transaction",
-            render: (createElement) => {
-                return createElement(EditTransaction, { props: props })
-            },
-        });
+    i18n,
+    el: "#edit_transaction",
+    render: (createElement) => {
+        return createElement(EditTransaction, {props: props})
+    },
+});

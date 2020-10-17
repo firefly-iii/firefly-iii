@@ -23,17 +23,17 @@
   Show if:
   - one or more currencies.
   -->
-  <div class="form-group" v-bind:class="{ 'has-error': hasError()}" v-if="this.enabledCurrencies.length >= 1">
+  <div v-if="this.enabledCurrencies.length >= 1" class="form-group" v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-8 col-sm-offset-4 text-sm">
       {{ $t('form.foreign_amount') }}
     </div>
     <div class="col-sm-4">
-      <select class="form-control" ref="currency_select" name="foreign_currency[]" @input="handleInput">
+      <select ref="currency_select" class="form-control" name="foreign_currency[]" @input="handleInput">
         <option
             v-for="currency in this.enabledCurrencies"
-            :value="currency.id"
             :label="currency.attributes.name"
             :selected="parseInt(value.currency_id) === parseInt(currency.id)"
+            :value="currency.id"
 
         >
           {{ currency.attributes.name }}
@@ -42,18 +42,18 @@
     </div>
     <div class="col-sm-8">
       <div class="input-group">
-        <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
-               name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
-               :title="this.title" autocomplete="off" :placeholder="this.title">
+        <input v-if="this.enabledCurrencies.length > 0" ref="amount" :placeholder="this.title" :title="this.title" :value="value.amount" autocomplete="off"
+               class="form-control" name="foreign_amount[]"
+               step="any" type="number" @input="handleInput">
         <span class="input-group-btn">
                 <button
-                    v-on:click="clearAmount"
-                    tabIndex="-1"
                     class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
+                    tabIndex="-1"
+                    type="button"
+                    v-on:click="clearAmount"><i class="fa fa-trash-o"></i></button>
                 </span>
       </div>
-      <ul class="list-unstyled" v-for="error in this.error">
+      <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
     </div>

@@ -21,27 +21,27 @@
 <template>
   <form accept-charset="UTF-8" class="form-horizontal" enctype="multipart/form-data">
     <input name="_token" type="hidden" value="xxx">
-    <div class="row" v-if="error_message !== ''">
+    <div v-if="error_message !== ''" class="row">
       <div class="col-lg-12">
         <div class="alert alert-danger alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
+          <button class="close" data-dismiss="alert" type="button" v-bind:aria-label="$t('firefly.close')"><span
               aria-hidden="true">&times;</span></button>
           <strong>{{ $t("firefly.flash_error") }}</strong> {{ error_message }}
         </div>
       </div>
     </div>
 
-    <div class="row" v-if="success_message !== ''">
+    <div v-if="success_message !== ''" class="row">
       <div class="col-lg-12">
         <div class="alert alert-success alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
+          <button class="close" data-dismiss="alert" type="button" v-bind:aria-label="$t('firefly.close')"><span
               aria-hidden="true">&times;</span></button>
           <strong>{{ $t("firefly.flash_success") }}</strong> <span v-html="success_message"></span>
         </div>
       </div>
     </div>
     <div>
-      <div class="row" v-for="(transaction, index) in transactions">
+      <div v-for="(transaction, index) in transactions" class="row">
         <div class="col-lg-12">
           <div class="box">
             <div class="box-header with-border">
@@ -51,116 +51,117 @@
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
               </h3>
-              <div class="box-tools pull-right" v-if="transactions.length > 1" x>
-                <button type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
+              <div v-if="transactions.length > 1" class="box-tools pull-right" x>
+                <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
                     class="fa fa-trash"></i></button>
               </div>
             </div>
             <div class="box-body">
               <div class="row">
-                <div class="col-lg-4" id="transaction-info">
+                <div id="transaction-info" class="col-lg-4">
                   <transaction-description
                       v-model="transaction.description"
-                      :index="index"
                       :error="transaction.errors.description"
+                      :index="index"
                   >
                   </transaction-description>
                   <account-select
-                      inputName="source[]"
-                      v-bind:inputDescription="$t('firefly.source_account')"
                       :accountName="transaction.source_account.name"
                       :accountTypeFilters="transaction.source_account.allowed_types"
                       :defaultAccountTypeFilters="transaction.source_account.default_allowed_types"
-                      :transactionType="transactionType"
+                      :error="transaction.errors.source_account"
                       :index="index"
+                      :transactionType="transactionType"
+                      inputName="source[]"
+                      v-bind:inputDescription="$t('firefly.source_account')"
                       v-on:clear:value="clearSource(index)"
                       v-on:select:account="selectedSourceAccount(index, $event)"
-                      :error="transaction.errors.source_account"
                   ></account-select>
                   <account-select
-                      inputName="destination[]"
-                      v-bind:inputDescription="$t('firefly.destination_account')"
                       :accountName="transaction.destination_account.name"
                       :accountTypeFilters="transaction.destination_account.allowed_types"
                       :defaultAccountTypeFilters="transaction.destination_account.default_allowed_types"
-                      :transactionType="transactionType"
+                      :error="transaction.errors.destination_account"
                       :index="index"
+                      :transactionType="transactionType"
+                      inputName="destination[]"
+                      v-bind:inputDescription="$t('firefly.destination_account')"
                       v-on:clear:value="clearDestination(index)"
                       v-on:select:account="selectedDestinationAccount(index, $event)"
-                      :error="transaction.errors.destination_account"
                   ></account-select>
-                  <p class="text-warning" v-if="0!== index && (null === transactionType || 'invalid' === transactionType || '' === transactionType)">
+                  <p v-if="0!== index && (null === transactionType || 'invalid' === transactionType || '' === transactionType)"
+                     class="text-warning">
                     {{ $t('firefly.multi_account_warning_unknown') }}
                   </p>
-                  <p class="text-warning" v-if="0!== index && 'Withdrawal' === transactionType">
+                  <p v-if="0!== index && 'Withdrawal' === transactionType" class="text-warning">
                     {{ $t('firefly.multi_account_warning_withdrawal') }}
                   </p>
-                  <p class="text-warning" v-if="0!== index && 'Deposit' === transactionType">
+                  <p v-if="0!== index && 'Deposit' === transactionType" class="text-warning">
                     {{ $t('firefly.multi_account_warning_deposit') }}
                   </p>
-                  <p class="text-warning" v-if="0!== index && 'Transfer' === transactionType">
+                  <p v-if="0!== index && 'Transfer' === transactionType" class="text-warning">
                     {{ $t('firefly.multi_account_warning_transfer') }}
                   </p>
                   <standard-date v-if="0===index"
                                  v-model="transaction.date"
-                                 :index="index"
                                  :error="transaction.errors.date"
+                                 :index="index"
                   >
                   </standard-date>
                   <div v-if="index===0">
                     <transaction-type
-                        :source="transaction.source_account.type"
                         :destination="transaction.destination_account.type"
+                        :source="transaction.source_account.type"
                         v-on:set:transactionType="setTransactionType($event)"
                         v-on:act:limitSourceType="limitSourceType($event)"
                         v-on:act:limitDestinationType="limitDestinationType($event)"
                     ></transaction-type>
                   </div>
                 </div>
-                <div class="col-lg-4" id="amount-info">
+                <div id="amount-info" class="col-lg-4">
                   <amount
-                      :source="transaction.source_account"
-                      :destination="transaction.destination_account"
                       v-model="transaction.amount"
+                      :destination="transaction.destination_account"
                       :error="transaction.errors.amount"
+                      :source="transaction.source_account"
                       :transactionType="transactionType"
                   ></amount>
                   <foreign-amount
-                      :source="transaction.source_account"
-                      :destination="transaction.destination_account"
                       v-model="transaction.foreign_amount"
-                      :transactionType="transactionType"
+                      :destination="transaction.destination_account"
                       :error="transaction.errors.foreign_amount"
+                      :source="transaction.source_account"
+                      :transactionType="transactionType"
                       v-bind:title="$t('form.foreign_amount')"
                   ></foreign-amount>
                 </div>
-                <div class="col-lg-4" id="optional-info">
+                <div id="optional-info" class="col-lg-4">
                   <budget
-                      :transactionType="transactionType"
                       v-model="transaction.budget"
                       :error="transaction.errors.budget_id"
                       :no_budget="$t('firefly.none_in_select_list')"
+                      :transactionType="transactionType"
                   ></budget>
                   <category
-                      :transactionType="transactionType"
                       v-model="transaction.category"
                       :error="transaction.errors.category"
+                      :transactionType="transactionType"
                   ></category>
                   <piggy-bank
-                      :transactionType="transactionType"
                       v-model="transaction.piggy_bank"
                       :error="transaction.errors.piggy_bank"
                       :no_piggy_bank="$t('firefly.no_piggy_bank')"
+                      :transactionType="transactionType"
                   ></piggy-bank>
                   <tags
                       v-model="transaction.tags"
                       :error="transaction.errors.tags"
                   ></tags>
                   <bill
-                      :transactionType="transactionType"
                       v-model="transaction.bill"
                       :error="transaction.errors.bill_id"
                       :no_bill="$t('firefly.none_in_select_list')"
+                      :transactionType="transactionType"
                   ></bill>
                   <custom-transaction-fields
                       v-model="transaction.custom_fields"
@@ -169,7 +170,7 @@
                 </div>
               </div>
             </div>
-            <div class="box-footer" v-if="transactions.length-1 === index">
+            <div v-if="transactions.length-1 === index" class="box-footer">
               <button class="split_add_btn btn btn-default" type="button" @click="addTransactionToArray">
                 {{ $t('firefly.add_another_split') }}
               </button>
@@ -178,7 +179,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="transactions.length > 1">
+    <div v-if="transactions.length > 1" class="row">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="box">
           <div class="box-header with-border">
@@ -188,8 +189,8 @@
           </div>
           <div class="box-body">
             <group-description
-                :error="group_title_errors"
                 v-model="group_title"
+                :error="group_title_errors"
             ></group-description>
           </div>
         </div>
@@ -221,7 +222,7 @@
           </div>
           <div class="box-footer">
             <div class="btn-group">
-              <button class="btn btn-success" id="submitButton" @click="submit">{{ $t('firefly.submit') }}</button>
+              <button id="submitButton" class="btn btn-success" @click="submit">{{ $t('firefly.submit') }}</button>
             </div>
             <p class="text-success" v-html="success_message"></p>
             <p class="text-danger" v-html="error_message"></p>

@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Keresés',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Lekérdezés',
     'search_found_transactions'                           => 'Firefly III :count tranzakciót talált :time másodperc alatt.|Firefly III :count tranzakciót talált :time másodperc alatt.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
@@ -320,7 +321,7 @@ return [
     'search_modifier_transaction_type'                    => 'Tranzakció típusa: :value',
     'search_modifier_tag_is'                              => 'A címke ":value"',
     'update_rule_from_query'                              => 'Update rule ":rule" from search query',
-    'create_rule_from_query'                              => 'Create new rule from search query',
+    'create_rule_from_query'                              => 'Új szabály létrehozása a keresési feltételek alapján',
     'rule_from_search_words'                              => 'The rule engine has a hard time handling ":string". The suggested rule that fits your search query may give different results. Please verify the rule triggers carefully.',
 
 
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Most már bejelentkezhet újra a régi email címével.',
     'login_provider_local_only'                 => 'Ez a művelet nem érhető el ":login_provider" általi hitelesítésekor.',
     'external_user_mgt_disabled'                => 'This action is not available when Firefly III isn\'t responsible for user management or authentication handling.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Because Firefly III isn't responsible for user management or authentication handling, this function will only delete local Firefly III information.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',
@@ -967,7 +969,7 @@ return [
     'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
-    'not_expected_period'                       => 'Not expected this period',
+    'not_expected_period'                       => 'Nem várható ebben az időszakban',
     'not_or_not_yet'                            => 'Not (yet)',
     'match_between_amounts'                     => 'Tranzakciókkal egyező számlák :low és :high között.',
     'running_again_loss'                        => 'A számlával korábban összekötött tranzakciók összeköttetése törlődhet, ha többé nem felelnek meg egyetlen szabálynak sem.',
@@ -1206,8 +1208,8 @@ return [
     'unknown_journal_error'                     => 'Nem lehet letárolni a tranzakciót. Ellenőrizni kell a naplófájlokat.',
     'attachment_not_found'                      => 'Ez a melléklet nem található.',
     'journal_link_bill'                         => 'Ez a tranzakció <a href=":route">:name</a> számlához van csatolva. A kapcsolat eltávolításához ki kell venni a jelölést a jelölőnégyzetből. Szabályok használatával másik számlához lehet csatolni.',
-    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
-    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
+    'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> mentve.',
+    'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> mentve.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
 
     // new user:
@@ -1514,7 +1516,7 @@ return [
     'store_configuration'              => 'Beállítás tárolása',
     'single_user_administration'       => ':email felhasználó adminisztrációja',
     'edit_user'                        => ':email felhasználó szerkesztése',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href="preferences">preferences</a>.',
+    'hidden_fields_preferences'        => 'A <a href="preferences">beállításokban</a> több mező is engedélyezhető.',
     'user_data_information'            => 'Felhasználói adatok',
     'user_information'                 => 'Felhasználó információk',
     'total_size'                       => 'teljes méret',

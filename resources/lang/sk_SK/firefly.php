@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Hľadať',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Požiadavka',
     'search_found_transactions'                           => 'Firefly III našiel :count transakciu za :time sekúnd.|Firefly III našiel :count transakcií za :time sekúnd.',
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Teraz sa môžete prihlásiť so svojou starou e-mailovou adresou.',
     'login_provider_local_only'                 => 'Táto akcia nie je k dispozícii pri autentifikácii prostredníctvom „:login_provider“.',
     'external_user_mgt_disabled'                => 'Táto akcia nie je k dispozícii, keď Firefly III nie je zodpovedný za správu používateľov alebo manipuláciu s autentifikáciou.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Pretože Firefly III nie je zodpovedný za správu používateľov alebo manipuláciu s autentifikáciou, táto funkcia vymaže iba miestne informácie Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth klienti',

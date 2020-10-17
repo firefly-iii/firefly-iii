@@ -91,7 +91,7 @@ return [
     'amount'                      => 'Importo',
     'foreign_amount'              => 'Importo estero',
     'date'                        => 'Data',
-    'interest_date'               => 'Data interesse',
+    'interest_date'               => 'Data di valuta',
     'book_date'                   => 'Data contabile',
     'process_date'                => 'Data elaborazione',
     'category'                    => 'Categoria',

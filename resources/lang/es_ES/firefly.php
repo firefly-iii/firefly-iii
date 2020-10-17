@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Buscar',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Consulta',
     'search_found_transactions'                           => 'Firefly III encontrado :count transacción en :time segundos.|Firefly III encontrado :count transacciones en :time segundos.',
     'search_found_more_transactions'                      => 'Firefly III encontró más de :count transacciones en :time segundos.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Usted puede ahora iniciar sesión con su vieja dirección de correo electrónico otra vez.',
     'login_provider_local_only'                 => 'Esta acción no está disponible cuando se identifica a través de ":login_provider".',
     'external_user_mgt_disabled'                => 'Esta acción no está disponible cuando Firefly III no es responsable de la gestión de usuarios o de la autenticación.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Debido a que Firefly III no es responsable de la gestión de usuarios o de la autenticación, esta función sólo eliminará la información local de Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clientes de OAuth',

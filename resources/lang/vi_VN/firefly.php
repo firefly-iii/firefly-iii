@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Tìm kiếm',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Truy vấn',
     'search_found_transactions'                           => 'Tìm thấy Firefly III :count giao dịch trong :time giây. | Firefly III được tìm thấy :count giao dịch trong :time giây.',
     'search_found_more_transactions'                      => 'Firefly III đã tìm thấy hơn :count giao dịch trong :time giây.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Bây giờ bạn có thể đăng nhập lại với địa chỉ email cũ của bạn.',
     'login_provider_local_only'                 => 'Hành động này không khả dụng khi xác thực thông qua ": login_provider".',
     'external_user_mgt_disabled'                => 'Hành động này không khả dụng khi Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Vì Firefly III không chịu trách nhiệm quản lý người dùng hoặc xử lý xác thực, nên chức năng này sẽ chỉ xóa thông tin Firefly III cục bộ.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth Clients',

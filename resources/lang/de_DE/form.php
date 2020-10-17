@@ -71,7 +71,7 @@ return [
     'returnHereExplanation'       => 'Nach dem Speichern hierher zurückkehren, um ein weiteres Element zu erstellen.',
     'returnHereUpdateExplanation' => 'Nach dem Update, hierher zurückkehren.',
     'description'                 => 'Beschreibung',
-    'expense_account'             => 'Debitor (Ausgabe)',
+    'expense_account'             => 'Ausgabenkonto',
     'revenue_account'             => 'Kreditor (Einnahme)',
     'decimal_places'              => 'Nachkommastellen',
     'destination_amount'          => 'Betrag (Ziel)',

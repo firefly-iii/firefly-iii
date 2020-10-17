@@ -19,70 +19,70 @@
   -->
 
 <template>
-    <div class="form-group">
-        <div class="col-sm-12">
-            <label v-if="sentence !== ''" class="control-label text-info">
-                {{ sentence }}
-            </label>
-        </div>
+  <div class="form-group">
+    <div class="col-sm-12">
+      <label v-if="sentence !== ''" class="control-label text-info">
+        {{ sentence }}
+      </label>
     </div>
+  </div>
 
 
 </template>
 
 <script>
-    export default {
-        props: {
-            source: String,
-            destination: String,
-            type: String
-        },
-        methods: {
-            changeValue: function () {
-                if (this.source && this.destination) {
-                    let transactionType = '';
-                    if (window.accountToTypes[this.source]) {
-                        if (window.accountToTypes[this.source][this.destination]) {
-                            transactionType = window.accountToTypes[this.source][this.destination];
-                        } else {
-                            console.warn('User selected an impossible destination.');
-                        }
-                    } else {
-                        console.warn('User selected an impossible source.');
-                    }
-                    if ('' !== transactionType) {
-                        this.transactionType = transactionType;
-                        this.sentence = this.$t('firefly.you_create_' + transactionType.toLowerCase());
+export default {
+  props: {
+    source: String,
+    destination: String,
+    type: String
+  },
+  methods: {
+    changeValue: function () {
+      if (this.source && this.destination) {
+        let transactionType = '';
+        if (window.accountToTypes[this.source]) {
+          if (window.accountToTypes[this.source][this.destination]) {
+            transactionType = window.accountToTypes[this.source][this.destination];
+          } else {
+            console.warn('User selected an impossible destination.');
+          }
+        } else {
+          console.warn('User selected an impossible source.');
+        }
+        if ('' !== transactionType) {
+          this.transactionType = transactionType;
+          this.sentence = this.$t('firefly.you_create_' + transactionType.toLowerCase());
 
-                        // Must also emit a change to set ALL sources and destinations to this particular type.
-                        this.$emit('act:limitSourceType', this.source);
-                        this.$emit('act:limitDestinationType', this.destination);
-                    }
-                } else {
-                    this.sentence = '';
-                    this.transactionType = '';
-                }
-                // emit event how cool is that.
-                this.$emit('set:transactionType', this.transactionType);
-            }
-        },
-        data() {
-            return {
-                transactionType: this.type,
-                sentence: ''
-
-            }
-        },
-        watch: {
-            source() {
-                this.changeValue();
-            },
-            destination() {
-                this.changeValue();
-            }
-        },
-        name: "TransactionType"
+          // Must also emit a change to set ALL sources and destinations to this particular type.
+          this.$emit('act:limitSourceType', this.source);
+          this.$emit('act:limitDestinationType', this.destination);
+        }
+      } else {
+        this.sentence = '';
+        this.transactionType = '';
+      }
+      // emit event how cool is that.
+      this.$emit('set:transactionType', this.transactionType);
     }
+  },
+  data() {
+    return {
+      transactionType: this.type,
+      sentence: ''
+
+    }
+  },
+  watch: {
+    source() {
+      this.changeValue();
+    },
+    destination() {
+      this.changeValue();
+    }
+  },
+  name: "TransactionType"
+}
 </script>
 
 <style scoped>

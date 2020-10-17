@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Търсене',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Заявка',
     'search_found_transactions'                           => 'Firefly III намери :count транзакция за :time секунди.|Firefly III намери :count транзакции за :time секунди.',
     'search_found_more_transactions'                      => 'Firefly III намери повече от :count транзакции за :time секунди.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Вече можете да влезете отново със стария си имейл адрес.',
     'login_provider_local_only'                 => 'Това действие не е достъпно при удостоверяване чрез ":login_provider".',
     'external_user_mgt_disabled'                => 'Това действие не е достъпно, когато Firefly III не е отговорен за управлението на потребителите или обработката на удостоверяването.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Тъй като Firefly III не е отговорен за управлението на потребителите или обработката на удостоверяването, тази функция ще изтрие само локална информация на Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'OAuth клиенти',

@@ -19,58 +19,58 @@
   -->
 
 <template>
-    <div class="form-group"
-         v-bind:class="{ 'has-error': hasError()}"
-    >
-        <div class="col-sm-12 text-sm">
-            {{ title }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-            <input type="text" class="form-control" :name="name"
-                   :title="title" autocomplete="off"
-                   ref="str"
-                   :value="value" @input="handleInput"
-                   :placeholder="title">
-            <span class="input-group-btn">
-            <button
-                    tabIndex="-1"
-                    v-on:click="clearField"
-                    class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-        </div>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group"
+       v-bind:class="{ 'has-error': hasError()}"
+  >
+    <div class="col-sm-12 text-sm">
+      {{ title }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input ref="str" :name="name" :placeholder="title"
+               :title="title" :value="value"
+               autocomplete="off"
+               class="form-control" type="text"
+               @input="handleInput">
+        <span class="input-group-btn">
+            <button
+                class="btn btn-default"
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearField"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+      <ul v-for="error in this.error" class="list-unstyled">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "CustomString",
-        props: {
-            title: String,
-            name: String,
-            value: String,
-            error: Array
-        },
-        methods: {
-            handleInput(e) {
-                this.$emit('input', this.$refs.str.value);
-            },
-            clearField: function () {
-                //props.value = '';
-                this.name = '';
-                this.$refs.str.value = '';
-                this.$emit('input', this.$refs.str.value);
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            }
-        }
+export default {
+  name: "CustomString",
+  props: {
+    title: String,
+    name: String,
+    value: String,
+    error: Array
+  },
+  methods: {
+    handleInput(e) {
+      this.$emit('input', this.$refs.str.value);
+    },
+    clearField: function () {
+      //props.value = '';
+      this.name = '';
+      this.$refs.str.value = '';
+      this.$emit('input', this.$refs.str.value);
+    },
+    hasError: function () {
+      return this.error.length > 0;
     }
+  }
+}
 </script>
 
 <style scoped>

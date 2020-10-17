@@ -30,19 +30,19 @@
       <div class="box box-default">
         <div class="box-header">
           <h3 class="box-title">{{ $t('firefly.profile_personal_access_tokens') }}</h3>
-            <a class="btn btn-default pull-right" tabindex="-1" @click="showCreateTokenForm">
-              {{ $t('firefly.profile_create_new_token') }}
-            </a>
-          </div>
+          <a class="btn btn-default pull-right" tabindex="-1" @click="showCreateTokenForm">
+            {{ $t('firefly.profile_create_new_token') }}
+          </a>
+        </div>
 
         <div class="box-body">
           <!-- No Tokens Notice -->
-          <p class="mb-0" v-if="tokens.length === 0">
+          <p v-if="tokens.length === 0" class="mb-0">
             {{ $t('firefly.profile_no_personal_access_token') }}
           </p>
 
           <!-- Personal Access Tokens -->
-          <table class="table table-responsive table-borderless mb-0" v-if="tokens.length > 0">
+          <table v-if="tokens.length > 0" class="table table-responsive table-borderless mb-0">
             <caption style="display:none;">{{ $t('firefly.profile_personal_access_tokens') }}</caption>
             <thead>
             <tr>
@@ -77,7 +77,7 @@
     </div>
 
     <!-- Create Token Modal -->
-    <div class="modal fade" id="modal-create-token" tabindex="-1" role="dialog">
+    <div id="modal-create-token" class="modal fade" role="dialog" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -85,13 +85,14 @@
               {{ $t('firefly.profile_create_token') }}
             </h4>
 
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
           </div>
 
           <div class="modal-body">
             <!-- Form Errors -->
-            <div class="alert alert-danger" v-if="form.errors.length > 0">
-              <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong> {{ $t('firefly.profile_something_wrong') }}</p>
+            <div v-if="form.errors.length > 0" class="alert alert-danger">
+              <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong>
+                {{ $t('firefly.profile_something_wrong') }}</p>
               <br>
               <ul>
                 <li v-for="error in form.errors">
@@ -107,21 +108,21 @@
                 <label class="col-md-4 col-form-label">{{ $t('firefly.name') }}</label>
 
                 <div class="col-md-6">
-                  <input id="create-token-name" type="text" class="form-control" name="name" v-model="form.name">
+                  <input id="create-token-name" v-model="form.name" class="form-control" name="name" type="text">
                 </div>
               </div>
 
               <!-- Scopes -->
-              <div class="form-group row" v-if="scopes.length > 0">
+              <div v-if="scopes.length > 0" class="form-group row">
                 <label class="col-md-4 col-form-label">{{ $t('firefly.profile_scopes') }}</label>
 
                 <div class="col-md-6">
                   <div v-for="scope in scopes">
                     <div class="checkbox">
                       <label>
-                        <input type="checkbox"
-                               @click="toggleScope(scope.id)"
-                               :checked="scopeIsAssigned(scope.id)">
+                        <input :checked="scopeIsAssigned(scope.id)"
+                               type="checkbox"
+                               @click="toggleScope(scope.id)">
 
                         {{ scope.id }}
                       </label>
@@ -134,9 +135,9 @@
 
           <!-- Modal Actions -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('firefly.close') }}</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ $t('firefly.close') }}</button>
 
-            <button type="button" class="btn btn-primary" @click="store">
+            <button class="btn btn-primary" type="button" @click="store">
               Create
             </button>
           </div>
@@ -145,7 +146,7 @@
     </div>
 
     <!-- Access Token Modal -->
-    <div class="modal fade" id="modal-access-token" tabindex="-1" role="dialog">
+    <div id="modal-access-token" class="modal fade" role="dialog" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -153,19 +154,19 @@
               {{ $t('firefly.profile_personal_access_token') }}
             </h4>
 
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
           </div>
 
           <div class="modal-body">
             <p>
               {{ $t('firefly.profile_personal_access_token_explanation') }}
             </p>
-            <textarea readonly style="width:100%;" rows="20" class="form-control">{{ accessToken }}</textarea>
+            <textarea class="form-control" readonly rows="20" style="width:100%;">{{ accessToken }}</textarea>
           </div>
 
           <!-- Modal Actions -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('firefly.close') }}</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ $t('firefly.close') }}</button>
           </div>
         </div>
       </div>

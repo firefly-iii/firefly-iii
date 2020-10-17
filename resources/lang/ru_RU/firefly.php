@@ -104,8 +104,8 @@ return [
     'warning_much_data'                                   => 'Загрузка данных за :days дней может занять некоторое время.',
     'registered'                                          => 'Вы зарегистрировались успешно!',
     'Default asset account'                               => 'Счёт по умолчанию',
-    'no_budget_pointer'                                   => 'You seem to have no budgets yet. You should create some on the <a href="budgets">budgets</a>-page. Budgets can help you keep track of expenses.',
-    'no_bill_pointer'                                     => 'You seem to have no bills yet. You should create some on the <a href="bills">bills</a>-page. Bills can help you keep track of expenses.',
+    'no_budget_pointer'                                   => 'Похоже, у вас пока нет бюджетов. Вы должны создать их на странице <a href="budgets">Бюджеты</a>. Бюджеты могут помочь вам отслеживать расходы.',
+    'no_bill_pointer'                                     => 'Похоже, у вас пока нет счетов на оплату. Вы должны создать их на странице <a href="bills">Счета на оплату</a>. Счета на оплату могут помочь вам отслеживать расходы.',
     'Savings account'                                     => 'Сберегательный счет',
     'Credit card'                                         => 'Кредитная карта',
     'source_accounts'                                     => 'Счёт-источник|Счета-источники',
@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Поиск',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Запрос',
     'search_found_transactions'                           => 'Firefly III нашёл :count транзакции за :time секунд.|Firefly III нашёл :count транзакций за :time секунд.',
     'search_found_more_transactions'                      => 'Firefly III нашёл более :count транзакций за :time секунд.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Теперь вы можете снова войти со своим старым адресом электронной почты.',
     'login_provider_local_only'                 => 'Это действие недоступно при аутентификации через ":login_provider".',
     'external_user_mgt_disabled'                => 'Это действие недоступно, если Firefly III не отвечает за управление пользователями или обработку аутентификации.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Поскольку Firefly III не отвечает за управление пользователями или обработку аутентификации, эта функция будет удалять только локальную информацию Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Клиенты OAuth',

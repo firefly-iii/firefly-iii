@@ -19,30 +19,30 @@
   -->
 
 <template>
-  <form method="POST" action="#" accept-charset="UTF-8" class="form-horizontal" id="store"
-        enctype="multipart/form-data">
+  <form id="store" accept-charset="UTF-8" action="#" class="form-horizontal" enctype="multipart/form-data"
+        method="POST">
     <input name="_token" type="hidden" value="xxx">
-    <div class="row" v-if="error_message !== ''">
+    <div v-if="error_message !== ''" class="row">
       <div class="col-lg-12">
         <div class="alert alert-danger alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
+          <button class="close" data-dismiss="alert" type="button" v-bind:aria-label="$t('firefly.close')"><span
               aria-hidden="true">&times;</span></button>
           <strong>{{ $t("firefly.flash_error") }}</strong> {{ error_message }}
         </div>
       </div>
     </div>
 
-    <div class="row" v-if="success_message !== ''">
+    <div v-if="success_message !== ''" class="row">
       <div class="col-lg-12">
         <div class="alert alert-success alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" v-bind:aria-label="$t('firefly.close')"><span
+          <button class="close" data-dismiss="alert" type="button" v-bind:aria-label="$t('firefly.close')"><span
               aria-hidden="true">&times;</span></button>
           <strong>{{ $t("firefly.flash_success") }}</strong> <span v-html="success_message"></span>
         </div>
       </div>
     </div>
     <div>
-      <div class="row" v-for="(transaction, index) in transactions">
+      <div v-for="(transaction, index) in transactions" class="row">
         <div class="col-lg-12">
           <div class="box">
             <div class="box-header with-border">
@@ -52,8 +52,8 @@
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
               </h3>
-              <div class="box-tools pull-right" v-if="transactions.length > 1">
-                <button type="button" v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
+              <div v-if="transactions.length > 1" class="box-tools pull-right">
+                <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
                     class="fa fa-trash"></i></button>
               </div>
             </div>
@@ -62,22 +62,22 @@
                 <div class="col-lg-4">
                   <transaction-description v-if="transactionType.toLowerCase() !== 'reconciliation'"
                                            v-model="transaction.description"
-                                           :index="index"
                                            :error="transaction.errors.description"
+                                           :index="index"
                   >
                   </transaction-description>
                   <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
-                                  inputName="source[]"
-                                  v-bind:inputDescription="$t('firefly.source_account')"
                                   :accountName="transaction.source_account.name"
                                   :accountTypeFilters="transaction.source_account.allowed_types"
-                                  :transactionType="transactionType"
+                                  :error="transaction.errors.source_account"
                                   :index="index"
+                                  :transactionType="transactionType"
+                                  inputName="source[]"
+                                  v-bind:inputDescription="$t('firefly.source_account')"
                                   v-on:clear:value="clearSource(index)"
                                   v-on:select:account="selectedSourceAccount(index, $event)"
-                                  :error="transaction.errors.source_account"
                   ></account-select>
-                  <div class="form-group" v-if="transactionType.toLowerCase() === 'reconciliation'">
+                  <div v-if="transactionType.toLowerCase() === 'reconciliation'" class="form-group">
                     <div class="col-sm-12">
                       <p id="ffInput_source" class="form-control-static">
                         <em>
@@ -87,17 +87,17 @@
                     </div>
                   </div>
                   <account-select v-if="transactionType.toLowerCase() !== 'reconciliation'"
-                                  inputName="destination[]"
-                                  v-bind:inputDescription="$t('firefly.destination_account')"
                                   :accountName="transaction.destination_account.name"
                                   :accountTypeFilters="transaction.destination_account.allowed_types"
-                                  :transactionType="transactionType"
+                                  :error="transaction.errors.destination_account"
                                   :index="index"
+                                  :transactionType="transactionType"
+                                  inputName="destination[]"
+                                  v-bind:inputDescription="$t('firefly.destination_account')"
                                   v-on:clear:value="clearDestination(index)"
                                   v-on:select:account="selectedDestinationAccount(index, $event)"
-                                  :error="transaction.errors.destination_account"
                   ></account-select>
-                  <div class="form-group" v-if="transactionType.toLowerCase() === 'reconciliation'">
+                  <div v-if="transactionType.toLowerCase() === 'reconciliation'" class="form-group">
                     <div class="col-sm-12">
                       <p id="ffInput_dest" class="form-control-static">
                         <em>
@@ -108,14 +108,14 @@
                   </div>
                   <standard-date
                       v-model="transaction.date"
-                      :index="index"
                       :error="transaction.errors.date"
+                      :index="index"
                   >
                   </standard-date>
                   <div v-if="index===0">
                     <transaction-type
-                        :source="transaction.source_account.type"
                         :destination="transaction.destination_account.type"
+                        :source="transaction.source_account.type"
                         v-on:set:transactionType="setTransactionType($event)"
                         v-on:act:limitSourceType="limitSourceType($event)"
                         v-on:act:limitDestinationType="limitDestinationType($event)"
@@ -125,45 +125,45 @@
                 <div class="col-lg-4">
                   <!-- -->
                   <amount
-                      :source="transaction.source_account"
-                      :destination="transaction.destination_account"
                       v-model="transaction.amount"
+                      :destination="transaction.destination_account"
                       :error="transaction.errors.amount"
+                      :source="transaction.source_account"
                       :transactionType="transactionType"
                   ></amount>
                   <foreign-amount v-if="transactionType.toLowerCase() !== 'reconciliation'"
-                                  :source="transaction.source_account"
-                                  :destination="transaction.destination_account"
                                   v-model="transaction.foreign_amount"
-                                  :transactionType="transactionType"
+                                  :destination="transaction.destination_account"
                                   :error="transaction.errors.foreign_amount"
                                   :no_currency="$t('firefly.none_in_select_list')"
+                                  :source="transaction.source_account"
+                                  :transactionType="transactionType"
                                   v-bind:title="$t('form.foreign_amount')"
                   ></foreign-amount>
                 </div>
                 <div class="col-lg-4">
                   <budget
-                      :transactionType="transactionType"
                       v-model="transaction.budget"
                       :error="transaction.errors.budget_id"
                       :no_budget="$t('firefly.none_in_select_list')"
+                      :transactionType="transactionType"
                   ></budget>
                   <category
-                      :transactionType="transactionType"
                       v-model="transaction.category"
                       :error="transaction.errors.category"
+                      :transactionType="transactionType"
                   ></category>
                   <tags
-                      :transactionType="transactionType"
-                      :tags="transaction.tags"
                       v-model="transaction.tags"
                       :error="transaction.errors.tags"
+                      :tags="transaction.tags"
+                      :transactionType="transactionType"
                   ></tags>
                   <bill
-                      :transactionType="transactionType"
                       v-model="transaction.bill"
                       :error="transaction.errors.bill_id"
                       :no_bill="$t('firefly.none_in_select_list')"
+                      :transactionType="transactionType"
                   ></bill>
                   <custom-transaction-fields
                       v-model="transaction.custom_fields"
@@ -172,8 +172,8 @@
                 </div>
               </div>
             </div>
-            <div class="box-footer"
-                 v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'">
+            <div v-if="transactions.length-1 === index && transactionType.toLowerCase() !== 'reconciliation'"
+                 class="box-footer">
               <button class="btn btn-default" type="button" @click="addTransaction">{{
                   $t('firefly.add_another_split')
                 }}
@@ -183,7 +183,7 @@
         </div>
       </div>
     </div>
-    <div class="row" v-if="transactions.length > 1">
+    <div v-if="transactions.length > 1" class="row">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
         <div class="box">
           <div class="box-header with-border">
@@ -193,8 +193,8 @@
           </div>
           <div class="box-body">
             <group-description
-                :error="group_title_errors"
                 v-model="group_title"
+                :error="group_title_errors"
             ></group-description>
           </div>
         </div>
@@ -215,7 +215,7 @@
                 {{ $t('firefly.after_update_create_another') }}
               </label>
             </div>
-            <div class="checkbox" v-if="null !== transactionType && transactionType.toLowerCase() !== 'reconciliation'">
+            <div v-if="null !== transactionType && transactionType.toLowerCase() !== 'reconciliation'" class="checkbox">
               <label>
                 <input v-model="storeAsNew" name="store_as_new" type="checkbox">
                 {{ $t('firefly.store_as_new') }}
@@ -224,7 +224,7 @@
           </div>
           <div class="box-footer">
             <div class="btn-group">
-              <button class="btn btn-success" @click="submit" id="submitButton">{{
+              <button id="submitButton" class="btn btn-success" @click="submit">{{
                   $t('firefly.update_transaction')
                 }}
               </button>

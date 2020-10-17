@@ -31,253 +31,253 @@
         <h3 class="box-title">
           {{ $t('firefly.profile_oauth_clients') }}
         </h3>
-          <a class="btn btn-default pull-right" tabindex="-1" @click="showCreateClientForm">
-            {{ $t('firefly.profile_oauth_create_new_client') }}
-          </a>
-      </div>
-    <div class="box-body">
-      <!-- Current Clients -->
-      <p class="mb-0" v-if="clients.length === 0">
-        {{ $t('firefly.profile_oauth_no_clients') }}
-      </p>
-
-      <table class="table table-responsive table-borderless mb-0" v-if="clients.length > 0">
-        <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
-        <thead>
-        <tr>
-          <th scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
-          <th scope="col">{{ $t('firefly.name') }}</th>
-          <th scope="col">{{ $t('firefly.profile_oauth_client_secret') }}</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr v-for="client in clients">
-          <!-- ID -->
-          <td style="vertical-align: middle;">
-            {{ client.id }}
-          </td>
-
-          <!-- Name -->
-          <td style="vertical-align: middle;">
-            {{ client.name }}
-          </td>
-
-          <!-- Secret -->
-          <td style="vertical-align: middle;">
-            <code>{{ client.secret ? client.secret : '-' }}</code>
-          </td>
-
-          <!-- Edit Button -->
-          <td style="vertical-align: middle;">
-            <a class="action-link" tabindex="-1" @click="edit(client)">
-              {{ $t('firefly.edit')  }}
-            </a>
-          </td>
-
-          <!-- Delete Button -->
-          <td style="vertical-align: middle;">
-            <a class="action-link text-danger" @click="destroy(client)">
-              {{ $t('firefly.delete')  }}
-            </a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-      <div class="box-footer">
-        <a  class="btn btn-default pull-right" tabindex="-1" @click="showCreateClientForm">
+        <a class="btn btn-default pull-right" tabindex="-1" @click="showCreateClientForm">
           {{ $t('firefly.profile_oauth_create_new_client') }}
         </a>
       </div>
-  </div>
+      <div class="box-body">
+        <!-- Current Clients -->
+        <p v-if="clients.length === 0" class="mb-0">
+          {{ $t('firefly.profile_oauth_no_clients') }}
+        </p>
 
-  <!-- Create Client Modal -->
-  <div class="modal fade" id="modal-create-client" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            {{ $t('firefly.profile_oauth_create_client') }}
-          </h4>
+        <table v-if="clients.length > 0" class="table table-responsive table-borderless mb-0">
+          <caption>{{ $t('firefly.profile_oauth_clients_header') }}</caption>
+          <thead>
+          <tr>
+            <th scope="col">{{ $t('firefly.profile_oauth_client_id') }}</th>
+            <th scope="col">{{ $t('firefly.name') }}</th>
+            <th scope="col">{{ $t('firefly.profile_oauth_client_secret') }}</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+          </thead>
 
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
+          <tbody>
+          <tr v-for="client in clients">
+            <!-- ID -->
+            <td style="vertical-align: middle;">
+              {{ client.id }}
+            </td>
 
-        <div class="modal-body">
-          <!-- Form Errors -->
-          <div class="alert alert-danger" v-if="createForm.errors.length > 0">
-            <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong> {{
-                $t('firefly.profile_something_wrong')
-              }}</p>
-            <br>
-            <ul>
-              <li v-for="error in createForm.errors">
-                {{ error }}
-              </li>
-            </ul>
+            <!-- Name -->
+            <td style="vertical-align: middle;">
+              {{ client.name }}
+            </td>
+
+            <!-- Secret -->
+            <td style="vertical-align: middle;">
+              <code>{{ client.secret ? client.secret : '-' }}</code>
+            </td>
+
+            <!-- Edit Button -->
+            <td style="vertical-align: middle;">
+              <a class="action-link" tabindex="-1" @click="edit(client)">
+                {{ $t('firefly.edit') }}
+              </a>
+            </td>
+
+            <!-- Delete Button -->
+            <td style="vertical-align: middle;">
+              <a class="action-link text-danger" @click="destroy(client)">
+                {{ $t('firefly.delete') }}
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="box-footer">
+        <a class="btn btn-default pull-right" tabindex="-1" @click="showCreateClientForm">
+          {{ $t('firefly.profile_oauth_create_new_client') }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Create Client Modal -->
+    <div id="modal-create-client" class="modal fade" role="dialog" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              {{ $t('firefly.profile_oauth_create_client') }}
+            </h4>
+
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
           </div>
 
-          <!-- Create Client Form -->
-          <form role="form">
-            <!-- Name -->
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
+          <div class="modal-body">
+            <!-- Form Errors -->
+            <div v-if="createForm.errors.length > 0" class="alert alert-danger">
+              <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong> {{
+                  $t('firefly.profile_something_wrong')
+                }}</p>
+              <br>
+              <ul>
+                <li v-for="error in createForm.errors">
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
 
-              <div class="col-md-9">
-                <input id="create-client-name" type="text" class="form-control"
-                       @keyup.enter="store" v-model="createForm.name">
+            <!-- Create Client Form -->
+            <form role="form">
+              <!-- Name -->
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
 
-                <span class="form-text text-muted">
+                <div class="col-md-9">
+                  <input id="create-client-name" v-model="createForm.name" class="form-control"
+                         type="text" @keyup.enter="store">
+
+                  <span class="form-text text-muted">
                               {{ $t('firefly.profile_oauth_name_help') }}
                                     </span>
+                </div>
               </div>
-            </div>
 
-            <!-- Redirect URL -->
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
+              <!-- Redirect URL -->
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
-              <div class="col-md-9">
-                <input type="text" class="form-control" name="redirect"
-                       @keyup.enter="store" v-model="createForm.redirect">
+                <div class="col-md-9">
+                  <input v-model="createForm.redirect" class="form-control" name="redirect"
+                         type="text" @keyup.enter="store">
 
-                <span class="form-text text-muted">
+                  <span class="form-text text-muted">
                               {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
-              </div>
-            </div>
-
-            <!-- Confidential -->
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_confidential') }}</label>
-
-              <div class="col-md-9">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" v-model="createForm.confidential">
-                  </label>
                 </div>
+              </div>
 
-                <span class="form-text text-muted">
+              <!-- Confidential -->
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_confidential') }}</label>
+
+                <div class="col-md-9">
+                  <div class="checkbox">
+                    <label>
+                      <input v-model="createForm.confidential" type="checkbox">
+                    </label>
+                  </div>
+
+                  <span class="form-text text-muted">
                     {{ $t('firefly.profile_oauth_confidential_help') }}
                   </span>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
-
-        <!-- Modal Actions -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('firefly.close') }}</button>
-
-          <button type="button" class="btn btn-primary" @click="store">
-            {{ $t('firefly.profile_create') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Edit Client Modal -->
-  <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            {{ $t('firefly.profile_oauth_edit_client') }}
-          </h4>
-
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-
-        <div class="modal-body">
-          <!-- Form Errors -->
-          <div class="alert alert-danger" v-if="editForm.errors.length > 0">
-            <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong> {{
-                $t('firefly.profile_something_wrong')
-              }}</p>
-            <br>
-            <ul>
-              <li v-for="error in editForm.errors">
-                {{ error }}
-              </li>
-            </ul>
+            </form>
           </div>
 
-          <!-- Edit Client Form -->
-          <form role="form">
-            <!-- Name -->
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
+          <!-- Modal Actions -->
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ $t('firefly.close') }}</button>
 
-              <div class="col-md-9">
-                <input id="edit-client-name" type="text" class="form-control"
-                       @keyup.enter="update" v-model="editForm.name">
+            <button class="btn btn-primary" type="button" @click="store">
+              {{ $t('firefly.profile_create') }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-                <span class="form-text text-muted">
+    <!-- Edit Client Modal -->
+    <div id="modal-edit-client" class="modal fade" role="dialog" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              {{ $t('firefly.profile_oauth_edit_client') }}
+            </h4>
+
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Form Errors -->
+            <div v-if="editForm.errors.length > 0" class="alert alert-danger">
+              <p class="mb-0"><strong>{{ $t('firefly.profile_whoops') }}</strong> {{
+                  $t('firefly.profile_something_wrong')
+                }}</p>
+              <br>
+              <ul>
+                <li v-for="error in editForm.errors">
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+
+            <!-- Edit Client Form -->
+            <form role="form">
+              <!-- Name -->
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
+
+                <div class="col-md-9">
+                  <input id="edit-client-name" v-model="editForm.name" class="form-control"
+                         type="text" @keyup.enter="update">
+
+                  <span class="form-text text-muted">
                                 {{ $t('firefly.profile_oauth_name_help') }}
                                   </span>
+                </div>
               </div>
-            </div>
 
-            <!-- Redirect URL -->
-            <div class="form-group row">
-              <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
+              <!-- Redirect URL -->
+              <div class="form-group row">
+                <label class="col-md-3 col-form-label">{{ $t('firefly.profile_oauth_redirect_url') }}</label>
 
-              <div class="col-md-9">
-                <input type="text" class="form-control" name="redirect"
-                       @keyup.enter="update" v-model="editForm.redirect">
+                <div class="col-md-9">
+                  <input v-model="editForm.redirect" class="form-control" name="redirect"
+                         type="text" @keyup.enter="update">
 
-                <span class="form-text text-muted">
+                  <span class="form-text text-muted">
                                         {{ $t('firefly.profile_oauth_redirect_url_help') }}
                                     </span>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
 
-        <!-- Modal Actions -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('firefly.close') }}</button>
+          <!-- Modal Actions -->
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ $t('firefly.close') }}</button>
 
-          <button type="button" class="btn btn-primary" @click="update">
-            {{ $t('firefly.profile_save_changes') }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Client Secret Modal -->
-  <div class="modal fade" id="modal-client-secret" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-            {{ $t('firefly.profile_oauth_client_secret_title') }}
-          </h4>
-
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-
-        <div class="modal-body">
-          <p>
-            {{ $t('firefly.profile_oauth_client_secret_expl') }}
-          </p>
-
-          <input type="text" class="form-control" v-model="clientSecret">
-        </div>
-
-        <!-- Modal Actions -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ $t('firefly.close') }}</button>
+            <button class="btn btn-primary" type="button" @click="update">
+              {{ $t('firefly.profile_save_changes') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- Client Secret Modal -->
+    <div id="modal-client-secret" class="modal fade" role="dialog" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">
+              {{ $t('firefly.profile_oauth_client_secret_title') }}
+            </h4>
+
+            <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <p>
+              {{ $t('firefly.profile_oauth_client_secret_expl') }}
+            </p>
+
+            <input v-model="clientSecret" class="form-control" type="text">
+          </div>
+
+          <!-- Modal Actions -->
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ $t('firefly.close') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

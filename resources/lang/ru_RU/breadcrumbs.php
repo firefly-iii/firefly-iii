@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Редактирование копилки ":name"',
     'preferences'            => 'Настройки',
     'profile'                => 'Профиль',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Счета',
     'changePassword'         => 'Изменение вашего пароля',
     'change_email'           => 'Изменить адрес электронной почты',
     'bills'                  => 'Счета к оплате',

@@ -38,7 +38,7 @@ return [
     'error_location'          => 'Błąd wystąpił w pliku <span style="font-family: monospace;">:file</span> linia :line z kodem :code.',
     'stacktrace'              => 'Ślad stosu',
     'more_info'               => 'Więcej informacji',
-    'collect_info'            => 'Więcej informacji znajdziesz w katalogu <code>storage/logs</code>, w który zawiera pliki dziennika. Jeśli używasz Docker, użyj <code>dzienników docker -f [container]</code>.',
+    'collect_info'            => 'Więcej informacji znajdziesz w katalogu <code>storage/logs</code>, w który zawiera pliki dziennika. Jeśli używasz Docker, użyj <code>docker logs -f [container]</code>.',
     'collect_info_more'       => 'Więcej informacji o zbieraniu informacji o błędach możesz znaleźć w <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
     'github_help'             => 'Uzyskaj pomoc na GitHub',
     'github_instructions'     => 'Możesz otworzyć nowy problem <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub</a></strong>.',

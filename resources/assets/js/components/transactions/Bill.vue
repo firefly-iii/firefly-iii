@@ -19,29 +19,29 @@
   -->
 
 <template>
-  <div class="form-group"
-       v-bind:class="{ 'has-error': hasError()}"
-       v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType">
+  <div v-if="typeof this.transactionType === 'undefined' || this.transactionType === 'withdrawal' || this.transactionType === 'Withdrawal' || this.transactionType === '' || null === this.transactionType"
+       class="form-group"
+       v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">
       {{ $t('firefly.bill') }}
     </div>
     <div class="col-sm-12">
       <select
-          name="bill[]"
+          v-if="this.bills.length > 0"
           ref="bill"
           v-model="selected"
-          @input="handleInput"
-          v-on:change="signalChange"
           :title="$t('firefly.bill')"
           class="form-control"
-          v-if="this.bills.length > 0">
+          name="bill[]"
+          @input="handleInput"
+          v-on:change="signalChange">
         <option v-for="cBill in this.bills"
                 :label="cBill.name"
                 :value="cBill.id">{{ cBill.name }}
         </option>
       </select>
-      <p class="help-block" v-if="this.bills.length === 1" v-html="$t('firefly.no_bill_pointer')"></p>
-      <ul class="list-unstyled" v-for="error in this.error">
+      <p v-if="this.bills.length === 1" class="help-block" v-html="$t('firefly.no_bill_pointer')"></p>
+      <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
     </div>

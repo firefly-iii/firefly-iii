@@ -260,6 +260,7 @@ return [
 
     // search
     'search'                                              => 'Αναζήτηση',
+    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Ερώτημα',
     'search_found_transactions'                           => 'Το Firefly III βρήκε :count συναλλαγή σε :time δευτερόλεπτα.|Το Firefly III βρήκε :count συναλλαγές σε :time δευτερόλεπτα.',
     'search_found_more_transactions'                      => 'Το Firefly III βρήκε περισσότερες από :count συναλλαγές σε :time δευτερόλεπτα.',
@@ -754,6 +755,7 @@ return [
     'login_with_old_email'                      => 'Τώρα μπορείτε να συνδεθείτε με το παλιό σας email ξανά.',
     'login_provider_local_only'                 => 'Αυτή η λειτουργία δεν είναι διαθέσιμη όταν πιστοποιήστε μέσω ":login_provider".',
     'external_user_mgt_disabled'                => 'Αυτή η ενέργεια δεν είναι διαθέσιμη όταν το Firefly III δεν είναι υπεύθυνο για διαχείριση χρηστών ή έλεγχο ταυτότητας.',
+    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
     'delete_local_info_only'                    => "Επειδή το Firefly III δεν είναι υπεύθυνο για διαχείριση χρηστών ή έλεγχο ταυτότητας, αυτή η λειτουργία θα διαγράψει μόνο τις τοπικές εγγραφές του Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Πελάτες OAuth',
