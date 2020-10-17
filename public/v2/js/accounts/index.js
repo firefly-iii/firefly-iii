@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[2],{207:function(e,n,t){e.exports=t(212)},212:function(e,n,t){"use strict";t.r(n);var r=t(9),o={name:"Index"},u=t(1),c=Object(u.a)(o,(function(){var e=this.$createElement,n=this._self._c||e;return n("div",[n("router-view")],1)}),[],!1,null,"6b40cc75",null).exports;t(156);var s=[{path:"/",component:c}],i=new r.a({mode:"history",routes:s}),a=t(154),p={};Vue.use(r.a),new Vue({router:i,i18n:a,render:function(e){return e(c,{props:p})}}).$mount("#accounts")}},[[207,0,1]]]);
+//# sourceMappingURL=index.js.map

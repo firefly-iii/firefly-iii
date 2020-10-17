@@ -1,5 +1,5 @@
 /*
- * accounts.js
+ * index.js
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,21 +18,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require('../bootstrap');
+require('../../bootstrap');
 
 import VueRouter from 'vue-router';
-import Index from "../components/accounts/Index";
-import List from "../components/accounts/List";
-import Show from "../components/accounts/Show";
-
+import Index from "../../components/accounts/Index";
 
 const routes = [
     {path: '/', component: Index},
-    {path: '/accounts/asset', name: 'accounts.index.asset', component: List, props: {accountTypes: 'asset'}},
-    {path: '/accounts/expense', component: List, props: {accountTypes: 'expense'}},
-    {path: '/accounts/revenue', component: List, props: {accountTypes: 'revenue'}},
-    {path: '/accounts/liabilities', component: List, props: {accountTypes: 'liabilities'}},
-    {path: '/accounts/show/:id', name: 'accounts.show', component: Show}
+    // maybe "create" and "edit" in component.
 ]
 
 // 3. Create the router instance and pass the `routes` option
@@ -44,7 +37,7 @@ const router = new VueRouter({
                              })
 
 // i18n
-let i18n = require('../i18n');
+let i18n = require('../../i18n');
 
 let props = {};
 // new Vue({router,

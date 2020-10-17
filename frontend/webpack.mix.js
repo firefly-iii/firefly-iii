@@ -54,7 +54,8 @@ mix
     // dashboard component (frontpage):
     .js('src/pages/dashboard.js', 'public/js')
 
-    .js('src/pages/accounts.js', 'public/js')
+    // accounts.
+    .js('src/pages/accounts/index.js', 'public/js/accounts')
 
     // register page
     .js('src/pages/register.js', 'public/js')
