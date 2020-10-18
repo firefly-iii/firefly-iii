@@ -101,8 +101,8 @@ class SummaryController extends Controller
     /**
      * @param DateRequest $request
      *
-     * @throws Exception
      * @return JsonResponse
+     * @throws Exception
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -128,30 +128,6 @@ class SummaryController extends Controller
         }
 
         return response()->json($return);
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return bool
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
     }
 
     /**
@@ -322,8 +298,8 @@ class SummaryController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @throws Exception
      * @return array
+     * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -428,5 +404,29 @@ class SummaryController extends Controller
         }
 
         return $return;
+    }
+
+    /**
+     * Check if date is outside session range.
+     *
+     * @param Carbon $date
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return bool
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 }

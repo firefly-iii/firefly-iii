@@ -95,8 +95,8 @@ class AttachmentController extends Controller
      * @param Attachment $attachment
      *
      * @codeCoverageIgnore
-     * @throws   FireflyException
      * @return LaravelResponse
+     * @throws   FireflyException
      */
     public function download(Attachment $attachment): LaravelResponse
     {
@@ -187,8 +187,8 @@ class AttachmentController extends Controller
      *
      * @param AttachmentStoreRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(AttachmentStoreRequest $request): JsonResponse
     {

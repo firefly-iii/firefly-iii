@@ -50,6 +50,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * Class TransactionController
  */
@@ -235,6 +236,19 @@ class TransactionController extends Controller
     }
 
     /**
+     * Show a single transaction, by transaction journal.
+     *
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function showByJournal(TransactionJournal $transactionJournal): JsonResponse
+    {
+        return $this->show($transactionJournal->transactionGroup);
+    }
+
+    /**
      * Show a single transaction.
      *
      * @param TransactionGroup $transactionGroup
@@ -267,19 +281,6 @@ class TransactionController extends Controller
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Show a single transaction, by transaction journal.
-     *
-     * @param TransactionJournal $transactionJournal
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function showByJournal(TransactionJournal $transactionJournal): JsonResponse
-    {
-        return $this->show($transactionJournal->transactionGroup);
     }
 
     /**

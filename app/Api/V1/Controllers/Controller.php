@@ -44,9 +44,8 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected ParameterBag $parameters;
-
     protected const CONTENT_TYPE = 'application/vnd.api+json';
+    protected ParameterBag $parameters;
 
     /**
      * Controller constructor.
@@ -64,43 +63,6 @@ abstract class Controller extends BaseController
                 return $next($request);
             });
 
-    }
-
-    /**
-     * Method to help build URI's.
-     *
-     * @return string
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-                continue;
-            }
-            $params[$key] = $value;
-        }
-        $return .= http_build_query($params);
-
-        return $return;
-    }
-
-    /**
-     * @return Manager
-     */
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
     }
 
     /**
@@ -144,5 +106,42 @@ abstract class Controller extends BaseController
 
         return $bag;
 
+    }
+
+    /**
+     * Method to help build URI's.
+     *
+     * @return string
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+                continue;
+            }
+            $params[$key] = $value;
+        }
+        $return .= http_build_query($params);
+
+        return $return;
+    }
+
+    /**
+     * @return Manager
+     */
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
     }
 }

@@ -80,9 +80,9 @@ class LinkTypeController extends Controller
      *
      * @param LinkType $linkType
      *
+     * @return JsonResponse
      * @throws FireflyException
      * @codeCoverageIgnore
-     * @return JsonResponse
      */
     public function delete(LinkType $linkType): JsonResponse
     {
@@ -152,8 +152,8 @@ class LinkTypeController extends Controller
      *
      * @param LinkTypeRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(LinkTypeRequest $request): JsonResponse
     {
@@ -242,8 +242,8 @@ class LinkTypeController extends Controller
      * @param LinkTypeRequest $request
      * @param LinkType        $linkType
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(LinkTypeRequest $request, LinkType $linkType): JsonResponse
     {

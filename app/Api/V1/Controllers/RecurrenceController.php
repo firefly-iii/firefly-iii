@@ -151,8 +151,8 @@ class RecurrenceController extends Controller
      *
      * @param RecurrenceStoreRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(RecurrenceStoreRequest $request): JsonResponse
     {
@@ -226,9 +226,9 @@ class RecurrenceController extends Controller
     }
 
     /**
+     * @return JsonResponse
      * @throws FireflyException
      * @codeCoverageIgnore
-     * @return JsonResponse
      */
     public function trigger(): JsonResponse
     {
@@ -238,7 +238,7 @@ class RecurrenceController extends Controller
             $result = $recurring->fire();
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
-            throw new FireflyException('200022: Error in cron job.',0, $e);
+            throw new FireflyException('200022: Error in cron job.', 0, $e);
         }
         if (false === $result) {
             return response()->json([], 204);

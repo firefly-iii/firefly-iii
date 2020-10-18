@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Exception;
-use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Api\V1\Requests\BudgetStoreRequest;
 use FireflyIII\Api\V1\Requests\BudgetUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -214,9 +212,9 @@ class BudgetController extends Controller
      *
      * @param BudgetStoreRequest $request
      *
+     * @return JsonResponse
      * @throws FireflyException
      *
-     * @return JsonResponse
      */
     public function store(BudgetStoreRequest $request): JsonResponse
     {

@@ -75,23 +75,6 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * Update the configuration.
-     *
-     * @param ConfigurationRequest $request
-     * @param string               $name
-     *
-     * @return JsonResponse
-     */
-    public function update(ConfigurationRequest $request, string $name): JsonResponse
-    {
-        $data = $request->getAll();
-        app('fireflyconfig')->set($name, $data['value']);
-        $configData = $this->getConfigData();
-
-        return response()->json(['data' => $configData])->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
      * Get all config values.
      *
      * @return array
@@ -113,5 +96,22 @@ class ConfigurationController extends Controller
             'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
             'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
         ];
+    }
+
+    /**
+     * Update the configuration.
+     *
+     * @param ConfigurationRequest $request
+     * @param string               $name
+     *
+     * @return JsonResponse
+     */
+    public function update(ConfigurationRequest $request, string $name): JsonResponse
+    {
+        $data = $request->getAll();
+        app('fireflyconfig')->set($name, $data['value']);
+        $configData = $this->getConfigData();
+
+        return response()->json(['data' => $configData])->header('Content-Type', self::CONTENT_TYPE);
     }
 }

@@ -157,8 +157,8 @@ class TransactionLinkController extends Controller
      *
      * @param TransactionLinkRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(TransactionLinkRequest $request): JsonResponse
     {
@@ -188,8 +188,8 @@ class TransactionLinkController extends Controller
      * @param TransactionLinkRequest $request
      * @param TransactionJournalLink $journalLink
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {

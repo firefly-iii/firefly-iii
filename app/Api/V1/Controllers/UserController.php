@@ -68,9 +68,9 @@ class UserController extends Controller
      *
      * @param User $user
      *
+     * @return JsonResponse
      * @throws FireflyException
      * @codeCoverageIgnore
-     * @return JsonResponse
      */
     public function delete(User $user): JsonResponse
     {

@@ -204,8 +204,8 @@ class PiggyBankController extends Controller
      *
      * @param PiggyBankStoreRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(PiggyBankStoreRequest $request): JsonResponse
     {

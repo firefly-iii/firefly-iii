@@ -244,9 +244,9 @@ class BudgetLimitController extends Controller
      */
     public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $data           = $request->getAll();
-        $budgetLimit    = $this->blRepository->update($budgetLimit, $data);
-        $manager        = $this->getManager();
+        $data        = $request->getAll();
+        $budgetLimit = $this->blRepository->update($budgetLimit, $data);
+        $manager     = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);

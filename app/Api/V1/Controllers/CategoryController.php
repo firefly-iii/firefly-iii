@@ -177,8 +177,8 @@ class CategoryController extends Controller
      *
      * @param CategoryRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(CategoryRequest $request): JsonResponse
     {

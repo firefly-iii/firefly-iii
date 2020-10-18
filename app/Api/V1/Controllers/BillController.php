@@ -207,8 +207,8 @@ class BillController extends Controller
      *
      * @param BillRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(BillRequest $request): JsonResponse
     {

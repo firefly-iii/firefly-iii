@@ -37,7 +37,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -198,7 +197,7 @@ class CurrencyController extends Controller
         $manager = $this->getManager();
 
         /** @var BillRepositoryInterface $billRepos */
-        $billRepos = app(BillRepositoryInterface::class);
+        $billRepos  = app(BillRepositoryInterface::class);
         $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $unfiltered = $billRepos->getBills();
 
@@ -450,7 +449,7 @@ class CurrencyController extends Controller
         // get list of budgets. Count it and split it.
         /** @var RecurringRepositoryInterface $recurringRepos */
         $recurringRepos = app(RecurringRepositoryInterface::class);
-        $unfiltered = $recurringRepos->getAll();
+        $unfiltered     = $recurringRepos->getAll();
 
         // filter selection
         $collection = $unfiltered->filter(
@@ -500,7 +499,7 @@ class CurrencyController extends Controller
 
         // get list of budgets. Count it and split it.
         /** @var RuleRepositoryInterface $ruleRepos */
-        $ruleRepos = app(RuleRepositoryInterface::class);
+        $ruleRepos  = app(RuleRepositoryInterface::class);
         $unfiltered = $ruleRepos->getAll();
 
         $collection = $unfiltered->filter(
