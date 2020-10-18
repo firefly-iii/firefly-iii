@@ -129,9 +129,7 @@ Of course, there are some [contributing guidelines](https://github.com/firefly-i
 
 I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
 
-[Sonarcloud](sc-project-url) scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
-
-[![Travis Build Status][build-shield]][build-url]
+[Sonarcloud][sc-project-url] scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
 
 [![Quality Gate Status][sc-gate-shield]][sc-project-url] [![Bugs][sc-bugs-shield]][sc-project-url] [![Code Smells][sc-smells-shield]][sc-project-url] [![Vulnerabilities][sc-vuln-shield]][sc-project-url]
 
