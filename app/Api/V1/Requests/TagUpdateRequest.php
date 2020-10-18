@@ -36,6 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class TagUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

@@ -36,6 +36,7 @@ use Illuminate\Validation\Validator;
 class TransactionLinkRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

@@ -161,31 +161,6 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types
-     */
-    private function destroyAccounts(array $types): void
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $collection = $repository->getAccountsByType($types);
-        $service    = app(AccountDestroyService::class);
-        /** @var Account $account */
-        foreach ($collection as $account) {
-            $service->destroy($account, null);
-        }
-    }
-
-    /**
-     *
-     */
-    private function destroyBills(): void
-    {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
      *
      */
     private function destroyBudgets(): void
@@ -206,18 +181,11 @@ class DestroyController extends Controller
     /**
      *
      */
-    private function destroyCategories(): void
+    private function destroyBills(): void
     {
-        /** @var CategoryRepositoryInterface $categoryRepos */
-        $categoryRepos = app(CategoryRepositoryInterface::class);
-        $categoryRepos->destroyAll();
-    }
-
-    private function destroyObjectGroups(): void
-    {
-        /** @var ObjectGroupRepositoryInterface $repository */
-        $repository = app(ObjectGroupRepositoryInterface::class);
-        $repository->deleteAll();
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
+        $repository->destroyAll();
     }
 
     /**
@@ -227,16 +195,6 @@ class DestroyController extends Controller
     {
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->destroyAll();
-    }
-
-    /**
-     *
-     */
-    private function destroyRecurringTransactions(): void
-    {
-        /** @var RecurringRepositoryInterface $repository */
-        $repository = app(RecurringRepositoryInterface::class);
         $repository->destroyAll();
     }
 
@@ -253,11 +211,53 @@ class DestroyController extends Controller
     /**
      *
      */
+    private function destroyRecurringTransactions(): void
+    {
+        /** @var RecurringRepositoryInterface $repository */
+        $repository = app(RecurringRepositoryInterface::class);
+        $repository->destroyAll();
+    }
+
+    /**
+     *
+     */
+    private function destroyCategories(): void
+    {
+        /** @var CategoryRepositoryInterface $categoryRepos */
+        $categoryRepos = app(CategoryRepositoryInterface::class);
+        $categoryRepos->destroyAll();
+    }
+
+    /**
+     *
+     */
     private function destroyTags(): void
     {
         /** @var TagRepositoryInterface $tagRepository */
         $tagRepository = app(TagRepositoryInterface::class);
         $tagRepository->destroyAll();
+    }
+
+    private function destroyObjectGroups(): void
+    {
+        /** @var ObjectGroupRepositoryInterface $repository */
+        $repository = app(ObjectGroupRepositoryInterface::class);
+        $repository->deleteAll();
+    }
+
+    /**
+     * @param array $types
+     */
+    private function destroyAccounts(array $types): void
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $collection = $repository->getAccountsByType($types);
+        $service    = app(AccountDestroyService::class);
+        /** @var Account $account */
+        foreach ($collection as $account) {
+            $service->destroy($account, null);
+        }
     }
 
     /**
@@ -267,10 +267,10 @@ class DestroyController extends Controller
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
-        $journals = $repository->findByType($types);
-        $service = app(JournalDestroyService::class);
+        $journals   = $repository->findByType($types);
+        $service    = app(JournalDestroyService::class);
         /** @var TransactionJournal $journal */
-        foreach($journals as $journal) {
+        foreach ($journals as $journal) {
             $service->destroy($journal);
         }
     }

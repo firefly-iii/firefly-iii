@@ -45,7 +45,7 @@ class TransactionController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager   = $this->getManager();
         $fullQuery = (string) $request->get('query');
         $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 

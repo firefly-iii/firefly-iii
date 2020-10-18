@@ -89,7 +89,7 @@ class CurrencyController extends Controller
      */
     public function currencies(AutocompleteRequest $request): JsonResponse
     {
-        $data   = $request->getData();
+        $data       = $request->getData();
         $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
         $result     = [];
 

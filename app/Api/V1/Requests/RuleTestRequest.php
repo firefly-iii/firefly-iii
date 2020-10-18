@@ -62,24 +62,12 @@ class RuleTestRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function rules(): array
+    private function getPage(): int
     {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after:start',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
-    }
+        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
 
-    /**
-     * @return string
-     */
-    private function getAccounts(): string
-    {
-        return (string) $this->query('accounts');
     }
 
     /**
@@ -96,12 +84,24 @@ class RuleTestRequest extends FormRequest
     }
 
     /**
-     * @return int
+     * @return string
      */
-    private function getPage(): int
+    private function getAccounts(): string
     {
-        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
+        return (string) $this->query('accounts');
+    }
 
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after:start',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
     }
 
 }

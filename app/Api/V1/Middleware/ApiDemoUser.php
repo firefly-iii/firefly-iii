@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Middleware;
 
 use Closure;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 

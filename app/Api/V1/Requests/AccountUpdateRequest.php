@@ -38,6 +38,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class AccountUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, AppendsLocationData;
+
     /**
      * Authorize logged in users.
      *

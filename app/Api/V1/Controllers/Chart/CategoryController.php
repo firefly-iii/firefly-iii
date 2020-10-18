@@ -88,17 +88,17 @@ class CategoryController extends Controller
         $end = $dates['end'];
 
 
-        $tempData      = [];
-        $spentWith     = $this->opsRepository->listExpenses($start, $end);
-        $spentWithout  = $this->noCatRepository->listExpenses($start, $end);
-        $categories    = [];
+        $tempData     = [];
+        $spentWith    = $this->opsRepository->listExpenses($start, $end);
+        $spentWithout = $this->noCatRepository->listExpenses($start, $end);
+        $categories   = [];
 
 
-        foreach ([$spentWith, $spentWithout, ] as $set) {
+        foreach ([$spentWith, $spentWithout,] as $set) {
             foreach ($set as $currency) {
                 foreach ($currency['categories'] as $category) {
-                    $categories[] = $category['name'];
-                    $outKey       = sprintf('%d-e', $currency['currency_id']);
+                    $categories[]      = $category['name'];
+                    $outKey            = sprintf('%d-e', $currency['currency_id']);
                     $tempData[$outKey] = $tempData[$outKey] ?? [
                             'currency_id'             => $currency['currency_id'],
                             'label'                   => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),

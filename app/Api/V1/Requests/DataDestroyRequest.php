@@ -32,6 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class DataDestroyRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *
