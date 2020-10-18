@@ -25,7 +25,7 @@
     <a href="https://github.com/firefly-iii/firefly-iii/issues">Request Feature</a>
   </p>
 
-[![Travis Build Status](build-shield)](build-url)
+[![Travis Build Status][build-shield]][build-url]
 
 <!-- MarkdownTOC autolink="true" -->
 
@@ -131,7 +131,9 @@ I can always use your help [squashing bugs](https://docs.firefly-iii.org/support
 
 [Sonarcloud](sc-project-url) scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
 
-[![Quality Gate Status](sc-gate-shield)](sc-project-url) [![Bugs](sc-bugs-shield)](sc-project-url) [![Code Smells](sc-smells-shield)](sc-project-url) [![Vulnerabilities](sc-vuln-shield)](sc-project-url)
+[![Travis Build Status][build-shield]][build-url]
+
+[![Quality Gate Status][sc-gate-shield]][sc-project-url] [![Bugs][sc-bugs-shield]][sc-project-url] [![Code Smells][sc-smells-shield]][sc-project-url] [![Vulnerabilities][sc-vuln-shield]][sc-project-url]
 
 There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
@@ -169,4 +171,4 @@ Over time, [many people have contributed to Firefly III](https://github.com/fire
 [sc-bugs-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs
 [sc-smells-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells
 [sc-vuln-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities
-[sc-project-url]: sc-project-url
+[sc-project-url]: https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii
