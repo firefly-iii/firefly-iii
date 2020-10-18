@@ -149,7 +149,7 @@ trait CollectsValues
             ]
         )->first();
         if (null === $result) {
-            throw new FireflyException(sprintf('Cannot find suitable %s to use.', $type));
+            throw new FireflyException(sprintf('Cannot find suitable journal "%s" to use.', $type));
         }
 
         return TransactionJournal::find((int) $result->transaction_journal_id);

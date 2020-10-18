@@ -68,7 +68,7 @@ class FixRecurringTransactions extends Command
 
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Corrected recurring transactions %s seconds.', $end));
+        $this->info(sprintf('Corrected recurring transactions in %s seconds.', $end));
 
         return 0;
     }

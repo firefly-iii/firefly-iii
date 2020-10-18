@@ -1,6 +1,6 @@
 <?php
 /*
- * FixGroupAccountsTest.php
+ * FixTransactionTypesTest.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,22 +25,20 @@ namespace Tests\Feature\Console\Commands\Correction;
 use Tests\TestCase;
 
 /**
- * Class FixGroupAccountsTest
+ * Class FixTransactionTypesTest
  */
-class FixGroupAccountsTest extends TestCase
+class FixTransactionTypesTest extends TestCase
 {
-
     /**
-     * @covers \FireflyIII\Console\Commands\Correction\FixGroupAccounts
+     * @covers \FireflyIII\Console\Commands\Correction\FixTransactionTypes
      */
     public function testHandle(): void
     {
-        // basic group with multiple journals, should trigger event.
-        $this->artisan('firefly-iii:unify-group-accounts')
-             ->expectsOutput('Updated inconsistent transaction groups.')
+        $this->artisan('firefly-iii:fix-transaction-types')
+             ->expectsOutput(sprintf('Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.',
+                                     $recurring->id, 'Withdrawal','Transfer',
+                             ))
              ->assertExitCode(0);
-
-        // This just triggers the events. No real test.
     }
 
 

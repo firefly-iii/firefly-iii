@@ -34,9 +34,40 @@ class FixLongDescriptionsTest extends TestCase
      */
     public function testHandle(): void
     {
+        $journal              = $this->getRandomWithdrawal();
+        $original             = $journal->description;
+        $journal->description = str_repeat('ABCDEF123456x', 200);
+        $journal->save();
+
+
         $this->artisan('firefly-iii:fix-long-descriptions')
-             ->expectsOutput('Verified all transaction group and journal title lengths')
+             ->expectsOutput(sprintf('Truncated description of transaction journal #%d', $journal->id))
+             ->expectsOutput('Verified all transaction group and journal title lengths.')
              ->assertExitCode(0);
+
+        $journal->description = $original;
+        $journal->save();
+    }
+
+    /**
+     * @covers \FireflyIII\Console\Commands\Correction\FixLongDescriptions
+     */
+    public function testHandleGroup(): void
+    {
+        $journal      = $this->getRandomWithdrawal();
+        $group        = $journal->transactionGroup;
+        $original     = $group->title;
+        $group->title = str_repeat('ABCDEF123456x', 200);
+        $group->save();
+
+
+        $this->artisan('firefly-iii:fix-long-descriptions')
+             ->expectsOutput(sprintf('Truncated description of transaction group #%d', $group->id))
+             ->expectsOutput('Verified all transaction group and journal title lengths.')
+             ->assertExitCode(0);
+
+        $group->title = $original;
+        $group->save();
     }
 
 }
