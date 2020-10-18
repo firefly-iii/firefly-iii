@@ -1,6 +1,7 @@
 <?php
+
 /**
- * MassEditJournalRequest.php
+ * LoggedInRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,29 +23,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
- * Class MassEditJournalRequest.
- *
- * @codeCoverageIgnore
+ * Class LoggedInRequest.
  */
-class MassEditJournalRequest extends LoggedInRequest
+class LoggedInRequest extends FormRequest
 {
     /**
-     * Rules for this request.
+     * Verify the request.
      *
-     * @return array
+     * @return bool
      */
-    public function rules(): array
+    public function authorize(): bool
     {
-        // fixed
-
-        return [
-            'description.*'    => 'required|min:1,max:255',
-            'source_id.*'      => 'numeric|belongsToUser:accounts,id',
-            'destination_id.*' => 'numeric|belongsToUser:accounts,id',
-            'journals.*'       => 'numeric|belongsToUser:transaction_journals,id',
-            'revenue_account'  => 'max:255',
-            'expense_account'  => 'max:255',
-        ];
+        // Only allow logged in users
+        return auth()->check();
     }
 }

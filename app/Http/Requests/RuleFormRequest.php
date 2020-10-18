@@ -25,24 +25,13 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Models\Rule;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class RuleFormRequest.
  */
-class RuleFormRequest extends FormRequest
+class RuleFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes, GetRuleConfiguration;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Get all data for controller.

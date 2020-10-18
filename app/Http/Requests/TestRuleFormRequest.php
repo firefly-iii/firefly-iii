@@ -23,26 +23,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\GetRuleConfiguration;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TestRuleFormRequest.
  *
  * @codeCoverageIgnore
  */
-class TestRuleFormRequest extends FormRequest
+class TestRuleFormRequest extends LoggedInRequest
 {
     use GetRuleConfiguration;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Rules for this request.

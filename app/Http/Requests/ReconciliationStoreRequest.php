@@ -25,25 +25,14 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Rules\ValidJournals;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 use Log;
 
 /**
  * Class ReconciliationStoreRequest
  */
-class ReconciliationStoreRequest extends FormRequest
+class ReconciliationStoreRequest extends LoggedInRequest
 {
     use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Returns the data required by the controller.

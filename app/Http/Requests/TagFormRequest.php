@@ -26,24 +26,13 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TagFormRequest.
  */
-class TagFormRequest extends FormRequest
+class TagFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes, AppendsLocationData;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Get all data for controller.
