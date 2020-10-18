@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Category;
+use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use Log;
@@ -46,7 +47,7 @@ class CategoryUpdateService
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
-        if(auth()->check()) {
+        if (auth()->check()) {
             $this->user = auth()->user();
         }
     }
@@ -66,6 +67,7 @@ class CategoryUpdateService
         // update triggers and actions
         $this->updateRuleTriggers($oldName, $data['name']);
         $this->updateRuleActions($oldName, $data['name']);
+        $this->updateRecurrences($oldName, $data['name']);
 
         return $category;
     }
@@ -118,6 +120,21 @@ class CategoryUpdateService
     public function setUser($user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRecurrences(string $oldName, string $newName): void
+    {
+        RecurrenceTransactionMeta
+            ::leftJoin('recurrences_transactions', 'rt_meta.rt_id', '=', 'recurrences_transactions.id')
+            ->leftJoin('recurrences', 'recurrences.id', '=', 'recurrences_transactions.recurrence_id')
+            ->where('recurrences.user_id', $this->user->id)
+            ->where('rt_meta.name', 'category_name')
+            ->where('rt_meta.value', $oldName)
+            ->update(['rt_meta.value' => $newName]);
     }
 
 }
