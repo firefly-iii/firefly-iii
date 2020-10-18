@@ -45,15 +45,12 @@ use phpseclib\Crypt\RSA;
 class InstallController extends Controller
 {
     use GetConfigurationData;
-    /** @var string Forbidden error */
-    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
-    /** @var string Basedir error */
-    public const BASEDIR_ERROR = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
-    /** @var string Other errors */
-    public const OTHER_ERROR = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
 
-    /** @var array All upgrade commands. */
-    private $upgradeCommands;
+    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
+    public const BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
+    public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
+    private array  $upgradeCommands;
+    private string $lastError;
 
 
     /** @noinspection MagicMethodsValidityInspection */
@@ -111,6 +108,8 @@ class InstallController extends Controller
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
         ];
+
+        $this->lastError = '';
     }
 
     /**
@@ -169,6 +168,10 @@ class InstallController extends Controller
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $index = 0;
+        /**
+         * @var string $command
+         * @var array  $args
+         */
         foreach ($this->upgradeCommands as $command => $args) {
             Log::debug(sprintf('Current command is "%s", index is %d', $command, $index));
             if ($index < $requestIndex) {
@@ -176,44 +179,51 @@ class InstallController extends Controller
                 $index++;
                 continue;
             }
-            if ($index >= $requestIndex) {
-                Log::debug(sprintf('%d >= %d, will execute the command.', $index, $requestIndex));
-                Log::debug(sprintf('Will now call command %s with args.', $command), $args);
-                try {
-                    if ('generate-keys' === $command) {
-                        $this->keys();
-                    }
-                    if ('generate-keys' !== $command) {
-                        Artisan::call($command, $args);
-                        Log::debug(Artisan::output());
-                    }
-                } catch (Exception $e) {
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
-                    if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
-                        $response['error']        = true;
-                        $response['errorMessage'] = self::BASEDIR_ERROR;
-
-                        return response()->json($response);
-                    }
-
-                    $response['error']        = true;
-                    $response['errorMessage'] = self::OTHER_ERROR . ' ' . $e->getMessage();
-
-                    return response()->json($response);
-                }
-                // clear cache as well.
-                Cache::clear();
-                Preferences::mark();
-
-                $index++;
-                $response['hasNextCommand'] = true;
-                $response['previous']       = $command;
-                break;
+            $result = $this->executeCommand($command, $args);
+            if (false === $result) {
+                $response['errorMessage'] = $this->lastError;
+                $response['error']        = true;
+                return response()->json($response);
             }
+            $index++;
+            $response['hasNextCommand'] = true;
+            $response['previous']       = $command;
         }
         $response['next'] = $index;
 
         return response()->json($response);
+    }
+
+    /**
+     * @param string $command
+     * @param array  $args
+     * @return bool
+     */
+    private function executeCommand(string $command, array $args): bool
+    {
+        Log::debug(sprintf('Will now call command %s with args.', $command), $args);
+        try {
+            if ('generate-keys' === $command) {
+                $this->keys();
+            }
+            if ('generate-keys' !== $command) {
+                Artisan::call($command, $args);
+                Log::debug(Artisan::output());
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                $this->lastError = self::BASEDIR_ERROR;
+                return false;
+            }
+            $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
+            return false;
+        }
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
+        
+        return true;
     }
 }

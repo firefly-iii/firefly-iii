@@ -46,14 +46,10 @@ class BudgetController extends Controller
 {
     use BasicDataSupport;
 
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var NoBudgetRepositoryInterface */
-    private $nbRepository;
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-    /** @var BudgetRepositoryInterface */
-    private $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private NoBudgetRepositoryInterface    $nbRepository;
+    private OperationsRepositoryInterface  $opsRepository;
+    private BudgetRepositoryInterface      $repository;
 
     /**
      * ExpenseReportController constructor.
@@ -506,8 +502,8 @@ class BudgetController extends Controller
                         ];
                     $report[$key]['entries'][$dateKey] = $report[$key] ['entries'][$dateKey] ?? '0';
                     $report[$key]['entries'][$dateKey] = bcadd($journal['amount'], $report[$key] ['entries'][$dateKey]);
-                    $report[$key]['sum'] = bcadd($report[$key] ['sum'], $journal['amount']);
-                    $report[$key]['avg'] = bcdiv($report[$key]['sum'], (string) count($periods));
+                    $report[$key]['sum']               = bcadd($report[$key] ['sum'], $journal['amount']);
+                    $report[$key]['avg']               = bcdiv($report[$key]['sum'], (string) count($periods));
                 }
             }
         }
