@@ -1,8 +1,7 @@
-[![Packagist][packagist-shield]][packagist-uri]
-[![License][license-shield]][license-uri]
+[![Packagist][packagist-shield]][packagist-url]
+[![License][license-shield]][license-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-uri]
-[![Travis Build Status](https://api.travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/github/firefly-iii/firefly-iii)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -25,6 +24,8 @@
     ·
     <a href="https://github.com/firefly-iii/firefly-iii/issues">Request Feature</a>
   </p>
+
+[![Travis Build Status](build-shield)](build-url)
 
 <!-- MarkdownTOC autolink="true" -->
 
@@ -128,9 +129,9 @@ Of course, there are some [contributing guidelines](https://github.com/firefly-i
 
 I can always use your help [squashing bugs](https://docs.firefly-iii.org/support/contribute#bugs), thinking about [new features](https://docs.firefly-iii.org/support/contribute#feature-requests) or [translating Firefly III](https://docs.firefly-iii.org/support/contribute#translations) into other languages.
 
-[Sonarcloud](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
+[Sonarcloud](sc-project-url) scans the code of Firefly III. If you want to help improve Firefly III, check out the latest reports and take your pick!
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=alert_status)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii)
+[![Quality Gate Status](sc-gate-shield)](sc-project-url) [![Bugs](sc-bugs-shield)](sc-project-url) [![Code Smells](sc-smells-shield)](sc-project-url) [![Vulnerabilities](sc-vuln-shield)](sc-project-url)
 
 There is also a [security policy](https://github.com/firefly-iii/firefly-iii/security/policy).
 
@@ -155,10 +156,17 @@ You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you
 Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their your support and code contributions.
 
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
-[packagist-uri]: https://packagist.org/packages/grumpydictator/firefly-iii
+[packagist-url]: https://packagist.org/packages/grumpydictator/firefly-iii
 [license-shield]: https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square
-[license-uri]: https://www.gnu.org/licenses/agpl-3.0.html
+[license-url]: https://www.gnu.org/licenses/agpl-3.0.html
 [stars-shield]: https://img.shields.io/github/stars/firefly-iii/firefly-iii.svg?style=flat-square
 [stars-url]: https://github.com/firefly-iii/firefly-iii/stargazers
 [donate-shield]: https://img.shields.io/badge/donate-%24%20%E2%82%AC-brightgreen?style=flat-square
 [donate-uri]: #support-the-development-of-firefly-iii
+[build-shield]: https://api.travis-ci.com/firefly-iii/firefly-iii.svg?branch=master
+[build-url]: https://travis-ci.com/github/firefly-iii/firefly-iii
+[sc-gate-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=alert_status
+[sc-bugs-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=bugs
+[sc-smells-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells
+[sc-vuln-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities
+[sc-project-url]: sc-project-url
