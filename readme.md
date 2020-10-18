@@ -2,6 +2,7 @@
 [![License][license-shield]][license-uri]
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-uri]
+[![Travis Build Status](https://api.travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/github/firefly-iii/firefly-iii)
 
 <!-- PROJECT LOGO -->
 <br />
