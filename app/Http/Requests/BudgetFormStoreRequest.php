@@ -22,17 +22,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * @codeCoverageIgnore
  * Class BudgetFormStoreRequest
  */
-class BudgetFormStoreRequest extends LoggedInRequest
+class BudgetFormStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ValidatesAutoBudgetRequest;
+    use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
 
     /**
      * Returns the data required by the controller.
