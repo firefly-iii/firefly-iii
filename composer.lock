@@ -1113,16 +1113,16 @@
         },
         {
             "name": "gdbots/query-parser",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gdbots/query-parser-php.git",
-                "reference": "7ea4f6aff99a2b989798ce459778e96c1cce73c1"
+                "reference": "21fffb3dae156792c0ffe5d4c2ba25e7607ac264"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/7ea4f6aff99a2b989798ce459778e96c1cce73c1",
-                "reference": "7ea4f6aff99a2b989798ce459778e96c1cce73c1",
+                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/21fffb3dae156792c0ffe5d4c2ba25e7607ac264",
+                "reference": "21fffb3dae156792c0ffe5d4c2ba25e7607ac264",
                 "shasum": ""
             },
             "require": {
@@ -1144,7 +1144,7 @@
             ],
             "description": "Php library that converts search queries into terms, phrases, hashtags, mentions, etc.",
             "homepage": "https://github.com/gdbots/query-parser-php",
-            "time": "2020-06-14T23:29:38+00:00"
+            "time": "2020-10-18T02:58:06+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
