@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class IndexController extends Controller
 {
     use OrganisesObjectGroups;
+
     private BillRepositoryInterface $repository;
 
     /**
@@ -139,9 +140,10 @@ class IndexController extends Controller
         ksort($bills);
 
         // summarise per currency / per group.
-        $sums = $this->getSums($bills);
+        $sums   = $this->getSums($bills);
+        $totals = $this->getTotals($sums);
 
-        return view('bills.index', compact('bills', 'sums', 'total'));
+        return view('bills.index', compact('bills', 'sums', 'total', 'totals'));
     }
 
 
@@ -238,7 +240,7 @@ class IndexController extends Controller
      */
     public function setOrder(Request $request, Bill $bill): JsonResponse
     {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $objectGroupTitle = (string) $request->get('objectGroupTitle');
         $newOrder         = (int) $request->get('order');
         $this->repository->setOrder($bill, $newOrder);
         if ('' !== $objectGroupTitle) {
@@ -249,5 +251,43 @@ class IndexController extends Controller
         }
 
         return response()->json(['data' => 'OK']);
+    }
+
+    /**
+     * @param array $sums
+     * @return array
+     */
+    private function getTotals(array $sums): array
+    {
+        $totals = [];
+        if (count($sums) < 2) {
+            return [];
+        }
+        /**
+         * @var int   $objectGroupId
+         * @var array $array
+         */
+        foreach ($sums as $objectGroupId => $array) {
+            /**
+             * @var int   $currencyId
+             * @var array $entry
+             */
+            foreach ($array as $currencyId => $entry) {
+                $totals[$currencyId]               = $totals[$currencyId] ?? [
+                        'currency_id'             => $currencyId,
+                        'currency_code'           => $entry['currency_code'],
+                        'currency_name'           => $entry['currency_name'],
+                        'currency_symbol'         => $entry['currency_symbol'],
+                        'currency_decimal_places' => $entry['currency_decimal_places'],
+                        'avg'                     => '0',
+                        'period'                  => $entry['period'],
+                        'per_period'              => '0',
+                    ];
+                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], $entry['avg']);
+                $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], $entry['per_period']);
+            }
+        }
+
+        return $totals;
     }
 }
