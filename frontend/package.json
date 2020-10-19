@@ -27,7 +27,7 @@
         "@fortawesome/fontawesome-free": "^5.15.1",
         "@popperjs/core": "^2.5.2",
         "bootstrap": "^4.5.3",
-        "chart.js": "^2.9.3",
+        "chart.js": "^2.9.4",
         "icheck-bootstrap": "^3.0.1",
         "jquery": "^3.5.1",
         "jquery-ui": "^1.12.1",
