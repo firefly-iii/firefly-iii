@@ -22,26 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * Class MassDeleteJournalRequest.
  *
  * @codeCoverageIgnore
  */
-class MassDeleteJournalRequest extends FormRequest
+class MassDeleteJournalRequest extends LoggedInRequest
 {
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
-
     /**
      * Rules for this request.
      *

@@ -22,26 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * Class ConfigurationRequest.
  *
  * @codeCoverageIgnore
  */
-class ConfigurationRequest extends FormRequest
+class ConfigurationRequest extends LoggedInRequest
 {
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users and admins
-        return auth()->check();
-    }
-
     /**
      * Returns the data required by the controller.
      *

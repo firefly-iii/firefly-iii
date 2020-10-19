@@ -24,24 +24,13 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class BillUpdateRequest.
  */
-class BillUpdateRequest extends FormRequest
+class BillUpdateRequest extends LoggedInRequest
 {
     use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Returns the data required by the controller.

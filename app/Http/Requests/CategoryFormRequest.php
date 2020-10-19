@@ -24,24 +24,13 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Category;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CategoryFormRequest.
  */
-class CategoryFormRequest extends FormRequest
+class CategoryFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Get information for the controller.

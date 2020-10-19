@@ -22,26 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
 /**
  * Class EmailFormRequest.
  *
  * @codeCoverageIgnore
  */
-class EmailFormRequest extends FormRequest
+class EmailFormRequest extends LoggedInRequest
 {
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
-
     /**
      * Rules for this request.
      *

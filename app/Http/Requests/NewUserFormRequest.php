@@ -23,26 +23,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class NewUserFormRequest.
  *
  * @codeCoverageIgnore
  */
-class NewUserFormRequest extends FormRequest
+class NewUserFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Rules for this request.

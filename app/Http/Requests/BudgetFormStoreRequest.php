@@ -24,25 +24,15 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
  * @codeCoverageIgnore
  * Class BudgetFormStoreRequest
  */
-class BudgetFormStoreRequest extends FormRequest
+class BudgetFormStoreRequest extends LoggedInRequest
 {
     use ConvertsDataTypes, ValidatesAutoBudgetRequest;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        return auth()->check();
-    }
 
     /**
      * Returns the data required by the controller.

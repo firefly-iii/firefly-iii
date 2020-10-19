@@ -27,24 +27,13 @@ use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AccountFormRequest.
  */
-class AccountFormRequest extends FormRequest
+class AccountFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes, AppendsLocationData;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Get all data.

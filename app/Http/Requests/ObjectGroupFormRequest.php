@@ -24,24 +24,13 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ObjectGroupFormRequest.
  */
-class ObjectGroupFormRequest extends FormRequest
+class ObjectGroupFormRequest extends LoggedInRequest
 {
     use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
 
     /**
      * Returns the data required by the controller.
