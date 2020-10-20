@@ -41,17 +41,17 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportGenerator
 {
-    private User                           $user;
     private Collection                     $accounts;
-    private Collection                     $budgets;
-    private Carbon                         $start;
-    private Carbon                         $end;
-    private BudgetRepositoryInterface      $repository;
     private BudgetLimitRepositoryInterface $blRepository;
+    private Collection                     $budgets;
     private TransactionCurrency            $currency;
-    private array                          $report;
-    private OperationsRepositoryInterface  $opsRepository;
+    private Carbon                         $end;
     private NoBudgetRepositoryInterface    $nbRepository;
+    private OperationsRepositoryInterface  $opsRepository;
+    private array                          $report;
+    private BudgetRepositoryInterface      $repository;
+    private Carbon                         $start;
+    private User                           $user;
 
     /**
      * BudgetReportGenerator constructor.
@@ -63,22 +63,6 @@ class BudgetReportGenerator
         $this->opsRepository = app(OperationsRepositoryInterface::class);
         $this->nbRepository  = app(NoBudgetRepositoryInterface::class);
         $this->report        = [];
-    }
-
-    /**
-     * Generates the data necessary to create the card that displays
-     * the budget overview in the general report.
-     */
-    public function general(): void
-    {
-        $this->report = [
-            'budgets' => [],
-            'sums'    => [],
-        ];
-
-        $this->generalBudgetReport();
-        $this->noBudgetReport();
-        $this->percentageReport();
     }
 
     /**
@@ -108,56 +92,61 @@ class BudgetReportGenerator
     }
 
     /**
-     * @param User $user
+     * Process each row of expenses collected for the "Account per budget" partial
+     *
+     * @param array $expenses
      */
-    public function setUser(User $user): void
+    private function processExpenses(array $expenses): void
     {
-        $this->user = $user;
-        $this->repository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-        $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        foreach ($expenses['budgets'] as $budget) {
+            $this->processBudgetExpenses($expenses, $budget);
+        }
     }
 
     /**
-     * @param Collection $budgets
+     * Process each set of transactions for each row of expenses.
+     *
+     * @param array $expenses
+     * @param array $budget
      */
-    public function setBudgets(Collection $budgets): void
+    private function processBudgetExpenses(array $expenses, array $budget): void
     {
-        $this->budgets = $budgets;
+        $budgetId   = (int)$budget['id'];
+        $currencyId = (int)$expenses['currency_id'];
+        foreach ($budget['transaction_journals'] as $journal) {
+            $sourceAccountId = $journal['source_account_id'];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]
+                = $this->report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                    'currency_id'             => $expenses['currency_id'],
+                    'currency_symbol'         => $expenses['currency_symbol'],
+                    'currency_name'           => $expenses['currency_name'],
+                    'currency_decimal_places' => $expenses['currency_decimal_places'],
+                    'budgets'                 => [],
+                ];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                = $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] ?? '0';
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
+        }
     }
 
     /**
-     * @param Collection $accounts
+     * Generates the data necessary to create the card that displays
+     * the budget overview in the general report.
      */
-    public function setAccounts(Collection $accounts): void
+    public function general(): void
     {
-        $this->accounts = $accounts;
-    }
+        $this->report = [
+            'budgets' => [],
+            'sums'    => [],
+        ];
 
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @return array
-     */
-    public function getReport(): array
-    {
-        return $this->report;
+        $this->generalBudgetReport();
+        $this->noBudgetReport();
+        $this->percentageReport();
     }
 
     /**
@@ -179,7 +168,7 @@ class BudgetReportGenerator
      */
     private function processBudget(Budget $budget): void
     {
-        $budgetId                           = (int) $budget->id;
+        $budgetId                           = (int)$budget->id;
         $this->report['budgets'][$budgetId] = $this->report['budgets'][$budgetId] ?? [
                 'budget_id'     => $budgetId,
                 'budget_name'   => $budget->name,
@@ -203,10 +192,10 @@ class BudgetReportGenerator
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): void
     {
-        $budgetId   = (int) $budget->id;
-        $limitId    = (int) $limit->id;
+        $budgetId   = (int)$budget->id;
+        $limitId    = (int)$limit->id;
         $currency   = $limit->transactionCurrency ?? $this->currency;
-        $currencyId = (int) $currency->id;
+        $currencyId = (int)$currency->id;
         $expenses   = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection([$budget]));
         $spent      = $expenses[$currencyId]['sum'] ?? '0';
         $left       = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
@@ -265,7 +254,7 @@ class BudgetReportGenerator
         foreach ($noBudget as $noBudgetEntry) {
 
             // currency information:
-            $nbCurrencyId     = (int) ($noBudgetEntry['currency_id'] ?? $this->currency->id);
+            $nbCurrencyId     = (int)($noBudgetEntry['currency_id'] ?? $this->currency->id);
             $nbCurrencyCode   = $noBudgetEntry['currency_code'] ?? $this->currency->code;
             $nbCurrencyName   = $noBudgetEntry['currency_name'] ?? $this->currency->name;
             $nbCurrencySymbol = $noBudgetEntry['currency_symbol'] ?? $this->currency->symbol;
@@ -310,9 +299,9 @@ class BudgetReportGenerator
         // make percentages based on total amount.
         foreach ($this->report['budgets'] as $budgetId => $data) {
             foreach ($data['budget_limits'] as $limitId => $entry) {
-                $budgetId      = (int) $budgetId;
-                $limitId       = (int) $limitId;
-                $currencyId    = (int) $entry['currency_id'];
+                $budgetId      = (int)$budgetId;
+                $limitId       = (int)$limitId;
+                $currencyId    = (int)$entry['currency_id'];
                 $spent         = $entry['spent'];
                 $totalSpent    = $this->report['sums'][$currencyId]['spent'] ?? '0';
                 $spentPct      = '0';
@@ -334,44 +323,55 @@ class BudgetReportGenerator
     }
 
     /**
-     * Process each row of expenses collected for the "Account per budget" partial
-     *
-     * @param array $expenses
+     * @return array
      */
-    private function processExpenses(array $expenses): void
+    public function getReport(): array
     {
-        foreach ($expenses['budgets'] as $budget) {
-            $this->processBudgetExpenses($expenses, $budget);
-        }
+        return $this->report;
     }
 
     /**
-     * Process each set of transactions for each row of expenses.
-     *
-     * @param array $expenses
-     * @param array $budget
+     * @param Collection $accounts
      */
-    private function processBudgetExpenses(array $expenses, array $budget): void
+    public function setAccounts(Collection $accounts): void
     {
-        $budgetId   = (int) $budget['id'];
-        $currencyId = (int) $expenses['currency_id'];
-        foreach ($budget['transaction_journals'] as $journal) {
-            $sourceAccountId = $journal['source_account_id'];
+        $this->accounts = $accounts;
+    }
 
-            $this->report[$sourceAccountId]['currencies'][$currencyId] =
-                $this->report[$sourceAccountId]['currencies'][$currencyId] ?? [
-                    'currency_id'             => $expenses['currency_id'],
-                    'currency_symbol'         => $expenses['currency_symbol'],
-                    'currency_name'           => $expenses['currency_name'],
-                    'currency_decimal_places' => $expenses['currency_decimal_places'],
-                    'budgets'                 => [],
-                ];
+    /**
+     * @param Collection $budgets
+     */
+    public function setBudgets(Collection $budgets): void
+    {
+        $this->budgets = $budgets;
+    }
 
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] =
-                $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] ?? '0';
+    /**
+     * @param Carbon $end
+     */
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
 
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] =
-                bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
-        }
+    /**
+     * @param Carbon $start
+     */
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->repository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+        $this->nbRepository->setUser($user);
+        $this->currency = app('amount')->getDefaultCurrencyByUser($this->user);
     }
 }
