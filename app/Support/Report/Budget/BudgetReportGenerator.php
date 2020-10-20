@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Report\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
@@ -42,6 +43,7 @@ class BudgetReportGenerator
 {
     private User                           $user;
     private Collection                     $accounts;
+    private Collection                     $budgets;
     private Carbon                         $start;
     private Carbon                         $end;
     private BudgetRepositoryInterface      $repository;
@@ -80,6 +82,32 @@ class BudgetReportGenerator
     }
 
     /**
+     * Returns the data necessary for the "account per budget" block on the budget report.
+     */
+    public function accountPerBudget(): void
+    {
+
+        $spent        = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts, $this->budgets);
+        $this->report = [];
+        /** @var Account $account */
+        foreach ($this->accounts as $account) {
+            $accountId                = $account->id;
+            $this->report[$accountId] = $this->report[$accountId] ?? [
+                    'name'       => $account->name,
+                    'id'         => $account->id,
+                    'iban'       => $account->iban,
+                    'currencies' => [],
+                ];
+        }
+
+        // loop expenses.
+        foreach ($spent as $currency) {
+            $this->processExpenses($currency);
+        }
+
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -90,6 +118,14 @@ class BudgetReportGenerator
         $this->opsRepository->setUser($user);
         $this->nbRepository->setUser($user);
         $this->currency = app('amount')->getDefaultCurrencyByUser($this->user);
+    }
+
+    /**
+     * @param Collection $budgets
+     */
+    public function setBudgets(Collection $budgets): void
+    {
+        $this->budgets = $budgets;
     }
 
     /**
@@ -125,7 +161,7 @@ class BudgetReportGenerator
     }
 
     /**
-     * Start the report by processing every budget.
+     * Start the budgets block on the default report by processing every budget.
      */
     private function generalBudgetReport(): void
     {
@@ -137,7 +173,7 @@ class BudgetReportGenerator
     }
 
     /**
-     * Process expenses etc. for a single budget.
+     * Process expenses etc. for a single budget for the budgets block on the default report.
      *
      * @param Budget $budget
      */
@@ -160,7 +196,8 @@ class BudgetReportGenerator
     }
 
     /**
-     * Process a single budget limit.
+     * Process a single budget limit for the budgets block on the default report.
+     *
      * @param Budget      $budget
      * @param BudgetLimit $limit
      */
@@ -212,7 +249,7 @@ class BudgetReportGenerator
     }
 
     /**
-     *
+     * Calculate the expenses for transactions without a budget. Part of the "budgets" block of the default report.
      */
     private function noBudgetReport(): void
     {
@@ -266,7 +303,7 @@ class BudgetReportGenerator
     }
 
     /**
-     *
+     * Calculate the percentages for each budget. Part of the "budgets" block on the default report.
      */
     private function percentageReport(): void
     {
@@ -293,6 +330,48 @@ class BudgetReportGenerator
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
+        }
+    }
+
+    /**
+     * Process each row of expenses collected for the "Account per budget" partial
+     *
+     * @param array $expenses
+     */
+    private function processExpenses(array $expenses): void
+    {
+        foreach ($expenses['budgets'] as $budget) {
+            $this->processBudgetExpenses($expenses, $budget);
+        }
+    }
+
+    /**
+     * Process each set of transactions for each row of expenses.
+     *
+     * @param array $expenses
+     * @param array $budget
+     */
+    private function processBudgetExpenses(array $expenses, array $budget): void
+    {
+        $budgetId   = (int) $budget['id'];
+        $currencyId = (int) $expenses['currency_id'];
+        foreach ($budget['transaction_journals'] as $journal) {
+            $sourceAccountId = $journal['source_account_id'];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId] =
+                $this->report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                    'currency_id'             => $expenses['currency_id'],
+                    'currency_symbol'         => $expenses['currency_symbol'],
+                    'currency_name'           => $expenses['currency_name'],
+                    'currency_decimal_places' => $expenses['currency_decimal_places'],
+                    'budgets'                 => [],
+                ];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] =
+                $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] ?? '0';
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] =
+                bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
         }
     }
 }

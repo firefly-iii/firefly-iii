@@ -72,6 +72,7 @@ class BudgetController extends Controller
     }
 
     /**
+     * Partial used in the budget report.
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -81,46 +82,17 @@ class BudgetController extends Controller
      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $report = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountId          = $account->id;
-            $report[$accountId] = $report[$accountId] ?? [
-                    'name'       => $account->name,
-                    'id'         => $account->id,
-                    'iban'       => $account->iban,
-                    'currencies' => [],
-                ];
-        }
+        /** @var BudgetReportGenerator $generator */
+        $generator = app(BudgetReportGenerator::class);
 
-        // loop expenses.
-        foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
+        $generator->setUser(auth()->user());
+        $generator->setAccounts($accounts);
+        $generator->setBudgets($budgets);
+        $generator->setStart($start);
+        $generator->setEnd($end);
 
-            foreach ($currency['budgets'] as $budget) {
-                foreach ($budget['transaction_journals'] as $journal) {
-                    $sourceAccountId = $journal['source_account_id'];
-
-
-                    $report[$sourceAccountId]['currencies'][$currencyId]                           = $report[$sourceAccountId]['currencies'][$currencyId] ?? [
-                            'currency_id'             => $currency['currency_id'],
-                            'currency_symbol'         => $currency['currency_symbol'],
-                            'currency_name'           => $currency['currency_name'],
-                            'currency_decimal_places' => $currency['currency_decimal_places'],
-                            'budgets'                 => [],
-                        ];
-                    $report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budget['id']]
-                                                                                                   = $report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budget['id']]
-                                                                                                     ?? '0';
-                    $report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budget['id']] = bcadd(
-                        $report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budget['id']],
-                        $journal['amount']
-                    );
-                }
-            }
-        }
-
+        $generator->accountPerBudget();
+        $report = $generator->getReport();
         return view('reports.budget.partials.account-per-budget', compact('report', 'budgets'));
     }
 
@@ -302,7 +274,6 @@ class BudgetController extends Controller
 
     /**
      * Show partial overview of budgets.
-     * TODO can be replaced I think.
      *
      * @param Collection $accounts
      * @param Carbon     $start
