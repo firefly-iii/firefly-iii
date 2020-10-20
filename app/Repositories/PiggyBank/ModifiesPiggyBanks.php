@@ -336,16 +336,16 @@ trait ModifiesPiggyBanks
      */
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-        if (isset($data['name']) && '' !== $data['name']) {
+        if (array_key_exists('name', $data) && '' !== $data['name']) {
             $piggyBank->name = $data['name'];
         }
-        if (isset($data['account_id']) && 0 !== $data['account_id']) {
+        if (array_key_exists('account_id', $data) && 0 !== $data['account_id']) {
             $piggyBank->account_id = (int) $data['account_id'];
         }
-        if (isset($data['targetamount']) && '' !== $data['targetamount']) {
+        if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
             $piggyBank->targetamount = $data['targetamount'];
         }
-        if (isset($data['targetdate']) && '' !== $data['targetdate']) {
+        if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
             $piggyBank->targetdate = $data['targetdate'];
         }
         $piggyBank->startdate = $data['startdate'] ?? $piggyBank->startdate;
@@ -359,7 +359,6 @@ trait ModifiesPiggyBanks
         if ($oldOrder !== $newOrder) {
             $this->updateOrder($piggyBank, $oldOrder, $newOrder);
         }
-
 
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
@@ -380,7 +379,14 @@ trait ModifiesPiggyBanks
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();
             }
+            return $piggyBank;
         }
+        // remove if name is empty. Should be overruled by ID.
+        if ('' === $objectGroupTitle) {
+            $piggyBank->objectGroups()->sync([]);
+            $piggyBank->save();
+        }
+
         // try also with ID:
         $objectGroupId = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
@@ -389,6 +395,7 @@ trait ModifiesPiggyBanks
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();
             }
+            return $piggyBank;
         }
 
         return $piggyBank;
