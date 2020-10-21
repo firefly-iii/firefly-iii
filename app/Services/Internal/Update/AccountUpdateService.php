@@ -77,7 +77,7 @@ class AccountUpdateService
 
         // find currency, or use default currency instead.
         if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
-            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;
         }
@@ -132,6 +132,9 @@ class AccountUpdateService
             $this->updateNote($account, (string)$data['notes']);
         }
 
+        // update preferences if inactive:
+        $this->updatePreferences($account, $data);
+
         return $account;
     }
 
@@ -177,8 +180,8 @@ class AccountUpdateService
 
         // if account type is a liability, the liability type (account type)
         // can be updated to another one.
-        if ($this->isLiability($account) && $this->isLiabilityTypeId((int) ($data['account_type_id'] ?? 0))) {
-            $account->account_type_id = (int) $data['account_type_id'];
+        if ($this->isLiability($account) && $this->isLiabilityTypeId((int)($data['account_type_id'] ?? 0))) {
+            $account->account_type_id = (int)$data['account_type_id'];
         }
 
         // update virtual balance (could be set to zero if empty string).
@@ -189,5 +192,26 @@ class AccountUpdateService
         $account->save();
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updatePreferences(Account $account, array $data): void
+    {
+        if (array_key_exists('active', $data) && false === $data['active']) {
+            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+            if (null !== $preference) {
+                $removeAccountId = (int)$account->id;
+                $array           = $preference->data;
+                $filtered        = array_filter(
+                    $array, function ($accountId) use ($removeAccountId) {
+                    return (int)$accountId !== $removeAccountId;
+                }
+                );
+                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
+            }
+        }
     }
 }
