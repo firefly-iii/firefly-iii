@@ -528,6 +528,7 @@ class GroupCollector implements GroupCollectorInterface
                         ->where(
                             static function (EloquentBuilder $q1) {
                                 $q1->where('attachments.attachable_type', TransactionJournal::class);
+                                $q1->where('attachments.uploaded',1);
                                 $q1->orWhereNull('attachments.attachable_type');
                             }
                         );
