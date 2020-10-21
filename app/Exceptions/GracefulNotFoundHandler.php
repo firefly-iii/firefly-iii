@@ -77,6 +77,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return $this->handleGroup($request, $exception);
             case 'attachments.show':
             case 'attachments.edit':
+            case 'attachments.download':
+            case 'attachments.view':
                 // redirect to original attachment holder.
                 return $this->handleAttachment($request, $exception);
                 break;
@@ -117,12 +119,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 $request->session()->reflash();
 
                 return redirect(route('categories.index'));
-                break;
             case 'rules.edit':
                 $request->session()->reflash();
 
                 return redirect(route('rules.index'));
-                break;
             case 'transactions.edit':
             case 'transactions.mass.edit':
             case 'transactions.mass.delete':
