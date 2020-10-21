@@ -458,7 +458,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $metaFieldData = $this->groupRepos->getMetaFields((int) $row['transaction_journal_id'], $this->metaFields);
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
 
-        $result[] = [
+        return [
             'user'                   => (int) $row['user_id'],
             'transaction_journal_id' => (int) $row['transaction_journal_id'],
             'type'                   => strtolower($type),
@@ -530,7 +530,6 @@ class TransactionGroupTransformer extends AbstractTransformer
             'payment_date'  => $this->dateFromArray($metaDateData, 'payment_date'),
             'invoice_date'  => $this->dateFromArray($metaDateData, 'invoice_date'),
         ];
-        return $result;
     }
 
     /**
