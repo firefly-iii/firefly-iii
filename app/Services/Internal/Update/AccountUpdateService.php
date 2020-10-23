@@ -200,7 +200,7 @@ class AccountUpdateService
      */
     private function updatePreferences(Account $account, array $data): void
     {
-        if (array_key_exists('active', $data) && false === $data['active']) {
+        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
             $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
             if (null !== $preference) {
                 $removeAccountId = (int)$account->id;
