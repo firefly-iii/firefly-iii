@@ -540,9 +540,7 @@ class Steam
         if (null === $amount) {
             return null;
         }
-        $amount = bcmul($amount, '-1');
-
-        return $amount;
+        return bcmul($amount, '-1');
     }
 
     /**

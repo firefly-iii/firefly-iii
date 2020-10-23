@@ -41,7 +41,7 @@ class RuleFormRequest extends LoggedInRequest
      */
     public function getRuleData(): array
     {
-        $data = [
+        return [
             'title'           => $this->string('title'),
             'rule_group_id'   => $this->integer('rule_group_id'),
             'active'          => $this->boolean('active'),
@@ -52,8 +52,6 @@ class RuleFormRequest extends LoggedInRequest
             'triggers'        => $this->getRuleTriggerData(),
             'actions'         => $this->getRuleActionData(),
         ];
-
-        return $data;
     }
 
     /**

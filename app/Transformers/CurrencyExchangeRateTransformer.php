@@ -32,19 +32,6 @@ use Log;
  */
 class CurrencyExchangeRateTransformer extends AbstractTransformer
 {
-
-    /**
-     * PiggyBankEventTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
     /**
      * @param CurrencyExchangeRate $rate
      *
@@ -54,7 +41,7 @@ class CurrencyExchangeRateTransformer extends AbstractTransformer
     {
         $result = number_format((float) $rate->rate * (float) $this->parameters->get('amount'), $rate->toCurrency->decimal_places, '.', '');
         $result = 0.0 === $result ? null : $result;
-        $data   = [
+        return [
             'id'                           => (int)$rate->id,
             'created_at'                   => $rate->created_at->toAtomString(),
             'updated_at'                   => $rate->updated_at->toAtomString(),
@@ -78,7 +65,5 @@ class CurrencyExchangeRateTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

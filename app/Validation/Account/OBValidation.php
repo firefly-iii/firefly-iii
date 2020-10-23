@@ -143,8 +143,6 @@ trait OBValidation
             $account->accountType = $accountType;
             $this->source         = $account;
         }
-        $result = $result ?? false;
-
-        return $result;
+        return $result ?? false;
     }
 }

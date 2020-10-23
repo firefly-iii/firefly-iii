@@ -66,7 +66,6 @@ class RuleGroupTriggerRequest extends FormRequest
      */
     private function getDate(string $field): ?Carbon
     {
-        /** @var Carbon $result */
         return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 

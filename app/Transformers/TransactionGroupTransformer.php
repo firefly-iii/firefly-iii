@@ -76,7 +76,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $data   = new NullArrayObject($group);
         $first  = new NullArrayObject(reset($group['transactions']));
-        $result = [
+        return [
             'id'           => (int) $first['transaction_group_id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
@@ -90,10 +90,6 @@ class TransactionGroupTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        // do something else.
-
-        return $result;
     }
 
     /**

@@ -51,9 +51,7 @@ trait GetConfigurationData
             E_ALL & ~E_NOTICE & ~E_STRICT                                  => 'E_ALL & ~E_NOTICE & ~E_STRICT',
             E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
         ];
-        $result = $array[$value] ?? (string)$value;
-
-        return $result;
+        return $array[$value] ?? (string)$value;
     }
 
     /**
@@ -150,7 +148,7 @@ trait GetConfigurationData
         $index          = (string)trans('firefly.everything');
         $ranges[$index] = [$first, new Carbon];
 
-        $return = [
+        return [
             'title'         => $title,
             'configuration' => [
                 'apply'       => (string)trans('firefly.apply'),
@@ -163,8 +161,6 @@ trait GetConfigurationData
                 'ranges'      => $ranges,
             ],
         ];
-
-        return $return;
     }
 
     /**

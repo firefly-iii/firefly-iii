@@ -43,11 +43,9 @@ class TestRuleFormRequest extends LoggedInRequest
     {
         // fixed
         $validTriggers = $this->getTriggers();
-        $rules         = [
+        return [
             'rule-trigger.*'       => 'required|min:1|in:' . implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',
         ];
-
-        return $rules;
     }
 }

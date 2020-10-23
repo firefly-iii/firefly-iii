@@ -312,9 +312,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     private function getCategories(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->categories()->get();
-
-        return $set;
+        return $this->user->categories()->get();
     }
 }

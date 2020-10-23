@@ -148,13 +148,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     {
         // both are NULL:
         if (null === $start && null === $end) {
-            $set = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                               ->with(['budget'])
                               ->where('budgets.user_id', $this->user->id)
                               ->whereNull('budgets.deleted_at')
                               ->get(['budget_limits.*']);
-
-            return $set;
         }
         // one of the two is NULL.
         if (null === $start xor null === $end) {
@@ -170,12 +168,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }
-            $set = $query->get(['budget_limits.*']);
-
-            return $set;
+            return $query->get(['budget_limits.*']);
         }
         // neither are NULL:
-        $set = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+        return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                           ->with(['budget'])
                           ->where('budgets.user_id', $this->user->id)
                           ->whereNull('budgets.deleted_at')
@@ -206,8 +202,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                      );
                               }
                           )->get(['budget_limits.*']);
-
-        return $set;
     }
 
     /**
@@ -250,13 +244,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }
-            $set = $query->get(['budget_limits.*']);
-
-            return $set;
+            return $query->get(['budget_limits.*']);
         }
 
         // when both dates are set:
-        $set = $budget->budgetlimits()
+        return $budget->budgetlimits()
                       ->where(
                           static function (Builder $q5) use ($start, $end) {
                               $q5->where(
@@ -286,8 +278,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                  );
                           }
                       )->orderBy('budget_limits.start_date', 'DESC')->get(['budget_limits.*']);
-
-        return $set;
     }
 
     /**

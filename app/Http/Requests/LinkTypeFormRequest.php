@@ -46,13 +46,11 @@ class LinkTypeFormRequest extends LoggedInRequest
             $nameRule = 'required|min:1';
         }
 
-        $rules = [
+        return [
             'id'      => $idRule,
             'name'    => $nameRule,
             'inward'  => 'required|min:1|different:outward',
             'outward' => 'required|min:1|different:inward',
         ];
-
-        return $rules;
     }
 }

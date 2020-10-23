@@ -50,9 +50,6 @@ class BudgetTransformer extends AbstractTransformer
     {
         $this->opsRepository = app(OperationsRepositoryInterface::class);
         $this->repository    = app(BudgetRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -92,7 +89,7 @@ class BudgetTransformer extends AbstractTransformer
             $abPeriod       = $autoBudget->period;
         }
 
-        $data = [
+        return [
             'id'                        => (int)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
             'updated_at'                => $budget->updated_at->toAtomString(),
@@ -111,8 +108,6 @@ class BudgetTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
     /**

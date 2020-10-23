@@ -44,19 +44,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
     use ModifiesPiggyBanks;
 
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
+    private User $user;
 
     /**
      * Find by name or return NULL.
@@ -384,7 +372,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -393,8 +381,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 
 

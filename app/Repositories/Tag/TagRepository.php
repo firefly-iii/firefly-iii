@@ -156,10 +156,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function get(): Collection
     {
-        /** @var Collection $tags */
-        $tags = $this->user->tags()->orderBy('tag', 'ASC')->get();
-
-        return $tags;
+        return $this->user->tags()->orderBy('tag', 'ASC')->get();
     }
 
     /**
@@ -575,7 +572,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -584,8 +581,6 @@ class TagRepository implements TagRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 
     /**

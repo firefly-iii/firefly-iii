@@ -121,8 +121,7 @@ class Breadcrumbs extends AbstractExtension
             }
             $html .= sprintf('<li class="%1$s"><a href="%2$s" title="%3$s">%3$s</a></li>', $class, $route, trans($breadcrumb['title']));
         }
-        $html .= '</ol>';
 
-        return $html;
+        return $html . '</ol>';
     }
 }

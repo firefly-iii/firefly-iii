@@ -33,17 +33,6 @@ use Log;
  */
 class TagTransformer extends AbstractTransformer
 {
-    /**
-     * TagTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * Transform a tag.
@@ -67,7 +56,7 @@ class TagTransformer extends AbstractTransformer
             $longitude = $location->longitude;
             $zoomLevel = $location->zoom_level;
         }
-        $data = [
+        return [
             'id'          => (int)$tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
             'updated_at'  => $tag->updated_at->toAtomString(),
@@ -84,8 +73,6 @@ class TagTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
 }

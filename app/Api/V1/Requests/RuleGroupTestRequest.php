@@ -67,10 +67,7 @@ class RuleGroupTestRequest extends FormRequest
      */
     private function getDate(string $field): ?Carbon
     {
-        /** @var Carbon $result */
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-
-        return $result;
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 
     /**

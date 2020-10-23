@@ -41,12 +41,9 @@ use Throwable;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection The accounts used. */
-    private $accounts;
-    /** @var Carbon End date of the report. */
-    private $end;
-    /** @var Carbon Start date of the report. */
-    private $start;
+    private Collection $accounts;
+    private Carbon $end;
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -155,7 +152,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         }
         $locale = app('steam')->getLocale();
-        $return = [
+        return [
             'journals'         => $journals,
             'currency'         => $currency,
             'exists'           => count($journals) > 0,
@@ -164,8 +161,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'dayBefore'        => $date->formatLocalized((string) trans('config.month_and_day', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];
-
-        return $return;
     }
 
     /**

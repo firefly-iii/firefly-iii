@@ -37,18 +37,7 @@ use Storage;
  */
 class JournalAPIRepository implements JournalAPIRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    private User $user;
 
     /**
      * Returns transaction by ID. Used to validate attachments.
@@ -59,12 +48,10 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      */
     public function findTransaction(int $transactionId): ?Transaction
     {
-        $transaction = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                   ->where('transaction_journals.user_id', $this->user->id)
                                   ->where('transactions.id', $transactionId)
                                   ->first(['transactions.*']);
-
-        return $transaction;
     }
 
     /**
@@ -81,7 +68,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -90,8 +77,6 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 
     /**

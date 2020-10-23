@@ -54,9 +54,6 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->accountRepos  = app(AccountRepositoryInterface::class);
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
 
@@ -108,7 +105,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $targetAmount = $piggyBank->targetamount;
         $targetAmount = 1 === bccomp('0.01', (string) $targetAmount) ? '0.01' : $targetAmount;
         $percentage   = (int) (0 !== bccomp('0', $currentAmountStr) ? $currentAmountStr / $targetAmount * 100 : 0);
-        $data         = [
+        return [
             'id'                      => (int) $piggyBank->id,
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
@@ -139,7 +136,5 @@ class PiggyBankTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

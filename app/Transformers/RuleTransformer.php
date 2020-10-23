@@ -47,9 +47,6 @@ class RuleTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->ruleRepository = app(RuleRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -64,7 +61,7 @@ class RuleTransformer extends AbstractTransformer
     {
         $this->ruleRepository->setUser($rule->user);
 
-        $data = [
+        return [
             'id'              => (int)$rule->id,
             'created_at'      => $rule->created_at->toAtomString(),
             'updated_at'      => $rule->updated_at->toAtomString(),
@@ -85,8 +82,6 @@ class RuleTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
     /**

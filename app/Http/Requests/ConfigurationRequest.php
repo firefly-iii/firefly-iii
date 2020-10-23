@@ -50,11 +50,9 @@ class ConfigurationRequest extends LoggedInRequest
     public function rules(): array
     {
         // fixed
-        $rules = [
+        return [
             'single_user_mode' => 'between:0,1|numeric',
             'is_demo_site'     => 'between:0,1|numeric',
         ];
-
-        return $rules;
     }
 }

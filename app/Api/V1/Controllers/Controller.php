@@ -60,8 +60,10 @@ abstract class Controller extends BaseController
                     $language = app('steam')->getLanguage();
                     app()->setLocale($language);
                 }
+
                 return $next($request);
-            });
+            }
+        );
 
     }
 
@@ -73,7 +75,7 @@ abstract class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag  = new ParameterBag;
-        $page = (int) request()->get('page');
+        $page = (int)request()->get('page');
         if (0 === $page) {
             $page = 1;
         }
@@ -100,7 +102,7 @@ abstract class Controller extends BaseController
         foreach ($integers as $integer) {
             $value = request()->query->get($integer);
             if (null !== $value) {
-                $bag->set($integer, (int) $value);
+                $bag->set($integer, (int)$value);
             }
         }
 
@@ -127,9 +129,8 @@ abstract class Controller extends BaseController
             }
             $params[$key] = $value;
         }
-        $return .= http_build_query($params);
 
-        return $return;
+        return $return . http_build_query($params);
     }
 
     /**

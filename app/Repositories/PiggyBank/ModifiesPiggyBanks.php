@@ -161,10 +161,7 @@ trait ModifiesPiggyBanks
         if (0 === bccomp('0', $amount)) {
             return new PiggyBankEvent;
         }
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
-
-        return $event;
+        return PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
     }
 
     /**
@@ -176,16 +173,13 @@ trait ModifiesPiggyBanks
      */
     public function createEventWithJournal(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): PiggyBankEvent
     {
-        /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(
+        return PiggyBankEvent::create(
             [
                 'piggy_bank_id'          => $piggyBank->id,
                 'transaction_journal_id' => $journal->id,
                 'date'                   => $journal->date->format('Y-m-d'),
                 'amount'                 => $amount]
         );
-
-        return $event;
     }
 
     /**

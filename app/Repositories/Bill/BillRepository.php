@@ -140,13 +140,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getActiveBills(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->bills()
+        return $this->user->bills()
                           ->where('active', 1)
                           ->orderBy('bills.name', 'ASC')
                           ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
-
-        return $set;
     }
 
     /**
@@ -163,7 +160,7 @@ class BillRepository implements BillRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -172,8 +169,6 @@ class BillRepository implements BillRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 
     /**
@@ -198,7 +193,7 @@ class BillRepository implements BillRepositoryInterface
         $fields = ['bills.id', 'bills.created_at', 'bills.updated_at', 'bills.deleted_at', 'bills.user_id', 'bills.name', 'bills.amount_min',
                    'bills.amount_max', 'bills.date', 'bills.transaction_currency_id', 'bills.repeat_freq', 'bills.skip', 'bills.automatch', 'bills.active',];
         $ids    = $accounts->pluck('id')->toArray();
-        $set    = $this->user->bills()
+        return $this->user->bills()
                              ->leftJoin(
                                  'transaction_journals',
                                  static function (JoinClause $join) {
@@ -217,7 +212,6 @@ class BillRepository implements BillRepositoryInterface
                              ->orderBy('bills.name', 'ASC')
                              ->groupBy($fields)
                              ->get($fields);
-        return $set;
     }
 
     /**

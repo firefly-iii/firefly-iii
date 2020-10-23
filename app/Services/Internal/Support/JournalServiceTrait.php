@@ -109,9 +109,7 @@ trait JournalServiceTrait
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
-        $result = $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
-
-        return $result;
+        return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
     }
 
     /**

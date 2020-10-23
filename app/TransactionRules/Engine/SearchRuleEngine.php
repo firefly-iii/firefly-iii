@@ -116,9 +116,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
             $collection = $collection->merge($found);
         }
-        $collection = $collection->unique();
-
-        return $collection;
+        return $collection->unique();
     }
 
     /**

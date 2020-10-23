@@ -45,12 +45,7 @@ class Preferences
      */
     public function beginsWith(User $user, string $search): Collection
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-        $set = Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
-
-        return $set;
+        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
     }
 
     /**
@@ -60,9 +55,6 @@ class Preferences
      */
     public function delete(string $name): bool
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
