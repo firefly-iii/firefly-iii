@@ -69,7 +69,7 @@ class EnableCurrencies extends Command
 
         // get all from journals:
         /** @var Collection $journals */
-        $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id', 'foreign_currency_id']);
+        $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
             $found[] = (int) $entry->transaction_currency_id;
         }
