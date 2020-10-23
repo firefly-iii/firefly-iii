@@ -34,7 +34,6 @@ use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 

@@ -24,7 +24,6 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**

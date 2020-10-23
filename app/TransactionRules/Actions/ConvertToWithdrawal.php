@@ -26,10 +26,8 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Log;

@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\LinkType;
-use Log;
 
 /**
  *

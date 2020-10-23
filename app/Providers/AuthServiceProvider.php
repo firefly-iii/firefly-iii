@@ -27,7 +27,6 @@ use FireflyIII\Support\Authentication\RemoteUserProvider;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
-use Log;
 
 /**
  * @codeCoverageIgnore

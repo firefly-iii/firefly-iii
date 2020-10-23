@@ -26,7 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
-use Log;
 
 /**
  * Class TagTransformer

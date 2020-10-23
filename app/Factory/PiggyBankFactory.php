@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class PiggyBankFactory

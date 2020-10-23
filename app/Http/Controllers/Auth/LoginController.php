@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
 use DB;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use Illuminate\Contracts\View\Factory;

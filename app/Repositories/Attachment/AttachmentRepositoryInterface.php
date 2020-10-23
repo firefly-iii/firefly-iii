@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\User;

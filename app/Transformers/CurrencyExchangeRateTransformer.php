@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\CurrencyExchangeRate;
-use Log;
 
 /**
  * Class CurrencyExchangeRateTransformer

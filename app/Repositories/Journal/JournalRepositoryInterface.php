@@ -28,7 +28,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 

@@ -27,7 +27,6 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class CategoryTransformer

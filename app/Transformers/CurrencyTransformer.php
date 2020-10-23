@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\TransactionCurrency;
-use Log;
 
 /**
  * Class CurrencyTransformer

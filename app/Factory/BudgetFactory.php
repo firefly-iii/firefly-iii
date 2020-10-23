@@ -25,7 +25,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class BudgetFactory.

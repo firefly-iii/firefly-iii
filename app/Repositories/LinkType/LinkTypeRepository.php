@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\LinkType;
 
 use Exception;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
