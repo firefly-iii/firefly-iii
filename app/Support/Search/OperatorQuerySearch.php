@@ -192,7 +192,7 @@ class OperatorQuerySearch implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            throw new FireflyException('Search query is empty.');
+            return new LengthAwarePaginator;
         }
         return $this->collector->getPaginatedGroups();
     }
