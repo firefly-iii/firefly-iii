@@ -290,7 +290,8 @@ class General extends AbstractExtension
                 $environment = Environment::createCommonMarkEnvironment();
                 $environment->addExtension(new GithubFlavoredMarkdownExtension());
 
-                $converter = new CommonMarkConverter([], $environment);
+                $converter = new CommonMarkConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 3, 'html_input' => 'escape'], $environment);
+
                 return $converter->convertToHtml($text);
             }, ['is_safe' => ['html']]
         );
