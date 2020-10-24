@@ -6,22 +6,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - [Issue 3885](https://github.com/firefly-iii/firefly-iii/issues/3885) You can create a user from CLI.
-- Various code changes and upgrades. See also [issue 3957](https://github.com/firefly-iii/firefly-iii/issues/3957)
+- Various code changes and upgrades. See [issue 3957](https://github.com/firefly-iii/firefly-iii/issues/3957)
 
 ### Fixed
+- [Issue 3871](https://github.com/firefly-iii/firefly-iii/issues/3871) Remove initial balance accounts from the auto-complete list.
 - [Issue 3898](https://github.com/firefly-iii/firefly-iii/issues/3898) It was impossible to rename a group.
 - [Issue 3900](https://github.com/firefly-iii/firefly-iii/issues/3900) Execution of inactive rules.
-- [Issue 3902](https://github.com/firefly-iii/firefly-iii/issues/3902) Rule values for target account id not accepted.
-- [Issue 3913](https://github.com/firefly-iii/firefly-iii/issues/3913) Extra space in currency name.
 - [Issue 3901](https://github.com/firefly-iii/firefly-iii/issues/3901) Rules not executed in correct order.
-- [Issue 3903](https://github.com/firefly-iii/firefly-iii/issues/3903) Executing rules manually would fail.
-- [Issue 3914](https://github.com/firefly-iii/firefly-iii/issues/3914) Bad paths.
+- [Issue 3902](https://github.com/firefly-iii/firefly-iii/issues/3902) Rule values for target account id not accepted.
 - [Issue 3903](https://github.com/firefly-iii/firefly-iii/issues/3903) Long search queries may break the query parser.
-- [Issue 3942](https://github.com/firefly-iii/firefly-iii/issues/3942) Bad data validation
-- [Issue 3871](https://github.com/firefly-iii/firefly-iii/issues/3871) Remove initial balance accounts from the auto-complete list.
 - [Issue 3909](https://github.com/firefly-iii/firefly-iii/issues/3909) Foreign amount button was hidden.
-- [Issue 3953](https://github.com/firefly-iii/firefly-iii/issues/3953) Renaming categories would not rename the recurring transactions' category.
+- [Issue 3913](https://github.com/firefly-iii/firefly-iii/issues/3913) Extra space in currency name.
+- [Issue 3914](https://github.com/firefly-iii/firefly-iii/issues/3914) Bad paths.
 - [Issue 3915](https://github.com/firefly-iii/firefly-iii/issues/3915) LDAP users could not use tokens.
+- [Issue 3940](https://github.com/firefly-iii/firefly-iii/issues/3940) Fix broken links
+- [Issue 3942](https://github.com/firefly-iii/firefly-iii/issues/3942) Bad data validation
+- [Issue 3953](https://github.com/firefly-iii/firefly-iii/issues/3953) Renaming categories would not rename the recurring transactions' category.
 - [Issue 3968](https://github.com/firefly-iii/firefly-iii/issues/3968) Remove group from bill was broken.
 - [Issue 3973](https://github.com/firefly-iii/firefly-iii/issues/3973) Remove attachment broken reference.
 - [Issue 3974](https://github.com/firefly-iii/firefly-iii/issues/3974) Remove account from preferences when set inactive.
