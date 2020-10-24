@@ -30,7 +30,7 @@ $password    = '';
 $database    = '';
 $port        = '';
 
-if (!(false === $databaseUrl)) {
+if (false !== $databaseUrl) {
     $options  = parse_url($databaseUrl);
     $host     = $options['host'] ?? 'firefly_iii_db';
     $username = $options['user'] ?? 'firefly';

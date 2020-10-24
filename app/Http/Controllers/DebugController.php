@@ -252,7 +252,7 @@ class DebugController extends Controller
             if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
-                    if (!(false === stripos($name, $string))) {
+                    if (false !== stripos($name, $string)) {
                         $found = true;
                         break;
                     }

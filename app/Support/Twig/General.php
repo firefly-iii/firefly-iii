@@ -95,7 +95,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (!(false === strpos($name, $route))) {
+                if (false !== strpos($name, $route)) {
                     return 'active';
                 }
 
@@ -118,7 +118,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (!(false === strpos($name, $route))) {
+                if (false !== strpos($name, $route)) {
                     return 'menu-open';
                 }
 
@@ -141,7 +141,7 @@ class General extends AbstractExtension
                 [, $route, $objectType] = func_get_args();
                 $activeObjectType = $context['objectType'] ?? false;
 
-                if ($objectType === $activeObjectType && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
+                if ($objectType === $activeObjectType && false !== stripos(Route::getCurrentRoute()->getName(), $route)) {
                     return 'active';
                 }
 

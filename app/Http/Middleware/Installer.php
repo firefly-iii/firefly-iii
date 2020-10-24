@@ -61,7 +61,7 @@ class Installer
         // don't run installer when already in installer.
         $url    = $request->url();
         $strpos = stripos($url, '/install');
-        if (!(false === $strpos)) {
+        if (false !== $strpos) {
             Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
 
             return $next($request);
@@ -90,7 +90,7 @@ class Installer
      */
     protected function isAccessDenied(string $message): bool
     {
-        return !(false === stripos($message, 'Access denied'));
+        return false !== stripos($message, 'Access denied');
     }
 
     /**
@@ -102,7 +102,7 @@ class Installer
      */
     protected function noTablesExist(string $message): bool
     {
-        return !(false === stripos($message, 'Base table or view not found'));
+        return false !== stripos($message, 'Base table or view not found');
     }
 
     /**

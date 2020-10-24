@@ -531,21 +531,21 @@ class Steam
     {
         $string = strtolower($string);
 
-        if (!(false === stripos($string, 'k'))) {
+        if (false !== stripos($string, 'k')) {
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'kK'), '1024');
 
             return (int)$bytes;
         }
 
-        if (!(false === stripos($string, 'm'))) {
+        if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'mM'), '1048576');
 
             return (int)$bytes;
         }
 
-        if (!(false === stripos($string, 'g'))) {
+        if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
 
