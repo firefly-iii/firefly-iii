@@ -45,12 +45,9 @@ var colourSet = [
 ];
 
 var fillColors = [];
-var strokePointHighColors = [];
-
 
 for (var i = 0; i < colourSet.length; i++) {
     fillColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.5)");
-    strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
 }
 
 Chart.defaults.global.legend.display = false;

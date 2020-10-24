@@ -252,9 +252,6 @@ function updateActionInput(selectList) {
             createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'set_source_account':
-            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
-            createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');
-            break;
         case 'set_destination_account':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'api/v1/autocomplete/accounts');

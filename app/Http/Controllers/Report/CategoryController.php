@@ -284,7 +284,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
@@ -337,7 +336,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $sourceId     = $journal['source_account_id'];
@@ -536,7 +534,7 @@ class CategoryController extends Controller
                             'entries'                 => [],
 
                         ];
-                    foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
+                    foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
                         $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
@@ -616,7 +614,7 @@ class CategoryController extends Controller
                             'entries'                 => [],
 
                         ];
-                    foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
+                    foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
                         $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
@@ -662,7 +660,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var CategoryReportGenerator $generator */
@@ -700,7 +698,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
@@ -750,7 +747,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
@@ -787,17 +783,4 @@ class CategoryController extends Controller
         return $result;
     }
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function noAmountInArray(array $array): bool
-    {
-        if (0 === count($array)) {
-            return true;
-        }
-
-        return false;
-    }
 }

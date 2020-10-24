@@ -77,7 +77,7 @@ class Rule extends AbstractExtension
         return new TwigFunction(
             'allRuleTriggers',
             static function () {
-                $ruleTriggers     = array_keys(config('firefly.search.operators'));;
+                $ruleTriggers     = array_keys(config('firefly.search.operators'));
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
                     if ('user_action' !== $key) {

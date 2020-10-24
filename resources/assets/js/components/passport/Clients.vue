@@ -121,7 +121,7 @@
             </div>
 
             <!-- Create Client Form -->
-            <form role="form">
+            <form role="form" aria-label="form">
               <!-- Name -->
               <div class="form-group row">
                 <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>
@@ -208,7 +208,7 @@
             </div>
 
             <!-- Edit Client Form -->
-            <form role="form">
+            <form role="form" aria-label="form">
               <!-- Name -->
               <div class="form-group row">
                 <label class="col-md-3 col-form-label">{{ $t('firefly.name') }}</label>

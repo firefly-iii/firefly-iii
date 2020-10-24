@@ -51,7 +51,7 @@ $(function () {
         );
 
         // set report type from cookie, if any:
-        if (!(readCookie('report-type') === null)) {
+        if (null !== readCookie('report-type')) {
             $('select[name="report_type"]').val(readCookie('report-type'));
         }
 

@@ -585,7 +585,6 @@ export default {
 
       tagList = [];
       foreignAmount = '0';
-      foreignCurrency = null;
       // loop tags
       for (let tagKey in row.tags) {
         if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && tagKey <= 4294967294) {

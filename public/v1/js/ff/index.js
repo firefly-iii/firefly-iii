@@ -108,7 +108,6 @@ function getBillsBox() {
         var unpaid = [];
         var paid = [];
         for (key in data) {
-            var row = data[key];
             //console.log(key);
             if (key.substr(0, 16) === 'bills-unpaid-in-') {
                 // only when less than 3.

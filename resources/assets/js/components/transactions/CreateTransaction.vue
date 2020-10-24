@@ -842,19 +842,7 @@ export default {
 
     deleteTransaction: function (index, event) {
       event.preventDefault();
-      for (const key in this.transactions) {
-        if (
-            this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-        }
-      }
-
       this.transactions.splice(index, 1);
-
-      for (const key in this.transactions) {
-        if (
-            this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-        }
-      }
     },
     limitSourceType: function (type) {
       let i;

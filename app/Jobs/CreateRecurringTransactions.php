@@ -169,23 +169,6 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
-     * Helper function for debug information.
-     *
-     * @param array $occurrences
-     *
-     * @return array
-     */
-    private function debugArray(array $occurrences): array
-    {
-        $return = [];
-        foreach ($occurrences as $entry) {
-            $return[] = $entry->format('Y-m-d');
-        }
-
-        return $return;
-    }
-
-    /**
      * @param Collection $recurrences
      *
      * @return Collection
@@ -427,23 +410,6 @@ class CreateRecurringTransactions implements ShouldQueue
         return $startDate->gt($this->date);
     }
 
-    /***
-     * @param Recurrence       $recurrence
-     * @param TransactionGroup $group
-     */
-    private function linkGroupToPiggies(Recurrence $recurrence, TransactionGroup $group): void
-    {
-        /** @var TransactionJournal $journal */
-        foreach ($group->transactionJournals as $journal) {
-            // get piggy bank ID from meta data:
-            $piggyBank = $this->repository->getPiggyBank($recurrence);
-            if (null !== $piggyBank) {
-                /** @var PiggyBankEventFactory $factory */
-                $factory = app(PiggyBankEventFactory::class);
-                $factory->create($journal, $piggyBank);
-            }
-        }
-    }
 
     /**
      * Return true if the $repeat_until date is in the past.
