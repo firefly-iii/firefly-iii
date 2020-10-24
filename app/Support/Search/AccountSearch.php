@@ -45,15 +45,10 @@ class AccountSearch implements GenericSearchInterface
     /** @var string */
     public const SEARCH_ID = 'id';
 
-    /** @var string */
-    private $field;
-    /** @var string */
-    private $query;
-    /** @var array */
-    private $types;
-
-    /** @var User */
-    private $user;
+    private string $field;
+    private string $query;
+    private array  $types;
+    private User   $user;
 
     public function __construct()
     {
@@ -66,7 +61,7 @@ class AccountSearch implements GenericSearchInterface
     public function search(): Collection
     {
 
-        $query         = $this->user->accounts()
+        $searchQuery         = $this->user->accounts()
                                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                                     ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
                                     ->whereIn('account_types.type', $this->types);
@@ -75,7 +70,7 @@ class AccountSearch implements GenericSearchInterface
         switch ($this->field) {
             default:
             case self::SEARCH_ALL:
-                $query->where(
+                $searchQuery->where(
                     static function (Builder $q) use ($like) {
                         $q->where('accounts.id', 'LIKE', $like);
                         $q->orWhere('accounts.name', 'LIKE', $like);
@@ -83,7 +78,7 @@ class AccountSearch implements GenericSearchInterface
                     }
                 );
                 // meta data:
-                $query->orWhere(
+                $searchQuery->orWhere(
                     static function (Builder $q) use ($originalQuery) {
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', '=', 'account_number');
@@ -92,17 +87,17 @@ class AccountSearch implements GenericSearchInterface
                 );
                 break;
             case self::SEARCH_ID:
-                $query->where('accounts.id', '=', (int)$originalQuery);
+                $searchQuery->where('accounts.id', '=', (int)$originalQuery);
                 break;
             case self::SEARCH_NAME:
-                $query->where('accounts.name', 'LIKE', $like);
+                $searchQuery->where('accounts.name', 'LIKE', $like);
                 break;
             case self::SEARCH_IBAN:
-                $query->where('accounts.iban', 'LIKE', $like);
+                $searchQuery->where('accounts.iban', 'LIKE', $like);
                 break;
             case self::SEARCH_NUMBER:
                 // meta data:
-                $query->Where(
+                $searchQuery->Where(
                     static function (Builder $q) use ($originalQuery) {
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', 'account_number');
@@ -111,7 +106,8 @@ class AccountSearch implements GenericSearchInterface
                 );
                 break;
         }
-        return $query->distinct()->get(['accounts.*']);
+
+        return $searchQuery->distinct()->get(['accounts.*']);
     }
 
     /**

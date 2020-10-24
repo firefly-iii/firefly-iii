@@ -54,17 +54,32 @@ class JournalUpdateService
 {
     use JournalServiceTrait;
 
-    private BillRepositoryInterface     $billRepository;
-    private CurrencyRepositoryInterface $currencyRepository;
-    private array                       $data;
-    private Account                     $destinationAccount;
-    private Transaction                 $destinationTransaction;
-    private array                       $metaDate;
-    private array                       $metaString;
-    private Account                     $sourceAccount;
-    private Transaction                 $sourceTransaction;
-    private TransactionGroup            $transactionGroup;
-    private TransactionJournal          $transactionJournal;
+    /** @var BillRepositoryInterface */
+    private $billRepository;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepository;
+    /** @var array The data to update the journal with. */
+    private $data;
+    /** @var Account The destination account. */
+    private $destinationAccount;
+    /** @var Transaction */
+    private $destinationTransaction;
+    /** @var array All meta values that are dates. */
+    private $metaDate;
+    /** @var array All meta values that are strings. */
+    private $metaString;
+    /** @var Account Source account of the journal */
+    private $sourceAccount;
+    /** @var Transaction Source transaction of the journal. */
+    private $sourceTransaction;
+    /** @var TransactionGroup The parent group. */
+    private $transactionGroup;
+    /** @var TransactionJournal The journal to update. */
+    private $transactionJournal;
+    /** @var Account If new account info is submitted, this array will hold the valid destination. */
+    private $validDestination;
+    /** @var Account If new account info is submitted, this array will hold the valid source. */
+    private $validSource;
 
     /**
      * JournalUpdateService constructor.
@@ -363,9 +378,9 @@ class JournalUpdateService
         $sourceName = $this->data['source_name'] ?? null;
 
         if (!$this->hasFields(['source_id', 'source_name'])) {
-            $sourceAccount = $this->getOriginalSourceAccount();
-            $sourceId      = $sourceAccount->id;
-            $sourceName    = $sourceAccount->name;
+            $origSourceAccount = $this->getOriginalSourceAccount();
+            $sourceId          = $origSourceAccount->id;
+            $sourceName        = $origSourceAccount->name;
         }
 
         // make new account validator.
@@ -402,9 +417,9 @@ class JournalUpdateService
             return;
         }
 
-        $sourceTransaction = $this->getSourceTransaction();
-        $sourceTransaction->account()->associate($source);
-        $sourceTransaction->save();
+        $origSourceTransaction = $this->getSourceTransaction();
+        $origSourceTransaction->account()->associate($source);
+        $origSourceTransaction->save();
 
         $destTransaction = $this->getDestinationTransaction();
         $destTransaction->account()->associate($destination);
@@ -436,9 +451,9 @@ class JournalUpdateService
 
             return;
         }
-        $sourceTransaction         = $this->getSourceTransaction();
-        $sourceTransaction->amount = app('steam')->negative($amount);
-        $sourceTransaction->save();
+        $origSourceTransaction         = $this->getSourceTransaction();
+        $origSourceTransaction->amount = app('steam')->negative($amount);
+        $origSourceTransaction->save();
 
 
         $destTransaction         = $this->getDestinationTransaction();
