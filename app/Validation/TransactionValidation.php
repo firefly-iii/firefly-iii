@@ -53,6 +53,9 @@ trait TransactionValidation
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
+            if(!is_int($index)) {
+                continue;
+            }
             $this->validateSingleAccount($validator, $index, $transactionType, $transaction);
         }
     }
@@ -179,6 +182,20 @@ trait TransactionValidation
     }
 
     /**
+     * @param Validator $validator
+     */
+    public function validateTransactionArray(Validator $validator): void {
+        $transactions = $this->getTransactionsArray($validator);
+        foreach($transactions as $key => $value) {
+            if(!is_int($key)) {
+                $validator->errors()->add('transactions.0.description', (string) trans('validation.at_least_one_transaction'));
+                Log::debug('Added error: at_least_one_transaction.');
+                return;
+            }
+        }
+    }
+
+    /**
      * Adds an error to the validator when there are no transactions in the array of data.
      *
      * @param Validator $validator
@@ -235,8 +252,6 @@ trait TransactionValidation
         foreach ($transactions as $transaction) {
             $originalType = $this->getOriginalType((int) ($transaction['transaction_journal_id'] ?? 0));
             // if type is not set, fall back to the type of the journal, if one is given.
-
-
             $types[] = $transaction['type'] ?? $originalType;
         }
         $unique = array_unique($types);

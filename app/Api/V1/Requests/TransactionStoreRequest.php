@@ -275,6 +275,10 @@ class TransactionStoreRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
+
+                // must be valid array.
+                $this->validateTransactionArray($validator);
+
                 // must submit at least one transaction.
                 $this->validateOneTransaction($validator);
 
