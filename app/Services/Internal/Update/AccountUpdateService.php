@@ -196,7 +196,9 @@ class AccountUpdateService
      */
     private function updatePreferences(Account $account, array $data): void
     {
+        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
         if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
+            Log::debug('Account was marked as inactive.');
             $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
             if (null !== $preference) {
                 $removeAccountId = (int)$account->id;
@@ -210,8 +212,13 @@ class AccountUpdateService
                 );
                 Log::debug('Left with accounts', array_values($filtered));
                 app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
+                app('preferences')->forget($account->user, 'frontpageAccounts');
+                return;
             }
+            Log::debug("Found no frontpageAccounts preference, do nothing.");
+            return;
         }
+        Log::debug('Account was not marked as inactive, do nothing.');
     }
 
     /**
