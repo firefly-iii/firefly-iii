@@ -26,14 +26,16 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AccountFormRequest.
  */
-class AccountFormRequest extends LoggedInRequest
+class AccountFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData;
+    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
 
     /**
      * Get all data.

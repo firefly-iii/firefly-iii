@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class TokenFormRequest.
  *
  * @codeCoverageIgnore
  */
-class TokenFormRequest extends LoggedInRequest
+class TokenFormRequest extends FormRequest
 {
+    use ChecksLogin;
+
     /**
      * Rules for this request.
      *

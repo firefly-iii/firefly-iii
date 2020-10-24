@@ -23,14 +23,16 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ObjectGroupFormRequest.
  */
-class ObjectGroupFormRequest extends LoggedInRequest
+class ObjectGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Returns the data required by the controller.

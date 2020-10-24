@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class DeleteAccountFormRequest.
  *
  * @codeCoverageIgnore
  */
-class DeleteAccountFormRequest extends LoggedInRequest
+class DeleteAccountFormRequest extends FormRequest
 {
+    use ChecksLogin;
+
     /**
      * Rules for this request.
      *

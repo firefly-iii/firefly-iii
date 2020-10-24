@@ -24,14 +24,16 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class RuleGroupFormRequest.
  */
-class RuleGroupFormRequest extends LoggedInRequest
+class RuleGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data for controller.

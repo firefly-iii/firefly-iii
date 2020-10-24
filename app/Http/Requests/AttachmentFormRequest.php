@@ -22,16 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AttachmentFormRequest.
  *
  * @codeCoverageIgnore
  */
-class AttachmentFormRequest extends LoggedInRequest
+class AttachmentFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Returns the data required by the controller.

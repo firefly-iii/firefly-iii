@@ -22,16 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TestRuleFormRequest.
  *
  * @codeCoverageIgnore
  */
-class TestRuleFormRequest extends LoggedInRequest
+class TestRuleFormRequest extends FormRequest
 {
-    use GetRuleConfiguration;
+    use GetRuleConfiguration, ChecksLogin;
 
     /**
      * Rules for this request.
@@ -43,6 +45,7 @@ class TestRuleFormRequest extends LoggedInRequest
     {
         // fixed
         $validTriggers = $this->getTriggers();
+
         return [
             'rule-trigger.*'       => 'required|min:1|in:' . implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|min:1|ruleTriggerValue',

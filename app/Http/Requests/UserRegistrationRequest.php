@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,6 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserRegistrationRequest extends FormRequest
 {
+    use ChecksLogin;
+
     /**
      * Verify the request.
      *

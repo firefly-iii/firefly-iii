@@ -22,13 +22,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Foundation\Http\FormRequest;
+
 /**
  * Class MassDeleteJournalRequest.
  *
  * @codeCoverageIgnore
  */
-class MassDeleteJournalRequest extends LoggedInRequest
+class MassDeleteJournalRequest extends FormRequest
 {
+    use ChecksLogin;
+
     /**
      * Rules for this request.
      *
