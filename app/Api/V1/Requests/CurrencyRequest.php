@@ -37,6 +37,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class CurrencyRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

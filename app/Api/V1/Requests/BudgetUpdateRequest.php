@@ -37,6 +37,7 @@ use Illuminate\Validation\Validator;
 class BudgetUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ValidatesAutoBudgetRequest;
+
     /**
      * Authorize logged in users.
      *

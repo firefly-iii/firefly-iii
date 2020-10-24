@@ -37,6 +37,7 @@
         <div class="box-body">
           <!-- Authorized Tokens -->
           <table class="table table-responsive table-borderless mb-0">
+            <caption style="display:none;">{{ $t('firefly.profile_authorized_apps') }}</caption>
             <thead>
             <tr>
               <th scope="col">{{ $t('firefly.name') }}</th>
@@ -111,7 +112,7 @@ export default {
      * Get all of the authorized tokens for the user.
      */
     getTokens() {
-      axios.get('/oauth/tokens')
+      axios.get('./oauth/tokens')
           .then(response => {
             this.tokens = response.data;
           });
@@ -121,7 +122,7 @@ export default {
      * Revoke the given token.
      */
     revoke(token) {
-      axios.delete('/oauth/tokens/' + token.id)
+      axios.delete('./oauth/tokens/' + token.id)
           .then(response => {
             this.getTokens();
           });

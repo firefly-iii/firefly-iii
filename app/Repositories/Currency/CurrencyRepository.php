@@ -58,10 +58,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
         // also count foreign:
-        $count += Transaction::where('foreign_currency_id', $currency->id)->count();
-
-        return $count;
-
+        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
     }
 
     /**

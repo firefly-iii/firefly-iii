@@ -35,43 +35,16 @@ use Tests\TestCase;
 
 /**
  * Class CreateAccessTokensTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CreateAccessTokensTest extends TestCase
 {
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
     /**
      * @covers \FireflyIII\Console\Commands\Correction\CreateAccessTokens
      */
     public function testHandle(): void
     {
-        $users      = new Collection([$this->user()]);
-        $repository = $this->mock(UserRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('all')->atLeast()->once()->andReturn($users);
-
-        // mock preferences thing:
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token', null])
-                   ->once()->andReturn(null);
-
-        // null means user object will generate one and store it.
-        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'access_token', Mockery::any()])
-                   ->once();
-
+        // remove preferences so token will be generated
+        Preference::where('name','access_token')->delete();
 
         $this->artisan('firefly-iii:create-access-tokens')
              ->expectsOutput(sprintf('Generated access token for user %s', $this->user()->email))
@@ -83,20 +56,11 @@ class CreateAccessTokensTest extends TestCase
      */
     public function testHandlePrefExists(): void
     {
-        $users      = new Collection([$this->user()]);
-        $repository = $this->mock(UserRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('all')->atLeast()->once()->andReturn($users);
-
-        // mock preferences thing:
         $preference       = new Preference;
         $preference->data = '123';
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'access_token', null])
-                   ->once()->andReturn($preference);
-
-        // null means user object will generate one and store it.
-        Preferences::shouldNotReceive('setForUser');
+        $preference->name = 'access_token';
+        $preference->user_id = $this->user()->id;
+        $preference->save();
 
         $this->artisan('firefly-iii:create-access-tokens')
              ->expectsOutput('All access tokens OK!')

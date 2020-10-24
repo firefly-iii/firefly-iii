@@ -75,20 +75,20 @@ class RemoteUserGuard implements Guard
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
         }
 
-        /** @var User $user */
-        $user = $this->provider->retrieveById($userID);
+        /** @var User $retrievedUser */
+        $retrievedUser = $this->provider->retrieveById($userID);
 
         // store email address if present in header and not already set.
         $header       = config('auth.guard_email');
         $emailAddress = request()->server($header) ?? null;
-        $preference   = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+        $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email', null);
 
         if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
-            app('preferences')->setForUser($user, 'remote_guard_alt_email', $emailAddress);
+            app('preferences')->setForUser($retrievedUser, 'remote_guard_alt_email', $emailAddress);
         }
 
-        Log::debug(sprintf('Result of getting user from provider: %s', $user->email));
-        $this->user = $user;
+        Log::debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
+        $this->user = $retrievedUser;
     }
 
     /**

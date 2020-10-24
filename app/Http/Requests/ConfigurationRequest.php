@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -31,16 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class ConfigurationRequest extends FormRequest
 {
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users and admins
-        return auth()->check();
-    }
+    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.
@@ -63,11 +55,9 @@ class ConfigurationRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        $rules = [
+        return [
             'single_user_mode' => 'between:0,1|numeric',
             'is_demo_site'     => 'between:0,1|numeric',
         ];
-
-        return $rules;
     }
 }

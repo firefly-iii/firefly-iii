@@ -19,58 +19,58 @@
   -->
 
 <template>
-    <div class="form-group"
-         v-bind:class="{ 'has-error': hasError()}"
-    >
-        <div class="col-sm-12 text-sm">
-            {{ title }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-            <input type="date" class="form-control" :name="name"
-                   :title="title" autocomplete="off"
-                   ref="date"
-                   :value="value ? value.substr(0,10): ''" @input="handleInput"
-                   :placeholder="title">
-            <span class="input-group-btn">
-            <button
-                    tabIndex="-1"
-                    v-on:click="clearDate"
-                    class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-        </div>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group"
+       v-bind:class="{ 'has-error': hasError()}"
+  >
+    <div class="col-sm-12 text-sm">
+      {{ title }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input ref="date" :name="name" :placeholder="title"
+               :title="title" :value="value ? value.substr(0,10): ''"
+               autocomplete="off"
+               class="form-control" type="date"
+               @input="handleInput">
+        <span class="input-group-btn">
+            <button
+                class="btn btn-default"
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearDate"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+      <ul v-for="error in this.error" class="list-unstyled">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "CustomDate",
-        props: {
-            value: String,
-            title: String,
-            name: String,
-            error: Array,
-        },
-        methods: {
-            handleInput(e) {
-                this.$emit('input', this.$refs.date.value);
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            clearDate: function () {
-                //props.value = '';
-                this.name = '';
-                this.$refs.date.value = '';
-                this.$emit('input', this.$refs.date.value);
-            },
-        }
-    }
+export default {
+  name: "CustomDate",
+  props: {
+    value: String,
+    title: String,
+    name: String,
+    error: Array,
+  },
+  methods: {
+    handleInput(e) {
+      this.$emit('input', this.$refs.date.value);
+    },
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    clearDate: function () {
+      //props.value = '';
+      this.name = '';
+      this.$refs.date.value = '';
+      this.$emit('input', this.$refs.date.value);
+    },
+  }
+}
 </script>
 
 <style scoped>

@@ -41,8 +41,7 @@ class IndexController extends Controller
 {
     use PeriodOverview;
 
-    /** @var JournalRepositoryInterface */
-    private $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -132,16 +131,12 @@ class IndexController extends Controller
      */
     public function indexAll(Request $request, string $objectType)
     {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-
-
         $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
         $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int) $request->get('page');
         $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
-        $first        = $repository->firstNull();
+        $first        = $this->repository->firstNull();
         $start        = null === $first ? new Carbon : $first->date;
         $last         = $this->repository->getLast();
         $end          = $last ? $last->date : today(config('app.timezone'));

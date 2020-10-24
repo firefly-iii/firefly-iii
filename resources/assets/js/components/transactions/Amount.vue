@@ -23,31 +23,31 @@
     <div class="col-sm-8 col-sm-offset-4 text-sm">
       {{ $t('firefly.amount') }}
     </div>
-    <label class="col-sm-4 control-label" ref="cur"></label>
+    <label ref="cur" class="col-sm-4 control-label"></label>
     <div class="col-sm-8">
       <div class="input-group">
-        <input type="number"
-               @input="handleInput"
-               ref="amount"
+        <input ref="amount"
+               :title="$t('firefly.amount')"
                :value="value"
-               step="any"
+               autocomplete="off"
                class="form-control"
                name="amount[]"
-               :title="$t('firefly.amount')"
-               autocomplete="off"
-               v-bind:placeholder="$t('firefly.amount')">
+               step="any"
+               type="number"
+               v-bind:placeholder="$t('firefly.amount')"
+               @input="handleInput">
 
         <span class="input-group-btn">
             <button
-                v-on:click="clearAmount"
-                tabIndex="-1"
                 class="btn btn-default"
-                type="button"><i class="fa fa-trash-o"></i></button>
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearAmount"><i class="fa fa-trash-o"></i></button>
         </span>
       </div>
     </div>
 
-    <ul class="list-unstyled" v-for="error in this.error">
+    <ul v-for="error in this.error" class="list-unstyled">
       <li class="text-danger">{{ error }}</li>
     </ul>
   </div>
@@ -133,7 +133,7 @@ export default {
       console.log('amount: watch source triggered');
       this.changeData();
     },
-    value: function() {
+    value: function () {
       console.log('amount: value changed');
     },
     destination: function () {

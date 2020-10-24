@@ -12,28 +12,28 @@
     "devDependencies": {
         "axios": "^0.20",
         "cross-env": "^7.0",
-        "laravel-mix": "^5.0.5",
+        "laravel-mix": "^5.0.7",
         "laravel-mix-bundle-analyzer": "^1.0.5",
         "lodash": "^4.17.20",
-        "resolve-url-loader": "^3.1.0",
-        "sass": "^1.26.11",
-        "sass-loader": "^10.0.2",
+        "node-forge": ">=0.10.0",
+        "resolve-url-loader": "^3.1.2",
+        "sass": "^1.27.0",
+        "sass-loader": "^10.0.4",
         "vue": "^2.6.12",
-        "vue-i18n": "^8.21.1",
-        "vue-template-compiler": "^2.6.12",
-        "node-forge": ">=0.10.0"
+        "vue-i18n": "^8.22.1",
+        "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.0",
+        "@fortawesome/fontawesome-free": "^5.15.1",
         "@popperjs/core": "^2.5.2",
-        "bootstrap": "^4.5.2",
-        "chart.js": "^2.9.3",
+        "bootstrap": "^4.5.3",
+        "chart.js": "^2.9.4",
         "icheck-bootstrap": "^3.0.1",
         "jquery": "^3.5.1",
         "jquery-ui": "^1.12.1",
         "overlayscrollbars": "^1.13.0",
         "popper.js": "^1.16.1",
         "vue-chartjs": "^3.5.1",
-        "vue-router": "^3.4.5"
+        "vue-router": "^3.4.7"
     }
 }

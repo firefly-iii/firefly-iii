@@ -41,7 +41,6 @@ class AccountController extends Controller
     use AccountFilter;
 
     private array                      $balanceTypes;
-
     private AccountRepositoryInterface $repository;
 
 
@@ -76,16 +75,14 @@ class AccountController extends Controller
         $query = $data['query'];
         $date  = $data['date'] ?? today(config('app.timezone'));
 
-        /** @var AccountRepositoryInterface $repository */
-        $repository      = app(AccountRepositoryInterface::class);
         $return          = [];
-        $result          = $repository->searchAccount((string) $query, $types, $data['limit']);
+        $result          = $this->repository->searchAccount((string) $query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
-            $currency        = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $currency        = $this->repository->getAccountCurrency($account) ?? $defaultCurrency;
 
             if (in_array($account->accountType->type, $this->balanceTypes, true)) {
                 $balance         = app('steam')->balance($account, $date);

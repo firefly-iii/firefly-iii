@@ -26,7 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use Log;
 
 /**
  *
@@ -45,10 +44,6 @@ class TransactionLinkTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->repository = app(JournalRepositoryInterface::class);
-
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -59,7 +54,7 @@ class TransactionLinkTransformer extends AbstractTransformer
     public function transform(TransactionJournalLink $link): array
     {
         $notes = $this->repository->getLinkNoteText($link);
-        $data  = [
+        return [
             'id'           => (int)$link->id,
             'created_at'   => $link->created_at->toAtomString(),
             'updated_at'   => $link->updated_at->toAtomString(),
@@ -74,7 +69,5 @@ class TransactionLinkTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

@@ -53,18 +53,8 @@ use Log;
 class RecurringRepository implements RecurringRepositoryInterface
 {
     use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
-    /** @var User */
-    private $user;
+    private User $user;
 
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * Destroy a recurring transaction.
@@ -246,9 +236,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
 
         // filter out all the weekend days:
-        $occurrences = $this->filterWeekends($repetition, $occurrences);
-
-        return $occurrences;
+        return $this->filterWeekends($repetition, $occurrences);
     }
 
     /**
@@ -386,9 +374,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         // filter out all the weekend days:
-        $occurrences = $this->filterWeekends($repetition, $occurrences);
-
-        return $occurrences;
+        return $this->filterWeekends($repetition, $occurrences);
     }
 
     /**
@@ -536,9 +522,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
         // filter out everything if "repeat_until" is set.
         $repeatUntil = $repetition->recurrence->repeat_until;
-        $occurrences = $this->filterMaxDate($repeatUntil, $occurrences);
-
-        return $occurrences;
+        return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
     /**

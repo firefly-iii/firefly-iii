@@ -64,11 +64,12 @@ class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher)
     {
         // search params:
-        $fullQuery   = (string) $request->get('search');
-        $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $ruleId      = (int) $request->get('rule');
-        $rule        = null;
-        $ruleChanged = false;
+        $fullQuery        = (string) $request->get('search');
+        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $ruleId           = (int) $request->get('rule');
+        $rule             = null;
+        $ruleChanged      = false;
+        $longQueryWarning = false;
 
         // find rule, check if query is different, offer to update.
         $ruleRepository = app(RuleRepositoryInterface::class);
@@ -79,7 +80,9 @@ class SearchController extends Controller
                 $ruleChanged = true;
             }
         }
-
+        if (strlen($fullQuery) > 250) {
+            $longQueryWarning = true;
+        }
         // parse search terms:
         $searcher->parseQuery($fullQuery);
 
@@ -89,7 +92,7 @@ class SearchController extends Controller
 
         $subTitle = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
-        return view('search.index', compact('query', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged'));
+        return view('search.index', compact('query', 'longQueryWarning', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged'));
     }
 
     /**
@@ -106,6 +109,7 @@ class SearchController extends Controller
         $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 
         $searcher->parseQuery($fullQuery);
+
         $searcher->setPage($page);
         $groups     = $searcher->searchTransactions();
         $hasPages   = $groups->hasPages();

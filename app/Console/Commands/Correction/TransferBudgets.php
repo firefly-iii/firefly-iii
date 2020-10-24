@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
+use Log;
 
 /**
  * Class TransferBudgets
@@ -62,15 +63,21 @@ class TransferBudgets extends Command
         $count = 0;
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
-            $this->info(sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type));
+            $message = sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type);
+            $this->info($message);
+            Log::debug($message);
             $entry->budgets()->sync([]);
             $count++;
         }
         if (0 === $count) {
-            $this->info('No invalid budget/journal entries.');
+            $message = 'No invalid budget/journal entries.';
+            Log::debug($message);
+            $this->info($message);
         }
         if (0 !== $count) {
-            $this->line(sprintf('Corrected %d invalid budget/journal entries (entry).', $count));
+            $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);
+            Log::debug($message);
+            $this->line($message);
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified budget/journals in %s seconds.', $end));

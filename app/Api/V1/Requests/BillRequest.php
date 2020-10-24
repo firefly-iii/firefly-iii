@@ -39,6 +39,7 @@ use Illuminate\Validation\Validator;
 class BillRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

@@ -56,14 +56,14 @@ class Kernel extends ConsoleKernel
         $schedule->call(
             static function () {
                 Log::error(
-                    'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://firefly-iii.readthedocs.io/en/latest/'
+                    'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://docs.firefly-iii.org/'
                 );
                 echo "\n";
                 echo '------------';
                 echo "\n";
                 echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
                 echo "\n";
-                echo 'https://firefly-iii.readthedocs.io/en/latest/';
+                echo 'https://docs.firefly-iii.org/';
                 echo "\n\n";
                 echo 'Disable this cron job!';
                 echo "\n";

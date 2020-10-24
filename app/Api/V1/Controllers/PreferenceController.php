@@ -101,7 +101,7 @@ class PreferenceController extends Controller
 
         $resource = new FractalCollection($preferences, $transformer, 'preferences');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 
@@ -122,7 +122,7 @@ class PreferenceController extends Controller
 
         $resource = new Item($preference, $transformer, 'preferences');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -161,7 +161,7 @@ class PreferenceController extends Controller
 
         $resource = new Item($result, $transformer, 'preferences');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 }

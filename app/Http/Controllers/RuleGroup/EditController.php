@@ -38,8 +38,7 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    /** @var RuleGroupRepositoryInterface */
-    private $repository;
+    private RuleGroupRepositoryInterface $repository;
 
     /**
      * EditController constructor.

@@ -26,11 +26,11 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
+use FireflyIII\Support\Report\Category\CategoryReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -44,9 +44,8 @@ class CategoryController extends Controller
 {
     use BasicDataSupport;
 
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
+    private OperationsRepositoryInterface $opsRepository;
+    private NoCategoryRepositoryInterface $noCatRepository;
 
     /**
      * ExpenseReportController constructor.
@@ -58,8 +57,8 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
-
+                $this->opsRepository   = app(OperationsRepositoryInterface::class);
+                $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
                 return $next($request);
             }
         );
@@ -285,7 +284,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
@@ -338,7 +336,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $sourceId     = $journal['source_account_id'];
@@ -505,14 +502,6 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepos */
-        $noCatRepos = app(NoCategoryRepositoryInterface::class);
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
@@ -527,8 +516,8 @@ class CategoryController extends Controller
 
         $periods = app('navigation')->listOfPeriods($start, $end);
         $data    = [];
-        $with    = $opsRepository->listExpenses($start, $end, $accounts);
-        $without = $noCatRepos->listExpenses($start, $end, $accounts);
+        $with    = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $without = $this->noCatRepository->listExpenses($start, $end, $accounts);
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
@@ -545,7 +534,7 @@ class CategoryController extends Controller
                             'entries'                 => [],
 
                         ];
-                    foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
+                    foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
                         $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
@@ -594,12 +583,6 @@ class CategoryController extends Controller
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepos */
-        $noCatRepos = app(NoCategoryRepositoryInterface::class);
-
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
         $format = app('navigation')->preferredCarbonFormat($start, $end);
@@ -613,8 +596,8 @@ class CategoryController extends Controller
 
         $periods = app('navigation')->listOfPeriods($start, $end);
         $data    = [];
-        $with    = $opsRepository->listIncome($start, $end, $accounts);
-        $without = $noCatRepos->listIncome($start, $end, $accounts);
+        $with    = $this->opsRepository->listIncome($start, $end, $accounts);
+        $without = $this->noCatRepository->listIncome($start, $end, $accounts);
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
@@ -631,7 +614,7 @@ class CategoryController extends Controller
                             'entries'                 => [],
 
                         ];
-                    foreach ($categoryRow['transaction_journals'] as $journalId => $journal) {
+                    foreach ($categoryRow['transaction_journals'] as $journal) {
                         $date                         = $journal['date']->format($format);
                         $data[$key]['entries'][$date] = $data[$key]['entries'][$date] ?? '0';
                         $data[$key]['entries'][$date] = bcadd($data[$key]['entries'][$date], $journal['amount']);
@@ -659,7 +642,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show overview of operations.
+     * Show overview of category transactions on the default report.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -677,85 +660,16 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-             // return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
-        /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
-
-        /** @var NoCategoryRepositoryInterface $noCatRepository */
-        $noCatRepository = app(NoCategoryRepositoryInterface::class);
-
-        $earnedWith    = $opsRepository->listIncome($start, $end, $accounts);
-        $spentWith     = $opsRepository->listExpenses($start, $end, $accounts);
-        $earnedWithout = $noCatRepository->listIncome($start, $end, $accounts);
-        $spentWithout  = $noCatRepository->listExpenses($start, $end, $accounts);
-
-        $report = [
-            'categories' => [],
-            'sums'       => [],
-        ];
-
-        // needs four for-each loops.
-        foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout] as $data) {
-            foreach ($data as $currencyId => $currencyRow) {
-                $report['sums'][$currencyId] = $report['sums'][$currencyId] ?? [
-                        'spent'                   => '0',
-                        'earned'                  => '0',
-                        'sum'                     => '0',
-                        'currency_id'             => $currencyRow['currency_id'],
-                        'currency_symbol'         => $currencyRow['currency_symbol'],
-                        'currency_name'           => $currencyRow['currency_name'],
-                        'currency_code'           => $currencyRow['currency_code'],
-                        'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                    ];
-
-
-                foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
-                    $key                        = sprintf('%s-%s', $currencyId, $categoryId);
-                    $report['categories'][$key] = $report['categories'][$key] ?? [
-                            'id'                      => $categoryId,
-                            'title'                   => $categoryRow['name'],
-                            'currency_id'             => $currencyRow['currency_id'],
-                            'currency_symbol'         => $currencyRow['currency_symbol'],
-                            'currency_name'           => $currencyRow['currency_name'],
-                            'currency_code'           => $currencyRow['currency_code'],
-                            'currency_decimal_places' => $currencyRow['currency_decimal_places'],
-                            'spent'                   => '0',
-                            'earned'                  => '0',
-                            'sum'                     => '0',
-                        ];
-                    // loop journals:
-                    foreach ($categoryRow['transaction_journals'] as $journal) {
-                        // sum of sums
-                        $report['sums'][$currencyId]['sum'] = bcadd($report['sums'][$currencyId]['sum'], $journal['amount']);
-                        // sum of spent:
-                        $report['sums'][$currencyId]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                            $report['sums'][$currencyId]['spent'],
-                            $journal['amount']
-                        ) : $report['sums'][$currencyId]['spent'];
-                        // sum of earned
-                        $report['sums'][$currencyId]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                            $report['sums'][$currencyId]['earned'],
-                            $journal['amount']
-                        ) : $report['sums'][$currencyId]['earned'];
-
-                        // sum of category
-                        $report['categories'][$key]['sum'] = bcadd($report['categories'][$key]['sum'], $journal['amount']);
-                        // total spent in category
-                        $report['categories'][$key]['spent'] = -1 === bccomp($journal['amount'], '0') ? bcadd(
-                            $report['categories'][$key]['spent'],
-                            $journal['amount']
-                        ) : $report['categories'][$key]['spent'];
-                        // total earned in category
-                        $report['categories'][$key]['earned'] = 1 === bccomp($journal['amount'], '0') ? bcadd(
-                            $report['categories'][$key]['earned'],
-                            $journal['amount']
-                        ) : $report['categories'][$key]['earned'];
-                    }
-                }
-            }
-        }
+        /** @var CategoryReportGenerator $generator */
+        $generator = app(CategoryReportGenerator::class);
+        $generator->setAccounts($accounts);
+        $generator->setStart($start);
+        $generator->setEnd($end);
+        $generator->operations();
+        $report = $generator->getReport();
 
         // @codeCoverageIgnoreStart
         try {
@@ -784,7 +698,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
@@ -834,7 +747,6 @@ class CategoryController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $result[] = [
@@ -871,17 +783,4 @@ class CategoryController extends Controller
         return $result;
     }
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function noAmountInArray(array $array): bool
-    {
-        if (0 === count($array)) {
-            return true;
-        }
-
-        return false;
-    }
 }

@@ -31,7 +31,6 @@ import MainPiggyList from "../components/dashboard/MainPiggyList";
 import TransactionListLarge from "../components/transactions/TransactionListLarge";
 import TransactionListMedium from "../components/transactions/TransactionListMedium";
 import TransactionListSmall from "../components/transactions/TransactionListSmall";
-import {Chart} from 'vue-chartjs'
 
 /**
  * First we will load Axios via bootstrap.js

@@ -126,7 +126,7 @@ class TransactionLinkController extends Controller
         $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 
@@ -148,7 +148,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 
@@ -157,8 +157,8 @@ class TransactionLinkController extends Controller
      *
      * @param TransactionLinkRequest $request
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function store(TransactionLinkRequest $request): JsonResponse
     {
@@ -179,7 +179,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -188,8 +188,8 @@ class TransactionLinkController extends Controller
      * @param TransactionLinkRequest $request
      * @param TransactionJournalLink $journalLink
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
@@ -209,7 +209,7 @@ class TransactionLinkController extends Controller
 
         $resource = new Item($journalLink, $transformer, 'transaction_links');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 }

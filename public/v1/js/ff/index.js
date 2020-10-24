@@ -108,7 +108,6 @@ function getBillsBox() {
         var unpaid = [];
         var paid = [];
         for (key in data) {
-            var row = data[key];
             //console.log(key);
             if (key.substr(0, 16) === 'bills-unpaid-in-') {
                 // only when less than 3.
@@ -137,7 +136,7 @@ function getBalanceBox() {
     $.getJSON('json/box/balance').done(function (data) {
         if (data.size === 1) {
             // show balance in "sums", show single entry in list.
-            for (x in data.sums) {
+            for (var x in data.sums) {
                 $('#box-balance-sums').html(data.sums[x]);
                 $('#box-balance-list').html(data.incomes[x] + ' + ' + data.expenses[x]);
             }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use Log;

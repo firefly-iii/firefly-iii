@@ -28,6 +28,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -93,7 +95,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (!(false === strpos($name, $route))) {
+                if (false !== strpos($name, $route)) {
                     return 'active';
                 }
 
@@ -116,7 +118,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (!(false === strpos($name, $route))) {
+                if (false !== strpos($name, $route)) {
                     return 'menu-open';
                 }
 
@@ -139,7 +141,7 @@ class General extends AbstractExtension
                 [, $route, $objectType] = func_get_args();
                 $activeObjectType = $context['objectType'] ?? false;
 
-                if ($objectType === $activeObjectType && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
+                if ($objectType === $activeObjectType && false !== stripos(Route::getCurrentRoute()->getName(), $route)) {
                     return 'active';
                 }
 
@@ -285,7 +287,10 @@ class General extends AbstractExtension
         return new TwigFilter(
             'markdown',
             static function (string $text): string {
-                $converter = new CommonMarkConverter;
+                $environment = Environment::createCommonMarkEnvironment();
+                $environment->addExtension(new GithubFlavoredMarkdownExtension());
+
+                $converter = new CommonMarkConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 3, 'html_input' => 'escape'], $environment);
 
                 return $converter->convertToHtml($text);
             }, ['is_safe' => ['html']]

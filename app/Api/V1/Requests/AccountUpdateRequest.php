@@ -38,6 +38,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class AccountUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, AppendsLocationData;
+
     /**
      * Authorize logged in users.
      *
@@ -133,8 +134,6 @@ class AccountUpdateRequest extends FormRequest
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
-        $rules = Location::requestRules($rules);
-
-        return $rules;
+        return Location::requestRules($rules);
     }
 }

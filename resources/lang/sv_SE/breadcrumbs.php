@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Redigera spargris ”:name”',
     'preferences'            => 'Inställningar',
     'profile'                => 'Profil',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Konton',
     'changePassword'         => 'Ändra ditt lösenord',
     'change_email'           => 'Ändra din e-postadress',
     'bills'                  => 'Räkningar',

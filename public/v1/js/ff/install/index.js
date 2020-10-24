@@ -149,6 +149,6 @@ function completeDone() {
 
 function displaySoftFail(message) {
     $('#status-box').html('<i class="fa fa-warning"></i> ' + message + '<br /><br />Please read the ' +
-                          '<a href="http://firefly-iii.readthedocs.io/en/latest/support/faq.html#i-get-an-error-during-the-automatic-installation-and-upgrade">' +
-                          'official documentation</a> about this, and upgrade by hand.');
+                          '<a href="https://docs.firefly-iii.org/">' +
+                          'documentation</a> about this, and upgrade by hand.');
 }

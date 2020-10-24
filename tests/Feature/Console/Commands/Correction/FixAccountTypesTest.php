@@ -29,36 +29,19 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use Log;
 use Tests\TestCase;
 
 /**
  * Class FixAccountTypesTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class FixAccountTypesTest extends TestCase
 {
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
     /**
      * @covers \FireflyIII\Console\Commands\Correction\FixAccountTypes
      */
     public function testHandleUneven(): void
     {
-        $this->mock(AccountFactory::class);
-        $source  = $this->user()->accounts()->where('name', 'Another DUO Student loans')->first();
+        $source  = $this->getRandomDebt();
         $type    = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         $journal = TransactionJournal::create(
             [
@@ -91,8 +74,6 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandle(): void
     {
-        $this->mock(AccountFactory::class);
-
         // assume there's nothing to fix.
         $this->artisan('firefly-iii:fix-account-types')
              ->expectsOutput('All account types are OK!')
@@ -107,8 +88,8 @@ class FixAccountTypesTest extends TestCase
     public function testHandleWithdrawalLoanLoan(): void
     {
         $this->mock(AccountFactory::class);
-        $source      = $this->user()->accounts()->where('name', 'Another DUO Student loans')->first();
-        $destination = $this->user()->accounts()->where('name', 'DUO Student loans')->first();
+        $source      = $this->getRandomLoan();
+        $destination = $this->getRandomLoan($source->id);
         $type        = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         $journal     = TransactionJournal::create(
             [
@@ -143,8 +124,6 @@ class FixAccountTypesTest extends TestCase
              ->assertExitCode(0);
 
         // since system cant handle this problem, dont look for changed transactions.
-
-
         $one->forceDelete();
         $two->forceDelete();
         $journal->forceDelete();
@@ -157,7 +136,7 @@ class FixAccountTypesTest extends TestCase
     {
         $this->mock(AccountFactory::class);
         $source      = $this->getRandomAsset();
-        $destination = $this->user()->accounts()->where('name', 'DUO Student loans')->first();
+        $destination = $this->getRandomLoan();
         $type        = TransactionType::where('type', TransactionType::TRANSFER)->first();
         $withdrawal  = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         $journal     = TransactionJournal::create(
@@ -205,7 +184,7 @@ class FixAccountTypesTest extends TestCase
     public function testHandleTransferLoanAsset(): void
     {
         $this->mock(AccountFactory::class);
-        $source      = $this->user()->accounts()->where('name', 'DUO Student loans')->first();
+        $source      = $this->getRandomLoan();
         $destination = $this->getRandomAsset();
         $type        = TransactionType::where('type', TransactionType::TRANSFER)->first();
         $deposit     = TransactionType::where('type', TransactionType::DEPOSIT)->first();

@@ -18,207 +18,207 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-        <div class="col-sm-12 text-sm">
-            {{ inputDescription }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-                <input
-                        ref="input"
-                        type="text"
-                        :placeholder="inputDescription"
-                        :data-index="index"
-                        autocomplete="off"
-                        data-role="input"
-                        v-on:keypress="handleEnter"
-                        :disabled="inputDisabled"
-                        class="form-control"
-                        v-on:submit.prevent
-                        :name="inputName"
-                        :title="inputDescription">
-                <span class="input-group-btn">
-            <button
-                    v-on:click="clearSource"
-                    class="btn btn-default"
-                    tabIndex="-1"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-            </div>
-            <typeahead
-                    :open-on-empty=true
-                    :open-on-focus=true
-                    v-on:input="selectedItem"
-                    :async-function="aSyncFunction"
-                    v-model="name"
-                    :target="target"
-                    item-key="name_with_balance"
-            ></typeahead>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+    <div class="col-sm-12 text-sm">
+      {{ inputDescription }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input
+            ref="input"
+            :data-index="index"
+            :disabled="inputDisabled"
+            :name="inputName"
+            :placeholder="inputDescription"
+            :title="inputDescription"
+            autocomplete="off"
+            class="form-control"
+            data-role="input"
+            type="text"
+            v-on:keypress="handleEnter"
+            v-on:submit.prevent>
+        <span class="input-group-btn">
+            <button
+                class="btn btn-default"
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearSource"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+      <typeahead
+          v-model="name"
+          :async-function="aSyncFunction"
+          :open-on-empty=true
+          :open-on-focus=true
+          :target="target"
+          item-key="name_with_balance"
+          v-on:input="selectedItem"
+      ></typeahead>
+      <ul v-for="error in this.error" class="list-unstyled">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 
 </template>
 <script>
-    export default {
-        props: {
-            inputName: String,
-            inputDescription: String,
-            index: Number,
-            transactionType: String,
-            error: Array,
-            accountName: {
-                type: String,
-                default: ''
-            },
-            accountTypeFilters: {
-                type: Array,
-                default: function () {
-                    return [];
-                }
-            },
-            defaultAccountTypeFilters: {
-                type: Array,
-                default: function () {
-                    return [];
-                }
-            }
-        },
-
-        data() {
-            return {
-                accountAutoCompleteURI: null,
-                name: null,
-                trType: this.transactionType,
-                target: null,
-                inputDisabled: false,
-                allowedTypes: this.accountTypeFilters,
-                defaultAllowedTypes: this.defaultAccountTypeFilters
-            }
-        },
-        ready() {
-            // console.log('ready(): this.name = this.accountName (' + this.accountName + ')');
-            this.name = this.accountName;
-        },
-        mounted() {
-            this.target = this.$refs.input;
-            this.updateACURI(this.allowedTypes.join(','));
-            // console.log('mounted(): this.name = this.accountName (' + this.accountName + ')');
-            this.name = this.accountName;
-            this.triggerTransactionType();
-        },
-
-        watch: {
-            transactionType() {
-                this.triggerTransactionType();
-            },
-            accountName() {
-              // console.log('AccountSelect watch accountName!');
-              this.name = this.accountName;
-            },
-            accountTypeFilters() {
-                let types = this.accountTypeFilters.join(',');
-                if (0 === this.accountTypeFilters.length) {
-                    types = this.defaultAccountTypeFilters.join(',');
-                }
-                this.updateACURI(types);
-            },
-            name() {
-                // console.log('Watch: name()');
-                // console.log(this.name);
-            }
-        },
-        methods:
-            {
-                aSyncFunction: function (query, done) {
-                    axios.get(this.accountAutoCompleteURI + query)
-                        .then(res => {
-                            done(res.data);
-                        })
-                        .catch(err => {
-                            // any error handler
-                        })
-                },
-                updateACURI: function (types) {
-                    this.accountAutoCompleteURI =
-                        document.getElementsByTagName('base')[0].href +
-                        'api/v1/autocomplete/accounts' +
-                        '?types=' +
-                        types +
-                        '&query=';
-                    // console.log('Auto complete URI is now ' + this.accountAutoCompleteURI);
-                },
-                hasError: function () {
-                    return this.error.length > 0;
-                },
-                triggerTransactionType: function () {
-                    // console.log('On triggerTransactionType(' + this.inputName + ')');
-                    if(null === this.name) {
-                        // console.log('this.name is NULL.');
-                    }
-                    if (null === this.transactionType) {
-                        // console.log('Transaction type is NULL.');
-                        return;
-                    }
-                    if ('' === this.transactionType) {
-                        // console.log('Transaction type is "".');
-                        return;
-                    }
-                    this.inputDisabled = false;
-                    if (this.transactionType.toString() !== '' && this.index > 0) {
-                        if (this.transactionType.toString().toLowerCase() === 'transfer') {
-                            this.inputDisabled = true;
-                            // todo: needs to copy value from very first input
-
-                            return;
-                        }
-
-                        if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
-                            // todo also clear value?
-                            this.inputDisabled = true;
-                            return;
-                        }
-
-                        if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
-                            // todo also clear value?
-                            this.inputDisabled = true;
-                        }
-                    }
-                },
-                selectedItem: function (e) {
-                    // console.log('In SelectedItem()');
-                    if (typeof this.name === 'undefined') {
-                        // console.log('Is undefined');
-                        return;
-                    }
-                    if(typeof this.name === 'string') {
-                        // console.log('Is a string.');
-                        //this.trType = null;
-                        this.$emit('clear:value');
-                    }
-                    // emit the fact that the user selected a type of account
-                    // (influencing the destination)
-                    // console.log('Is some object maybe:');
-                    // console.log(this.name);
-                    this.$emit('select:account', this.name);
-                },
-                clearSource: function (e) {
-                    // console.log('clearSource()');
-                    //props.value = '';
-                    this.name = '';
-                    // some event?
-                    this.$emit('clear:value')
-                },
-                handleEnter: function (e) {
-                    // todo feels sloppy
-                    if (e.keyCode === 13) {
-                        //e.preventDefault();
-                    }
-                }
-            }
+export default {
+  props: {
+    inputName: String,
+    inputDescription: String,
+    index: Number,
+    transactionType: String,
+    error: Array,
+    accountName: {
+      type: String,
+      default: ''
+    },
+    accountTypeFilters: {
+      type: Array,
+      default: function () {
+        return [];
+      }
+    },
+    defaultAccountTypeFilters: {
+      type: Array,
+      default: function () {
+        return [];
+      }
     }
+  },
+
+  data() {
+    return {
+      accountAutoCompleteURI: null,
+      name: null,
+      trType: this.transactionType,
+      target: null,
+      inputDisabled: false,
+      allowedTypes: this.accountTypeFilters,
+      defaultAllowedTypes: this.defaultAccountTypeFilters
+    }
+  },
+  ready() {
+    // console.log('ready(): this.name = this.accountName (' + this.accountName + ')');
+    this.name = this.accountName;
+  },
+  mounted() {
+    this.target = this.$refs.input;
+    this.updateACURI(this.allowedTypes.join(','));
+    // console.log('mounted(): this.name = this.accountName (' + this.accountName + ')');
+    this.name = this.accountName;
+    this.triggerTransactionType();
+  },
+
+  watch: {
+    transactionType() {
+      this.triggerTransactionType();
+    },
+    accountName() {
+      // console.log('AccountSelect watch accountName!');
+      this.name = this.accountName;
+    },
+    accountTypeFilters() {
+      let types = this.accountTypeFilters.join(',');
+      if (0 === this.accountTypeFilters.length) {
+        types = this.defaultAccountTypeFilters.join(',');
+      }
+      this.updateACURI(types);
+    },
+    name() {
+      // console.log('Watch: name()');
+      // console.log(this.name);
+    }
+  },
+  methods:
+      {
+        aSyncFunction: function (query, done) {
+          axios.get(this.accountAutoCompleteURI + query)
+              .then(res => {
+                done(res.data);
+              })
+              .catch(err => {
+                // any error handler
+              })
+        },
+        updateACURI: function (types) {
+          this.accountAutoCompleteURI =
+              document.getElementsByTagName('base')[0].href +
+              'api/v1/autocomplete/accounts' +
+              '?types=' +
+              types +
+              '&query=';
+          // console.log('Auto complete URI is now ' + this.accountAutoCompleteURI);
+        },
+        hasError: function () {
+          return this.error.length > 0;
+        },
+        triggerTransactionType: function () {
+          // console.log('On triggerTransactionType(' + this.inputName + ')');
+          if (null === this.name) {
+            // console.log('this.name is NULL.');
+          }
+          if (null === this.transactionType) {
+            // console.log('Transaction type is NULL.');
+            return;
+          }
+          if ('' === this.transactionType) {
+            // console.log('Transaction type is "".');
+            return;
+          }
+          this.inputDisabled = false;
+          if (this.transactionType.toString() !== '' && this.index > 0) {
+            if (this.transactionType.toString().toLowerCase() === 'transfer') {
+              this.inputDisabled = true;
+              // todo: needs to copy value from very first input
+
+              return;
+            }
+
+            if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
+              // todo also clear value?
+              this.inputDisabled = true;
+              return;
+            }
+
+            if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
+              // todo also clear value?
+              this.inputDisabled = true;
+            }
+          }
+        },
+        selectedItem: function (e) {
+          // console.log('In SelectedItem()');
+          if (typeof this.name === 'undefined') {
+            // console.log('Is undefined');
+            return;
+          }
+          if (typeof this.name === 'string') {
+            // console.log('Is a string.');
+            //this.trType = null;
+            this.$emit('clear:value');
+          }
+          // emit the fact that the user selected a type of account
+          // (influencing the destination)
+          // console.log('Is some object maybe:');
+          // console.log(this.name);
+          this.$emit('select:account', this.name);
+        },
+        clearSource: function (e) {
+          // console.log('clearSource()');
+          //props.value = '';
+          this.name = '';
+          // some event?
+          this.$emit('clear:value')
+        },
+        handleEnter: function (e) {
+          // todo feels sloppy
+          if (e.keyCode === 13) {
+            //e.preventDefault();
+          }
+        }
+      }
+}
 </script>
 
 <style scoped>

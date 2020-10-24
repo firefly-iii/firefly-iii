@@ -75,7 +75,7 @@ class AccountTransformer extends AbstractTransformer
 
         [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account);
         [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
-        [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $decimalPlaces);
+        [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
         [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
         $openingBalance  = number_format((float) $openingBalance, $decimalPlaces, '.', '');
@@ -235,12 +235,11 @@ class AccountTransformer extends AbstractTransformer
      *
      * TODO refactor call to getOpeningBalanceAmount / Date because its extra queries.
      */
-    private function getOpeningBalance(Account $account, string $accountType, int $decimalPlaces): array
+    private function getOpeningBalance(Account $account, string $accountType): array
     {
         $openingBalance     = null;
         $openingBalanceDate = null;
         if (in_array($accountType, ['asset', 'liabilities'], true)) {
-            //$journal            = $this->repository->getOpeningBalance($account);
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = $amount;
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);

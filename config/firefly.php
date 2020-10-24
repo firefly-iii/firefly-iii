@@ -95,7 +95,7 @@ return [
     ],
 
     //'encryption'                   => null === env('USE_ENCRYPTION') || true === env('USE_ENCRYPTION'),
-    'version'                      => '5.4.3',
+    'version'                      => '5.4.4',
     'api_version'                  => '1.4.0',
     'db_version'                   => 15,
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -225,57 +225,57 @@ return [
         'liability'   => 'Liabilities',
     ],
     'subIconsByIdentifier'         => [
-        'asset'               => 'fa-money',
-        'Asset account'       => 'fa-money',
-        'Default account'     => 'fa-money',
-        'Cash account'        => 'fa-money',
-        'expense'             => 'fa-shopping-cart',
-        'Expense account'     => 'fa-shopping-cart',
-        'Beneficiary account' => 'fa-shopping-cart',
-        'revenue'             => 'fa-download',
-        'Revenue account'     => 'fa-download',
-        'import'              => 'fa-download',
-        'Import account'      => 'fa-download',
-        'liabilities'         => 'fa-ticket',
+        'asset'                  => 'fa-money',
+        AccountType::ASSET       => 'fa-money',
+        AccountType::DEFAULT     => 'fa-money',
+        AccountType::CASH        => 'fa-money',
+        'expense'                => 'fa-shopping-cart',
+        AccountType::EXPENSE     => 'fa-shopping-cart',
+        AccountType::BENEFICIARY => 'fa-shopping-cart',
+        'revenue'                => 'fa-download',
+        AccountType::REVENUE     => 'fa-download',
+        'import'                 => 'fa-download',
+        AccountType::IMPORT      => 'fa-download',
+        'liabilities'            => 'fa-ticket',
     ],
     'accountTypesByIdentifier'     => [
-        'asset'       => ['Default account', 'Asset account'],
-        'expense'     => ['Expense account', 'Beneficiary account'],
-        'revenue'     => ['Revenue account'],
-        'import'      => ['Import account'],
-        'liabilities' => ['Loan', 'Debt', 'Credit card', 'Mortgage'],
+        'asset'       => [AccountType::DEFAULT, AccountType::ASSET],
+        'expense'     => [AccountType::EXPENSE, AccountType::BENEFICIARY],
+        'revenue'     => [AccountType::REVENUE],
+        'import'      => [AccountType::IMPORT],
+        'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
     ],
     'accountTypeByIdentifier'      => [
-        'asset'       => ['Asset account'],
-        'expense'     => ['Expense account'],
-        'revenue'     => ['Revenue account'],
-        'opening'     => ['Initial balance account'],
-        'initial'     => ['Initial balance account'],
-        'import'      => ['Import account'],
-        'reconcile'   => ['Reconciliation account'],
-        'liabilities' => ['Loan', 'Debt', 'Mortgage', 'Credit card'],
-        'liability'   => ['Loan', 'Debt', 'Mortgage', 'Credit card'],
+        'asset'       => [AccountType::ASSET],
+        'expense'     => [AccountType::EXPENSE],
+        'revenue'     => [AccountType::REVENUE],
+        'opening'     => [AccountType::INITIAL_BALANCE],
+        'initial'     => [AccountType::INITIAL_BALANCE],
+        'import'      => [AccountType::IMPORT],
+        'reconcile'   => [AccountType::RECONCILIATION],
+        'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
+        'liability'   => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
     ],
     'shortNamesByFullName'         => [
-        'Default account'         => 'asset',
-        'Asset account'           => 'asset',
-        'Import account'          => 'import',
-        'Expense account'         => 'expense',
-        'Beneficiary account'     => 'expense',
-        'Revenue account'         => 'revenue',
-        'Cash account'            => 'cash',
-        'Initial balance account' => 'initial-balance',
-        'Reconciliation account'  => 'reconciliation',
-        'Credit card'             => 'liabilities',
-        'Loan'                    => 'liabilities',
-        'Debt'                    => 'liabilities',
-        'Mortgage'                => 'liabilities',
+        AccountType::DEFAULT         => 'asset',
+        AccountType::ASSET           => 'asset',
+        AccountType::IMPORT          => 'import',
+        AccountType::EXPENSE         => 'expense',
+        AccountType::BENEFICIARY     => 'expense',
+        AccountType::REVENUE         => 'revenue',
+        AccountType::CASH            => 'cash',
+        AccountType::INITIAL_BALANCE => 'initial-balance',
+        AccountType::RECONCILIATION  => 'reconciliation',
+        AccountType::CREDITCARD      => 'liabilities',
+        AccountType::LOAN            => 'liabilities',
+        AccountType::DEBT            => 'liabilities',
+        AccountType::MORTGAGE        => 'liabilities',
     ],
     'shortLiabilityNameByFullName' => [
-        'Credit card' => 'creditcard',
-        'Loan'        => 'loan',
-        'Debt'        => 'debt',
-        'Mortgage'    => 'mortgage',
+        AccountType::CREDITCARD => 'creditcard',
+        AccountType::LOAN       => AccountType::LOAN,
+        AccountType::DEBT       => AccountType::DEBT,
+        AccountType::MORTGAGE   => AccountType::MORTGAGE,
     ],
     /**
      * Languages configuration.
@@ -459,6 +459,7 @@ return [
             'description_ends'     => ['alias' => false, 'needs_context' => true,],
             'description_contains' => ['alias' => false, 'needs_context' => true,],
             'description_is'       => ['alias' => false, 'needs_context' => true,],
+            'description'          => ['alias' => true, 'alias_for' => 'description_contains', 'needs_context' => true,],
 
             'currency_is'         => ['alias' => false, 'needs_context' => true,],
             'foreign_currency_is' => ['alias' => false, 'needs_context' => true,],
@@ -575,7 +576,7 @@ return [
             'to_account_nr_ends'              => ['alias' => true, 'alias_for' => 'destination_account_nr_ends', 'needs_context' => true,],
 
             // any account id is
-            'account_id'                      => ['alias' => false, 'needs_context' => true,], // TODO
+            'account_id'                      => ['alias' => false, 'needs_context' => true,],
 
             // category
             'category_is'                     => ['alias' => false, 'needs_context' => true,],
@@ -586,7 +587,7 @@ return [
             'budget'                          => ['alias' => true, 'alias_for' => 'budget_is', 'needs_context' => true,],
 
             // bill
-            'bill_is'                         => ['alias' => false, 'needs_context' => true,], // TODO
+            'bill_is'                         => ['alias' => false, 'needs_context' => true,],
             'bill'                            => ['alias' => true, 'alias_for' => 'bill_is', 'needs_context' => true,],
 
             // type
@@ -691,8 +692,8 @@ return [
                                              TransactionTypeModel::OPENING_BALANCE,],
             AccountType::MORTGAGE        => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
                                              TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::INITIAL_BALANCE => [], // todo fill me in.
-            AccountType::RECONCILIATION  => [], // todo fill me in.
+            AccountType::INITIAL_BALANCE => [TransactionTypeModel::OPENING_BALANCE],
+            AccountType::RECONCILIATION  => [TransactionTypeModel::RECONCILIATION],
         ],
         'destination' => [
             AccountType::ASSET           => [TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER, TransactionTypeModel::OPENING_BALANCE,
@@ -705,8 +706,8 @@ return [
                                              TransactionTypeModel::OPENING_BALANCE,],
             AccountType::MORTGAGE        => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
                                              TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::INITIAL_BALANCE => [], // todo fill me in.
-            AccountType::RECONCILIATION  => [], // todo fill me in.
+            AccountType::INITIAL_BALANCE => [TransactionTypeModel::OPENING_BALANCE],
+            AccountType::RECONCILIATION  => [TransactionTypeModel::RECONCILIATION],
         ],
 
     ],

@@ -170,12 +170,10 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->budgets()->where('active', 1)
+        return $this->user->budgets()->where('active', 1)
                           ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
-        return $set;
     }
 
     /**
@@ -183,11 +181,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getBudgets(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->budgets()->orderBy('order', 'ASC')
+        return $this->user->budgets()->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->get();
-
-        return $set;
     }
 
     /**
@@ -207,12 +202,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getInactiveBudgets(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->budgets()
+        return $this->user->budgets()
                           ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
-
-        return $set;
     }
 
     /**
@@ -475,7 +467,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -484,8 +476,6 @@ class BudgetRepository implements BudgetRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 
     public function getMaxOrder(): int

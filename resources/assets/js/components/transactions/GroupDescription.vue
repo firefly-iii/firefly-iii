@@ -19,59 +19,59 @@
   -->
 
 <template>
-    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-        <div class="col-sm-12 text-sm">
-            {{ $t('firefly.split_transaction_title') }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-                <input
-                        type="text"
-                        class="form-control"
-                        name="group_title"
-                        v-bind:title="$t('firefly.split_transaction_title')"
-                        ref="descr"
-                        autocomplete="off"
-                        v-bind:placeholder="$t('firefly.split_transaction_title')"
-                        :value="value" @input="handleInput"
-                >
-                <span class="input-group-btn">
-            <button
-                    tabIndex="-1"
-                    v-on:click="clearField"
-                    class="btn btn-default"
-                    type="button"><i class="fa fa-trash-o"></i></button>
-        </span>
-            </div>
-            <p class="help-block" v-if="error.length === 0">
-                {{ $t('firefly.split_transaction_title_help') }}
-            </p>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+    <div class="col-sm-12 text-sm">
+      {{ $t('firefly.split_transaction_title') }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input
+            ref="descr"
+            :value="value"
+            autocomplete="off"
+            class="form-control"
+            name="group_title"
+            type="text"
+            v-bind:placeholder="$t('firefly.split_transaction_title')"
+            v-bind:title="$t('firefly.split_transaction_title')" @input="handleInput"
+        >
+        <span class="input-group-btn">
+            <button
+                class="btn btn-default"
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearField"><i class="fa fa-trash-o"></i></button>
+        </span>
+      </div>
+      <p v-if="error.length === 0" class="help-block">
+        {{ $t('firefly.split_transaction_title_help') }}
+      </p>
+      <ul v-for="error in this.error" class="list-unstyled">
+        <li class="text-danger">{{ error }}</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        props: ['error', 'value', 'index'],
-        name: "GroupDescription",
-        methods: {
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            handleInput(e) {
-                this.$emit('input', this.$refs.descr.value);
-            },
-            clearField: function () {
-                //props.value = '';
-                this.name = '';
-                this.$refs.descr.value = '';
-                this.$emit('input', this.$refs.descr.value);
-            },
-        }
-    }
+export default {
+  props: ['error', 'value', 'index'],
+  name: "GroupDescription",
+  methods: {
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    handleInput(e) {
+      this.$emit('input', this.$refs.descr.value);
+    },
+    clearField: function () {
+      //props.value = '';
+      this.name = '';
+      this.$refs.descr.value = '';
+      this.$emit('input', this.$refs.descr.value);
+    },
+  }
+}
 </script>
 
 <style scoped>

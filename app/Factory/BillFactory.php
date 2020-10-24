@@ -40,21 +40,7 @@ class BillFactory
 {
     use BillServiceTrait, CreatesObjectGroups;
 
-    /** @var User */
-    private $user;
-
-
-    /**
-     * Constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    private User $user;
 
     /**
      * @param array $data
@@ -153,11 +139,7 @@ class BillFactory
      */
     public function findByName(string $name): ?Bill
     {
-        $query = sprintf('%%%s%%', $name);
-        /** @var Bill $first */
-        $first = $this->user->bills()->where('name', 'LIKE', $query)->first();
-
-        return $first;
+        return $this->user->bills()->where('name', 'LIKE', sprintf('%%%s%%', $name))->first();
     }
 
     /**

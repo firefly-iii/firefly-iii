@@ -72,9 +72,9 @@ const i18n = require('./i18n');
 
 let props = {};
 new Vue({
-            i18n,
-            el: "#create_transaction",
-            render: (createElement) => {
-                return createElement(CreateTransaction, { props: props });
-            },
-        });
+    i18n,
+    el: "#create_transaction",
+    render: (createElement) => {
+        return createElement(CreateTransaction, {props: props});
+    },
+});

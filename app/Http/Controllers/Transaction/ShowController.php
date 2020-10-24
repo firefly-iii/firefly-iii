@@ -32,7 +32,6 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -41,8 +40,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class ShowController extends Controller
 {
-    /** @var TransactionGroupRepositoryInterface */
-    private $repository;
+    private TransactionGroupRepositoryInterface $repository;
 
     /**
      * ShowController constructor.
@@ -103,12 +101,7 @@ class ShowController extends Controller
         $amounts = $this->getAmounts($groupArray);
         $accounts = $this->getAccounts($groupArray);
 
-        // make sure notes are escaped but not double escaped.
         foreach ($groupArray['transactions'] as $index => $transaction) {
-            $search = ['&amp;', '&gt;', '&lt;'];
-            if (!Str::contains($transaction['notes'], $search)) {
-                $groupArray['transactions'][$index]['notes'] = e($transaction['notes']);
-            }
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects($groupArray['transactions'][$index]['transaction_journal_id']);
         }
 

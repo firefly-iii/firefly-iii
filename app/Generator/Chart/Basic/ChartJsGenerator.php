@@ -209,7 +209,7 @@ class ChartJsGenerator implements GeneratorInterface
      */
     public function singleSet(string $setLabel, array $data): array
     {
-        $chartData = [
+        return [
             'count'    => 1,
             'labels'   => array_keys($data), // take ALL labels from the first set.
             'datasets' => [
@@ -219,7 +219,5 @@ class ChartJsGenerator implements GeneratorInterface
                 ],
             ],
         ];
-
-        return $chartData;
     }
 }

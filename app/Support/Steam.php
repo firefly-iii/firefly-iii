@@ -49,9 +49,6 @@ class Steam
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -105,9 +102,6 @@ class Steam
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -177,9 +171,6 @@ class Steam
      */
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -264,9 +255,6 @@ class Steam
      */
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         // abuse chart properties:
         $cache = new CacheProperties;
         $cache->addProperty($account->id);
@@ -300,9 +288,6 @@ class Steam
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties;
@@ -335,9 +320,6 @@ class Steam
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $ids = $accounts->pluck('id')->toArray();
         // cache this property.
         $cache = new CacheProperties;
@@ -497,9 +479,6 @@ class Steam
      */
     public function getLastActivities(array $accounts): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $list = [];
 
         $set = auth()->user()->transactions()
@@ -540,9 +519,7 @@ class Steam
         if (null === $amount) {
             return null;
         }
-        $amount = bcmul($amount, '-1');
-
-        return $amount;
+        return bcmul($amount, '-1');
     }
 
     /**
@@ -554,21 +531,21 @@ class Steam
     {
         $string = strtolower($string);
 
-        if (!(false === stripos($string, 'k'))) {
+        if (false !== stripos($string, 'k')) {
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'kK'), '1024');
 
             return (int)$bytes;
         }
 
-        if (!(false === stripos($string, 'm'))) {
+        if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'mM'), '1048576');
 
             return (int)$bytes;
         }
 
-        if (!(false === stripos($string, 'g'))) {
+        if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
 

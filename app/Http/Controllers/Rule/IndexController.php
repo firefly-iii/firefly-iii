@@ -25,11 +25,9 @@ namespace FireflyIII\Http\Controllers\Rule;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
-use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -91,7 +89,7 @@ class IndexController extends Controller
      */
     public function search(Rule $rule): RedirectResponse
     {
-        $route  = route('search.index');
+        $route = route('search.index');
         $query = $this->ruleRepos->getSearchQuery($rule);
         $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
 

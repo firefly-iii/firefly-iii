@@ -53,7 +53,7 @@ function enableGuidance(route, specialPage) {
     $.post('json/intro/enable/' + route + '/' + specialPage, {_token: token}).done(function (data) {
         alert(data.message);
     }).fail(function () {
-        alert('Could not re-enable introduction.');
+        console.error('Could not re-enable introduction.');
     });
 }
 

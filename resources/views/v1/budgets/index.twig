@@ -239,7 +239,21 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a href="{{ route('budgets.show',budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                        {% if 0 == budget.budgeted|length %}
+                                            <a href="{{ route('budgets.show', budget.id) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                        {% endif %}
+                                        {% if 1 == budget.budgeted|length %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                <a href="{{ route('budgets.show.limit', [budget.id, budgetLimit.id]) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                                {% endfor %}
+                                        {% endif %}
+
+                                        {% if budget.budgeted|length > 1 %}
+                                            {% for budgetLimit in budget.budgeted %}
+                                                <a href="{{ route('budgets.show.limit', [budget.id, budgetLimit.id]) }}" data-id="{{ budget.id }}">{{ budget.name }} ({{ budgetLimit.currency_name }})</a><br>
+                                            {% endfor %}
+                                        {% endif %}
+
                                         {% if budget.auto_budget %}
                                         {% if 1 == budget.auto_budget.auto_budget_type %}
                                             <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>

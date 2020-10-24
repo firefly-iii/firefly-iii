@@ -56,7 +56,7 @@ return [
     'description'             => 'Descrizione',
     'amount'                  => 'Importo',
     'date'                    => 'Data',
-    'interest_date'           => 'Data interessi',
+    'interest_date'           => 'Data di valuta',
     'book_date'               => 'Data contabile',
     'process_date'            => 'Data lavorazione',
     'due_date'                => 'Data scadenza',

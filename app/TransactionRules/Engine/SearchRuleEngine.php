@@ -116,9 +116,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
             $collection = $collection->merge($found);
         }
-        $collection = $collection->unique();
-
-        return $collection;
+        return $collection->unique();
     }
 
     /**
@@ -234,11 +232,11 @@ class SearchRuleEngine implements RuleEngineInterface
         foreach ($rule->ruleTriggers as $ruleTrigger) {
             // if needs no context, value is different:
             $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
-            if(false === $needsContext) {
+            if (false === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type] = 'true';
             }
-            if(true === $needsContext) {
+            if (true === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
                 $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
@@ -249,26 +247,20 @@ class SearchRuleEngine implements RuleEngineInterface
             Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
             $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
         }
-        $toJoin = [];
-        foreach ($searchArray as $type => $value) {
-            $toJoin[] = sprintf('%s:%s', $type, $value);
-        }
-
-        $searchQuery = join(' ', $toJoin);
-        Log::debug(sprintf('SearchRuleEngine:: Search strict query for rule #%d ("%s") = %s', $rule->id, $rule->title, $searchQuery));
 
         // build and run the search engine.
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
         $searchEngine->setPage(1);
         $searchEngine->setLimit(31337);
-        $searchEngine->parseQuery($searchQuery);
+
+        foreach ($searchArray as $type => $value) {
+            $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+        }
+
 
         $result     = $searchEngine->searchTransactions();
-        $collection = $result->getCollection();
-        Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine with query "%s".', $collection->count(), $searchQuery));
-
-        return $collection;
+        return $result->getCollection();
     }
 
     /**
@@ -286,13 +278,13 @@ class SearchRuleEngine implements RuleEngineInterface
                 Log::debug('Skip trigger type.');
                 continue;
             }
-            $searchArray = [];
+            $searchArray  = [];
             $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
-            if(false === $needsContext) {
+            if (false === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type] = 'true';
             }
-            if(true === $needsContext) {
+            if (true === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: non strict, will search for: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
                 $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
@@ -302,21 +294,16 @@ class SearchRuleEngine implements RuleEngineInterface
                 Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
                 $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
             }
-            $toJoin = [];
-            foreach ($searchArray as $type => $value) {
-                $toJoin[] = sprintf('%s:%s', $type, $value);
-            }
 
-            $searchQuery = join(' ', $toJoin);
-            Log::debug(sprintf('SearchRuleEngine:: Search strict query for non-strict rule #%d ("%s") = %s', $rule->id, $rule->title, $searchQuery));
-
-            // build and run a search:
             // build and run the search engine.
             $searchEngine = app(SearchInterface::class);
             $searchEngine->setUser($this->user);
             $searchEngine->setPage(1);
             $searchEngine->setLimit(31337);
-            $searchEngine->parseQuery($searchQuery);
+
+            foreach ($searchArray as $type => $value) {
+                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+            }
 
             $result     = $searchEngine->searchTransactions();
             $collection = $result->getCollection();

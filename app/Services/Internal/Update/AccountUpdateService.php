@@ -77,7 +77,7 @@ class AccountUpdateService
 
         // find currency, or use default currency instead.
         if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
-            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code']);
             $data['currency_id'] = $currency->id;
         }
@@ -86,7 +86,30 @@ class AccountUpdateService
         $this->updateMetaData($account, $data);
 
         // update, delete or create location:
+        $this->updateLocation($account, $data);
+
+        // update opening balance.
+        $this->updateOpeningBalance($account, $data);
+
+        // update note:
+        if (isset($data['notes']) && null !== $data['notes']) {
+            $this->updateNote($account, (string)$data['notes']);
+        }
+
+        // update preferences if inactive:
+        $this->updatePreferences($account, $data);
+
+        return $account;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updateLocation(Account $account, array $data): void {
         $updateLocation = $data['update_location'] ?? false;
+
+
 
         // location must be updated?
         if (true === $updateLocation) {
@@ -109,30 +132,6 @@ class AccountUpdateService
                 $location->save();
             }
         }
-
-        // has valid initial balance (IB) data?
-        $type = $account->accountType;
-        // if it can have a virtual balance, it can also have an opening balance.
-
-        if (in_array($type->type, $this->canHaveVirtual, true)) {
-            // check if is submitted as empty, that makes it valid:
-
-
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
-                $this->updateOBGroup($account, $data);
-            }
-
-            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
-                $this->deleteOBGroup($account);
-            }
-        }
-
-        // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
-            $this->updateNote($account, (string)$data['notes']);
-        }
-
-        return $account;
     }
 
     /**
@@ -177,8 +176,8 @@ class AccountUpdateService
 
         // if account type is a liability, the liability type (account type)
         // can be updated to another one.
-        if ($this->isLiability($account) && $this->isLiabilityTypeId((int) ($data['account_type_id'] ?? 0))) {
-            $account->account_type_id = (int) $data['account_type_id'];
+        if ($this->isLiability($account) && $this->isLiabilityTypeId((int)($data['account_type_id'] ?? 0))) {
+            $account->account_type_id = (int)$data['account_type_id'];
         }
 
         // update virtual balance (could be set to zero if empty string).
@@ -189,5 +188,60 @@ class AccountUpdateService
         $account->save();
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updatePreferences(Account $account, array $data): void
+    {
+        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
+        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
+            Log::debug('Account was marked as inactive.');
+            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+            if (null !== $preference) {
+                $removeAccountId = (int)$account->id;
+                $array           = $preference->data;
+                Log::debug('Current list of accounts: ', $array);
+                Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
+                $filtered        = array_filter(
+                    $array, function ($accountId) use ($removeAccountId) {
+                    return (int)$accountId !== $removeAccountId;
+                }
+                );
+                Log::debug('Left with accounts', array_values($filtered));
+                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
+                app('preferences')->forget($account->user, 'frontpageAccounts');
+                return;
+            }
+            Log::debug("Found no frontpageAccounts preference, do nothing.");
+            return;
+        }
+        Log::debug('Account was not marked as inactive, do nothing.');
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updateOpeningBalance(Account $account, array $data): void
+    {
+
+        // has valid initial balance (IB) data?
+        $type = $account->accountType;
+        // if it can have a virtual balance, it can also have an opening balance.
+
+        if (in_array($type->type, $this->canHaveVirtual, true)) {
+
+            // check if is submitted as empty, that makes it valid:
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
+                $this->updateOBGroup($account, $data);
+            }
+
+            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
+                $this->deleteOBGroup($account);
+            }
+        }
     }
 }

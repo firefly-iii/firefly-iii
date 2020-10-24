@@ -29,7 +29,6 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class AttachmentFactory

@@ -45,12 +45,7 @@ class Preferences
      */
     public function beginsWith(User $user, string $search): Collection
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-        $set = Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
-
-        return $set;
+        return Preference::where('user_id', $user->id)->where('name', 'LIKE', $search . '%')->get();
     }
 
     /**
@@ -60,9 +55,6 @@ class Preferences
      */
     public function delete(string $name): bool
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
@@ -84,10 +76,6 @@ class Preferences
      */
     public function findByName(string $name): Collection
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-
         return Preference::where('name', $name)->get();
     }
 
@@ -99,9 +87,6 @@ class Preferences
      */
     public function get(string $name, $default = null): ?Preference
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s("%s") should NOT be called in the TEST environment!', __METHOD__, $name));
-        }
         /** @var User $user */
         $user = auth()->user();
         if (null === $user) {
@@ -115,6 +100,26 @@ class Preferences
     }
 
     /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return \FireflyIII\Models\Preference|null
+     */
+    public function getFresh(string $name, $default = null): ?Preference
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (null === $user) {
+            $preference       = new Preference;
+            $preference->data = $default;
+
+            return $preference;
+        }
+
+        return $this->getFreshForUser($user, $name, $default);
+    }
+
+    /**
      * @param \FireflyIII\User $user
      * @param array            $list
      *
@@ -122,9 +127,6 @@ class Preferences
      */
     public function getArrayForUser(User $user, array $list): array
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $result      = [];
         $preferences = Preference::where('user_id', $user->id)->whereIn('name', $list)->get(['id', 'name', 'data']);
         /** @var Preference $preference */
@@ -141,9 +143,9 @@ class Preferences
     }
 
     /**
-     * @param User $user
-     * @param string           $name
-     * @param null|string      $default
+     * @param User        $user
+     * @param string      $name
+     * @param null|string $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
@@ -151,9 +153,46 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
+            Log::debug(sprintf('Retrieved preference "%s" from cache ("%s").', $name, $fullName));
+
             return Cache::get($fullName);
         }
+        Log::debug(sprintf('Retrieved preference "%s" FRESH.', $name));
+        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        if (null !== $preference && null === $preference->data) {
+            try {
+                $preference->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()));
+            }
+            $preference = null;
+        }
 
+        if (null !== $preference) {
+            Cache::forever($fullName, $preference);
+
+            return $preference;
+        }
+        // no preference found and default is null:
+        if (null === $default) {
+            // return NULL
+            return null;
+        }
+
+        return $this->setForUser($user, $name, $default);
+    }
+
+    /**
+     * @param User        $user
+     * @param string      $name
+     * @param null|string $default
+     *
+     * @return \FireflyIII\Models\Preference|null
+     */
+    public function getFreshForUser(User $user, string $name, $default = null): ?Preference
+    {
+        $fullName = sprintf('preference%s%s', $user->id, $name);
+        Log::debug(sprintf('Retrieved preference "%s" FRESH.', $name));
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
@@ -183,9 +222,6 @@ class Preferences
      */
     public function lastActivity(): string
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
 
@@ -230,6 +266,18 @@ class Preferences
     }
 
     /**
+     * @param User   $user
+     * @param string $name
+     */
+    public function forget(User $user, string $name): void
+    {
+        $key = sprintf('preference%s%s', $user->id, $name);
+        Log::debug(sprintf('Going to forget key "%s"', $key));
+        Cache::forget($key);
+        Cache::put($key, '', 5);
+    }
+
+    /**
      * @param \FireflyIII\User $user
      * @param string           $name
      * @param mixed            $value
@@ -259,7 +307,7 @@ class Preferences
         if (null !== $pref) {
             $pref->data = $value;
             $pref->save();
-
+            Log::debug(sprintf('Saved new value under existing preference object. "%s"', $fullName));
             Cache::forever($fullName, $pref);
 
             return $pref;
@@ -271,7 +319,7 @@ class Preferences
         $pref->user()->associate($user);
 
         $pref->save();
-
+        Log::debug(sprintf('Saved new value under new preference object. "%s"', $fullName));
         Cache::forever($fullName, $pref);
 
         return $pref;

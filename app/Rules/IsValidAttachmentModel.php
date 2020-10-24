@@ -229,8 +229,6 @@ class IsValidAttachmentModel implements Rule
         $replace = '';
         $model   = str_replace($search, $replace, $model);
 
-        $model = sprintf('FireflyIII\Models\%s', $model);
-
-        return $model;
+        return sprintf('FireflyIII\Models\%s', $model);
     }
 }

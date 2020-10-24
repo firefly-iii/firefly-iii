@@ -27,20 +27,20 @@
     </div>
     <div class="col-sm-12">
       <div class="input-group">
-        <input multiple="multiple"
-               autocomplete="off"
+        <input ref="input"
+               :name="name"
                :placeholder="title"
                :title="title"
-               ref="input"
-               :name="name" type="file" class="form-control">
+               autocomplete="off"
+               class="form-control" multiple="multiple" type="file">
         <span class="input-group-btn">
             <button
-                v-on:click="clearAtt"
                 class="btn btn-default"
-                type="button"><i class="fa fa-trash-o"></i></button>
+                type="button"
+                v-on:click="clearAtt"><i class="fa fa-trash-o"></i></button>
         </span>
       </div>
-      <ul class="list-unstyled" v-for="error in this.error">
+      <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
     </div>

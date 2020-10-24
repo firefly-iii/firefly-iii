@@ -24,24 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\TransactionCurrency;
-use Log;
 
 /**
  * Class CurrencyTransformer
  */
 class CurrencyTransformer extends AbstractTransformer
 {
-    /**
-     * CurrencyTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * Transform the currency.
@@ -57,7 +45,7 @@ class CurrencyTransformer extends AbstractTransformer
         if (null !== $defaultCurrency) {
             $isDefault = (int) $defaultCurrency->id === (int) $currency->id;
         }
-        $data = [
+        return [
             'id'             => (int) $currency->id,
             'created_at'     => $currency->created_at->toAtomString(),
             'updated_at'     => $currency->updated_at->toAtomString(),
@@ -74,7 +62,5 @@ class CurrencyTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

@@ -29,7 +29,6 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;

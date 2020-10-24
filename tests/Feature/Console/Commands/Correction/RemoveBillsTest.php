@@ -30,24 +30,10 @@ use Tests\TestCase;
 
 /**
  * Class RemoveBillsTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RemoveBillsTest extends TestCase
 {
 
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
 
     /**
      * @covers \FireflyIII\Console\Commands\Correction\RemoveBills
@@ -67,7 +53,7 @@ class RemoveBillsTest extends TestCase
      */
     public function testHandleWithdrawal(): void
     {
-        $bill    = $this->user()->bills()->first();
+        $bill    = $this->getRandomBill();
         $journal = $this->getRandomDeposit();
 
         $journal->bill_id = $bill->id;

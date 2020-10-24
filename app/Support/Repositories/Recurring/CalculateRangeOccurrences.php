@@ -46,11 +46,8 @@ trait CalculateRangeOccurrences
     {
         $return   = [];
         $attempts = 0;
-        #Log::debug('Rep is daily. Start of loop.');
         while ($start <= $end) {
-            #Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
             if (0 === $attempts % $skipMod) {
-                #Log::debug(sprintf('Attempts modulo skipmod is zero, include %s', $start->format('Y-m-d')));
                 $return[] = clone $start;
             }
             $start->addDay();
@@ -77,27 +74,14 @@ trait CalculateRangeOccurrences
         $return     = [];
         $attempts   = 0;
         $dayOfMonth = (int)$moment;
-        #Log::debug(sprintf('Day of month in repetition is %d', $dayOfMonth));
-        #Log::debug(sprintf('Start is %s.', $start->format('Y-m-d')));
-        #Log::debug(sprintf('End is %s.', $end->format('Y-m-d')));
         if ($start->day > $dayOfMonth) {
-            #Log::debug('Add a month.');
             // day has passed already, add a month.
             $start->addMonth();
         }
-        #Log::debug(sprintf('Start is now %s.', $start->format('Y-m-d')));
-        #Log::debug('Start loop.');
         while ($start < $end) {
-            #Log::debug(sprintf('Mutator is now %s.', $start->format('Y-m-d')));
             $domCorrected = min($dayOfMonth, $start->daysInMonth);
-            #Log::debug(sprintf('DoM corrected is %d', $domCorrected));
             $start->day = $domCorrected;
-            #Log::debug(sprintf('Mutator is now %s.', $start->format('Y-m-d')));
-            #Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export(0 === $attempts % $skipMod, true)));
-            #Log::debug(sprintf('$start->lte($mutator) is %s', var_export($start->lte($start), true)));
-            #Log::debug(sprintf('$end->gte($mutator) is %s', var_export($end->gte($start), true)));
             if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
-                #Log::debug(sprintf('ADD %s to return!', $start->format('Y-m-d')));
                 $return[] = clone $start;
             }
             $attempts++;

@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use View;
 
 /**
  * Class NewUserController.

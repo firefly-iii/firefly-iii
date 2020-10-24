@@ -45,14 +45,14 @@ return [
     'access_token_created_subject'     => 'A new access token was created',
     'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
     'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_revoke'      => 'Ha nem Ön kérte, kérem vonja vissza ezt a tokent a lehető leghamarabb itt: :url.',
 
     // registered
     'registered_subject'               => 'Welcome to Firefly III!',
     'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
+    'registered_pw'                    => 'Ha elfelejtette a jelszavát, <a style="color:#337ab7" href=":address/password/reset">itt</a> visszaállíthatja.',
     'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">grand theory</a>.',
+    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
     'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
     'registered_closing'               => 'Enjoy!',
     'registered_firefly_iii_link'      => 'Firefly III:',

@@ -72,8 +72,8 @@ class MigrateAttachments extends Command
         foreach ($attachments as $att) {
 
             // move description:
-            $description = (string) $att->description;
-            if ('' !== $description) {
+            $attDescription = (string) $att->description;
+            if ('' !== $attDescription) {
 
                 // find or create note:
                 $note = $att->notes()->first();
@@ -81,7 +81,7 @@ class MigrateAttachments extends Command
                     $note = new Note;
                     $note->noteable()->associate($att);
                 }
-                $note->text = $description;
+                $note->text = $attDescription;
                 $note->save();
 
                 // clear description:

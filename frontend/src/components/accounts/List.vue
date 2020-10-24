@@ -35,21 +35,10 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TODO -->
-                    <!--
-                    <div class="card-tools">
-                        <ul class="pagination pagination-sm float-right">
-                            <li class="page-item"><a class="page-link" href="#">«</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">»</a></li>
-                        </ul>
-                    </div>
-                    -->
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-sm table-striped">
+                        <caption style="display:none;">{{ $t('list.name') }}</caption>
                         <thead>
                         <tr>
                             <th scope="col">&nbsp;</th>

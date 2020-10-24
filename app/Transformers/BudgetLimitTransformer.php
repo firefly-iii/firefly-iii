@@ -24,25 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
-use Log;
 
 /**
  * Class BudgetLimitTransformer
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    /**
-     * CurrencyTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
     /**
      * Transform the note.
      *
@@ -68,7 +55,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             $currencyDecimalPlaces = $currency->decimal_places;
         }
         $amount = number_format((float) $amount, $currencyDecimalPlaces, '.', '');
-        $data   = [
+        return [
             'id'                      => (int) $budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
@@ -88,7 +75,5 @@ class BudgetLimitTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

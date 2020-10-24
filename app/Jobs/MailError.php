@@ -72,11 +72,11 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $email            = config('firefly.site_owner');
-        $args             = $this->exception;
-        $args['loggedIn'] = $this->userData['id'] > 0;
-        $args['user']     = $this->userData;
-        $args['ip']       = $this->ipAddress;
+        $email             = config('firefly.site_owner');
+        $args              = $this->exception;
+        $args['loggedIn']  = $this->userData['id'] > 0;
+        $args['user']      = $this->userData;
+        $args['ipAddress'] = $this->ipAddress;
         if ($this->attempts() < 3) {
             try {
                 Mail::send(
@@ -84,7 +84,7 @@ class MailError extends Job implements ShouldQueue
                     $args,
                     function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
+                            $message->to($email, $email)->subject((string)trans('email.error_subject'));
                         }
                     }
                 );

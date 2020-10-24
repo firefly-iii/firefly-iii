@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Api\V1\Requests\UserUpdateRequest;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\UserFormRequest;

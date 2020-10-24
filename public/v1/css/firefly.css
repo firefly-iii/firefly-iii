@@ -179,10 +179,6 @@ span.info-box-text a:hover, span.info-box-number a:hover {
     overflow-x: hidden;
 }
 
-.bootstrap-tagsinput {
-    width: 100%;
-}
-
 .accordion {
     margin-bottom:-3px;
 }

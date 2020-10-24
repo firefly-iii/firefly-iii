@@ -29,6 +29,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -40,24 +41,14 @@ use Log;
  */
 class RecurrenceFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get the data required by the controller.
      *
+     * @return array
      * @throws FireflyException
      *
-     * @return array
      */
     public function getAll(): array
     {
@@ -136,11 +127,47 @@ class RecurrenceFormRequest extends FormRequest
     }
 
     /**
-     * The rules for this request.
-     *
-     * @throws FireflyException
+     * Parses repetition data.
      *
      * @return array
+     */
+    private function parseRepetitionData(): array
+    {
+        $value  = $this->string('repetition_type');
+        $return = [
+            'type'   => '',
+            'moment' => '',
+        ];
+
+        if ('daily' === $value) {
+            $return['type'] = $value;
+        }
+        //monthly,17
+        //ndom,3,7
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+            $return['type']   = substr($value, 0, 6);
+            $return['moment'] = substr($value, 7);
+        }
+        if (0 === strpos($value, 'monthly')) {
+            $return['type']   = substr($value, 0, 7);
+            $return['moment'] = substr($value, 8);
+        }
+        if (0 === strpos($value, 'ndom')) {
+            $return['type']   = substr($value, 0, 4);
+            $return['moment'] = substr($value, 5);
+        }
+
+        return $return;
+
+
+    }
+
+    /**
+     * The rules for this request.
+     *
+     * @return array
+     * @throws FireflyException
+     *
      */
     public function rules(): array
     {
@@ -228,6 +255,23 @@ class RecurrenceFormRequest extends FormRequest
     }
 
     /**
+     * Configure the validator instance with special rules for after the basic validation rules.
+     *
+     * @param Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                // validate all account info
+                $this->validateAccountInformation($validator);
+            }
+        );
+    }
+
+    /**
      * Validates the given account information. Switches on given transaction type.
      *
      * @param Validator $validator
@@ -254,16 +298,16 @@ class RecurrenceFormRequest extends FormRequest
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
             case 'withdrawal':
-                $sourceId      = (int) $data['source_id'];
-                $destinationId = (int) $data['withdrawal_destination_id'];
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['withdrawal_destination_id'];
                 break;
             case 'deposit':
-                $sourceId      = (int) $data['deposit_source_id'];
-                $destinationId = (int) $data['destination_id'];
+                $sourceId      = (int)$data['deposit_source_id'];
+                $destinationId = (int)$data['destination_id'];
                 break;
             case 'transfer':
-                $sourceId      = (int) $data['source_id'];
-                $destinationId = (int) $data['destination_id'];
+                $sourceId      = (int)$data['source_id'];
+                $destinationId = (int)$data['destination_id'];
                 break;
         }
 
@@ -273,7 +317,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // do something with result:
         if (false === $validSource) {
-            $message = (string) trans('validation.generic_invalid_source');
+            $message = (string)trans('validation.generic_invalid_source');
             $validator->errors()->add('source_id', $message);
             $validator->errors()->add('deposit_source_id', $message);
 
@@ -284,64 +328,9 @@ class RecurrenceFormRequest extends FormRequest
         $validDestination = $accountValidator->validateDestination($destinationId, null, null);
         // do something with result:
         if (false === $validDestination) {
-            $message = (string) trans('validation.generic_invalid_destination');
+            $message = (string)trans('validation.generic_invalid_destination');
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
-
-            return;
         }
-    }
-
-    /**
-     * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator) {
-                // validate all account info
-                $this->validateAccountInformation($validator);
-            }
-        );
-    }
-
-    /**
-     * Parses repetition data.
-     *
-     * @return array
-     */
-    private function parseRepetitionData(): array
-    {
-        $value  = $this->string('repetition_type');
-        $return = [
-            'type'   => '',
-            'moment' => '',
-        ];
-
-        if ('daily' === $value) {
-            $return['type'] = $value;
-        }
-        //monthly,17
-        //ndom,3,7
-        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
-            $return['type']   = substr($value, 0, 6);
-            $return['moment'] = substr($value, 7);
-        }
-        if (0 === strpos($value, 'monthly')) {
-            $return['type']   = substr($value, 0, 7);
-            $return['moment'] = substr($value, 8);
-        }
-        if (0 === strpos($value, 'ndom')) {
-            $return['type']   = substr($value, 0, 4);
-            $return['moment'] = substr($value, 5);
-        }
-
-        return $return;
-
-
     }
 }

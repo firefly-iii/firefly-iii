@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Rule;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
@@ -32,17 +33,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleFormRequest extends FormRequest
 {
-    use ConvertsDataTypes, GetRuleConfiguration;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -52,7 +43,7 @@ class RuleFormRequest extends FormRequest
      */
     public function getRuleData(): array
     {
-        $data = [
+        return [
             'title'           => $this->string('title'),
             'rule_group_id'   => $this->integer('rule_group_id'),
             'active'          => $this->boolean('active'),
@@ -63,8 +54,48 @@ class RuleFormRequest extends FormRequest
             'triggers'        => $this->getRuleTriggerData(),
             'actions'         => $this->getRuleActionData(),
         ];
+    }
 
-        return $data;
+    /**
+     * @return array
+     */
+    private function getRuleTriggerData(): array
+    {
+        $return      = [];
+        $triggerData = $this->get('triggers');
+        if (is_array($triggerData)) {
+            foreach ($triggerData as $trigger) {
+                $stopProcessing = $trigger['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $trigger['type'] ?? 'invalid',
+                    'value'           => $trigger['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRuleActionData(): array
+    {
+        $return     = [];
+        $actionData = $this->get('actions');
+        if (is_array($actionData)) {
+            foreach ($actionData as $action) {
+                $stopProcessing = $action['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $action['type'] ?? 'invalid',
+                    'value'           => $action['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -105,47 +136,5 @@ class RuleFormRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleActionData(): array
-    {
-        $return     = [];
-        $actionData = $this->get('actions');
-        if (is_array($actionData)) {
-            foreach ($actionData as $action) {
-                $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $action['type'] ?? 'invalid',
-                    'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleTriggerData(): array
-    {
-        $return      = [];
-        $triggerData = $this->get('triggers');
-        if (is_array($triggerData)) {
-            foreach ($triggerData as $trigger) {
-                $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $trigger['type'] ?? 'invalid',
-                    'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
     }
 }

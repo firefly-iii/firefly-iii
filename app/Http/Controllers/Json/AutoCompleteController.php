@@ -22,17 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Amount;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

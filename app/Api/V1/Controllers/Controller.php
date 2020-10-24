@@ -44,8 +44,8 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected const CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
-
 
     /**
      * Controller constructor.
@@ -60,46 +60,11 @@ abstract class Controller extends BaseController
                     $language = app('steam')->getLanguage();
                     app()->setLocale($language);
                 }
+
                 return $next($request);
-            });
-
-    }
-
-    /**
-     * Method to help build URI's.
-     *
-     * @return string
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
             }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-                continue;
-            }
-            $params[$key] = $value;
-        }
-        $return .= http_build_query($params);
+        );
 
-        return $return;
-    }
-
-    /**
-     * @return Manager
-     */
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
     }
 
     /**
@@ -110,7 +75,7 @@ abstract class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag  = new ParameterBag;
-        $page = (int) request()->get('page');
+        $page = (int)request()->get('page');
         if (0 === $page) {
             $page = 1;
         }
@@ -137,11 +102,47 @@ abstract class Controller extends BaseController
         foreach ($integers as $integer) {
             $value = request()->query->get($integer);
             if (null !== $value) {
-                $bag->set($integer, (int) $value);
+                $bag->set($integer, (int)$value);
             }
         }
 
         return $bag;
 
+    }
+
+    /**
+     * Method to help build URI's.
+     *
+     * @return string
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        return $return . http_build_query($params);
+    }
+
+    /**
+     * @return Manager
+     */
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
     }
 }

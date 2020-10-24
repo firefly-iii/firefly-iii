@@ -191,7 +191,7 @@ trait ConvertsDataTypes
      *
      * @return string
      */
-    protected function nlString(string $field): string
+    public function nlString(string $field): string
     {
         return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
     }

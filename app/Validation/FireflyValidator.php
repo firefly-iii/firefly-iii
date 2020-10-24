@@ -335,6 +335,11 @@ class FireflyValidator extends Validator
             return '' !== $value;
         }
 
+        // check if it's an existing account.
+        if (in_array($triggerType, ['destination_account_id', 'source_account_id'])) {
+            return is_numeric($value) && (int) $value > 0;
+        }
+
         // check transaction type.
         if ('transaction_type' === $triggerType) {
             $count = TransactionType::where('type', ucfirst($value))->count();
@@ -357,7 +362,7 @@ class FireflyValidator extends Validator
         }
 
         // and finally a "will match everything check":
-        $classes = array_keys(config('firefly.search.operators'));;
+        $classes = array_keys(config('firefly.search.operators'));
         /** @var TriggerInterface $class */
         $class = $classes[$triggerType] ?? false;
         if (false === $class) {

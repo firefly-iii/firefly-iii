@@ -19,91 +19,91 @@
   -->
 
 <template>
-    <div class="form-group"
-         v-bind:class="{ 'has-error': hasError()}"
-    >
-        <div class="col-sm-12 text-sm">
-            {{ $t('firefly.tags') }}
-        </div>
-        <div class="col-sm-12">
-            <div class="input-group">
-            <vue-tags-input
-                    v-model="tag"
-                    :tags="tags"
-                    :title="$t('firefly.tags')"
-                    classes="form-input"
-                    :autocomplete-items="autocompleteItems"
-                    :add-only-from-autocomplete="false"
-                    @tags-changed="update"
-                    v-bind:placeholder="$t('firefly.tags')"
-            />
-                <span class="input-group-btn">
-                <button
-                        v-on:click="clearTags"
-                        tabIndex="-1"
-                        class="btn btn-default"
-                        type="button"><i class="fa fa-trash-o"></i></button>
-                </span>
-            </div>
-            </div>
-            <ul class="list-unstyled" v-for="error in this.error">
-                <li class="text-danger">{{ error }}</li>
-            </ul>
-        </div>
+  <div class="form-group"
+       v-bind:class="{ 'has-error': hasError()}"
+  >
+    <div class="col-sm-12 text-sm">
+      {{ $t('firefly.tags') }}
     </div>
+    <div class="col-sm-12">
+      <div class="input-group">
+        <vue-tags-input
+            v-model="tag"
+            :add-only-from-autocomplete="false"
+            :autocomplete-items="autocompleteItems"
+            :tags="tags"
+            :title="$t('firefly.tags')"
+            classes="form-input"
+            v-bind:placeholder="$t('firefly.tags')"
+            @tags-changed="update"
+        />
+        <span class="input-group-btn">
+                <button
+                    class="btn btn-default"
+                    tabIndex="-1"
+                    type="button"
+                    v-on:click="clearTags"><i class="fa fa-trash-o"></i></button>
+                </span>
+      </div>
+    </div>
+    <ul v-for="error in this.error" class="list-unstyled">
+      <li class="text-danger">{{ error }}</li>
+    </ul>
+  </div>
+  </div>
 </template>
 
 <script>
-    import axios from 'axios';
-    import VueTagsInput from '@johmun/vue-tags-input';
+import axios from 'axios';
+import VueTagsInput from '@johmun/vue-tags-input';
 
-    export default {
-        name: "Tags",
-        components: {
-            VueTagsInput
-        },
-        props: ['value','error'],
-        data() {
-            return {
-                tag: '',
-                autocompleteItems: [],
-                debounce: null,
-                tags: this.value,
-            };
-        },
-        watch: {
-            'tag': 'initItems',
-        },
-        methods: {
-            update(newTags) {
-                this.autocompleteItems = [];
-                this.tags = newTags;
-                this.$emit('input', this.tags);
-            },
-            clearTags() {
-                this.tags = [];
-            },
-            hasError: function () {
-                return this.error.length > 0;
-            },
-            initItems() {
-                // console.log('Now in initItems');
-                if (this.tag.length < 2) {
-                    return;
-                }
-                const url = document.getElementsByTagName('base')[0].href + `api/v1/autocomplete/tags?query=${this.tag}`;
+export default {
+  name: "Tags",
+  components: {
+    VueTagsInput
+  },
+  props: ['value', 'error'],
+  data() {
+    return {
+      tag: '',
+      autocompleteItems: [],
+      debounce: null,
+      tags: this.value,
+    };
+  },
+  watch: {
+    'tag': 'initItems',
+  },
+  methods: {
+    update(newTags) {
+      this.autocompleteItems = [];
+      this.tags = newTags;
+      this.$emit('input', this.tags);
+    },
+    clearTags() {
+      this.tags = [];
+    },
+    hasError: function () {
+      return this.error.length > 0;
+    },
+    initItems() {
+      // console.log('Now in initItems');
+      if (this.tag.length < 2) {
+        return;
+      }
+      const url = document.getElementsByTagName('base')[0].href + `api/v1/autocomplete/tags?query=${this.tag}`;
 
-                clearTimeout(this.debounce);
-                this.debounce = setTimeout(() => {
-                    axios.get(url).then(response => {
-                        this.autocompleteItems = response.data.map(a => {
-                            return {text: a.tag};
-                        });
-                    }).catch(() => console.warn('Oh. Something went wrong loading tags.'));
-                }, 600);
-            },
-        },
-    }
+      clearTimeout(this.debounce);
+      this.debounce = setTimeout(() => {
+        axios.get(url).then(response => {
+          this.autocompleteItems = response.data.map(a => {
+            return {text: a.tag};
+          });
+        }).catch(() => console.warn('Oh. Something went wrong loading tags.'));
+      }, 600);
+    },
+  },
+}
 </script>
 
 <style scoped>

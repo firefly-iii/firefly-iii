@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => 'Добро пожаловать в <a style="color:#337ab7" href=":address">Firefly III</a>. Вы успешно зарегистрированы, и это письмо отправлено для подтверждения регистрации. Ура!',
     'registered_pw'                    => 'Если вы уже забыли свой пароль, пожалуйста, сбросьте его <a style="color:#337ab7" href=":address/password/reset">с помощью инструмента сброса пароля</a>.',
     'registered_help'                  => 'В верхнем правом углу страницы есть иконка справки. Если вам нужна помощь, нажмите её!',
-    'registered_doc_html'              => 'Если вы ещё этого не сделали, прочтите <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">грандиозную теорию</a>.',
+    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
     'registered_doc_text'              => 'Если вы еще этого не сделали, прочтите краткое руководство по использованию и полное описание.',
     'registered_closing'               => 'Наслаждайтесь!',
     'registered_firefly_iii_link'      => 'Firefly III:',

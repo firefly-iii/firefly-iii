@@ -34,6 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class AvailableBudgetRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

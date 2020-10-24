@@ -86,7 +86,6 @@ class FixPiggies extends Command
                 $event->save();
                 $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
                 $this->count++;
-                continue;
             }
         }
         if (0 === $this->count) {

@@ -47,8 +47,7 @@ use Log;
  */
 class MassController extends Controller
 {
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * MassController constructor.
@@ -131,16 +130,16 @@ class MassController extends Controller
     {
         $subTitle = (string) trans('firefly.mass_edit_journals');
 
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
 
         // valid withdrawal sources:
         $array             = array_keys(config(sprintf('firefly.source_dests.%s', TransactionType::WITHDRAWAL)));
-        $withdrawalSources = $repository->getAccountsByType($array);
+        $withdrawalSources = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:
         $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionType::DEPOSIT, AccountType::REVENUE));
-        $depositDestinations = $repository->getAccountsByType($array);
+        $depositDestinations = $accountRepository->getAccountsByType($array);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);

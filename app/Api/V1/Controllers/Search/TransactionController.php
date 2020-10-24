@@ -45,7 +45,7 @@ class TransactionController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager   = $this->getManager();
         $fullQuery = (string) $request->get('query');
         $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 
@@ -65,6 +65,6 @@ class TransactionController extends Controller
         $resource = new Collection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }

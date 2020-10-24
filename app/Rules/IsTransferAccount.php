@@ -71,6 +71,6 @@ class IsTransferAccount implements Rule
         $validAccount = $validator->validateSource((int)$value, null, null);
         Log::debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
-        return !(false === $validAccount);
+        return false !== $validAccount;
     }
 }

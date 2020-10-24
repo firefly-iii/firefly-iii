@@ -186,7 +186,6 @@ class EditController extends Controller
         $this->repository->update($account, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
-        app('preferences')->mark();
 
         // store new attachment(s):
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -209,6 +208,7 @@ class EditController extends Controller
 
             $redirect = redirect(route('accounts.edit', [$account->id]))->withInput(['return_to_edit' => 1]);
         }
+        app('preferences')->mark();
 
         return $redirect;
     }

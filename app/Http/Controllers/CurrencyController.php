@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Redirector;
 use Log;
-use View;
 
 /**
  * Class CurrencyController.

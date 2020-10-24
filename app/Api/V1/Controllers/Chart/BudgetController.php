@@ -58,12 +58,9 @@ class BudgetController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                //$this->generator     = app(GeneratorInterface::class);
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
-
-                //$this->nbRepository  = app(NoBudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -132,94 +129,6 @@ class BudgetController extends Controller
         }
 
         return $arr;
-    }
-
-    /**
-     * @param array $budgetNames
-     * @param array $currencyNames
-     *
-     * @return array
-     */
-    private function createSets(array $budgetNames, array $currencyNames): array
-    {
-        $return = [];
-        foreach ($currencyNames as $currencyName) {
-            $entries = [];
-            foreach ($budgetNames as $budgetName) {
-                $label           = sprintf('%s (%s)', $budgetName, $currencyName);
-                $entries[$label] = '0';
-            }
-
-            // left
-            $return['left'] = [
-                'label'         => sprintf('%s (%s)', trans('firefly.left'), $currencyName),
-                'data_type'     => 'left',
-                'currency_name' => $currencyName,
-                'type'          => 'bar',
-                'yAxisID'       => 0, // 0, 1, 2
-                'entries'       => $entries,
-            ];
-
-            // spent_capped
-            $return['spent_capped'] = [
-                'label'         => sprintf('%s (%s)', trans('firefly.spent'), $currencyName),
-                'data_type'     => 'spent_capped',
-                'currency_name' => $currencyName,
-                'type'          => 'bar',
-                'yAxisID'       => 0, // 0, 1, 2
-                'entries'       => $entries,
-            ];
-
-            // overspent
-            $return['overspent'] = [
-                'label'         => sprintf('%s (%s)', trans('firefly.overspent'), $currencyName),
-                'data_type'     => 'overspent',
-                'currency_name' => $currencyName,
-                'type'          => 'bar',
-                'yAxisID'       => 0, // 0, 1, 2
-                'entries'       => $entries,
-            ];
-
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param array $basic
-     * @param array $sets
-     *
-     * @return array
-     */
-    private function fillSets(array $basic, array $sets): array
-    {
-        foreach ($sets as $set) {
-            $label                                    = $set['label'];
-            //$basic['spent']['entries'][$label]        = $set['entries']['spent'];
-            $basic['spent_capped']['entries'][$label] = $set['entries']['spent_capped'];
-            $basic['left']['entries'][$label]         = $set['entries']['left'];
-            $basic['overspent']['entries'][$label]    = $set['entries']['overspent'];
-        }
-
-        return $basic;
-    }
-
-    /**
-     * @param array $expenses
-     *
-     * @return array
-     */
-    private function filterNulls(array $expenses): array
-    {
-        $return = [];
-        /** @var array|null $arr */
-        foreach ($expenses as $arr) {
-            if ([] !== $arr) {
-                $return[] = $arr;
-            }
-        }
-
-        return $return;
     }
 
     /**
@@ -292,10 +201,97 @@ class BudgetController extends Controller
         $return['entries']['spent']        = $sumSpent;
         $return['entries']['amount']       = $limit->amount;
         $return['entries']['spent_capped'] = 1 === bccomp($sumSpent, $limit->amount) ? $limit->amount : $sumSpent;
-        $return['entries']['left']         = 1 === bccomp($limit->amount, $sumSpent) ? bcadd($set['sum'], $limit->amount) : '0'; // left
+        $return['entries']['left']         = 1 === bccomp($limit->amount, $sumSpent) ? bcadd($set['sum'], $limit->amount) : '0';              // left
         $return['entries']['overspent']    = 1 === bccomp($limit->amount, $sumSpent) ? '0' : bcmul(bcadd($set['sum'], $limit->amount), '-1'); // overspent
 
         return $return;
+    }
+
+    /**
+     * @param array $expenses
+     *
+     * @return array
+     */
+    private function filterNulls(array $expenses): array
+    {
+        $return = [];
+        /** @var array|null $arr */
+        foreach ($expenses as $arr) {
+            if ([] !== $arr) {
+                $return[] = $arr;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $budgetNames
+     * @param array $currencyNames
+     *
+     * @return array
+     */
+    private function createSets(array $budgetNames, array $currencyNames): array
+    {
+        $return = [];
+        foreach ($currencyNames as $currencyName) {
+            $entries = [];
+            foreach ($budgetNames as $budgetName) {
+                $label           = sprintf('%s (%s)', $budgetName, $currencyName);
+                $entries[$label] = '0';
+            }
+
+            // left
+            $return['left'] = [
+                'label'         => sprintf('%s (%s)', trans('firefly.left'), $currencyName),
+                'data_type'     => 'left',
+                'currency_name' => $currencyName,
+                'type'          => 'bar',
+                'yAxisID'       => 0, // 0, 1, 2
+                'entries'       => $entries,
+            ];
+
+            // spent_capped
+            $return['spent_capped'] = [
+                'label'         => sprintf('%s (%s)', trans('firefly.spent'), $currencyName),
+                'data_type'     => 'spent_capped',
+                'currency_name' => $currencyName,
+                'type'          => 'bar',
+                'yAxisID'       => 0, // 0, 1, 2
+                'entries'       => $entries,
+            ];
+
+            // overspent
+            $return['overspent'] = [
+                'label'         => sprintf('%s (%s)', trans('firefly.overspent'), $currencyName),
+                'data_type'     => 'overspent',
+                'currency_name' => $currencyName,
+                'type'          => 'bar',
+                'yAxisID'       => 0, // 0, 1, 2
+                'entries'       => $entries,
+            ];
+
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $basic
+     * @param array $sets
+     *
+     * @return array
+     */
+    private function fillSets(array $basic, array $sets): array
+    {
+        foreach ($sets as $set) {
+            $label                                    = $set['label'];
+            $basic['spent_capped']['entries'][$label] = $set['entries']['spent_capped'];
+            $basic['left']['entries'][$label]         = $set['entries']['left'];
+            $basic['overspent']['entries'][$label]    = $set['entries']['overspent'];
+        }
+
+        return $basic;
     }
 
 }

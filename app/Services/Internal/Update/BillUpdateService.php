@@ -44,17 +44,7 @@ class BillUpdateService
 {
     use BillServiceTrait, CreatesObjectGroups;
 
-    protected $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    protected User $user;
 
     /**
      * @param Bill $bill
@@ -81,31 +71,31 @@ class BillUpdateService
 
         // old values
         $oldData = [
-            'name'                      => $bill->name,
-            'amount_min'                => $bill->amount_min,
-            'amount_max'                => $bill->amount_max,
+            'name' => $bill->name,
+            'amount_min' => $bill->amount_min,
+            'amount_max' => $bill->amount_max,
             'transaction_currency_name' => $bill->transactionCurrency->name,
         ];
         // new values
         $data['transaction_currency_name'] = $currency->name;
 
-        if (isset($data['name']) && '' !== (string) $data['name']) {
+        if (isset($data['name']) && '' !== (string)$data['name']) {
             $bill->name = $data['name'];
         }
 
-        if (isset($data['amount_min']) && '' !== (string) $data['amount_min']) {
+        if (isset($data['amount_min']) && '' !== (string)$data['amount_min']) {
             $bill->amount_min = $data['amount_min'];
         }
-        if (isset($data['amount_max']) && '' !== (string) $data['amount_max']) {
+        if (isset($data['amount_max']) && '' !== (string)$data['amount_max']) {
             $bill->amount_max = $data['amount_max'];
         }
-        if (isset($data['date']) && '' !== (string) $data['date']) {
+        if (isset($data['date']) && '' !== (string)$data['date']) {
             $bill->date = $data['date'];
         }
-        if (isset($data['repeat_freq']) && '' !== (string) $data['repeat_freq']) {
+        if (isset($data['repeat_freq']) && '' !== (string)$data['repeat_freq']) {
             $bill->repeat_freq = $data['repeat_freq'];
         }
-        if (isset($data['skip']) && '' !== (string) $data['skip']) {
+        if (isset($data['skip']) && '' !== (string)$data['skip']) {
             $bill->skip = $data['skip'];
         }
         if (isset($data['active']) && is_bool($data['active'])) {
@@ -113,19 +103,19 @@ class BillUpdateService
         }
 
         $bill->transaction_currency_id = $currency->id;
-        $bill->match                   = 'EMPTY';
-        $bill->automatch               = true;
+        $bill->match = 'EMPTY';
+        $bill->automatch = true;
         $bill->save();
 
         // update note:
         if (isset($data['notes'])) {
-            $this->updateNote($bill, (string) $data['notes']);
+            $this->updateNote($bill, (string)$data['notes']);
         }
 
         // update order.
         // update the order of the piggy bank:
-        $oldOrder = (int) $bill->order;
-        $newOrder = (int) ($data['order'] ?? $oldOrder);
+        $oldOrder = (int)$bill->order;
+        $newOrder = (int)($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->updateOrder($bill, $oldOrder, $newOrder);
         }
@@ -142,22 +132,34 @@ class BillUpdateService
                 $bill->objectGroups()->sync([$objectGroup->id]);
                 $bill->save();
             }
+            return $bill;
         }
+        // remove if name is empty. Should be overruled by ID.
+        if ('' === $objectGroupTitle) {
+            $bill->objectGroups()->sync([]);
+            $bill->save();
+        }
+
         // try also with ID:
-        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        $objectGroupId = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
                 $bill->objectGroups()->sync([$objectGroup->id]);
                 $bill->save();
             }
+            return $bill;
+        }
+        if(0 === $objectGroupId) {
+            $bill->objectGroups()->sync([]);
+            $bill->save();
         }
 
         return $bill;
     }
 
     /**
-     * @param Bill  $bill
+     * @param Bill $bill
      * @param array $oldData
      * @param array $newData
      */
@@ -175,9 +177,9 @@ class BillUpdateService
         }
         Log::debug(sprintf('Found %d rules', $rules->count()));
         $fields = [
-            'name'                      => 'description_contains',
-            'amount_min'                => 'amount_more',
-            'amount_max'                => 'amount_less',
+            'name' => 'description_contains',
+            'amount_min' => 'amount_more',
+            'amount_max' => 'amount_less',
             'transaction_currency_name' => 'currency_is'];
         foreach ($fields as $field => $ruleTriggerKey) {
             if ($oldData[$field] === $newData[$field]) {
@@ -191,9 +193,9 @@ class BillUpdateService
 
     /**
      * @param Collection $rules
-     * @param string     $key
-     * @param string     $oldValue
-     * @param string     $newValue
+     * @param string $key
+     * @param string $oldValue
+     * @param string $newValue
      */
     private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
     {
@@ -211,14 +213,13 @@ class BillUpdateService
                 Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
-                continue;
             }
         }
     }
 
 
     /**
-     * @param Rule   $rule
+     * @param Rule $rule
      * @param string $key
      *
      * @return RuleTrigger|null
@@ -230,26 +231,22 @@ class BillUpdateService
 
     /**
      * @param Bill $bill
-     * @param int  $oldOrder
-     * @param int  $newOrder
+     * @param int $oldOrder
+     * @param int $newOrder
      */
     private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
     {
         if ($newOrder > $oldOrder) {
-            /** @var User $user */
-            $user = $this->user;
-            $user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                 ->where('bills.id', '!=', $bill->id)
-                 ->update(['order' => DB::raw('bills.order-1')]);
+            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                ->where('bills.id', '!=', $bill->id)
+                ->update(['order' => DB::raw('bills.order-1')]);
             $bill->order = $newOrder;
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
-            /** @var User $user */
-            $user = $this->user;
-            $user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                 ->where('bills.id', '!=', $bill->id)
-                 ->update(['order' => DB::raw('bills.order+1')]);
+            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                ->where('bills.id', '!=', $bill->id)
+                ->update(['order' => DB::raw('bills.order+1')]);
             $bill->order = $newOrder;
             $bill->save();
         }

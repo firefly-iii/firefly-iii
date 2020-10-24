@@ -45,12 +45,9 @@ var colourSet = [
 ];
 
 var fillColors = [];
-var strokePointHighColors = [];
-
 
 for (var i = 0; i < colourSet.length; i++) {
     fillColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.5)");
-    strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
 }
 
 Chart.defaults.global.legend.display = false;
@@ -67,11 +64,11 @@ function colorizeData(data) {
     var newData = {};
     newData.datasets = [];
 
-    for (var i = 0; i < data.count; i++) {
+    for (var loop = 0; loop < data.count; loop++) {
         newData.labels = data.labels;
-        var dataset = data.datasets[i];
+        var dataset = data.datasets[loop];
         dataset.fill = false;
-        dataset.backgroundColor = dataset.borderColor = fillColors[i];
+        dataset.backgroundColor = dataset.borderColor = fillColors[loop];
         newData.datasets.push(dataset);
     }
     return newData;

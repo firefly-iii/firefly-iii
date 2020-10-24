@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\LinkType;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -31,17 +32,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class JournalLinkRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged in users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Returns the data required by the controller.
@@ -53,7 +44,7 @@ class JournalLinkRequest extends FormRequest
         $return                           = [];
         $linkType                         = $this->get('link_type');
         $parts                            = explode('_', $linkType);
-        $return['link_type_id']           = (int) $parts[0];
+        $return['link_type_id']           = (int)$parts[0];
         $return['transaction_journal_id'] = $this->integer('opposing');
         $return['notes']                  = $this->string('notes');
         $return['direction']              = $parts[1];

@@ -1,8 +1,4 @@
-<!--
-TODO: reconcile
-TODO: hide and show columns
--->
-<table class="table table-condensed table-hover table-responsive">
+<table class="table table-condensed table-hover table-responsive table-sortable">
     <thead>
     <tr>
         {% if showCategory or showBudget %}
@@ -53,7 +49,7 @@ TODO: hide and show columns
     <tbody>
     {% for group in groups %}
         {% if group.count > 1 %}
-            <tr style="border-top:1px #aaa solid;">
+            <tr style="border-top:1px #aaa solid;" class="unsortable">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>
                             <a href="{{ route('transactions.show', [group.id]) }}"
@@ -102,25 +98,25 @@ TODO: hide and show columns
             {% if group.transactions|length == loop.index and group.count > 1 %}
                 {% set style="border-bottom:1px #aaa solid;" %}
             {% endif %}
-            <tr data-date="{{ transaction.date.format('Y-m-d') }}">
+            <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}" data-id="{{ group.id }}">
                 <td style=" {{ style|raw }}" class="hidden-xs">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
-                        <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
+                        <i class="object-handle fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                        <i class="object-handle fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Transfer' %}
-                        <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Transfer') }}"></i>
+                        <i class="object-handle fa fa-exchange fa-fw" title="{{ trans('firefly.Transfer') }}"></i>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Reconciliation' %}
-                        <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
+                        <i class="object-handle fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
                     {% endif %}
                     {% if transaction.transaction_type_type == 'Opening balance' %}
-                        <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
+                        <i class="object-handle fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                     {% endif %}
 
                 </td>

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Autocomplete;
 
 
+use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -57,6 +58,9 @@ class AutocompleteRequest extends FormRequest
         }
         $limit = $this->integer('limit');
         $limit = 0 === $limit ? 10 : $limit;
+
+        // remove 'initial balance' from allowed types. its internal
+        $array = array_diff($array, [AccountType::INITIAL_BALANCE]);
 
         return [
             'types' => $array,

@@ -47,9 +47,6 @@ class BillTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->repository = app(BillRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -80,7 +77,7 @@ class BillTransformer extends AbstractTransformer
             $objectGroupTitle = $objectGroup->title;
         }
 
-        $data = [
+        return [
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
             'updated_at'              => $bill->updated_at->toAtomString(),
@@ -110,9 +107,6 @@ class BillTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
-
     }
 
     /**

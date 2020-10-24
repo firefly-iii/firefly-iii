@@ -77,9 +77,11 @@ class OperatorQuerySearch implements SearchInterface
     private float                              $startTime;
     private Collection                         $modifiers; // obsolete
     private Collection                         $operators;
+    private string                             $originalQuery;
 
     /**
      * OperatorQuerySearch constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -90,6 +92,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->page               = 1;
         $this->words              = [];
         $this->limit              = 25;
+        $this->originalQuery      = '';
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -143,6 +146,7 @@ class OperatorQuerySearch implements SearchInterface
     public function setPage(int $page): void
     {
         $this->page = $page;
+        $this->collector->setPage($this->page);
     }
 
     /**
@@ -161,22 +165,16 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser      = new QueryParser();
-        $this->query = $parser->parse($query);
-
-        $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setUser($this->user);
-        $this->collector->setLimit($this->limit)->setPage($this->page);
-        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
+        $parser              = new QueryParser();
+        $this->query         = $parser->parse($query);
+        $this->originalQuery = $query;
 
         Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
-
         foreach ($this->query->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
 
         $this->collector->setSearchWords($this->words);
-
     }
 
     /**
@@ -195,8 +193,9 @@ class OperatorQuerySearch implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            throw new FireflyException('Search query is empty.');
+            return new LengthAwarePaginator;
         }
+
         return $this->collector->getPaginatedGroups();
     }
 
@@ -211,12 +210,17 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
+        $this->collector = app(GroupCollectorInterface::class);
+        $this->collector->setUser($this->user);
+        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
-        $this->setLimit((int) app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+
     }
 
     /**
      * @param Node $searchNode
+     *
      * @throws FireflyException
      */
     private function handleSearchNode(Node $searchNode): void
@@ -236,7 +240,7 @@ class OperatorQuerySearch implements SearchInterface
             case Emoji::class:
             case Mention::class:
                 Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = (string) $searchNode->getValue();
+                $this->words[] = (string)$searchNode->getValue();
                 break;
             case Field::class:
                 Log::debug(sprintf('Now handle %s', $class));
@@ -245,15 +249,13 @@ class OperatorQuerySearch implements SearchInterface
                 $operator = strtolower($searchNode->getValue());
                 $value    = $searchNode->getNode()->getValue();
                 // must be valid operator:
-                if (in_array($operator, $this->validOperators, true)) {
-                    if ($this->updateCollector($operator, (string) $value)) {
-                        $this->operators->push(
-                            [
-                                'type'  => self::getRootOperator($operator),
-                                'value' => (string) $value,
-                            ]
-                        );
-                    }
+                if (in_array($operator, $this->validOperators, true) && $this->updateCollector($operator, (string)$value)) {
+                    $this->operators->push(
+                        [
+                            'type'  => self::getRootOperator($operator),
+                            'value' => (string)$value,
+                        ]
+                    );
                 }
                 break;
         }
@@ -263,12 +265,13 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * @param string $operator
      * @param string $value
+     *
      * @return bool
      * @throws FireflyException
      */
     private function updateCollector(string $operator, string $value): bool
     {
-        Log::debug(sprintf('updateCollector(%s, %s)', $operator, $value));
+        Log::debug(sprintf('updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
@@ -282,6 +285,7 @@ class OperatorQuerySearch implements SearchInterface
             // some search operators are ignored, basically:
             case 'user_action':
                 Log::info(sprintf('Ignore search operator "%s"', $operator));
+
                 return false;
             //
             // all account related searches:
@@ -311,7 +315,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->findNull((int) $value);
+                $account = $this->accountRepository->findNull((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
@@ -345,7 +349,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->findNull((int) $value);
+                $account = $this->accountRepository->findNull((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -354,7 +358,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->findNull((int) $accountId);
+                    $account = $this->accountRepository->findNull((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -389,6 +393,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case 'description_contains':
                 $this->words[] = $value;
+
                 return false;
             case 'description_is':
                 $this->collector->descriptionIs($value);
@@ -493,17 +498,17 @@ class OperatorQuerySearch implements SearchInterface
             // amount
             //
             case 'amount_exactly':
-                $amount = app('steam')->positive((string) $value);
+                $amount = app('steam')->positive((string)$value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
             case 'amount_less':
-                $amount = app('steam')->positive((string) $value);
+                $amount = app('steam')->positive((string)$value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
             case 'amount_more':
-                $amount = app('steam')->positive((string) $value);
+                $amount = app('steam')->positive((string)$value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
@@ -519,7 +524,12 @@ class OperatorQuerySearch implements SearchInterface
             //
             case 'date_is':
                 $range = $this->parseDateRange($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                Log::debug(
+                    sprintf(
+                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
+                        $range['end']->format('Y-m-d')
+                    )
+                );
                 $this->collector->setRange($range['start'], $range['end']);
 
                 // add to operators manually:
@@ -528,8 +538,14 @@ class OperatorQuerySearch implements SearchInterface
 
                 return false;
             case 'date_before':
+                Log::debug(sprintf('Value for date_before is "%s"', $value));
                 $range = $this->parseDateRange($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                Log::debug(
+                    sprintf(
+                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
+                        $range['end']->format('Y-m-d')
+                    )
+                );
 
                 // add to operators manually:
                 $this->operators->push(['type' => 'date_before', 'value' => $range['start']->format('Y-m-d'),]);
@@ -537,8 +553,14 @@ class OperatorQuerySearch implements SearchInterface
 
                 return false;
             case 'date_after':
+                Log::debug(sprintf('Value for date_after is "%s"', $value));
                 $range = $this->parseDateRange($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'), $range['end']->format('Y-m-d')));
+                Log::debug(
+                    sprintf(
+                        'Set "%s" using collector with value "%s" (%s - %s)', $operator, $value, $range['start']->format('Y-m-d'),
+                        $range['end']->format('Y-m-d')
+                    )
+                );
 
                 // add to operators manually:
                 $this->operators->push(['type' => 'date_after', 'value' => $range['end']->format('Y-m-d'),]);
@@ -565,19 +587,21 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->setInternalReference($value);
                 break;
         }
+
         return true;
     }
 
     /**
      * searchDirection: 1 = source (default), 2 = destination
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
+     *
      * @param string $value
      * @param int    $searchDirection
      * @param int    $stringPosition
      */
     private function searchAccount(string $value, int $searchDirection, int $stringPosition): void
     {
-        Log::debug(sprintf('searchAccount(%s, %d, %d)', $value, $stringPosition, $searchDirection));
+        Log::debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
@@ -607,22 +631,25 @@ class OperatorQuerySearch implements SearchInterface
         $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
 
             return;
         }
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
-        $filtered = $accounts->filter(function (Account $account) use ($value, $stringMethod) {
-            return $stringMethod(strtolower($account->name), strtolower($value));
-        });
+        $filtered = $accounts->filter(
+            function (Account $account) use ($value, $stringMethod) {
+                return $stringMethod(strtolower($account->name), strtolower($value));
+            }
+        );
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
+
             return;
         }
         Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
@@ -633,6 +660,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      * searchDirection: 1 = source (default), 2 = destination
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
+     *
      * @param string $value
      * @param int    $searchDirection
      * @param int    $stringPosition
@@ -669,32 +697,37 @@ class OperatorQuerySearch implements SearchInterface
         $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
+
             return;
         }
 
         // if found, do filter
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
-        $filtered = $accounts->filter(function (Account $account) use ($value, $stringMethod) {
-            // either IBAN or account number!
-            $ibanMatch      = $stringMethod(strtolower($account->iban), strtolower($value));
-            $accountNrMatch = false;
-            /** @var AccountMeta $meta */
-            foreach ($account->accountMeta as $meta) {
-                if ('account_number' === $meta->name && $stringMethod(strtolower($meta->data), strtolower($value))) {
-                    $accountNrMatch = true;
+        $filtered = $accounts->filter(
+            function (Account $account) use ($value, $stringMethod) {
+                // either IBAN or account number!
+                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
+                $accountNrMatch = false;
+                /** @var AccountMeta $meta */
+                foreach ($account->accountMeta as $meta) {
+                    if ('account_number' === $meta->name && $stringMethod(strtolower($meta->data), strtolower($value))) {
+                        $accountNrMatch = true;
+                    }
                 }
+
+                return $ibanMatch || $accountNrMatch;
             }
-            return $ibanMatch || $accountNrMatch;
-        });
+        );
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero, search for invalid account');
-            $account = new Account;
+            $account     = new Account;
             $account->id = 0;
             $this->collector->$collectorMethod(new Collection([$account]));
+
             return;
         }
         Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
@@ -703,6 +736,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @param string $value
+     *
      * @return TransactionCurrency|null
      */
     private function findCurrency(string $value): ?TransactionCurrency
@@ -718,11 +752,13 @@ class OperatorQuerySearch implements SearchInterface
         if (null === $result) {
             $result = $this->currencyRepository->findByNameNull($value);
         }
+
         return $result;
     }
 
     /**
      * @param string $operator
+     *
      * @return string
      * @throws FireflyException
      */
@@ -734,6 +770,7 @@ class OperatorQuerySearch implements SearchInterface
         }
         if (true === $config['alias']) {
             Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $operator, $config['alias_for']));
+
             return $config['alias_for'];
         }
         Log::debug(sprintf('"%s" is not an alias.', $operator));
@@ -743,6 +780,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @param string $value
+     *
      * @return array
      * @throws FireflyException
      */
@@ -753,6 +791,7 @@ class OperatorQuerySearch implements SearchInterface
             return $parser->parseRange($value, today(config('app.timezone')));
         }
         $date = $parser->parseDate($value);
+
         return [
             'start' => $date,
             'end'   => $date,
@@ -765,6 +804,7 @@ class OperatorQuerySearch implements SearchInterface
     public function setLimit(int $limit): void
     {
         $this->limit = $limit;
+        $this->collector->setLimit($this->limit);
     }
 
     /**

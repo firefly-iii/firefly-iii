@@ -50,9 +50,7 @@ trait DateCalculation
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $today->diffInDays($end);
         }
-        $difference = 0 === $difference ? 1 : $difference;
-
-        return $difference;
+        return 0 === $difference ? 1 : $difference;
     }
 
     /**

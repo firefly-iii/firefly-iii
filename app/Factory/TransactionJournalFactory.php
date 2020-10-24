@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -56,26 +55,17 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
-    private AccountRepositoryInterface $accountRepository;
-    private AccountValidator           $accountValidator;
-    private BillRepositoryInterface    $billRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var bool */
-    private $errorOnHash;
-    /** @var array */
-    private $fields;
-    /** @var PiggyBankEventFactory */
-    private $piggyEventFactory;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyRepository;
-    /** @var TransactionFactory */
-    private $transactionFactory;
-    /** @var TransactionTypeRepositoryInterface */
-    private $typeRepository;
-    /** @var User The user */
-    private $user;
-
+    private AccountRepositoryInterface         $accountRepository;
+    private AccountValidator                   $accountValidator;
+    private BillRepositoryInterface            $billRepository;
+    private CurrencyRepositoryInterface        $currencyRepository;
+    private bool                               $errorOnHash;
+    private array                              $fields;
+    private PiggyBankEventFactory              $piggyEventFactory;
+    private PiggyBankRepositoryInterface       $piggyRepository;
+    private TransactionFactory                 $transactionFactory;
+    private TransactionTypeRepositoryInterface $typeRepository;
+    private User                               $user;
 
     /**
      * Constructor.
@@ -112,7 +102,6 @@ class TransactionJournalFactory
 
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
-        $this->transactionFactory = app(TransactionFactory::class);
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->budgetRepository   = app(BudgetRepositoryInterface::class);
         $this->categoryRepository = app(CategoryRepositoryInterface::class);
@@ -134,6 +123,7 @@ class TransactionJournalFactory
      */
     public function create(array $data): Collection
     {
+        Log::debug('Now in TransactionJournalFactory::create()');
         // convert to special object.
         $dataObject = new NullArrayObject($data);
 
@@ -195,7 +185,6 @@ class TransactionJournalFactory
         $this->user = $user;
         $this->currencyRepository->setUser($this->user);
         $this->tagFactory->setUser($user);
-        $this->transactionFactory->setUser($this->user);
         $this->billRepository->setUser($this->user);
         $this->budgetRepository->setUser($this->user);
         $this->categoryRepository->setUser($this->user);
@@ -328,7 +317,6 @@ class TransactionJournalFactory
         Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
         /** Create two transactions. */
-        /** @var TransactionFactory $transactionFactory */
         $transactionFactory = app(TransactionFactory::class);
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);

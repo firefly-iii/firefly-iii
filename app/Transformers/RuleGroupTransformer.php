@@ -24,24 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\RuleGroup;
-use Log;
 
 /**
  * Class RuleGroupTransformer
  */
 class RuleGroupTransformer extends AbstractTransformer
 {
-    /**
-     * RuleGroupTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * Transform the rule group
@@ -52,7 +40,7 @@ class RuleGroupTransformer extends AbstractTransformer
      */
     public function transform(RuleGroup $ruleGroup): array
     {
-        $data = [
+        return [
             'id'          => (int)$ruleGroup->id,
             'created_at'  => $ruleGroup->created_at->toAtomString(),
             'updated_at'  => $ruleGroup->updated_at->toAtomString(),
@@ -67,8 +55,6 @@ class RuleGroupTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
 

@@ -26,35 +26,35 @@
     <div class="col-sm-12">
       <div class="input-group">
         <input
-            type="text"
+            ref="descr"
+            :title="$t('firefly.description')"
+            :value="value"
+            autocomplete="off"
             class="form-control"
             name="description[]"
-            :title="$t('firefly.description')"
-            v-on:keypress="handleEnter"
-            v-on:submit.prevent
-            ref="descr"
-            autocomplete="off"
+            type="text"
             v-bind:placeholder="$t('firefly.description')"
-            :value="value" @input="handleInput"
+            @input="handleInput"
+            v-on:keypress="handleEnter" v-on:submit.prevent
         >
         <span class="input-group-btn">
             <button
-                v-on:click="clearDescription"
-                tabIndex="-1"
                 class="btn btn-default"
-                type="button"><i class="fa fa-trash-o"></i></button>
+                tabIndex="-1"
+                type="button"
+                v-on:click="clearDescription"><i class="fa fa-trash-o"></i></button>
         </span>
       </div>
       <typeahead
+          v-model="name"
+          :async-function="aSyncFunction"
           :open-on-empty=true
           :open-on-focus=true
-          v-on:input="selectedItem"
-          :async-function="aSyncFunction"
-          v-model="name"
           :target="target"
           item-key="description"
+          v-on:input="selectedItem"
       ></typeahead>
-      <ul class="list-unstyled" v-for="error in this.error">
+      <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
     </div>

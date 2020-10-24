@@ -63,9 +63,6 @@ class RecurrenceTransformer extends AbstractTransformer
         $this->factory     = app(CategoryFactory::class);
         $this->budgetRepos = app(BudgetRepositoryInterface::class);
 
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -90,7 +87,7 @@ class RecurrenceTransformer extends AbstractTransformer
         $reps      = 0 === (int)$recurrence->repetitions ? null : (int)$recurrence->repetitions;
         Log::debug('Get basic data.');
         // basic data.
-        $return = [
+        return [
             'id'                => (int)$recurrence->id,
             'created_at'        => $recurrence->created_at->toAtomString(),
             'updated_at'        => $recurrence->updated_at->toAtomString(),
@@ -113,9 +110,6 @@ class RecurrenceTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-
-        return $return;
     }
 
     /**

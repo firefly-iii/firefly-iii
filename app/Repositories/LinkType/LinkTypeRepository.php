@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\LinkType;
 
 use Exception;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -210,13 +209,11 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $inward  = TransactionJournalLink::whereDestinationId($journal->id)->get();
         $merged  = $outward->merge($inward);
 
-        $filtered = $merged->filter(
+        return $merged->filter(
             function (TransactionJournalLink $link) {
                 return (null !== $link->source && null !== $link->destination);
             }
         );
-
-        return $filtered;
     }
 
     /**

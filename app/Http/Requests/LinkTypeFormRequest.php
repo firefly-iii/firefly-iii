@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,16 +30,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class LinkTypeFormRequest extends FormRequest
 {
-    /**
-     * Verify the request.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow logged and admins
-        return auth()->check();
-    }
+    use ChecksLogin;
 
     /**
      * Rules for this request.
@@ -59,13 +51,11 @@ class LinkTypeFormRequest extends FormRequest
             $nameRule = 'required|min:1';
         }
 
-        $rules = [
+        return [
             'id'      => $idRule,
             'name'    => $nameRule,
             'inward'  => 'required|min:1|different:outward',
             'outward' => 'required|min:1|different:inward',
         ];
-
-        return $rules;
     }
 }

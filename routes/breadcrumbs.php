@@ -114,8 +114,8 @@ try {
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
-                    ['start' => $start ? $start->formatLocalized((string) trans('config.month_and_day')) : '',
-                     'end'   => $end ? $end->formatLocalized((string) trans('config.month_and_day')) : '',]
+                    ['start' =>$start->formatLocalized((string) trans('config.month_and_day')),
+                     'end'   => $end->formatLocalized((string) trans('config.month_and_day')),]
                 );
                 $breadcrumbs->push($title, route('accounts.show', $account));
             }

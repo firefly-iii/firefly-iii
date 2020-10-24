@@ -168,10 +168,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getCategories(): Collection
     {
-        /** @var Collection $set */
-        $set = $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
-
-        return $set;
+        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -376,7 +373,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        $set = $set->each(
+        return $set->each(
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -385,7 +382,5 @@ class CategoryRepository implements CategoryRepositoryInterface
                 return $attachment;
             }
         );
-
-        return $set;
     }
 }

@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Log;
 
@@ -81,9 +80,9 @@ class BulkController extends Controller
         // make amounts positive.
 
         // get list of budgets:
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budgetList = app('expandedform')->makeSelectListWithEmpty($repository->getActiveBudgets());
+        /** @var BudgetRepositoryInterface $budgetRepos */
+        $budgetRepos = app(BudgetRepositoryInterface::class);
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
         return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }

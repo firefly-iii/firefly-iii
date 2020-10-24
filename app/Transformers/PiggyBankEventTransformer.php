@@ -28,7 +28,6 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use Log;
 
 /**
  * Class PiggyBankEventTransformer
@@ -52,9 +51,6 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $this->repository    = app(AccountRepositoryInterface::class);
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -84,7 +80,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             $groupId   = (int) $event->transactionJournal->transaction_group_id;
             $journalId = (int) $journalId;
         }
-        $data = [
+        return [
             'id'                      => (int) $event->id,
             'created_at'              => $event->created_at->toAtomString(),
             'updated_at'              => $event->updated_at->toAtomString(),
@@ -102,8 +98,6 @@ class PiggyBankEventTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
 }

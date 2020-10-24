@@ -63,7 +63,6 @@ function stopSorting() {
     "use strict";
     $.each($('#sortable-table>tbody>tr.sortable-object'), function (i, v) {
         var holder = $(v);
-        var parentBody = holder.parent();
         var position = parseInt(holder.data('position'));
         var originalOrder = parseInt(holder.data('order'));
         var id = holder.data('id');

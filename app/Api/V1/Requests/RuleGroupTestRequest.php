@@ -26,13 +26,9 @@ namespace FireflyIII\Api\V1\Requests;
 
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class RuleGroupTestRequest
@@ -65,16 +61,13 @@ class RuleGroupTestRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @param string $field
+     *
+     * @return Carbon|null
      */
-    public function rules(): array
+    private function getDate(string $field): ?Carbon
     {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after:start',
-            'accounts'   => '',
-            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
-        ];
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
     }
 
     /**
@@ -86,16 +79,16 @@ class RuleGroupTestRequest extends FormRequest
     }
 
     /**
-     * @param string $field
-     *
-     * @return Carbon|null
+     * @return array
      */
-    private function getDate(string $field): ?Carbon
+    public function rules(): array
     {
-        /** @var Carbon $result */
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-
-        return $result;
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after:start',
+            'accounts'   => '',
+            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
+        ];
     }
 
 }

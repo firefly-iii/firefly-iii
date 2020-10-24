@@ -29,24 +29,9 @@ use Tests\TestCase;
 
 /**
  * Class TransferBudgetsTest
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransferBudgetsTest extends TestCase
 {
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        self::markTestIncomplete('Incomplete for refactor.');
-
-        return;
-        parent::setUp();
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
     /**
      * @covers \FireflyIII\Console\Commands\Correction\TransferBudgets
      */
@@ -63,7 +48,7 @@ class TransferBudgetsTest extends TestCase
     public function testHandleBudget(): void
     {
         $deposit = $this->getRandomDeposit();
-        $budget  = $this->user()->budgets()->inRandomOrder()->first();
+        $budget  = $this->getRandomBudget();
 
         $deposit->budgets()->save($budget);
 

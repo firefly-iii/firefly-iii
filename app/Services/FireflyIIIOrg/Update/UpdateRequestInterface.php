@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
-use FireflyIII\Exceptions\FireflyException;
-
 /**
  * Interface UpdateRequestInterface
  */

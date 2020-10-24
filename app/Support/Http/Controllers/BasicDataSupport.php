@@ -41,9 +41,7 @@ trait BasicDataSupport
      */
     protected function isInArray(array $array, int $entryId) // helper for data (math, calculations)
     {
-        $result = $array[$entryId] ?? '0';
-
-        return $result;
+        return $array[$entryId] ?? '0';
     }
 
 

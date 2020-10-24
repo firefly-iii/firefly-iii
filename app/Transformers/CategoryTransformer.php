@@ -27,7 +27,6 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class CategoryTransformer
@@ -45,9 +44,6 @@ class CategoryTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->opsRepository = app(OperationsRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**
@@ -69,7 +65,7 @@ class CategoryTransformer extends AbstractTransformer
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
-        $data = [
+        return [
             'id'         => (int)$category->id,
             'created_at' => $category->created_at->toAtomString(),
             'updated_at' => $category->updated_at->toAtomString(),
@@ -83,8 +79,6 @@ class CategoryTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 
     /**

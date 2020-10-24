@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;

@@ -70,7 +70,7 @@ $(function () {
             }).done(function () {
                 window.location.reload(true);
             }).fail(function () {
-                alert('Could not change date range');
+                console.error('Could not change date range');
             });
         }
     );

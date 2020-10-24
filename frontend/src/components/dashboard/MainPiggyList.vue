@@ -25,6 +25,7 @@
         </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-striped">
+              <caption style="display:none;">{{ $t('firefly.piggy_banks') }}</caption>
                 <thead>
                 <tr>
                     <th scope="col" style="width:35%;">{{ $t('list.piggy_bank') }}</th>

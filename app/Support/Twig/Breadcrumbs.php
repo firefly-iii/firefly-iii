@@ -53,51 +53,75 @@ class Breadcrumbs extends AbstractExtension
                 $name = Route::getCurrentRoute()->getName() ?? '';
 
                 // loop for actual breadcrumb:
-                $arr         = config(sprintf('bc.%s', $name));
-                $breadcrumbs = [];
+                $arr = config(sprintf('bc.%s', $name));
+
                 if (null === $arr) {
                     throw new FireflyException(sprintf('No breadcrumbs for route "%s".', $name));
                 }
-                $hasParent = true;
-                $loop      = 0;
-                while (true === $hasParent && $loop < 30) {
-                    $breadcrumbs[] = $arr;
-                    if (null === $arr['parent']) {
-                        $hasParent = false;
+                $breadcrumbs = $this->getBreadcrumbs($arr);
 
-                    }
-                    if (null !== $arr['parent']) {
-                        $arr = config(sprintf('bc.%s', $arr['parent']));
-                        if (null === $arr) {
-                            throw new FireflyException(sprintf('No (2) breadcrumbs for route "%s".', $name));
-                        }
-                    }
-                    $loop++; // safety catch
-                }
-                // reverse order
-                $breadcrumbs = array_reverse($breadcrumbs);
+                return $this->getHtml($breadcrumbs);
 
-                // get HTML
-                $html = '<ol class="breadcrumb float-sm-right">';
-                foreach ($breadcrumbs as $index => $breadcrumb) {
-                    $class = 'breadcrumb-item';
-                    if ($index === count($breadcrumbs) - 1) {
-                        // active!
-                        $class = 'breadcrumb-item active';
-                    }
-                    $route = '#';
-                    if (null !== $breadcrumb['static_route']) {
-                        $route = route($breadcrumb['static_route']);
-                    }
-                    if (null !== $breadcrumb['dynamic_route']) {
-                        $route = route($breadcrumb['dynamic_route'], $args[$index - 1] ?? []);
-                    }
-                    $html .= sprintf('<li class="%1$s"><a href="%2$s" title="%3$s">%3$s</a></li>', $class, $route, trans($breadcrumb['title']));
-                }
-                $html .= '</ol>';
-                return $html;
             },
             ['is_safe' => ['html']]
         );
+    }
+
+    /**
+     * @param array $arr
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getBreadcrumbs(array $arr)
+    {
+        $breadcrumbs = [];
+        $hasParent   = true;
+        $loop        = 0;
+        while (true === $hasParent && $loop < 30) {
+            $breadcrumbs[] = $arr;
+            if (null === $arr['parent']) {
+                $hasParent = false;
+
+            }
+            if (null !== $arr['parent']) {
+                $arr = config(sprintf('bc.%s', $arr['parent']));
+                if (null === $arr) {
+                    throw new FireflyException(sprintf('No (2) breadcrumbs for route "%s".', $name));
+                }
+            }
+            $loop++; // safety catch
+        }
+
+        // reverse order
+        return array_reverse($breadcrumbs);
+    }
+
+    /**
+     * @param array $breadcrumbs
+     *
+     * @return string
+     */
+    private function getHtml(array $breadcrumbs): string
+    {
+        // get HTML
+        $html = '<ol class="breadcrumb float-sm-right">';
+        foreach ($breadcrumbs as $index => $breadcrumb) {
+            $class = 'breadcrumb-item';
+            if ($index === count($breadcrumbs) - 1) {
+                // active!
+                $class = 'breadcrumb-item active';
+            }
+            $route = '#';
+            if (null !== $breadcrumb['static_route']) {
+                $route = route($breadcrumb['static_route']);
+            }
+            if (null !== $breadcrumb['dynamic_route']) {
+                $route = route($breadcrumb['dynamic_route'], $args[$index - 1] ?? []);
+            }
+            $html .= sprintf('<li class="%1$s"><a href="%2$s" title="%3$s">%3$s</a></li>', $class, $route, trans($breadcrumb['title']));
+        }
+
+        return $html . '</ol>';
     }
 }

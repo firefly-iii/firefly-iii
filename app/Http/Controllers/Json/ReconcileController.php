@@ -46,12 +46,10 @@ use Throwable;
 class ReconcileController extends Controller
 {
     use UserNavigation;
-    /** @var AccountRepositoryInterface The account repository */
-    private $accountRepos;
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepos;
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+
+    private AccountRepositoryInterface  $accountRepos;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private JournalRepositoryInterface  $repository;
 
     /**
      * ReconcileController constructor.
@@ -196,6 +194,7 @@ class ReconcileController extends Controller
         $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
         $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
+
         // get the transactions
         $selectionStart = clone $start;
         $selectionStart->subDays(3);
@@ -210,36 +209,7 @@ class ReconcileController extends Controller
                   ->setRange($selectionStart, $selectionEnd)
                   ->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
         $array    = $collector->getExtractedJournals();
-        $journals = [];
-        // "fix" amounts to make it easier on the reconciliation overview:
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            $inverse = false;
-            // @codeCoverageIgnoreStart
-            if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
-                $inverse = true;
-            }
-            // transfer to this account? then positive amount:
-            if (TransactionType::TRANSFER === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
-                $inverse = true;
-            }
-
-            // opening balance into account? then positive amount:
-            if (TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
-                && $account->id === $journal['destination_account_id']) {
-                $inverse = true;
-            }
-
-            if (true === $inverse) {
-                $journal['amount'] = app('steam')->positive($journal['amount']);
-                if (null !== $journal['foreign_amount']) {
-                    $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
-                }
-            }
-            // @codeCoverageIgnoreEnd
-
-            $journals[] = $journal;
-        }
+        $journals = $this->processTransactions($account, $array);
 
         try {
             $html = view(
@@ -295,5 +265,46 @@ class ReconcileController extends Controller
         Log::debug(sprintf('Result is %s', $amount));
 
         return $amount;
+    }
+
+    /**
+     * "fix" amounts to make it easier on the reconciliation overview:
+     *
+     * @param Account $account
+     * @param array   $array
+     * @return array
+     */
+    private function processTransactions(Account $account, array $array): array
+    {
+        $journals = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $inverse = false;
+            // @codeCoverageIgnoreStart
+            if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
+                $inverse = true;
+            }
+            // transfer to this account? then positive amount:
+            if (TransactionType::TRANSFER === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
+                $inverse = true;
+            }
+
+            // opening balance into account? then positive amount:
+            if (TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
+                && $account->id === $journal['destination_account_id']) {
+                $inverse = true;
+            }
+
+            if (true === $inverse) {
+                $journal['amount'] = app('steam')->positive($journal['amount']);
+                if (null !== $journal['foreign_amount']) {
+                    $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
+                }
+            }
+            // @codeCoverageIgnoreEnd
+
+            $journals[] = $journal;
+        }
+        return $journals;
     }
 }

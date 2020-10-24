@@ -40,6 +40,7 @@ use Illuminate\Validation\Validator;
 class RecurrenceStoreRequest extends FormRequest
 {
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData;
+
     /**
      * Authorize logged in users.
      *
@@ -81,6 +82,56 @@ class RecurrenceStoreRequest extends FormRequest
             'transactions' => $this->getTransactionData(),
             'repetitions'  => $this->getRepetitionData(),
         ];
+    }
+
+    /**
+     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
+     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
+     *
+     * @return array
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+        // transaction data:
+        /** @var array $transactions */
+        $transactions = $this->get('transactions');
+        if (null === $transactions) {
+            return [];
+        }
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = $this->getSingleRecurrenceData($transaction);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the repetition data as it is found in the submitted data.
+     *
+     * @return array
+     */
+    private function getRepetitionData(): array
+    {
+        $return = [];
+        // repetition data:
+        /** @var array $repetitions */
+        $repetitions = $this->get('repetitions');
+        if (null === $repetitions) {
+            return [];
+        }
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $return[] = [
+                'type'    => $repetition['type'],
+                'moment'  => $repetition['moment'],
+                'skip'    => (int) $repetition['skip'],
+                'weekend' => (int) $repetition['weekend'],
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -149,55 +200,5 @@ class RecurrenceStoreRequest extends FormRequest
                 $this->validateAccountInformation($validator);
             }
         );
-    }
-
-    /**
-     * Returns the repetition data as it is found in the submitted data.
-     *
-     * @return array
-     */
-    private function getRepetitionData(): array
-    {
-        $return = [];
-        // repetition data:
-        /** @var array $repetitions */
-        $repetitions = $this->get('repetitions');
-        if (null === $repetitions) {
-            return [];
-        }
-        /** @var array $repetition */
-        foreach ($repetitions as $repetition) {
-            $return[] = [
-                'type'    => $repetition['type'],
-                'moment'  => $repetition['moment'],
-                'skip'    => (int) $repetition['skip'],
-                'weekend' => (int) $repetition['weekend'],
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
-     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
-     *
-     * @return array
-     */
-    private function getTransactionData(): array
-    {
-        $return = [];
-        // transaction data:
-        /** @var array $transactions */
-        $transactions = $this->get('transactions');
-        if (null === $transactions) {
-            return [];
-        }
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = $this->getSingleRecurrenceData($transaction);
-        }
-
-        return $return;
     }
 }

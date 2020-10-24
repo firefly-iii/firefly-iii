@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Models\Telemetry as TelemetryModel;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Database\QueryException;

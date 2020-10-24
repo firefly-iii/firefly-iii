@@ -1,11 +1,11 @@
 /*!
-  * Bootstrap v4.5.2 (https://getbootstrap.com/)
+  * Bootstrap v4.5.3 (https://getbootstrap.com/)
   * Copyright 2011-2020 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
   */
 
 /*!
-  * vue-router v3.4.5
+  * vue-router v3.4.7
   * (c) 2020 Evan You
   * @license MIT
   */
@@ -14,13 +14,6 @@
  * AdminLTE v3.0.5 (https://adminlte.io)
  * Copyright 2014-2020 Colorlib <http://colorlib.com>
  * Licensed under MIT (https://github.com/ColorlibHQ/AdminLTE/blob/master/LICENSE)
- */
-
-/*!
- * Chart.js v2.9.3
- * https://www.chartjs.org
- * (c) 2019 Chart.js Contributors
- * Released under the MIT License
  */
 
 /*!
@@ -76,17 +69,6 @@
  * http://jquery.org/license
  */
 
-/*! 
- * portal-vue © Thorsten Lünborg, 2019 
- * 
- * Version: 2.1.7
- * 
- * LICENCE: MIT 
- * 
- * https://github.com/linusborg/portal-vue
- * 
-*/
-
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
  * @version 1.16.1
@@ -111,9 +93,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-//! moment.js
-
-//! moment.js language configuration
-
-//! moment.js locale configuration

@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Foundation\Application;
 use Log;
 use Str;
 

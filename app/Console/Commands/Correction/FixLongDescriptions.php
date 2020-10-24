@@ -76,7 +76,8 @@ class FixLongDescriptions extends Command
             }
         }
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified all transaction group and journal title lengths in %s seconds.', $end));
+        $this->info('Verified all transaction group and journal title lengths.');
+        $this->info(sprintf('Took %s seconds.', $end));
 
         return 0;
     }

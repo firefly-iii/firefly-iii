@@ -68,9 +68,9 @@ class UserController extends Controller
      *
      * @param User $user
      *
+     * @return JsonResponse
      * @throws FireflyException
      * @codeCoverageIgnore
-     * @return JsonResponse
      */
     public function delete(User $user): JsonResponse
     {
@@ -113,7 +113,7 @@ class UserController extends Controller
         $resource = new FractalCollection($users, $transformer, 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -135,7 +135,7 @@ class UserController extends Controller
 
         $resource = new Item($user, $transformer, 'users');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -159,7 +159,7 @@ class UserController extends Controller
 
         $resource = new Item($user, $transformer, 'users');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -182,7 +182,7 @@ class UserController extends Controller
 
         $resource = new Item($user, $transformer, 'users');
 
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
 

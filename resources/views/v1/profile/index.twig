@@ -18,17 +18,21 @@
                 <li role="presentation">
                     <a href="#cmd" aria-controls="profile" role="tab" data-toggle="tab">{{ 'command_line_token'|_ }}</a>
                 </li>
-                {% if false == externalIdentity %}
+                {% if true == isInternalAuth %}
                 <li role="presentation">
                     <a href="#oauth" aria-controls="messages" role="tab" data-toggle="tab">{{ 'oauth'|_ }}</a>
                 </li>
+                {% endif %}
+                {% if true == isInternalAuth and true == isInternalIdentity %}
                 <li role="presentation">
                     <a href="#mfa" aria-controls="settings" role="tab" data-toggle="tab">{{ 'pref_two_factor_auth'|_ }}</a>
                 </li>
                 {% endif %}
+                {% if true == isInternalAuth and true == isInternalIdentity %}
                 <li role="presentation">
                     <a href="#delete" aria-controls="settings" role="tab" data-toggle="tab">{{ 'delete_stuff_header'|_ }}</a>
                 </li>
+                {% endif %}
             </ul>
             <div class="tab-content">
 
@@ -42,7 +46,7 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <ul>
-                                        {% if false == externalIdentity %}
+                                        {% if true == isInternalAuth and true == isInternalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a>
                                         </li>
@@ -52,7 +56,7 @@
                                         {% endif %}
                                         <li><a href="{{ route('logout') }}">{{ 'logout'|_ }}</a></li>
 
-                                        {% if false == externalIdentity %}
+                                        {% if true == isInternalAuth and true == isInternalIdentity %}
                                         <li>
                                             <a href="{{ route('profile.logout-others') }}">{{ 'logout_other_sessions'|_ }}</a>
                                         </li>
@@ -93,12 +97,14 @@
                     </div>
                 </div>
 
-                {% if false == externalIdentity %}
+                {% if true == isInternalAuth %}
                 <!-- OAuth -->
                 <div role="tabpanel" class="tab-pane" id="oauth">
                     <div id="passport_clients"></div>
                 </div>
+                {% endif %}
 
+                {% if true == isInternalAuth and true == isInternalIdentity %}
                 <!-- MFA -->
                 <div role="tabpanel" class="tab-pane" id="mfa">
                     <div class="box box-default">

@@ -33,11 +33,9 @@ class CronController
     use CronRunner;
 
     /**
-     * @param string $token
-     *
      * @return string
      */
-    public function cron(string $token): string
+    public function cron(): string
     {
         $results   = [];
         $results[] = $this->runRecurring();

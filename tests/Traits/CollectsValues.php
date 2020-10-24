@@ -149,7 +149,7 @@ trait CollectsValues
             ]
         )->first();
         if (null === $result) {
-            throw new FireflyException(sprintf('Cannot find suitable %s to use.', $type));
+            throw new FireflyException(sprintf('Cannot find suitable journal "%s" to use.', $type));
         }
 
         return TransactionJournal::find((int) $result->transaction_journal_id);
@@ -180,6 +180,45 @@ trait CollectsValues
     public function getRandomAsset(?int $except = null): Account
     {
         return $this->getRandomAccount(AccountType::ASSET, $except);
+    }
+
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomDebt(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::DEBT, $except);
+    }
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomLoan(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::LOAN, $except);
+    }
+
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomRevenue(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::REVENUE, $except);
+    }
+
+    /**
+     * @param int|null $except
+     *
+     * @return Account
+     */
+    public function getRandomExpense(?int $except = null): Account
+    {
+        return $this->getRandomAccount(AccountType::EXPENSE, $except);
     }
 
     /**

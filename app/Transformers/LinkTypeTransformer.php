@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\LinkType;
-use Log;
 
 /**
  *
@@ -33,18 +32,6 @@ use Log;
  */
 class LinkTypeTransformer extends AbstractTransformer
 {
-    /**
-     * CurrencyTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
     /**
      * Transform the currency.
      *
@@ -54,7 +41,7 @@ class LinkTypeTransformer extends AbstractTransformer
      */
     public function transform(LinkType $linkType): array
     {
-        $data = [
+        return [
             'id'         => (int)$linkType->id,
             'created_at' => $linkType->created_at->toAtomString(),
             'updated_at' => $linkType->updated_at->toAtomString(),
@@ -69,7 +56,5 @@ class LinkTypeTransformer extends AbstractTransformer
                 ],
             ],
         ];
-
-        return $data;
     }
 }

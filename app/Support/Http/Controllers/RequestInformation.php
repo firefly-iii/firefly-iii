@@ -98,9 +98,7 @@ trait RequestInformation
             // also check cache first:
             if ($help->inCache($route, $language)) {
                 Log::debug(sprintf('Help text %s was in cache.', $language));
-                $content = $help->getFromCache($route, $language);
-
-                return $content;
+                return $help->getFromCache($route, $language);
             }
             $baseHref   = route('index');
             $helpString = sprintf(

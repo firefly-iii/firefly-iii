@@ -106,8 +106,6 @@ class OAuthKeys
         }
         if (!self::keysInDatabase() && self::hasKeyFiles()) {
             self::storeKeysInDB();
-
-            return;
         }
     }
 

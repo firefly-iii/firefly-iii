@@ -26,7 +26,6 @@ namespace FireflyIII\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Laravel\Passport\Client;
 
 /**
  * Class NewIPAddressWarningMail
@@ -58,9 +57,9 @@ class NewIPAddressWarningMail extends Mailable
         // time
         $this->time = now()->formatLocalized((string)trans('config.date_time'));
         $this->host = '';
-        $host = gethostbyaddr($this->ipAddress);
-        if($host !== $this->ipAddress) {
-            $this->host = $host;
+        $hostName = gethostbyaddr($this->ipAddress);
+        if($hostName !== $this->ipAddress) {
+            $this->host = $hostName;
         }
 
         return $this->view('emails.new-ip-html')->text('emails.new-ip-text')

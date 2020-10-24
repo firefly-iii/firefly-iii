@@ -37,6 +37,7 @@ use Illuminate\Validation\Rule;
 class LinkTypeRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

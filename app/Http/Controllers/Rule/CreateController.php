@@ -32,15 +32,12 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
-use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Log;
-use Throwable;
 
 /**
  * Class CreateController

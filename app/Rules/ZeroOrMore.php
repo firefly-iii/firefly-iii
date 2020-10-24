@@ -60,6 +60,6 @@ class ZeroOrMore implements Rule
         }
         $res = bccomp('0', $value);
 
-        return !($res > 0);
+        return $res <= 0;
     }
 }

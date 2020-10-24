@@ -35,6 +35,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UserUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes;
+
     /**
      * Authorize logged in users.
      *

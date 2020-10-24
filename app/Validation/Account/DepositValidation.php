@@ -134,9 +134,6 @@ trait DepositValidation
             $account->accountType = $accountType;
             $this->source         = $account;
         }
-        $result = $result ?? false;
-
-        // don't expect to end up here:
-        return $result;
+        return $result ?? false;
     }
 }

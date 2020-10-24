@@ -18,9 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Dashboard from "../components/dashboard/Dashboard";
-import TopBoxes from "../components/dashboard/TopBoxes";
-
 /**
  * First we will load Axios via bootstrap.js
  * jquery and bootstrap-sass preloaded in app.js
