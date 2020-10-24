@@ -44,17 +44,7 @@ class BillUpdateService
 {
     use BillServiceTrait, CreatesObjectGroups;
 
-    protected $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    protected User $user;
 
     /**
      * @param Bill $bill
@@ -223,7 +213,6 @@ class BillUpdateService
                 Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
-                continue;
             }
         }
     }
@@ -248,18 +237,14 @@ class BillUpdateService
     private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
     {
         if ($newOrder > $oldOrder) {
-            /** @var User $user */
-            $user = $this->user;
-            $user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
                 ->where('bills.id', '!=', $bill->id)
                 ->update(['order' => DB::raw('bills.order-1')]);
             $bill->order = $newOrder;
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
-            /** @var User $user */
-            $user = $this->user;
-            $user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
                 ->where('bills.id', '!=', $bill->id)
                 ->update(['order' => DB::raw('bills.order+1')]);
             $bill->order = $newOrder;

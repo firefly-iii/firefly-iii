@@ -54,32 +54,17 @@ class JournalUpdateService
 {
     use JournalServiceTrait;
 
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var array The data to update the journal with. */
-    private $data;
-    /** @var Account The destination account. */
-    private $destinationAccount;
-    /** @var Transaction */
-    private $destinationTransaction;
-    /** @var array All meta values that are dates. */
-    private $metaDate;
-    /** @var array All meta values that are strings. */
-    private $metaString;
-    /** @var Account Source account of the journal */
-    private $sourceAccount;
-    /** @var Transaction Source transaction of the journal. */
-    private $sourceTransaction;
-    /** @var TransactionGroup The parent group. */
-    private $transactionGroup;
-    /** @var TransactionJournal The journal to update. */
-    private $transactionJournal;
-    /** @var Account If new account info is submitted, this array will hold the valid destination. */
-    private $validDestination;
-    /** @var Account If new account info is submitted, this array will hold the valid source. */
-    private $validSource;
+    private BillRepositoryInterface     $billRepository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private array                       $data;
+    private Account                     $destinationAccount;
+    private Transaction                 $destinationTransaction;
+    private array                       $metaDate;
+    private array                       $metaString;
+    private Account                     $sourceAccount;
+    private Transaction                 $sourceTransaction;
+    private TransactionGroup            $transactionGroup;
+    private TransactionJournal          $transactionJournal;
 
     /**
      * JournalUpdateService constructor.
@@ -253,7 +238,7 @@ class JournalUpdateService
         }
 
         $destInfo = [
-            'id'     => (int) ($this->data['destination_id'] ?? null),
+            'id'     => (int)($this->data['destination_id'] ?? null),
             'name'   => $this->data['destination_name'] ?? null,
             'iban'   => $this->data['destination_iban'] ?? null,
             'number' => $this->data['destination_number'] ?? null,
@@ -287,7 +272,7 @@ class JournalUpdateService
         }
 
         $sourceInfo = [
-            'id'     => (int) ($this->data['source_id'] ?? null),
+            'id'     => (int)($this->data['source_id'] ?? null),
             'name'   => $this->data['source_name'] ?? null,
             'iban'   => $this->data['source_iban'] ?? null,
             'number' => $this->data['source_number'] ?? null,
@@ -479,8 +464,8 @@ class JournalUpdateService
             )
             && TransactionType::WITHDRAWAL === $type
         ) {
-            $billId                            = (int) ($this->data['bill_id'] ?? 0);
-            $billName                          = (string) ($this->data['bill_name'] ?? '');
+            $billId                            = (int)($this->data['bill_id'] ?? 0);
+            $billName                          = (string)($this->data['bill_name'] ?? '');
             $bill                              = $this->billRepository->findBill($billId, $billName);
             $this->transactionJournal->bill_id = null === $bill ? null : $bill->id;
             Log::debug('Updated bill ID');
@@ -551,15 +536,15 @@ class JournalUpdateService
      */
     private function updateField(string $fieldName): void
     {
-        if (array_key_exists($fieldName, $this->data) && '' !== (string) $this->data[$fieldName]) {
+        if (array_key_exists($fieldName, $this->data) && '' !== (string)$this->data[$fieldName]) {
             $value = $this->data[$fieldName];
 
             if ('date' === $fieldName) {
-                if($value instanceof Carbon) {
+                if ($value instanceof Carbon) {
                     // update timezone.
                     $value->setTimezone(config('app.timezone'));
                 }
-                if(!($value instanceof Carbon)) {
+                if (!($value instanceof Carbon)) {
                     $value = new Carbon($value);
                 }
                 // do some parsing.
@@ -667,7 +652,7 @@ class JournalUpdateService
         foreach ($this->metaDate as $field) {
             if ($this->hasFields([$field])) {
                 try {
-                    $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
+                    $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
                 } catch (Exception $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
@@ -713,7 +698,7 @@ class JournalUpdateService
     {
         // update notes.
         if ($this->hasFields(['notes'])) {
-            $notes = '' === (string) $this->data['notes'] ? null : $this->data['notes'];
+            $notes = '' === (string)$this->data['notes'] ? null : $this->data['notes'];
             $this->storeNotes($this->transactionJournal, $notes);
         }
     }

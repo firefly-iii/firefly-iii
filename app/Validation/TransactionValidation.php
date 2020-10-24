@@ -96,8 +96,6 @@ trait TransactionValidation
         if (false === $validDestination) {
             $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
             $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
-
-            return;
         }
     }
 
@@ -257,8 +255,6 @@ trait TransactionValidation
         $unique = array_unique($types);
         if (count($unique) > 1) {
             $validator->errors()->add('transactions.0.type', (string) trans('validation.transaction_types_equal'));
-
-            return;
         }
     }
 

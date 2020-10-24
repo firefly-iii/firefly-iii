@@ -331,8 +331,6 @@ class RecurrenceFormRequest extends FormRequest
             $message = (string)trans('validation.generic_invalid_destination');
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
-
-            return;
         }
     }
 }

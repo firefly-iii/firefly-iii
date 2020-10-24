@@ -64,11 +64,11 @@ function colorizeData(data) {
     var newData = {};
     newData.datasets = [];
 
-    for (var i = 0; i < data.count; i++) {
+    for (var loop = 0; loop < data.count; loop++) {
         newData.labels = data.labels;
-        var dataset = data.datasets[i];
+        var dataset = data.datasets[loop];
         dataset.fill = false;
-        dataset.backgroundColor = dataset.borderColor = fillColors[i];
+        dataset.backgroundColor = dataset.borderColor = fillColors[loop];
         newData.datasets.push(dataset);
     }
     return newData;

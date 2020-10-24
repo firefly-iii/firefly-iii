@@ -806,7 +806,7 @@ export default {
                 // console.log('Uploading attachment #' + key);
                 const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
                 axios.post(uploadUri, fileData[key].content)
-                    .then(response => {
+                    .then(secondResponse => {
                       // console.log('Uploaded attachment #' + key);
                       uploads++;
                       if (uploads === count) {

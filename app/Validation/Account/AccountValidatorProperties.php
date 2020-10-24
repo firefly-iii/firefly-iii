@@ -29,26 +29,19 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 
 /**
+ * I have no idea what made me do this. I'll reverse it some day.
+ *
  * Trait AccountValidatorProperties
  */
 trait AccountValidatorProperties
 {
-    /** @var bool */
-    public $createMode;
-    /** @var string */
-    public $destError;
-    /** @var Account */
-    public $destination;
-    /** @var Account */
-    public $source;
-    /** @var string */
-    public $sourceError;
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var array */
-    private $combinations;
-    /** @var string */
-    private $transactionType;
-    /** @var User */
-    private $user;
+    public bool                        $createMode;
+    public string                      $destError;
+    public Account                     $destination;
+    public Account                     $source;
+    public string                      $sourceError;
+    private AccountRepositoryInterface $accountRepository;
+    private array                      $combinations;
+    private string                     $transactionType;
+    private User                       $user;
 }

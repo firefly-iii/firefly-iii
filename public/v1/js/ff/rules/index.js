@@ -59,7 +59,7 @@ function testRuleTriggers(e) {
 
     var modal = $("#testTriggerModal");
     // respond to modal:
-    modal.on('hide.bs.modal', function (e) {
+    modal.on('hide.bs.modal', function () {
         disableRuleSpinners();
     });
 
@@ -98,28 +98,28 @@ function sortStop(event, ui) {
 
     // resort / move rule
     $.each($('.group-rules'), function(i,v) {
-        $.each($('tr.single-rule', $(v)), function (i, v) {
-            var holder = $(v);
+        $.each($('tr.single-rule', $(v)), function (counter, value) {
+            var holder = $(value);
             var position = parseInt(holder.data('position'));
             var ruleGroupId = holder.data('group-id');
             var ruleId = holder.data('id');
             var originalOrder = parseInt(holder.data('order'));
             var newOrder;
 
-            if (position === i) {
+            if (position === counter) {
                 // not changed, position is what it should be.
                 return;
             }
-            if (position < i) {
+            if (position < counter) {
                 // position is less.
-                console.log('Rule #' + ruleId + ' moved down from position ' + originalOrder + ' to ' + (i + 1));
+                console.log('Rule #' + ruleId + ' moved down from position ' + originalOrder + ' to ' + (counter + 1));
             }
-            if (position > i) {
-                console.log('Rule #' + ruleId + ' moved up from position ' + originalOrder + ' to ' + (i + 1));
+            if (position > counter) {
+                console.log('Rule #' + ruleId + ' moved up from position '   + originalOrder + ' to ' + (counter + 1));
             }
             // update position:
-            holder.data('position', i);
-            newOrder = i+1;
+            holder.data('position', counter);
+            newOrder = counter + 1;
 
             $.post('rules/move-rule/' + ruleId + '/' + ruleGroupId, {order: newOrder, _token: token});
         });
