@@ -1803,7 +1803,7 @@ return [
     'object_groups_empty_explain'        => 'Sok elem csoportosítható Firefly III-ban. Például malacperselyeknek beállítható a "Csoport" mezője. Szerkeszthető a csoportok megnevezése és sorrendje. További információkért nézd meg a súgót a jobb felső sarokban lévő (?) ikonra kattintva.',
     'object_group_title'                 => 'Cím',
     'edit_object_group'                  => '":title" csoport szerkesztése',
-    'delete_object_group'                => 'Delete group ":title"',
+    'delete_object_group'                => '":title" csoport törlése',
     'update_object_group'                => 'Csoport frissítése',
     'updated_object_group'               => '":title" csoport sikeresen frissítve',
     'deleted_object_group'               => '":title" csoport sikeresen törölve',

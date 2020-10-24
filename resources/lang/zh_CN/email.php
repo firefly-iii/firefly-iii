@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => '欢迎来到 <a style="color:#337ab7" href=":address">Firefly III</a>。您的注册已经成功完成，此电子邮件即为确认信息。恭喜！',
     'registered_pw'                    => '如果您忘记了您的密码，请使用 <a style="color:#337ab7" href=":address/password/reset">重置密码工具</a> 重置密码。',
     'registered_help'                  => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
-    'registered_doc_html'              => '如果您尚未阅读过，请阅读 <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">大统一理论</a>。',
+    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
     'registered_doc_text'              => '如果您尚未阅读，请阅读第一个使用指南和完整说明。',
     'registered_closing'               => '祝您使用愉快！',
     'registered_firefly_iii_link'      => 'Firefly III:',

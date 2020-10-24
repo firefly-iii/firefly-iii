@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => 'Chào mừng đến <a style="color:#337ab7" href=":address">Firefly III</a>. Đăng ký của bạn đã được thực hiện và email này để xác nhận nó!',
     'registered_pw'                    => 'Nếu bạn đã quên mật khẩu của mình, vui lòng đặt lại bằng cách sử dụng <a style="color:#337ab7" href=":address/password/reset"> công cụ đặt lại mật khẩu </a>.',
     'registered_help'                  => 'Có một biểu tượng trợ giúp ở góc trên bên phải của mỗi trang. Nếu bạn cần giúp đỡ, bấm vào nó!',
-    'registered_doc_html'              => 'Nếu bạn chưa có, vui lòng đọc lý thuyết <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory"> </ a>.',
+    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
     'registered_doc_text'              => 'Nếu bạn chưa có, xin vui lòng đọc hướng dẫn sử dụng đầu tiên và mô tả.',
     'registered_closing'               => 'Hãy tận hưởng!',
     'registered_firefly_iii_link'      => 'Firefly III:',
