@@ -135,7 +135,17 @@ export default {
         aSyncFunction: function (query, done) {
           axios.get(this.accountAutoCompleteURI + query)
               .then(res => {
-                done(res.data);
+                // loop over data
+                let escapedData = [];
+                let current;
+                for (const key in res.data) {
+                  if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                    current = res.data[key];
+                    current.description = this.escapeHtml(res.data[key].description)
+                    escapedData.push(current);
+                  }
+                }
+                done(escapedData);
               })
               .catch(err => {
                 // any error handler
