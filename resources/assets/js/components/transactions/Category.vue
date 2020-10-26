@@ -100,7 +100,7 @@ export default {
             for (const key in res.data) {
               if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                 current = res.data[key];
-                current.description = this.escapeHtml(res.data[key].description)
+                current.name = this.escapeHtml(res.data[key].name)
                 escapedData.push(current);
               }
             }
@@ -110,6 +110,25 @@ export default {
             // any error handler
           })
     },
+    escapeHtml: function (string) {
+
+      let entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+      };
+
+      return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap(s) {
+        return entityMap[s];
+      });
+
+    },
+
     handleInput(e) {
       if (typeof this.$refs.input.value === 'string') {
         this.$emit('input', this.$refs.input.value);
