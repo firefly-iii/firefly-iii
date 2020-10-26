@@ -54,6 +54,7 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
+        $cache->addProperty($currency ? $currency->id : 0);
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
@@ -186,7 +187,7 @@ class Steam
         $end->addDay();
         $balances     = [];
         $formatted    = $start->format('Y-m-d');
-        $startBalance = $this->balance($account, $start);
+        $startBalance = $this->balance($account, $start, $currency);
 
         /** @var AccountRepositoryInterface $repository */
 
@@ -196,7 +197,7 @@ class Steam
             $repository->setUser($account->user);
             $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $currencyId = $currency->id;
+        $currencyId = (int)$currency->id;
 
         $start->addDay();
 
