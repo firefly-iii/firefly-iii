@@ -346,7 +346,6 @@ class ReportController extends Controller
         $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
         $tags       = implode(',', $request->getTagList()->pluck('id')->toArray());
         $double     = implode(',', $request->getDoubleList()->pluck('id')->toArray());
-        $uri        = route('reports.index');
 
         if (0 === $request->getAccountList()->count()) {
             Log::debug('Account count is zero');
