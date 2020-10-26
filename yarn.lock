@@ -6333,9 +6333,9 @@ uglify-js@3.4.x:
     source-map "~0.6.1"
 
 uiv@^1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.1.1.tgz#b747b18781f95a77b5215957dc21d34caedb320b"
-  integrity sha512-Ny8koCu1jJt83jZAiFIRe0DS6C0fQ2RGV1BevKR6z8ILOwvoqKLWoM/solvU+zWcwLxYVeg0PXpj+ZCiKRONuw==
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.1.2.tgz#02a074d2a95bfb446d9c3e524dd62492e19b2151"
+  integrity sha512-T+UVykoEUG3C9qvpFGnWozcIl/nkM/vuP5UpncDAkf8aB202eWJJ9TNAVKyvpvu6igBe85D5hnsd66cNuFtp+Q==
   dependencies:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.0.0"
