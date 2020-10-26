@@ -300,7 +300,6 @@ class FixAccountTypesTest extends TestCase
         $newSource   = $this->getRandomRevenue();
         $destination = $this->getRandomAsset();
 
-        $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         $deposit    = TransactionType::where('type', TransactionType::DEPOSIT)->first();
         $journal    = TransactionJournal::create(
             [

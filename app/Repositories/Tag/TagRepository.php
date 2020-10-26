@@ -476,7 +476,6 @@ class TagRepository implements TagRepositoryInterface
      */
     public function update(Tag $tag, array $data): Tag
     {
-        $oldTag           = $data['tag'];
         $tag->tag         = $data['tag'];
         $tag->date        = $data['date'];
         $tag->description = $data['description'];

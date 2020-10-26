@@ -264,10 +264,9 @@ class IndexController extends Controller
             return [];
         }
         /**
-         * @var int   $objectGroupId
          * @var array $array
          */
-        foreach ($sums as $objectGroupId => $array) {
+        foreach ($sums as $array) {
             /**
              * @var int   $currencyId
              * @var array $entry

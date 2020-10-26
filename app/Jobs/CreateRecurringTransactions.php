@@ -354,17 +354,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $includeWeekend = clone $this->date;
             $includeWeekend->addDays(2);
             $occurrences = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
-            /*
-            Log::debug(
-                sprintf(
-                    'Calculated %d occurrences between %s and %s',
-                    count($occurrences),
-                    $recurrence->first_date->format('Y-m-d'),
-                    $includeWeekend->format('Y-m-d')
-                ),
-                $this->debugArray($occurrences)
-            );
-            */
+
             unset($includeWeekend);
 
             $result     = $this->handleOccurrences($recurrence, $repetition, $occurrences);

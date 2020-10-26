@@ -187,7 +187,7 @@ class ExpenseReportController extends Controller
                 $newSet[$key] = $chartData[$key]; // @codeCoverageIgnore
             }
         }
-        if (0 === count($newSet)) {
+        if (empty($newSet)) {
             $newSet = $chartData; // @codeCoverageIgnore
         }
         $data = $this->generator->multiSet($newSet);

@@ -41,8 +41,7 @@ class RecurrenceUpdateService
 {
     use TransactionTypeTrait, RecurringTransactionTrait;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * Updates a recurrence.
@@ -99,7 +98,7 @@ class RecurrenceUpdateService
             $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
         }
 
-        // update all transactions (and associated meta-data);
+        // update all transactions (and associated meta-data)
         if (null !== $data['transactions']) {
             $this->deleteTransactions($recurrence);
             $this->createTransactions($recurrence, $data['transactions'] ?? []);

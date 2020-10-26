@@ -157,7 +157,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {
-        $oldest  = null;
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
             return $journal->date;

@@ -50,16 +50,11 @@ class BudgetController extends Controller
 {
     use DateCalculation, AugumentData;
 
-    /** @var GeneratorInterface Chart generation methods. */
-    protected $generator;
-    /** @var OperationsRepositoryInterface */
-    protected $opsRepository;
-    /** @var BudgetRepositoryInterface The budget repository */
-    protected $repository;
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-    /** @var NoBudgetRepositoryInterface */
-    private $nbRepository;
+    protected GeneratorInterface            $generator;
+    protected OperationsRepositoryInterface $opsRepository;
+    protected BudgetRepositoryInterface     $repository;
+    private BudgetLimitRepositoryInterface  $blRepository;
+    private NoBudgetRepositoryInterface     $nbRepository;
 
     /**
      * BudgetController constructor.
@@ -185,12 +180,12 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
             $amount           = bcadd($amount, $spent);
-            $format           = $start->formatLocalized((string) trans('config.month_and_day', [], $locale));
+            $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
             $entries[$format] = $amount;
 
             $start->addDay();
         }
-        $data = $this->generator->singleSet((string) trans('firefly.left'), $entries);
+        $data = $this->generator->singleSet((string)trans('firefly.left'), $entries);
         // add currency symbol from budget limit:
         $data['datasets'][0]['currency_symbol'] = $budgetLimit->transactionCurrency->symbol;
         $data['datasets'][0]['currency_code']   = $budgetLimit->transactionCurrency->code;
@@ -239,7 +234,7 @@ class BudgetController extends Controller
 
         // group by asset account ID:
         foreach ($journals as $journal) {
-            $key                    = sprintf('%d-%d', (int) $journal['source_account_id'], $journal['currency_id']);
+            $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
             $result[$key]           = $result[$key] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -252,7 +247,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts   = explode('-', $combinedId);
-            $assetId = (int) $parts[0];
+            $assetId = (int)$parts[0];
             $title   = sprintf('%s (%s)', $names[$assetId] ?? '(empty)', $info['currency_name']);
             $chartData[$title]
                      = [
@@ -319,7 +314,7 @@ class BudgetController extends Controller
         $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $categoryId        = (int) $parts[0];
+            $categoryId        = (int)$parts[0];
             $title             = sprintf('%s (%s)', $names[$categoryId] ?? '(empty)', $info['currency_name']);
             $chartData[$title] = [
                 'amount'          => $info['amount'],
@@ -385,7 +380,7 @@ class BudgetController extends Controller
         $names = $this->getAccountNames(array_keys($result));
         foreach ($result as $combinedId => $info) {
             $parts             = explode('-', $combinedId);
-            $opposingId        = (int) $parts[0];
+            $opposingId        = (int)$parts[0];
             $name              = $names[$opposingId] ?? 'no name';
             $title             = sprintf('%s (%s)', $name, $info['currency_name']);
             $chartData[$title] = [
@@ -422,12 +417,12 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        $generator = app(FrontpageChartGenerator::class);
-        $generator->setUser(auth()->user());
-        $generator->setStart($start);
-        $generator->setEnd($end);
+        $chartGenerator = app(FrontpageChartGenerator::class);
+        $chartGenerator->setUser(auth()->user());
+        $chartGenerator->setStart($start);
+        $chartGenerator->setEnd($end);
 
-        $chartData = $generator->generate();
+        $chartData = $chartGenerator->generate();
         $data      = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -463,14 +458,14 @@ class BudgetController extends Controller
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
         $chartData      = [
             [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'entries'         => [],
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
             ],
             [
-                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
+                'label'           => (string)trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
@@ -549,7 +544,7 @@ class BudgetController extends Controller
             $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 
-        $data = $this->generator->singleSet((string) trans('firefly.spent'), $chartData);
+        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
         $cache->store($data);
 
         return response()->json($data);

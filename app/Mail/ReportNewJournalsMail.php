@@ -70,12 +70,6 @@ class ReportNewJournalsMail extends Mailable
      */
     public function build(): self
     {
-        $subject = 1 === $this->groups->count()
-            ? 'Firefly III has created a new transaction'
-            : sprintf(
-                'Firefly III has created new %d transactions',
-                $this->groups->count()
-            );
         $this->transform();
 
         return $this->view('emails.report-new-journals-html')->text('emails.report-new-journals-text')

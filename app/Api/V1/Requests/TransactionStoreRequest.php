@@ -82,10 +82,9 @@ class TransactionStoreRequest extends FormRequest
     {
         $return = [];
         /**
-         * @var int   $index
          * @var array $transaction
          */
-        foreach ($this->get('transactions') as $index => $transaction) {
+        foreach ($this->get('transactions') as $transaction) {
             $object   = new NullArrayObject($transaction);
             $return[] = [
                 'type'  => $this->stringFromValue($object['type']),

@@ -67,8 +67,6 @@ class EditController extends Controller
     {
         $subTitle     = (string) trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
         $subTitleIcon = 'fa-pencil';
-        $targetDate   = null;
-        $startDate    = null;
 
         if (true !== session('object-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('object-groups.edit.uri');

@@ -84,7 +84,3 @@ export default {
   name: "TransactionType"
 }
 </script>
-
-<style scoped>
-
-</style>

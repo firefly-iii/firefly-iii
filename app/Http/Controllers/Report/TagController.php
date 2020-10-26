@@ -40,10 +40,7 @@ use Throwable;
  */
 class TagController extends Controller
 {
-
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * ExpenseReportController constructor.
@@ -282,7 +279,6 @@ class TagController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
@@ -335,7 +331,6 @@ class TagController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceId     = $journal['source_account_id'];
@@ -496,7 +491,6 @@ class TagController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $result[] = [
@@ -546,7 +540,6 @@ class TagController extends Controller
         $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $result[] = [

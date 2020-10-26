@@ -267,7 +267,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (count($journalIds) > 0) {
+        if (!empty($journalIds)) {
             $this->query->whereIn('transaction_journals.id', $journalIds);
         }
 

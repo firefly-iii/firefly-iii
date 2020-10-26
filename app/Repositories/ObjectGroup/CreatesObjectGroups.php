@@ -60,7 +60,6 @@ trait CreatesObjectGroups
      */
     protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
     {
-        $group    = null;
         $maxOrder = $this->getObjectGroupMaxOrder();
         if (!$this->hasObjectGroup($title)) {
             return ObjectGroup::create(

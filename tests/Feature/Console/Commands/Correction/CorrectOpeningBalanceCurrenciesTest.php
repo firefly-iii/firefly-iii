@@ -59,7 +59,7 @@ class CorrectOpeningBalanceCurrenciesTest extends TestCase
     public function testHandleBroken(): void
     {
         // create opening balance journal for test. Is enough to trigger this test.
-        $journal = factory(TransactionJournal::class)->state(TransactionType::OPENING_BALANCE)->create();
+        factory(TransactionJournal::class)->state(TransactionType::OPENING_BALANCE)->create();
 
         // run command
         $this->artisan('firefly-iii:fix-ob-currencies')
