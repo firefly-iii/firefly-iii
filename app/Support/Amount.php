@@ -350,6 +350,7 @@ class Amount
         try {
             $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
+        	// ignore decryption error.
         }
 
         return $value;
