@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BillRequest.php
+ * BillUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,31 +25,19 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * Class BillRequest
- *
- * TODO AFTER 4.8,0: split this into two request classes.
+ * Class BillUpdateRequest
  *
  * @codeCoverageIgnore
  */
-class BillRequest extends FormRequest
+class BillUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -85,8 +73,9 @@ class BillRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name'          => 'between:1,255|uniqueObjectForUser:bills,name',
+        $bill          = $this->route()->parameter('bill');
+        return [
+            'name'          => sprintf('between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'    => 'numeric|gt:0',
             'amount_max'    => 'numeric|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
@@ -97,17 +86,6 @@ class BillRequest extends FormRequest
             'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                $bill          = $this->route()->parameter('bill');
-                $rules['name'] .= ',' . $bill->id;
-                break;
-        }
-
-        return $rules;
     }
 
     /**

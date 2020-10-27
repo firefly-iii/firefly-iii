@@ -80,7 +80,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account      $account
+     * @param Account $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -97,18 +97,8 @@ interface AccountRepositoryInterface
     public function expandWithDoubles(Collection $accounts): Collection;
 
     /**
-     * Find by account number. Is used.
-     *
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account|null
-     */
-    public function findByAccountNumber(string $number, array $types): ?Account;
-
-    /**
      * @param string $iban
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -116,7 +106,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -135,13 +125,6 @@ interface AccountRepositoryInterface
      * @return TransactionCurrency|null
      */
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
-
-    /**
-     * @param Account $account
-     *
-     * @return string
-     */
-    public function getAccountType(Account $account): string;
 
     /**
      * Return account type or null if not found.
@@ -189,7 +172,7 @@ interface AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string  $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -282,7 +265,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array  $types
+     * @param array $types
      * @param int $limit
      *
      * @return Collection
@@ -291,7 +274,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array  $types
+     * @param array $types
      * @param int $limit
      *
      * @return Collection
@@ -312,7 +295,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param array $data
      *
      * @return Account
      */

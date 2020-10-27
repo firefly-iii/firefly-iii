@@ -24,7 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BillRequest;
+use FireflyIII\Api\V1\Requests\BillUpdateRequest;
+use FireflyIII\Api\V1\Requests\BillStoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
@@ -49,8 +50,7 @@ class BillController extends Controller
 {
     use TransactionFilter;
 
-    /** @var BillRepositoryInterface The bill repository */
-    private $repository;
+    private BillRepositoryInterface $repository;
 
 
     /**
@@ -205,12 +205,12 @@ class BillController extends Controller
     /**
      * Store a bill.
      *
-     * @param BillRequest $request
+     * @param BillStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(BillRequest $request): JsonResponse
+    public function store(BillStoreRequest $request): JsonResponse
     {
         $bill    = $this->repository->store($request->getAll());
         $manager = $this->getManager();
@@ -285,12 +285,12 @@ class BillController extends Controller
     /**
      * Update a bill.
      *
-     * @param BillRequest $request
+     * @param BillUpdateRequest $request
      * @param Bill        $bill
      *
      * @return JsonResponse
      */
-    public function update(BillRequest $request, Bill $bill): JsonResponse
+    public function update(BillUpdateRequest $request, Bill $bill): JsonResponse
     {
         $data    = $request->getAll();
         $bill    = $this->repository->update($bill, $data);

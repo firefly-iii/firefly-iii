@@ -116,33 +116,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account|null
-     */
-    public function findByAccountNumber(string $number, array $types): ?Account
-    {
-        $query = $this->user->accounts()
-                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                            ->where('account_meta.name', 'account_number')
-                            ->where('account_meta.data', json_encode($number));
-
-        if (!empty($types)) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-        }
-
-        /** @var Collection $accounts */
-        $accounts = $query->get(['accounts.*']);
-        if ($accounts->count() > 0) {
-            return $accounts->first();
-        }
-
-        return null;
-    }
-
-    /**
      * @param string $iban
      * @param array  $types
      *
@@ -226,16 +199,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return string
-     */
-    public function getAccountType(Account $account): string
-    {
-        return $account->accountType->type;
     }
 
     /**
