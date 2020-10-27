@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
+
 /**
  * Class FrontpageChartGenerator
  */
@@ -64,9 +65,9 @@ class FrontpageChartGenerator
     {
         $budgets = $this->budgetRepository->getActiveBudgets();
         $data    = [
-            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         // loop al budgets:
@@ -91,7 +92,7 @@ class FrontpageChartGenerator
         $this->opsRepository->setUser($user);
 
         $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string) trans('config.month_and_day', [], $locale);
+        $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
     }
 
     /**
@@ -117,6 +118,7 @@ class FrontpageChartGenerator
      *
      * @param array  $data
      * @param Budget $budget
+     *
      * @return array
      */
     private function processBudget(array $data, Budget $budget): array
@@ -133,6 +135,7 @@ class FrontpageChartGenerator
         if (0 !== $limits->count()) {
             return $this->budgetLimits($data, $budget, $limits);
         }
+
         return $data;
     }
 
@@ -142,6 +145,7 @@ class FrontpageChartGenerator
      *
      * @param array  $data
      * @param Budget $budget
+     *
      * @return array
      */
     private function noBudgetLimits(array $data, Budget $budget): array
@@ -154,6 +158,7 @@ class FrontpageChartGenerator
             $data[1]['entries'][$title] = 0;                          // left to spend
             $data[2]['entries'][$title] = 0;                          // overspent
         }
+
         return $data;
     }
 
@@ -163,6 +168,7 @@ class FrontpageChartGenerator
      * @param array      $data
      * @param Budget     $budget
      * @param Collection $limits
+     *
      * @return array
      */
     private function budgetLimits(array $data, Budget $budget, Collection $limits): array
@@ -171,6 +177,7 @@ class FrontpageChartGenerator
         foreach ($limits as $limit) {
             $data = $this->processLimit($data, $budget, $limit);
         }
+
         return $data;
     }
 
@@ -180,6 +187,7 @@ class FrontpageChartGenerator
      * @param array       $data
      * @param Budget      $budget
      * @param BudgetLimit $limit
+     *
      * @return array
      */
     private function processLimit(array $data, Budget $budget, BudgetLimit $limit): array
@@ -187,8 +195,12 @@ class FrontpageChartGenerator
         $spent = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $limit->transactionCurrency);
         /** @var array $entry */
         foreach ($spent as $entry) {
-            $data = $this->processRow($data, $budget, $limit, $entry);
+            // only spent the entry where the entry's currency matches the budget limit's currency
+            if ($entry['currency_id'] === (int)$limit->transaction_currency_id) {
+                $data = $this->processRow($data, $budget, $limit, $entry);
+            }
         }
+
         return $data;
     }
 
@@ -202,6 +214,7 @@ class FrontpageChartGenerator
      * @param Budget      $budget
      * @param BudgetLimit $limit
      * @param array       $entry
+     *
      * @return array
      */
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
