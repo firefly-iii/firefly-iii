@@ -328,8 +328,7 @@ trait ModifiesPiggyBanks
      *
      * @return PiggyBank
      */
-    public function update(PiggyBank $piggyBank, array $data): PiggyBank
-    {
+    private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank {
         if (array_key_exists('name', $data) && '' !== $data['name']) {
             $piggyBank->name = $data['name'];
         }
@@ -344,7 +343,18 @@ trait ModifiesPiggyBanks
         }
         $piggyBank->startdate = $data['startdate'] ?? $piggyBank->startdate;
         $piggyBank->save();
+        return $piggyBank;
+    }
 
+    /**
+     * @param PiggyBank $piggyBank
+     * @param array     $data
+     *
+     * @return PiggyBank
+     */
+    public function update(PiggyBank $piggyBank, array $data): PiggyBank
+    {
+        $piggyBank = $this->updateProperties($piggyBank, $data);
         $this->updateNote($piggyBank, $data['notes'] ?? '');
 
         // update the order of the piggy bank:
