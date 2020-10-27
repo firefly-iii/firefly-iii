@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthRefreshTokensTable.
+ * @codeCoverageIgnore
  */
 class CreateOauthRefreshTokensTable extends Migration
 {

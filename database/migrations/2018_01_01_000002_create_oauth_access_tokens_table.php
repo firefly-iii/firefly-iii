@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthAccessTokensTable.
+ * @codeCoverageIgnore
  */
 class CreateOauthAccessTokensTable extends Migration
 {

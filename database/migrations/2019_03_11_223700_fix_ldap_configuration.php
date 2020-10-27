@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class FixLdapConfiguration.
+ * @codeCoverageIgnore
  */
 class FixLdapConfiguration extends Migration
 {

@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthPersonalAccessClientsTable.
+ * @codeCoverageIgnore
  */
 class CreateOauthPersonalAccessClientsTable extends Migration
 {

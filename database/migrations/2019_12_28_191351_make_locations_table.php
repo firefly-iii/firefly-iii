@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class MakeLocationsTable.
+ * @codeCoverageIgnore
  */
 class MakeLocationsTable extends Migration
 {

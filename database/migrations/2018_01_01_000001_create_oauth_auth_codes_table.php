@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthAuthCodesTable.
+ * @codeCoverageIgnore
  */
 class CreateOauthAuthCodesTable extends Migration
 {
