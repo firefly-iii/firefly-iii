@@ -204,11 +204,11 @@ class DecryptDatabase extends Command
         try {
             $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
         } catch (JsonException $e) {
-            $message = sprintf('Could not JSON decode preference row #%d: %s', $id, $e->getMessage());
+            $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
             $this->error($message);
-            Log::error($message);
-            Log::error($value);
-            Log::error($e->getTraceAsString());
+            Log::warning($message);
+            Log::warning($value);
+            Log::warning($e->getTraceAsString());
             return;
         }
 

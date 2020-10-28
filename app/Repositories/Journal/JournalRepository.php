@@ -215,7 +215,6 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getLinkNoteText(TransactionJournalLink $link): string
     {
-        $notes = null;
         /** @var Note $note */
         $note = $link->notes()->first();
         if (null !== $note) {

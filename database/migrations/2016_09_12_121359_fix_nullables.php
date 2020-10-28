@@ -25,6 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class FixNullables.
+ * @codeCoverageIgnore
  */
 class FixNullables extends Migration
 {

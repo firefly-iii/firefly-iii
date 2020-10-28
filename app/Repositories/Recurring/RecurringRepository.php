@@ -327,7 +327,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = (int)$journalId;
         }
-        if (0 === count($search)) {
+        if (empty($search)) {
 
             return new Collection;
         }

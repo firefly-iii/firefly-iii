@@ -193,7 +193,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (0 === count($sums)) {
+        if (empty($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);
@@ -257,7 +257,7 @@ class BoxController extends Controller
 
 
         $return = [];
-        foreach ($netWorthSet as $index => $data) {
+        foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency              = $data['currency'];
             $return[$currency->id] = app('amount')->formatAnything($currency, $data['balance'], false);

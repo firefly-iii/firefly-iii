@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV530a
+ * @codeCoverageIgnore
  */
 class ChangesForV530a extends Migration
 {

@@ -70,7 +70,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                $attachments_count
  * @property-read int|null                $transaction_journals_count
  * @property-read int|null                $transactions_count
- * @property bool $encrypted
  */
 class Category extends Model
 {
@@ -133,6 +132,15 @@ class Category extends Model
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Get all of the category's notes.
+     */
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     /**

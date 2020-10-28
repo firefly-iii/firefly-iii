@@ -171,7 +171,7 @@ class ShowController extends Controller
     {
         $accounts = [];
         
-        foreach ($group['transactions'] as $index => $transaction) {
+        foreach ($group['transactions'] as $transaction) {
             $accounts['source'][] = [ 
                 'type' => $transaction['source_type'],
                 'id' => $transaction['source_id'],

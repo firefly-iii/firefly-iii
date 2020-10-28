@@ -569,6 +569,6 @@ class TransactionGroupTransformer extends AbstractTransformer
             return null;
         }
 
-        return $object['interest_date']->toAtomString();
+        return $object[$key]->toAtomString();
     }
 }

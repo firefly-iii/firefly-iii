@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.4.5 (API 1.4.0) - 2020-10-28
+
+### Fixed
+- [Issue 3853](https://github.com/firefly-iii/firefly-iii/issues/3853) Could not create rules with IBAN values.
+- [Issue 3991](https://github.com/firefly-iii/firefly-iii/issues/3991) Hardcoded array key broke editing.
+- [Issue 3992](https://github.com/firefly-iii/firefly-iii/issues/3992) Amount problems in account chart for multi-currency charts.
+- [Issue 4000](https://github.com/firefly-iii/firefly-iii/issues/4000) Budget chart did not handle multiple currencies well.
+- [Issue 4003](https://github.com/firefly-iii/firefly-iii/issues/4003) Was unable to create new auto budget limits in foreign currency.
+
+### Security
+- [Issue 3990](https://github.com/firefly-iii/firefly-iii/issues/3990) Unescaped content could break the auto-complete.
+
 ## 5.4.4 (API 1.4.0) - 2020-10-24
 
 ### Changed

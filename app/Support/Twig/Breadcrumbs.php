@@ -60,7 +60,7 @@ class Breadcrumbs extends AbstractExtension
                 }
                 $breadcrumbs = $this->getBreadcrumbs($arr);
 
-                return $this->getHtml($breadcrumbs);
+                return $this->getHtml($breadcrumbs, $args);
 
             },
             ['is_safe' => ['html']]
@@ -87,7 +87,7 @@ class Breadcrumbs extends AbstractExtension
             if (null !== $arr['parent']) {
                 $arr = config(sprintf('bc.%s', $arr['parent']));
                 if (null === $arr) {
-                    throw new FireflyException(sprintf('No (2) breadcrumbs for route "%s".', $name));
+                    throw new FireflyException(sprintf('No (2) breadcrumbs for route "%s".', $arr['parent']));
                 }
             }
             $loop++; // safety catch
@@ -98,11 +98,12 @@ class Breadcrumbs extends AbstractExtension
     }
 
     /**
-     * @param array $breadcrumbs
+     * @param array      $breadcrumbs
+     * @param array|null $args
      *
      * @return string
      */
-    private function getHtml(array $breadcrumbs): string
+    private function getHtml(array $breadcrumbs, ?array $args): string
     {
         // get HTML
         $html = '<ol class="breadcrumb float-sm-right">';

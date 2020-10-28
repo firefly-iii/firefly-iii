@@ -25,6 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class CreateSupportTables.
+ * @codeCoverageIgnore
  */
 class CreateSupportTables extends Migration
 {

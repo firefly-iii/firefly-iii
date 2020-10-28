@@ -63,7 +63,6 @@ class TransactionJournalFactory
     private array                              $fields;
     private PiggyBankEventFactory              $piggyEventFactory;
     private PiggyBankRepositoryInterface       $piggyRepository;
-    private TransactionFactory                 $transactionFactory;
     private TransactionTypeRepositoryInterface $typeRepository;
     private User                               $user;
 

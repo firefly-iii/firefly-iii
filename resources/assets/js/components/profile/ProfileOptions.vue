@@ -43,7 +43,3 @@ export default {
   name: "ProfileOptions"
 }
 </script>
-
-<style scoped>
-
-</style>

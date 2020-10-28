@@ -116,33 +116,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account|null
-     */
-    public function findByAccountNumber(string $number, array $types): ?Account
-    {
-        $query = $this->user->accounts()
-                            ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                            ->where('account_meta.name', 'account_number')
-                            ->where('account_meta.data', json_encode($number));
-
-        if (count($types) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-        }
-
-        /** @var Collection $accounts */
-        $accounts = $query->get(['accounts.*']);
-        if ($accounts->count() > 0) {
-            return $accounts->first();
-        }
-
-        return null;
-    }
-
-    /**
      * @param string $iban
      * @param array  $types
      *
@@ -152,7 +125,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -180,7 +153,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts();
 
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -229,16 +202,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Account $account
-     *
-     * @return string
-     */
-    public function getAccountType(Account $account): string
-    {
-        return $account->accountType->type;
-    }
-
-    /**
      * Return account type or null if not found.
      *
      * @param string $type
@@ -260,7 +223,7 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Collection $result */
         $query = $this->user->accounts();
 
-        if (count($accountIds) > 0) {
+        if (!empty($accountIds)) {
             $query->whereIn('accounts.id', $accountIds);
         }
         $query->orderBy('accounts.order', 'ASC');
@@ -279,7 +242,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         /** @var Collection $result */
         $query = $this->user->accounts();
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
         $query->orderBy('accounts.order', 'ASC');
@@ -303,7 +266,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'account_role');
             }, 'attachments']
         );
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);
@@ -572,7 +535,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
 
         }
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
@@ -630,7 +593,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'account_role');
             }]
         );
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 0);
@@ -728,7 +691,7 @@ class AccountRepository implements AccountRepositoryInterface
                 });
             }
         }
-        if (count($types) > 0) {
+        if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }

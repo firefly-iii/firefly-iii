@@ -116,7 +116,7 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
         Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get('email')));
 
-        return $this->sendFailedLoginResponse($request);
+        $this->sendFailedLoginResponse($request);
     }
 
     /**

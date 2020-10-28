@@ -124,10 +124,6 @@ export default {
         types = this.defaultAccountTypeFilters.join(',');
       }
       this.updateACURI(types);
-    },
-    name() {
-      // console.log('Watch: name()');
-      // console.log(this.name);
     }
   },
   methods:
@@ -135,12 +131,41 @@ export default {
         aSyncFunction: function (query, done) {
           axios.get(this.accountAutoCompleteURI + query)
               .then(res => {
-                done(res.data);
+                // loop over data
+                let escapedData = [];
+                let current;
+                for (const key in res.data) {
+                  if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                    current = res.data[key];
+                    current.name_with_balance = this.escapeHtml(res.data[key].name_with_balance)
+                    escapedData.push(current);
+                  }
+                }
+                done(escapedData);
               })
               .catch(err => {
                 // any error handler
               })
         },
+        escapeHtml: function (string) {
+
+          let entityMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+          };
+
+          return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap(s) {
+            return entityMap[s];
+          });
+
+        },
+
         updateACURI: function (types) {
           this.accountAutoCompleteURI =
               document.getElementsByTagName('base')[0].href +
@@ -220,7 +245,3 @@ export default {
       }
 }
 </script>
-
-<style scoped>
-
-</style>

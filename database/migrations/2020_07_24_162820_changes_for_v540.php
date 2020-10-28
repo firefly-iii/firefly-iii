@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV540
+ * @codeCoverageIgnore
  */
 class ChangesForV540 extends Migration
 {

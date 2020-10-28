@@ -5,7 +5,7 @@
   */
 
 /*!
-  * vue-router v3.4.7
+  * vue-router v3.4.8
   * (c) 2020 Evan You
   * @license MIT
   */

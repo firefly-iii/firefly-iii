@@ -242,17 +242,15 @@ class ConvertController extends Controller
     private function getAssetAccounts(): array
     {
         // make repositories
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountList       = $accountRepository->getActiveAccountsByType([AccountType::ASSET]);
+        $accountList       = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET]);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $grouped           = [];
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
             $balance  = app('steam')->balance($account, today());
-            $currency = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role     = (string)$accountRepository->getMetaValue($account, 'account_role');
+            $currency = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -271,16 +269,14 @@ class ConvertController extends Controller
     private function getLiabilities(): array
     {
         // make repositories
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountList       = $accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $accountList       = $this->accountRepository->getActiveAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         $defaultCurrency   = app('amount')->getDefaultCurrency();
         $grouped           = [];
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
             $balance                     = app('steam')->balance($account, today());
-            $currency                    = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
             $role                        = 'l_' . $account->accountType->type;
             $key                         = (string)trans('firefly.opt_group_' . $role);
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
@@ -295,16 +291,14 @@ class ConvertController extends Controller
     private function getValidDepositSources(): array
     {
         // make repositories
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
         $liabilityTypes    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $accountList       = $accountRepository
+        $accountList       = $this->accountRepository
             ->getActiveAccountsByType([AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         $grouped           = [];
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string)$accountRepository->getMetaValue($account, 'account_role');
+            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             $name = $account->name;
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
@@ -337,17 +331,15 @@ class ConvertController extends Controller
     private function getValidWithdrawalDests(): array
     {
         // make repositories
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
         $liabilityTypes    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $accountList       = $accountRepository->getActiveAccountsByType(
+        $accountList       = $this->accountRepository->getActiveAccountsByType(
             [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
         $grouped           = [];
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string)$accountRepository->getMetaValue($account, 'account_role');
+            $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             $name = $account->name;
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore

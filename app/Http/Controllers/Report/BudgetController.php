@@ -165,7 +165,6 @@ class BudgetController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
@@ -328,7 +327,6 @@ class BudgetController extends Controller
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 $count = 0;
-                $total = '0';
                 foreach ($budget['transaction_journals'] as $journal) {
                     $count++;
                     $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
@@ -377,7 +375,6 @@ class BudgetController extends Controller
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
         $result = [];
         foreach ($spent as $currency) {
-            $currencyId = $currency['currency_id'];
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
                     $result[] = [

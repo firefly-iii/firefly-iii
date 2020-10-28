@@ -76,10 +76,6 @@ class JournalUpdateService
     private $transactionGroup;
     /** @var TransactionJournal The journal to update. */
     private $transactionJournal;
-    /** @var Account If new account info is submitted, this array will hold the valid destination. */
-    private $validDestination;
-    /** @var Account If new account info is submitted, this array will hold the valid source. */
-    private $validSource;
 
     /**
      * JournalUpdateService constructor.

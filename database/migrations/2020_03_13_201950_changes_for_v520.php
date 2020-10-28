@@ -28,6 +28,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV520.
+ * @codeCoverageIgnore
  */
 class ChangesForV520 extends Migration
 {

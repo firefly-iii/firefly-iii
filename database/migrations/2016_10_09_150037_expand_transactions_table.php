@@ -25,6 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ExpandTransactionsTable.
+ * @codeCoverageIgnore
  */
 class ExpandTransactionsTable extends Migration
 {

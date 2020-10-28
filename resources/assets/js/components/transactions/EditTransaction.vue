@@ -243,11 +243,11 @@ export default {
     groupId: Number
   },
   mounted() {
-    console.log('EditTransaction: mounted()');
+    // console.log('EditTransaction: mounted()');
     this.getGroup();
   },
   ready() {
-    console.log('EditTransaction: ready()');
+    // console.log('EditTransaction: ready()');
   },
   methods: {
     positiveAmount(amount) {
@@ -353,7 +353,7 @@ export default {
       // console.log(this.transactions[index].destination_account.allowed_types);
     },
     getGroup() {
-      console.log('EditTransaction: getGroup()');
+      // console.log('EditTransaction: getGroup()');
       const page = window.location.href.split('/');
       const groupId = page[page.length - 1];
 
@@ -372,7 +372,7 @@ export default {
           });
     },
     processIncomingGroup(data) {
-      console.log('EditTransaction: processIncomingGroup()');
+      // console.log('EditTransaction: processIncomingGroup()');
       this.group_title = data.attributes.group_title;
       let transactions = data.attributes.transactions.reverse();
       for (let key in transactions) {
@@ -390,7 +390,7 @@ export default {
       return null;
     },
     processIncomingGroupRow(transaction) {
-      console.log('EditTransaction: processIncomingGroupRow()');
+      //console.log('EditTransaction: processIncomingGroupRow()');
       this.setTransactionType(transaction.type);
 
       let newTags = [];
@@ -921,15 +921,15 @@ export default {
         }
       });
       let count = this.transactions.length;
-      console.log('Transactions length = ' + count);
+      // console.log('Transactions length = ' + count);
       // also set accounts from previous entry, if present.
       if (this.transactions.length > 1) {
-        console.log('Adding split.');
+        // console.log('Adding split.');
         this.transactions[count - 1].source_account = this.transactions[count - 2].source_account;
         this.transactions[count - 1].destination_account = this.transactions[count - 2].destination_account;
         this.transactions[count - 1].date = this.transactions[count - 2].date;
       }
-      console.log('Transactions length now = ' + this.transactions.length);
+      // console.log('Transactions length now = ' + this.transactions.length);
 
       if (e) {
         e.preventDefault();
@@ -1046,7 +1046,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
