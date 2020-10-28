@@ -128,21 +128,21 @@ export default {
       // console.log(destType + ' (dest) is a liability: ' + destIsLiability);
 
       if (tType === 'transfer' || destIsLiability || sourceIsLiability) {
-        console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
-        console.log('Length of currencies is ' + this.currencies.length);
-        console.log(this.currencies);
+        // console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
+        // console.log('Length of currencies is ' + this.currencies.length);
+        // console.log(this.currencies);
         this.liability = true;
         // lock dropdown list on on currencyID of destination.
         for (const key in this.currencies) {
           if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('this.currencies[key].id = ' + this.currencies[key].id);
-            console.log('this.destination.currency_id = ' + this.destination.currency_id);
+            // console.log('this.currencies[key].id = ' + this.currencies[key].id);
+            // console.log('this.destination.currency_id = ' + this.destination.currency_id);
             if (parseInt(this.currencies[key].id) === parseInt(this.destination.currency_id)) {
               this.enabledCurrencies.push(this.currencies[key]);
             }
           }
         }
-        console.log('Enabled currencies length is now ' + this.enabledCurrencies.length);
+        // console.log('Enabled currencies length is now ' + this.enabledCurrencies.length);
         return;
       }
 
@@ -207,7 +207,7 @@ export default {
             }
           }
         }
-        console.log(this.enabledCurrencies);
+        // console.log(this.enabledCurrencies);
       });
     }
   }

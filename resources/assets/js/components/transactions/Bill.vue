@@ -61,7 +61,7 @@ export default {
     no_bill: String,
   },
   mounted() {
-    console.log('bill: mounted');
+    // console.log('bill: mounted');
     this.loadBills();
   },
   data() {
@@ -72,7 +72,7 @@ export default {
   },
   watch: {
     value: function () {
-      console.log('bill: value changed to ' + this.value);
+      // console.log('bill: value changed to ' + this.value);
       this.selected = this.value;
     }
   },

@@ -78,7 +78,7 @@ export default {
       return this.error.length > 0;
     },
     changeData: function () {
-      console.log('Triggered amount changeData()');
+      //console.log('Triggered amount changeData()');
       let transactionType = this.transactionType;
       // reset of all are empty:
       if (!transactionType && !this.source.name && !this.destination.name) {
@@ -130,23 +130,23 @@ export default {
   },
   watch: {
     source: function () {
-      console.log('amount: watch source triggered');
+      // console.log('amount: watch source triggered');
       this.changeData();
     },
     value: function () {
-      console.log('amount: value changed');
+      // console.log('amount: value changed');
     },
     destination: function () {
-      console.log('amount: watch destination triggered');
+      // console.log('amount: watch destination triggered');
       this.changeData();
     },
     transactionType: function () {
-      console.log('amount: watch transaction type triggered');
+      // console.log('amount: watch transaction type triggered');
       this.changeData();
     }
   },
   mounted() {
-    console.log('amount: mounted');
+    // console.log('amount: mounted');
     this.changeData();
   }
 }
