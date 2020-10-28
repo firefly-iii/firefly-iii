@@ -161,6 +161,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null !== $journal) {
             return $journal->date;
         }
+
         return null;
     }
 
@@ -208,7 +209,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -220,7 +221,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
-        ->orderBy('name', 'ASC')->where('active', 1);
+               ->orderBy('name', 'ASC')->where('active', 1);
 
         return $search->take($limit)->get();
     }
@@ -277,15 +278,15 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('rollover' === $type) {
             $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
         }
-        $repos = app(CurrencyRepositoryInterface::class);
-        $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+        $repos        = app(CurrencyRepositoryInterface::class);
+        $currencyId   = (int)($data['transaction_currency_id'] ?? 0);
         $currencyCode = (string)($data['transaction_currency_code'] ?? '');
 
         $currency = $repos->findNull($currencyId);
-        if(null === $currency) {
+        if (null === $currency) {
             $currency = $repos->findByCodeNull($currencyCode);
         }
-        if(null === $currency) {
+        if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
@@ -306,11 +307,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         $limitRepos->setUser($this->user);
         $limitRepos->store(
             [
-                'budget_id'               => $newBudget->id,
-                'transaction_currency_id' => $autoBudget->transaction_currency_id,
-                'start_date'              => $start,
-                'end_date'                => $end,
-                'amount'                  => $autoBudget->amount,
+                'budget_id'   => $newBudget->id,
+                'currency_id' => $autoBudget->transaction_currency_id,
+                'start_date'  => $start,
+                'end_date'    => $end,
+                'amount'      => $autoBudget->amount,
             ]
         );
 
@@ -348,15 +349,15 @@ class BudgetRepository implements BudgetRepositoryInterface
                 $autoBudget->budget()->associate($budget);
             }
 
-            $repos = app(CurrencyRepositoryInterface::class);
-            $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+            $repos        = app(CurrencyRepositoryInterface::class);
+            $currencyId   = (int)($data['transaction_currency_id'] ?? 0);
             $currencyCode = (string)($data['transaction_currency_code'] ?? '');
 
             $currency = $repos->findNull($currencyId);
-            if(null === $currency) {
+            if (null === $currency) {
                 $currency = $repos->findByCodeNull($currencyCode);
             }
-            if(null === $currency) {
+            if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrencyByUser($this->user);
             }
 
