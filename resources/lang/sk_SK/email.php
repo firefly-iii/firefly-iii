@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => 'Vitajte vo <a style="color:#337ab7" href=":address">Firefly III</a>. Vaša registrácia sa podarila a tento e-mail k vám dorazil ako potvrdenie. Jupí!',
     'registered_pw'                    => 'Ak ste už zabudli svoje heslo, môžete ho obnoviť <a style="color:#337ab7" href=":address/password/reset">nástrojom na obnovu hesla</a>.',
     'registered_help'                  => 'V pravom hornom rohu každej stánky je ikonka pomocníka. Ak potrebujete pomoc, kliknite na ňu!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
+    'registered_doc_html'              => 'Ak ste tak už nespravili, prečítajte si <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">hlavnú myšlienku</a>.',
     'registered_doc_text'              => 'Ak ste tak ešte nespravili, prečítajte si sprievodcu pre prvé použitie a celý popis.',
     'registered_closing'               => 'Užite si to!',
     'registered_firefly_iii_link'      => 'Firefly III:',

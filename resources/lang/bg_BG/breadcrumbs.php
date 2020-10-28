@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Редактирай касичка ":name"',
     'preferences'            => 'Настройки',
     'profile'                => 'Профил',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Сметки',
     'changePassword'         => 'Промени паролата си',
     'change_email'           => 'Смяна на имейл адрес',
     'bills'                  => 'Сметки',

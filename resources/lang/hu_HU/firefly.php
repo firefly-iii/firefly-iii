@@ -1697,7 +1697,7 @@ return [
     'recurring_weekly'                      => 'Minden héten ekkor: :weekday',
     'recurring_weekly_skip'                 => 'Minden :skip. héten, hétköznap',
     'recurring_monthly'                     => 'Minden hónap ezen napján: :dayOfMonth',
-    'recurring_monthly_skip'                => 'MInden :skip. hónapon, a(z) :dayOfMonth. napon',
+    'recurring_monthly_skip'                => 'Minden :skip. hónapon, a(z) :dayOfMonth. napon',
     'recurring_ndom'                        => 'Minden hónapban ekkor: :dayOfMonth :weekday',
     'recurring_yearly'                      => 'Minden évben ekkor: :date',
     'overview_for_recurrence'               => '":title" ismétlődő tranzakció áttekintése',
