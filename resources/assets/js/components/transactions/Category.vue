@@ -50,10 +50,19 @@
           :async-function="aSyncFunction"
           :open-on-empty=true
           :open-on-focus=true
+          ref="typea"
           :target="target"
           item-key="name"
           v-on:input="selectedItem"
-      ></typeahead>
+      >
+        <template slot="item" slot-scope="props">
+          <li v-for="(item, index) in props.items" :class="{active:props.activeIndex===index}">
+            <a role="button" @click="props.select(item)">
+              <span v-html="betterHighlight(item)"></span>
+            </a>
+          </li>
+        </template>
+      </typeahead>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
@@ -78,10 +87,12 @@ export default {
       categoryAutoCompleteURI: null,
       name: null,
       target: null,
+      acKey: null,
     }
   },
   ready() {
     this.name = this.accountName;
+    this.acKey = 'name';
   },
   mounted() {
     this.target = this.$refs.input;
@@ -90,6 +101,11 @@ export default {
   methods: {
     hasError: function () {
       return this.error.length > 0;
+    },
+    betterHighlight: function (item) {
+      var inputValue = this.$refs.input.value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+      var escapedName = this.escapeHtml(item.name);
+      return escapedName.replace(new RegExp(("" + inputValue), 'i'), '<b>$&</b>');
     },
     aSyncFunction: function (query, done) {
       axios.get(this.categoryAutoCompleteURI + query)
@@ -100,7 +116,10 @@ export default {
             for (const key in res.data) {
               if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                 current = res.data[key];
-                current.name = this.escapeHtml(res.data[key].name)
+                //current.name_html = res.data[key].name;
+                //current.name = this.escapeHtml(res.data[key].name);
+
+                //current.name = res.data[key].name;
                 escapedData.push(current);
               }
             }
