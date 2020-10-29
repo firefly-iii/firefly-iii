@@ -110,20 +110,7 @@ export default {
     aSyncFunction: function (query, done) {
       axios.get(this.categoryAutoCompleteURI + query)
           .then(res => {
-            // loop over data
-            let escapedData = [];
-            let current;
-            for (const key in res.data) {
-              if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                current = res.data[key];
-                //current.name_html = res.data[key].name;
-                //current.name = this.escapeHtml(res.data[key].name);
-
-                //current.name = res.data[key].name;
-                escapedData.push(current);
-              }
-            }
-            done(escapedData);
+            done(res.data);
           })
           .catch(err => {
             // any error handler
