@@ -49,17 +49,13 @@ class StartFireflySession extends StartSession
         $isJsonPage   = strpos($uri, '/json');
 
         // also stop remembering "delete" URL's.
-
         if (false === $isScriptPage && false === $isDeletePage
             && false === $isLoginPage
             && false === $isJsonPage
             && 'GET' === $request->method()
             && !$request->ajax()) {
             $session->setPreviousUrl($uri);
-            Log::debug(sprintf('Will set previous URL to %s', $uri));
-
             return;
         }
-        Log::debug(sprintf('Will NOT set previous URL to %s', $uri));
     }
 }

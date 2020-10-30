@@ -153,11 +153,8 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
-            Log::debug(sprintf('Retrieved preference "%s" from cache ("%s").', $name, $fullName));
-
             return Cache::get($fullName);
         }
-        Log::debug(sprintf('Retrieved preference "%s" FRESH.', $name));
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
@@ -192,7 +189,6 @@ class Preferences
     public function getFreshForUser(User $user, string $name, $default = null): ?Preference
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
-        Log::debug(sprintf('Retrieved preference "%s" FRESH.', $name));
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
@@ -272,7 +268,6 @@ class Preferences
     public function forget(User $user, string $name): void
     {
         $key = sprintf('preference%s%s', $user->id, $name);
-        Log::debug(sprintf('Going to forget key "%s"', $key));
         Cache::forget($key);
         Cache::put($key, '', 5);
     }
@@ -307,7 +302,6 @@ class Preferences
         if (null !== $pref) {
             $pref->data = $value;
             $pref->save();
-            Log::debug(sprintf('Saved new value under existing preference object. "%s"', $fullName));
             Cache::forever($fullName, $pref);
 
             return $pref;
@@ -319,7 +313,6 @@ class Preferences
         $pref->user()->associate($user);
 
         $pref->save();
-        Log::debug(sprintf('Saved new value under new preference object. "%s"', $fullName));
         Cache::forever($fullName, $pref);
 
         return $pref;
