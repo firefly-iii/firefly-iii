@@ -245,20 +245,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Limit the result to a specific transaction group.
-     *
-     * @param TransactionGroup $transactionGroup
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
-    {
-        $this->query->where('transaction_groups.id', $transactionGroup->id);
-
-        return $this;
-    }
-
-    /**
      * Limit the result to a set of specific journals.
      *
      * @param array $journalIds

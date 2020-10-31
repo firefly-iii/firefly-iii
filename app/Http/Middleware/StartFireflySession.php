@@ -55,7 +55,6 @@ class StartFireflySession extends StartSession
             && 'GET' === $request->method()
             && !$request->ajax()) {
             $session->setPreviousUrl($uri);
-            return;
         }
     }
 }

@@ -204,11 +204,6 @@ interface CurrencyRepositoryInterface
     public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
 
     /**
-     * @return Collection
-     */
-    public function getEnabled(): Collection;
-
-    /**
      * Get currency exchange rate.
      *
      * @param TransactionCurrency $fromCurrency

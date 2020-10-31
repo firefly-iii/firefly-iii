@@ -239,15 +239,6 @@ interface GroupCollectorInterface
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
-     * Limit the result to a specific transaction group.
-     *
-     * @param TransactionGroup $transactionGroup
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface;
-
-    /**
      * Limit the result to a set of specific transaction journals.
      *
      * @param array $journalIds

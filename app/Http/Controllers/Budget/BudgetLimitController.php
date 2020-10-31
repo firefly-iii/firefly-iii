@@ -86,7 +86,7 @@ class BudgetLimitController extends Controller
      */
     public function create(Budget $budget, Carbon $start, Carbon $end)
     {
-        $collection   = $this->currencyRepos->getEnabled();
+        $collection   = $this->currencyRepos->get();
         $budgetLimits = $this->blRepository->getBudgetLimits($budget, $start, $end);
 
         // remove already budgeted currencies:

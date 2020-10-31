@@ -73,41 +73,6 @@ class AccountForm
     }
 
     /**
-     * Shows a <select> with all active asset accounts.
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     */
-    public function activeAssetAccountList(string $name, $value = null, array $options = null): string
-    {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT];
-        $grouped = $this->getAccountsGrouped($types);
-
-        return $this->select($name, $grouped, $value, $options);
-    }
-
-
-    /**
-     * Return a list that includes liabilities.
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     */
-    public function activeLongAccountList(string $name, $value = null, array $options = null): string
-    {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $grouped = $this->getAccountsGrouped($types);
-
-        return $this->select($name, $grouped, $value, $options);
-    }
-
-    /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
      * @param string $name

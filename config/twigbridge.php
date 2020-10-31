@@ -194,8 +194,7 @@ return [
             ],
             'AccountForm'   => [
                 'is_safe' => [
-                    'activeAssetAccountList', 'activeLongAccountList', 'activeWithdrawalDestinations', 'activeDepositDestinations',
-                    'assetAccountCheckList', 'assetAccountList', 'longAccountList',
+                    'activeWithdrawalDestinations', 'activeDepositDestinations', 'assetAccountCheckList', 'assetAccountList', 'longAccountList',
                 ],
             ],
             'CurrencyForm'  => [

@@ -1182,16 +1182,16 @@
         },
         {
             "name": "gdbots/query-parser",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gdbots/query-parser-php.git",
-                "reference": "21fffb3dae156792c0ffe5d4c2ba25e7607ac264"
+                "reference": "d35cb9ae613ee8d6a94b5758fb0047668ab1d34c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/21fffb3dae156792c0ffe5d4c2ba25e7607ac264",
-                "reference": "21fffb3dae156792c0ffe5d4c2ba25e7607ac264",
+                "url": "https://api.github.com/repos/gdbots/query-parser-php/zipball/d35cb9ae613ee8d6a94b5758fb0047668ab1d34c",
+                "reference": "d35cb9ae613ee8d6a94b5758fb0047668ab1d34c",
                 "shasum": ""
             },
             "require": {
@@ -1215,9 +1215,9 @@
             "homepage": "https://github.com/gdbots/query-parser-php",
             "support": {
                 "issues": "https://github.com/gdbots/query-parser-php/issues",
-                "source": "https://github.com/gdbots/query-parser-php/tree/v2.0.1"
+                "source": "https://github.com/gdbots/query-parser-php/tree/v2.0.2"
             },
-            "time": "2020-10-18T02:58:06+00:00"
+            "time": "2020-10-30T23:41:54+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -7012,16 +7012,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "f7eebdd092873f5d63929f21183e69ec9f5e83cd"
+                "reference": "4053eab90a7cdf0b81dd93073dc6c18c15d487fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/f7eebdd092873f5d63929f21183e69ec9f5e83cd",
-                "reference": "f7eebdd092873f5d63929f21183e69ec9f5e83cd",
+                "url": "https://api.github.com/repos/composer/composer/zipball/4053eab90a7cdf0b81dd93073dc6c18c15d487fd",
+                "reference": "4053eab90a7cdf0b81dd93073dc6c18c15d487fd",
                 "shasum": ""
             },
             "require": {
@@ -7089,7 +7089,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.3"
+                "source": "https://github.com/composer/composer/tree/2.0.4"
             },
             "funding": [
                 {
@@ -7105,7 +7105,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-28T14:50:56+00:00"
+            "time": "2020-10-30T21:39:11+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",

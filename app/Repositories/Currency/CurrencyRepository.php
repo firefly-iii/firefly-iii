@@ -402,14 +402,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function getEnabled(): Collection
-    {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
-    }
-
-    /**
      * Get currency exchange rate.
      *
      * @param TransactionCurrency $fromCurrency
