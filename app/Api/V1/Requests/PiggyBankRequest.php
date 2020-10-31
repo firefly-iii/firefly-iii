@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
-use FireflyIII\Rules\ZeroOrMore;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -79,7 +78,7 @@ class PiggyBankRequest extends FormRequest
     {
         $rules = [
             'name'           => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount' => ['numeric', new ZeroOrMore, 'lte:target_amount'],
+            'current_amount' => ['numeric', 'gte:0', 'lte:target_amount'],
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
@@ -95,7 +94,7 @@ class PiggyBankRequest extends FormRequest
                 $rules['name']           = 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
                 $rules['account_id']     = ['belongsToUser:accounts', new IsAssetAccountId];
                 $rules['target_amount']  = 'numeric|gt:0';
-                $rules['current_amount'] = ['numeric', new ZeroOrMore, new LessThanPiggyTarget];
+                $rules['current_amount'] = ['numeric', 'gte:0', new LessThanPiggyTarget];
                 break;
         }
 

@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ZeroOrMore.php
+ * CategoryUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,44 +21,44 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Rules;
+namespace FireflyIII\Api\V1\Requests;
 
-use Illuminate\Contracts\Validation\Rule;
+use FireflyIII\Support\Request\ChecksLogin;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
+ * Class CategoryUpdateRequest
  *
- * Class ZeroOrMore
  * @codeCoverageIgnore
  */
-class ZeroOrMore implements Rule
+class CategoryUpdateRequest extends FormRequest
 {
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
-     * Get the validation error message.
+     * Get all data from the request.
      *
-     * @return string
+     * @return array
      */
-    public function message(): string
+    public function getAll(): array
     {
-        return trans('validation.zero_or_more');
+        return [
+            'name' => $this->string('name'),
+        ];
     }
 
     /**
-     * Determine if the validation rule passes.
+     * The rules that the incoming request must be matched against.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
-     *
-     * @return bool
+     * @return array
      */
-    public function passes($attribute, $value): bool
+    public function rules(): array
     {
-        $value = (string)$value;
-        if ('' === $value) {
-            return true;
-        }
-        $res = bccomp('0', $value);
+        $category = $this->route()->parameter('category');
 
-        return $res <= 0;
+        return [
+            'name' => sprintf('required|between:1,100|uniqueObjectForUser:categories,name,%d', $category->id),
+        ];
     }
 }
