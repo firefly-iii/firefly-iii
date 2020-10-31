@@ -252,32 +252,6 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return bool
      */
-    public function isDeposit(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::DEPOSIT === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isDeposit();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function isOpeningBalance(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::OPENING_BALANCE === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isOpeningBalance();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
     public function isTransfer(): bool
     {
         if (null !== $this->transaction_type_type) {
@@ -285,19 +259,6 @@ class TransactionJournal extends Model
         }
 
         return $this->transactionType->isTransfer();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function isWithdrawal(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::WITHDRAWAL === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isWithdrawal();
     }
 
     /**
