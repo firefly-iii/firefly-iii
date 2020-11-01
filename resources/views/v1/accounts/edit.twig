@@ -87,7 +87,7 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.select('cc_type',Config.get('firefly.ccTypes')) }}
-                        {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'}) }}
+                        {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : trans('firefly.cc_monthly_payment_date_help')}) }}
                     </div>
                 </div>
             {% endif %}
