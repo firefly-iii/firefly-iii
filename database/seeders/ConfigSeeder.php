@@ -43,8 +43,11 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+namespace Database\Seeders;
+
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\Seeder;
+use Log;
 
 /**
  * Class ConfigSeeder.
@@ -68,7 +71,7 @@ class ConfigSeeder extends Seeder
             );
         }
         if (null !== $entry) {
-            $version     = (int) config('firefly.db_version');
+            $version     = (int)config('firefly.db_version');
             $entry->data = $version;
             $entry->save();
 

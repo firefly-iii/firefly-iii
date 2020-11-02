@@ -182,6 +182,11 @@ class UserEventHandler
         $user      = $event->user;
         $email     = $user->email;
         $ipAddress = $event->ipAddress;
+
+        if($user->hasRole('demo')) {
+            return; // do not email demo user.
+        }
+
         $list      = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
 
         // see if user has alternative email address:

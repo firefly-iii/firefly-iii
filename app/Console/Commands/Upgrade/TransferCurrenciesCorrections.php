@@ -55,13 +55,13 @@ class TransferCurrenciesCorrections extends Command
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
     private int                           $count;
-    private Account                       $destinationAccount;
-    private TransactionCurrency           $destinationCurrency;
-    private Transaction                   $destinationTransaction;
-    private Account                       $sourceAccount;
-    private TransactionCurrency           $sourceCurrency;
-    private Transaction                   $sourceTransaction;
 
+    private ?Account                       $destinationAccount;
+    private ?TransactionCurrency           $destinationCurrency;
+    private ?Transaction                   $destinationTransaction;
+    private ?Account                       $sourceAccount;
+    private ?TransactionCurrency           $sourceCurrency;
+    private ?Transaction                   $sourceTransaction;
 
     /**
      * Execute the console command.

@@ -1,6 +1,6 @@
 <?php
 /**
- * DatabaseSeeder.php
+ * AccountTypeSeeder.php
  * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,23 +20,39 @@
  */
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
+use FireflyIII\Models\AccountType;
 use Illuminate\Database\Seeder;
+use PDOEXception;
 
 /**
- * Class DatabaseSeeder.
+ * Class AccountTypeSeeder.
  */
-class DatabaseSeeder extends Seeder
+class AccountTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run()
+    public function run(): void
     {
-        $this->call(AccountTypeSeeder::class);
-        $this->call(TransactionCurrencySeeder::class);
-        $this->call(TransactionTypeSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call(LinkTypeSeeder::class);
-        $this->call(ConfigSeeder::class);
+        $types = [
+            AccountType::DEFAULT,
+            AccountType::CASH,
+            AccountType::ASSET,
+            AccountType::EXPENSE,
+            AccountType::REVENUE,
+            AccountType::INITIAL_BALANCE,
+            AccountType::BENEFICIARY,
+            AccountType::IMPORT,
+            AccountType::LOAN,
+            AccountType::RECONCILIATION,
+            AccountType::DEBT,
+            AccountType::MORTGAGE,
+        ];
+        foreach ($types as $type) {
+            try {
+                AccountType::create(['type' => $type]);
+            } catch (PDOException $e) {
+                // dont care.
+            }
+        }
     }
 }
