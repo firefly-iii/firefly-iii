@@ -116,7 +116,7 @@
     "phpunit/phpunit": "^9.2",
     "roave/security-advisories": "dev-master",
     "thecodingmachine/phpstan-strict-rules": "^0.12.0",
-    "vimeo/psalm": "^3.10"
+    "vimeo/psalm": "^4.1"
   },
   "suggest": {
   },
