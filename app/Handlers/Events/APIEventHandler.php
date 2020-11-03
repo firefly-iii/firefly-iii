@@ -52,6 +52,12 @@ class APIEventHandler
         $user       = $repository->findNull((int) $event->userId);
         if (null !== $user) {
             $email     = $user->email;
+
+            // if user is demo user, send to owner:
+            if($user->hasRole('demo')) {
+                $email = config('firefly.site_owner');
+            }
+
             $ipAddress = Request::ip();
 
             // see if user has alternative email address:
