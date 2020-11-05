@@ -29,6 +29,37 @@ var fixHelper = function (e, tr) {
     return $helper;
 };
 
+function createCookie(name, value, days) {
+    "use strict";
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
+}
+
+function readCookie(name) {
+    "use strict";
+    var nameEQ = encodeURIComponent(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+    }
+    return null;
+}
+
+
 $(function () {
       "use strict";
       $('.group-rules').find('tbody').sortable(
@@ -37,9 +68,41 @@ $(function () {
               stop: sortStop,
               handle: '.rule-handle',
               cursor: "move"
-
           }
       );
+
+      $('.rules-box').each(function (i, v) {
+          var box = $(v);
+          var groupId = box.data('group');
+          var cookieName = 'rule-box-collapse-' + groupId;
+          if ('collapsed' === readCookie(cookieName)) {
+              box.addClass('collapsed-box');
+              console.log('Box ' + groupId + ' is collapsed');
+              return;
+          }
+          console.log('Box ' + groupId + ' is not collapsed');
+      });
+
+      $('.rules-box').on('expanded.boxwidget', function (e) {
+          var box = $(e.currentTarget);
+          var groupId = box.data('group');
+          var cookieName = 'rule-box-collapse-' + groupId;
+          createCookie(cookieName, 'expanded', 90);
+          //console.log('Box ' + box.data('group') + ' is now expanded.');
+          //alert('hi!')
+      });
+
+      $('.rules-box').on('collapsed.boxwidget', function (e) {
+          var box = $(e.currentTarget);
+          var groupId = box.data('group');
+          var cookieName = 'rule-box-collapse-' + groupId;
+          createCookie(cookieName, 'collapsed', 90);
+          //console.log('Box ' + box.data('group') + ' is now collapsed.');
+          //alert('ho!')
+      });
+
+      //collapsed-box
+
 
       // test rule triggers button:
       $('.test_rule_triggers').click(testRuleTriggers);
@@ -97,7 +160,7 @@ function sortStop(event, ui) {
     "use strict";
 
     // resort / move rule
-    $.each($('.group-rules'), function(i,v) {
+    $.each($('.group-rules'), function (i, v) {
         $.each($('tr.single-rule', $(v)), function (counter, value) {
             var holder = $(value);
             var position = parseInt(holder.data('position'));
@@ -115,7 +178,7 @@ function sortStop(event, ui) {
                 console.log('Rule #' + ruleId + ' moved down from position ' + originalOrder + ' to ' + (counter + 1));
             }
             if (position > counter) {
-                console.log('Rule #' + ruleId + ' moved up from position '   + originalOrder + ' to ' + (counter + 1));
+                console.log('Rule #' + ruleId + ' moved up from position ' + originalOrder + ' to ' + (counter + 1));
             }
             // update position:
             holder.data('position', counter);
