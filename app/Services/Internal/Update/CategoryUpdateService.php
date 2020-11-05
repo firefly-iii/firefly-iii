@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
@@ -68,6 +69,7 @@ class CategoryUpdateService
         $this->updateRuleTriggers($oldName, $data['name']);
         $this->updateRuleActions($oldName, $data['name']);
         $this->updateRecurrences($oldName, $data['name']);
+        $this->updateNotes($category, $data);
 
         return $category;
     }
@@ -135,6 +137,42 @@ class CategoryUpdateService
             ->where('rt_meta.name', 'category_name')
             ->where('rt_meta.value', $oldName)
             ->update(['rt_meta.value' => $newName]);
+    }
+
+
+    /**
+     * @param Category $category
+     * @param array    $data
+     *
+     * @throws \Exception
+     */
+    private function updateNotes(Category $category, array $data): void
+    {
+        $note = array_key_exists('notes', $data) ? $data['notes'] : null;
+        if (null === $note) {
+            return;
+        }
+        if ('' === $note) {
+            $dbNote = $category->notes()->first();
+            if (null !== $dbNote) {
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) {
+                    Log::debug($e->getMessage());
+                }
+            }
+
+            return;
+        }
+        $dbNote = $category->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($category);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return;
     }
 
 }
