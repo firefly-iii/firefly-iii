@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Comptes de destination',
     'all_source_accounts'                                 => 'Comptes source',
     'back_to_index'                                       => 'Retour à l\'accueil',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Vérifier les mises à jour',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Après la mise à jour, revenir ici pour continuer l\'édition.',
     'store_as_new'                          => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                           => 'Réinitialiser le formulaire après soumission',
-    'errors_submission'                     => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(Sans groupement)',

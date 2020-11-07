@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Conturi de destinație',
     'all_source_accounts'                                 => 'Conturi sursă',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Verifică actualizări',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'După actualizare, reveniți aici pentru a continua editarea.',
     'store_as_new'                          => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                           => 'Resetați formularul după trimitere',
-    'errors_submission'                     => 'A fost ceva în neregulă cu transmiterea dvs. Vă rugăm să consultați erorile de mai jos.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Приходни сметки',
     'all_source_accounts'                                 => 'Разходни сметки',
     'back_to_index'                                       => 'Обратно към списъка',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Проверка за обновления',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'След обновяването се върнете тук, за да продължите с редакцията.',
     'store_as_new'                          => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                           => 'Изчистване на формуляра след изпращане',
-    'errors_submission'                     => 'Имаше нещо нередно с вашите данни. Моля, проверете грешките по-долу.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(без група)',

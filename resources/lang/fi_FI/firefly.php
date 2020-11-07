@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Kohdetilit',
     'all_source_accounts'                                 => 'Lähdetilit',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Tarkista päivitykset',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Päivityksen jälkeen, palaa takaisin jatkamaan muokkausta.',
     'store_as_new'                          => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
-    'errors_submission'                     => 'Lomakkeen tiedoissa oli puutteita - alta löydät listan puutteista.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',

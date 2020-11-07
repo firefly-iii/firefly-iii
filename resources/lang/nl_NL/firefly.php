@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Doelrekeningen',
     'all_source_accounts'                                 => 'Bronrekeningen',
     'back_to_index'                                       => 'Terug naar de index',
+    'cant_logout_guard'                                   => 'Firefly III kan je niet uitloggen.',
 
     // check for updates:
     'update_check_title'                                  => 'Op updates controleren',

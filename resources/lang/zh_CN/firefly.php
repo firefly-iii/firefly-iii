@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => '目标帐户',
     'all_source_accounts'                                 => '源账户',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => '检查更新',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => '更新后，返回此页面继续编辑。',
     'store_as_new'                          => '保存为新交易而不是更新此交易。',
     'reset_after'                           => '提交后重置表单',
-    'errors_submission'                     => '您的提交有误，请查看下面输出的错误信息。',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

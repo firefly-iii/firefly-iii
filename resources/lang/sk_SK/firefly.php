@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Cieľové účty',
     'all_source_accounts'                                 => 'Zdrojové účty',
     'back_to_index'                                       => 'Späť na zoznam',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Zistiť dostupnosť aktualizácií',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Po aktualizácii sa vrátiť späť a pokračovať v úpravách.',
     'store_as_new'                          => 'Namiesto aktualizácie uložiť ako novú transakciu.',
     'reset_after'                           => 'Po odoslaní vynulovať formulár',
-    'errors_submission'                     => 'Pri odoslaní nastala chyba. Skontrolujte chyby uvedené nižšie.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(nezoskupené)',

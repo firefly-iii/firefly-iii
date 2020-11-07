@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Zielkonten',
     'all_source_accounts'                                 => 'Quellkonten',
     'back_to_index'                                       => 'Zurück zum Index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Nach Updates suchen',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Nach dem Aktualisieren hierher zurückkehren, um weiter zu bearbeiten.',
     'store_as_new'                          => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                           => 'Formular nach der Übermittlung zurücksetzen',
-    'errors_submission'                     => 'Problem bei der Übermittlung. Bitte überprüfen Sie die nachfolgenden Fehler.',
+    'errors_submission'                     => 'Ihre Übermittlung ist fehlgeschlagen. Bitte überprüfen Sie die Fehler.',
 
     // object groups
     'default_group_title_name'              => '(ohne Gruppierung)',

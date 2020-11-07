@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Tài khoản nhận',
     'all_source_accounts'                                 => 'Tài khoản gửi',
     'back_to_index'                                       => 'Quay lại chỉ mục',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Kiểm tra cập nhật',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Sau khi cập nhật, quay lại đây để tiếp tục chỉnh sửa.',
     'store_as_new'                          => 'Lưu trữ như một giao dịch mới thay vì cập nhật.',
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
-    'errors_submission'                     => 'Có gì đó sai. Vui lòng kiểm tra các lỗi dưới đây.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',

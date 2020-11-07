@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Счета назначения',
     'all_source_accounts'                                 => 'Счета-источники',
     'back_to_index'                                       => 'Вернуться к содержанию',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Проверить обновления',
@@ -1630,7 +1631,7 @@ return [
     'after_update_create_another'           => 'После обновления вернитесь сюда, чтобы продолжить редактирование.',
     'store_as_new'                          => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                           => 'Сбросить форму после отправки',
-    'errors_submission'                     => 'При отправке произошла ошибка. Пожалуйста, проверьте ошибки ниже.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(без группировки)',
