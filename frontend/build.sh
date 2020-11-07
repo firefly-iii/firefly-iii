@@ -15,6 +15,8 @@ npm audit fix
 npm upgrade
 npm run prod
 
+# npm run watch-poll
+
 # move to right directory
 # mv public/js ../public/v2
 # mv public/css ../public/v2

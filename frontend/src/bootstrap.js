@@ -50,7 +50,7 @@ if (localeToken) {
 
 // admin stuff
 require('jquery-ui');
-require('bootstrap');
+//require('bootstrap'); // bootstrap CSS?
 
 require('./dist/js/adminlte');
 require('overlayscrollbars');
