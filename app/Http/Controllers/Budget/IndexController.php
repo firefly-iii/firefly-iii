@@ -99,7 +99,7 @@ class IndexController extends Controller
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
-        $currencies      = $this->currencyRepository->getEnabled();
+        $currencies      = $this->currencyRepository->get();
         $budgeted        = '0';
         $spent           = '0';
 

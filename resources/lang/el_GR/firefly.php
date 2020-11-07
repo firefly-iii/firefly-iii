@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Λογαριασμοί προορισμού',
     'all_source_accounts'                                 => 'Λογαριασμοί προέλευσης',
     'back_to_index'                                       => 'Επιστροφή στο ευρετήριο',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Έλεγχος ενημερώσεων',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Αυτοί είναι οι ανενεργοί λογαριασμοί σας.',
     'active_account_link'                       => 'Αυτός ο σύνδεσμος πηγαίνει πίσω στους ενεργούς λογαριασμούς σας.',
     'account_missing_transaction'               => 'Ο λογαριασμός #:id (":name") δεν μπορεί να προβληθεί άμεσα, αλλά και το Firefly δεν έχει πληροφορίες ανακατεύθυνσης.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Λεπτομέρειες για τον λογαριασμό κεφαλαίου ":name"',
     'details_for_expense'                       => 'Λεπτομέρειες για το λογαριασμό δαπανών ":name"',
     'details_for_revenue'                       => 'Λεπτομέρειες για τον λογαριασμό εσόδων ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Μετά την ενημέρωση, επιστρέψτε εδώ για να συνεχίσετε την επεξεργασία.',
     'store_as_new'                          => 'Αποθήκευση ως νέα συναλλαγή αντί για ενημέρωση.',
     'reset_after'                           => 'Επαναφορά φόρμας μετά την υποβολή',
-    'errors_submission'                     => 'Υπήρξε κάποιο λάθος με την υποβολή σας. Ελέγξτε τα παρακάτω σφάλματα.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(χωρίς ομάδα)',

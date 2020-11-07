@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => '目标帐户',
     'all_source_accounts'                                 => '源账户',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => '检查更新',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => '这些是您的未激活帐户。',
     'active_account_link'                       => '此链接回到您的活动帐户。',
     'account_missing_transaction'               => '帐户 #:id (":name") 无法直接被检视，但 Firefly 找不到重新转向资讯。',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '资产帐户 ":name" 的详细资讯',
     'details_for_expense'                       => '支出帐户 ":name" 的详细资讯',
     'details_for_revenue'                       => '收入帐户 ":name" 的详细资讯',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => '更新后，返回此页面继续编辑。',
     'store_as_new'                          => '保存为新交易而不是更新此交易。',
     'reset_after'                           => '提交后重置表单',
-    'errors_submission'                     => '您的提交有误，请查看下面输出的错误信息。',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

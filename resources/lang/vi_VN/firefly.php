@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Tài khoản nhận',
     'all_source_accounts'                                 => 'Tài khoản gửi',
     'back_to_index'                                       => 'Quay lại chỉ mục',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Kiểm tra cập nhật',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Đây là những tài khoản không hoạt động của bạn.',
     'active_account_link'                       => 'Liên kết này quay lại tài khoản đang hoạt động của bạn.',
     'account_missing_transaction'               => 'Tài khoản #: id (": name") không thể được xem trực tiếp, nhưng Firefly thiếu thông tin chuyển hướng.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Chi tiết cho tài khoản ":name"',
     'details_for_expense'                       => 'Chi tiết tài khoản chi phí ":name"',
     'details_for_revenue'                       => 'Chi tiết cho tài khoản doanh thu ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Sau khi cập nhật, quay lại đây để tiếp tục chỉnh sửa.',
     'store_as_new'                          => 'Lưu trữ như một giao dịch mới thay vì cập nhật.',
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
-    'errors_submission'                     => 'Có gì đó sai. Vui lòng kiểm tra các lỗi dưới đây.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',

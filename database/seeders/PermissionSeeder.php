@@ -20,8 +20,11 @@
  */
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use FireflyIII\Models\Role;
 use Illuminate\Database\Seeder;
+use PDOEXception;
 
 /**
  * Class PermissionSeeder.
@@ -46,7 +49,7 @@ class PermissionSeeder extends Seeder
             try {
                 Role::create($role);
             } catch (PDOException $e) {
-                Log::info(sprintf('Could not create role "%s". It might exist already.', $role['display_name']));
+                // dont care
             }
         }
     }

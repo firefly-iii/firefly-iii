@@ -65,6 +65,10 @@ class AutomationHandler
                 $email = $pref->data;
             }
 
+            // if user is demo user, send to owner:
+            if($user->hasRole('demo')) {
+                $email = config('firefly.site_owner');
+            }
 
             try {
                 Log::debug('Trying to mail...');

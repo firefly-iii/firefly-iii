@@ -20,8 +20,11 @@
  */
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
+use PDOEXception;
 
 /**
  * Class LinkTypeSeeder.
@@ -60,7 +63,7 @@ class LinkTypeSeeder extends Seeder
             try {
                 LinkType::create($type);
             } catch (PDOException $e) {
-                Log::info(sprintf('Could not create link type "%s". It might exist already.', $type['name']));
+                // dont care
             }
         }
     }

@@ -61,11 +61,10 @@ class HomeController extends Controller
         $mainTitleIcon = 'fa-hand-spock-o';
         $email = auth()->user()->email;
         $pref = app('preferences')->get('remote_guard_alt_email', null);
-        if(null !== $pref) {
+        if(null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }
-
-
+        Log::debug('Email is ', [$email]);
 
         return view('admin.index', compact('title', 'mainTitleIcon','email'));
     }

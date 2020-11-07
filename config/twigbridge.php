@@ -25,7 +25,6 @@ use TwigBridge\Extension\Laravel\Url;
 use TwigBridge\Extension\Loader\Facades;
 use TwigBridge\Extension\Loader\Filters;
 use TwigBridge\Extension\Loader\Functions;
-use FireflyIII\Support\Twig\Breadcrumbs;
 
 /**
  * Configuration options for Twig.
@@ -138,7 +137,6 @@ return [
             Rule::class,
             TransactionGroupTwig::class,
             Translation::class,
-            Breadcrumbs::class,
 
         ],
 
@@ -194,8 +192,7 @@ return [
             ],
             'AccountForm'   => [
                 'is_safe' => [
-                    'activeAssetAccountList', 'activeLongAccountList', 'activeWithdrawalDestinations', 'activeDepositDestinations',
-                    'assetAccountCheckList', 'assetAccountList', 'longAccountList',
+                    'activeWithdrawalDestinations', 'activeDepositDestinations', 'assetAccountCheckList', 'assetAccountList', 'longAccountList',
                 ],
             ],
             'CurrencyForm'  => [

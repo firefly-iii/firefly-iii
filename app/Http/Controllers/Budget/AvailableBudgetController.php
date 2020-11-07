@@ -111,7 +111,7 @@ class AvailableBudgetController extends Controller
      */
     public function createAlternative(Request $request, Carbon $start, Carbon $end)
     {
-        $currencies       = $this->currencyRepos->getEnabled();
+        $currencies       = $this->currencyRepos->get();
         $availableBudgets = $this->abRepository->get($start, $end);
 
         // remove already budgeted currencies:

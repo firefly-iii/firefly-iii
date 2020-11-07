@@ -84,14 +84,15 @@
     "ext-xml": "*",
     "adldap2/adldap2-laravel": "6.*",
     "bacon/bacon-qr-code": "2.*",
-    "davejamesmiller/laravel-breadcrumbs": "5.*",
+    "diglactic/laravel-breadcrumbs": "^6.0",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
+    "guzzlehttp/guzzle": "^7.2",
     "jc5/google2fa-laravel": "2.0.5",
-    "laravel/framework": "^7.0",
-    "laravel/passport": "9.*",
-    "laravel/ui": "^2.0",
+    "laravel/framework": "^8.0",
+    "laravel/passport": "10.*",
+    "laravel/ui": "^3.0",
     "laravelcollective/html": "6.*",
     "league/commonmark": "1.*",
     "league/csv": "^9.6",
@@ -107,30 +108,22 @@
     "barryvdh/laravel-ide-helper": "2.*",
     "ergebnis/phpstan-rules": "^0.15.0",
     "filp/whoops": "2.*",
-    "fzaninotto/faker": "1.*",
+    "fakerphp/faker": "1.*",
     "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
     "nunomaduro/larastan": "^0.6.2",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.2",
-    "psalm/plugin-laravel": "^1.1",
     "roave/security-advisories": "dev-master",
     "thecodingmachine/phpstan-strict-rules": "^0.12.0",
-    "vimeo/psalm": "^3.10"
+    "vimeo/psalm": "^4.1"
   },
-  "suggest": {
-  },
-  "repositories": [
-
-  ],
   "autoload": {
-    "classmap": [
-      "database/seeds",
-      "database/factories"
-    ],
     "psr-4": {
-      "FireflyIII\\": "app/"
+      "FireflyIII\\": "app/",
+      "Database\\Factories\\": "database/factories/",
+      "Database\\Seeders\\": "database/seeders/"
     }
   },
   "autoload-dev": {

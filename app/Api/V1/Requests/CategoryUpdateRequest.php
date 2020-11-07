@@ -1,6 +1,6 @@
 <?php
 /**
- * CategoryRequest.php
+ * CategoryUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,30 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Category;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class CategoryRequest
+ * Class CategoryUpdateRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class CategoryRequest extends FormRequest
+class CategoryUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -55,8 +43,15 @@ class CategoryRequest extends FormRequest
      */
     public function getAll(): array
     {
+        $notes = null;
+        $all   = $this->all();
+        if (array_key_exists('notes', $all)) {
+            $notes = $this->nlString('notes');
+        }
+
         return [
-            'name' => $this->string('name'),
+            'name'  => $this->string('name'),
+            'notes' => $notes,
         ];
     }
 
@@ -67,20 +62,10 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name' => 'required|between:1,100|uniqueObjectForUser:categories,name',
-        ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var Category $category */
-                $category      = $this->route()->parameter('category');
-                $rules['name'] = sprintf('required|between:1,100|uniqueObjectForUser:categories,name,%d', $category->id);
-                break;
-        }
+        $category = $this->route()->parameter('category');
 
-        return $rules;
+        return [
+            'name' => sprintf('required|between:1,100|uniqueObjectForUser:categories,name,%d', $category->id),
+        ];
     }
 }

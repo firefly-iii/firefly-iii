@@ -1,6 +1,6 @@
 <?php
 /**
- * AccountTypeSeeder.php
+ * TransactionTypeSeeder.php
  * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,35 +20,32 @@
  */
 declare(strict_types=1);
 
-use FireflyIII\Models\AccountType;
+namespace Database\Seeders;
+
+use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Seeder;
+use PDOEXception;
 
 /**
- * Class AccountTypeSeeder.
+ * Class TransactionTypeSeeder.
  */
-class AccountTypeSeeder extends Seeder
+class TransactionTypeSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         $types = [
-            AccountType::DEFAULT,
-            AccountType::CASH,
-            AccountType::ASSET,
-            AccountType::EXPENSE,
-            AccountType::REVENUE,
-            AccountType::INITIAL_BALANCE,
-            AccountType::BENEFICIARY,
-            AccountType::IMPORT,
-            AccountType::LOAN,
-            AccountType::RECONCILIATION,
-            AccountType::DEBT,
-            AccountType::MORTGAGE,
+            TransactionType::WITHDRAWAL,
+            TransactionType::DEPOSIT,
+            TransactionType::TRANSFER,
+            TransactionType::OPENING_BALANCE,
+            TransactionType::RECONCILIATION,
         ];
+
         foreach ($types as $type) {
             try {
-                AccountType::create(['type' => $type]);
+                TransactionType::create(['type' => $type]);
             } catch (PDOException $e) {
-                Log::info(sprintf('Could not create account type "%s". It might exist already.', $type));
+                // dont care
             }
         }
     }

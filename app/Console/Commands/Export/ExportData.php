@@ -57,7 +57,7 @@ class ExportData extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:export-data
+    protected                          $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -74,20 +74,17 @@ class ExportData extends Command
     {--export-bills : Create a file with all your bills and some meta data.}
     {--export-piggies : Create a file with all your piggy banks and some meta data.}
     {--force : Force overwriting of previous exports if found.}';
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-    /** @var JournalRepositoryInterface */
-    private $journalRepository;
-    /** @var User */
-    private $user;
+    private AccountRepositoryInterface $accountRepository;
+    private JournalRepositoryInterface $journalRepository;
+    private User                       $user;
 
 
     /**
      * Execute the console command.
      *
-     * @throws FireflyException
-     * @throws CannotInsertRecord
      * @return int
+     * @throws CannotInsertRecord
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -111,7 +108,6 @@ class ExportData extends Command
             return 1;
         }
         // make export object and configure it.
-
         /** @var ExportDataGenerator $exporter */
         $exporter = app(ExportDataGenerator::class);
         $exporter->setUser($this->user);
@@ -126,26 +122,24 @@ class ExportData extends Command
         $exporter->setExportRules($options['export']['rules']);
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
-
         $data = $exporter->export();
-
-        if (0 === count($data)) {
+        if (empty($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
+        }
+        $returnCode = 0;
+        if (!empty($data)) {
+            try {
+                $this->exportData($options, $data);
+                app('telemetry')->feature('system.command.executed', $this->signature);
+            } catch (FireflyException $e) {
+                $this->error(sprintf('Could not store data: %s', $e->getMessage()));
 
-            return 1;
+                app('telemetry')->feature('system.command.errored', $this->signature);
+                $returnCode = 1;
+            }
         }
 
-        try {
-            $this->exportData($options, $data);
-        } catch (FireflyException $e) {
-            $this->error(sprintf('Could not store data: %s', $e->getMessage()));
-
-            app('telemetry')->feature('system.command.errored', $this->signature);
-            return 1;
-        }
-
-        app('telemetry')->feature('system.command.executed', $this->signature);
-        return 0;
+        return $returnCode;
     }
 
     /**
@@ -172,8 +166,8 @@ class ExportData extends Command
     }
 
     /**
-     * @throws FireflyException
      * @return Collection
+     * @throws FireflyException
      */
     private function getAccountsParameter(): Collection
     {
@@ -181,7 +175,7 @@ class ExportData extends Command
         $accounts    = new Collection;
         $accountList = $this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string) $accountList) {
+        if (null !== $accountList && '' !== (string)$accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
@@ -205,35 +199,30 @@ class ExportData extends Command
     /**
      * @param string $field
      *
-     * @throws FireflyException
-     * @throws Exception
      * @return Carbon
+     * @throws Exception
      */
     private function getDateParameter(string $field): Carbon
     {
         $date = Carbon::now()->subYear();
+        $error = false;
         if (null !== $this->option($field)) {
             try {
                 $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
                 Log::error($e->getMessage());
                 $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
+                $error = true;
             }
-
-            return $date;
         }
-        if ('start' === $field) {
+        if (false === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
             $date->startOfDay();
-
-            return $date;
         }
-        if ('end' === $field) {
+        if (false === $error && 'end' === $field) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
-
-            return $date;
         }
 
         // fallback
@@ -241,13 +230,13 @@ class ExportData extends Command
     }
 
     /**
+     * @return string
      * @throws FireflyException
      *
-     * @return string
      */
     private function getExportDirectory(): string
     {
-        $directory = (string) $this->option('export_directory');
+        $directory = (string)$this->option('export_directory');
         if (null === $directory) {
             $directory = './';
         }
@@ -259,8 +248,8 @@ class ExportData extends Command
     }
 
     /**
-     * @throws FireflyException
      * @return array
+     * @throws FireflyException
      */
     private function parseOptions(): array
     {

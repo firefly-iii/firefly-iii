@@ -41,16 +41,11 @@ use Throwable;
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
-    /** @var Collection The accounts in the report. */
-    private $accounts;
-    /** @var Collection The budgets in the report. */
-    private $budgets;
-    /** @var Carbon The end date. */
-    private $end;
-    /** @var array The expenses in the report. */
-    private $expenses;
-    /** @var Carbon The start date. */
-    private $start;
+    private Collection $accounts;
+    private Collection $budgets;
+    private Carbon     $end;
+    private array      $expenses;
+    private Carbon     $start;
 
     /**
      * MonthReportGenerator constructor.

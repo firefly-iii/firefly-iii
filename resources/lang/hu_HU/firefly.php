@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Célszámlák',
     'all_source_accounts'                                 => 'Forrásszámlák',
     'back_to_index'                                       => 'Vissza a kezdőoldalra',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Frissítések ellenőrzése',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Ezek az inaktív számlák.',
     'active_account_link'                       => 'Ez a hivatkozás visszavisz az aktív számlákhoz.',
     'account_missing_transaction'               => ':id (":name") számla nem tekinthető meg közvetlenül, de a Fireflyból hiányzik az átirányítási információ.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '":name" eszközszámla részletei',
     'details_for_expense'                       => '":name" költségszámla részletei',
     'details_for_revenue'                       => '":name" jövedelemszámla részletei',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'A frissítés után térjen vissza ide a szerkesztés folytatásához.',
     'store_as_new'                          => 'Tárolás új tranzakcióként frissítés helyett.',
     'reset_after'                           => 'Űrlap törlése a beküldés után',
-    'errors_submission'                     => 'Hiba történt a beküldés során. Kérem, javítsa az alábbi hibákat.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(nem csoportosított)',

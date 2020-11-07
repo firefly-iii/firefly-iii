@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Destinationskonton',
     'all_source_accounts'                                 => 'Källkonton',
     'back_to_index'                                       => 'Åter till index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Sök uppdateringar',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Dessa är dina inaktiva konton.',
     'active_account_link'                       => 'Denna länk går tillbaka till dina aktiva konton.',
     'account_missing_transaction'               => 'Konto #:id (":name") kan inte visas direkt, men Firefly saknar information för omdirigering.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Detaljer för tillgångskonto ":name"',
     'details_for_expense'                       => 'Detaljer för utgiftskonto ":name"',
     'details_for_revenue'                       => 'Detaljer för intäktskonto ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Efter uppdaterat, återkom hit för att fortsätta redigera.',
     'store_as_new'                          => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                           => 'Återställ formulär efter inskickat',
-    'errors_submission'                     => 'Något fel uppstod med inskickningen. Vänligen kontrollera felen nedan.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ogrupperad)',

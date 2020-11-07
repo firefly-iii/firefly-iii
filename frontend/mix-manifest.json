@@ -9,6 +9,8 @@
     "/public/css/app.css": "/public/css/app.css",
     "/public/js/dashboard.js.map": "/public/js/dashboard.js.map",
     "/public/css/app.css.map": "/public/css/app.css.map",
+    "/public/js/empty.js": "/public/js/empty.js",
+    "/public/js/empty.js.map": "/public/js/empty.js.map",
     "/public/js/register.js": "/public/js/register.js",
     "/public/js/register.js.map": "/public/js/register.js.map"
 }

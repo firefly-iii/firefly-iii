@@ -39,6 +39,7 @@ import TransactionListSmall from "../components/transactions/TransactionListSmal
  */
 
 require('../bootstrap');
+require('chart.js');
 
 Vue.component('transaction-list-large', TransactionListLarge);
 Vue.component('transaction-list-medium', TransactionListMedium);

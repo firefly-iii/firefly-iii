@@ -2,6 +2,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.4.6 (API 1.4.0) - 2020-10-07
+
+### Added
+- [Issue 4031](https://github.com/firefly-iii/firefly-iii/issues/4031) Rule groups can be collapsed.
+- [Issue 4002](https://github.com/firefly-iii/firefly-iii/issues/4002) Category now support notes, although they're not displayed anywhere yet.
+
+### Changed
+- Upgrade to Laravel 8
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- [Issue 4001](https://github.com/firefly-iii/firefly-iii/issues/4001) [issue 4005](https://github.com/firefly-iii/firefly-iii/issues/4005) [issue 4011](https://github.com/firefly-iii/firefly-iii/issues/4011) Special characters are double escaped.
+- [Issue 4006](https://github.com/firefly-iii/firefly-iii/issues/4006) Unclear error message fixed.
+- [Issue 4015](https://github.com/firefly-iii/firefly-iii/issues/4015) Better handling of headers in Apache.
+- [Issue 4023](https://github.com/firefly-iii/firefly-iii/issues/4023) Fix issue with logout and admin view.
+- Missing help text can now be translated.
+- Demo sites send messages to me, not "demo@firefly".
+
+
+### Security
+- Initial release.
+
+### API
+- Initial release
+
+
 ## 5.4.5 (API 1.4.0) - 2020-10-28
 
 ### Fixed

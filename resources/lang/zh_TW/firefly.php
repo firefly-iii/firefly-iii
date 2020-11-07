@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Destination accounts',
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => '檢查更新',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
     'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => '帳戶 #:id (":name") 無法直接檢視，惟 Firefly 找不到重新導向資訊。',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '資產帳戶 ":name" 的詳細資訊',
     'details_for_expense'                       => '支出帳戶 ":name" 的詳細資訊',
     'details_for_revenue'                       => '收入帳戶 ":name" 的詳細資訊',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'After updating, return here to continue editing.',
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

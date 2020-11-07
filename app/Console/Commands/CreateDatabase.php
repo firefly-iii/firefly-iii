@@ -61,39 +61,46 @@ class CreateDatabase extends Command
             return 0;
         }
         // try to set up a raw connection:
+        $pdo     = false;
+        $exists  = false;
+        $checked = false; // checked for existence of DB?
         $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
+
+        // when it fails, display error
         try {
             $pdo = new PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
         } catch (PDOException $e) {
             $this->error(sprintf('Error when connecting to DB: %s', $e->getMessage()));
-
-            return 1;
         }
-        // with PDO, try to list DB's (
-        $stmt   = $pdo->query('SHOW DATABASES;');
-        $exists = false;
-        // slightly more complex but less error prone.
-        foreach ($stmt as $row) {
-            $name = $row['Database'] ?? false;
-            if ($name === env('DB_DATABASE')) {
-                $exists = true;
+
+        // only continue when no error.
+        if (false !== $pdo) {
+            // with PDO, try to list DB's (
+            $stmt    = $pdo->query('SHOW DATABASES;');
+            $checked = true;
+            // slightly more complex but less error prone.
+            foreach ($stmt as $row) {
+                $name = $row['Database'] ?? false;
+                if ($name === env('DB_DATABASE')) {
+                    $exists = true;
+                }
             }
         }
-        if (false === $exists) {
+        if (false === $exists && true === $checked) {
             $this->error(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
 
             // try to create it.
             $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
             $this->info(sprintf('Created database "%s"', env('DB_DATABASE')));
-
-            return 0;
         }
-        $this->info(sprintf('Database "%s" exists.', env('DB_DATABASE')));
+        if (true === $exists && true === $checked) {
+            $this->info(sprintf('Database "%s" exists.', env('DB_DATABASE')));
+        }
 
         return 0;
     }

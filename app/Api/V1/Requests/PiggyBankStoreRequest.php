@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Rules\ZeroOrMore;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -76,10 +75,10 @@ class PiggyBankStoreRequest extends FormRequest
     {
         return [
             'name'            => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'  => ['numeric', new ZeroOrMore, 'lte:target_amount'],
+            'current_amount'  => ['numeric', 'gte:0', 'lte:target_amount'],
             'account_id'      => 'required|numeric|belongsToUser:accounts,id',
             'object_group_id' => 'numeric|belongsToUser:object_groups,id',
-            'target_amount'   => ['numeric', new ZeroOrMore, 'lte:target_amount', 'required'],
+            'target_amount'   => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
             'start_date'      => 'date|nullable',
             'target_date'     => 'date|nullable|after:start_date',
             'notes'           => 'max:65000',

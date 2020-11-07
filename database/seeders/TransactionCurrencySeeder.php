@@ -20,8 +20,11 @@
  */
 declare(strict_types=1);
 
+namespace Database\Seeders;
+
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\Seeder;
+use PDOEXception;
 
 /**
  * Class TransactionCurrencySeeder.
@@ -78,7 +81,7 @@ class TransactionCurrencySeeder extends Seeder
             try {
                 TransactionCurrency::create($currency);
             } catch (PDOException $e) {
-                Log::info(sprintf('Could not create transaction currency "%s". It might exist already. This is not a problem.', $currency['code']));
+                // dont care
             }
         }
     }

@@ -29,9 +29,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Log;
 
@@ -52,32 +50,18 @@ class TransferCurrenciesCorrections extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
-    /** @var array */
-    private $accountCurrencies;
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var JournalCLIRepositoryInterface */
-    private $cliRepos;
-    /** @var int */
-    private $count;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var Account The destination account of the current journal. */
-    private $destinationAccount;
-    /** @var TransactionCurrency The currency preference of the destination account of the current journal. */
-    private $destinationCurrency;
-    /** @var Transaction The destination transaction of the current journal. */
-    private $destinationTransaction;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
-    /** @var Account The source account of the current journal. */
-    private $sourceAccount;
-    /** @var TransactionCurrency The currency preference of the source account of the current journal. */
-    private $sourceCurrency;
-    /** @var Transaction The source transaction of the current journal. */
-    private $sourceTransaction;
+    protected                             $signature = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
+    private array                         $accountCurrencies;
+    private AccountRepositoryInterface    $accountRepos;
+    private JournalCLIRepositoryInterface $cliRepos;
+    private int                           $count;
 
+    private ?Account                       $destinationAccount;
+    private ?TransactionCurrency           $destinationCurrency;
+    private ?Transaction                   $destinationTransaction;
+    private ?Account                       $sourceAccount;
+    private ?TransactionCurrency           $sourceCurrency;
+    private ?Transaction                   $sourceTransaction;
 
     /**
      * Execute the console command.
@@ -124,7 +108,7 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->destinationTransaction->transaction_currency_id && null !== $this->destinationCurrency) {
             $this->destinationTransaction
                 ->transaction_currency_id
-                     = (int) $this->destinationCurrency->id;
+                     = (int)$this->destinationCurrency->id;
             $message = sprintf(
                 'Transaction #%d has no currency setting, now set to %s.',
                 $this->destinationTransaction->id,
@@ -144,7 +128,7 @@ class TransferCurrenciesCorrections extends Command
     private function fixDestNullForeignAmount(): void
     {
         if (null === $this->destinationTransaction->foreign_amount && null !== $this->sourceTransaction->foreign_amount) {
-            $this->destinationTransaction->foreign_amount = bcmul((string) $this->sourceTransaction->foreign_amount, '-1');
+            $this->destinationTransaction->foreign_amount = bcmul((string)$this->sourceTransaction->foreign_amount, '-1');
             $this->destinationTransaction->save();
             $this->count++;
             Log::debug(
@@ -165,7 +149,7 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->destinationCurrency
             && null === $this->destinationTransaction->foreign_amount
-            && (int) $this->destinationTransaction->transaction_currency_id !== (int) $this->destinationCurrency->id
+            && (int)$this->destinationTransaction->transaction_currency_id !== (int)$this->destinationCurrency->id
         ) {
             $message = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
@@ -177,7 +161,7 @@ class TransferCurrenciesCorrections extends Command
             Log::debug($message);
             $this->line($message);
             $this->count++;
-            $this->destinationTransaction->transaction_currency_id = (int) $this->destinationCurrency->id;
+            $this->destinationTransaction->transaction_currency_id = (int)$this->destinationCurrency->id;
             $this->destinationTransaction->save();
         }
     }
@@ -189,7 +173,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixInvalidForeignCurrency(): void
     {
-        if ((int) $this->destinationCurrency->id === (int) $this->sourceCurrency->id) {
+        if ((int)$this->destinationCurrency->id === (int)$this->sourceCurrency->id) {
             // update both transactions to match:
             $this->sourceTransaction->foreign_amount      = null;
             $this->sourceTransaction->foreign_currency_id = null;
@@ -223,7 +207,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixMismatchedForeignCurrency(): void
     {
-        if ((int) $this->sourceCurrency->id !== (int) $this->destinationCurrency->id) {
+        if ((int)$this->sourceCurrency->id !== (int)$this->destinationCurrency->id) {
             $this->sourceTransaction->transaction_currency_id      = $this->sourceCurrency->id;
             $this->sourceTransaction->foreign_currency_id          = $this->destinationCurrency->id;
             $this->destinationTransaction->transaction_currency_id = $this->sourceCurrency->id;
@@ -245,7 +229,7 @@ class TransferCurrenciesCorrections extends Command
         if (null === $this->sourceTransaction->transaction_currency_id && null !== $this->sourceCurrency) {
             $this->sourceTransaction
                 ->transaction_currency_id
-                     = (int) $this->sourceCurrency->id;
+                     = (int)$this->sourceCurrency->id;
             $message = sprintf(
                 'Transaction #%d has no currency setting, now set to %s.',
                 $this->sourceTransaction->id,
@@ -265,7 +249,7 @@ class TransferCurrenciesCorrections extends Command
     private function fixSourceNullForeignAmount(): void
     {
         if (null === $this->sourceTransaction->foreign_amount && null !== $this->destinationTransaction->foreign_amount) {
-            $this->sourceTransaction->foreign_amount = bcmul((string) $this->destinationTransaction->foreign_amount, '-1');
+            $this->sourceTransaction->foreign_amount = bcmul((string)$this->destinationTransaction->foreign_amount, '-1');
             $this->sourceTransaction->save();
             $this->count++;
             Log::debug(
@@ -286,7 +270,7 @@ class TransferCurrenciesCorrections extends Command
     {
         if (null !== $this->sourceCurrency
             && null === $this->sourceTransaction->foreign_amount
-            && (int) $this->sourceTransaction->transaction_currency_id !== (int) $this->sourceCurrency->id
+            && (int)$this->sourceTransaction->transaction_currency_id !== (int)$this->sourceCurrency->id
         ) {
             $message = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
@@ -298,7 +282,7 @@ class TransferCurrenciesCorrections extends Command
             Log::debug($message);
             $this->line($message);
             $this->count++;
-            $this->sourceTransaction->transaction_currency_id = (int) $this->sourceCurrency->id;
+            $this->sourceTransaction->transaction_currency_id = (int)$this->sourceCurrency->id;
             $this->sourceTransaction->save();
         }
     }
@@ -310,7 +294,7 @@ class TransferCurrenciesCorrections extends Command
      */
     private function fixTransactionJournalCurrency(TransactionJournal $journal): void
     {
-        if ((int) $journal->transaction_currency_id !== (int) $this->sourceCurrency->id) {
+        if ((int)$journal->transaction_currency_id !== (int)$this->sourceCurrency->id) {
             $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
             $journal->transaction_currency_id = $this->sourceCurrency->id;
             $message                          = sprintf(
@@ -424,7 +408,7 @@ class TransferCurrenciesCorrections extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false; // @codeCoverageIgnore
@@ -502,8 +486,6 @@ class TransferCurrenciesCorrections extends Command
      * For transfers, this is can be a destructive routine since we FORCE them into a currency setting whether they
      * like it or not. Previous routines MUST have set the currency setting for both accounts for this to work.
      *
-     * A transfer always has the
-     *
      * Both source and destination must match the respective currency preference. So FF3 must verify ALL
      * transactions.
      */
@@ -527,8 +509,6 @@ class TransferCurrenciesCorrections extends Command
     {
         $this->count             = 0;
         $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->journalRepos      = app(JournalRepositoryInterface::class);
         $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
         $this->accountCurrencies = [];
         $this->resetInformation();

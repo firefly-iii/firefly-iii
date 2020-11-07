@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Счета назначения',
     'all_source_accounts'                                 => 'Счета-источники',
     'back_to_index'                                       => 'Вернуться к содержанию',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Проверить обновления',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Это ваши неактивные счета.',
     'active_account_link'                       => 'Эта ссылка вернёт вас к вашим активным счетам.',
     'account_missing_transaction'               => 'Счёт #:id (":name") невозможно просмотреть напрямую, и у Firefly нет информации для перенаправления.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Детали по основному счёту ":name"',
     'details_for_expense'                       => 'Детали по счёту расходов ":name"',
     'details_for_revenue'                       => 'Детали по счёту доходов ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'После обновления вернитесь сюда, чтобы продолжить редактирование.',
     'store_as_new'                          => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                           => 'Сбросить форму после отправки',
-    'errors_submission'                     => 'При отправке произошла ошибка. Пожалуйста, проверьте ошибки ниже.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(без группировки)',

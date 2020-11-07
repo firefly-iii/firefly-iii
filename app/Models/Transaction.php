@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -132,13 +133,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @mixin Eloquent
  * @property-read int|null $budgets_count
  * @property-read int|null $categories_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property bool $reconciled
  */
 class Transaction extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
     /**
      * The attributes that should be casted to native types.
      *
@@ -184,7 +182,6 @@ class Transaction extends Model
 
         return false;
     }
-
 
     /**
      * Get the account this object belongs to.

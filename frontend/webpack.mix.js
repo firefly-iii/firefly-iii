@@ -53,6 +53,7 @@ mix
 
     // dashboard component (frontpage):
     .js('src/pages/dashboard.js', 'public/js')
+    .js('src/pages/empty.js', 'public/js')
 
     // accounts.
     .js('src/pages/accounts/index.js', 'public/js/accounts')

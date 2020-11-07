@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -124,7 +125,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
 
     /**
      * The attributes that should be casted to native types.
@@ -252,32 +253,6 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return bool
      */
-    public function isDeposit(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::DEPOSIT === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isDeposit();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function isOpeningBalance(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::OPENING_BALANCE === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isOpeningBalance();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
     public function isTransfer(): bool
     {
         if (null !== $this->transaction_type_type) {
@@ -285,19 +260,6 @@ class TransactionJournal extends Model
         }
 
         return $this->transactionType->isTransfer();
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return bool
-     */
-    public function isWithdrawal(): bool
-    {
-        if (null !== $this->transaction_type_type) {
-            return TransactionType::WITHDRAWAL === $this->transaction_type_type;
-        }
-
-        return $this->transactionType->isWithdrawal();
     }
 
     /**

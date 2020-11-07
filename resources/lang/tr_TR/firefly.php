@@ -234,6 +234,7 @@ return [
     'all_destination_accounts'                            => 'Destination accounts',
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Güncellemeleri kontrol et',
@@ -1009,6 +1010,7 @@ return [
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
     'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '":name" Varlık hesabı ayrıntıları',
     'details_for_expense'                       => '":name" Harcama hesabı ayrıntıları',
     'details_for_revenue'                       => '":name" Gelir hesabı ayrıntıları',
@@ -1630,7 +1632,7 @@ return [
     'after_update_create_another'           => 'After updating, return here to continue editing.',
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

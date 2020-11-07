@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\CategoryRequest;
+use FireflyIII\Api\V1\Requests\CategoryStoreRequest;
+use FireflyIII\Api\V1\Requests\CategoryUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Category;
@@ -46,9 +47,7 @@ use League\Fractal\Resource\Item;
 class CategoryController extends Controller
 {
     use TransactionFilter;
-
-    /** @var CategoryRepositoryInterface The category repository */
-    private $repository;
+    private CategoryRepositoryInterface $repository;
 
 
     /**
@@ -175,12 +174,12 @@ class CategoryController extends Controller
     /**
      * Store new category.
      *
-     * @param CategoryRequest $request
+     * @param CategoryStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(CategoryRequest $request): JsonResponse
+    public function store(CategoryStoreRequest $request): JsonResponse
     {
         $category = $this->repository->store($request->getAll());
         $manager  = $this->getManager();
@@ -253,12 +252,12 @@ class CategoryController extends Controller
     /**
      * Update the category.
      *
-     * @param CategoryRequest $request
+     * @param CategoryUpdateRequest $request
      * @param Category        $category
      *
      * @return JsonResponse
      */
-    public function update(CategoryRequest $request, Category $category): JsonResponse
+    public function update(CategoryUpdateRequest $request, Category $category): JsonResponse
     {
         $data     = $request->getAll();
         $category = $this->repository->update($category, $data);

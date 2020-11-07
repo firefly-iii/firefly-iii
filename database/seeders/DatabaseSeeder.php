@@ -1,6 +1,6 @@
 <?php
 /**
- * TransactionTypeSeeder.php
+ * DatabaseSeeder.php
  * Copyright (c) 2019 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,30 +20,25 @@
  */
 declare(strict_types=1);
 
-use FireflyIII\Models\TransactionType;
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 /**
- * Class TransactionTypeSeeder.
+ * Class DatabaseSeeder.
  */
-class TransactionTypeSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run()
     {
-        $types = [
-            TransactionType::WITHDRAWAL,
-            TransactionType::DEPOSIT,
-            TransactionType::TRANSFER,
-            TransactionType::OPENING_BALANCE,
-            TransactionType::RECONCILIATION,
-        ];
-
-        foreach ($types as $type) {
-            try {
-                TransactionType::create(['type' => $type]);
-            } catch (PDOException $e) {
-                Log::info(sprintf('Could not create transaction type "%s". It might exist already.', $type));
-            }
-        }
+        $this->call(AccountTypeSeeder::class);
+        $this->call(TransactionCurrencySeeder::class);
+        $this->call(TransactionTypeSeeder::class);
+        $this->call(PermissionSeeder::class);
+        $this->call(LinkTypeSeeder::class);
+        $this->call(ConfigSeeder::class);
     }
 }

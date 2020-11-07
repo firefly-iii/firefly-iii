@@ -53,7 +53,15 @@
           :target="target"
           item-key="name_with_balance"
           v-on:input="selectedItem"
-      ></typeahead>
+      >
+        <template slot="item" slot-scope="props">
+          <li v-for="(item, index) in props.items" :class="{active:props.activeIndex===index}">
+            <a role="button" @click="props.select(item)">
+              <span v-html="betterHighlight(item)"></span>
+            </a>
+          </li>
+        </template>
+      </typeahead>
       <ul v-for="error in this.error" class="list-unstyled">
         <li class="text-danger">{{ error }}</li>
       </ul>
@@ -131,21 +139,16 @@ export default {
         aSyncFunction: function (query, done) {
           axios.get(this.accountAutoCompleteURI + query)
               .then(res => {
-                // loop over data
-                let escapedData = [];
-                let current;
-                for (const key in res.data) {
-                  if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                    current = res.data[key];
-                    current.name_with_balance = this.escapeHtml(res.data[key].name_with_balance)
-                    escapedData.push(current);
-                  }
-                }
-                done(escapedData);
+                done(res.data);
               })
               .catch(err => {
                 // any error handler
               })
+        },
+        betterHighlight: function (item) {
+          var inputValue = this.$refs.input.value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+          var escapedName = this.escapeHtml(item.name_with_balance);
+          return escapedName.replace(new RegExp(("" + inputValue), 'i'), '<b>$&</b>');
         },
         escapeHtml: function (string) {
 

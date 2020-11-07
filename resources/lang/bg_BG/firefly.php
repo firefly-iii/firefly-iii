@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Приходни сметки',
     'all_source_accounts'                                 => 'Разходни сметки',
     'back_to_index'                                       => 'Обратно към списъка',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Проверка за обновления',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Това са вашите неактивни сметки.',
     'active_account_link'                       => 'Тази връзка ви връща към активните ви сметки.',
     'account_missing_transaction'               => 'Сметка #:id (":name") не може да се вижда директно, но в Firefly липсва информация за пренасочване.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Подробности за сметката за активи ":name"',
     'details_for_expense'                       => 'Подробности за сметката за разходи ":name"',
     'details_for_revenue'                       => 'Подробности за сметката за приходи ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'След обновяването се върнете тук, за да продължите с редакцията.',
     'store_as_new'                          => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                           => 'Изчистване на формуляра след изпращане',
-    'errors_submission'                     => 'Имаше нещо нередно с вашите данни. Моля, проверете грешките по-долу.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(без група)',

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Console\Commands\Correction;
 
 
-use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -87,7 +87,6 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandleWithdrawalLoanLoan(): void
     {
-        $this->mock(AccountFactory::class);
         $source      = $this->getRandomLoan();
         $destination = $this->getRandomLoan($source->id);
         $type        = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
@@ -134,7 +133,6 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandleTransferAssetLoan(): void
     {
-        $this->mock(AccountFactory::class);
         $source      = $this->getRandomAsset();
         $destination = $this->getRandomLoan();
         $type        = TransactionType::where('type', TransactionType::TRANSFER)->first();
@@ -183,7 +181,6 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandleTransferLoanAsset(): void
     {
-        $this->mock(AccountFactory::class);
         $source      = $this->getRandomLoan();
         $destination = $this->getRandomAsset();
         $type        = TransactionType::where('type', TransactionType::TRANSFER)->first();
@@ -232,11 +229,10 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandleWithdrawalAssetRevenue(): void
     {
-        $source         = $this->getRandomAsset();
-        $destination    = $this->getRandomRevenue();
-        $newDestination = $this->getRandomExpense();
-        $withdrawal     = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
-        $journal        = TransactionJournal::create(
+        $source      = $this->getRandomAsset();
+        $destination = $this->getRandomRevenue(); // is revenue account.
+        $withdrawal  = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
+        $journal     = TransactionJournal::create(
             [
                 'user_id'                 => 1,
                 'transaction_currency_id' => 1,
@@ -246,39 +242,45 @@ class FixAccountTypesTest extends TestCase
                 'date'                    => '2019-01-01',
             ]
         );
-        $one            = Transaction::create(
+        $one         = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
                 'account_id'             => $source->id,
                 'amount'                 => '-10',
             ]
         );
-        $two            = Transaction::create(
+        $two         = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
-                'account_id'             => $destination->id,
+                'account_id'             => $destination->id, // revenue cannot be destination.
                 'amount'                 => '10',
             ]
         );
 
+        // create expense account with the same name:
+        $expense        = AccountType::where('type', AccountType::EXPENSE)->first();
+        $newDestination = Account::create(
+            [
+                'name'            => $destination->name,
+                'account_type_id' => $expense->id,
+                'user_id'         => 1,
+            ]
+        );
+
+        // asset we find bad destination.
         $this->assertCount(0, Transaction::where('id', $two->id)->where('account_id', $newDestination->id)->get());
         $this->assertCount(1, Transaction::where('id', $two->id)->where('account_id', $destination->id)->get());
-
-        // mock stuff
-        $factory = $this->mock(AccountFactory::class);
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('findOrCreate')
-                ->withArgs([$destination->name, AccountType::EXPENSE])
-                ->atLeast()->once()->andReturn($newDestination);
 
         // Transaction journal #137, destination account changed from #1 ("Checking Account") to #29 ("Land lord").
         $this->artisan('firefly-iii:fix-account-types')
              ->expectsOutput(
-                 sprintf('Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
-                         $journal->id,
-                         $destination->id, $destination->name,
-                         $newDestination->id, $newDestination->name
-                 ))
+                 sprintf(
+                     'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+                     $journal->id,
+                     $destination->id, $destination->name,
+                     $newDestination->id, $newDestination->name
+                 )
+             )
              ->expectsOutput('Acted on 1 transaction(s)!')
              ->assertExitCode(0);
 
@@ -296,12 +298,12 @@ class FixAccountTypesTest extends TestCase
      */
     public function testHandleDepositAssetExpense(): void
     {
-        $source      = $this->getRandomExpense();
-        $newSource   = $this->getRandomRevenue();
+        $source      = $this->getRandomExpense(); // expense account
+        //$newSource   = $this->getRandomRevenue();
         $destination = $this->getRandomAsset();
 
-        $deposit    = TransactionType::where('type', TransactionType::DEPOSIT)->first();
-        $journal    = TransactionJournal::create(
+        $deposit = TransactionType::where('type', TransactionType::DEPOSIT)->first();
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => 1,
                 'transaction_currency_id' => 1,
@@ -311,39 +313,44 @@ class FixAccountTypesTest extends TestCase
                 'date'                    => '2019-01-01',
             ]
         );
-        $one        = Transaction::create(
+        $one     = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
-                'account_id'             => $source->id,
+                'account_id'             => $source->id, // expense account cannot be source.
                 'amount'                 => '-10',
             ]
         );
-        $two        = Transaction::create(
+        $two     = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
                 'account_id'             => $destination->id,
                 'amount'                 => '10',
             ]
         );
+        // create revenue account with the same name:
+        $revenue      = AccountType::where('type', AccountType::REVENUE)->first();
+        $newSource = Account::create(
+            [
+                'name'            => $source->name,
+                'account_type_id' => $revenue->id,
+                'user_id'         => 1,
+            ]
+        );
 
         $this->assertCount(0, Transaction::where('id', $one->id)->where('account_id', $newSource->id)->get());
         $this->assertCount(1, Transaction::where('id', $one->id)->where('account_id', $source->id)->get());
 
-        // mock stuff
-        $factory = $this->mock(AccountFactory::class);
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('findOrCreate')
-                ->withArgs([$source->name, AccountType::REVENUE])
-                ->atLeast()->once()->andReturn($newSource);
 
         // Transaction journal #137, destination account changed from #1 ("Checking Account") to #29 ("Land lord").
         $this->artisan('firefly-iii:fix-account-types')
              ->expectsOutput(
-                 sprintf('Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
-                         $journal->id,
-                         $destination->id, $destination->name,
-                         $newSource->id, $newSource->name
-                 ))
+                 sprintf(
+                     'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
+                     $journal->id,
+                     $destination->id, $destination->name,
+                     $newSource->id, $newSource->name
+                 )
+             )
              ->expectsOutput('Acted on 1 transaction(s)!')
              ->assertExitCode(0);
 

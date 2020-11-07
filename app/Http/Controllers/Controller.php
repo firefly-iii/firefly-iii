@@ -62,6 +62,13 @@ abstract class Controller extends BaseController
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
 
+        // share custom auth guard info.
+        $authGuard = config('firefly.authentication_guard');
+        $logoutUri = config('firefly.custom_logout_uri');
+
+        app('view')->share('authGuard', $authGuard);
+        app('view')->share('logoutUri', $logoutUri);
+
         // upload size
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));

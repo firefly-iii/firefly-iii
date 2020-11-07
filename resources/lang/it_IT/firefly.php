@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Conti di destinazione',
     'all_source_accounts'                                 => 'Conti di origine',
     'back_to_index'                                       => 'Torna all\'indice',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Controlla aggiornamenti',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Questi sono i tuoi conti inattivi.',
     'active_account_link'                       => 'Questo collegamento ti riporta ai conti attivi.',
     'account_missing_transaction'               => 'Non è possibile visualizzare il conto #:id (":name") direttamente, a Firefly mancano le informazioni per il reindirizzamento.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Dettagli per conto attività ":name"',
     'details_for_expense'                       => 'Dettagli per conto uscite ":name"',
     'details_for_revenue'                       => 'Dettagli per conto entrate ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Dopo l\'aggiornamento, torna qui per continuare la modifica.',
     'store_as_new'                          => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                           => 'Resetta il modulo dopo l\'invio',
-    'errors_submission'                     => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(non in un gruppo)',

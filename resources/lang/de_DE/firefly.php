@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Zielkonten',
     'all_source_accounts'                                 => 'Quellkonten',
     'back_to_index'                                       => 'Zurück zum Index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Nach Updates suchen',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Dies sind Ihre inaktiven Konten.',
     'active_account_link'                       => 'Diese Verknüpfung führt zurück zu Ihren aktiven Konten.',
     'account_missing_transaction'               => 'Konto #:id („:name”) kann nicht direkt angezeigt werden, da Firefly III Weiterleitungsinformationen fehlen.',
+    'cc_monthly_payment_date_help'              => 'Wählen Sie ein beliebiges Jahr und einen beliebigen Monat, da diese Angaben ohnehin ignoriert werden. Nur der Tag des Monats ist relevant.',
     'details_for_asset'                         => 'Details zum Bestandskonto „:name”',
     'details_for_expense'                       => 'Details zum Ausgabenkonto „:name”',
     'details_for_revenue'                       => 'Details zum Einnahmenkonto „:name”',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Nach dem Aktualisieren hierher zurückkehren, um weiter zu bearbeiten.',
     'store_as_new'                          => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                           => 'Formular nach der Übermittlung zurücksetzen',
-    'errors_submission'                     => 'Problem bei der Übermittlung. Bitte überprüfen Sie die nachfolgenden Fehler.',
+    'errors_submission'                     => 'Ihre Übermittlung ist fehlgeschlagen. Bitte überprüfen Sie die Fehler.',
 
     // object groups
     'default_group_title_name'              => '(ohne Gruppierung)',

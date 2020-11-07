@@ -233,6 +233,7 @@ return [
     'all_destination_accounts'                            => 'Kohdetilit',
     'all_source_accounts'                                 => 'Lähdetilit',
     'back_to_index'                                       => 'Back to the index',
+    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
 
     // check for updates:
     'update_check_title'                                  => 'Tarkista päivitykset',
@@ -1008,6 +1009,7 @@ return [
     'all_accounts_inactive'                     => 'Nämä ovat käytöstä poistettuja tilejä.',
     'active_account_link'                       => 'Tämä linkki vie sinut takaisin aktiivisiin tileihisi.',
     'account_missing_transaction'               => 'Tiliä #:id (":name") ei voi tarkastella suoraan, mutta Firefly:lta puuttuvat uudelleenohjaustiedot.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Yksityiskohdat omaisuustilille ":name"',
     'details_for_expense'                       => 'Yksityiskohdat kulutustilille ":name"',
     'details_for_revenue'                       => 'Yksityiskohdat tuottotilille ":name"',
@@ -1629,7 +1631,7 @@ return [
     'after_update_create_another'           => 'Päivityksen jälkeen, palaa takaisin jatkamaan muokkausta.',
     'store_as_new'                          => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
-    'errors_submission'                     => 'Lomakkeen tiedoissa oli puutteita - alta löydät listan puutteista.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',
