@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Dies sind Ihre inaktiven Konten.',
     'active_account_link'                       => 'Diese Verknüpfung führt zurück zu Ihren aktiven Konten.',
     'account_missing_transaction'               => 'Konto #:id („:name”) kann nicht direkt angezeigt werden, da Firefly III Weiterleitungsinformationen fehlen.',
+    'cc_monthly_payment_date_help'              => 'Wählen Sie ein beliebiges Jahr und einen beliebigen Monat, da diese Angaben ohnehin ignoriert werden. Nur der Tag des Monats ist relevant.',
     'details_for_asset'                         => 'Details zum Bestandskonto „:name”',
     'details_for_expense'                       => 'Details zum Ausgabenkonto „:name”',
     'details_for_revenue'                       => 'Details zum Einnahmenkonto „:name”',

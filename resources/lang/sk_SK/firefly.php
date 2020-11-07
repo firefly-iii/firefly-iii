@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Toto sú vaše neaktívne bankové účty.',
     'active_account_link'                       => 'Tento prepojenie smeruje späť na vaše aktívne účty.',
     'account_missing_transaction'               => 'Bankový účet #:id (":name") nie je možné zobraziť priamo, ale Firefly III chýbajú informácie o presmerovaní.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Podrobnosti o účte aktív „:name“',
     'details_for_expense'                       => 'Podrobnosti o výdavkovom účte „:name“',
     'details_for_revenue'                       => 'Podrobnosti o výnosovom účte „:name“',

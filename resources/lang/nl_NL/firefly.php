@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Dit zijn je inactieve rekeningen.',
     'active_account_link'                       => 'Deze link gaat terug naar je actieve rekeningen.',
     'account_missing_transaction'               => 'Rekening #:id (":name") kan je niet bekijken in Firefly III, maar het origineel is kwijt.',
+    'cc_monthly_payment_date_help'              => 'Maakt niet uit welk jaar of welke maand. Alleen de dag van de maand is relevant.',
     'details_for_asset'                         => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                       => 'Overzicht voor crediteur ":name"',
     'details_for_revenue'                       => 'Overzicht voor debiteur ":name"',

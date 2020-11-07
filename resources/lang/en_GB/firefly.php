@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'These are your inactive accounts.',
     'active_account_link'                       => 'This link goes back to your active accounts.',
     'account_missing_transaction'               => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Details for asset account ":name"',
     'details_for_expense'                       => 'Details for expense account ":name"',
     'details_for_revenue'                       => 'Details for revenue account ":name"',

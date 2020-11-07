@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Dessa är dina inaktiva konton.',
     'active_account_link'                       => 'Denna länk går tillbaka till dina aktiva konton.',
     'account_missing_transaction'               => 'Konto #:id (":name") kan inte visas direkt, men Firefly saknar information för omdirigering.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Detaljer för tillgångskonto ":name"',
     'details_for_expense'                       => 'Detaljer för utgiftskonto ":name"',
     'details_for_revenue'                       => 'Detaljer för intäktskonto ":name"',

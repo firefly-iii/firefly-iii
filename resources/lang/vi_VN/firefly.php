@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Đây là những tài khoản không hoạt động của bạn.',
     'active_account_link'                       => 'Liên kết này quay lại tài khoản đang hoạt động của bạn.',
     'account_missing_transaction'               => 'Tài khoản #: id (": name") không thể được xem trực tiếp, nhưng Firefly thiếu thông tin chuyển hướng.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Chi tiết cho tài khoản ":name"',
     'details_for_expense'                       => 'Chi tiết tài khoản chi phí ":name"',
     'details_for_revenue'                       => 'Chi tiết cho tài khoản doanh thu ":name"',

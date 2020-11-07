@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Ezek az inaktív számlák.',
     'active_account_link'                       => 'Ez a hivatkozás visszavisz az aktív számlákhoz.',
     'account_missing_transaction'               => ':id (":name") számla nem tekinthető meg közvetlenül, de a Fireflyból hiányzik az átirányítási információ.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '":name" eszközszámla részletei',
     'details_for_expense'                       => '":name" költségszámla részletei',
     'details_for_revenue'                       => '":name" jövedelemszámla részletei',

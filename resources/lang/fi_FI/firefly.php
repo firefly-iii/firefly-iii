@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Nämä ovat käytöstä poistettuja tilejä.',
     'active_account_link'                       => 'Tämä linkki vie sinut takaisin aktiivisiin tileihisi.',
     'account_missing_transaction'               => 'Tiliä #:id (":name") ei voi tarkastella suoraan, mutta Firefly:lta puuttuvat uudelleenohjaustiedot.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Yksityiskohdat omaisuustilille ":name"',
     'details_for_expense'                       => 'Yksityiskohdat kulutustilille ":name"',
     'details_for_revenue'                       => 'Yksityiskohdat tuottotilille ":name"',

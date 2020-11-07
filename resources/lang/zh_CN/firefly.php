@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => '这些是您的未激活帐户。',
     'active_account_link'                       => '此链接回到您的活动帐户。',
     'account_missing_transaction'               => '帐户 #:id (":name") 无法直接被检视，但 Firefly 找不到重新转向资讯。',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => '资产帐户 ":name" 的详细资讯',
     'details_for_expense'                       => '支出帐户 ":name" 的详细资讯',
     'details_for_revenue'                       => '收入帐户 ":name" 的详细资讯',

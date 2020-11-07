@@ -4174,16 +4174,16 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.12.2",
+            "version": "v0.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "a4faebbb0c18cf775fda4247c926faa6319ee611"
+                "reference": "5d6dc0c907c5db476cf0caf3210eb10e44a78369"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/a4faebbb0c18cf775fda4247c926faa6319ee611",
-                "reference": "a4faebbb0c18cf775fda4247c926faa6319ee611",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/5d6dc0c907c5db476cf0caf3210eb10e44a78369",
+                "reference": "5d6dc0c907c5db476cf0caf3210eb10e44a78369",
                 "shasum": ""
             },
             "require": {
@@ -4245,9 +4245,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rcrowe/TwigBridge/issues",
-                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.12.2"
+                "source": "https://github.com/rcrowe/TwigBridge/tree/v0.12.3"
             },
-            "time": "2020-09-07T12:36:34+00:00"
+            "time": "2020-10-14T18:14:32+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -7348,16 +7348,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.5",
+            "version": "2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "0934b44a86d4c43e416674e80cd6c94044cd23b3"
+                "reference": "d5789bd8e2d852a6b98fe944ca2ff82e921eb43d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/0934b44a86d4c43e416674e80cd6c94044cd23b3",
-                "reference": "0934b44a86d4c43e416674e80cd6c94044cd23b3",
+                "url": "https://api.github.com/repos/composer/composer/zipball/d5789bd8e2d852a6b98fe944ca2ff82e921eb43d",
+                "reference": "d5789bd8e2d852a6b98fe944ca2ff82e921eb43d",
                 "shasum": ""
             },
             "require": {
@@ -7425,7 +7425,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.5"
+                "source": "https://github.com/composer/composer/tree/2.0.6"
             },
             "funding": [
                 {
@@ -7441,7 +7441,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-06T19:57:15+00:00"
+            "time": "2020-11-07T10:21:17+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",

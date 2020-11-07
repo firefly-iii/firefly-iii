@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Estas son sus cuentas inactivas.',
     'active_account_link'                       => 'Este enlace se regresa a sus cuentas activas.',
     'account_missing_transaction'               => 'Cuenta #:id (":name") no puede ser vista directamente, Firefly perdió información de redirección.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Detalles para la cuenta de activos ":name"',
     'details_for_expense'                       => 'Detalles para la cuenta de gastos ":name"',
     'details_for_revenue'                       => 'Detalles para la cuenta de ingresos ":name"',

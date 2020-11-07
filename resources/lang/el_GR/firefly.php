@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Αυτοί είναι οι ανενεργοί λογαριασμοί σας.',
     'active_account_link'                       => 'Αυτός ο σύνδεσμος πηγαίνει πίσω στους ενεργούς λογαριασμούς σας.',
     'account_missing_transaction'               => 'Ο λογαριασμός #:id (":name") δεν μπορεί να προβληθεί άμεσα, αλλά και το Firefly δεν έχει πληροφορίες ανακατεύθυνσης.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Λεπτομέρειες για τον λογαριασμό κεφαλαίου ":name"',
     'details_for_expense'                       => 'Λεπτομέρειες για το λογαριασμό δαπανών ":name"',
     'details_for_revenue'                       => 'Λεπτομέρειες για τον λογαριασμό εσόδων ":name"',

@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'To są twoje nieaktywne konta.',
     'active_account_link'                       => 'Ten link wraca do Twoich aktywnych kont.',
     'account_missing_transaction'               => 'Konto #:id (":name") nie możne być wyświetlone bezpośrednio, ale Firefly Iii nie ma informacji przekierowania.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Szczegóły konta aktywów ":name"',
     'details_for_expense'                       => 'Szczegóły konta wydatków ":name"',
     'details_for_revenue'                       => 'Szczegóły konta przychodów ":name"',

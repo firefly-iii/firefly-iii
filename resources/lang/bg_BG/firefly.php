@@ -1008,6 +1008,7 @@ return [
     'all_accounts_inactive'                     => 'Това са вашите неактивни сметки.',
     'active_account_link'                       => 'Тази връзка ви връща към активните ви сметки.',
     'account_missing_transaction'               => 'Сметка #:id (":name") не може да се вижда директно, но в Firefly липсва информация за пренасочване.',
+    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
     'details_for_asset'                         => 'Подробности за сметката за активи ":name"',
     'details_for_expense'                       => 'Подробности за сметката за разходи ":name"',
     'details_for_revenue'                       => 'Подробности за сметката за приходи ":name"',
