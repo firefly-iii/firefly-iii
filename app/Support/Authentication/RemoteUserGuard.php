@@ -80,7 +80,7 @@ class RemoteUserGuard implements Guard
 
         // store email address if present in header and not already set.
         $header       = config('auth.guard_email');
-        $emailAddress = request()->server($header) ?? null;
+        $emailAddress = (string) (request()->server($header) ?? null);
         $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email', null);
 
         if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {
