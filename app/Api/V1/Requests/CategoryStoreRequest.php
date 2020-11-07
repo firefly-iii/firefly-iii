@@ -45,7 +45,8 @@ class CategoryStoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name' => $this->string('name'),
+            'name'  => $this->string('name'),
+            'notes' => $this->nlString('notes'),
         ];
     }
 
@@ -57,7 +58,7 @@ class CategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'    => 'required|between:1,100|uniqueObjectForUser:categories,name'
+            'name' => 'required|between:1,100|uniqueObjectForUser:categories,name',
         ];
     }
 }

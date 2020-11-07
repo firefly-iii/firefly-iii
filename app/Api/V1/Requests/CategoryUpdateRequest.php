@@ -43,8 +43,15 @@ class CategoryUpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
+        $notes = null;
+        $all   = $this->all();
+        if (array_key_exists('notes', $all)) {
+            $notes = $this->nlString('notes');
+        }
+
         return [
-            'name' => $this->string('name'),
+            'name'  => $this->string('name'),
+            'notes' => $notes,
         ];
     }
 
