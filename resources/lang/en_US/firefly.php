@@ -1630,7 +1630,7 @@ return [
     'after_update_create_another'           => 'After updating, return here to continue editing.',
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
