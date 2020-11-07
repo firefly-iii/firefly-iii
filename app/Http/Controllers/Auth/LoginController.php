@@ -198,6 +198,9 @@ class LoginController extends Controller
         if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
             return redirect($logoutUri);
         }
+        if ('remote_user_guard' === $authGuard && '' === $logoutUri) {
+            session()->flash('error',trans('firefly.cant_logout_guard'));
+        }
 
         $this->guard()->logout();
 
