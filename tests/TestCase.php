@@ -23,18 +23,17 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\MocksDefaultValues;
-use Tests\Traits\TestHelpers;
 
 /**
  * Class TestCase
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, CollectsValues; // MocksDefaultValues TestHelpers
+    use CreatesApplication, CollectsValues;
+
+    // MocksDefaultValues TestHelpers
 
     /**
      * @return array

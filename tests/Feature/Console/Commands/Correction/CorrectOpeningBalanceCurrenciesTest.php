@@ -23,12 +23,12 @@ namespace Tests\Feature\Console\Commands\Correction;
 
 
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Log;
 use Tests\TestCase;
 
 /**
  * Class CorrectOpeningBalanceCurrenciesTest
+ *
  * @package Tests\Feature\Console\Commands\Correction
  */
 class CorrectOpeningBalanceCurrenciesTest extends TestCase
@@ -59,7 +59,7 @@ class CorrectOpeningBalanceCurrenciesTest extends TestCase
     public function testHandleBroken(): void
     {
         // create opening balance journal for test. Is enough to trigger this test.
-        factory(TransactionJournal::class)->state(TransactionType::OPENING_BALANCE)->create();
+        TransactionJournal::factory()->openingBalance()->create();
 
         // run command
         $this->artisan('firefly-iii:fix-ob-currencies')
@@ -74,11 +74,11 @@ class CorrectOpeningBalanceCurrenciesTest extends TestCase
     {
         Log::debug('Now in testHandleNoAccount');
         // create opening balance journal for test. Is enough to trigger this test.
-        $journal = factory(TransactionJournal::class)->state('ob_broken')->create();
+        $journal = TransactionJournal::factory()->brokenOpeningBalance()->create();
 
         // run command
         $this->artisan('firefly-iii:fix-ob-currencies')
-            ->expectsOutput(sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id))
+             ->expectsOutput(sprintf('Transaction journal #%d has no valid account. Cant fix this line.', $journal->id))
             //->expectsOutput('Cant fix this line.')
              ->assertExitCode(0);
 

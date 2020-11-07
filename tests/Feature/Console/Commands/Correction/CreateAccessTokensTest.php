@@ -26,11 +26,6 @@ namespace Tests\Feature\Console\Commands\Correction;
 
 
 use FireflyIII\Models\Preference;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Collection;
-use Log;
-use Mockery;
-use Preferences;
 use Tests\TestCase;
 
 /**
@@ -44,7 +39,7 @@ class CreateAccessTokensTest extends TestCase
     public function testHandle(): void
     {
         // remove preferences so token will be generated
-        Preference::where('name','access_token')->delete();
+        Preference::where('name', 'access_token')->delete();
 
         $this->artisan('firefly-iii:create-access-tokens')
              ->expectsOutput(sprintf('Generated access token for user %s', $this->user()->email))
@@ -56,9 +51,9 @@ class CreateAccessTokensTest extends TestCase
      */
     public function testHandlePrefExists(): void
     {
-        $preference       = new Preference;
-        $preference->data = '123';
-        $preference->name = 'access_token';
+        $preference          = new Preference;
+        $preference->data    = '123';
+        $preference->name    = 'access_token';
         $preference->user_id = $this->user()->id;
         $preference->save();
 

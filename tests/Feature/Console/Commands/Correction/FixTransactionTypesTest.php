@@ -34,7 +34,9 @@ class FixTransactionTypesTest extends TestCase
      */
     public function testHandle(): void
     {
-        $this->markTestIncomplete();
+        $this->artisan('firefly-iii:fix-transaction-types')
+             //->expectsOutput()
+             ->assertExitCode(0);
     }
 
 
