@@ -70,7 +70,15 @@
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
-        bla bla bla
+        {% block control %}
+            <div class="p-3 control-sidebar-content">
+                <h5>{{ 'advanced_options'|_ }}</h5>
+                <hr class="mb-2">
+                <p>
+                    {{ 'advanced_options_explain'|_ }}
+                </p>
+            </div>
+        {% endblock %}
     </aside>
     <!-- /.control-sidebar -->
 </div>
