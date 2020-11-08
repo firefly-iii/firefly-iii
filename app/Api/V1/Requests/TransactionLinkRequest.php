@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,18 +36,9 @@ use Illuminate\Validation\Validator;
  */
 class TransactionLinkRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, ChecksLogin;
 
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+
 
     /**
      * Get all data from the request.

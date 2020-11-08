@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
@@ -39,18 +40,9 @@ use Illuminate\Validation\Validator;
  */
 class RecurrenceUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData;
+    use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+
 
     /**
      * Get all data from the request.

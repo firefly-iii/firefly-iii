@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,18 +38,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
 
     /**
      * @return array

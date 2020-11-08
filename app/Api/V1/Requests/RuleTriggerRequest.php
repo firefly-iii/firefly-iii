@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 
 use Carbon\Carbon;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -34,18 +35,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleTriggerRequest extends FormRequest
 {
-    use ConvertsDataTypes;
+    use ConvertsDataTypes, ChecksLogin;
 
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+
 
     /**
      * @return array

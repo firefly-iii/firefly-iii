@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
@@ -40,7 +41,7 @@ use Log;
  */
 class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, ConvertsDataTypes;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes, ChecksLogin;
 
     private array $arrayFields;
     private array $booleanFields;
@@ -50,16 +51,7 @@ class TransactionUpdateRequest extends FormRequest
     private array $textareaFields;
 
 
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
