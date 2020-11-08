@@ -106,13 +106,6 @@ interface GroupCollectorInterface
     public function getPaginatedGroups(): LengthAwarePaginator;
 
     /**
-     * Return the sum of all journals.
-     *
-     * @return string
-     */
-    public function getSum(): string;
-
-    /**
      * Define which accounts can be part of the source and destination transactions.
      *
      * @param Collection $accounts

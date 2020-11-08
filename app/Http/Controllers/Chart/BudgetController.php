@@ -171,14 +171,17 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $locale           = app('steam')->getLocale();
         $entries          = [];
         $amount           = $budgetLimit->amount;
         $budgetCollection = new Collection([$budget]);
+        $currency         = $budgetLimit->transactionCurrency;
         while ($start <= $end) {
-            $spent            = $this->opsRepository->spentInPeriod($budgetCollection, new Collection, $start, $start);
+            $current          = clone $start;
+            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
+            $spent            = $expenses[(int)$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
             $format           = $start->formatLocalized((string)trans('config.month_and_day', [], $locale));
             $entries[$format] = $amount;

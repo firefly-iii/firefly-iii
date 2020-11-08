@@ -85,24 +85,6 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return string
-     */
-    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setTag($tag);
-
-        return $collector->getSum();
-    }
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return array
      */
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array
@@ -295,24 +277,6 @@ class TagRepository implements TagRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
-
-        return $collector->getSum();
     }
 
     /**

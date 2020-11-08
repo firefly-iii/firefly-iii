@@ -65,15 +65,6 @@ interface TagRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return string
-     */
-    public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return array
      */
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array;
@@ -175,15 +166,6 @@ interface TagRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user);
-
-    /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
-    public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
 
     /**
      * This method stores a tag.

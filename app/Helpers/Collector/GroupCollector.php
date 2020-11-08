@@ -196,24 +196,6 @@ class GroupCollector implements GroupCollectorInterface
         return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
     }
 
-    /**
-     * Return the sum of all journals.
-     * TODO ignores the currency.
-     *
-     * @return string
-     */
-    public function getSum(): string
-    {
-        $journals = $this->getExtractedJournals();
-        $sum      = '0';
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $amount = (string) $journal['amount'];
-            $sum    = bcadd($sum, $amount);
-        }
-
-        return $sum;
-    }
 
     /**
      * Limit results to a specific currency, either foreign or normal one.
