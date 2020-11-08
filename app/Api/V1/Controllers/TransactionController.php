@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Rules\IsDuplicateTransaction;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
@@ -45,11 +46,13 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Validator;
 
 /**
  * Class TransactionController
@@ -171,7 +174,7 @@ class TransactionController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -289,7 +292,7 @@ class TransactionController extends Controller
      * @param TransactionStoreRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
+     * @throws FireflyException|ValidationException
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
@@ -304,29 +307,16 @@ class TransactionController extends Controller
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Caught a duplicate transaction. Return error message.');
-            // return bad validation message.
-            // TODO use Laravel's internal validation thing to do this.
-            $response = [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.description' => [$e->getMessage()],
-                ],
-            ];
-
-            return response()->json($response, 422);
+            $validator = Validator::make(
+                ['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction]
+            );
+            throw new ValidationException($validator);
         } catch (FireflyException $e) {
             Log::warning('Caught an exception. Return error message.');
             Log::error($e->getMessage());
-            // return bad validation message.
-            // TODO use Laravel's internal validation thing to do this.
-            $response = [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.description' => [sprintf('Internal exception: %s', $e->getMessage())],
-                ],
-            ];
-
-            return response()->json($response, 422);
+            $message   = sprintf('Internal exception: %s', $e->getMessage());
+            $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction]);
+            throw new ValidationException($validator);
         }
         app('preferences')->mark();
         event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));

@@ -1,6 +1,6 @@
 <?php
 /**
- * CurrencyRequest.php
+ * CurrencyStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,30 +24,19 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
- * Class CurrencyRequest
+ * Class CurrencyStoreRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class CurrencyRequest extends FormRequest
+class CurrencyStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -82,7 +71,7 @@ class CurrencyRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'name'           => 'required|between:1,255|unique:transaction_currencies,name',
             'code'           => 'required|between:3,3|unique:transaction_currencies,code',
             'symbol'         => 'required|between:1,8|unique:transaction_currencies,symbol',
@@ -91,20 +80,5 @@ class CurrencyRequest extends FormRequest
             'default'        => [new IsBoolean()],
 
         ];
-
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                $currency        = $this->route()->parameter('currency_code');
-                $rules['name']   = 'required|between:1,255|unique:transaction_currencies,name,' . $currency->id;
-                $rules['code']   = 'required|between:3,3|unique:transaction_currencies,code,' . $currency->id;
-                $rules['symbol'] = 'required|between:1,8|unique:transaction_currencies,symbol,' . $currency->id;
-                break;
-        }
-
-        return $rules;
-
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * PiggyBankStoreRequest.php
+ * BudgetLimitUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -28,11 +28,11 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class PiggyBankStoreRequest
+ * Class BudgetLimitUpdateRequest
  *
  * @codeCoverageIgnore
  */
-class PiggyBankStoreRequest extends FormRequest
+class BudgetLimitUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -43,17 +43,20 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'            => $this->string('name'),
-            'account_id'      => $this->integer('account_id'),
-            'targetamount'    => $this->string('target_amount'),
-            'current_amount'  => $this->string('current_amount'),
-            'startdate'       => $this->date('start_date'),
-            'targetdate'      => $this->date('target_date'),
-            'notes'           => $this->nlString('notes'),
-            'object_group_id' => $this->integer('object_group_id'),
-            'object_group'    => $this->string('object_group_name'),
+        $data = [
+            'budget_id'     => $this->integer('budget_id'),
+            'start'         => $this->date('start'),
+            'end'           => $this->date('end'),
+            'amount'        => $this->string('amount'),
+            'currency_id'   => $this->integer('currency_id'),
+            'currency_code' => $this->string('currency_code'),
         ];
+        // if request has a budget already, drop the rule.
+        $budget = $this->route()->parameter('budget');
+        if (null !== $budget) {
+            $data['budget_id'] = $budget->id;
+        }
+        return $data;
     }
 
     /**
@@ -63,16 +66,21 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name'            => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'  => ['numeric', 'gte:0', 'lte:target_amount'],
-            'account_id'      => 'required|numeric|belongsToUser:accounts,id',
-            'object_group_id' => 'numeric|belongsToUser:object_groups,id',
-            'target_amount'   => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
-            'start_date'      => 'date|nullable',
-            'target_date'     => 'date|nullable|after:start_date',
-            'notes'           => 'max:65000',
+        $rules = [
+            'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
+            'start'         => 'required|before:end|date',
+            'end'           => 'required|after:start|date',
+            'amount'        => 'required|gt:0',
+            'currency_id'   => 'numeric|exists:transaction_currencies,id',
+            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];
+        // if request has a budget already, drop the rule.
+        $budget = $this->route()->parameter('budget');
+        if (null !== $budget) {
+            unset($rules['budget_id']);
+        }
+
+        return $rules;
     }
 
 }

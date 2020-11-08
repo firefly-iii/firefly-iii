@@ -1,6 +1,6 @@
 <?php
 /**
- * PiggyBankStoreRequest.php
+ * CurrencyUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,16 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
+
 /**
- * Class PiggyBankStoreRequest
+ * Class CurrencyUpdateRequest
  *
  * @codeCoverageIgnore
  */
-class PiggyBankStoreRequest extends FormRequest
+class CurrencyUpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -43,16 +45,22 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
+        $enabled = true;
+        $default = false;
+        if (null !== $this->get('enabled')) {
+            $enabled = $this->boolean('enabled');
+        }
+        if (null !== $this->get('default')) {
+            $default = $this->boolean('default');
+        }
+
         return [
-            'name'            => $this->string('name'),
-            'account_id'      => $this->integer('account_id'),
-            'targetamount'    => $this->string('target_amount'),
-            'current_amount'  => $this->string('current_amount'),
-            'startdate'       => $this->date('start_date'),
-            'targetdate'      => $this->date('target_date'),
-            'notes'           => $this->nlString('notes'),
-            'object_group_id' => $this->integer('object_group_id'),
-            'object_group'    => $this->string('object_group_name'),
+            'name'           => $this->string('name'),
+            'code'           => $this->string('code'),
+            'symbol'         => $this->string('symbol'),
+            'decimal_places' => $this->integer('decimal_places'),
+            'default'        => $default,
+            'enabled'        => $enabled,
         ];
     }
 
@@ -63,16 +71,14 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $currency        = $this->route()->parameter('currency_code');
         return [
-            'name'            => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'  => ['numeric', 'gte:0', 'lte:target_amount'],
-            'account_id'      => 'required|numeric|belongsToUser:accounts,id',
-            'object_group_id' => 'numeric|belongsToUser:object_groups,id',
-            'target_amount'   => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
-            'start_date'      => 'date|nullable',
-            'target_date'     => 'date|nullable|after:start_date',
-            'notes'           => 'max:65000',
+            'name'           => sprintf('required|between:1,255|unique:transaction_currencies,name,%d', $currency->id),
+            'code'           => sprintf('required|between:3,3|unique:transaction_currencies,code,%d', $currency->id),
+            'symbol'         => sprintf('required|between:1,8|unique:transaction_currencies,symbol,%d', $currency->id),
+            'decimal_places' => 'between:0,20|numeric|min:0|max:20',
+            'enabled'        => [new IsBoolean()],
+            'default'        => [new IsBoolean()],
         ];
     }
-
 }

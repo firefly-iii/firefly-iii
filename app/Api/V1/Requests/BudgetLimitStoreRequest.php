@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetLimitRequest.php
+ * BudgetLimitStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,29 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class BudgetLimitRequest
+ * Class BudgetLimitStoreRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class BudgetLimitRequest extends FormRequest
+class BudgetLimitStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -54,7 +43,7 @@ class BudgetLimitRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $data = [
+        return [
             'budget_id'     => $this->integer('budget_id'),
             'start'         => $this->date('start'),
             'end'           => $this->date('end'),
@@ -62,12 +51,6 @@ class BudgetLimitRequest extends FormRequest
             'currency_id'   => $this->integer('currency_id'),
             'currency_code' => $this->string('currency_code'),
         ];
-        // if request has a budget already, drop the rule.
-        $budget = $this->route()->parameter('budget');
-        if (null !== $budget) {
-            $data['budget_id'] = $budget->id;
-        }
-        return $data;
     }
 
     /**
@@ -77,7 +60,7 @@ class BudgetLimitRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
@@ -85,22 +68,6 @@ class BudgetLimitRequest extends FormRequest
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                $rules['budget_id'] = 'required|exists:budgets,id|belongsToUser:budgets,id';
-                break;
-        }
-        // if request has a budget already, drop the rule.
-        $budget = $this->route()->parameter('budget');
-        if (null !== $budget) {
-            unset($rules['budget_id']);
-        }
-
-
-        return $rules;
     }
 
 }

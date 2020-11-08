@@ -1,6 +1,6 @@
 <?php
 /**
- * RuleGroupRequest.php
+ * RuleGroupUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,31 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
  * @codeCoverageIgnore
- * Class RuleGroupRequest
- * TODO AFTER 4.8,0: split this into two request classes.
+ * Class RuleGroupUpdateRequest
  */
-class RuleGroupRequest extends FormRequest
+class RuleGroupUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -76,22 +64,11 @@ class RuleGroupRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
+        $ruleGroup = $this->route()->parameter('ruleGroup');
+        return [
+            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
             'description' => 'between:1,5000|nullable',
             'active'      => [new IsBoolean],
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var RuleGroup $ruleGroup */
-                $ruleGroup      = $this->route()->parameter('ruleGroup');
-                $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id;
-                break;
-        }
-
-        return $rules;
     }
 }

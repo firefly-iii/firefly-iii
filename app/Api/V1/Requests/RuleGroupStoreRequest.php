@@ -1,6 +1,6 @@
 <?php
 /**
- * PiggyBankStoreRequest.php
+ * RuleGroupStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,16 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
+
 /**
- * Class PiggyBankStoreRequest
- *
  * @codeCoverageIgnore
+ * Class RuleGroupStoreRequest
  */
-class PiggyBankStoreRequest extends FormRequest
+class RuleGroupStoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -43,16 +45,16 @@ class PiggyBankStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
+        $active = true;
+
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         return [
-            'name'            => $this->string('name'),
-            'account_id'      => $this->integer('account_id'),
-            'targetamount'    => $this->string('target_amount'),
-            'current_amount'  => $this->string('current_amount'),
-            'startdate'       => $this->date('start_date'),
-            'targetdate'      => $this->date('target_date'),
-            'notes'           => $this->nlString('notes'),
-            'object_group_id' => $this->integer('object_group_id'),
-            'object_group'    => $this->string('object_group_name'),
+            'title'       => $this->string('title'),
+            'description' => $this->string('description'),
+            'active'      => $active,
         ];
     }
 
@@ -64,15 +66,9 @@ class PiggyBankStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'            => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'  => ['numeric', 'gte:0', 'lte:target_amount'],
-            'account_id'      => 'required|numeric|belongsToUser:accounts,id',
-            'object_group_id' => 'numeric|belongsToUser:object_groups,id',
-            'target_amount'   => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
-            'start_date'      => 'date|nullable',
-            'target_date'     => 'date|nullable|after:start_date',
-            'notes'           => 'max:65000',
+            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
+            'description' => 'between:1,5000|nullable',
+            'active'      => [new IsBoolean],
         ];
     }
-
 }

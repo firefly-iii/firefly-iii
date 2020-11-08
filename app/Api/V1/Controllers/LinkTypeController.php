@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\LinkTypeRequest;
+use FireflyIII\Api\V1\Requests\LinkTypeStoreRequest;
+use FireflyIII\Api\V1\Requests\LinkTypeUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\LinkType;
@@ -150,12 +151,12 @@ class LinkTypeController extends Controller
     /**
      * Store new object.
      *
-     * @param LinkTypeRequest $request
+     * @param LinkTypeStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(LinkTypeRequest $request): JsonResponse
+    public function store(LinkTypeStoreRequest $request): JsonResponse
     {
         /** @var User $admin */
         $admin = auth()->user();
@@ -239,13 +240,13 @@ class LinkTypeController extends Controller
     /**
      * Update object.
      *
-     * @param LinkTypeRequest $request
+     * @param LinkTypeUpdateRequest $request
      * @param LinkType        $linkType
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function update(LinkTypeRequest $request, LinkType $linkType): JsonResponse
+    public function update(LinkTypeUpdateRequest $request, LinkType $linkType): JsonResponse
     {
         if (false === $linkType->editable) {
             throw new FireflyException('200020: Link type cannot be changed.');

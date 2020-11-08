@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 
-use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
+use FireflyIII\Api\V1\Requests\BudgetLimitStoreRequest;
+use FireflyIII\Api\V1\Requests\BudgetLimitUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\BudgetLimit;
@@ -156,13 +157,13 @@ class BudgetLimitController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param BudgetLimitRequest $request
+     * @param BudgetLimitStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      *
      */
-    public function store(BudgetLimitRequest $request): JsonResponse
+    public function store(BudgetLimitStoreRequest $request): JsonResponse
     {
         $data               = $request->getAll();
         $data['start_date'] = $data['start'];
@@ -237,12 +238,12 @@ class BudgetLimitController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param BudgetLimitRequest $request
+     * @param BudgetLimitUpdateRequest $request
      * @param BudgetLimit        $budgetLimit
      *
      * @return JsonResponse
      */
-    public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
+    public function update(BudgetLimitUpdateRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $data        = $request->getAll();
         $budgetLimit = $this->blRepository->update($budgetLimit, $data);

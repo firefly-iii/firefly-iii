@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Exception;
-use FireflyIII\Api\V1\Requests\RuleGroupRequest;
+use FireflyIII\Api\V1\Requests\RuleGroupUpdateRequest;
+use FireflyIII\Api\V1\Requests\RuleGroupStoreRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTestRequest;
 use FireflyIII\Api\V1\Requests\RuleGroupTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -221,11 +222,11 @@ class RuleGroupController extends Controller
     /**
      * Store new object.
      *
-     * @param RuleGroupRequest $request
+     * @param RuleGroupStoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(RuleGroupRequest $request): JsonResponse
+    public function store(RuleGroupStoreRequest $request): JsonResponse
     {
         $ruleGroup = $this->ruleGroupRepository->store($request->getAll());
         $manager   = $this->getManager();
@@ -341,12 +342,12 @@ class RuleGroupController extends Controller
     /**
      * Update a rule group.
      *
-     * @param RuleGroupRequest $request
+     * @param RuleGroupUpdateRequest $request
      * @param RuleGroup        $ruleGroup
      *
      * @return JsonResponse
      */
-    public function update(RuleGroupRequest $request, RuleGroup $ruleGroup): JsonResponse
+    public function update(RuleGroupUpdateRequest $request, RuleGroup $ruleGroup): JsonResponse
     {
         $ruleGroup = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
         $manager   = $this->getManager();

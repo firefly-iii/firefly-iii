@@ -1,6 +1,6 @@
 <?php
 /**
- * LinkTypeRequest.php
+ * LinkTypeUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,30 +24,19 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\LinkType;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class LinkTypeRequest
+ * Class LinkTypeUpdateRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class LinkTypeRequest extends FormRequest
+class LinkTypeUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -72,26 +61,11 @@ class LinkTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name'    => 'required|unique:link_types,name|min:1',
-            'outward' => 'required|unique:link_types,outward|min:1|different:inward',
-            'inward'  => 'required|unique:link_types,inward|min:1|different:outward',
+        $linkType         = $this->route()->parameter('linkType');
+        return [
+            'name'    => ['required', Rule::unique('link_types', 'name')->ignore($linkType->id), 'min:1'],
+            'outward' => ['required', 'different:inward', Rule::unique('link_types', 'outward')->ignore($linkType->id), 'min:1'],
+            'inward'  => ['required', 'different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1'],
         ];
-
-
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var LinkType $linkType */
-                $linkType         = $this->route()->parameter('linkType');
-                $rules['name']    = ['required', Rule::unique('link_types', 'name')->ignore($linkType->id), 'min:1'];
-                $rules['outward'] = ['required', 'different:inward', Rule::unique('link_types', 'outward')->ignore($linkType->id), 'min:1'];
-                $rules['inward']  = ['required', 'different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1'];
-                break;
-        }
-
-        return $rules;
     }
 }

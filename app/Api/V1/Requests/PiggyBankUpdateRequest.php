@@ -1,6 +1,6 @@
 <?php
 /**
- * PiggyBankRequest.php
+ * PiggyBankUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -26,29 +26,18 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class PiggyBankRequest
+ * Class PiggyBankUpdateRequest
  *
  * @codeCoverageIgnore
- * TODO AFTER 4.8,0: split this into two request classes.
  */
-class PiggyBankRequest extends FormRequest
+class PiggyBankUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -76,30 +65,16 @@ class PiggyBankRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'name'           => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount' => ['numeric', 'gte:0', 'lte:target_amount'],
+        $piggyBank               = $this->route()->parameter('piggyBank');
+        return [
+            'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
+            'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget],
+            'target_amount' => 'numeric|gt:0',
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
+            'account_id' => ['belongsToUser:accounts', new IsAssetAccountId],
         ];
-
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                /** @var PiggyBank $piggyBank */
-                $piggyBank               = $this->route()->parameter('piggyBank');
-                $rules['name']           = 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id;
-                $rules['account_id']     = ['belongsToUser:accounts', new IsAssetAccountId];
-                $rules['target_amount']  = 'numeric|gt:0';
-                $rules['current_amount'] = ['numeric', 'gte:0', new LessThanPiggyTarget];
-                break;
-        }
-
-
-        return $rules;
     }
 
 }
