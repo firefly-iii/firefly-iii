@@ -26,7 +26,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">{{ $t("firefly.balance") }}</span>
-                    <!-- dont take the first, take default currency OR first -->
+                    <!-- TODO dont take the first, take default currency OR first -->
                     <span class="info-box-number" v-if="balances.length > 0">{{ balances[0].value_parsed }}</span>
 
                     <div class="progress bg-info">
@@ -45,14 +45,14 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text"><span>{{ $t('firefly.bills_to_pay') }}</span></span>
-                    <!-- dont take the first, take default currency OR first -->
+                    <!-- TODO dont take the first, take default currency OR first -->
                     <span class="info-box-number" v-if="1 === billsUnpaid.length && billsPaid.length > 0">{{ billsUnpaid[0].value_parsed }}</span>
 
                     <div class="progress bg-teal">
                         <div class="progress-bar" style="width: 0"></div>
                     </div>
                     <span class="progress-description">
-                        <!-- dont take the first, take default currency OR first -->
+                        <!-- TODO dont take the first, take default currency OR first -->
                         <span v-if="1 === billsUnpaid.length && 1 === billsPaid.length">{{ $t('firefly.paid') }}: {{ billsPaid[0].value_parsed }}</span>
                         <span v-if="billsUnpaid.length > 1">
                             <span v-for="(bill, index) in billsUnpaid" :key="bill.key">
@@ -76,15 +76,15 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text"><span>{{ $t('firefly.left_to_spend') }}</span></span>
-                    <!-- dont take the first, take default currency OR first -->
-                    <!-- change color if negative -->
+                    <!-- TODO dont take the first, take default currency OR first -->
+                    <!-- TODO change color if negative -->
                     <span class="info-box-number" v-if="leftToSpend.length > 0">{{ leftToSpend[0].value_parsed }}</span>
 
                     <div class="progress bg-success">
                         <div class="progress-bar" style="width: 0"></div>
                     </div>
                     <span class="progress-description">
-                        <!-- list all EXCEPT default currency -->
+                        <!-- TODO list all EXCEPT default currency -->
                            <span v-for="(spent, index) in leftToSpend" :key="spent.key">
                                 {{ spent.value_parsed }}<span v-if="index+1 !== leftToSpend.length">, </span>
                             </span>
@@ -100,16 +100,16 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text"><span>{{ $t('firefly.net_worth') }}</span></span>
-                    <!-- dont take the first, take default currency OR first -->
+                    <!-- TODO dont take the first, take default currency OR first -->
                     <span class="info-box-number" v-if="netWorth.length > 0">{{ netWorth[0].value_parsed }}</span>
 
                     <div class="progress bg-success">
                         <div class="progress-bar" style="width: 0"></div>
                     </div>
                     <span class="progress-description">
-                        <!-- list all EXCEPT default currency -->
+                        <!-- TODO list all EXCEPT default currency -->
                            <span v-for="(net, index) in netWorth" :key="net.key">
-                                {{ net.value_parsed }}<span v-if="index+1 !== net.length">, </span>
+                                {{ net.value_parsed }}<span v-if="index+1 !== netWorth.length">, </span>
                             </span>
                     </span>
                 </div>

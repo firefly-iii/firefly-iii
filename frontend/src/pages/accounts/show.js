@@ -18,17 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 require('../../bootstrap');
 
-import Index from "../../components/accounts/Index";
+import Show from "../../components/accounts/Show";
 
 // i18n
 let i18n = require('../../i18n');
 
-let props = {};
+// get page name?
+
+
+let props = {
+
+};
 new Vue({
             i18n,
             render(createElement) {
-                return createElement(Index, {props: props});
+                return createElement(Show, {props: props});
             }
-        }).$mount('#accounts');
+        }).$mount('#accounts_show');

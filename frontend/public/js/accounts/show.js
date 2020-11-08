@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{224:function(n,e,t){n.exports=t(230)},230:function(n,e,t){"use strict";t.r(e);var o={name:"Show"},r=t(1),s=Object(r.a)(o,(function(){var n=this.$createElement;return(this._self._c||n)("div",[this._v("\n    I am a show\n")])}),[],!1,null,"dcd61a50",null).exports;t(8);var c=t(9),u={};new Vue({i18n:c,render:function(n){return n(s,{props:u})}}).$mount("#accounts_show")}},[[224,0,1]]]);
+//# sourceMappingURL=show.js.map

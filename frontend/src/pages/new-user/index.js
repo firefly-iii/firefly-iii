@@ -20,7 +20,7 @@
 
 require('../../bootstrap');
 
-import Index from "../../components/accounts/Index";
+import Index from "../../components/new-user/Index";
 
 // i18n
 let i18n = require('../../i18n');
@@ -31,4 +31,4 @@ new Vue({
             render(createElement) {
                 return createElement(Index, {props: props});
             }
-        }).$mount('#accounts');
+        }).$mount('#newuser');
