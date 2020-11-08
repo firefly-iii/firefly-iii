@@ -217,6 +217,8 @@ return [
     'expected_total'                                      => 'total esperado',
     'reconciliation_account_name'                         => 'Reconciliação :name (:currency)',
     'saved'                                               => 'Salvo',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Pedido de autorização',
@@ -233,7 +235,7 @@ return [
     'all_destination_accounts'                            => 'Contas de destino',
     'all_source_accounts'                                 => 'Contas de origem',
     'back_to_index'                                       => 'Voltar ao índice',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III não pode te deslogar.',
 
     // check for updates:
     'update_check_title'                                  => 'Verificar Atualizações',

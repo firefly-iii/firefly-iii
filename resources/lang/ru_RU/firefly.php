@@ -217,6 +217,8 @@ return [
     'expected_total'                                      => 'ожидаемый итог',
     'reconciliation_account_name'                         => ':name сверка (:currency)',
     'saved'                                               => 'Сохранено',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
 
     // API access
     'authorization_request'                               => 'Запрос авторизации Firefly III v:version',

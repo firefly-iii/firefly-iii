@@ -5,7 +5,7 @@
         "flash_success": "Succes!",
         "close": "\u00cenchide",
         "split_transaction_title": "Descrierea tranzac\u021biei divizate",
-        "errors_submission": "A fost ceva \u00een neregul\u0103 cu transmiterea dvs. V\u0103 rug\u0103m s\u0103 consulta\u021bi erorile de mai jos.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "split": "\u00cemparte",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tranzac\u021bia #{ID} (\"{title}\")<\/a> a fost stocat\u0103.",

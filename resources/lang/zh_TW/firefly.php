@@ -217,6 +217,8 @@ return [
     'expected_total'                                      => '預期總數',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授權請求',

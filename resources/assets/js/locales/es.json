@@ -5,7 +5,7 @@
         "flash_success": "\u00a1Operaci\u00f3n correcta!",
         "close": "Cerrar",
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
-        "errors_submission": "Hubo algo malo con su env\u00edo. Por favor, revise los errores de abajo.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "split": "Separar",
         "single_split": "Divisi\u00f3n",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID} (\"{title}\")<\/a> ha sido almacenada.",

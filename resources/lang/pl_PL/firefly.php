@@ -217,6 +217,8 @@ return [
     'expected_total'                                      => 'oczekiwana suma',
     'reconciliation_account_name'                         => 'Uzgadnianie :name (:currency)',
     'saved'                                               => 'Zapisano',
+    'advanced_options'                                    => 'Advanced options',
+    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
 
     // API access
     'authorization_request'                               => 'Żądanie autoryzacji Firefly III v:version',
@@ -1631,7 +1633,7 @@ return [
     'after_update_create_another'           => 'Po aktualizacji wróć tutaj, aby kontynuować edycję.',
     'store_as_new'                          => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                           => 'Wyczyść formularz po zapisaniu',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Coś poszło nie tak w czasie zapisu. Proszę sprawdź błędy.',
 
     // object groups
     'default_group_title_name'              => '(bez grupy)',
