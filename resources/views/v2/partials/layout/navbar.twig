@@ -59,6 +59,50 @@
                 </a>
             </div>
         </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="far fa-plus-square"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <a href="{{ route('transactions.create', 'withdrawal') }}" class="dropdown-item">
+                    <i class="fas fa-long-arrow-alt-left nav-icon"></i> {{ 'new_withdrawal'|_ }}
+                </a>
+                <a href="{{ route('transactions.create', 'deposit') }}" class="dropdown-item">
+                    <i class="fas fa-long-arrow-alt-right nav-icon"></i> {{ 'new_deposit'|_ }}
+                </a>
+                <a href="{{ route('transactions.create', 'transfer') }}" class="dropdown-item">
+                    <i class="fas fa-exchange-alt nav-icon"></i> {{ 'new_transfer'|_ }}
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('budgets.create') }}" class="dropdown-item">
+                    <i class="nav-icon fas fa-chart-pie"></i> {{ 'new_budget'|_ }}
+                </a>
+                <a href="{{ route('bills.create') }}" class="dropdown-item">
+                    <i class="nav-icon far fa-calendar-alt"></i> {{ 'new_bill'|_ }}
+                </a>
+                <a href="{{ route('piggy-banks.create') }}" class="dropdown-item">
+                    <i class="nav-icon fas fa-piggy-bank"></i> {{ 'new_piggy_bank'|_ }}
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('rules.create') }}" class="dropdown-item">
+                    <i class="fas fa-random nav-icon"></i> {{ 'new_rule'|_ }}
+                </a>
+                <a href="{{ route('recurring.create') }}" class="dropdown-item">
+                    <i class="fas fa-magic nav-icon"></i> {{ 'new_recurring_transaction'|_ }}
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('accounts.create', 'asset') }}" class="dropdown-item">
+                    <i class="far fa-money-bill-alt nav-icon"></i> {{ 'new_asset_account'|_ }}
+                </a>
+                <a href="{{ route('accounts.create', 'liabilities') }}" class="dropdown-item">
+                    <i class="fas fa-funnel-dollar nav-icon"></i> {{ 'new_liabilities_account'|_ }}
+                </a>
+            </div>
+        </li>
+        <!-- here be dragons -->
         <li class="nav-item">
             <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
                 <i class="fas fa-dragon"></i>
