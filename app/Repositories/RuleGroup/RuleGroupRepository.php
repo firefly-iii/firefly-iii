@@ -38,16 +38,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @return int
      */
     public function count(): int

@@ -210,12 +210,19 @@ trait AugumentData
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $set    = $blRepository->getBudgetLimits($budget, $start, $end);
-        $limits = new Collection();
-
+        $set              = $blRepository->getBudgetLimits($budget, $start, $end);
+        $limits           = new Collection();
+        $budgetCollection = new Collection([$budget]);
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
-            $entry->spent = $opsRepository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
+            $currency = $entry->transactionCurrency;
+            // clone because these objects change each other.
+            $currentStart = clone $start;
+            $currentEnd   = clone $end;
+            $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
+            $spent        = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $entry->spent = $spent;
+
             $limits->push($entry);
         }
         $cache->store($limits);

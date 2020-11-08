@@ -41,17 +41,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-            die(__METHOD__);
-        }
-    }
-
-    /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.

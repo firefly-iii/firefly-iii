@@ -40,16 +40,6 @@ use Log;
 class PopupReport implements PopupReportInterface
 {
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * Collect the transactions for one account and one budget.
      *
      * @param Budget  $budget

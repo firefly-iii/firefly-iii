@@ -1,7 +1,7 @@
 <?php
-/**
- * ExchangeRateInterface.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * IsDuplicateTransaction.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,33 +18,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Services\Currency;
+namespace FireflyIII\Rules;
 
-use Carbon\Carbon;
-use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\User;
+
+use Illuminate\Contracts\Validation\Rule;
 
 /**
- * Interface ExchangeRateInterface
+ * Class IsDuplicateTransaction
  */
-interface ExchangeRateInterface
+class IsDuplicateTransaction implements Rule
 {
-    /**
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     *
-     * @return CurrencyExchangeRate
-     */
-    public function getRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): CurrencyExchangeRate;
+    private string $value;
 
     /**
-     * @param User $user
-     *
-     * @return mixed
+     * @inheritDoc
      */
-    public function setUser(User $user);
+    public function passes($attribute, $value)
+    {
+        $this->value = $value;
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function message()
+    {
+        return $this->value;
+    }
 }

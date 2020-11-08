@@ -374,26 +374,10 @@ class TransactionUpdateRequest extends FormRequest
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
-                // If type is set, source + destination info is mandatory.
-                // Not going to do this. Not sure where the demand came from.
-
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
                 $this->validateAccountInformationUpdate($validator);
 
-                // The currency info must match the accounts involved.
-                // Instead will ignore currency info as much as possible.
-
-                // TODO if the transaction_journal_id is empty, some fields are mandatory, like the amount!
-
-                // all journals must have a description
-
-                //                // validate foreign currency info
-                //
-
-                //
-                //                // make sure all splits have valid source + dest info
-                //                 the group must have a description if > 1 journal.
             }
         );
     }
