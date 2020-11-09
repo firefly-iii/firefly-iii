@@ -48,10 +48,10 @@ class TransactionController extends Controller
         $manager   = $this->getManager();
         $fullQuery = (string) $request->get('query');
         $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-
+        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
-        $searcher->setLimit((int) config('firefly.search_result_limit'));
+        $searcher->setLimit($pageSize);
         $groups     = $searcher->searchTransactions();
         $parameters = ['search' => $fullQuery];
         $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
