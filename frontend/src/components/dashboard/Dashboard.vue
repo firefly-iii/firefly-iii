@@ -19,49 +19,78 @@
   -->
 
 <template>
-    <div>
-        <top-boxes/>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <main-account />
-            </div>
-        </div>
-        <main-account-list/>
-
-        <!--
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-budget/>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-category />
-            </div>
-        </div>
-
-
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <main-debit/>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <main-credit/>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-piggy-list/>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-bills-list/>
-            </div>
-        </div>
-        -->
+  <div>
+    <top-boxes/>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <main-account/>
+      </div>
     </div>
+    <main-account-list/>
+
+    <!--
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <main-budget/>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <main-category />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <main-debit/>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <main-credit/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <main-piggy-list/>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <main-bills-list/>
+        </div>
+    </div>
+    -->
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Dashboard"
+export default {
+  name: "Dashboard",
+  mounted() {
+    if (!localStorage.currencyPreference) {
+      this.getCurrencyPreference();
     }
+  },
+  methods: {
+    getCurrencyPreference: function () {
+      axios.get('./api/v1/currencies/default')
+          .then(response => {
+            localStorage.currencyPreference = JSON.stringify({
+              id: parseInt(response.data.data.id),
+              name: response.data.data.attributes.name,
+              symbol: response.data.data.attributes.symbol,
+              code: response.data.data.attributes.code,
+              decimal_places: parseInt(response.data.data.attributes.decimal_places),
+            });
+          }).catch(err => {
+        console.log('Got error response.');
+        console.error(err);
+        localStorage.currencyPreference = JSON.stringify({
+          id: 1,
+          name: 'Euro',
+          symbol: '€',
+          code: 'EUR',
+          decimal_places: 2
+        });
+      });
+    }
+  }
+}
 </script>

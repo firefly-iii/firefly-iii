@@ -21,7 +21,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
+          <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
         </div>
         <div class="card-body">
             <div>
