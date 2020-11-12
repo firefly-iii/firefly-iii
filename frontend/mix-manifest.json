@@ -16,5 +16,7 @@
     "/public/js/new-user/index.js": "/public/js/new-user/index.js",
     "/public/js/new-user/index.js.map": "/public/js/new-user/index.js.map",
     "/public/js/register.js": "/public/js/register.js",
-    "/public/js/register.js.map": "/public/js/register.js.map"
+    "/public/js/register.js.map": "/public/js/register.js.map",
+    "/public/js/transactions/create.js": "/public/js/transactions/create.js",
+    "/public/js/transactions/create.js.map": "/public/js/transactions/create.js.map"
 }

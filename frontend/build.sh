@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+[ -d "/sites" ] && exit 1;
+
 # build translations.
-php /sites/tools/firefly-iii-tools/cli.php ff3:json-translations --v2
+php ~/Sites/tools/firefly-iii-tools/cli.php ff3:json-translations --v2
 
 # remove old stuff
 rm -rf public/
@@ -10,12 +12,12 @@ rm -rf ../public/v2/js
 rm -rf ../public/v2/css
 
 # build new stuff
-npm install
-npm audit fix
-npm upgrade
-npm run prod
+yarn install
+yarn audit fix
+yarn upgrade
+yarn prod
 
-# npm run watch-poll
+# yarn watch
 
 # move to right directory
 # mv public/js ../public/v2
@@ -23,3 +25,6 @@ npm run prod
 
 # also copy fonts
 cp -r fonts ../public
+
+# remove built stuff
+rm -rf public
