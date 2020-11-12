@@ -40,7 +40,7 @@ class TransactionFactory
 {
     private Account $account;
     private TransactionCurrency $currency;
-    private TransactionCurrency $foreignCurrency;
+    private ?TransactionCurrency $foreignCurrency;
     private TransactionJournal $journal;
     private bool $reconciled;
     private User $user;

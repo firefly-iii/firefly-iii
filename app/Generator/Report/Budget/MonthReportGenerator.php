@@ -52,7 +52,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function __construct()
     {
-        $this->expenses = new Collection;
+        $this->expenses = [];
     }
 
     /**
