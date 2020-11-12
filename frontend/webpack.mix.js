@@ -60,8 +60,12 @@ mix
     .js('src/pages/accounts/index.js', 'public/js/accounts')
     .js('src/pages/accounts/show.js', 'public/js/accounts')
 
+    // transactions.
+    .js('src/pages/transactions/create.js', 'public/js/transactions')
     // register page
     .js('src/pages/register.js', 'public/js')
+
+
 
     .extract().sourceMaps()
     .sass('src/app.scss', 'public/css')
