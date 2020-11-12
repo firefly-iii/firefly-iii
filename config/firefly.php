@@ -800,4 +800,21 @@ return [
             AccountType::ASSET          => [AccountType::RECONCILIATION],
         ],
     ],
+    'journal_meta_fields' => [
+        // sepa
+        'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
+        'sepa_db', 'sepa_country', 'sepa_ep',
+        'sepa_ci', 'sepa_batch_id', 'external_uri',
+
+        // dates
+        'interest_date', 'book_date', 'process_date',
+        'due_date', 'payment_date', 'invoice_date',
+
+        // others
+        'recurrence_id', 'internal_reference', 'bunq_payment_id',
+        'import_hash', 'import_hash_v2', 'external_id', 'original_source',
+
+        // recurring transactions
+        'recurrence_total', 'recurrence_count',
+    ],
 ];
