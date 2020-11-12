@@ -43,9 +43,9 @@ if (token) {
 let localeToken = document.head.querySelector('meta[name="locale"]');
 
 if (localeToken) {
-    window.localeValue = localeToken.content;
+    localStorage.locale = localeToken.content;
 } else {
-    window.localeValue = 'en_US';
+    localStorage.locale = 'en_US';
 }
 
 // admin stuff

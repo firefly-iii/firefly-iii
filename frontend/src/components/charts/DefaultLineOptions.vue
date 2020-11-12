@@ -106,7 +106,7 @@ export default {
                   // date format
                   let dateObj = new Date(value);
                   let options = { year: 'numeric', month: 'long', day: 'numeric' };
-                  let str = new Intl.DateTimeFormat(window.localeValue, options).format(dateObj);
+                  let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
                   //console.log();
                   //return self.formatLabel(value, 20);
                   return self.formatLabel(str, 20);
@@ -120,7 +120,7 @@ export default {
               callback: function (tickValue) {
                 "use strict";
                 let currencyCode = this.chart.data.datasets[0].currency_code ? this.chart.data.datasets[0].currency_code : 'EUR';
-                return new Intl.NumberFormat(window.localeValue, {style: 'currency', currency: currencyCode}).format(tickValue);
+                return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
               },
               beginAtZero: true
             }
@@ -134,7 +134,7 @@ export default {
               "use strict";
               let currencyCode = data.datasets[tooltipItem.datasetIndex].currency_code ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
               let nrString =
-                  new Intl.NumberFormat(window.localeValue, {style: 'currency', currency: currencyCode}).format(tooltipItem.yLabel)
+                  new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tooltipItem.yLabel)
 
               return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
             }
