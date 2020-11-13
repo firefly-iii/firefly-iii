@@ -16,6 +16,7 @@ class ChangesForV550 extends Migration
      */
     public function down()
     {
+        // recreate jobs table.
         Schema::drop('jobs');
         Schema::create(
             'jobs',
@@ -32,13 +33,26 @@ class ChangesForV550 extends Migration
                 $table->index(['queue', 'reserved', 'reserved_at']);
             }
         );
+
+        // expand budget / transaction journal table.
         Schema::table(
             'budget_transaction_journal', function (Blueprint $table) {
             $table->dropForeign('budget_id_foreign');
             $table->dropColumn('budget_limit_id');
         }
         );
+
+        // drop failed jobs table.
         Schema::dropIfExists('failed_jobs');
+
+        // drop fields from budget limits
+        Schema::table(
+            'budget_limits',
+            static function (Blueprint $table) {
+                $table->dropColumn('repeat_freq');
+                $table->dropColumn('auto_budget');
+            }
+        );
     }
 
     /**
@@ -48,6 +62,7 @@ class ChangesForV550 extends Migration
      */
     public function up()
     {
+        // drop and recreate jobs table.
         Schema::drop('jobs');
         // this is the NEW table
         Schema::create(
@@ -62,6 +77,7 @@ class ChangesForV550 extends Migration
         }
         );
 
+        // create new failed_jobs table.
         Schema::create(
             'failed_jobs', function (Blueprint $table) {
             $table->id();
@@ -74,6 +90,7 @@ class ChangesForV550 extends Migration
         }
         );
 
+        // update budget / transaction journal table.
         Schema::table(
             'budget_transaction_journal', function (Blueprint $table) {
             $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
@@ -81,6 +98,16 @@ class ChangesForV550 extends Migration
 
 
         }
+        );
+
+        // append budget limits table.
+        // i swear I dropped & recreated this field 15 times already.
+        Schema::table(
+            'budget_limits',
+            static function (Blueprint $table) {
+                $table->string('repeat_freq', 12)->nullable();
+                $table->boolean('auto_budget')->default(false);
+            }
         );
     }
 }
