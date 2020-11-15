@@ -40,10 +40,10 @@
             </td>
             <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'accounts/show/' + transaction.destination_id" v-if="'withdrawal' === tr.type">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + transaction.source_id" v-if="'deposit' === tr.type">{{ tr.source_name }}</a>
-                    <a :href="'accounts/show/' + transaction.destination_id" v-if="'transfer' === tr.type && tr.source_id === account_id">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + transaction.source_id" v-if="'transfer' === tr.type && tr.destination_id === account_id">{{ tr.source_name }}</a>
+                    <a :href="'accounts/show/' + tr.destination_id" v-if="'withdrawal' === tr.type">{{ tr.destination_name }}</a>
+                    <a :href="'accounts/show/' + tr.source_id" v-if="'deposit' === tr.type">{{ tr.source_name }}</a>
+                    <a :href="'accounts/show/' + tr.destination_id" v-if="'transfer' === tr.type && tr.source_id === account_id">{{ tr.destination_name }}</a>
+                    <a :href="'accounts/show/' + tr.source_id" v-if="'transfer' === tr.type && tr.destination_id === account_id">{{ tr.source_name }}</a>
                     <br />
                 </span>
             </td>
@@ -65,12 +65,12 @@
             </td>
             <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'categories/show/' + transaction.category_id"  v-if="0!==tr.category_id">{{ tr.category_name }}</a><br />
+                    <a :href="'categories/show/' + tr.category_id"  v-if="0!==tr.category_id">{{ tr.category_name }}</a><br />
                 </span>
             </td>
             <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'budgets/show/' + transaction.budget_id" v-if="0!==tr.budget_id">{{ tr.budget_name }}</a><br />
+                    <a :href="'budgets/show/' + tr.budget_id" v-if="0!==tr.budget_id">{{ tr.budget_name }}</a><br />
                 </span>
             </td>
         </tr>

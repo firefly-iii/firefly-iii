@@ -20,25 +20,29 @@
 
 <template>
   <div>
+
+    <div class="row">
+      <div class="col">
+        <main-budget-list/>
+      </div>
+    </div>
+
+
     <top-boxes/>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col">
         <main-account/>
       </div>
     </div>
     <main-account-list/>
 
-    <!--
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <main-budget/>
-        </div>
+      <!--
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <main-category />
         </div>
-    </div>
+        -->
 
-
+    <!--
     <div class="row">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <main-debit/>

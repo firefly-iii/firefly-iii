@@ -26,13 +26,13 @@
 
         <div class="info-box-content">
           <span class="info-box-text">{{ $t("firefly.balance") }}</span>
-          <!-- only preferred currency -->
+          <!-- balance in preferred currency -->
           <span class="info-box-number" v-for="balance in prefCurrencyBalances" :title="balance.sub_title">{{ balance.value_parsed }}</span>
 
           <div class="progress bg-info">
             <div class="progress-bar" style="width: 0"></div>
           </div>
-          <!-- all others -->
+          <!-- balance in not preferred currency -->
           <span class="progress-description">
                         <span v-for="(balance, index) in notPrefCurrencyBalances" :title="balance.sub_title">
                           {{ balance.value_parsed }}<span v-if="index+1 !== notPrefCurrencyBalances.length">, </span>
@@ -48,15 +48,15 @@
         <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text"><span>{{ $t('firefly.bills_to_pay') }}</span></span>
+          <span class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
 
-          <!-- only preferred currencies -->
+          <!-- bills unpaid, in preferred currency. -->
           <span class="info-box-number" v-for="balance in prefBillsUnpaid">{{ balance.value_parsed }}</span>
 
           <div class="progress bg-teal">
             <div class="progress-bar" style="width: 0"></div>
           </div>
-          <!-- all others -->
+          <!-- bills unpaid, in other currencies. -->
           <span class="progress-description">
                             <span v-for="(bill, index) in notPrefBillsUnpaid">
                                 {{ bill.value_parsed }}<span v-if="index+1 !== notPrefBillsUnpaid.length">, </span>
@@ -67,9 +67,6 @@
       </div>
     </div>
 
-    <!-- altijd iets in bold -->
-    <!-- subtitle verschilt -->
-    <!-- fix for small devices only -->
     <div class="clearfix hidden-md-up"></div>
 
     <!-- left to spend -->
@@ -78,13 +75,15 @@
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text"><span>{{ $t('firefly.left_to_spend') }}</span></span>
+          <span class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
+
+          <!-- left to spend in preferred currency -->
           <span class="info-box-number" v-for="left in prefLeftToSpend" :title="left.sub_title">{{ left.value_parsed }}</span>
 
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
           </div>
-          <!-- others-->
+          <!-- other currencies-->
           <span class="progress-description">
                             <span v-for="(left, index) in notPrefLeftToSpend">
                                 {{ left.value_parsed }}<span v-if="index+1 !== notPrefLeftToSpend.length">, </span>
@@ -144,6 +143,7 @@ export default {
     notPrefCurrencyBalances: function () {
       return this.filterOnNotCurrency(this.balances);
     },
+
     // contains only bills unpaid in preferred currency or first one.
     prefBillsUnpaid: function () {
       return this.filterOnCurrency(this.billsUnpaid);
@@ -151,6 +151,7 @@ export default {
     notPrefBillsUnpaid: function () {
       return this.filterOnNotCurrency(this.billsUnpaid);
     },
+
     // left to spend
     prefLeftToSpend: function () {
       return this.filterOnCurrency(this.leftToSpend);
@@ -158,6 +159,7 @@ export default {
     notPrefLeftToSpend: function () {
       return this.filterOnNotCurrency(this.leftToSpend);
     },
+
     // net worth
     prefNetWorth: function () {
       return this.filterOnCurrency(this.netWorth);
