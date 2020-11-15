@@ -43,6 +43,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              spent
  * @property int                 $transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
+ * @property string              $repeat_freq
+ * @property bool @auto_budget
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
  * @method static Builder|BudgetLimit query()
@@ -65,10 +67,11 @@ class BudgetLimit extends Model
      */
     protected $casts
         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'start_date' => 'date',
-            'end_date'   => 'date',
+            'created_at'  => 'datetime',
+            'updated_at'  => 'datetime',
+            'start_date'  => 'date',
+            'end_date'    => 'date',
+            'auto_budget' => 'boolean',
         ];
 
     /** @var array Fields that can be filled */
@@ -79,13 +82,13 @@ class BudgetLimit extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): BudgetLimit
     {
         if (auth()->check()) {
-            $budgetLimitId = (int) $value;
+            $budgetLimitId = (int)$value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                                  ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                  ->where('budgets.user_id', auth()->user()->id)

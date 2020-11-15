@@ -175,6 +175,17 @@ Route::group(
     }
 );
 
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\BudgetLimit', 'prefix' => 'limits',
+     'as'        => 'api.v1.limits.',],
+    static function () {
+
+        // Budget API routes:
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+    }
+);
+
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories',
      'as'        => 'api.v1.categories.',],

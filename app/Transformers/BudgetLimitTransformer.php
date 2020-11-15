@@ -24,12 +24,31 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
+use League\Fractal\Resource\Item;
 
 /**
  * Class BudgetLimitTransformer
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
+    /** @var string[] */
+    protected $availableIncludes
+        = [
+            'budget',
+        ];
+
+    /**
+     * Include Budget
+     *
+     * @param BudgetLimit $limit
+     *
+     * @return Item
+     */
+    public function includeBudget(BudgetLimit $limit)
+    {
+        return $this->item($limit->budget, new BudgetTransformer,'budgets ');
+    }
+
     /**
      * Transform the note.
      *
@@ -48,26 +67,29 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int) $currency->id;
+            $currencyId            = (int)$currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = number_format((float) $amount, $currencyDecimalPlaces, '.', '');
+        $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
+
         return [
-            'id'                      => (int) $budgetLimit->id,
+            'id'                      => (int)$budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->format('Y-m-d'),
             'end'                     => $budgetLimit->end_date->format('Y-m-d'),
-            'budget_id'               => (int) $budgetLimit->budget_id,
+            'budget_id'               => (int)$budgetLimit->budget_id,
             'currency_id'             => $currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
             'currency_decimal_places' => $currencyName,
             'currency_symbol'         => $currencySymbol,
             'amount'                  => $amount,
+            'repeat_freq'             => $budgetLimit->repeat_freq,
+            'auto_budget'             => $budgetLimit->auto_budget,
             'links'                   => [
                 [
                     'rel' => 'self',
