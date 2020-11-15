@@ -50,7 +50,7 @@ class ChangesForV550 extends Migration
             'budget_limits',
             static function (Blueprint $table) {
                 $table->dropColumn('repeat_freq');
-                $table->dropColumn('auto_budget');
+                $table->dropColumn('generated');
             }
         );
     }
@@ -80,7 +80,7 @@ class ChangesForV550 extends Migration
         // create new failed_jobs table.
         Schema::create(
             'failed_jobs', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('uuid')->unique();
             $table->text('connection');
             $table->text('queue');
@@ -106,7 +106,7 @@ class ChangesForV550 extends Migration
             'budget_limits',
             static function (Blueprint $table) {
                 $table->string('repeat_freq', 12)->nullable();
-                $table->boolean('auto_budget')->default(false);
+                $table->boolean('generated')->default(false);
             }
         );
     }
