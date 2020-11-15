@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Adldap;
+use Cookie;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
@@ -130,7 +131,7 @@ class LoginController extends Controller
 
         $count         = DB::table('users')->count();
         $loginProvider = config('firefly.login_provider');
-        $title         = (string) trans('firefly.login_page_title');
+        $title         = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
@@ -199,8 +200,12 @@ class LoginController extends Controller
             return redirect($logoutUri);
         }
         if ('remote_user_guard' === $authGuard && '' === $logoutUri) {
-            session()->flash('error',trans('firefly.cant_logout_guard'));
+            session()->flash('error', trans('firefly.cant_logout_guard'));
         }
+
+        // also logout current 2FA tokens.
+        $cookieName = config('google2fa.cookie_name', 'google2fa_token');
+        Cookie::forget($cookieName);
 
         $this->guard()->logout();
 
