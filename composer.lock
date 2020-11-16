@@ -67,16 +67,16 @@
         },
         {
             "name": "adldap2/adldap2-laravel",
-            "version": "v6.1.2",
+            "version": "v6.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Adldap2/Adldap2-Laravel.git",
-                "reference": "03dc1ebf085cc3b7dc69ede84d3dd03e9183171b"
+                "reference": "68bb7802e59096de4161b4addf5c48e2e7d2aaae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Adldap2/Adldap2-Laravel/zipball/03dc1ebf085cc3b7dc69ede84d3dd03e9183171b",
-                "reference": "03dc1ebf085cc3b7dc69ede84d3dd03e9183171b",
+                "url": "https://api.github.com/repos/Adldap2/Adldap2-Laravel/zipball/68bb7802e59096de4161b4addf5c48e2e7d2aaae",
+                "reference": "68bb7802e59096de4161b4addf5c48e2e7d2aaae",
                 "shasum": ""
             },
             "require": {
@@ -117,7 +117,7 @@
                 "laravel",
                 "ldap"
             ],
-            "time": "2020-09-08T01:15:26+00:00"
+            "time": "2020-11-12T14:26:46+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
