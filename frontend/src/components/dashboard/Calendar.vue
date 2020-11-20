@@ -31,7 +31,6 @@
     <date-picker
         v-model="range"
         mode="date"
-        :masks="masks"
         rows="2"
         is-range
     >
