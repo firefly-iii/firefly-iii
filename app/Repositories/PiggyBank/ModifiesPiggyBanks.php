@@ -62,7 +62,7 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         // create event
-        $this->createEvent($piggyBank, $amount);
+        //$this->createEvent($piggyBank, $amount);
 
         return true;
     }

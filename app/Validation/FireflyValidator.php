@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
@@ -289,10 +290,11 @@ class FireflyValidator extends Validator
             return null !== $account;
         }
 
-        // must be numeric for piggy bank things:
         if ('update_piggy' === $actionType) {
-            $value = str_replace(',', '.', $value);
-            return '' !== $value && is_numeric($value);
+            /** @var PiggyBankRepositoryInterface $repository */
+            $repository = app(PiggyBankRepositoryInterface::class);
+            $piggy = $repository->findByName($value);
+            return null !== $piggy;
         }
 
         // return true for the rest.
