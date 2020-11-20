@@ -49,7 +49,7 @@ class ChangesForV550 extends Migration
         Schema::table(
             'budget_limits',
             static function (Blueprint $table) {
-                $table->dropColumn('repeat_freq');
+                $table->dropColumn('period');
                 $table->dropColumn('generated');
             }
         );
@@ -105,7 +105,7 @@ class ChangesForV550 extends Migration
         Schema::table(
             'budget_limits',
             static function (Blueprint $table) {
-                $table->string('repeat_freq', 12)->nullable();
+                $table->string('period', 12)->nullable();
                 $table->boolean('generated')->default(false);
             }
         );

@@ -102,6 +102,7 @@ class BudgetLimitController extends Controller
     public function index(Request $request): JsonResponse
     {
         $manager  = $this->getManager();
+        $manager->parseIncludes('budget');
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
