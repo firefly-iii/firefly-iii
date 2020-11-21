@@ -3,7 +3,7 @@
 [ -d "/sites" ] && exit 1;
 
 # build translations.
-php ~/Sites/tools/firefly-iii-tools/cli.php ff3:json-translations --v2
+#php ~/Sites/tools/firefly-iii-tools/cli.php ff3:json-translations --v2
 
 # remove old stuff
 rm -rf public/
