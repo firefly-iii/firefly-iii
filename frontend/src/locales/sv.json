@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Sparkonto",
         "account_role_sharedAsset": "Delat tillg\u00e5ngskonto",
         "account_role_ccAsset": "Kreditkort",
-        "account_role_cashWalletAsset": "Pl\u00e5nbok"
+        "account_role_cashWalletAsset": "Pl\u00e5nbok",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Spargris",

@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Sparekonto",
         "account_role_sharedAsset": "Delt aktivakonto",
         "account_role_ccAsset": "Kredittkort",
-        "account_role_cashWalletAsset": "Kontant lommebok"
+        "account_role_cashWalletAsset": "Kontant lommebok",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Sparegris",

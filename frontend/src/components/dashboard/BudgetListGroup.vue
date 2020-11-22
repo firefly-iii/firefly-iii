@@ -26,8 +26,8 @@
     <div class="card-body table-responsive p-0">
       <table class="table table-sm">
         <tbody>
-          <BudgetLimitRow v-bind:key="budgetLimit.id" v-for="budgetLimit in budgetLimits" :budgetLimit="budgetLimit" />
-          <BudgetRow v-bind:key="budget.id" v-for="budget in budgets" :budget="budget" />
+          <BudgetLimitRow v-bind:key="key" v-for="(budgetLimit, key) in budgetLimits" :budgetLimit="budgetLimit" />
+          <BudgetRow v-bind:key="key" v-for="(budget, key) in budgets" :budget="budget" />
         </tbody>
       </table>
     </div>

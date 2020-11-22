@@ -34,7 +34,14 @@
         "account_role_savingAsset": "T\u00e0i kho\u1ea3n ti\u1ebft ki\u1ec7m",
         "account_role_sharedAsset": "t\u00e0i kho\u1ea3n d\u00f9ng chung",
         "account_role_ccAsset": "Th\u1ebb t\u00edn d\u1ee5ng",
-        "account_role_cashWalletAsset": "V\u00ed ti\u1ec1n m\u1eb7t"
+        "account_role_cashWalletAsset": "V\u00ed ti\u1ec1n m\u1eb7t",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",

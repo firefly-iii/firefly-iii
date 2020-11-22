@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Conto risparmio",
         "account_role_sharedAsset": "Conto attivit\u00e0 condiviso",
         "account_role_ccAsset": "Carta di credito",
-        "account_role_cashWalletAsset": "Portafoglio"
+        "account_role_cashWalletAsset": "Portafoglio",
+        "daily_budgets": "Budget giornalieri",
+        "weekly_budgets": "Budget settimanali",
+        "monthly_budgets": "Budget mensili",
+        "quarterly_budgets": "Bilanci trimestrali",
+        "half_year_budgets": "Bilanci semestrali",
+        "yearly_budgets": "Budget annuali",
+        "other_budgets": "Budget a periodi personalizzati"
     },
     "list": {
         "piggy_bank": "Salvadanaio",

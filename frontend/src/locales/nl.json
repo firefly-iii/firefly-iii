@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Spaarrekening",
         "account_role_sharedAsset": "Gedeelde betaalrekening",
         "account_role_ccAsset": "Credit card",
-        "account_role_cashWalletAsset": "Cash"
+        "account_role_cashWalletAsset": "Cash",
+        "daily_budgets": "Dagelijkse budgetten",
+        "weekly_budgets": "Wekelijkse budgetten",
+        "monthly_budgets": "Maandelijkse budgetten",
+        "quarterly_budgets": "Driemaandelijkse budgetten",
+        "half_year_budgets": "Halfjaarlijkse budgetten",
+        "yearly_budgets": "Jaarlijkse budgetten",
+        "other_budgets": "Aangepaste budgetten"
     },
     "list": {
         "piggy_bank": "Spaarpotje",

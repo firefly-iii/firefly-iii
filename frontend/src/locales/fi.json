@@ -34,7 +34,14 @@
         "account_role_savingAsset": "S\u00e4\u00e4st\u00f6tili",
         "account_role_sharedAsset": "Jaettu k\u00e4ytt\u00f6tili",
         "account_role_ccAsset": "Luottokortti",
-        "account_role_cashWalletAsset": "K\u00e4teinen"
+        "account_role_cashWalletAsset": "K\u00e4teinen",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",

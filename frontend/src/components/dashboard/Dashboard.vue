@@ -21,6 +21,9 @@
 <template>
   <div>
 
+
+
+
     <top-boxes/>
     <div class="row">
       <div class="col">
@@ -35,12 +38,11 @@
       </div>
     </div>
 
-
-    <!--
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-          <main-category />
+    <div class="row">
+      <div class="col">
+        <main-category-list />
       </div>
-      -->
+    </div>
 
     <!--
     <div class="row">
@@ -67,7 +69,7 @@
 <script>
 export default {
   name: "Dashboard",
-  mounted() {
+  created() {
     if (!localStorage.currencyPreference) {
       this.getCurrencyPreference();
     }

@@ -78,28 +78,23 @@ export default {
       locale: 'en-US',
     }
   },
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
-    console.log('Mounted.')
     this.collectData();
   },
   methods:
       {
         collectData() {
-          console.log('collectData');
           this.getBudgets();
         },
         getBudgets() {
-          console.log('getBudgets()');
           axios.get('./api/v1/budgets?start=' + window.sessionStart + '&end=' + window.sessionEnd)
               .then(response => {
-                      console.log('Go to parseBudgets');
                       this.parseBudgets(response.data);
                     }
               );
         },
         parseBudgets(data) {
-          console.log('in parseBudgets');
           for (let key in data.data) {
             if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
               let current = data.data[key];
@@ -120,23 +115,18 @@ export default {
 
             }
           }
-          console.log('Found ' + this.rawBudgets.length + ' budgets + expense info.');
           this.getBudgetLimits();
         },
 
 
         getBudgetLimits() {
-          console.log('getBudgetLimits');
           axios.get('./api/v1/budgets/limits?start=' + window.sessionStart + '&end=' + window.sessionEnd)
               .then(response => {
-                      console.log('Go to parse budget limits.');
                       this.parseBudgetLimits(response.data);
                     }
               );
         },
         parseBudgetLimits(data) {
-          console.log('parsebudgetlimits');
-
           for (let key in data.included) {
             if (data.included.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
               this.budgets[data.included[key].id] =
@@ -225,7 +215,6 @@ export default {
           //     };
           //
           //
-          //     console.log(data.data[key]);
           //
           //     let period = data.data[key].attributes.period ?? 'other';
           //     this.budgetLimits[period].push(obj);
@@ -234,19 +223,14 @@ export default {
 
         },
         filterBudgets(budgetId, currencyId) {
-          //console.log('filterBudgets(' + budgetId + ',' + currencyId + ')');
           for (let key in this.rawBudgets) {
             if (this.rawBudgets.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
               if (this.rawBudgets[key].currency_id === currencyId && this.rawBudgets[key].id === budgetId) {
-                //console.log('found! (' + budgetId + ',' + currencyId + ')');
                 this.rawBudgets.splice(key, 1);
               }
             }
           }
-          console.log('Budgets to display left: ' + this.rawBudgets.length);
-
         }
-
       }
 }
 </script>

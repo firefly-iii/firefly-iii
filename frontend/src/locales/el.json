@@ -34,7 +34,14 @@
         "account_role_savingAsset": "\u039b\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03b1\u03c0\u03bf\u03c4\u03b1\u03bc\u03af\u03b5\u03c5\u03c3\u03b7\u03c2",
         "account_role_sharedAsset": "\u039a\u03bf\u03b9\u03bd\u03cc\u03c2 \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03ba\u03b5\u03c6\u03b1\u03bb\u03b1\u03af\u03bf\u03c5",
         "account_role_ccAsset": "\u03a0\u03b9\u03c3\u03c4\u03c9\u03c4\u03b9\u03ba\u03ae \u03ba\u03ac\u03c1\u03c4\u03b1",
-        "account_role_cashWalletAsset": "\u03a0\u03bf\u03c1\u03c4\u03bf\u03c6\u03cc\u03bb\u03b9 \u03bc\u03b5\u03c4\u03c1\u03b7\u03c4\u03ce\u03bd"
+        "account_role_cashWalletAsset": "\u03a0\u03bf\u03c1\u03c4\u03bf\u03c6\u03cc\u03bb\u03b9 \u03bc\u03b5\u03c4\u03c1\u03b7\u03c4\u03ce\u03bd",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "\u039a\u03bf\u03c5\u03bc\u03c0\u03b1\u03c1\u03ac\u03c2",

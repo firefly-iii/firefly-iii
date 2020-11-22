@@ -34,6 +34,14 @@
 <script>
 export default {
   name: "BudgetRow",
+  mounted() {
+    this.locale = localStorage.locale ?? 'en-US';
+  },
+  data() {
+    return {
+      locale: 'en-US',
+    }
+  },
   props: {
     budget: {
       type: Object,

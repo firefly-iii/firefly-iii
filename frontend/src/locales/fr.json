@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Compte d\u2019\u00e9pargne",
         "account_role_sharedAsset": "Compte d'actif partag\u00e9",
         "account_role_ccAsset": "Carte de cr\u00e9dit",
-        "account_role_cashWalletAsset": "Porte-monnaie"
+        "account_role_cashWalletAsset": "Porte-monnaie",
+        "daily_budgets": "Budgets quotidiens",
+        "weekly_budgets": "Budgets hebdomadaires",
+        "monthly_budgets": "Budgets mensuels",
+        "quarterly_budgets": "Budgets trimestriels",
+        "half_year_budgets": "Budgets semestriels",
+        "yearly_budgets": "Budgets annuels",
+        "other_budgets": "Budgets \u00e0 p\u00e9riode personnalis\u00e9e"
     },
     "list": {
         "piggy_bank": "Tirelire",

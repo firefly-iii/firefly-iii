@@ -66,7 +66,7 @@
 <script>
     export default {
         name: "MainPiggyList",
-        mounted() {
+      created() {
             axios.get('./api/v1/piggy_banks')
                 .then(response => {
                           this.loadPiggyBanks(response.data.data);

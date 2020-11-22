@@ -34,7 +34,14 @@
         "account_role_savingAsset": "\u0160etriaci \u00fa\u010det",
         "account_role_sharedAsset": "Zdie\u013ean\u00fd \u00fa\u010det akt\u00edv",
         "account_role_ccAsset": "Kreditn\u00e1 karta",
-        "account_role_cashWalletAsset": "Pe\u0148a\u017eenka"
+        "account_role_cashWalletAsset": "Pe\u0148a\u017eenka",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

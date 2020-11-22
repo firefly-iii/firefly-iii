@@ -44,7 +44,7 @@ export default {
       accounts: [],
     }
   },
-  mounted() {
+  created() {
     axios.get('./api/v1/preferences/frontpageAccounts')
         .then(response => {
                 this.loadAccounts(response);

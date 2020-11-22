@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Spo\u0159ic\u00ed \u00fa\u010det",
         "account_role_sharedAsset": "Sd\u00edlen\u00fd \u00fa\u010det aktiv",
         "account_role_ccAsset": "Kreditn\u00ed karta",
-        "account_role_cashWalletAsset": "Pen\u011b\u017eenka"
+        "account_role_cashWalletAsset": "Pen\u011b\u017eenka",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

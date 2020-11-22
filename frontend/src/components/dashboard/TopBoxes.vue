@@ -168,7 +168,7 @@ export default {
       return this.filterOnNotCurrency(this.netWorth);
     },
   },
-  mounted() {
+  created() {
     this.prepareComponent();
     this.currencyPreference = localStorage.currencyPreference ? JSON.parse(localStorage.currencyPreference) : {};
   },

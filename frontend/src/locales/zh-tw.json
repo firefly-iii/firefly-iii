@@ -34,7 +34,14 @@
         "account_role_savingAsset": "\u5132\u84c4\u5e33\u6236",
         "account_role_sharedAsset": "\u5171\u7528\u8cc7\u7522\u5e33\u6236",
         "account_role_ccAsset": "\u4fe1\u7528\u5361",
-        "account_role_cashWalletAsset": "\u73fe\u91d1\u9322\u5305"
+        "account_role_cashWalletAsset": "\u73fe\u91d1\u9322\u5305",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",

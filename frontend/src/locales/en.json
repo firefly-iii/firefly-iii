@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Savings account",
         "account_role_sharedAsset": "Shared asset account",
         "account_role_ccAsset": "Credit card",
-        "account_role_cashWalletAsset": "Cash wallet"
+        "account_role_cashWalletAsset": "Cash wallet",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Piggy bank",

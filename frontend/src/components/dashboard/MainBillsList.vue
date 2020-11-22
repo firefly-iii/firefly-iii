@@ -57,7 +57,7 @@
 
     export default {
         name: "MainBillsList",
-        mounted() {
+      created() {
             axios.get('./api/v1/bills?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
                           this.loadBills(response.data.data);

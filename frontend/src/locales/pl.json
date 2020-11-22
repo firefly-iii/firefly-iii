@@ -34,7 +34,14 @@
         "account_role_savingAsset": "Konto oszcz\u0119dno\u015bciowe",
         "account_role_sharedAsset": "Wsp\u00f3\u0142dzielone konto aktyw\u00f3w",
         "account_role_ccAsset": "Karta kredytowa",
-        "account_role_cashWalletAsset": "Portfel got\u00f3wkowy"
+        "account_role_cashWalletAsset": "Portfel got\u00f3wkowy",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets"
     },
     "list": {
         "piggy_bank": "Skarbonka",
