@@ -337,7 +337,6 @@ return [
     'sync_attributes' => [
 
         'email' => envNonEmpty('ADLDAP_SYNC_FIELD', 'userprincipalname'),
-        //'name'  => 'cn',
 
     ],
 
