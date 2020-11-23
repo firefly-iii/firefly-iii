@@ -328,16 +328,16 @@
         },
         {
             "name": "diglactic/laravel-breadcrumbs",
-            "version": "v6.0.2",
+            "version": "v6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/diglactic/laravel-breadcrumbs.git",
-                "reference": "ca30e03a22dd724bcc6bbcdba6cd9faf24ac455e"
+                "reference": "82991d5dafb02788aebccaf69f6fcb2683b4cee9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/ca30e03a22dd724bcc6bbcdba6cd9faf24ac455e",
-                "reference": "ca30e03a22dd724bcc6bbcdba6cd9faf24ac455e",
+                "url": "https://api.github.com/repos/diglactic/laravel-breadcrumbs/zipball/82991d5dafb02788aebccaf69f6fcb2683b4cee9",
+                "reference": "82991d5dafb02788aebccaf69f6fcb2683b4cee9",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2020-11-04T17:35:19+00:00"
+            "time": "2020-11-19T17:13:13+00:00"
         },
         {
             "name": "doctrine/cache",
