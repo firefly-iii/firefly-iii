@@ -1,5 +1,5 @@
 // date ranges
-var ranges = {}
+var ranges = {};
 {% for title, range in dateRangeConfig.ranges %}
     ranges["{{ title }}"] = [moment("{{ range[0].format('Y-m-d') }}"), moment("{{ range[1].format('Y-m-d') }}")];
 {% endfor %}
@@ -32,7 +32,7 @@ var currencyCode = '{{ currencyCode|escape('js') }}';
 var currencySymbol = '{{ currencySymbol|escape('js') }}';
 var mon_decimal_point = "{{ accountingLocaleInfo.mon_decimal_point|escape('js') }}";
 var mon_thousands_sep = "{{ accountingLocaleInfo.mon_thousands_sep|escape('js') }}";
-var frac_digits = {{ accountingLocaleInfo.frac_digits }};
+var frac_digits = {{ accountingLocaleInfo.frac_digits|default(0) }};
 var noDataForChart = '{{ trans('firefly.no_data_for_chart')|escape('js') }}';
 var showFullList = '{{ trans('firefly.show_full_list')|escape('js') }}';
 var showOnlyTop = '{{ trans('firefly.show_only_top',{number:listLength})|escape('js') }}';
