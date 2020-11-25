@@ -35,19 +35,23 @@ use FireflyIII\Support\System\GeneratesInstallationId;
 class InstallationId
 {
     use GeneratesInstallationId;
+
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
      * @param Closure                  $next
      *
-     * @throws FireflyException
-     *
      * @return mixed
+     *
+     * @throws FireflyException
      *
      */
     public function handle($request, Closure $next)
     {
+
+
+
         $this->generateInstallationId();
 
         return $next($request);
