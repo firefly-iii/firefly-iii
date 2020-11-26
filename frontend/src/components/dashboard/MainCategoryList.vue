@@ -152,13 +152,19 @@ export default {
           this.sortCategories();
         },
         sortCategories() {
-
-          this.categories.sort(function (one, two) {
-            return (one.spent + one.earned) - (two.spent + two.earned);
-          });
+          // no longer care about keys:
+          let array = [];
           for (let cat in this.categories) {
             if (this.categories.hasOwnProperty(cat)) {
-              let current = this.categories[cat];
+              array.push(this.categories[cat]);
+            }
+          }
+          array.sort(function (one, two) {
+            return (one.spent + one.earned) - (two.spent + two.earned);
+          });
+          for (let cat in array) {
+            if (array.hasOwnProperty(cat)) {
+              let current = array[cat];
               current.spentPct = (current.spent / this.spent) * 100;
               current.earnedPct = (current.earned / this.earned) * 100;
               this.sortedList.push(current);
