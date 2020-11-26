@@ -41,7 +41,7 @@ return [
     */
 
     'paths' => [
-        realpath(base_path(sprintf('resources/views/%s', $layout ?? 'v1'))),
+        realpath(base_path(sprintf('resources/views/%s', $layout))),
     ],
 
     /*
@@ -55,6 +55,6 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path(sprintf('framework/views/%s', $layout ?? 'v1'))),
+    'compiled' => realpath(storage_path(sprintf('framework/views/%s', $layout))),
 
 ];
