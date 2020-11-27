@@ -47,24 +47,12 @@ use Illuminate\Http\JsonResponse;
  */
 class SummaryController extends Controller
 {
-    /** @var AvailableBudgetRepositoryInterface */
-    private $abRepository;
-
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
-
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
-
+    private AvailableBudgetRepositoryInterface $abRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private BillRepositoryInterface $billRepository;
+    private BudgetRepositoryInterface $budgetRepository;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * SummaryController constructor.

@@ -395,6 +395,7 @@ Route::group(
     }
 );
 
+// destroy data route.
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
      'as'        => 'api.v1.data.',],
@@ -402,6 +403,18 @@ Route::group(
 
         // Overview API routes:
         Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
+// INSIGHT
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight', 'prefix' => 'insight',
+     'as'        => 'api.v1.insight.',],
+    static function () {
+
+        // Insight in expenses.
+        // Insight in expenses by date.
+        Route::get('expense/date/basic', ['uses' => 'Expense\DateController@basic', 'as' => 'expense.date.basic']);
     }
 );
 
