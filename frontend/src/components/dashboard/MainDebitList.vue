@@ -23,12 +23,28 @@
     <div class="card-header">
       <h3 class="card-title">{{ $t('firefly.expense_accounts') }}</h3>
     </div>
-      <div class="card-body table-responsive p-0">
-        <table class="table table-sm">
-          <tr>
-            <td>hallo</td>
-          </tr>
-        </table>
+    <div class="card-body table-responsive p-0">
+      <table class="table table-sm">
+        <tbody>
+        <tr v-for="entry in expenses">
+          <td style="width:20%;"><a :href="'./accounts/show/' +  entry.id">{{ entry.name }}</a></td>
+          <td class="align-middle">
+            <div class="progress" v-if="entry.pct > 0">
+              <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" :aria-valuenow="entry.pct"
+                   :style="{ width: entry.pct  + '%'}" aria-valuemin="0"
+                   aria-valuemax="100">
+                <span v-if="entry.pct > 20">
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}
+                </span>
+              </div>
+              <span v-if="entry.pct <= 20">&nbsp;
+              {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}
+              </span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div class="card-footer">
       <a href="./transactions/withdrawals" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_expenses') }}</a>
@@ -38,14 +54,47 @@
 
 <script>
 export default {
-name: "MainDebitList",
-  created() {
-    axios.get('./api/v1/chart/account/expense?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-        .then(response => {
-          // do something with response.
-          console.log(response.data);
-        });
+  name: "MainDebitList",
+  data() {
+    return {
+      locale: 'en-US',
+      expenses: [],
+      max: 0
+    }
   },
+  created() {
+    this.locale = localStorage.locale ?? 'en-US';
+    this.getExpenses();
+  },
+  methods: {
+    getExpenses() {
+      axios.get('./api/v1/insight/expense/date/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+          .then(response => {
+            // do something with response.
+            this.parseExpenses(response.data);
+          });
+    },
+    parseExpenses(data) {
+      for (let mainKey in data) {
+        if (data.hasOwnProperty(mainKey) && /^0$|^[1-9]\d*$/.test(mainKey) && mainKey <= 4294967294) {
+          // contains currency info and entries.
+          let current = data[mainKey];
+          if (0 === parseInt(mainKey)) {
+            this.max = data[mainKey].difference_float;
+            current.pct = 100;
+          }
+          if(0 !== parseInt(mainKey)) {
+            // calc percentage:
+            current.pct = (data[mainKey].difference_float / this.max) * 100;
+          }
+          this.expenses.push(current);
+
+        }
+      }
+      console.log(this.expenses);
+      // sort:
+    }
+  }
 }
 </script>
 

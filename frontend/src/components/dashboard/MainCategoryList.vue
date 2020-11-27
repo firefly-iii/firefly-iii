@@ -73,7 +73,7 @@
 export default {
   name: "MainCategoryList",
 
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
     this.getCategories();
   },
