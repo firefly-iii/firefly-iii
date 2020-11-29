@@ -800,6 +800,7 @@ return [
             AccountType::ASSET          => [AccountType::RECONCILIATION],
         ],
     ],
+    // if you add fields to this array, dont forget to update the export routine (ExportDataGenerator).
     'journal_meta_fields' => [
         // sepa
         'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
