@@ -85,13 +85,14 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration'                => [
+    'configuration' => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags'                => [
+    'feature_flags' => [
         'export'    => true,
         'telemetry' => true,
+        'webhooks'  => false,
     ],
 
     'version'                      => '5.4.6',
@@ -120,6 +121,7 @@ return [
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
+    'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
     'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
     'update_minimum_age'           => 6,
@@ -801,7 +803,7 @@ return [
         ],
     ],
     // if you add fields to this array, dont forget to update the export routine (ExportDataGenerator).
-    'journal_meta_fields' => [
+    'journal_meta_fields'       => [
         // sepa
         'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
         'sepa_db', 'sepa_country', 'sepa_ep',
