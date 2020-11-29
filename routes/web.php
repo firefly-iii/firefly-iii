@@ -1077,6 +1077,16 @@ Route::group(
     }
 );
 
+/*
+ * Webhooks management
+ */
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Webhooks', 'prefix' => 'webhooks', 'as' => 'webhooks.'],
+    static function () {
+        Route::get('index', ['uses' => 'IndexController@index', 'as' => 'index']);
+    }
+);
+
 /**
  * For the admin routes, the user must be logged in and have the role of 'owner'.
  */

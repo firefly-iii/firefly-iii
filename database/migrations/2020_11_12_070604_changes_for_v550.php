@@ -116,7 +116,7 @@ class ChangesForV550 extends Migration
         Schema::create(
             'webhooks',
             static function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->integer('user_id', false, true);
                 $table->softDeletes();
                 $table->boolean('active')->default(true);
@@ -133,7 +133,7 @@ class ChangesForV550 extends Migration
         Schema::create(
             'webhook_messages',
             static function (Blueprint $table) {
-                $table->bigIncrements('id');
+                $table->increments('id');
                 $table->integer('webhook_id', false, true);
                 $table->softDeletes();
                 $table->boolean('sent')->default(false);
