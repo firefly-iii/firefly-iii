@@ -35,13 +35,15 @@
         "account_role_sharedAsset": "Cuenta de ingresos compartida",
         "account_role_ccAsset": "Tarjeta de Cr\u00e9dito",
         "account_role_cashWalletAsset": "Billetera de efectivo",
-        "daily_budgets": "Daily budgets",
-        "weekly_budgets": "Weekly budgets",
-        "monthly_budgets": "Monthly budgets",
-        "quarterly_budgets": "Quarterly budgets",
-        "half_year_budgets": "Half-yearly budgets",
-        "yearly_budgets": "Yearly budgets",
-        "other_budgets": "Custom timed budgets"
+        "daily_budgets": "Presupuestos diarios",
+        "weekly_budgets": "Presupuestos semanales",
+        "monthly_budgets": "Presupuestos mensuales",
+        "quarterly_budgets": "Presupuestos trimestrales",
+        "half_year_budgets": "Presupuestos semestrales",
+        "yearly_budgets": "Presupuestos anuales",
+        "other_budgets": "Presupuestos de tiempo personalizado",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Cuentas de ingresos"
     },
     "list": {
         "piggy_bank": "Alcancilla",

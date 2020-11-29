@@ -41,7 +41,9 @@
         "quarterly_budgets": "Quarterly budgets",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
-        "other_budgets": "Custom timed budgets"
+        "other_budgets": "Custom timed budgets",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "P\u0159\u00edjmov\u00e9 \u00fa\u010dty"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

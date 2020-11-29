@@ -41,7 +41,9 @@
         "quarterly_budgets": "Quarterly budgets",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
-        "other_budgets": "Custom timed budgets"
+        "other_budgets": "Custom timed budgets",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "\u0421\u0447\u0435\u0442\u0430 \u0434\u043e\u0445\u043e\u0434\u043e\u0432"
     },
     "list": {
         "piggy_bank": "\u041a\u043e\u043f\u0438\u043b\u043a\u0430",

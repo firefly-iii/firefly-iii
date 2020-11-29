@@ -41,7 +41,9 @@
         "quarterly_budgets": "Driemaandelijkse budgetten",
         "half_year_budgets": "Halfjaarlijkse budgetten",
         "yearly_budgets": "Jaarlijkse budgetten",
-        "other_budgets": "Aangepaste budgetten"
+        "other_budgets": "Aangepaste budgetten",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Debiteuren"
     },
     "list": {
         "piggy_bank": "Spaarpotje",

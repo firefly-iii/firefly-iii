@@ -35,13 +35,15 @@
         "account_role_sharedAsset": "\u0421\u043c\u0435\u0442\u043a\u0430 \u0437\u0430 \u0441\u043f\u043e\u0434\u0435\u043b\u0435\u043d\u0438 \u0430\u043a\u0442\u0438\u0432\u0438",
         "account_role_ccAsset": "\u041a\u0440\u0435\u0434\u0438\u0442\u043d\u0430 \u043a\u0430\u0440\u0442\u0430",
         "account_role_cashWalletAsset": "\u041f\u0430\u0440\u0438\u0447\u0435\u043d \u043f\u043e\u0440\u0442\u0444\u0435\u0439\u043b",
-        "daily_budgets": "Daily budgets",
-        "weekly_budgets": "Weekly budgets",
-        "monthly_budgets": "Monthly budgets",
-        "quarterly_budgets": "Quarterly budgets",
-        "half_year_budgets": "Half-yearly budgets",
-        "yearly_budgets": "Yearly budgets",
-        "other_budgets": "Custom timed budgets"
+        "daily_budgets": "\u0414\u043d\u0435\u0432\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "weekly_budgets": "\u0421\u0435\u0434\u043c\u0438\u0447\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "monthly_budgets": "\u041c\u0435\u0441\u0435\u0447\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "quarterly_budgets": "\u0422\u0440\u0438\u043c\u0435\u0441\u0435\u0447\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "half_year_budgets": "\u0428\u0435\u0441\u0442\u043c\u0435\u0441\u0435\u0447\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "yearly_budgets": "\u0413\u043e\u0434\u0438\u0448\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "other_budgets": "\u0412\u0440\u0435\u043c\u0435\u0432\u043e \u043f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u0430\u043d\u0438 \u0431\u044e\u0434\u0436\u0435\u0442\u0438",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "\u0421\u043c\u0435\u0442\u043a\u0438 \u0437\u0430 \u043f\u0440\u0438\u0445\u043e\u0434\u0438"
     },
     "list": {
         "piggy_bank": "\u041a\u0430\u0441\u0438\u0447\u043a\u0430",

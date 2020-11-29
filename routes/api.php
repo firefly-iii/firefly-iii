@@ -415,6 +415,10 @@ Route::group(
         // Insight in expenses.
         // Insight in expenses by date.
         Route::get('expense/date/basic', ['uses' => 'Expense\DateController@basic', 'as' => 'expense.date.basic']);
+
+        // Insight in income.
+        // Insight in income by date.
+        Route::get('income/date/basic', ['uses' => 'Income\DateController@basic', 'as' => 'income.date.basic']);
     }
 );
 

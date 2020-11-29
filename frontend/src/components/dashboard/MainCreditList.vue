@@ -1,5 +1,5 @@
 <!--
-  - MainDebitList.vue
+  - MainCreditList.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,16 +21,16 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">{{ $t('firefly.expense_accounts') }}</h3>
+      <h3 class="card-title">{{ $t('firefly.revenue_accounts') }}</h3>
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-sm">
         <tbody>
-        <tr v-for="entry in expenses">
+        <tr v-for="entry in income">
           <td style="width:20%;"><a :href="'./accounts/show/' +  entry.id">{{ entry.name }}</a></td>
           <td class="align-middle">
             <div class="progress" v-if="entry.pct > 0">
-              <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" :aria-valuenow="entry.pct"
+              <div class="progress-bar progress-bar-striped bg-success" role="progressbar" :aria-valuenow="entry.pct"
                    :style="{ width: entry.pct  + '%'}" aria-valuemin="0"
                    aria-valuemax="100">
                 <span v-if="entry.pct > 20">
@@ -47,18 +47,18 @@
       </table>
     </div>
     <div class="card-footer">
-      <a href="./transactions/withdrawal" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_withdrawals') }}</a>
+      <a href="./transactions/deposit" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_deposits') }}</a>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "MainDebitList",
+  name: "MainCreditList",
   data() {
     return {
       locale: 'en-US',
-      expenses: [],
+      income: [],
       max: 0
     }
   },
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getExpenses() {
-      axios.get('./api/v1/insight/expense/date/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+      axios.get('./api/v1/insight/income/date/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
           .then(response => {
             // do something with response.
             this.parseExpenses(response.data);
@@ -87,7 +87,7 @@ export default {
             // calc percentage:
             current.pct = (data[mainKey].difference_float / this.max) * 100;
           }
-          this.expenses.push(current);
+          this.income.push(current);
 
         }
       }

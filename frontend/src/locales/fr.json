@@ -41,7 +41,9 @@
         "quarterly_budgets": "Budgets trimestriels",
         "half_year_budgets": "Budgets semestriels",
         "yearly_budgets": "Budgets annuels",
-        "other_budgets": "Budgets \u00e0 p\u00e9riode personnalis\u00e9e"
+        "other_budgets": "Budgets \u00e0 p\u00e9riode personnalis\u00e9e",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Comptes de recettes"
     },
     "list": {
         "piggy_bank": "Tirelire",

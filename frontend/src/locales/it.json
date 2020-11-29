@@ -41,7 +41,9 @@
         "quarterly_budgets": "Bilanci trimestrali",
         "half_year_budgets": "Bilanci semestrali",
         "yearly_budgets": "Budget annuali",
-        "other_budgets": "Budget a periodi personalizzati"
+        "other_budgets": "Budget a periodi personalizzati",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Conti entrate"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
