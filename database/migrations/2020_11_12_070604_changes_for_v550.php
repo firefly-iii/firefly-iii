@@ -53,6 +53,8 @@ class ChangesForV550 extends Migration
                 $table->dropColumn('generated');
             }
         );
+        Schema::dropIfExists('webhook_messages');
+        Schema::dropIfExists('webhooks');
     }
 
     /**
@@ -107,6 +109,38 @@ class ChangesForV550 extends Migration
             static function (Blueprint $table) {
                 $table->string('period', 12)->nullable();
                 $table->boolean('generated')->default(false);
+            }
+        );
+
+        // new webhooks table
+        Schema::create(
+            'webhooks',
+            static function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('user_id', false, true);
+                $table->softDeletes();
+                $table->boolean('active')->default(true);
+                $table->string('trigger',32);
+                $table->string('response', 32);
+                $table->string('delivery',32);
+                $table->string('url',512);
+
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            }
+        );
+
+        // new webhook_messages table
+        Schema::create(
+            'webhook_messages',
+            static function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->integer('webhook_id', false, true);
+                $table->softDeletes();
+                $table->boolean('sent')->default(false);
+                $table->boolean('errored')->default(false);
+                $table->string('uuid',64);
+                $table->longText('message');
+                $table->foreign('webhook_id')->references('id')->on('webhooks')->onDelete('cascade');
             }
         );
     }
