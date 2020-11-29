@@ -44,6 +44,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Repositories\Webhook\WebhookRepository;
+use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
@@ -182,6 +184,19 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            WebhookRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var WebhookRepository $repository */
+                $repository = app(WebhookRepository::class);
                 if ($app->auth->check()) {
                     $repository->setUser(auth()->user());
                 }

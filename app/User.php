@@ -45,6 +45,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Webhook;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,42 +65,42 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class User.
  *
- * @property int                                                                                $id
- * @property string                                                                             $email
- * @property bool                                                                               $isAdmin used in admin user
+ * @property int                                                                  $id
+ * @property string                                                               $email
+ * @property bool                                                                 $isAdmin used in admin user
  *           controller.
- * @property bool                                                                                                           $has2FA  used in admin user
+ * @property bool                                                                 $has2FA  used in admin user
  *           controller.
- * @property array                                                                                                          $prefs   used in admin user
+ * @property array                                                                $prefs   used in admin user
  *           controller.
- * @property string                                                                                                         password
- * @property string                                                                                                         $mfa_secret
- * @property Collection                                                                                                     roles
- * @property string                                                                                                         blocked_code
- * @property bool                                                            blocked
- * @property Carbon|null                                 $created_at
- * @property Carbon|null                                 $updated_at
- * @property string|null                                                     $remember_token
- * @property string|null                                                     $reset
- * @property-read \Illuminate\Database\Eloquent\Collection|Account[]         $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]      $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|AvailableBudget[] $availableBudgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Bill[]            $bills
- * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]          $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[]        $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|Client[]                     $clients
- * @property-read \Illuminate\Database\Eloquent\Collection|CurrencyExchangeRate[]          $currencyExchangeRates
- * @property-read DatabaseNotificationCollection|DatabaseNotification[]                         $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBank[]                          $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|Preference[]                         $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|Recurrence[]                  $recurrences
- * @property-read \Illuminate\Database\Eloquent\Collection|RuleGroup[]                               $ruleGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|Rule[]                                                           $rules
- * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]                                                            $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|Token[]                                                          $tokens
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[]                                               $transactionGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]                                             $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]                                                    $transactions
+ * @property string                                                               password
+ * @property string                                                               $mfa_secret
+ * @property Collection                                                           roles
+ * @property string                                                               blocked_code
+ * @property bool                                                                 blocked
+ * @property Carbon|null                                                          $created_at
+ * @property Carbon|null                                                          $updated_at
+ * @property string|null                                                          $remember_token
+ * @property string|null                                                          $reset
+ * @property-read \Illuminate\Database\Eloquent\Collection|Account[]              $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]           $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|AvailableBudget[]      $availableBudgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|Bill[]                 $bills
+ * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]               $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|Category[]             $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|Client[]               $clients
+ * @property-read \Illuminate\Database\Eloquent\Collection|CurrencyExchangeRate[] $currencyExchangeRates
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[]           $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBank[]            $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|Preference[]           $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection|Recurrence[]           $recurrences
+ * @property-read \Illuminate\Database\Eloquent\Collection|RuleGroup[]            $ruleGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|Rule[]                 $rules
+ * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]                  $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection|Token[]                $tokens
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[]     $transactionGroups
+ * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]   $transactionJournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]          $transactions
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -113,31 +114,35 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereReset($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
- * @property string|null $objectguid
- * @property-read int|null $accounts_count
- * @property-read int|null $attachments_count
- * @property-read int|null $available_budgets_count
- * @property-read int|null $bills_count
- * @property-read int|null $budgets_count
- * @property-read int|null $categories_count
- * @property-read int|null $clients_count
- * @property-read int|null $currency_exchange_rates_count
- * @property-read int|null $notifications_count
- * @property-read int|null $piggy_banks_count
- * @property-read int|null $preferences_count
- * @property-read int|null $recurrences_count
- * @property-read int|null $roles_count
- * @property-read int|null $rule_groups_count
- * @property-read int|null $rules_count
- * @property-read int|null $tags_count
- * @property-read int|null $tokens_count
- * @property-read int|null $transaction_groups_count
- * @property-read int|null $transaction_journals_count
- * @property-read int|null $transactions_count
+ * @property string|null                                                          $objectguid
+ * @property-read int|null                                                        $accounts_count
+ * @property-read int|null                                                        $attachments_count
+ * @property-read int|null                                                        $available_budgets_count
+ * @property-read int|null                                                        $bills_count
+ * @property-read int|null                                                        $budgets_count
+ * @property-read int|null                                                        $categories_count
+ * @property-read int|null                                                        $clients_count
+ * @property-read int|null                                                        $currency_exchange_rates_count
+ * @property-read int|null                                                        $notifications_count
+ * @property-read int|null                                                        $piggy_banks_count
+ * @property-read int|null                                                        $preferences_count
+ * @property-read int|null                                                        $recurrences_count
+ * @property-read int|null                                                        $roles_count
+ * @property-read int|null                                                        $rule_groups_count
+ * @property-read int|null                                                        $rules_count
+ * @property-read int|null                                                        $tags_count
+ * @property-read int|null                                                        $tokens_count
+ * @property-read int|null                                                        $transaction_groups_count
+ * @property-read int|null                                                        $transaction_journals_count
+ * @property-read int|null                                                        $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
- * @property string|null $provider
+ * @property string|null                                                          $provider
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[] $webhooks
+ * @property-read int|null $webhooks_count
  */
 class User extends Authenticatable
 {
@@ -211,6 +216,18 @@ class User extends Authenticatable
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * Link to webhooks
+     *
+     * @return HasMany
+     */
+    public function webhooks(): HasMany
+    {
+        return $this->hasMany(Webhook::class);
     }
 
     /**

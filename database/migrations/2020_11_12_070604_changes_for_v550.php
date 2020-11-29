@@ -97,8 +97,6 @@ class ChangesForV550 extends Migration
             'budget_transaction_journal', function (Blueprint $table) {
             $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
             $table->foreign('budget_limit_id','budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
-
-
         }
         );
 
@@ -117,15 +115,16 @@ class ChangesForV550 extends Migration
             'webhooks',
             static function (Blueprint $table) {
                 $table->increments('id');
-                $table->integer('user_id', false, true);
+                $table->timestamps();
                 $table->softDeletes();
+                $table->integer('user_id', false, true);
                 $table->boolean('active')->default(true);
-                $table->string('trigger',32);
-                $table->string('response', 32);
-                $table->string('delivery',32);
-                $table->string('url',512);
-
+                $table->unsignedSmallInteger('trigger',false);
+                $table->unsignedSmallInteger('response', false);
+                $table->unsignedSmallInteger('delivery',false);
+                $table->string('url',512)->index();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->unique(['user_id','trigger','response','delivery','url']);
             }
         );
 
@@ -134,8 +133,9 @@ class ChangesForV550 extends Migration
             'webhook_messages',
             static function (Blueprint $table) {
                 $table->increments('id');
-                $table->integer('webhook_id', false, true);
+                $table->timestamps();
                 $table->softDeletes();
+                $table->integer('webhook_id', false, true);
                 $table->boolean('sent')->default(false);
                 $table->boolean('errored')->default(false);
                 $table->string('uuid',64);

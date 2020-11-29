@@ -37,19 +37,6 @@ class UserTransformer extends AbstractTransformer
     private $repository;
 
     /**
-     * UserTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        $this->repository = app(UserRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * Transform user.
      *
      * @param User $user

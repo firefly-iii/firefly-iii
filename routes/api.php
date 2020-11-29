@@ -386,6 +386,23 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
+     'as'        => 'api.v1.webhooks.',],
+    static function () {
+
+        // Webhook API routes:
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+
+        // create new one.
+        Route::post('', ['uses' => 'CreateController@store', 'as' => 'store']);
+
+        // update
+        Route::put('{webhook}', ['uses' => 'EditController@update', 'as' => 'update']);
+        Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'        => 'api.v1.summary.',],
     static function () {

@@ -44,6 +44,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
+use FireflyIII\Models\Webhook;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Binder\BudgetList;
 use FireflyIII\Support\Binder\CategoryList;
@@ -377,6 +378,7 @@ return [
         'ruleGroup'        => RuleGroup::class,
         'transactionGroup' => TransactionGroup::class,
         'user'             => User::class,
+        'webhook'          => Webhook::class,
 
         // strings
         'currency_code'    => CurrencyCode::class,
@@ -819,5 +821,19 @@ return [
 
         // recurring transactions
         'recurrence_total', 'recurrence_count',
+    ],
+    'webhooks'                  => [
+        'triggers'   => [
+            100 => 'TRIGGER_CREATE_TRANSACTION',
+            110 => 'TRIGGER_UPDATE_TRANSACTION',
+            120 => 'TRIGGER_DELETE_TRANSACTION',
+        ],
+        'responses'  => [
+            200 => 'RESPONSE_TRANSACTIONS',
+            210 => 'RESPONSE_ACCOUNTS',
+        ],
+        'deliveries' => [
+            300 => 'DELIVERY_JSON',
+        ],
     ],
 ];
