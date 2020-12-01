@@ -210,6 +210,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
+        $this->tagRepository->setUser($user);
         $this->collector = app(GroupCollectorInterface::class);
         $this->collector->setUser($this->user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
