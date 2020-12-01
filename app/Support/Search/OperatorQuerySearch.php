@@ -498,17 +498,27 @@ class OperatorQuerySearch implements SearchInterface
             // amount
             //
             case 'amount_exactly':
-                $amount = app('steam')->positive((string)$value);
+
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
             case 'amount_less':
-                $amount = app('steam')->positive((string)$value);
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
             case 'amount_more':
-                $amount = app('steam')->positive((string)$value);
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
