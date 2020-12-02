@@ -61,6 +61,7 @@ class WebhookMessage extends Model
             'errored' => 'boolean',
             'uuid'    => 'string',
             'message' => 'json',
+            'logs' => 'json',
         ];
 
     /**

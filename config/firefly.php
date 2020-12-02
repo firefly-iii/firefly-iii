@@ -823,16 +823,17 @@ return [
         'recurrence_total', 'recurrence_count',
     ],
     'webhooks'                  => [
-        'triggers'   => [
+        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
+        'triggers'     => [
             100 => 'TRIGGER_STORE_TRANSACTION',
             110 => 'TRIGGER_UPDATE_TRANSACTION',
             120 => 'TRIGGER_DESTROY_TRANSACTION',
         ],
-        'responses'  => [
+        'responses'    => [
             200 => 'RESPONSE_TRANSACTIONS',
             210 => 'RESPONSE_ACCOUNTS',
         ],
-        'deliveries' => [
+        'deliveries'   => [
             300 => 'DELIVERY_JSON',
         ],
     ],

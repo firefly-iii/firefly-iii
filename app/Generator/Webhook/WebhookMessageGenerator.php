@@ -21,6 +21,8 @@
 
 namespace FireflyIII\Generator\Webhook;
 
+use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\StoredWebhookMessage;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -93,6 +95,7 @@ class WebhookMessageGenerator
         foreach ($this->webhooks as $webhook) {
             $this->runWebhook($webhook);
         }
+        event(new RequestedSendWebhookMessages);
     }
 
     /**
@@ -166,7 +169,7 @@ class WebhookMessageGenerator
      * @param Webhook $webhook
      * @param array   $message
      */
-    private function storeMessage(Webhook $webhook, array $message): void
+    private function storeMessage(Webhook $webhook, array $message): WebhookMessage
     {
         $webhookMessage = new WebhookMessage;
         $webhookMessage->webhook()->associate($webhook);
@@ -176,6 +179,8 @@ class WebhookMessageGenerator
         $webhookMessage->message = $message;
         $webhookMessage->logs    = null;
         $webhookMessage->save();
+
+        return $webhookMessage;
     }
 
 

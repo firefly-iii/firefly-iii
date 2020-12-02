@@ -29,8 +29,10 @@ use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\StoredWebhookMessage;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Handlers\Events\SendEmailVerificationNotification;
@@ -111,6 +113,11 @@ class EventServiceProvider extends ServiceProvider
             // API related events:
             AccessTokenCreated::class          => [
                 'FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated',
+            ],
+
+            // Webhook related event:
+            RequestedSendWebhookMessages::class => [
+                'FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages',
             ],
         ];
 

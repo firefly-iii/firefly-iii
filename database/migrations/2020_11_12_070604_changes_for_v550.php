@@ -138,6 +138,7 @@ class ChangesForV550 extends Migration
                 $table->integer('webhook_id', false, true);
                 $table->boolean('sent')->default(false);
                 $table->boolean('errored')->default(false);
+                $table->unsignedTinyInteger('attempts')->default(0);
                 $table->string('uuid',64);
                 $table->longText('message');
                 $table->longText('logs')->nullable();
