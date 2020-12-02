@@ -34,6 +34,27 @@ trait ConvertsDataTypes
 {
 
     /**
+     * Returns all data in the request, or omits the field if not set,
+     * according to the config from the request. This is the way.
+     *
+     * @param array $fields
+     *
+     * @return array
+     */
+    protected function getAllData(array $fields): array
+    {
+        $return = [];
+        foreach ($fields as $field => $info) {
+            if ($this->has($info[0])) {
+                $method         = $info[1];
+                $return[$field] = $this->$method($info[0]);
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Return date or NULL.
      *
      * @param string $field
@@ -142,7 +163,7 @@ trait ConvertsDataTypes
 
             return null;
         }
-        Log::debug(sprintf('Date object: %s (%s)',$carbon->toW3cString() , $carbon->getTimezone()));
+        Log::debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
 
         return $carbon;
     }

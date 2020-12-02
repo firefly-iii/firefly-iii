@@ -49,7 +49,8 @@ class PiggyBankUpdateRequest extends FormRequest
         // TODO this should be the way to collect fields for all API things.
         // TODO make sure piggy bank uses 'start_date' etc. until right up to DB update.
         // TODO can we configure this and return it from config?
-        $return = [];
+
+        // TODO this is the way.
         $fields = [
             'name'            => ['name', 'string'],
             'account_id'      => ['account_id', 'integer'],
@@ -62,14 +63,7 @@ class PiggyBankUpdateRequest extends FormRequest
             'object_group'    => ['object_group', 'string'],
             'object_group_id' => ['object_group_id', 'integer'],
         ];
-        foreach ($fields as $field => $info) {
-            if ($this->has($info[0])) {
-                $method         = $info[1];
-                $return[$field] = $this->$method($info[0]);
-            }
-        }
-
-        return $return;
+        return $this->getAllData($fields);
     }
 
     /**

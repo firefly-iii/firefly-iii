@@ -42,12 +42,23 @@ class CreateRequest extends FormRequest
         $responses  = array_flip(config('firefly.webhooks.responses'));
         $deliveries = array_flip(config('firefly.webhooks.deliveries'));
 
+        $fields = [
+            'active'   => ['active', 'boolean'],
+            'trigger'  => ['trigger', 'string'],
+            'response' => ['response', 'string'],
+            'delivery' => ['delivery', 'string'],
+            'url'      => ['url', 'string'],
+        ];
+
+        // this is the way.
+        $return = $this->getAllData($fields);
+
         return [
-            'active'   => $this->boolean('active'),
-            'trigger'  => $triggers[$this->string('trigger')] ?? 0,
-            'response' => $responses[$this->string('response')] ?? 0,
-            'delivery' => $deliveries[$this->string('delivery')] ?? 0,
-            'url'      => $this->string('url'),
+            'active'   => $return['active'],
+            'trigger'  => $triggers[$return['trigger']] ?? 0,
+            'response' => $responses[$return['response']] ?? 0,
+            'delivery' => $deliveries[$return['delivery']] ?? 0,
+            'url'      => $return['url'],
         ];
     }
 
