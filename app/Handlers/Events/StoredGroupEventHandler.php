@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Generator\Webhook\WebhookMessageGenerator;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -68,6 +71,24 @@ class StoredGroupEventHandler
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRules($rules);
         $newRuleEngine->fire();
+    }
+
+    /**
+     * This method processes all webhooks that respond to the "stored transaction group" trigger (100)
+     *
+     * @param StoredTransactionGroup $storedGroupEvent
+     */
+    public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
+    {
+        Log::debug('StoredTransactionGroup:triggerWebhooks');
+        $group    = $storedGroupEvent->transactionGroup;
+        $user     = $group->user;
+        $engine = new WebhookMessageGenerator;
+        $engine->setUser($user);
+        $engine->setTransactionGroups(new Collection([$group]));
+        $engine->setTrigger(Webhook::TRIGGER_STORE_TRANSACTION);
+
+        $messages= $engine->generateMessages();
     }
 
 }

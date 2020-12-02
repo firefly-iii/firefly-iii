@@ -61,10 +61,6 @@ class TransactionGroupTransformer extends AbstractTransformer
             'recurrence_count', 'recurrence_total',
         ];
         $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
-
-        if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
     }
 
     /**

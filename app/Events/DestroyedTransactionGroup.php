@@ -1,7 +1,7 @@
 <?php
 
 /**
- * StoredTransactionGroup.php
+ * DestroyedTransactionGroup.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -28,15 +28,13 @@ use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class StoredTransactionGroup.
+ * Class DestroyedTransactionGroup.
  *
  * @codeCoverageIgnore
  */
-class StoredTransactionGroup extends Event
+class DestroyedTransactionGroup extends Event
 {
     use SerializesModels;
-
-    public bool $applyRules;
     public TransactionGroup $transactionGroup;
 
 
@@ -44,11 +42,9 @@ class StoredTransactionGroup extends Event
      * Create a new event instance.
      *
      * @param TransactionGroup $transactionGroup
-     * @param bool             $applyRules
      */
-    public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true)
+    public function __construct(TransactionGroup $transactionGroup)
     {
         $this->transactionGroup = $transactionGroup;
-        $this->applyRules       = $applyRules;
     }
 }

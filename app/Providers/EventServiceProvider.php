@@ -24,6 +24,7 @@ namespace FireflyIII\Providers;
 
 use Exception;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -96,11 +97,16 @@ class EventServiceProvider extends ServiceProvider
             // is a Transaction Journal related event.
             StoredTransactionGroup::class    => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerWebhooks',
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionGroup::class   => [
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@triggerWebhooks',
+            ],
+            DestroyedTransactionGroup::class => [
+                'FireflyIII\Handlers\Events\DestroyedGroupEventHandler@triggerWebhooks',
             ],
             // API related events:
             AccessTokenCreated::class          => [

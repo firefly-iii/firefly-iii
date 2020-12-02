@@ -824,9 +824,9 @@ return [
     ],
     'webhooks'                  => [
         'triggers'   => [
-            100 => 'TRIGGER_CREATE_TRANSACTION',
+            100 => 'TRIGGER_STORE_TRANSACTION',
             110 => 'TRIGGER_UPDATE_TRANSACTION',
-            120 => 'TRIGGER_DELETE_TRANSACTION',
+            120 => 'TRIGGER_DESTROY_TRANSACTION',
         ],
         'responses'  => [
             200 => 'RESPONSE_TRANSACTIONS',

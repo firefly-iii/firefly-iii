@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -56,19 +57,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookMessage[] $webhookMessages
+ * @property-read int|null $webhook_messages_count
+ * @method static \Illuminate\Database\Query\Builder|Webhook onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
  */
 class Webhook extends Model
 {
     use SoftDeletes;
+
     // dont forget to update the config in firefly.php
     // triggers
-    public const TRIGGER_CREATE_TRANSACTION = 100;
-    public const TRIGGER_UPDATE_TRANSACTION = 110;
-    public const TRIGGER_DELETE_TRANSACTION = 120;
+    public const TRIGGER_STORE_TRANSACTION   = 100;
+    public const TRIGGER_UPDATE_TRANSACTION  = 110;
+    public const TRIGGER_DESTROY_TRANSACTION = 120;
 
     // actions
-    public const MESSAGE_TRANSACTIONS = 200;
-    public const MESSAGE_ACCOUNTS     = 210;
+    public const RESPONSE_TRANSACTIONS = 200;
+    public const RESPONSE_ACCOUNTS     = 210;
 
     // delivery
     public const DELIVERY_JSON = 300;
@@ -88,13 +95,13 @@ class Webhook extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Webhook
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Webhook
     {
         if (auth()->check()) {
-            $budgetId = (int) $value;
+            $budgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Webhook $webhook */
@@ -113,6 +120,15 @@ class Webhook extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function webhookMessages(): HasMany
+    {
+        return $this->hasMany(WebhookMessage::class);
     }
 
 }

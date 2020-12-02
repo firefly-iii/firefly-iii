@@ -140,6 +140,7 @@ class ChangesForV550 extends Migration
                 $table->boolean('errored')->default(false);
                 $table->string('uuid',64);
                 $table->longText('message');
+                $table->longText('logs')->nullable();
                 $table->foreign('webhook_id')->references('id')->on('webhooks')->onDelete('cascade');
             }
         );
