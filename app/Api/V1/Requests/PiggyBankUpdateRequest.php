@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Rules\IsAssetAccountId;
 use FireflyIII\Rules\LessThanPiggyTarget;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -46,16 +45,31 @@ class PiggyBankUpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'           => $this->string('name'),
-            'account_id'     => $this->integer('account_id'),
-            'targetamount'   => $this->string('target_amount'),
-            'current_amount' => $this->string('current_amount'),
-            'startdate'      => $this->date('start_date'),
-            'targetdate'     => $this->date('target_date'),
-            'notes'          => $this->nlString('notes'),
-            'order'          => $this->integer('order'),
+        // if the value isn't present, dont return it at all.
+        // TODO this should be the way to collect fields for all API things.
+        // TODO make sure piggy bank uses 'start_date' etc. until right up to DB update.
+        // TODO can we configure this and return it from config?
+        $return = [];
+        $fields = [
+            'name'            => ['name', 'string'],
+            'account_id'      => ['account_id', 'integer'],
+            'targetamount'    => ['target_amount', 'string'],
+            'current_amount'  => ['current_amount', 'string'],
+            'startdate'       => ['start_date', 'date'],
+            'targetdate'      => ['target_date', 'string'],
+            'notes'           => ['notes', 'nlString'],
+            'order'           => ['order', 'integer'],
+            'object_group'    => ['object_group', 'string'],
+            'object_group_id' => ['object_group_id', 'integer'],
         ];
+        foreach ($fields as $field => $info) {
+            if ($this->has($info[0])) {
+                $method         = $info[1];
+                $return[$field] = $this->$method($info[0]);
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -65,15 +79,16 @@ class PiggyBankUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $piggyBank               = $this->route()->parameter('piggyBank');
+        $piggyBank = $this->route()->parameter('piggyBank');
+
         return [
             'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
             'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget],
-            'target_amount' => 'numeric|gt:0',
+            'target_amount'  => 'numeric|gt:0',
             'start_date'     => 'date|nullable',
             'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
-            'account_id' => ['belongsToUser:accounts', new IsAssetAccountId],
+            'account_id'     => ['belongsToUser:accounts', new IsAssetAccountId],
         ];
     }
 
