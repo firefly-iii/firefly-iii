@@ -43,6 +43,7 @@ class UpdateRequest extends FormRequest
         $deliveries = array_flip(config('firefly.webhooks.deliveries'));
 
         $fields = [
+            'title'    => ['title', 'string'],
             'active'   => ['active', 'boolean'],
             'trigger'  => ['trigger', 'string'],
             'response' => ['response', 'string'],
@@ -51,15 +52,12 @@ class UpdateRequest extends FormRequest
         ];
 
         // this is the way.
-        $return = $this->getAllData($fields);
+        $return             = $this->getAllData($fields);
+        $return['trigger']  = $triggers[$return['trigger']] ?? 0;
+        $return['response'] = $responses[$return['response']] ?? 0;
+        $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
 
-        return [
-            'active'   => $return['active'],
-            'trigger'  => $triggers[$return['trigger']] ?? 0,
-            'response' => $responses[$return['response']] ?? 0,
-            'delivery' => $deliveries[$return['delivery']] ?? 0,
-            'url'      => $return['url'],
-        ];
+        return $return;
     }
 
     /**
@@ -72,9 +70,10 @@ class UpdateRequest extends FormRequest
         $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
         $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
         $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
-        $webhook = $this->route()->parameter('webhook');
+        $webhook    = $this->route()->parameter('webhook');
 
         return [
+            'title'    => 'between:1,512',
             'active'   => [new IsBoolean],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),

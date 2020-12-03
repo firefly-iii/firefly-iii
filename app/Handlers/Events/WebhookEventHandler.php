@@ -92,7 +92,7 @@ class WebhookEventHandler
         $client      = new Client;
         $logs        = $message->logs ?? [];
         try {
-            $res           = $client->request('GET', $message->webhook->url, $options);
+            $res           = $client->request('POST', $message->webhook->url, $options);
             $message->sent = true;
         } catch (ClientException|Exception $e) {
             Log::error($e->getMessage());
@@ -106,6 +106,7 @@ class WebhookEventHandler
         $message->save();
 
         Log::debug(sprintf('Webhook message #%d was sent. Status code %d', $message->id, $res->getStatusCode()));
+        Log::debug(sprintf('Webhook request body size: %d bytes', strlen($json)));
         Log::debug(sprintf('Response body: %s', $res->getBody()));
     }
 

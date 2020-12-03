@@ -55,7 +55,8 @@ class WebhookRepository implements WebhookRepositoryInterface
     {
         $fullData = [
             'user_id'  => $this->user->id,
-            'active'   => $data['active'],
+            'active'   => $data['active'] ?? false,
+            'title'    => $data['title'] ?? null,
             'trigger'  => $data['trigger'],
             'response' => $data['response'],
             'delivery' => $data['delivery'],

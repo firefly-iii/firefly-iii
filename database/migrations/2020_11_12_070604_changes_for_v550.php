@@ -96,7 +96,7 @@ class ChangesForV550 extends Migration
         Schema::table(
             'budget_transaction_journal', function (Blueprint $table) {
             $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
-            $table->foreign('budget_limit_id','budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
+            $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
         }
         );
 
@@ -118,13 +118,15 @@ class ChangesForV550 extends Migration
                 $table->timestamps();
                 $table->softDeletes();
                 $table->integer('user_id', false, true);
+                $table->string('title', 512)->index();
                 $table->boolean('active')->default(true);
-                $table->unsignedSmallInteger('trigger',false);
+                $table->unsignedSmallInteger('trigger', false);
                 $table->unsignedSmallInteger('response', false);
-                $table->unsignedSmallInteger('delivery',false);
-                $table->string('url',512)->index();
+                $table->unsignedSmallInteger('delivery', false);
+                $table->string('url', 512)->index();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->unique(['user_id','trigger','response','delivery','url']);
+                $table->unique(['user_id', 'trigger', 'response', 'delivery', 'url']);
+                $table->unique(['user_id', 'title']);
             }
         );
 
@@ -139,7 +141,7 @@ class ChangesForV550 extends Migration
                 $table->boolean('sent')->default(false);
                 $table->boolean('errored')->default(false);
                 $table->unsignedTinyInteger('attempts')->default(0);
-                $table->string('uuid',64);
+                $table->string('uuid', 64);
                 $table->longText('message');
                 $table->longText('logs')->nullable();
                 $table->foreign('webhook_id')->references('id')->on('webhooks')->onDelete('cascade');

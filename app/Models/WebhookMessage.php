@@ -51,6 +51,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereWebhookId($value)
  * @mixin \Eloquent
+ * @property int $attempts
+ * @property array|null $logs
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereAttempts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereLogs($value)
  */
 class WebhookMessage extends Model
 {

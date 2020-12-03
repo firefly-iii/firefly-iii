@@ -66,8 +66,6 @@ class CreateController extends Controller
     {
         $data    = $request->getData();
         $webhook = $this->repository->store($data);
-
-
         $manager = $this->getManager();
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
