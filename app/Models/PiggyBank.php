@@ -33,31 +33,37 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
- * Class PiggyBank.
+ * FireflyIII\Models\PiggyBank
  *
- * @property Carbon                                                                                 $targetdate
- * @property Carbon                                                                                 $startdate
- * @property string                                                                                 $targetamount
- * @property int                                                                                    $id
- * @property string                                $name
- * @property Account                               $account
- * @property Carbon                                $updated_at
- * @property Carbon                                $created_at
- * @property int                                   $order
- * @property bool                                  $active
- * @property int                                   $account_id
- * @property bool                                  encrypted
- * @property \Illuminate\Support\Carbon|null       $deleted_at
- * @property-read Collection|Note[]                $notes
- * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $account_id
+ * @property string $name
+ * @property string $targetamount
+ * @property \Illuminate\Support\Carbon|null $startdate
+ * @property \Illuminate\Support\Carbon|null $targetdate
+ * @property int $order
+ * @property bool $active
+ * @property bool $encrypted
+ * @property-read \FireflyIII\Models\Account $account
+ * @property-read Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
+ * @property-read int|null $piggy_bank_events_count
+ * @property-read Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions
+ * @property-read int|null $piggy_bank_repetitions_count
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newQuery()
  * @method static Builder|PiggyBank onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereAccountId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereCreatedAt($value)
@@ -73,13 +79,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|PiggyBank withTrashed()
  * @method static Builder|PiggyBank withoutTrashed()
  * @mixin Eloquent
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null                $attachments_count
- * @property-read int|null                $notes_count
- * @property-read int|null                $piggy_bank_events_count
- * @property-read int|null                $piggy_bank_repetitions_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
- * @property-read int|null $object_groups_count
  */
 class PiggyBank extends Model
 {

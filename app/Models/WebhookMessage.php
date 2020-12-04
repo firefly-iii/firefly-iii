@@ -24,37 +24,38 @@ namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class WebhookMessage
+ * FireflyIII\Models\WebhookMessage
  *
- * @property int                             $id
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null                     $deleted_at
- * @property int                             $webhook_id
- * @property int                             $sent
- * @property int                             $errored
- * @property string                          $uuid
- * @property string                          $message
+ * @property string|null $deleted_at
+ * @property int $webhook_id
+ * @property bool $sent
+ * @property bool $errored
+ * @property int $attempts
+ * @property string $uuid
+ * @property array $message
+ * @property array|null $logs
  * @property-read \FireflyIII\Models\Webhook $webhook
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage query()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereAttempts($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereErrored($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereLogs($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereSent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereWebhookId($value)
  * @mixin \Eloquent
- * @property int $attempts
- * @property array|null $logs
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereAttempts($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereLogs($value)
  */
 class WebhookMessage extends Model
 {
@@ -75,6 +76,15 @@ class WebhookMessage extends Model
     public function webhook(): BelongsTo
     {
         return $this->belongsTo(Webhook::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function webhookAttempts(): HasMany
+    {
+        return $this->hasMany(WebhookAttempt::class);
     }
 
 

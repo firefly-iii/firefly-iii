@@ -31,17 +31,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
- * Class Telemetry
+ * FireflyIII\Models\Telemetry
  *
- * @property int                             $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $submitted
- * @property int|null                        $user_id
- * @property string                          $installation_id
- * @property string                          $type
- * @property string                          $key
- * @property array                           $value
+ * @property int|null $user_id
+ * @property string $installation_id
+ * @property string $type
+ * @property string $key
+ * @property array $value
  * @method static Builder|Telemetry newModelQuery()
  * @method static Builder|Telemetry newQuery()
  * @method static Builder|Telemetry query()

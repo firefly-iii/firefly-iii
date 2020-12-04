@@ -32,25 +32,23 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class AvailableBudget.
+ * FireflyIII\Models\AvailableBudget
  *
- * @property int                             $id
- * @property Carbon                          $created_at
- * @property Carbon                          $updated_at
- * @property User                            $user
- * @property TransactionCurrency             $transactionCurrency
- * @property int                             $transaction_currency_id
- * @property Carbon                          $start_date
- * @property Carbon                          $end_date
- * @property string                          $amount
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int                             $user_id
- * @method static bool|null forceDelete()
+ * @property int $user_id
+ * @property int $transaction_currency_id
+ * @property string $amount
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon $end_date
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
  * @method static Builder|AvailableBudget onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereDeletedAt($value)

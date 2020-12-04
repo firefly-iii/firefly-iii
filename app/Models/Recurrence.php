@@ -37,39 +37,39 @@ use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Recurrence
+ * FireflyIII\Models\Recurrence
  *
- * @property int                                                                     $id
- * @property \Carbon\Carbon                                                          $created_at
- * @property \Carbon\Carbon                                                          $updated_at
- * @property int                                                                     $user_id
- * @property int                                                                     $transaction_type_id
- * @property int                                                                     $transaction_currency_id
- * @property string                                                                  $title
- * @property string                         $description
- * @property \Carbon\Carbon                 $first_date
- * @property \Carbon\Carbon                 $repeat_until
- * @property \Carbon\Carbon                 $latest_date
- * @property string                         $repetition_type
- * @property string                         $repetition_moment
- * @property int                            $repetition_skip
- * @property int                            $repetitions
- * @property bool                           $active
- * @property bool                           $apply_rules
- * @property User                           $user
- * @property \Illuminate\Support\Collection $recurrenceRepetitions
- * @property \Illuminate\Support\Collection $recurrenceMeta
- * @property \Illuminate\Support\Collection $recurrenceTransactions
- * @property TransactionType                $transactionType
- * @property Carbon|null                    $deleted_at
- * @property-read Collection|Note[]         $notes
- * @property-read TransactionCurrency       $transactionCurrency
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $transaction_type_id
+ * @property string $title
+ * @property string $description
+ * @property Carbon $first_date
+ * @property Carbon|null $repeat_until
+ * @property Carbon|null $latest_date
+ * @property int $repetitions
+ * @property bool $apply_rules
+ * @property bool $active
+ * @property-read Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read Collection|\FireflyIII\Models\RecurrenceMeta[] $recurrenceMeta
+ * @property-read int|null $recurrence_meta_count
+ * @property-read Collection|\FireflyIII\Models\RecurrenceRepetition[] $recurrenceRepetitions
+ * @property-read int|null $recurrence_repetitions_count
+ * @property-read Collection|\FireflyIII\Models\RecurrenceTransaction[] $recurrenceTransactions
+ * @property-read int|null $recurrence_transactions_count
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionType $transactionType
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence newQuery()
  * @method static Builder|Recurrence onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereApplyRules($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereCreatedAt($value)
@@ -87,10 +87,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null $notes_count
- * @property-read int|null $recurrence_meta_count
- * @property-read int|null $recurrence_repetitions_count
- * @property-read int|null $recurrence_transactions_count
  */
 class Recurrence extends Model
 {

@@ -37,41 +37,43 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Account.
+ * Class Account
  *
- * @property int                                                                            $id
- * @property string                                                                         $name
- * @property string                                                                         $iban
- * @property AccountType                                                                    $accountType
- * @property bool                                                                           $active
- * @property string                                                                         $virtual_balance
- * @property User                                                                           $user
- * @property string                                                                         startBalance
- * @property string                                                                         endBalance
- * @property string                                                                         difference
- * @property Carbon                                                                         lastActivityDate
- * @property Collection                                                                     accountMeta
- * @property bool                                                                           encrypted
- * @property int                                                                            account_type_id
- * @property Collection                                                  piggyBanks
- * @property string                                                      $interest
- * @property string                                                      $interestPeriod
- * @property string                                                      accountTypeString
- * @property Carbon                                                      created_at
- * @property Carbon                                                      updated_at
- * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
- * @property \Illuminate\Support\Carbon|null                             $deleted_at
- * @property int                                                         $user_id
- * @property-read string                                                 $edit_name
- * @property-read \Illuminate\Database\Eloquent\Collection|Note[]        $notes
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[] $transactions
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $account_type_id
+ * @property string $name
+ * @property string|null $virtual_balance
+ * @property string|null $iban
+ * @property bool $active
+ * @property bool $encrypted
+ * @property int $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
+ * @property-read int|null $account_meta_count
+ * @property-read \FireflyIII\Models\AccountType $accountType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read string $account_number
+ * @property-read string $edit_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[] $locations
+ * @property-read int|null $locations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read int|null $piggy_banks_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read User $user
  * @method static EloquentBuilder|Account accountTypeIn($types)
- * @method static bool|null forceDelete()
  * @method static EloquentBuilder|Account newModelQuery()
  * @method static EloquentBuilder|Account newQuery()
  * @method static Builder|Account onlyTrashed()
  * @method static EloquentBuilder|Account query()
- * @method static bool|null restore()
  * @method static EloquentBuilder|Account whereAccountTypeId($value)
  * @method static EloquentBuilder|Account whereActive($value)
  * @method static EloquentBuilder|Account whereCreatedAt($value)
@@ -80,21 +82,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|Account whereIban($value)
  * @method static EloquentBuilder|Account whereId($value)
  * @method static EloquentBuilder|Account whereName($value)
+ * @method static EloquentBuilder|Account whereOrder($value)
  * @method static EloquentBuilder|Account whereUpdatedAt($value)
  * @method static EloquentBuilder|Account whereUserId($value)
  * @method static EloquentBuilder|Account whereVirtualBalance($value)
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null                                              $account_meta_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
- * @property-read int|null                                              $attachments_count
- * @property-read string                                                $account_number
- * @property-read \Illuminate\Database\Eloquent\Collection|Location[]   $locations
- * @property-read int|null                                              $locations_count
- * @property-read int|null                                              $notes_count
- * @property-read int|null                                              $piggy_banks_count
- * @property-read int|null                                              $transactions_count
  */
 class Account extends Model
 {

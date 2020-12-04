@@ -31,26 +31,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
  * FireflyIII\Models\LinkType
  *
- * @property int                                                                    $journalCount
- * @property string                                                                 $inward
- * @property string                                                                 $outward
- * @property string                                                                 $name
- * @property bool                                                                   $editable
- * @property Carbon                                                                 $created_at
- * @property Carbon                                                                 $updated_at
- * @property int                                                                    $id
- * Class LinkType
- * @property \Illuminate\Support\Carbon|null                                        $deleted_at
- * @property-read Collection|TransactionJournalLink[] $transactionJournalLinks
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string $name
+ * @property string $outward
+ * @property string $inward
+ * @property bool $editable
+ * @property-read Collection|\FireflyIII\Models\TransactionJournalLink[] $transactionJournalLinks
+ * @property-read int|null $transaction_journal_links_count
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newQuery()
  * @method static Builder|LinkType onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType whereEditable($value)
@@ -62,7 +60,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|LinkType withTrashed()
  * @method static Builder|LinkType withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null                                                          $transaction_journal_links_count
  */
 class LinkType extends Model
 {

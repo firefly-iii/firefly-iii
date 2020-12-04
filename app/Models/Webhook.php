@@ -30,21 +30,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Webhook
+ * FireflyIII\Models\Webhook
  *
- * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null                     $deleted_at
- * @property int                             $user_id
- * @property bool                            $active
- * @property int                             $trigger
- * @property int                             $response
- * @property int                             $delivery
- * @property string                          $url
- * @property-read User                       $user
+ * @property int                                                                               $id
+ * @property \Illuminate\Support\Carbon|null                                                   $created_at
+ * @property \Illuminate\Support\Carbon|null                                                   $updated_at
+ * @property \Illuminate\Support\Carbon|null                                                   $deleted_at
+ * @property int                                                                               $user_id
+ * @property bool                                                                              $active
+ * @property int                                                                               $trigger
+ * @property int                                                                               $response
+ * @property int                                                                               $delivery
+ * @property string                                                                            $url
+ * @property-read User                                                                         $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookMessage[] $webhookMessages
+ * @property-read int|null                                                                     $webhook_messages_count
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Webhook onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook query()
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereCreatedAt($value)
@@ -56,12 +59,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUserId($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookMessage[] $webhookMessages
- * @property-read int|null $webhook_messages_count
- * @method static \Illuminate\Database\Query\Builder|Webhook onlyTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
+ * @mixin \Eloquent
  */
 class Webhook extends Model
 {
@@ -76,6 +76,7 @@ class Webhook extends Model
     // actions
     public const RESPONSE_TRANSACTIONS = 200;
     public const RESPONSE_ACCOUNTS     = 210;
+    public const RESPONSE_NONE         = 220;
 
     // delivery
     public const DELIVERY_JSON = 300;
@@ -130,5 +131,4 @@ class Webhook extends Model
     {
         return $this->hasMany(WebhookMessage::class);
     }
-
 }

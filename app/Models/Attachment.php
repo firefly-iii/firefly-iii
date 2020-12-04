@@ -35,32 +35,30 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Attachment.
+ * FireflyIII\Models\Attachment
  *
- * @property int                                                                           $id
- * @property Carbon                                                                        $created_at
- * @property Carbon                                                                        $updated_at
- * @property string                                                                        $attachable_type
- * @property string                                                                        $md5
- * @property string                                                                        $filename
- * @property string                                                                        $title
- * @property string                                                     $description
- * @property string                                                     $notes
- * @property string                                                     $mime
- * @property int                                                        $size
- * @property User                                                       $user
- * @property bool                                                       $uploaded
- * @property bool                                                       file_exists
- * @property \Illuminate\Support\Carbon|null                            $deleted_at
- * @property int                                                        $user_id
- * @property int                                                        $attachable_id
- * @property-read Collection|Attachment[] $attachable
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $attachable_id
+ * @property string $attachable_type
+ * @property string $md5
+ * @property string $filename
+ * @property string|null $title
+ * @property string|null $description
+ * @property string $mime
+ * @property int $size
+ * @property bool $uploaded
+ * @property-read Model|\Eloquent $attachable
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
  * @method static Builder|Attachment onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereCreatedAt($value)
@@ -78,7 +76,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null $notes_count
  */
 class Attachment extends Model
 {

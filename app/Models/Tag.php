@@ -35,29 +35,31 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Tag.
+ * FireflyIII\Models\Tag
  *
- * @property Collection                      $transactionJournals
- * @property string                          $tag
- * @property int                             $id
- * @property Carbon                          $date
- * @property int                             zoomLevel
- * @property float                           latitude
- * @property float                           longitude
- * @property string                          description
- * @property string                          amount_sum
- * @property string                          tagMode
- * @property Carbon                          created_at
- * @property Carbon                          updated_at
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int                             $user_id
- * @property-read User                       $user
- * @method static bool|null forceDelete()
+ * @property int $user_id
+ * @property string $tag
+ * @property string $tagMode
+ * @property \Illuminate\Support\Carbon|null $date
+ * @property string|null $description
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property int|null $zoomLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[] $locations
+ * @property-read int|null $locations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
  * @method static Builder|Tag onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDeletedAt($value)
@@ -73,18 +75,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
  * @mixin Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
- * @property-read int|null                                              $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Location[]   $locations
- * @property-read int|null                                              $locations_count
- * @property-read int|null                                              $transaction_journals_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $tagMode
- * @property string|null $description
- * @property float|null $latitude
- * @property float|null $longitude
- * @property int|null $zoomLevel
  */
 class Tag extends Model
 {

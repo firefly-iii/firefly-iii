@@ -31,27 +31,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
- * Class TransactionCurrency.
+ * FireflyIII\Models\TransactionCurrency
  *
- * @property string                               $code
- * @property string                               $symbol
- * @property int                                  $decimal_places
- * @property int                                  $id
- * @property string                               name
- * @property bool                                 $enabled
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property \Illuminate\Support\Carbon|null      $deleted_at
- * @property-read Collection|BudgetLimit[]        $budgetLimits
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read Collection|Transaction[]        $transactions
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $enabled
+ * @property string $code
+ * @property string $name
+ * @property string $symbol
+ * @property int $decimal_places
+ * @property-read Collection|\FireflyIII\Models\BudgetLimit[] $budgetLimits
+ * @property-read int|null $budget_limits_count
+ * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
  * @method static Builder|TransactionCurrency onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereDecimalPlaces($value)
@@ -64,9 +66,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionCurrency withTrashed()
  * @method static Builder|TransactionCurrency withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null                        $budget_limits_count
- * @property-read int|null                        $transaction_journals_count
- * @property-read int|null                        $transactions_count
  */
 class TransactionCurrency extends Model
 {

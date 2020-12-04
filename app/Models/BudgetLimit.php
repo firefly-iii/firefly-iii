@@ -30,21 +30,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class BudgetLimit.
+ * FireflyIII\Models\BudgetLimit
  *
- * @property Budget              $budget
- * @property int                 $id
- * @property Carbon              $created_at
- * @property Carbon              $updated_at
- * @property Carbon              $start_date
- * @property Carbon              $end_date
- * @property string              $amount
- * @property int                 $budget_id
- * @property string              spent
- * @property int                 $transaction_currency_id
- * @property TransactionCurrency $transactionCurrency
- * @property string              $repeat_freq
- * @property bool @auto_budget
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $budget_id
+ * @property int|null $transaction_currency_id
+ * @property \Illuminate\Support\Carbon $start_date
+ * @property \Illuminate\Support\Carbon|null $end_date
+ * @property string $amount
+ * @property string|null $period
+ * @property int $generated
+ * @property-read \FireflyIII\Models\Budget $budget
+ * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
  * @method static Builder|BudgetLimit query()
@@ -52,7 +51,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|BudgetLimit whereBudgetId($value)
  * @method static Builder|BudgetLimit whereCreatedAt($value)
  * @method static Builder|BudgetLimit whereEndDate($value)
+ * @method static Builder|BudgetLimit whereGenerated($value)
  * @method static Builder|BudgetLimit whereId($value)
+ * @method static Builder|BudgetLimit wherePeriod($value)
  * @method static Builder|BudgetLimit whereStartDate($value)
  * @method static Builder|BudgetLimit whereTransactionCurrencyId($value)
  * @method static Builder|BudgetLimit whereUpdatedAt($value)

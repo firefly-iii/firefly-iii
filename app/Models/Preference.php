@@ -31,15 +31,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Preference.
+ * FireflyIII\Models\Preference
  *
- * @property mixed  $data
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $user_id
  * @property string $name
- * @property Carbon $updated_at
- * @property Carbon $created_at
- * @property int    $id
- * @property User   user
- * @property int    $user_id
+ * @property array|null $data
+ * @property-read User $user
  * @method static Builder|Preference newModelQuery()
  * @method static Builder|Preference newQuery()
  * @method static Builder|Preference query()
@@ -50,7 +50,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Preference whereUpdatedAt($value)
  * @method static Builder|Preference whereUserId($value)
  * @mixin Eloquent
- * @property-read \FireflyIII\User $user
  */
 class Preference extends Model
 {

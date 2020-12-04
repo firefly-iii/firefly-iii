@@ -33,43 +33,40 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+
 /**
- * Class RuleGroup.
+ * FireflyIII\Models\RuleGroup
  *
- * @property bool                            $active
- * @property User                            $user
- * @property Carbon                          $created_at
- * @property Carbon                          $updated_at
- * @property string                          $title
- * @property string                          $text
- * @property int                             $id
- * @property int                             $order
- * @property Collection                      $rules
- * @property string                          description
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int                             $user_id
- * @method static bool|null forceDelete()
+ * @property int $user_id
+ * @property string $title
+ * @property string|null $description
+ * @property int $order
+ * @property bool $active
+ * @property bool $stop_processing
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
+ * @property-read int|null $rules_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
  * @method static Builder|RuleGroup onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereStopProcessing($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
  * @method static Builder|RuleGroup withTrashed()
  * @method static Builder|RuleGroup withoutTrashed()
- * @property bool                            $stop_processing
  * @mixin Eloquent
- * @property-read int|null                   $rules_count
- * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereStopProcessing($value)
- * @property string|null $description
  */
 class RuleGroup extends Model
 {
