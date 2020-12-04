@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Αυτό το πάγιο έξοδο δεν έχει σχετιζόμενους κανόνες.',
     'go_to_asset_accounts'                                => 'Δείτε τους λογαριασμούς κεφαλαίου σας',
     'go_to_budgets'                                       => 'Πηγαίνετε στους προϋπολογισμούς σας',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Αυτή η συναλλαγή είναι ένας κλώνος του ":description" (#:id)',
     'go_to_categories'                                    => 'Πηγαίνετε στις κατηγορίες σας',
     'go_to_bills'                                         => 'Πηγαίνετε στα πάγια έξοδα',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => 'Αποθηκεύτηκε',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Αίτημα Εξουσιοδότησης Firefly III v:version',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Αναζήτηση',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Ερώτημα',
     'search_found_transactions'                           => 'Το Firefly III βρήκε :count συναλλαγή σε :time δευτερόλεπτα.|Το Firefly III βρήκε :count συναλλαγές σε :time δευτερόλεπτα.',
     'search_found_more_transactions'                      => 'Το Firefly III βρήκε περισσότερες από :count συναλλαγές σε :time δευτερόλεπτα.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Επιλογές',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'Αυτό το ποσό ισχύει από :start έως :end:',
     'total_available_budget'                    => 'Συνολικός διαθέσιμος προϋπολογισμός (μεταξύ :start και :end)',
     'total_available_budget_in_currency'        => 'Συνολικός διαθέσιμος προϋπολογισμός σε :currency',

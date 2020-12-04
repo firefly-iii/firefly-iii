@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => '该账单没有与之相关的规则。',
     'go_to_asset_accounts'                                => '检视您的资产帐户',
     'go_to_budgets'                                       => '前往您的预算',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => '此交易是 ":description" (#:id) 的克隆。',
     'go_to_categories'                                    => '前往您的分类',
     'go_to_bills'                                         => '前往您的帐单',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => '已保存',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授权请求',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => '搜寻',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => '查询',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => '选项',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => '可用预算总额 (:start 和 :end之间)',
     'total_available_budget_in_currency'        => '可用预算总额 以:currency为单位',

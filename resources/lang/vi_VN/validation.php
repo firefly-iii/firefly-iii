@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Số tiền hiện tại phải nhỏ hơn số tiền mục tiêu.',
     'unique_piggy_bank_for_user'     => 'Tên của con heo đất phải là duy nhất.',
     'unique_object_group'            => 'Tên nhóm phải không bị trùng',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
-    'valid_recurrence_rep_moment'    => 'Khoảnh khắc lặp lại không hợp lệ cho loại lặp lại này.',
-    'invalid_account_info'           => 'Thông tin tài khoản không hợp lệ.',
-    'attributes'                     => [
+    'secure_password'             => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',
+    'valid_recurrence_rep_moment' => 'Khoảnh khắc lặp lại không hợp lệ cho loại lặp lại này.',
+    'invalid_account_info'        => 'Thông tin tài khoản không hợp lệ.',
+    'attributes'                  => [
         'email'                   => 'địa chỉ email',
         'description'             => 'mô tả',
         'amount'                  => 'số tiền',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'tên',
         'piggy_bank_id'           => 'ID heo đất',
         'targetamount'            => 'lượng mục tiêu',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
-    'withdrawal_source_bad_data'     => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
-    'withdrawal_dest_need_data'      => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
-    'withdrawal_dest_bad_data'       => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+    'withdrawal_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
+    'withdrawal_source_bad_data'  => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+    'withdrawal_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
+    'withdrawal_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
     'deposit_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
     'deposit_source_bad_data'  => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để continuaCould không tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm IDe ":id" hoặc tên ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Tổng số tiền được yêu cầu.',
     'auto_budget_amount_positive'     => 'Số lượng phải lớn hơn 0.',
-    'auto_budget_period_mandatory' => 'Ngân sách tự động là một trường bắt buộc.',
+    'auto_budget_period_mandatory'    => 'Ngân sách tự động là một trường bắt buộc.',
 ];

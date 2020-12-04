@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Cette facture n\'a aucune règle associée.',
     'go_to_asset_accounts'                                => 'Afficher vos comptes d\'actifs',
     'go_to_budgets'                                       => 'Gérer vos budgets',
+    'go_to_withdrawals'                                   => 'Accéder à vos retraits',
     'clones_journal_x'                                    => 'Cette opération est un clone de ":description" (#:id)',
     'go_to_categories'                                    => 'Gérer vos catégories',
     'go_to_bills'                                         => 'Gérer vos factures',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'total prévu',
     'reconciliation_account_name'                         => 'Régularisation de :name (:currency)',
     'saved'                                               => 'Sauvegardé',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Options avancées',
+    'advanced_options_explain'                            => 'Certaines pages de Firefly III ont des options avancées cachées derrière ce bouton. Cette page n\'a rien de bien utile ici, mais regardez les autres !',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version demande d\'autorisation',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Rechercher',
-    'long_query_warning'                                  => 'Votre requête de recherche est très longue et peut ne pas fonctionner comme prévu.',
     'search_query'                                        => 'Requête',
     'search_found_transactions'                           => 'Firefly III a trouvé :count opération en :time secondes.|Firefly III a trouvé :count opérations en :time secondes.',
     'search_found_more_transactions'                      => 'Firefly III a trouvé plus de :count transactions en :time secondes.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Options',
 
     // budgets:
+    'daily_budgets'                             => 'Budgets quotidiens',
+    'weekly_budgets'                            => 'Budgets hebdomadaires',
+    'monthly_budgets'                           => 'Budgets mensuels',
+    'quarterly_budgets'                         => 'Budgets trimestriels',
+    'half_year_budgets'                         => 'Budgets semestriels',
+    'yearly_budgets'                            => 'Budgets annuels',
+    'other_budgets'                             => 'Budgets à période personnalisée',
     'budget_limit_not_in_range'                 => 'Ce montant s\'applique du :start au :end :',
     'total_available_budget'                    => 'Budget total disponible (entre :start et :end)',
     'total_available_budget_in_currency'        => 'Budget total disponible en :currency',

@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Det nuvarande beloppet måste vara mindre än målbeloppet.',
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
     'unique_object_group'            => 'Gruppnamnet måste vara unikt',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Ogiltig repetitionstyp får återkommande transaktioner.',
-    'valid_recurrence_rep_moment'    => 'Ogiltig repetitionsmoment för denna typ av repetition.',
-    'invalid_account_info'           => 'Ogiltig kontoinformation.',
-    'attributes'                     => [
+    'secure_password'             => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Ogiltig repetitionstyp får återkommande transaktioner.',
+    'valid_recurrence_rep_moment' => 'Ogiltig repetitionsmoment för denna typ av repetition.',
+    'invalid_account_info'        => 'Ogiltig kontoinformation.',
+    'attributes'                  => [
         'email'                   => 'e-postadress',
         'description'             => 'beskrivning',
         'amount'                  => 'belopp',
+        'transactions.*.amount'   => 'transaktionens belopp',
         'name'                    => 'namn',
         'piggy_bank_id'           => 'spargris ID',
         'targetamount'            => 'mål belopp',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'withdrawal_source_bad_data'     => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
-    'withdrawal_dest_need_data'      => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
-    'withdrawal_dest_bad_data'       => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
+    'withdrawal_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
+    'withdrawal_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
+    'withdrawal_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
+    'withdrawal_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
 
     'deposit_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
     'deposit_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Beloppet är obligatoriskt.',
     'auto_budget_amount_positive'     => 'Beloppet måste vara mer än noll.',
-    'auto_budget_period_mandatory' => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
+    'auto_budget_period_mandatory'    => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
 ];

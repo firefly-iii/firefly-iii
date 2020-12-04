@@ -30,7 +30,7 @@ return [
     'delete'                                              => 'Изтрий',
     'split'                                               => 'Раздели',
     'single_split'                                        => 'Раздел',
-    'clone'                                               => 'Доблирай',
+    'clone'                                               => 'Дублирай',
     'last_seven_days'                                     => 'Последните седем дни',
     'last_thirty_days'                                    => 'Последните трийсет дни',
     'welcome_back'                                        => 'Какво се случва?',
@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'С тази сметка няма свързани правила.',
     'go_to_asset_accounts'                                => 'Вижте активите си',
     'go_to_budgets'                                       => 'Вижте бюджетите си',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Тази транзакция е копирана от ":description" (#:id)',
     'go_to_categories'                                    => 'Виж категориите си',
     'go_to_bills'                                         => 'Виж сметките си',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'общо очаквано',
     'reconciliation_account_name'                         => ':name съгласуване (:currency)',
     'saved'                                               => 'Записан',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Разширени настройки',
+    'advanced_options_explain'                            => 'Някои страници в Firefly III имат разширени опции, скрити зад този бутон. Тази страница няма нищо интересно тук, но проверете останалите!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version заявка за потвърждение',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Приходни сметки',
     'all_source_accounts'                                 => 'Разходни сметки',
     'back_to_index'                                       => 'Обратно към списъка',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III не може да ви отпише.',
 
     // check for updates:
     'update_check_title'                                  => 'Проверка за обновления',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Търсене',
-    'long_query_warning'                                  => 'Вашата заявка за търсене е много дълга и може да не работи както се очаква.',
     'search_query'                                        => 'Заявка',
     'search_found_transactions'                           => 'Firefly III намери :count транзакция за :time секунди.|Firefly III намери :count транзакции за :time секунди.',
     'search_found_more_transactions'                      => 'Firefly III намери повече от :count транзакции за :time секунди.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Настройки',
 
     // budgets:
+    'daily_budgets'                             => 'Дневни бюджети',
+    'weekly_budgets'                            => 'Седмични бюджети',
+    'monthly_budgets'                           => 'Месечни бюджети',
+    'quarterly_budgets'                         => 'Тримесечни бюджети',
+    'half_year_budgets'                         => 'Шестмесечни бюджети',
+    'yearly_budgets'                            => 'Годишни бюджети',
+    'other_budgets'                             => 'Времево персонализирани бюджети',
     'budget_limit_not_in_range'                 => 'Тази сума се отнася за периода от :start до :end:',
     'total_available_budget'                    => 'Общ наличен бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Общ наличен бюджет в :currency',
@@ -1011,7 +1019,7 @@ return [
     'all_accounts_inactive'                     => 'Това са вашите неактивни сметки.',
     'active_account_link'                       => 'Тази връзка ви връща към активните ви сметки.',
     'account_missing_transaction'               => 'Сметка #:id (":name") не може да се вижда директно, но в Firefly липсва информация за пренасочване.',
-    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
+    'cc_monthly_payment_date_help'              => 'Изберете която и да е година и месец, те ще бъдат игнорирани. От значение е само денят от месеца.',
     'details_for_asset'                         => 'Подробности за сметката за активи ":name"',
     'details_for_expense'                       => 'Подробности за сметката за разходи ":name"',
     'details_for_revenue'                       => 'Подробности за сметката за приходи ":name"',
@@ -1633,7 +1641,7 @@ return [
     'after_update_create_another'           => 'След обновяването се върнете тук, за да продължите с редакцията.',
     'store_as_new'                          => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                           => 'Изчистване на формуляра след изпращане',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Имаше нещо нередно с вашите данни. Моля, проверете грешките.',
 
     // object groups
     'default_group_title_name'              => '(без група)',

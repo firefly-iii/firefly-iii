@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Notan saknar associerade regler.',
     'go_to_asset_accounts'                                => 'Visa dina tillgångskonton',
     'go_to_budgets'                                       => 'Gå till dina budgetar',
+    'go_to_withdrawals'                                   => 'Gå till dina uttag',
     'clones_journal_x'                                    => 'Denna transaktion är en klon av ":description" (#:id)',
     'go_to_categories'                                    => 'Gå till dina kategorier',
     'go_to_bills'                                         => 'Gå till dina notor',
@@ -204,9 +205,9 @@ return [
     'button_register'                                     => 'Registrera',
     'authorization'                                       => 'Auktorisering',
     'active_bills_only'                                   => 'endast aktiva notor',
-    'active_bills_only_total'                             => 'all active bills',
+    'active_bills_only_total'                             => 'alla aktiva räkningar',
     'active_exp_bills_only'                               => 'endast aktiva och väntade notor',
-    'active_exp_bills_only_total'                         => 'all active expected bills only',
+    'active_exp_bills_only_total'                         => 'alla aktiva förväntade räkningar endast',
     'per_period_sum_1D'                                   => 'Förväntade dagliga kostnader',
     'per_period_sum_1W'                                   => 'Förväntade veckokostnader',
     'per_period_sum_1M'                                   => 'Förväntade månadskostnader',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'total förväntad',
     'reconciliation_account_name'                         => ':name avstämning (:currency)',
     'saved'                                               => 'Sparad',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Avancerade alternativ',
+    'advanced_options_explain'                            => 'Vissa sidor i Firefly III har avancerade alternativ gömda bakom den här knappen. Den här sidan har inget tjusigt här, men kolla in de andra!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Auktorisationsbegäran',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Destinationskonton',
     'all_source_accounts'                                 => 'Källkonton',
     'back_to_index'                                       => 'Åter till index',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III kan inte logga ut dig.',
 
     // check for updates:
     'update_check_title'                                  => 'Sök uppdateringar',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Sök',
-    'long_query_warning'                                  => 'Din sökfråga är mycket lång, den kanske inte fungerar som förväntat.',
     'search_query'                                        => 'Fråga',
     'search_found_transactions'                           => 'Firefly III hittade :count transaktion i :time sekunder.|Firefly III hittade :count transaktioner i :time sekunder.',
     'search_found_more_transactions'                      => 'Firefly III hittade mer än :count transaktioner i :time sekunder.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Alternativ',
 
     // budgets:
+    'daily_budgets'                             => 'Dagliga budgetar',
+    'weekly_budgets'                            => 'Veckovis budgetar',
+    'monthly_budgets'                           => 'Månatliga budgetar',
+    'quarterly_budgets'                         => 'Kvartalsbudgetar',
+    'half_year_budgets'                         => 'Halvårsbudgetar',
+    'yearly_budgets'                            => 'Årliga budgetar',
+    'other_budgets'                             => 'Anpassade tidsinställda budgetar',
     'budget_limit_not_in_range'                 => 'Detta belopp gäller från :start till :end:',
     'total_available_budget'                    => 'Total tillgänglig budget (mellan :start och :end)',
     'total_available_budget_in_currency'        => 'Total tillgänglig budget i :currency',
@@ -1011,7 +1019,7 @@ return [
     'all_accounts_inactive'                     => 'Dessa är dina inaktiva konton.',
     'active_account_link'                       => 'Denna länk går tillbaka till dina aktiva konton.',
     'account_missing_transaction'               => 'Konto #:id (":name") kan inte visas direkt, men Firefly saknar information för omdirigering.',
-    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
+    'cc_monthly_payment_date_help'              => 'Välj ett år och en månad, det kommer att ignoreras ändå. Endast dagen i månaden är relevant.',
     'details_for_asset'                         => 'Detaljer för tillgångskonto ":name"',
     'details_for_expense'                       => 'Detaljer för utgiftskonto ":name"',
     'details_for_revenue'                       => 'Detaljer för intäktskonto ":name"',
@@ -1633,7 +1641,7 @@ return [
     'after_update_create_another'           => 'Efter uppdaterat, återkom hit för att fortsätta redigera.',
     'store_as_new'                          => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                           => 'Återställ formulär efter inskickat',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Något fel uppstod med inskickningen. Vänligen kontrollera felen nedan.',
 
     // object groups
     'default_group_title_name'              => '(ogrupperad)',
@@ -1807,7 +1815,7 @@ return [
     'object_groups_empty_explain'        => 'Vissa saker i Firefly III kan delas in i grupper. Spargrisar till exempel, har ett "Grupp" fält i redigera och skapa vyerna. När du anger det här fältet kan du redigera gruppernas namn och ordning på den här sidan. För mer information, kolla in hjälpsidorna i det övre högra hörnet, under (?)-ikonen.',
     'object_group_title'                 => 'Titel',
     'edit_object_group'                  => 'Redigera grupp ":title"',
-    'delete_object_group'                => 'Delete group ":title"',
+    'delete_object_group'                => 'Ta bort grupp ":title"',
     'update_object_group'                => 'Uppdatera grupp',
     'updated_object_group'               => 'Uppdatering för grupp ":title" lyckades',
     'deleted_object_group'               => 'Grupp ":title" lyckades tas bort',

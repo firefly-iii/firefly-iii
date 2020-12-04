@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Esta factura no tiene reglas asociadas a ella.',
     'go_to_asset_accounts'                                => 'Ver tus cuentas de activos',
     'go_to_budgets'                                       => 'Ir a tus presupuestos',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Esta transacción es un clon de ":description" (#:id)',
     'go_to_categories'                                    => 'Ir a tus categorías',
     'go_to_bills'                                         => 'Ir a tus cuentas',
@@ -204,9 +205,9 @@ return [
     'button_register'                                     => 'Registrarse',
     'authorization'                                       => 'Autorización',
     'active_bills_only'                                   => 'sólo facturas activas',
-    'active_bills_only_total'                             => 'all active bills',
+    'active_bills_only_total'                             => 'todas las facturas activas',
     'active_exp_bills_only'                               => 'sólo facturas activas y esperadas',
-    'active_exp_bills_only_total'                         => 'all active expected bills only',
+    'active_exp_bills_only_total'                         => 'solo las facturas activas esperadas',
     'per_period_sum_1D'                                   => 'Costes diarios esperados',
     'per_period_sum_1W'                                   => 'Costes semanales esperados',
     'per_period_sum_1M'                                   => 'Costes mensuales esperados',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'total esperado',
     'reconciliation_account_name'                         => ':name reconciliación (:currency)',
     'saved'                                               => 'Guardado',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Opciones avanzadas',
+    'advanced_options_explain'                            => 'Algunas páginas de Firefly III tienen opciones avanzadas ocultas detrás de este botón. Esta página no tiene nada elegante, ¡pero eche un vistazo a las demás!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Solicitud de autorización',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Cuentas destino',
     'all_source_accounts'                                 => 'Cuentas origen',
     'back_to_index'                                       => 'Volver al Índice',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III no puede cerrar sesión.',
 
     // check for updates:
     'update_check_title'                                  => 'Ver actualizaciones',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Buscar',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Consulta',
     'search_found_transactions'                           => 'Firefly III encontrado :count transacción en :time segundos.|Firefly III encontrado :count transacciones en :time segundos.',
     'search_found_more_transactions'                      => 'Firefly III encontró más de :count transacciones en :time segundos.',
@@ -760,7 +761,7 @@ return [
     'login_with_old_email'                      => 'Usted puede ahora iniciar sesión con su vieja dirección de correo electrónico otra vez.',
     'login_provider_local_only'                 => 'Esta acción no está disponible cuando se identifica a través de ":login_provider".',
     'external_user_mgt_disabled'                => 'Esta acción no está disponible cuando Firefly III no es responsable de la gestión de usuarios o de la autenticación.',
-    'external_auth_disabled'                    => 'This action is not available when Firefly III isn\'t responsible for authentication handling.',
+    'external_auth_disabled'                    => 'Esta acción no está disponible cuando Firefly III no es responsable del manejo de la autenticación.',
     'delete_local_info_only'                    => "Debido a que Firefly III no es responsable de la gestión de usuarios o de la autenticación, esta función sólo eliminará la información local de Firefly III.",
     'oauth'                                     => 'OAuth',
     'profile_oauth_clients'                     => 'Clientes de OAuth',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Opciones',
 
     // budgets:
+    'daily_budgets'                             => 'Presupuestos diarios',
+    'weekly_budgets'                            => 'Presupuestos semanales',
+    'monthly_budgets'                           => 'Presupuestos mensuales',
+    'quarterly_budgets'                         => 'Presupuestos trimestrales',
+    'half_year_budgets'                         => 'Presupuestos semestrales',
+    'yearly_budgets'                            => 'Presupuestos anuales',
+    'other_budgets'                             => 'Presupuestos de tiempo personalizado',
     'budget_limit_not_in_range'                 => 'Esta cantidad se aplica desde :start hasta :end:',
     'total_available_budget'                    => 'Presupuesto total disponible (entre :start y :end)',
     'total_available_budget_in_currency'        => 'Presupuesto total disponible en :currency',
@@ -1011,7 +1019,7 @@ return [
     'all_accounts_inactive'                     => 'Estas son sus cuentas inactivas.',
     'active_account_link'                       => 'Este enlace se regresa a sus cuentas activas.',
     'account_missing_transaction'               => 'Cuenta #:id (":name") no puede ser vista directamente, Firefly perdió información de redirección.',
-    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
+    'cc_monthly_payment_date_help'              => 'Seleccione cualquier año y mes, será ignorado de todos modos. Sólo el día del mes es relevante.',
     'details_for_asset'                         => 'Detalles para la cuenta de activos ":name"',
     'details_for_expense'                       => 'Detalles para la cuenta de gastos ":name"',
     'details_for_revenue'                       => 'Detalles para la cuenta de ingresos ":name"',
@@ -1633,7 +1641,7 @@ return [
     'after_update_create_another'           => 'Después de actualizar, vuelve aquí para continuar editando.',
     'store_as_new'                          => 'Almacenar como una nueva transacción en lugar de actualizar.',
     'reset_after'                           => 'Restablecer formulario después del envío',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Hubo un problema con su envío. Por favor, compruebe los errores.',
 
     // object groups
     'default_group_title_name'              => '(sin agrupación)',
@@ -1807,7 +1815,7 @@ return [
     'object_groups_empty_explain'        => 'Algunas cosas en Firefly III se pueden dividir en grupos. Los las alcancías, por ejemplo, incluyen un campo "Grupo" en las pantallas de edición y creación. Cuando establece este campo, puede editar los nombres y el orden de los grupos en esta página. Para obtener más información, consulte las páginas de ayuda en la esquina superior derecha, debajo del icono (?).',
     'object_group_title'                 => 'Título',
     'edit_object_group'                  => 'Editar grupo ":title"',
-    'delete_object_group'                => 'Delete group ":title"',
+    'delete_object_group'                => 'Eliminar grupo ":title"',
     'update_object_group'                => 'Actualizar grupo',
     'updated_object_group'               => 'Grupo ":title" actualizado con éxito',
     'deleted_object_group'               => 'Grupo ":title" borrado con éxito',

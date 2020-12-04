@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Aktuální částka musí být menší než cílová částka.',
     'unique_piggy_bank_for_user'     => 'Je třeba, aby se názvy pokladniček neopakovaly.',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Neplatný typ opakování pro opakované transakce.',
-    'valid_recurrence_rep_moment'    => 'Neplatné opakování v tento moment tohoto typu opakování.',
-    'invalid_account_info'           => 'Neplatná informace o účtu.',
-    'attributes'                     => [
+    'secure_password'             => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Neplatný typ opakování pro opakované transakce.',
+    'valid_recurrence_rep_moment' => 'Neplatné opakování v tento moment tohoto typu opakování.',
+    'invalid_account_info'        => 'Neplatná informace o účtu.',
+    'attributes'                  => [
         'email'                   => 'e-mailová adresa',
         'description'             => 'popis',
         'amount'                  => 'částka',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'název',
         'piggy_bank_id'           => 'ID pokladničky',
         'targetamount'            => 'cílová částka',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
-    'withdrawal_source_bad_data'     => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
-    'withdrawal_dest_need_data'      => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
-    'withdrawal_dest_bad_data'       => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
+    'withdrawal_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
+    'withdrawal_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
+    'withdrawal_dest_need_data'   => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
+    'withdrawal_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
 
     'deposit_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'deposit_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];

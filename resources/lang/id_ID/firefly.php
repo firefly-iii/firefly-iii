@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Bill ini tidak terkait dengan aturan yang telah ada.',
     'go_to_asset_accounts'                                => 'Menampilkan rekening aset',
     'go_to_budgets'                                       => 'Pergi ke anggaran mu',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Transaksi ini adalah salinan dari ":description" (#:id)',
     'go_to_categories'                                    => 'Menuju ke kategori yang anda miliki',
     'go_to_bills'                                         => 'Menuju ke bill yang anda miliki',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => 'Saved',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Authorization Request',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Pencarian',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Pertanyaan',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Pilihan',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',

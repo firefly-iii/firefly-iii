@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Ten rachunek nie ma przypisanych do niego reguł.',
     'go_to_asset_accounts'                                => 'Zobacz swoje konta aktywów',
     'go_to_budgets'                                       => 'Przejdź do swoich budżetów',
+    'go_to_withdrawals'                                   => 'Przejdź do swoich wydatków',
     'clones_journal_x'                                    => 'Ta transakcja jest sklonowana z transakcji ":description" (#:id)',
     'go_to_categories'                                    => 'Przejdź do swoich kategorii',
     'go_to_bills'                                         => 'Przejdź do swoich rachunków',
@@ -204,9 +205,9 @@ return [
     'button_register'                                     => 'Zarejestruj',
     'authorization'                                       => 'Autoryzacja',
     'active_bills_only'                                   => 'tylko aktywne rachunki',
-    'active_bills_only_total'                             => 'all active bills',
+    'active_bills_only_total'                             => 'wszystkie aktywne rachunki',
     'active_exp_bills_only'                               => 'tylko aktywne i oczekiwane rachunki',
-    'active_exp_bills_only_total'                         => 'all active expected bills only',
+    'active_exp_bills_only_total'                         => 'tylko aktywne i oczekiwane rachunki',
     'per_period_sum_1D'                                   => 'Oczekiwane koszty dzienne',
     'per_period_sum_1W'                                   => 'Oczekiwane koszty tygodniowe',
     'per_period_sum_1M'                                   => 'Przewidywane koszty miesięczne',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'oczekiwana suma',
     'reconciliation_account_name'                         => 'Uzgadnianie :name (:currency)',
     'saved'                                               => 'Zapisano',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Opcje zaawansowane',
+    'advanced_options_explain'                            => 'Niektóre strony w Firefly III mają zaawansowane opcje ukryte pod tym przyciskiem. Ta strona niestety nie ma nic, ale sprawdź inne!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Żądanie autoryzacji Firefly III v:version',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Konta docelowe',
     'all_source_accounts'                                 => 'Konta źródłowe',
     'back_to_index'                                       => 'Wróć do indeksu',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III nie może cię wylogować.',
 
     // check for updates:
     'update_check_title'                                  => 'Sprawdź aktualizacje',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Szukaj',
-    'long_query_warning'                                  => 'Twoje zapytanie jest bardzo długie i może nie działać zgodnie z oczekiwaniami.',
     'search_query'                                        => 'Zapytanie',
     'search_found_transactions'                           => 'Firefly III znalazł :count transakcję w :time sekund.|Firefly III znalazł :count transakcji w :time sekund.',
     'search_found_more_transactions'                      => 'Firefly III znalazł więcej niż :count transakcji w :time sekund.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Opcje',
 
     // budgets:
+    'daily_budgets'                             => 'Budżety dzienne',
+    'weekly_budgets'                            => 'Budżety tygodniowe',
+    'monthly_budgets'                           => 'Budżety miesięczne',
+    'quarterly_budgets'                         => 'Budżety kwartalne',
+    'half_year_budgets'                         => 'Budżety półroczne',
+    'yearly_budgets'                            => 'Budżety roczne',
+    'other_budgets'                             => 'Budżety niestandardowe',
     'budget_limit_not_in_range'                 => 'Ta kwota dotyczy okresu od :start do :end:',
     'total_available_budget'                    => 'Dostępny budżet (pomiędzy :start i :end)',
     'total_available_budget_in_currency'        => 'Dostępny budżet w :currency',
@@ -1011,7 +1019,7 @@ return [
     'all_accounts_inactive'                     => 'To są twoje nieaktywne konta.',
     'active_account_link'                       => 'Ten link wraca do Twoich aktywnych kont.',
     'account_missing_transaction'               => 'Konto #:id (":name") nie możne być wyświetlone bezpośrednio, ale Firefly Iii nie ma informacji przekierowania.',
-    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
+    'cc_monthly_payment_date_help'              => 'Wybierz dowolny rok i miesiąc, są i tak ignorowane. Ważny jest tylko dzień miesiąca.',
     'details_for_asset'                         => 'Szczegóły konta aktywów ":name"',
     'details_for_expense'                       => 'Szczegóły konta wydatków ":name"',
     'details_for_revenue'                       => 'Szczegóły konta przychodów ":name"',
@@ -1807,7 +1815,7 @@ return [
     'object_groups_empty_explain'        => 'Niektóre rzeczy w Firefly III można podzielić na grupy. Na przykład skarbonki zawierają pole "Grupa" w ekranach edycji i tworzenia. Gdy ustawisz to pole, możesz edytować nazwy i kolejność grup na tej stronie. Aby uzyskać więcej informacji, sprawdź strony pomocy w prawym górnym rogu, pod ikoną (?).',
     'object_group_title'                 => 'Tytuł',
     'edit_object_group'                  => 'Modyfikuj grupę ":title"',
-    'delete_object_group'                => 'Delete group ":title"',
+    'delete_object_group'                => 'Usuń grupę ":title"',
     'update_object_group'                => 'Aktualizuj grupę',
     'updated_object_group'               => 'Pomyślnie zmodyfikowano grupę ":title"',
     'deleted_object_group'               => 'Pomyślnie usunięto grupę ":title"',

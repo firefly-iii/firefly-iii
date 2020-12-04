@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Dit contract heeft geen regels.',
     'go_to_asset_accounts'                                => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                                       => 'Ga naar je budgetten',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Deze transactie is een kloon van ":description" (#:id)',
     'go_to_categories'                                    => 'Ga naar je categorieën',
     'go_to_bills'                                         => 'Ga naar je contracten',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'verwacht totaal',
     'reconciliation_account_name'                         => ':name afstemming (:currency)',
     'saved'                                               => 'Opgeslagen',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Geavanceerde opties',
+    'advanced_options_explain'                            => 'Sommige pagina\'s in Firefly III hebben geavanceerde opties verborgen achter deze knop. Voor deze pagina geldt dat niet, maar check zeker de andere pagina\'s!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version autorisatieverzoek',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Zoeken',
-    'long_query_warning'                                  => 'Je zoekopdracht is erg lang en werkt misschien niet lekker.',
     'search_query'                                        => 'Zoekopdracht',
     'search_found_transactions'                           => 'Firefly III vond :count transactie in :time seconden.|Firefly III vond :count transacties in :time seconden.',
     'search_found_more_transactions'                      => 'Firefly III vond meer dan :count transacties in :time seconden.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Opties',
 
     // budgets:
+    'daily_budgets'                             => 'Dagelijkse budgetten',
+    'weekly_budgets'                            => 'Wekelijkse budgetten',
+    'monthly_budgets'                           => 'Maandelijkse budgetten',
+    'quarterly_budgets'                         => 'Driemaandelijkse budgetten',
+    'half_year_budgets'                         => 'Halfjaarlijkse budgetten',
+    'yearly_budgets'                            => 'Jaarlijkse budgetten',
+    'other_budgets'                             => 'Aangepaste budgetten',
     'budget_limit_not_in_range'                 => 'Dit bedrag is van toepassing op :start tot :end:',
     'total_available_budget'                    => 'Totaal beschikbare budget (tussen :start en :end)',
     'total_available_budget_in_currency'        => 'Totaal beschikbare budget in :currency',

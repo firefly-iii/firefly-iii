@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Hóa đơn này không có quy tắc nào liên quan đến nó.',
     'go_to_asset_accounts'                                => 'Xem tài khoản của bạn',
     'go_to_budgets'                                       => 'Chuyển đến ngân sách của bạn',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Giao dịch này là một bản sao của ":description" (#:id)',
     'go_to_categories'                                    => 'Đi đến danh mục của bạn',
     'go_to_bills'                                         => 'Đi đến hóa đơn của bạn',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => 'Saved',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Tìm kiếm',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Truy vấn',
     'search_found_transactions'                           => 'Tìm thấy Firefly III :count giao dịch trong :time giây. | Firefly III được tìm thấy :count giao dịch trong :time giây.',
     'search_found_more_transactions'                      => 'Firefly III đã tìm thấy hơn :count giao dịch trong :time giây.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Tùy chọn',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Tổng ngân sách có sẵn (giữa :start và :end)',
     'total_available_budget_in_currency'        => 'Tổng ngân sách có sẵn bằng: tiền tệ',

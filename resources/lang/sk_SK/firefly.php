@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Táto účtenka nemá priradené žiadne pravidlá.',
     'go_to_asset_accounts'                                => 'Zobraziť účty aktív',
     'go_to_budgets'                                       => 'Zobraziť rozpočty',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Táto transakcia je kópiou „:description“ (#:id)',
     'go_to_categories'                                    => 'Zobraziť kategórie',
     'go_to_bills'                                         => 'Zobraziť účty',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'očakávaný celkový súčet',
     'reconciliation_account_name'                         => ':name zúčtovanie (:currency)',
     'saved'                                               => 'Uložené',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Pokročilé nastavenia',
+    'advanced_options_explain'                            => 'Niektoré stránky Firefly III majú pod týmto tlačítkom skryté pokročilé nastavenia. Táto stránka síce nič také neobsahuje, ale určite to skúste na iných!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Požiadavka na overenie – Firefly III verzia :version',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Cieľové účty',
     'all_source_accounts'                                 => 'Zdrojové účty',
     'back_to_index'                                       => 'Späť na zoznam',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III sa nepodarilo vás odhlásiť.',
 
     // check for updates:
     'update_check_title'                                  => 'Zistiť dostupnosť aktualizácií',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Hľadať',
-    'long_query_warning'                                  => 'Váš vyhľadávaný pojem je veľmi dlhý, a nemusí fungovať tak, ako očakávate.',
     'search_query'                                        => 'Požiadavka',
     'search_found_transactions'                           => 'Firefly III našiel :count transakciu za :time sekúnd.|Firefly III našiel :count transakcií za :time sekúnd.',
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Možnosti',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Špecifické časované rozpočty',
     'budget_limit_not_in_range'                 => 'Táto suma platí od :start do :end:',
     'total_available_budget'                    => 'Suma dostupného rozpočtu (medzi :start a :end)',
     'total_available_budget_in_currency'        => 'Celkový rozpočet k dispozici v :currency',
@@ -1011,7 +1019,7 @@ return [
     'all_accounts_inactive'                     => 'Toto sú vaše neaktívne bankové účty.',
     'active_account_link'                       => 'Tento prepojenie smeruje späť na vaše aktívne účty.',
     'account_missing_transaction'               => 'Bankový účet #:id (":name") nie je možné zobraziť priamo, ale Firefly III chýbajú informácie o presmerovaní.',
-    'cc_monthly_payment_date_help'              => 'Select any year and any month, it will be ignored anyway. Only the day of the month is relevant.',
+    'cc_monthly_payment_date_help'              => 'Vyberte akýkoľvek rok alebo mesiac, budú ignorované. Relevantný je len deň v mesiaci.',
     'details_for_asset'                         => 'Podrobnosti o účte aktív „:name“',
     'details_for_expense'                       => 'Podrobnosti o výdavkovom účte „:name“',
     'details_for_revenue'                       => 'Podrobnosti o výnosovom účte „:name“',
@@ -1633,7 +1641,7 @@ return [
     'after_update_create_another'           => 'Po aktualizácii sa vrátiť späť a pokračovať v úpravách.',
     'store_as_new'                          => 'Namiesto aktualizácie uložiť ako novú transakciu.',
     'reset_after'                           => 'Po odoslaní vynulovať formulár',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'Pri odosielaní sa niečo nepodarilo. Skontrolujte prosím chyby.',
 
     // object groups
     'default_group_title_name'              => '(nezoskupené)',

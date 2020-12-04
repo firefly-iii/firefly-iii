@@ -5,7 +5,7 @@
         "flash_success": "Slutf\u00f6rd!",
         "close": "St\u00e4ng",
         "split_transaction_title": "Beskrivning av delad transaktion",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
+        "errors_submission": "N\u00e5got fel uppstod med inskickningen. V\u00e4nligen kontrollera felen nedan.",
         "split": "Dela",
         "single_split": "Dela",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaktion #{ID} (\"{title}\")<\/a> sparades.",

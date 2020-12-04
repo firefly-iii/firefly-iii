@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => '此帳單未設定相關的規則。',
     'go_to_asset_accounts'                                => '檢視您的資產帳戶',
     'go_to_budgets'                                       => '前往您的預算',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'This transaction is a clone of ":description" (#:id)',
     'go_to_categories'                                    => '前往您的分類',
     'go_to_bills'                                         => '前往您的帳單',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => 'Saved',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III :version 版授權請求',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => '搜尋',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => '查詢',
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => '選項',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Total available budget (between :start and :end)',
     'total_available_budget_in_currency'        => 'Total available budget in :currency',

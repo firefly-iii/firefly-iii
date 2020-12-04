@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Bieżąca kwota musi być mniejsza niż kwota docelowa.',
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'unique_object_group'            => 'Nazwa grupy musi być unikalna',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
-    'valid_recurrence_rep_moment'    => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
-    'invalid_account_info'           => 'Nieprawidłowe informacje o koncie.',
-    'attributes'                     => [
+    'secure_password'             => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
+    'valid_recurrence_rep_moment' => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
+    'invalid_account_info'        => 'Nieprawidłowe informacje o koncie.',
+    'attributes'                  => [
         'email'                   => 'adres e-mail',
         'description'             => 'opis',
         'amount'                  => 'kwota',
+        'transactions.*.amount'   => 'kwota transakcji',
         'name'                    => 'nazwa',
         'piggy_bank_id'           => 'identyfikator skarbonki',
         'targetamount'            => 'kwota docelowa',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
-    'withdrawal_source_bad_data'     => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
-    'withdrawal_dest_need_data'      => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
-    'withdrawal_dest_bad_data'       => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
+    'withdrawal_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
+    'withdrawal_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
+    'withdrawal_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
+    'withdrawal_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 
     'deposit_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'deposit_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Kwota jest wymagana.',
     'auto_budget_amount_positive'     => 'Kwota musi być większa niż zero.',
-    'auto_budget_period_mandatory' => 'Okres automatycznego budżetu to pole obowiązkowe.',
+    'auto_budget_period_mandatory'    => 'Okres automatycznego budżetu to pole obowiązkowe.',
 ];

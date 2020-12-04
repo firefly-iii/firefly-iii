@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'С этим счётом не связано ни одно правило.',
     'go_to_asset_accounts'                                => 'Просмотр ваших основных счетов',
     'go_to_budgets'                                       => 'Перейти к вашим бюджетам',
+    'go_to_withdrawals'                                   => 'Go to your withdrawals',
     'clones_journal_x'                                    => 'Эта транзакция является клоном ":description" (#:id)',
     'go_to_categories'                                    => 'Перейти к вашим категориям',
     'go_to_bills'                                         => 'Перейти к вашим счетам на оплату',
@@ -219,6 +220,7 @@ return [
     'saved'                                               => 'Сохранено',
     'advanced_options'                                    => 'Advanced options',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Запрос авторизации Firefly III v:version',
@@ -265,7 +267,6 @@ return [
 
     // search
     'search'                                              => 'Поиск',
-    'long_query_warning'                                  => 'Your search query is very long, and may not work as expected.',
     'search_query'                                        => 'Запрос',
     'search_found_transactions'                           => 'Firefly III нашёл :count транзакции за :time секунд.|Firefly III нашёл :count транзакций за :time секунд.',
     'search_found_more_transactions'                      => 'Firefly III нашёл более :count транзакций за :time секунд.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Параметры',
 
     // budgets:
+    'daily_budgets'                             => 'Daily budgets',
+    'weekly_budgets'                            => 'Weekly budgets',
+    'monthly_budgets'                           => 'Monthly budgets',
+    'quarterly_budgets'                         => 'Quarterly budgets',
+    'half_year_budgets'                         => 'Half-yearly budgets',
+    'yearly_budgets'                            => 'Yearly budgets',
+    'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'This amount applies from :start to :end:',
     'total_available_budget'                    => 'Общий доступный бюджет (между :start и :end)',
     'total_available_budget_in_currency'        => 'Всего доступно в бюджете (:currency)',

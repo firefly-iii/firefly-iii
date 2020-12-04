@@ -20,7 +20,7 @@
 
 <template>
   <div class="row">
-    <div class="col-md-3 col-sm-6 col-12">
+    <div class="col"> <!-- col-md-3 col-sm-6 col-12 -->
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
 
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="col-12 col-sm-6 col-md-3">
+    <div class="col">
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
@@ -66,11 +66,8 @@
         </div>
       </div>
     </div>
-
-    <div class="clearfix hidden-md-up"></div>
-
     <!-- left to spend -->
-    <div class="col-12 col-sm-6 col-md-3">
+    <div class="col">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
@@ -95,7 +92,7 @@
     </div>
 
     <!-- net worth -->
-    <div class="col-12 col-sm-6 col-md-3">
+    <div class="col">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
@@ -254,7 +251,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

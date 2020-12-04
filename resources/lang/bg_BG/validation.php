@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Текущата сума трябва да бъде по-малка от планираната сума.',
     'unique_piggy_bank_for_user'     => 'Името на касичката трябва да е уникално.',
     'unique_object_group'            => 'Името на групата трябва да е уникално',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Това не е сигурна парола. Моля, опитайте отново. За повече информация посетете https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Невалиден тип повторение за повтарящи се транзакции.',
-    'valid_recurrence_rep_moment'    => 'Невалиден момент на повторение за този тип повторение.',
-    'invalid_account_info'           => 'Невалидна информация за сметка.',
-    'attributes'                     => [
+    'secure_password'             => 'Това не е сигурна парола. Моля, опитайте отново. За повече информация посетете https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Невалиден тип повторение за повтарящи се транзакции.',
+    'valid_recurrence_rep_moment' => 'Невалиден момент на повторение за този тип повторение.',
+    'invalid_account_info'        => 'Невалидна информация за сметка.',
+    'attributes'                  => [
         'email'                   => 'имейл адрес',
         'description'             => 'описание',
         'amount'                  => 'сума',
+        'transactions.*.amount'   => 'сума на транзакцията',
         'name'                    => 'име',
         'piggy_bank_id'           => 'ID касичка',
         'targetamount'            => 'планирана сума',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
-    'withdrawal_source_bad_data'     => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
-    'withdrawal_dest_need_data'      => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
-    'withdrawal_dest_bad_data'       => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+    'withdrawal_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
+    'withdrawal_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
+    'withdrawal_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
+    'withdrawal_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
 
     'deposit_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
     'deposit_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Необходима е сума.',
     'auto_budget_amount_positive'     => 'Сумата трябва да е по-голяма от нула.',
-    'auto_budget_period_mandatory' => 'Периодът на автоматичния бюджет е задължително поле.',
+    'auto_budget_period_mandatory'    => 'Периодът на автоматичния бюджет е задължително поле.',
 ];

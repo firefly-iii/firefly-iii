@@ -130,6 +130,9 @@ return [
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
     'secure_password'             => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Invalid repetition type for recurring transactions.',

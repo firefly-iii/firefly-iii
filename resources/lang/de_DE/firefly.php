@@ -59,6 +59,7 @@ return [
     'no_rules_for_bill'                                   => 'Dieser Rechnung sind keine Regeln zugeordnet.',
     'go_to_asset_accounts'                                => 'Bestandskonten anzeigen',
     'go_to_budgets'                                       => 'Budgets anzeigen',
+    'go_to_withdrawals'                                   => 'Ausgaben anzeigen',
     'clones_journal_x'                                    => 'Diese Buchung ist ein Duplikat von ":description" (#:id)',
     'go_to_categories'                                    => 'Kategorien anzeigen',
     'go_to_bills'                                         => 'Rechnungen anzeigen',
@@ -217,8 +218,9 @@ return [
     'expected_total'                                      => 'Voraussichtliche Summe',
     'reconciliation_account_name'                         => ':name Kontenabgleich (:currency)',
     'saved'                                               => 'Gespeichert',
-    'advanced_options'                                    => 'Advanced options',
-    'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
+    'advanced_options'                                    => 'Erweiterte Optionen',
+    'advanced_options_explain'                            => 'Auf einigen Seiten in Firefly III sind hinter dieser Schaltfläche erweiterte Optionen zu finden. Diese Seite enthält hier nichts Außergewöhnliches, aber schauen Sie sich die anderen an!',
+    'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Autorisierungsanfrage',
@@ -235,7 +237,7 @@ return [
     'all_destination_accounts'                            => 'Zielkonten',
     'all_source_accounts'                                 => 'Quellkonten',
     'back_to_index'                                       => 'Zurück zum Index',
-    'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'cant_logout_guard'                                   => 'Firefly III kann Sie nicht abmelden.',
 
     // check for updates:
     'update_check_title'                                  => 'Nach Updates suchen',
@@ -261,11 +263,10 @@ return [
     'admin_update_channel_explain'                        => 'Firefly III verfügt über drei Aktualisierungskanäle, welche bestimmen, wie weit Sie in Bezug auf Funktionen, Verbesserungen und Fehler experimentierfreudig sind. Nutzen Sie den „Beta”-Kanal, wenn Sie abenteuerlustig sind, und den „Alpha”-Kanal, wenn Sie ein gefährliches Leben führen möchten.',
     'update_channel_stable'                               => 'Stabil — Alles sollte wie erwartet funktionieren.',
     'update_channel_beta'                                 => 'Beta — Neue Funktionen, aber einige Funktionen könnten fehlerhaft sein.',
-    'update_channel_alpha'                                => 'Alpha — Wir experiementieren mit neuen Dingen und benutzen die noch Fallstricke enthalten.',
+    'update_channel_alpha'                                => 'Alpha — Wir werfen neue Features hinein und schauen, was funktioniert.',
 
     // search
     'search'                                              => 'Suche',
-    'long_query_warning'                                  => 'Ihre Suchanfrage ist sehr lang und funktioniert möglicherweise nicht wie erwartet.',
     'search_query'                                        => 'Abfrage',
     'search_found_transactions'                           => 'Firefly III hat :count Transaktion in :time Sekunden gefunden.|Firefly III hat :count Transaktionen in :time Sekunden gefunden.',
     'search_found_more_transactions'                      => 'Firefly III hat mehr als :count Transaktionen in :time Sekunden gefunden.',
@@ -917,6 +918,13 @@ return [
     'options'                                   => 'Einstellungen',
 
     // budgets:
+    'daily_budgets'                             => 'Tagesbudgets',
+    'weekly_budgets'                            => 'Wochenbudgets',
+    'monthly_budgets'                           => 'Monatsbudgets',
+    'quarterly_budgets'                         => 'Quartalsbudgets',
+    'half_year_budgets'                         => 'Halbjahresbudgets',
+    'yearly_budgets'                            => 'Jahresbudgets',
+    'other_budgets'                             => 'Zeitlich befristete Budgets',
     'budget_limit_not_in_range'                 => 'Dieser Betrag gilt von :start to :end:',
     'total_available_budget'                    => 'Verfügbares Gesamtbudget (zwischen :start und :end)',
     'total_available_budget_in_currency'        => 'Verfügbares Gesamtbudget in :currency',
@@ -1435,7 +1443,7 @@ return [
     'spent_capped'                              => 'Ausgegeben (gedeckelt)',
     'spent_in_budget'                           => 'Ausgegeben im Budget',
     'left_to_spend'                             => 'Verbleibend zum Ausgeben',
-    'earned'                                    => 'Einnahmen',
+    'earned'                                    => 'Eingenommen',
     'overspent'                                 => 'Zuviel ausgegeben',
     'left'                                      => 'Übrig',
     'max-amount'                                => 'Höchstbetrag',

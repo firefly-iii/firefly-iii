@@ -24,7 +24,7 @@ import MainAccount from "../components/dashboard/MainAccount";
 import MainAccountList from "../components/dashboard/MainAccountList";
 import MainBillsList from "../components/dashboard/MainBillsList";
 import MainBudgetList from "../components/dashboard/MainBudgetList";
-import MainCredit from "../components/dashboard/MainCredit";
+import MainCreditList from "../components/dashboard/MainCreditList";
 import MainDebitList from "../components/dashboard/MainDebitList";
 import MainPiggyList from "../components/dashboard/MainPiggyList";
 import TransactionListLarge from "../components/transactions/TransactionListLarge";
@@ -56,8 +56,8 @@ Vue.component('main-account-list', MainAccountList);
 Vue.component('main-bills-list', MainBillsList);
 Vue.component('main-budget-list', MainBudgetList);
 Vue.component('main-category-list', MainCategoryList);
-Vue.component('main-credit', MainCredit);
 Vue.component('main-debit-list', MainDebitList);
+Vue.component('main-credit-list', MainCreditList);
 Vue.component('main-piggy-list', MainPiggyList);
 
 // i18n

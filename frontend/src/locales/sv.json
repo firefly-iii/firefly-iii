@@ -35,13 +35,15 @@
         "account_role_sharedAsset": "Delat tillg\u00e5ngskonto",
         "account_role_ccAsset": "Kreditkort",
         "account_role_cashWalletAsset": "Pl\u00e5nbok",
-        "daily_budgets": "Daily budgets",
-        "weekly_budgets": "Weekly budgets",
-        "monthly_budgets": "Monthly budgets",
-        "quarterly_budgets": "Quarterly budgets",
-        "half_year_budgets": "Half-yearly budgets",
-        "yearly_budgets": "Yearly budgets",
-        "other_budgets": "Custom timed budgets"
+        "daily_budgets": "Dagliga budgetar",
+        "weekly_budgets": "Veckovis budgetar",
+        "monthly_budgets": "M\u00e5natliga budgetar",
+        "quarterly_budgets": "Kvartalsbudgetar",
+        "half_year_budgets": "Halv\u00e5rsbudgetar",
+        "yearly_budgets": "\u00c5rliga budgetar",
+        "other_budgets": "Anpassade tidsinst\u00e4llda budgetar",
+        "go_to_withdrawals": "G\u00e5 till dina uttag",
+        "revenue_accounts": "Int\u00e4ktskonton"
     },
     "list": {
         "piggy_bank": "Spargris",
