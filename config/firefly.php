@@ -832,6 +832,7 @@ return [
         'responses'    => [
             200 => 'RESPONSE_TRANSACTIONS',
             210 => 'RESPONSE_ACCOUNTS',
+            220 => 'RESPONSE_NONE',
         ],
         'deliveries'   => [
             300 => 'DELIVERY_JSON',

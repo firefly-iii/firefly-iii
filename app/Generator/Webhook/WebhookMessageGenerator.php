@@ -100,6 +100,8 @@ class WebhookMessageGenerator
 
     /**
      * @param Webhook $webhook
+     *
+     * @throws FireflyException
      */
     private function runWebhook(Webhook $webhook): void
     {
@@ -124,6 +126,7 @@ class WebhookMessageGenerator
             'trigger'  => config('firefly.webhooks.triggers')[$webhook->trigger],
             'url'      => $webhook->url,
             'uuid'     => $uuid->toString(),
+            'version'  => 0,
             'response' => config('firefly.webhooks.responses')[$webhook->response],
             'content'  => [],
         ];
@@ -131,6 +134,8 @@ class WebhookMessageGenerator
         switch ($webhook->response) {
             default:
                 throw new FireflyException(sprintf('Cannot handle this webhook response (%d)', $webhook->response));
+            case Webhook::RESPONSE_NONE:
+                $message['content'] = [];
             case Webhook::RESPONSE_TRANSACTIONS:
                 $transformer        = new TransactionGroupTransformer;
                 $message['content'] = $transformer->transformObject($transactionGroup);
@@ -177,7 +182,6 @@ class WebhookMessageGenerator
         $webhookMessage->errored = false;
         $webhookMessage->uuid    = $message['uuid'];
         $webhookMessage->message = $message;
-        $webhookMessage->logs    = null;
         $webhookMessage->save();
 
         return $webhookMessage;

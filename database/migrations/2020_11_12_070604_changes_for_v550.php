@@ -119,13 +119,13 @@ class ChangesForV550 extends Migration
                 $table->softDeletes();
                 $table->integer('user_id', false, true);
                 $table->string('title', 512)->index();
+                $table->string('secret', 32)->index();
                 $table->boolean('active')->default(true);
                 $table->unsignedSmallInteger('trigger', false);
                 $table->unsignedSmallInteger('response', false);
                 $table->unsignedSmallInteger('delivery', false);
-                $table->string('url', 512)->index();
+                $table->string('url', 1024);
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                $table->unique(['user_id', 'trigger', 'response', 'delivery', 'url']);
                 $table->unique(['user_id', 'title']);
             }
         );
@@ -137,14 +137,30 @@ class ChangesForV550 extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->softDeletes();
-                $table->integer('webhook_id', false, true);
                 $table->boolean('sent')->default(false);
                 $table->boolean('errored')->default(false);
-                $table->unsignedTinyInteger('attempts')->default(0);
+
+                $table->integer('webhook_id', false, true);
                 $table->string('uuid', 64);
                 $table->longText('message');
-                $table->longText('logs')->nullable();
+
                 $table->foreign('webhook_id')->references('id')->on('webhooks')->onDelete('cascade');
+            }
+        );
+
+        Schema::create(
+            'webhook_attempts',
+            static function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->integer('webhook_message_id', false, true);
+                $table->unsignedSmallInteger('status_code')->default(0);
+
+                $table->longText('logs')->nullable();
+                $table->longText('response')->nullable();
+
+                $table->foreign('webhook_message_id')->references('id')->on('webhook_messages')->onDelete('cascade');
             }
         );
     }
