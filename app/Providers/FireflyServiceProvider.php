@@ -36,6 +36,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Helpers\Webhook\Sha3SignatureGenerator;
+use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Repositories\Telemetry\TelemetryRepository;
@@ -50,6 +52,8 @@ use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
 use FireflyIII\Services\Password\Verifier;
+use FireflyIII\Services\Webhook\StandardWebhookSender;
+use FireflyIII\Services\Webhook\WebhookSenderInterface;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\FireflyConfig;
@@ -225,6 +229,11 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
         $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
+
+        // webhooks:
+        $this->app->bind(SignatureGeneratorInterface::class,Sha3SignatureGenerator::class);
+        $this->app->bind(WebhookSenderInterface::class, StandardWebhookSender::class);
+
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);

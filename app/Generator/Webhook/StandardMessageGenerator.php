@@ -22,7 +22,6 @@
 namespace FireflyIII\Generator\Webhook;
 
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Events\StoredWebhookMessage;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -38,10 +37,11 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class WebhookMessageGenerator
+ * Class StandardMessageGenerator
  */
-class WebhookMessageGenerator
+class StandardMessageGenerator implements MessageGeneratorInterface
 {
+    private int        $version = 1;
     private User       $user;
     private Collection $transactionGroups;
     private int        $trigger;
@@ -89,6 +89,9 @@ class WebhookMessageGenerator
         return $this->user->webhooks()->where('active', 1)->where('trigger', $this->trigger)->get(['webhooks.*']);
     }
 
+    /**
+     * Will also trigger a send.
+     */
     private function run(): void
     {
         /** @var Webhook $webhook */
@@ -100,8 +103,6 @@ class WebhookMessageGenerator
 
     /**
      * @param Webhook $webhook
-     *
-     * @throws FireflyException
      */
     private function runWebhook(Webhook $webhook): void
     {
@@ -126,19 +127,28 @@ class WebhookMessageGenerator
             'trigger'  => config('firefly.webhooks.triggers')[$webhook->trigger],
             'url'      => $webhook->url,
             'uuid'     => $uuid->toString(),
-            'version'  => 0,
+            'version'  => sprintf('v%d',$this->getVersion()),
             'response' => config('firefly.webhooks.responses')[$webhook->response],
             'content'  => [],
         ];
 
         switch ($webhook->response) {
             default:
-                throw new FireflyException(sprintf('Cannot handle this webhook response (%d)', $webhook->response));
+                Log::error(
+                    sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response)
+                );
+
+                return;
             case Webhook::RESPONSE_NONE:
                 $message['content'] = [];
+                break;
             case Webhook::RESPONSE_TRANSACTIONS:
-                $transformer        = new TransactionGroupTransformer;
-                $message['content'] = $transformer->transformObject($transactionGroup);
+                $transformer = new TransactionGroupTransformer;
+                try {
+                    $message['content'] = $transformer->transformObject($transactionGroup);
+                } catch (FireflyException $e) {
+                    $message['content'] = ['error' => 'Internal error prevented Firefly III from including data', 'message' => $e->getMessage()];
+                }
                 break;
             case Webhook::RESPONSE_ACCOUNTS:
                 $accounts = $this->collectAccounts($transactionGroup);
@@ -173,6 +183,8 @@ class WebhookMessageGenerator
     /**
      * @param Webhook $webhook
      * @param array   $message
+     *
+     * @return WebhookMessage
      */
     private function storeMessage(Webhook $webhook, array $message): WebhookMessage
     {
@@ -188,4 +200,11 @@ class WebhookMessageGenerator
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
 }
