@@ -46,9 +46,9 @@ interface MessageGeneratorInterface
     public function setUser(User $user): void;
 
     /**
-     * @param Collection $transactionGroups
+     * @param Collection $objects
      */
-    public function setTransactionGroups(Collection $transactionGroups): void;
+    public function setObjects(Collection $objects): void;
 
     /**
      * @param int $trigger

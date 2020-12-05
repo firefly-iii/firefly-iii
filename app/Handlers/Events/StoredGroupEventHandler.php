@@ -85,8 +85,12 @@ class StoredGroupEventHandler
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
-        $engine->setTransactionGroups(new Collection([$group]));
+
+        // tell the generator which trigger it should look for
         $engine->setTrigger(Webhook::TRIGGER_STORE_TRANSACTION);
+        // tell the generator which objects to process
+        $engine->setObjects(new Collection([$group]));
+        // tell the generator to generate the messages
         $engine->generateMessages();
     }
 

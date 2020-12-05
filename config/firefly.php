@@ -825,17 +825,17 @@ return [
     'webhooks'                  => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
         'triggers'     => [
-            100 => 'TRIGGER_STORE_TRANSACTION',
-            110 => 'TRIGGER_UPDATE_TRANSACTION',
-            120 => 'TRIGGER_DESTROY_TRANSACTION',
+            Webhook::TRIGGER_STORE_TRANSACTION   => 'TRIGGER_STORE_TRANSACTION',
+            Webhook::TRIGGER_UPDATE_TRANSACTION  => 'TRIGGER_UPDATE_TRANSACTION',
+            Webhook::TRIGGER_DESTROY_TRANSACTION => 'TRIGGER_DESTROY_TRANSACTION',
         ],
         'responses'    => [
-            200 => 'RESPONSE_TRANSACTIONS',
-            210 => 'RESPONSE_ACCOUNTS',
-            220 => 'RESPONSE_NONE',
+            Webhook::RESPONSE_TRANSACTIONS => 'RESPONSE_TRANSACTIONS',
+            Webhook::RESPONSE_ACCOUNTS => 'RESPONSE_ACCOUNTS',
+            Webhook::RESPONSE_NONE => 'RESPONSE_NONE',
         ],
         'deliveries'   => [
-            300 => 'DELIVERY_JSON',
+            Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
         ],
     ],
 ];

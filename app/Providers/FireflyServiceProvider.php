@@ -24,6 +24,8 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Generator\Webhook\StandardMessageGenerator;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelper;
@@ -231,9 +233,9 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
         // webhooks:
+        $this->app->bind(MessageGeneratorInterface::class, StandardMessageGenerator::class);
         $this->app->bind(SignatureGeneratorInterface::class,Sha3SignatureGenerator::class);
         $this->app->bind(WebhookSenderInterface::class, StandardWebhookSender::class);
-
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);
