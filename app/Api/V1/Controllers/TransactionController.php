@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\TransactionStoreRequest;
 use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
+use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
@@ -145,6 +146,8 @@ class TransactionController extends Controller
     public function delete(TransactionGroup $transactionGroup): JsonResponse
     {
         $this->repository->destroyGroup($transactionGroup);
+        // trigger just after destruction
+        event(new DestroyedTransactionGroup($transactionGroup));
 
         return response()->json([], 204);
     }

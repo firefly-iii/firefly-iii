@@ -41,7 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class StandardMessageGenerator implements MessageGeneratorInterface
 {
-    private int        $version = 1;
+    private int        $version = 0;
     private User       $user;
     private Collection $objects;
     private int        $trigger;

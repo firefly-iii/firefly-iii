@@ -29,7 +29,7 @@ use JsonException;
  */
 class Sha3SignatureGenerator implements SignatureGeneratorInterface
 {
-    private int $version = 1;
+    private int $version = 0;
 
     /**
      * @inheritDoc
