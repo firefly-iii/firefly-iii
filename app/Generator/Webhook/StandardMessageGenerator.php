@@ -104,7 +104,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         foreach ($this->webhooks as $webhook) {
             $this->runWebhook($webhook);
         }
-        //event(new RequestedSendWebhookMessages);
     }
 
     /**

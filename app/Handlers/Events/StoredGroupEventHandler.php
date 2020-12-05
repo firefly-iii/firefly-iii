@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
@@ -92,6 +93,9 @@ class StoredGroupEventHandler
         $engine->setObjects(new Collection([$group]));
         // tell the generator to generate the messages
         $engine->generateMessages();
+
+        // trigger event to send them:
+        event(new RequestedSendWebhookMessages);
     }
 
 }

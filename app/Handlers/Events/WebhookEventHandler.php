@@ -22,14 +22,8 @@
 namespace FireflyIII\Handlers\Events;
 
 
-use Exception;
-use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
-use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
-use FireflyIII\Services\Webhook\WebhookSenderInterface;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use JsonException;
 use Log;
 
 /**
@@ -42,6 +36,7 @@ class WebhookEventHandler
      */
     public function sendWebhookMessages(): void
     {
+        // kick offf the job!
         $messages = WebhookMessage
             ::where('webhook_messages.sent', 0)
             ->where('webhook_messages.errored', 0)
@@ -52,10 +47,8 @@ class WebhookEventHandler
                 }
             )->splice(0, 3);
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
-
-        $sender =app(WebhookSenderInterface::class);
-        $sender->setMessages($messages);
-        $sender->send();
-
+        foreach ($messages as $message) {
+            SendWebhookMessage::dispatch($message)->afterResponse();
+        }
     }
 }

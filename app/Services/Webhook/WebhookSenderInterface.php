@@ -22,7 +22,6 @@
 namespace FireflyIII\Services\Webhook;
 
 use FireflyIII\Models\WebhookMessage;
-use Illuminate\Support\Collection;
 
 /**
  * Interface WebhookSenderInterface
@@ -35,9 +34,9 @@ interface WebhookSenderInterface
     public function getVersion(): int;
 
     /**
-     * @param Collection $messages
+     * @param WebhookMessage $message
      */
-    public function setMessages(Collection $messages): void;
+    public function setMessage(WebhookMessage $message): void;
 
     /**
      *
