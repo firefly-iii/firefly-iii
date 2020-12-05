@@ -53,6 +53,7 @@ class ChangesForV550 extends Migration
                 $table->dropColumn('generated');
             }
         );
+        Schema::dropIfExists('webhook_attempts');
         Schema::dropIfExists('webhook_messages');
         Schema::dropIfExists('webhooks');
     }
