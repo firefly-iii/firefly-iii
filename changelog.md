@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- API endpoint for budget limits applicable to a date range now has budget info.
+- add period and auto generated to budget limit
+- add spent to budget limit.
+
 ## 5.4.6 (API 1.4.0) - 2020-10-07
 
 ### Added
