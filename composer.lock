@@ -8300,16 +8300,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "v0.6.10",
+            "version": "v0.6.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "555d4cefde563ec9bf93925951615ef344cebd86"
+                "reference": "a036948cdcb09bc374f8be77db4c1262374cb297"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/555d4cefde563ec9bf93925951615ef344cebd86",
-                "reference": "555d4cefde563ec9bf93925951615ef344cebd86",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/a036948cdcb09bc374f8be77db4c1262374cb297",
+                "reference": "a036948cdcb09bc374f8be77db4c1262374cb297",
                 "shasum": ""
             },
             "require": {
@@ -8389,7 +8389,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-11-25T22:57:13+00:00"
+            "time": "2020-12-07T17:05:45+00:00"
         },
         {
             "name": "openlss/lib-array2xml",
