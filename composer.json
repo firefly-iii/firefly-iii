@@ -98,7 +98,7 @@
     "league/csv": "^9.6",
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^8.0",
-    "pragmarx/recovery": "^0.1.0",
+    "jc5/recovery": "^2",
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
     "rcrowe/twigbridge": "^0.12.1"
