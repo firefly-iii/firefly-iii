@@ -185,7 +185,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($sums[$currencyId] ?? 0, $currency->decimal_places),
+                'monetary_value'          => round((float) $sums[$currencyId] ?? 0, $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -198,7 +198,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($expenses[$currencyId] ?? 0, $currency->decimal_places),
+                'monetary_value'          => round((float) $expenses[$currencyId] ?? 0, $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -210,7 +210,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($incomes[$currencyId] ?? 0, $currency->decimal_places),
+                'monetary_value'          => round((float) $incomes[$currencyId] ?? 0, $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -248,7 +248,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($amount, $currency->decimal_places),
+                'monetary_value'          => round((float) $amount, $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -268,7 +268,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round($amount, $currency->decimal_places),
+                'monetary_value'          => round((float) $amount, $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -312,7 +312,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
-                'monetary_value'          => round($leftToSpend, $row['currency_decimal_places']),
+                'monetary_value'          => round((float) $leftToSpend, $row['currency_decimal_places']),
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
@@ -372,7 +372,7 @@ class SummaryController extends Controller
         foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency = $data['currency'];
-            $amount   = round($data['balance'], $currency->decimal_places);
+            $amount   = round((float) $data['balance'], $currency->decimal_places);
             if (0.0 === $amount) {
                 continue;
             }

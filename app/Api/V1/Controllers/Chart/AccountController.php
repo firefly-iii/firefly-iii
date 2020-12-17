@@ -206,11 +206,11 @@ class AccountController extends Controller
             /** @var Carbon $currentStart */
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
-            $previous     = round(array_values($range)[0], 12);
+            $previous     = round((float) array_values($range)[0], 12);
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
                 $label    = $currentStart->format('Y-m-d');
-                $balance  = array_key_exists($format, $range) ? round($range[$format], 12) : $previous;
+                $balance  = array_key_exists($format, $range) ? round((float) $range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
@@ -300,7 +300,7 @@ class AccountController extends Controller
         foreach ($tempData as $entry) {
             $currencyId                               = $entry['currency_id'];
             $name                                     = $entry['name'];
-            $chartData[$currencyId]['entries'][$name] = round($entry['difference'], $chartData[$currencyId]['currency_decimal_places']);
+            $chartData[$currencyId]['entries'][$name] = round((float) $entry['difference'], $chartData[$currencyId]['currency_decimal_places']);
         }
         $chartData = array_values($chartData);
 

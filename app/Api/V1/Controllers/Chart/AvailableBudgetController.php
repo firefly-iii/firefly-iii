@@ -105,7 +105,7 @@ class AvailableBudgetController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'type'                    => 'line', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
-                'entries'                 => [round($left, $currency->decimal_places)],
+                'entries'                 => [round((float) $left, $currency->decimal_places)],
             ],
         ];
 
