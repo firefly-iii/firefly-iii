@@ -309,6 +309,7 @@ return [
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
 
         // currently disabled languages:
+        //        'fa_IR' => ['name_locale' => 'فارسی', 'name_english' => 'Persian'],
         //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
         //        'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
         //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
