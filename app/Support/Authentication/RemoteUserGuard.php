@@ -100,7 +100,6 @@ class RemoteUserGuard implements Guard
     public function check(): bool
     {
         $result = !is_null($this->user());
-        Log::debug(sprintf('Now in check(). Will return %s', var_export($result, true)));
 
         return $result;
     }
