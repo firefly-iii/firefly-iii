@@ -198,14 +198,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(User $user): Collection
+    public function getRuleGroupsWithRules(): Collection
     {
-        return $user->ruleGroups()
+        return $this->user->ruleGroups()
                     ->orderBy('order', 'ASC')
+                    ->where('active', true)
                     ->with(
                         [
                             'rules'              => static function (HasMany $query) {

@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Engine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Support\Search\SearchInterface;
 use FireflyIII\TransactionRules\Factory\ActionFactory;
@@ -40,10 +41,12 @@ class SearchRuleEngine implements RuleEngineInterface
     private User       $user;
     private Collection $rules;
     private array      $operators;
+    private Collection $groups;
 
     public function __construct()
     {
         $this->rules     = new Collection;
+        $this->groups    = new Collection;
         $this->operators = [];
     }
 
@@ -61,6 +64,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function setRules(Collection $rules): void
     {
+        Log::debug(__METHOD__);
         foreach ($rules as $rule) {
             if ($rule instanceof Rule) {
                 Log::debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
@@ -74,7 +78,13 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function setRuleGroups(Collection $ruleGroups): void
     {
-        die(__METHOD__);
+        Log::debug(__METHOD__);
+        foreach ($ruleGroups as $group) {
+            if ($group instanceof RuleGroup) {
+                Log::debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
+                $this->groups->push($group);
+            }
+        }
     }
 
     /**
@@ -93,8 +103,24 @@ class SearchRuleEngine implements RuleEngineInterface
     public function fire(): void
     {
         Log::debug('SearchRuleEngine::fire()!');
-        foreach ($this->rules as $rule) {
-            $this->fireRule($rule);
+
+        // if rules and no rule groups, file each rule separately.
+        if (0 !== $this->rules->count()) {
+            Log::debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
+            foreach ($this->rules as $rule) {
+                $this->fireRule($rule);
+            }
+            Log::debug('SearchRuleEngine:: done processing all rules!');
+
+            return;
+        }
+        if (0 !== $this->groups->count()) {
+            Log::debug(sprintf('SearchRuleEngine:: found %d rule group(s) to fire.', $this->groups->count()));
+            // fire each group:
+            /** @var RuleGroup $group */
+            foreach ($this->groups as $group) {
+                $this->fireGroup($group);
+            }
         }
         Log::debug('SearchRuleEngine:: done processing all rules!');
     }
@@ -116,25 +142,35 @@ class SearchRuleEngine implements RuleEngineInterface
             }
             $collection = $collection->merge($found);
         }
+
         return $collection->unique();
     }
 
     /**
+     * Returns true if the rule has been triggered.
+     *
      * @param Rule $rule
+     *
+     * @return bool
      * @throws FireflyException
      */
-    private function fireRule(Rule $rule): void
+    private function fireRule(Rule $rule): bool
     {
+        Log::debug(sprintf('Now going to fire rule #%d', $rule->id));
         if (true === $rule->strict) {
-            $this->fireStrictRule($rule);
-            return;
+            Log::debug(sprintf('Rule #%d is a strict rule.', $rule->id));
+
+            return $this->fireStrictRule($rule);
         }
-        $this->fireNonStrictRule($rule);
+        Log::debug(sprintf('Rule #%d is not strict rule.', $rule->id));
+
+        return $this->fireNonStrictRule($rule);
     }
 
     /**
      * @param Rule       $rule
      * @param Collection $collection
+     *
      * @throws FireflyException
      */
     private function processResults(Rule $rule, Collection $collection): void
@@ -149,6 +185,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * @param Rule  $rule
      * @param array $group
+     *
      * @throws FireflyException
      */
     private function processTransactionGroup(Rule $rule, array $group): void
@@ -163,6 +200,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * @param Rule  $rule
      * @param array $transaction
+     *
      * @throws FireflyException
      */
     private function processTransactionJournal(Rule $rule, array $transaction): void
@@ -180,6 +218,7 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * @param RuleAction $ruleAction
      * @param array      $transaction
+     *
      * @return bool
      * @throws FireflyException
      */
@@ -190,39 +229,63 @@ class SearchRuleEngine implements RuleEngineInterface
         $actionClass->actOnArray($transaction);
         if ($ruleAction->stop_processing) {
             Log::debug(sprintf('Rule action "%s" asks to break, so break!', $ruleAction->action_value));
+
             return true;
         }
+
         return false;
     }
 
     /**
+     * Return true if the rule is fired (the collection is larger than zero).
+     *
      * @param Rule $rule
+     *
+     * @return bool
      * @throws FireflyException
      */
-    private function fireStrictRule(Rule $rule): void
+    private function fireStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
         $collection = $this->findStrictRule($rule);
 
         $this->processResults($rule, $collection);
         Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
+
+        $result = $collection->count() > 0;
+        if(true === $result) {
+            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+            return true;
+        }
+        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
+        return false;
     }
 
     /**
+     * Return true if the rule is fired (the collection is larger than zero).
+     *
      * @param Rule $rule
+     *
+     * @return bool
      * @throws FireflyException
      */
-    private function fireNonStrictRule(Rule $rule): void
+    private function fireNonStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
         $collection = $this->findNonStrictRule($rule);
 
         $this->processResults($rule, $collection);
         Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
+
+        return $collection->count() > 0;
     }
 
     /**
+     * Finds the transactions a strict rule will execute on.
+     *
      * @param Rule $rule
+     *
      * @return Collection
      */
     private function findStrictRule(Rule $rule): Collection
@@ -259,12 +322,14 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
 
-        $result     = $searchEngine->searchTransactions();
+        $result = $searchEngine->searchTransactions();
+
         return $result->getCollection();
     }
 
     /**
      * @param Rule $rule
+     *
      * @return Collection
      */
     private function findNonStrictRule(Rule $rule): Collection
@@ -316,17 +381,47 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('Done running %d trigger(s)', $count));
 
         // make collection unique
-        $unique = $total->unique(function (array $group) {
-            $str = '';
-            foreach ($group['transactions'] as $transaction) {
-                $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
+        $unique = $total->unique(
+            function (array $group) {
+                $str = '';
+                foreach ($group['transactions'] as $transaction) {
+                    $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
+                }
+                $key = sprintf('%d%s', $group['id'], $str);
+                Log::debug(sprintf('Return key: %s ', $key));
+
+                return $key;
             }
-            $key = sprintf('%d%s', $group['id'], $str);
-            Log::debug(sprintf('Return key: %s ', $key));
-            return $key;
-        });
+        );
 
         Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine.', $unique->count()));
+
         return $unique;
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return bool
+     */
+    private function fireGroup(RuleGroup $group): bool
+    {
+        $all = false;
+        Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
+        /** @var  $rule */
+        foreach ($group->rules as $rule) {
+            Log::debug(sprintf('Going to fire rule #%d from group #%d', $rule->id, $group->id));
+            $result = $this->fireRule($rule);
+            if (true === $result) {
+                $all = true;
+            }
+            if (true === $result && true === $rule->stop_processing) {
+                Log::debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
+
+                return true;
+            }
+        }
+
+        return $all;
     }
 }

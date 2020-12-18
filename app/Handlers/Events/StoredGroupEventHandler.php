@@ -28,6 +28,7 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -62,14 +63,19 @@ class StoredGroupEventHandler
 
         // collect rules:
         $ruleRepository = app(RuleRepositoryInterface::class);
+        $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $ruleRepository->setUser($storedGroupEvent->transactionGroup->user);
-        $rules = $ruleRepository->getStoreRules();
+        $ruleGroupRepository->setUser($storedGroupEvent->transactionGroup->user);
 
-        // file rule engine.
+        // add the groups to the rule engine.
+        // it should run the rules in the group and cancel the group if necessary.
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules();
+
+        // create and fire rule engine.
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($storedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
-        $newRuleEngine->setRules($rules);
+        $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
 
