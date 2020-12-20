@@ -84,11 +84,13 @@
     "ext-xml": "*",
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^6.0",
+    "directorytree/ldaprecord-laravel": "^1.7",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
     "jc5/google2fa-laravel": "2.0.5",
+    "jc5/recovery": "^2",
     "laravel/framework": "^8.0",
     "laravel/passport": "10.*",
     "laravel/ui": "^3.0",
@@ -97,7 +99,6 @@
     "league/csv": "^9.6",
     "league/fractal": "0.*",
     "pragmarx/google2fa": "^8.0",
-    "jc5/recovery": "^2",
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
     "rcrowe/twigbridge": "^0.12.1"
@@ -119,7 +120,7 @@
     "vimeo/psalm": "^4.1"
   },
   "suggest": {
-    "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
+    "adldap2/adldap2-laravel": "If you want to login using LDAP.",
     "ext-ldap": "Needed to support LDAP."
   },
   "autoload": {
