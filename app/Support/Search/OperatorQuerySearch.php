@@ -47,6 +47,7 @@ use Gdbots\QueryParser\Node\Mention;
 use Gdbots\QueryParser\Node\Node;
 use Gdbots\QueryParser\Node\Numbr;
 use Gdbots\QueryParser\Node\Phrase;
+use Gdbots\QueryParser\Node\Subquery;
 use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
@@ -231,6 +232,12 @@ class OperatorQuerySearch implements SearchInterface
             default:
                 Log::error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
+            case Subquery::class:
+                // loop all notes in subquery:
+                foreach($searchNode->getNodes() as $subNode) {
+                    $this->handleSearchNode($subNode); // lets hope its not too recursive!
+                }
+                break;
             case Word::class:
             case Phrase::class:
             case Numbr::class:
