@@ -198,7 +198,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round((float) $expenses[$currencyId] ?? 0, $currency->decimal_places),
+                'monetary_value'          => round((float) ($expenses[$currencyId] ?? 0), $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
@@ -210,7 +210,7 @@ class SummaryController extends Controller
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => round((float) $incomes[$currencyId] ?? 0, $currency->decimal_places),
+                'monetary_value'          => round((float) ($incomes[$currencyId] ?? 0), $currency->decimal_places),
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
