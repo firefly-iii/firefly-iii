@@ -84,7 +84,6 @@
     "ext-xml": "*",
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^6.0",
-    "directorytree/ldaprecord-laravel": "^1.7",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
