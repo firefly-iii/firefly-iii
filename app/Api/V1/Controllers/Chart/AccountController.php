@@ -149,7 +149,7 @@ class AccountController extends Controller
         foreach ($tempData as $entry) {
             $currencyId                               = $entry['currency_id'];
             $name                                     = $entry['name'];
-            $chartData[$currencyId]['entries'][$name] = round($entry['difference'], $chartData[$currencyId]['currency_decimal_places']);
+            $chartData[$currencyId]['entries'][$name] = round((float) $entry['difference'], $chartData[$currencyId]['currency_decimal_places']);
         }
         $chartData = array_values($chartData);
 

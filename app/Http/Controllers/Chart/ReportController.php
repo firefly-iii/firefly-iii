@@ -236,8 +236,8 @@ class ReportController extends Controller
             while ($currentStart <= $end) {
                 $key                        = $currentStart->format($format);
                 $title                      = $currentStart->formatLocalized($titleFormat);
-                $income['entries'][$title]  = round($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
-                $expense['entries'][$title] = round($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
+                $income['entries'][$title]  = round((float) ($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
+                $expense['entries'][$title] = round((float) ($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
                 $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
 
