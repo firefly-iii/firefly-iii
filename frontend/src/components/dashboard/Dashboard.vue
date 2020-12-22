@@ -20,10 +20,6 @@
 
 <template>
   <div>
-
-
-
-
     <top-boxes/>
     <div class="row">
       <div class="col">
@@ -40,15 +36,15 @@
 
     <div class="row">
       <div class="col">
-        <main-category-list />
+        <main-category-list/>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <main-debit-list />
+        <main-debit-list/>
       </div>
       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <main-credit-list />
+        <main-credit-list/>
       </div>
     </div>
 
@@ -70,34 +66,8 @@
 <script>
 export default {
   name: "Dashboard",
-  created() {
-    if (!localStorage.currencyPreference) {
-      this.getCurrencyPreference();
-    }
-  },
-  methods: {
-    getCurrencyPreference: function () {
-      axios.get('./api/v1/currencies/default')
-          .then(response => {
-            localStorage.currencyPreference = JSON.stringify({
-              id: parseInt(response.data.data.id),
-              name: response.data.data.attributes.name,
-              symbol: response.data.data.attributes.symbol,
-              code: response.data.data.attributes.code,
-              decimal_places: parseInt(response.data.data.attributes.decimal_places),
-            });
-          }).catch(err => {
-        console.log('Got error response.');
-        console.error(err);
-        localStorage.currencyPreference = JSON.stringify({
-          id: 1,
-          name: 'Euro',
-          symbol: '€',
-          code: 'EUR',
-          decimal_places: 2
-        });
-      });
-    }
-  }
+  created() {},
+  computed: {},
+  methods: {}
 }
 </script>

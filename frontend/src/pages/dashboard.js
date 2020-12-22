@@ -33,6 +33,10 @@ import TransactionListSmall from "../components/transactions/TransactionListSmal
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import Calendar from "../components/dashboard/Calendar";
 import MainCategoryList from "../components/dashboard/MainCategoryList";
+import Vue from "vue";
+import Vuex from 'vuex'
+import store from '../components/store/index';
+
 /**
  * First we will load Axios via bootstrap.js
  * jquery and bootstrap-sass preloaded in app.js
@@ -41,7 +45,6 @@ import MainCategoryList from "../components/dashboard/MainCategoryList";
 
 require('../bootstrap');
 require('chart.js');
-Vue.config.devtools = false;
 
 Vue.component('transaction-list-large', TransactionListLarge);
 Vue.component('transaction-list-medium', TransactionListMedium);
@@ -60,24 +63,29 @@ Vue.component('main-debit-list', MainDebitList);
 Vue.component('main-credit-list', MainCreditList);
 Vue.component('main-piggy-list', MainPiggyList);
 
-// i18n
+Vue.use(Vuex);
+
 let i18n = require('../i18n');
-
-
 let props = {};
 
 new Vue({
             i18n,
+            store,
             el: "#dashboard",
             render: (createElement) => {
                 return createElement(Dashboard, {props: props});
+            },
+            beforeCreate() {
+                this.$store.dispatch('updateCurrencyPreference');
             },
         });
 
 new Vue({
             i18n,
+            store,
             el: "#calendar",
             render: (createElement) => {
                 return createElement(Calendar, {props: props});
             },
+            // TODO init store as well?
         });

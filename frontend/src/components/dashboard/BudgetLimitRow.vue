@@ -104,11 +104,15 @@ export default {
   props: {
     budgetLimit: {
       type: Object,
-      default: {}
+      default: function () {
+        return {};
+      }
     },
     budget: {
       type: Object,
-      default: {}
+      default: function () {
+        return {};
+      }
     }
   }
 }

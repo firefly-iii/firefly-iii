@@ -35,36 +35,41 @@
         is-range
     >
       <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
-        <div class="btn-group btn-group-sm btn-group-justified">
-          <button
-              class="btn btn-secondary btn-sm"
-              @click="togglePopover({ placement: 'auto-start', positionFixed:true })"
-          ><i class="fas fa-calendar-alt"></i></button>
-          <button
-              class="btn btn-secondary"
-          ><i class="fas fa-history"></i></button>
+        <div class="row">
+          <div class="col">
+            <div class="btn-group btn-group-sm d-flex">
+              <button
+                  class="btn btn-secondary btn-sm"
+                  @click="togglePopover({ placement: 'auto-start', positionFixed:true })"
+              ><i class="fas fa-calendar-alt"></i></button>
+              <button
+                  class="btn btn-secondary"
+              ><i class="fas fa-history"></i></button>
 
 
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-list"></i>
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">(prev period)</a>
-            <a class="dropdown-item" href="#">(next period)</a>
-            <a class="dropdown-item" href="#">(this week?)</a>
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                      aria-expanded="false">
+                <i class="fas fa-list"></i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">(prev period)</a>
+                <a class="dropdown-item" href="#">(next period)</a>
+                <a class="dropdown-item" href="#">(this week?)</a>
+              </div>
+
+            </div>
+            <input type="hidden"
+                   :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                   :value="inputValue.start"
+                   v-on="inputEvents.start"
+            />
+            <input type="hidden"
+                   :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                   :value="inputValue.end"
+                   v-on="inputEvents.end"
+            />
           </div>
-
         </div>
-        <input type="hidden"
-               :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
-               :value="inputValue.start"
-               v-on="inputEvents.start"
-        />
-        <input type="hidden"
-               :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
-               :value="inputValue.end"
-               v-on="inputEvents.end"
-        />
       </template>
     </date-picker>
   </div>
@@ -73,13 +78,21 @@
 <script>
 export default {
   name: "Calendar",
-  mounted() {
-    this.locale = localStorage.locale ?? 'en-US';
+  created() {
+    // this.locale = localStorage.locale ?? 'en-US';
+    // this.$store.commit('increment');
+    // console.log(this.$store.state.count);
+    // get dates for current period (history button):
+    // get dates for optional periods (dropdown) + descriptions.
   },
   data() {
     return {
       locale: 'en-US',
       range: {
+        start: new Date(window.sessionStart),
+        end: new Date(window.sessionEnd),
+      },
+      defaultRange: {
         start: new Date(window.sessionStart),
         end: new Date(window.sessionEnd),
       },
@@ -89,6 +102,11 @@ export default {
 </script>
 
 <style scoped>
-.dropdown-item {color:#212529;}
-.dropdown-item:hover {color:#212529;}
+.dropdown-item {
+  color: #212529;
+}
+
+.dropdown-item:hover {
+  color: #212529;
+}
 </style>

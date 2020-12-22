@@ -27,7 +27,7 @@
         <div class="info-box-content">
           <span class="info-box-text">{{ $t("firefly.balance") }}</span>
           <!-- balance in preferred currency -->
-          <span class="info-box-number" v-for="balance in prefCurrencyBalances" :title="balance.sub_title">{{ balance.value_parsed }}</span>
+          <span class="info-box-number" v-for="balance in prefCurrencyBalances" :title="balance.sub_title">(x) {{ balance.value_parsed }}</span>
 
           <div class="progress bg-info">
             <div class="progress-bar" style="width: 0"></div>
@@ -35,6 +35,7 @@
           <!-- balance in not preferred currency -->
           <span class="progress-description">
                         <span v-for="(balance, index) in notPrefCurrencyBalances" :title="balance.sub_title">
+                          (y)
                           {{ balance.value_parsed }}<span v-if="index+1 !== notPrefCurrencyBalances.length">, </span>
                         </span>
                       <span v-if="0===notPrefCurrencyBalances.length">&nbsp;</span>
@@ -122,7 +123,6 @@ export default {
   props: {},
   data() {
     return {
-      currencyPreference: {},
       summary: [],
       balances: [],
       billsPaid: [],
@@ -164,17 +164,23 @@ export default {
     notPrefNetWorth: function () {
       return this.filterOnNotCurrency(this.netWorth);
     },
+    currencyCode() {
+      return this.$store.getters.currencyCode;
+    },
+    currencyId() {
+      return this.$store.getters.currencyId;
+    }
   },
   created() {
     this.prepareComponent();
-    this.currencyPreference = localStorage.currencyPreference ? JSON.parse(localStorage.currencyPreference) : {};
   },
   methods: {
     filterOnCurrency(array) {
       let ret = [];
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          if (array[key].currency_id === this.currencyPreference.id) {
+          console.log('Currency ID seems to be ' + this.currencyId);
+          if (array[key].currency_id === this.currencyId) {
             ret.push(array[key]);
           }
         }
@@ -189,7 +195,7 @@ export default {
       let ret = [];
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          if (array[key].currency_id !== this.currencyPreference.id) {
+          if (array[key].currency_id !== this.currencyId) {
             ret.push(array[key]);
           }
         }
@@ -216,7 +222,7 @@ export default {
     hasCurrency: function (array) {
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          if (array[key].currency_id === this.currencyPreference.id) {
+          if (array[key].currency_id === this.currencyId) {
             return true;
           }
         }

@@ -23,6 +23,7 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n'
 import * as uiv from 'uiv';
 
+
 // export jquery for others scripts to use
 window.$ = window.jQuery = require('jquery');
 
@@ -55,9 +56,10 @@ require('bootstrap'); // bootstrap CSS?
 require('./dist/js/adminlte');
 require('overlayscrollbars');
 
+
 // vue
 window.vuei18n = VueI18n;
-window.uiv =uiv;
+window.uiv = uiv;
 Vue.use(vuei18n);
 Vue.use(uiv);
 window.Vue = Vue;
