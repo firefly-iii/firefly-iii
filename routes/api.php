@@ -315,6 +315,7 @@ Route::group(
 
         // Preference API routes:
         Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
+        Route::get('date-ranges', ['uses' => 'Preferences\IndexController@dateRanges', 'as' => 'date-ranges']);
         Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
     }

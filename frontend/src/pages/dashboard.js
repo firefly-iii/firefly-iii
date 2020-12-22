@@ -76,6 +76,7 @@ new Vue({
                 return createElement(Dashboard, {props: props});
             },
             beforeCreate() {
+                this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
             },
         });

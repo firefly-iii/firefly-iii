@@ -19,25 +19,38 @@
  */
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, {createLogger} from 'vuex'
 
 Vue.use(Vuex)
+
 
 export default new Vuex.Store(
     {
         modules: [],
         strict: true,
-        plugins: [],
+        plugins: [createLogger()],
         state: {
             currencyPreference: {},
             locale: 'en-US'
         },
         mutations: {
             setCurrencyPreference(state, object) {
+                console.log('mutation: setCurrencyPreference');
                 state.currencyPreference = object;
             },
             initialiseStore(state) {
-                console.log('initialiseStore');
+                console.log('mutation: initialiseStore');
+                // if locale in local storage:
+                if (localStorage.locale) {
+                    state.locale = localStorage.locale;
+                    return;
+                }
+                // set locale from HTML:
+                let localeToken = document.head.querySelector('meta[name="locale"]');
+                if (localeToken) {
+                    state.locale = localeToken.content;
+                    localStorage.locale = localeToken.content;
+                }
             }
         },
         getters: {
@@ -46,19 +59,31 @@ export default new Vuex.Store(
             },
             currencyId: state => {
                 return state.currencyPreference.id;
+            },
+            locale: state => {
+                return state.locale;
             }
         },
         actions: {
             updateCurrencyPreference(context) {
+                console.log('action: updateCurrencyPreference');
+                if (localStorage.currencyPreference) {
+                    console.log('action: from local storage');
+                    context.commit('setCurrencyPreference', localStorage.currencyPreference);
+                    return;
+                }
                 axios.get('./api/v1/currencies/default')
                     .then(response => {
-                        context.commit('setCurrencyPreference', {
+                        console.log('action: from axios');
+                        let currencyResponse = {
                             id: parseInt(response.data.data.id),
                             name: response.data.data.attributes.name,
                             symbol: response.data.data.attributes.symbol,
                             code: response.data.data.attributes.code,
                             decimal_places: parseInt(response.data.data.attributes.decimal_places),
-                        });
+                        };
+                        localStorage.currencyPreference = currencyResponse;
+                        context.commit('setCurrencyPreference', currencyResponse);
                     }).catch(err => {
                     console.log('Got error response.');
                     console.error(err);
