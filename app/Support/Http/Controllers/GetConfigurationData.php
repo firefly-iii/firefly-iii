@@ -90,7 +90,7 @@ trait GetConfigurationData
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
-        $viewRange = app('preferences')->get('viewRange', '1M')->data;
+        $viewRange = (string) app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $start */
         $start = session('start');
         /** @var Carbon $end */
