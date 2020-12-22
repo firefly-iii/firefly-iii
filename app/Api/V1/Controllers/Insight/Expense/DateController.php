@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * DateController.php
  * Copyright (c) 2020 james@firefly-iii.org
