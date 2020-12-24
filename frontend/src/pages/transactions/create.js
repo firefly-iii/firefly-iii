@@ -18,9 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import store from "../../components/store";
+import Create from "../../components/transactions/Create";
+
 require('../../bootstrap');
 
-import Create from "../../components/transactions/Create";
 
 // i18n
 let i18n = require('../../i18n');
@@ -28,6 +30,7 @@ let i18n = require('../../i18n');
 let props = {};
 new Vue({
             i18n,
+            store,
             render(createElement) {
                 return createElement(Create, {props: props});
             }

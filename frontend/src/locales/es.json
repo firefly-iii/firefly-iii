@@ -43,7 +43,8 @@
         "yearly_budgets": "Presupuestos anuales",
         "other_budgets": "Presupuestos de tiempo personalizado",
         "go_to_withdrawals": "Ir a sus retiros",
-        "revenue_accounts": "Cuentas de ingresos"
+        "revenue_accounts": "Cuentas de ingresos",
+        "add_another_split": "A\u00f1adir otra divisi\u00f3n"
     },
     "list": {
         "piggy_bank": "Alcancilla",

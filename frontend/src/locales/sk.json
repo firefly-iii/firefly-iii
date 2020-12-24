@@ -43,7 +43,8 @@
         "yearly_budgets": "Ro\u010dn\u00e9 rozpo\u010dty",
         "other_budgets": "\u0160pecifick\u00e9 \u010dasovan\u00e9 rozpo\u010dty",
         "go_to_withdrawals": "Zobrazi\u0165 v\u00fdbery",
-        "revenue_accounts": "V\u00fdnosov\u00e9 \u00fa\u010dty"
+        "revenue_accounts": "V\u00fdnosov\u00e9 \u00fa\u010dty",
+        "add_another_split": "Prida\u0165 \u010fal\u0161ie roz\u00fa\u010dtovanie"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

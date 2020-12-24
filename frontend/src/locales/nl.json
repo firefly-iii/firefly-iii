@@ -43,7 +43,8 @@
         "yearly_budgets": "Jaarlijkse budgetten",
         "other_budgets": "Aangepaste budgetten",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "Debiteuren"
+        "revenue_accounts": "Debiteuren",
+        "add_another_split": "Voeg een split toe"
     },
     "list": {
         "piggy_bank": "Spaarpotje",

@@ -43,7 +43,8 @@
         "yearly_budgets": "Or\u00e7amentos anuais",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "V\u00e1 para seus saques",
-        "revenue_accounts": "Contas de receitas"
+        "revenue_accounts": "Contas de receitas",
+        "add_another_split": "Adicionar outra divis\u00e3o"
     },
     "list": {
         "piggy_bank": "Cofrinho",

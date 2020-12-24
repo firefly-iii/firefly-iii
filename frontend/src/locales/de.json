@@ -43,7 +43,8 @@
         "yearly_budgets": "Jahresbudgets",
         "other_budgets": "Zeitlich befristete Budgets",
         "go_to_withdrawals": "Ausgaben anzeigen",
-        "revenue_accounts": "Einnahmekonten"
+        "revenue_accounts": "Einnahmekonten",
+        "add_another_split": "Eine weitere Aufteilung hinzuf\u00fcgen"
     },
     "list": {
         "piggy_bank": "Sparschwein",

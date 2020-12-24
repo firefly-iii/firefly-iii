@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "Revenue accounts"
+        "revenue_accounts": "Revenue accounts",
+        "add_another_split": "Add another split"
     },
     "list": {
         "piggy_bank": "Piggy bank",

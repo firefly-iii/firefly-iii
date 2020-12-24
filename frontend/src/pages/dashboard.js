@@ -35,7 +35,7 @@ import Calendar from "../components/dashboard/Calendar";
 import MainCategoryList from "../components/dashboard/MainCategoryList";
 import Vue from "vue";
 import Vuex from 'vuex'
-import store from '../components/store/index';
+import store from '../components/store';
 
 /**
  * First we will load Axios via bootstrap.js

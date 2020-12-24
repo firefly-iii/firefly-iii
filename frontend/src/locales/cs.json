@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "P\u0159\u00edjmov\u00e9 \u00fa\u010dty"
+        "revenue_accounts": "P\u0159\u00edjmov\u00e9 \u00fa\u010dty",
+        "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

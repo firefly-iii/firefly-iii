@@ -29,17 +29,17 @@
         <thead>
         <tr>
           <th scope="col" style="width:35%;">{{ $t('list.name') }}</th>
-          <th scope="col" style="width:40%;">{{ $t('list.amount') }}</th>
           <th scope="col" style="width:25%;">{{ $t('list.next_expected_match') }}</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="bill in this.bills">
-          <td><a :href="'./bills/show' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a></td>
-          <td>~{{
+          <td><a :href="'./bills/show' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
+            ~{{
               Intl.NumberFormat(locale, {style: 'currency', currency: bill.attributes.currency_code}).format((parseFloat(bill.attributes.amount_min) +
                                                                                                               parseFloat(bill.attributes.amount_max)) / 2)
             }}
+            <br />
           </td>
           <td>
                         <span v-for="payDate in bill.attributes.pay_dates">

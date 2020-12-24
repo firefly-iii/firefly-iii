@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "\u6536\u5165\u5e10\u6237"
+        "revenue_accounts": "\u6536\u5165\u5e10\u6237",
+        "add_another_split": "\u589e\u52a0\u62c6\u5206"
     },
     "list": {
         "piggy_bank": "\u5b58\u94b1\u7f50",

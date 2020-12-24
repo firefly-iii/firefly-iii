@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "T\u00e0i kho\u1ea3n doanh thu"
+        "revenue_accounts": "T\u00e0i kho\u1ea3n doanh thu",
+        "add_another_split": "Th\u00eam m\u1ed9t ph\u00e2n chia kh\u00e1c"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",

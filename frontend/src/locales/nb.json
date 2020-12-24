@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Go to your withdrawals",
-        "revenue_accounts": "Inntektskontoer"
+        "revenue_accounts": "Inntektskontoer",
+        "add_another_split": "Legg til en oppdeling til"
     },
     "list": {
         "piggy_bank": "Sparegris",

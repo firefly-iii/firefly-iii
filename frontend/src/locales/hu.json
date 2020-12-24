@@ -43,7 +43,8 @@
         "yearly_budgets": "Yearly budgets",
         "other_budgets": "Custom timed budgets",
         "go_to_withdrawals": "Ugr\u00e1s a k\u00f6lts\u00e9gekhez",
-        "revenue_accounts": "J\u00f6vedelemsz\u00e1ml\u00e1k"
+        "revenue_accounts": "J\u00f6vedelemsz\u00e1ml\u00e1k",
+        "add_another_split": "M\u00e1sik feloszt\u00e1s hozz\u00e1ad\u00e1sa"
     },
     "list": {
         "piggy_bank": "Malacpersely",

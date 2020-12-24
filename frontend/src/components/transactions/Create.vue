@@ -19,100 +19,237 @@
   -->
 
 <template>
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Create a new transaction</h3>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-          <div id="accordion">
-            <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h4 class="card-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="" aria-expanded="true">
-                    Basic transaction information
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseOne" class="panel-collapse in collapse show" style="">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">From</div>
-                    <div class="col">To</div>
+  <div>
+    <div class="row" v-for="(transaction, index) in transactions">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Create a new transaction</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <div id="accordion">
+              <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h4 class="card-title">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseBasic' + index" class='' aria-expanded="true">
+                      Basic transaction information
+                    </a>
+                  </h4>
+                </div>
+                <div :id="'collapseBasic' + index" class="panel-collapse in collapse show" style=''>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <p>
+                          Source
+                        </p>
+                      </div>
+                      <div class="col">
+                        <p>
+                          Amount
+                          <br>
+                          foreign amount
+                        </p>
+                      </div>
+                      <div class="col">
+                        <p>
+                          Destination
+                        </p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <TransactionDescription
+                            v-model="transaction[index].description"
+                            :index="index"
+                        ></TransactionDescription>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        Date<br/>
+                        Time
+                      </div>
+                      <div class="col">
+                        Other date
+                      </div>
+                      <div class="col">
+                        Other date
+                      </div>
+                    </div>
                   </div>
-                  <div class="row">
-                    <div class="col">
-                      Amount, foreign amount, description, time + date
+                </div>
+              </div>
+              <div class="card card-secondary">
+                <div class="card-header">
+                  <h4 class="card-title">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseMeta' + index" class="collapsed" aria-expanded="false">
+                      Meta information
+                    </a>
+                  </h4>
+                </div>
+                <div :id="'collapseMeta' + index" class="panel-collapse collapse">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        Budget<br>
+                        Cat<br>
+                      </div>
+                      <div class="col">
+                        Bill<br>
+                        Tags<br>
+                        Piggy<br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card card-secondary">
+                <div class="card-header">
+                  <h4 class="card-title">
+                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseExtra' + index" class="collapsed" aria-expanded="false">
+                      Extra information
+                    </a>
+                  </h4>
+                </div>
+                <div :id="'collapseExtra' + index" class="panel-collapse collapse">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        Internal ref<br/>
+                        External URL<br/>
+                        Notes
+                      </div>
+                      <div class="col">
+                        Transaction links<br/>
+                        Attachments
+                      </div>
 
                     </div>
                   </div>
-
-                </div>
-              </div>
-            </div>
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h4 class="card-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed" aria-expanded="false">
-                    Meta information
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseTwo" class="panel-collapse collapse">
-                <div class="card-body">
-                  Budget, category, bill, tags, contract
-                </div>
-              </div>
-            </div>
-            <div class="card card-secondary">
-              <div class="card-header">
-                <h4 class="card-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="collapsed" aria-expanded="false">
-                    Extra information
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseThree" class="panel-collapse collapse">
-                <div class="card-body">
-                  Notes, transaction links, custom fields.
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- /.card-body -->
-      </div>
-      <!-- button -->
-      <div class="row">
-        <div class="col">
-          <a href="#" class="btn btn-primary">Add a split</a>
-        </div>
-        <div class="col">
-          <p class="float-right">
-            <a href="#" class="btn btn-success">Store transaction</a><br/>
-          </p>
+          <!-- /.card-body -->
         </div>
       </div>
-      <div class="row">
-        <div class="col float-right">
-          <p class="text-right">
-            <small class="text-muted">Create another another another <input type="checkbox"/></small><br/>
-            <small class="text-muted">Return here <input type="checkbox"/></small><br/>
-          </p>
-        </div>
-      </div>
-
-
     </div>
+
+    <!-- buttons -->
+    <!-- button -->
+    <div class="row">
+      <div class="col">
+        <button @click="addTransaction" class="btn btn-primary">{{ $t('firefly.add_another_split') }}</button>
+      </div>
+      <div class="col">
+        <p class="float-right">
+          <button @click="submitTransaction" :disabled="isSubmitting" class="btn btn-success">Store transaction</button>
+          <br/>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col float-right">
+        <p class="text-right">
+          <small class="text-muted">Create another another another <input type="checkbox"/></small><br/>
+          <small class="text-muted">Return here <input type="checkbox"/></small><br/>
+        </p>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
+import TransactionDescription from "./TransactionDescription";
+import {createNamespacedHelpers} from 'vuex'
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
+
+
 export default {
-  name: "Create"
+  name: "Create",
+  components: {TransactionDescription},
+  created() {
+    this.addTransaction();
+  },
+  data() {
+    return {
+      groupTitle: '',
+      isSubmitting: false
+    }
+  },
+  computed: {
+    ...mapGetters([
+                    'transactionType', // -> this.someGetter
+                    'transactions', // -> this.someOtherGetter
+                  ])
+  },
+  methods: {
+    ...mapMutations(
+        [
+          'addTransaction',
+        ]
+    ),
+    /**
+     *
+     */
+    submitTransaction: function () {
+      this.isSubmitting = true;
+      console.log('Now in submit()');
+      const uri = './api/v1/transactions';
+      const data = this.convertData();
+
+      console.log('Would have submitted:');
+      console.log(data);
+
+      this.isSubmitting = false;
+    },
+    /**
+     *
+     */
+    convertData: function () {
+      console.log('now in convertData');
+      let data = {
+        //'group_title': null,
+        'transactions': []
+      };
+      for (let key in this.transactions) {
+        if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+          data.transactions.push(this.convertSplit(key, this.transactions[key]));
+        }
+      }
+      return data;
+    },
+
+    /**
+     *
+     * @param key
+     * @param array
+     */
+    convertSplit: function (key, array) {
+      let currentSplit = {
+        description: array.description
+      };
+
+      // return it.
+      return currentSplit;
+    }
+
+    // addTransactionToArray: function (e) {
+    //   console.log('Now in addTransactionToArray()');
+    //   this.$store.
+    //
+    //   this.transactions.push({
+    //                            description: '',
+    //                          });
+    //   if (e) {
+    //     e.preventDefault();
+    //   }
+  },
 }
 </script>
 

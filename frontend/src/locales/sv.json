@@ -43,7 +43,8 @@
         "yearly_budgets": "\u00c5rliga budgetar",
         "other_budgets": "Anpassade tidsinst\u00e4llda budgetar",
         "go_to_withdrawals": "G\u00e5 till dina uttag",
-        "revenue_accounts": "Int\u00e4ktskonton"
+        "revenue_accounts": "Int\u00e4ktskonton",
+        "add_another_split": "L\u00e4gga till en annan delning"
     },
     "list": {
         "piggy_bank": "Spargris",

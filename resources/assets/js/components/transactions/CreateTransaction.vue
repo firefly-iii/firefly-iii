@@ -237,7 +237,7 @@
 export default {
   name: "CreateTransaction",
   components: {},
-  mounted() {
+  created() {
     this.addTransactionToArray();
     document.onreadystatechange = () => {
       if (document.readyState === "complete") {

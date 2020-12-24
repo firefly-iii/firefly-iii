@@ -43,7 +43,8 @@
         "yearly_budgets": "Bud\u017cety roczne",
         "other_budgets": "Bud\u017cety niestandardowe",
         "go_to_withdrawals": "Przejd\u017a do swoich wydatk\u00f3w",
-        "revenue_accounts": "Konta przychod\u00f3w"
+        "revenue_accounts": "Konta przychod\u00f3w",
+        "add_another_split": "Dodaj kolejny podzia\u0142"
     },
     "list": {
         "piggy_bank": "Skarbonka",

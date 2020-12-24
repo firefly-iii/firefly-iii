@@ -20,26 +20,32 @@
 
 import Vue from 'vue'
 import Vuex, {createLogger} from 'vuex'
+import transactions_create from './modules/transactions/create';
 
 Vue.use(Vuex)
-
+const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store(
     {
-        modules: [],
-        strict: true,
-        plugins: [createLogger()],
+        modules: {
+            transactions: {
+                namespaced: true,
+                modules: {
+                    create: transactions_create
+                }
+            }
+        },
+        strict: debug,
+        plugins: debug ? [createLogger()] : [],
         state: {
             currencyPreference: {},
             locale: 'en-US'
         },
         mutations: {
             setCurrencyPreference(state, object) {
-                console.log('mutation: setCurrencyPreference');
                 state.currencyPreference = object;
             },
             initialiseStore(state) {
-                console.log('mutation: initialiseStore');
                 // if locale in local storage:
                 if (localStorage.locale) {
                     state.locale = localStorage.locale;
@@ -66,15 +72,12 @@ export default new Vuex.Store(
         },
         actions: {
             updateCurrencyPreference(context) {
-                console.log('action: updateCurrencyPreference');
                 if (localStorage.currencyPreference) {
-                    console.log('action: from local storage');
                     context.commit('setCurrencyPreference', localStorage.currencyPreference);
                     return;
                 }
                 axios.get('./api/v1/currencies/default')
                     .then(response => {
-                        console.log('action: from axios');
                         let currencyResponse = {
                             id: parseInt(response.data.data.id),
                             name: response.data.data.attributes.name,
