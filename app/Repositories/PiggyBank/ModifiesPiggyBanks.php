@@ -105,7 +105,7 @@ trait ModifiesPiggyBanks
         $leftOnAccount = $this->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = (string)min(round((float) $leftOnAccount, 12), round($leftToSave, 12));
+        $maxAmount     = (string)min(round((float) $leftOnAccount, 12), round((float)$leftToSave, 12));
         $compare       = bccomp($amount, $maxAmount);
         $result        = $compare <= 0;
 
