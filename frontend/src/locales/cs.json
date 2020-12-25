@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "Nov\u00e1 transakce",
         "balance": "Z\u016fstatek",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta informace",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Faktury k zaplacen\u00ed",
         "left_to_spend": "Zb\u00fdv\u00e1 k utracen\u00ed",
         "net_worth": "\u010cist\u00e9 jm\u011bn\u00ed",

@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "\u00daj tranzakci\u00f3",
         "balance": "Egyenleg",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta-inform\u00e1ci\u00f3",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Fizetend\u0151 sz\u00e1ml\u00e1k",
         "left_to_spend": "Elk\u00f6lthet\u0151",
         "net_worth": "Nett\u00f3 \u00e9rt\u00e9k",

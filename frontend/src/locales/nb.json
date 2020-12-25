@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "New transaction",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metainformasjon",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Regninger \u00e5 betale",
         "left_to_spend": "Igjen \u00e5 bruke",
         "net_worth": "Formue",

@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "\u65b0\u4ea4\u6613",
         "balance": "\u9918\u984d",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "\u5f8c\u8a2d\u8cc7\u8a0a",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "\u5f85\u4ed8\u5e33\u55ae",
         "left_to_spend": "\u5269\u9918\u53ef\u82b1\u8cbb",
         "net_worth": "\u6de8\u503c",

@@ -25,7 +25,7 @@
         <input
             ref="description"
             :title="$t('firefly.description')"
-            :value="value"
+            v-model="description"
             autocomplete="off"
             autofocus
             class="form-control"
@@ -35,8 +35,7 @@
             v-on:submit.prevent
         >
         <div class="input-group-append">
-          <!-- v-on:click="clearDescription" -->
-          <button class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
         </div>
       </div>
     </div>
@@ -45,9 +44,39 @@
 </template>
 
 <script>
+
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
+
 export default {
-  props: ['value'],
-  name: "TransactionDescription"
+  props: ['value', 'index'],
+  name: "TransactionDescription",
+  methods: {
+    ...mapMutations(
+        [
+          'updateField',
+        ],
+    ),
+    clearDescription: function() {
+      this.description = '';
+    }
+  },
+  computed: {
+    ...mapGetters([
+                    'transactionType', // -> this.someGetter
+                    'transactions', // -> this.someOtherGetter
+                  ]),
+    description: {
+      get() {
+        return this.transactions[this.index].description;
+      },
+      set(value) {
+        console.log('I am set ' + value + ' ' + this.index);
+        this.updateField({field: 'description', index: this.index, value: value});
+      }
+    }
+  }
 }
 </script>
 

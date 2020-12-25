@@ -51,7 +51,7 @@
                   }}</span>
                 <span v-if="transactions.length === 1">{{ $t('firefly.transaction_journal_information') }}</span>
               </h3>
-              <div v-if="transactions.length > 1" class="box-tools pull-right" x>
+              <div v-if="transactions.length > 1" class="box-tools pull-right">
                 <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
                     class="fa fa-trash"></i></button>
               </div>

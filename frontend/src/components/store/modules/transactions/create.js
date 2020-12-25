@@ -53,8 +53,17 @@ const mutations = {
         state.transactions.push(
             {
                 description: '',
+                date: new Date
             }
         );
+    },
+    deleteTransaction(state, index) {
+        this.state.transactions.splice(index, 1);
+    },
+    updateField(state, payload) {
+        console.log('I am update field');
+        console.log(payload)
+        state.transactions[payload.index][payload.field] = payload.value;
     }
 }
 

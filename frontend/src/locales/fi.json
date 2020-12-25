@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "Uusi tapahtuma",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metatiedot",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Laskuja maksettavana",
         "left_to_spend": "K\u00e4ytett\u00e4viss\u00e4",
         "net_worth": "Varallisuus",

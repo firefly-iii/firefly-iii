@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "Neue Buchung",
         "balance": "Kontostand",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metainformationen",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Unbezahlte Rechnungen",
         "left_to_spend": "Verbleibend zum Ausgeben",
         "net_worth": "Eigenkapital",

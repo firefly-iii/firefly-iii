@@ -24,7 +24,14 @@
       <div class="col">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Create a new transaction</h3>
+            <h3 class="card-title">
+              {{ $t('firefly.new_transaction')}}
+              <span v-if="transactions.length > 1">({{ $t('firefly.single_split') }} {{ index + 1}} / {{ transactions.length }})</span>
+            </h3>
+            <div v-if="transactions.length > 1" class="box-tools pull-right">
+              <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
+                  class="fa fa-trash"></i></button>
+            </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
@@ -34,7 +41,7 @@
                 <div class="card-header">
                   <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseBasic' + index" class='' aria-expanded="true">
-                      Basic transaction information
+                      {{ $t('firefly.basic_journal_information') }}
                     </a>
                   </h4>
                 </div>
@@ -62,15 +69,20 @@
                     <div class="row">
                       <div class="col">
                         <TransactionDescription
-                            v-model="transaction[index].description"
+                            :description="transactions[index].description"
                             :index="index"
                         ></TransactionDescription>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col">
-                        Date<br/>
-                        Time
+                        <!--
+                        <TransactionDate
+                            :description="transactions[index].date"
+                            :index="index"
+                        ></TransactionDate>
+                        -->
+                        Date and time.
                       </div>
                       <div class="col">
                         Other date
@@ -86,7 +98,7 @@
                 <div class="card-header">
                   <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseMeta' + index" class="collapsed" aria-expanded="false">
-                      Meta information
+                      {{ $t('firefly.transaction_journal_meta') }}
                     </a>
                   </h4>
                 </div>
@@ -110,7 +122,7 @@
                 <div class="card-header">
                   <h4 class="card-title">
                     <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseExtra' + index" class="collapsed" aria-expanded="false">
-                      Extra information
+                      {{ $t('firefly.transaction_journal_extra') }}
                     </a>
                   </h4>
                 </div>
@@ -192,6 +204,7 @@ export default {
     ...mapMutations(
         [
           'addTransaction',
+          'deleteTransaction'
         ]
     ),
     /**

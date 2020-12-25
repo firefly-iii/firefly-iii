@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "Nieuwe transactie",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metainformatie",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Openstaande contracten",
         "left_to_spend": "Over om uit te geven",
         "net_worth": "Kapitaal",

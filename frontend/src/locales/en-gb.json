@@ -1,6 +1,10 @@
 {
     "firefly": {
+        "new_transaction": "New transaction",
         "balance": "Balance",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta information",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Bills to pay",
         "left_to_spend": "Left to spend",
         "net_worth": "Net worth",
