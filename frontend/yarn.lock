@@ -6863,10 +6863,10 @@ uuid@^8.3.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-v-calendar@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-2.1.3.tgz#968c8039232908eb0e8ab48256b60db082cba187"
-  integrity sha512-xLWWUbOfT2RfJPN1y5p8RVpIalVCQKAKqzoTbUel0bf/vbyAC8MLLmKSh2Lr75To01IzHi8mVf3UPZn9Dt0khQ==
+v-calendar@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-2.1.5.tgz#f95f73a9c39f8d49a19c80da5503a77cc72e32e4"
+  integrity sha512-od4wejIDzLQRsb4OJfe/GuMGU1ZzTM9vpaT5suizA0wqL8KQKRMD9mAFsudQUmm5JIo+LH5xV+eNjDAVn+HYpQ==
   dependencies:
     core-js "^3.6.5"
     date-fns "^2.8.1"
