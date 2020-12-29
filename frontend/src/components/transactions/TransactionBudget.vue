@@ -1,5 +1,5 @@
 <!--
-  - TransactionDescription.vue
+  - TransactionBudget.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,27 +21,23 @@
 <template>
   <div class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
-      {{ $t('firefly.description') }}
+      {{ $t('firefly.budget') }}
     </div>
     <div class="input-group">
-      <input
-          ref="description"
-          :title="$t('firefly.description')"
-          v-model="description"
+      <select
+          ref="budget"
+          :title="$t('firefly.budget')"
+          v-model="budget_id"
           autocomplete="off"
-          autofocus
           class="form-control"
-          name="description[]"
-          type="text"
-          :placeholder="$t('firefly.description')"
+          name="budget_id[]"
           v-on:submit.prevent
       >
-      <div class="input-group-append">
-        <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
-      </div>
+        <option v-for="budget in this.budgetList" :value="budget.id" :label="budget.name">{{ budget.name }}</option>
+
+      </select>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -52,28 +48,62 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 
 export default {
   props: ['index'],
-  name: "TransactionDescription",
+  name: "TransactionBudget",
+  data() {
+    return {
+      budgetList: []
+    }
+  },
+  created() {
+    this.collectData();
+  },
   methods: {
     ...mapMutations(
         [
           'updateField',
         ],
     ),
-    clearDescription: function () {
-      this.description = '';
-    }
+    collectData() {
+      this.budgetList.push(
+          {
+            id: 0,
+            name: this.$t('firefly.no_budget'),
+          }
+      );
+      this.getBudgets();
+    },
+    getBudgets() {
+      axios.get('./api/v1/budgets')
+          .then(response => {
+                  this.parseBudgets(response.data);
+                }
+          );
+    },
+    parseBudgets(data) {
+      for (let key in data.data) {
+        if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+          let current = data.data[key];
+          this.budgetList.push(
+              {
+                id: parseInt(current.id),
+                name: current.attributes.name
+              }
+          );
+        }
+      }
+    },
   },
   computed: {
     ...mapGetters([
                     'transactionType',
                     'transactions',
                   ]),
-    description: {
+    budget_id: {
       get() {
-        return this.transactions[this.index].description;
+        return this.transactions[this.index].budget_id;
       },
       set(value) {
-        this.updateField({field: 'description', index: this.index, value: value});
+        this.updateField({field: 'budget_id', index: this.index, value: value});
       }
     }
   }

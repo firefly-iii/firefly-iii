@@ -18,12 +18,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+let date = new Date;
 
 // initial state
 const state = () => ({
-    transactionType: 'any',
-    transactions: []
-})
+        transactionType: 'any',
+        transactions: [],
+        sourceAllowedTypes: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage'],
+        defaultTransaction: {
+            // basic
+            description: '',
+            date: date.toISOString().split('T')[0],
+            time: ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2),
+
+            // accounts:
+            source_account: {
+                id: 0,
+                name: "",
+                type: "",
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2
+            },
+            source_allowed_types: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage'],
+
+            // meta data
+            budget_id: 0
+        },
+    }
+)
 
 
 // getters
@@ -33,7 +57,13 @@ const getters = {
     },
     transactionType: state => {
         return state.transactionType;
-    }
+    },
+    defaultTransaction: state => {
+        return state.defaultTransaction;
+    },
+    sourceAllowedTypes: state => {
+        return state.sourceAllowedTypes;
+    },
     // // `getters` is localized to this module's getters
     // // you can use rootGetters via 4th argument of getters
     // someGetter (state, getters, rootState, rootGetters) {
@@ -50,12 +80,7 @@ const actions = {}
 // mutations
 const mutations = {
     addTransaction(state) {
-        state.transactions.push(
-            {
-                description: '',
-                date: new Date
-            }
-        );
+        state.transactions.push(state.defaultTransaction);
     },
     deleteTransaction(state, index) {
         this.state.transactions.splice(index, 1);

@@ -25,124 +25,307 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              {{ $t('firefly.new_transaction')}}
-              <span v-if="transactions.length > 1">({{ $t('firefly.single_split') }} {{ index + 1}} / {{ transactions.length }})</span>
+              <span v-if="0 === transactions.length">{{ $t('firefly.create_new_transaction') }}</span>
+              <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{ transactions.length }}</span>
             </h3>
-            <div v-if="transactions.length > 1" class="box-tools pull-right">
+            <div v-if="transactions.length > 1" class="card-tools">
               <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
                   class="fa fa-trash"></i></button>
             </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <div id="accordion">
-              <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h4 class="card-title">
-                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseBasic' + index" class='' aria-expanded="true">
-                      {{ $t('firefly.basic_journal_information') }}
-                    </a>
-                  </h4>
-                </div>
-                <div :id="'collapseBasic' + index" class="panel-collapse in collapse show" style=''>
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col">
-                        <p>
-                          Source
-                        </p>
-                      </div>
-                      <div class="col">
-                        <p>
-                          Amount
-                          <br>
-                          foreign amount
-                        </p>
-                      </div>
-                      <div class="col">
-                        <p>
-                          Destination
-                        </p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <TransactionDescription
-                            :description="transactions[index].description"
-                            :index="index"
-                        ></TransactionDescription>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <!--
-                        <TransactionDate
-                            :description="transactions[index].date"
-                            :index="index"
-                        ></TransactionDate>
-                        -->
-                        Date and time.
-                      </div>
-                      <div class="col">
-                        Other date
-                      </div>
-                      <div class="col">
-                        Other date
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card card-secondary">
-                <div class="card-header">
-                  <h4 class="card-title">
-                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseMeta' + index" class="collapsed" aria-expanded="false">
-                      {{ $t('firefly.transaction_journal_meta') }}
-                    </a>
-                  </h4>
-                </div>
-                <div :id="'collapseMeta' + index" class="panel-collapse collapse">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col">
-                        Budget<br>
-                        Cat<br>
-                      </div>
-                      <div class="col">
-                        Bill<br>
-                        Tags<br>
-                        Piggy<br>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="card card-secondary">
-                <div class="card-header">
-                  <h4 class="card-title">
-                    <a data-toggle="collapse" data-parent="#accordion" :href="'#collapseExtra' + index" class="collapsed" aria-expanded="false">
-                      {{ $t('firefly.transaction_journal_extra') }}
-                    </a>
-                  </h4>
-                </div>
-                <div :id="'collapseExtra' + index" class="panel-collapse collapse">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col">
-                        Internal ref<br/>
-                        External URL<br/>
-                        Notes
-                      </div>
-                      <div class="col">
-                        Transaction links<br/>
-                        Attachments
-                      </div>
+            <h4>{{ $t('firefly.basic_journal_information') }}</h4>
 
-                    </div>
+            <!-- description etc, 3 rows -->
+            <div class="row">
+              <div class="col">
+                <TransactionDescription
+                    :description="transactions[index].description"
+                    :index="index"
+                ></TransactionDescription>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <p class="d-block d-sm-none">XS</p>
+                <p class="d-none d-sm-block d-md-none">SM</p>
+                <p class="d-none d-md-block d-lg-none">MD</p>
+                <p class="d-none d-lg-block d-xl-none">LG</p>
+                <p class="d-none d-xl-block">XL</p>
+              </div>
+            </div>
+
+            <!-- source and destination -->
+            <div class="row">
+              <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
+                <!-- SOURCE -->
+                <TransactionAccount
+                    :selectedAccount="transactions[index].source_account"
+                    direction="source"
+                    :index="index"
+                  />
+              </div>
+              <!-- switcharoo! -->
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
+                <!--
+                <div class="btn-group d-flex">
+                  <button class="btn btn-light">&harr;</button>
+                </div>
+                -->
+              </div>
+
+              <!-- destination -->
+              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <!--
+                <div class="input-group">
+                  <input
+                      title="Dest"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Dest"
+                  >
+                </div>
+                -->
+              </div>
+            </div>
+
+            <!-- amount  -->
+            <div class="row">
+              <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
+                <!-- SOURCE -->
+                <!--
+                <div class="form-group">
+                  <div class="text-xs">{{ $t('firefly.amount') }}</div>
+                  <div class="input-group">
+                    <input
+                        title="Amount"
+                        autocomplete="off"
+                        autofocus
+                        class="form-control"
+                        name="amount[]"
+                        type="number"
+                        placeholder="Amount"
+                    >
+                  </div>
+                </div>
+                -->
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
+                <!-- SELECT FOR FOREIGN -->
+                <!--
+                (select)
+                -->
+              </div>
+              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <!-- FOREIGN AMOUNT -->
+                <!--
+                Foreign
+                -->
+              </div>
+            </div>
+
+            <!-- dates -->
+            <div class="row">
+              <div class="col">
+                <TransactionDate
+                    :date="transactions[index].date"
+                    :time="transactions[index].time"
+                    :index="index"
+                />
+              </div>
+              <div class="col">
+                <!-- TODO other time slots -->
+                <div class="form-group">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    other dates
+                  </div>
+                  <div class="input-group">
+                    <input class="form-control" type="date" value="2020-12-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    other dates
+                  </div>
+                  <div class="input-group">
+                    <input class="form-control" type="date" value="2020-12-12">
                   </div>
                 </div>
               </div>
+            </div>
+
+<!--
+            <p class="d-block d-sm-none">XS</p>
+            <p class="d-none d-sm-block d-md-none">SM</p>
+            <p class="d-none d-md-block d-lg-none">MD</p>
+            <p class="d-none d-lg-block d-xl-none">LG</p>
+            <p class="d-none d-xl-block">XL</p>
+
+
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+            {# top stuff #}
+            <div class="row">
+              <div class="col">
+
+              </div>
+            </div>
+
+
+-->
+
+            <div class="row">
+              <div class="col">
+                <!-- AMOUNT -->
+                <!--
+                <div class="input-group">
+                  <input
+                      title="Amount"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Amount"
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                      title="Foreign"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Foreign"
+                  >
+                </div>
+                -->
+              </div>
+              <div class="col">
+
+              </div>
+            </div>
+
+
+            <h4>{{ $t('firefly.transaction_journal_meta') }}</h4>
+
+            <!-- meta -->
+            <div class="row">
+              <div class="col">
+                <TransactionBudget
+                    :budget_id="transactions[index].budget_id"
+                    :index="index"
+                />
+                <div class="input-group">
+                  <input
+                      title="Category"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Category"
+                  >
+                </div>
+              </div>
+              <div class="col">
+                <div class="input-group">
+                  <input
+                      title="Bill"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Bill"
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                      title="Tags"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Tags"
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                      title="Piggy"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="Piggy"
+                  >
+                </div>
+              </div>
+            </div>
+
+            <h4>{{ $t('firefly.transaction_journal_extra') }}</h4>
+
+            <div class="row">
+              <div class="col">
+                <div class="input-group">
+                  <input
+                      title="internal ref"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="internal ref"
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                      title="Piggy"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="external url"
+                  >
+                </div>
+                <div class="input-group">
+                  <textarea class="form-control" placeholder="Notes"></textarea>
+                </div>
+              </div>
+              <div class="col">
+                <div class="input-group">
+                  <input
+                      title="Piggy"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="transaction links"
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                      title="Piggy"
+                      autocomplete="off"
+                      autofocus
+                      class="form-control"
+                      name="something[]"
+                      type="text"
+                      placeholder="piggy bank"
+                  >
+                </div>
+              </div>
+
             </div>
           </div>
           <!-- /.card-body -->
@@ -177,14 +360,17 @@
 
 <script>
 import TransactionDescription from "./TransactionDescription";
+import TransactionDate from "./TransactionDate";
+import TransactionBudget from "./TransactionBudget";
 import {createNamespacedHelpers} from 'vuex'
+import TransactionAccount from "./TransactionAccount";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 
 export default {
   name: "Create",
-  components: {TransactionDescription},
+  components: {TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate},
   created() {
     this.addTransaction();
   },
@@ -245,7 +431,13 @@ export default {
      */
     convertSplit: function (key, array) {
       let currentSplit = {
-        description: array.description
+        // basic
+        description: array.description,
+        date: array.date + ' ' + array.time,
+
+        // meta
+        budget_id: array.budget_id,
+
       };
 
       // return it.
