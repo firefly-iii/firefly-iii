@@ -20,10 +20,11 @@
 
 import store from "../../components/store";
 import Create from "../../components/transactions/Create";
+import Vue from "vue";
 
 require('../../bootstrap');
 
-
+Vue.config.productionTip = false;
 // i18n
 let i18n = require('../../i18n');
 
