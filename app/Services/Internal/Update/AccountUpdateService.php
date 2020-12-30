@@ -108,9 +108,6 @@ class AccountUpdateService
      */
     private function updateLocation(Account $account, array $data): void {
         $updateLocation = $data['update_location'] ?? false;
-
-
-
         // location must be updated?
         if (true === $updateLocation) {
             // if all set to NULL, delete

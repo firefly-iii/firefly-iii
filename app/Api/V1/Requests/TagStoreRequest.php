@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
+use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,8 +36,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TagStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes, ChecksLogin;
-
+    use ConvertsDataTypes, ChecksLogin, AppendsLocationData;
 
 
     /**
@@ -46,20 +46,15 @@ class TagStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $hasLocation = false;
-        if ($this->has('longitude') && $this->has('latitude') && $this->has('zoom_level')) {
-            $hasLocation = true;
-        }
-
-        return [
+        $data = [
             'tag'          => $this->string('tag'),
             'date'         => $this->date('date'),
             'description'  => $this->string('description'),
-            'has_location' => $hasLocation,
-            'longitude'    => $this->string('longitude'),
-            'latitude'     => $this->string('latitude'),
-            'zoom_level'   => $this->integer('zoom_level'),
+            'has_location' => true,
         ];
+        $data = $this->appendLocationData($data, null);
+
+        return $data;
     }
 
     /**
