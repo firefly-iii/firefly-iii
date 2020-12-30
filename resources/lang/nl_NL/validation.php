@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Het huidige bedrag moet minder zijn dan het doelbedrag.',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
     'unique_object_group'            => 'De groepsnaam moet uniek zijn',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'De waarde moet beginnen met :values.',
+    'unique_webhook'                 => 'Je hebt al een webhook met deze waarden.',
+    'unique_existing_webhook'        => 'Je hebt al een andere webhook met deze waarden.',
 
     'secure_password'             => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Dit is geen geldige herhaling voor periodieke transacties.',

@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Текущата сума трябва да бъде по-малка от планираната сума.',
     'unique_piggy_bank_for_user'     => 'Името на касичката трябва да е уникално.',
     'unique_object_group'            => 'Името на групата трябва да е уникално',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'Стойността трябва да започва с :values.',
+    'unique_webhook'                 => 'Вече имате уеб кука с тези стойности.',
+    'unique_existing_webhook'        => 'Вече имате друга уеб кука с тези стойности.',
 
     'secure_password'             => 'Това не е сигурна парола. Моля, опитайте отново. За повече информация посетете https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Невалиден тип повторение за повтарящи се транзакции.',

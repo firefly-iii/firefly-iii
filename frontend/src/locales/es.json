@@ -1,6 +1,16 @@
 {
     "firefly": {
-        "new_transaction": "Nueva transacci\u00f3n",
+        "Transfer": "Transferencia",
+        "Withdrawal": "Retiro",
+        "Deposit": "Dep\u00f3sito",
+        "date_and_time": "Date and time",
+        "date": "Fecha",
+        "time": "Time",
+        "no_budget": "(sin presupuesto)",
+        "destination_account": "Cuenta destino",
+        "source_account": "Cuenta origen",
+        "single_split": "Divisi\u00f3n",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Balance",
         "transaction_journal_extra": "Extra information",
         "transaction_journal_meta": "Informaci\u00f3n Meta",

@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'La cantidad actual debe ser menor que la cantidad de destino.',
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
     'unique_object_group'            => 'El nombre del grupo debe ser único',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'El valor debe comenzar con :values.',
+    'unique_webhook'                 => 'Ya tiene un webhook con estos valores.',
+    'unique_existing_webhook'        => 'Ya tiene otro webhook con estos valores.',
 
     'secure_password'             => 'Esta contraseña no es segura. Por favor inténtalo de nuevo. Para más información, visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Tipo de repetición no válido para transacciones recurrentes.',

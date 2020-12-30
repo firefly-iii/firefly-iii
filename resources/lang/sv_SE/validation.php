@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Det nuvarande beloppet måste vara mindre än målbeloppet.',
     'unique_piggy_bank_for_user'     => 'Namnet på spargrisen måste vara unikt.',
     'unique_object_group'            => 'Gruppnamnet måste vara unikt',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'Värdet måste börja med :values.',
+    'unique_webhook'                 => 'Du har redan en webhook med dessa värden.',
+    'unique_existing_webhook'        => 'Du har redan en annan webhook med dessa värden.',
 
     'secure_password'             => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Ogiltig repetitionstyp får återkommande transaktioner.',

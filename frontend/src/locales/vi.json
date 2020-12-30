@@ -1,6 +1,16 @@
 {
     "firefly": {
-        "new_transaction": "Giao d\u1ecbch m\u1edbi",
+        "Transfer": "Chuy\u1ec3n kho\u1ea3n",
+        "Withdrawal": "R\u00fat ti\u1ec1n",
+        "Deposit": "Ti\u1ec1n g\u1eedi",
+        "date_and_time": "Date and time",
+        "date": "Ng\u00e0y",
+        "time": "Time",
+        "no_budget": "(kh\u00f4ng c\u00f3 ng\u00e2n s\u00e1ch)",
+        "destination_account": "T\u00e0i kho\u1ea3n \u0111\u00edch",
+        "source_account": "Ngu\u1ed3n t\u00e0i kho\u1ea3n",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Ti\u1ec1n c\u00f2n l\u1ea1i",
         "transaction_journal_extra": "Extra information",
         "transaction_journal_meta": "Th\u00f4ng tin t\u1ed5ng h\u1ee3p",

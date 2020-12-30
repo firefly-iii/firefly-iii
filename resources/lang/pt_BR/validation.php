@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'O valor atual deve ser menor do que o valor pretendido.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
     'unique_object_group'            => 'O nome do grupo deve ser único',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'O valor deve começar com :values.',
+    'unique_webhook'                 => 'Você já tem um webhook com esses valores.',
+    'unique_existing_webhook'        => 'Você já tem outro webhook com esses valores.',
 
     'secure_password'             => 'Esta não é uma senha segura. Por favor, tente novamente. Para mais informações, visite https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Tipo de repetição inválido para transações recorrentes.',

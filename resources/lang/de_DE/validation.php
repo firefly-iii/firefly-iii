@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'Der Wert muss mit :values beginnen.',
+    'unique_webhook'                 => 'Sie haben bereits einen Webhook mit diesen Werten.',
+    'unique_existing_webhook'        => 'Sie haben bereits einen anderen Webhook mit diesen Werten.',
 
     'secure_password'             => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'   => 'Ungültige Wiederholungsart für Daueraufträge.',

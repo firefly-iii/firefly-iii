@@ -34,5 +34,9 @@ new Vue({
             store,
             render(createElement) {
                 return createElement(Create, {props: props});
-            }
+            },
+            beforeCreate() {
+                this.$store.commit('initialiseStore');
+                this.$store.dispatch('updateCurrencyPreference');
+            },
         }).$mount('#transactions_create');

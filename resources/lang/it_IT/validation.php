@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
     'unique_object_group'            => 'Il nome del gruppo deve essere unico',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'Il valore deve iniziare con :values.',
+    'unique_webhook'                 => 'Hai già un webhook con questi valori.',
+    'unique_existing_webhook'        => 'Hai già un altro webhook con questi valori.',
 
     'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',

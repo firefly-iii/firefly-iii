@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Bieżąca kwota musi być mniejsza niż kwota docelowa.',
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'unique_object_group'            => 'Nazwa grupy musi być unikalna',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'Wartość musi zaczynać się od :values.',
+    'unique_webhook'                 => 'Masz już webhook z tymi wartościami.',
+    'unique_existing_webhook'        => 'Masz już inny webhook z tymi wartościami.',
 
     'secure_password'             => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',

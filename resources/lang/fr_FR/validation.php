@@ -130,9 +130,9 @@ return [
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
     'unique_object_group'            => 'Le nom du groupe doit être unique',
-    'starts_with'                    => 'The value must start with :values.',
-    'unique_webhook'                 => 'You already have a webhook with these values.',
-    'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'starts_with'                    => 'La valeur doit commencer par :values.',
+    'unique_webhook'                 => 'Vous avez déjà un webhook avec ces valeurs.',
+    'unique_existing_webhook'        => 'Vous avez déjà un autre webhook avec ces valeurs.',
 
     'secure_password'             => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Type de répétition non valide pour des opérations périodiques.',

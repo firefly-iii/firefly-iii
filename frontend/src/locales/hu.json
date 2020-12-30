@@ -1,6 +1,16 @@
 {
     "firefly": {
-        "new_transaction": "\u00daj tranzakci\u00f3",
+        "Transfer": "\u00c1tvezet\u00e9s",
+        "Withdrawal": "K\u00f6lts\u00e9g",
+        "Deposit": "Bev\u00e9tel",
+        "date_and_time": "Date and time",
+        "date": "D\u00e1tum",
+        "time": "Time",
+        "no_budget": "(nincs k\u00f6lts\u00e9gkeret)",
+        "destination_account": "C\u00e9lsz\u00e1mla",
+        "source_account": "Forr\u00e1s sz\u00e1mla",
+        "single_split": "Feloszt\u00e1s",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Egyenleg",
         "transaction_journal_extra": "Extra information",
         "transaction_journal_meta": "Meta-inform\u00e1ci\u00f3",

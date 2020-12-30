@@ -1,6 +1,16 @@
 {
     "firefly": {
-        "new_transaction": "\u65b0\u4ea4\u6613",
+        "Transfer": "\u8f49\u5e33",
+        "Withdrawal": "\u63d0\u6b3e",
+        "Deposit": "\u5b58\u6b3e",
+        "date_and_time": "Date and time",
+        "date": "\u65e5\u671f",
+        "time": "Time",
+        "no_budget": "(\u7121\u9810\u7b97)",
+        "destination_account": "Destination account",
+        "source_account": "Source account",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "\u9918\u984d",
         "transaction_journal_extra": "Extra information",
         "transaction_journal_meta": "\u5f8c\u8a2d\u8cc7\u8a0a",
