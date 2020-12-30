@@ -36,7 +36,15 @@
           <!-- /.card-header -->
           <div class="card-body">
             <h4>{{ $t('firefly.basic_journal_information') }}</h4>
-
+            <div class="row">
+              <div class="col">
+                <p class="d-block d-sm-none">XS</p>
+                <p class="d-none d-sm-block d-md-none">SM</p>
+                <p class="d-none d-md-block d-lg-none">MD</p>
+                <p class="d-none d-lg-block d-xl-none">LG</p>
+                <p class="d-none d-xl-block">XL</p>
+              </div>
+            </div>
             <!-- description etc, 3 rows -->
             <div class="row">
               <div class="col">
@@ -47,15 +55,7 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col">
-                <p class="d-block d-sm-none">XS</p>
-                <p class="d-none d-sm-block d-md-none">SM</p>
-                <p class="d-none d-md-block d-lg-none">MD</p>
-                <p class="d-none d-lg-block d-xl-none">LG</p>
-                <p class="d-none d-xl-block">XL</p>
-              </div>
-            </div>
+
 
             <!-- source and destination -->
             <div class="row">
@@ -65,54 +65,33 @@
                     :selectedAccount="transactions[index].source_account"
                     direction="source"
                     :index="index"
-                  />
+                />
               </div>
               <!-- switcharoo! -->
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
-                <!--
-                <div class="btn-group d-flex">
-                  <button class="btn btn-light">&harr;</button>
-                </div>
-                -->
+                <SwitchAccount
+                :index="index"
+                />
               </div>
 
               <!-- destination -->
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                <!--
-                <div class="input-group">
-                  <input
-                      title="Dest"
-                      autocomplete="off"
-                      autofocus
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Dest"
-                  >
-                </div>
-                -->
+                <!-- DESTINATION -->
+                <TransactionAccount
+                    :selectedAccount="transactions[index].destination_account"
+                    direction="destination"
+                    :index="index"
+                />
               </div>
             </div>
 
             <!-- amount  -->
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
-                <!-- SOURCE -->
+                <!-- AMOUNT -->
+                <TransactionAmount />
                 <!--
-                <div class="form-group">
-                  <div class="text-xs">{{ $t('firefly.amount') }}</div>
-                  <div class="input-group">
-                    <input
-                        title="Amount"
-                        autocomplete="off"
-                        autofocus
-                        class="form-control"
-                        name="amount[]"
-                        type="number"
-                        placeholder="Amount"
-                    >
-                  </div>
-                </div>
+
                 -->
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
@@ -131,14 +110,15 @@
 
             <!-- dates -->
             <div class="row">
-              <div class="col">
+              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <TransactionDate
                     :date="transactions[index].date"
                     :time="transactions[index].time"
                     :index="index"
                 />
               </div>
-              <div class="col">
+
+              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
                 <!-- TODO other time slots -->
                 <div class="form-group">
                   <div class="text-xs d-none d-lg-block d-xl-block">
@@ -159,25 +139,25 @@
               </div>
             </div>
 
-<!--
-            <p class="d-block d-sm-none">XS</p>
-            <p class="d-none d-sm-block d-md-none">SM</p>
-            <p class="d-none d-md-block d-lg-none">MD</p>
-            <p class="d-none d-lg-block d-xl-none">LG</p>
-            <p class="d-none d-xl-block">XL</p>
+            <!--
+                        <p class="d-block d-sm-none">XS</p>
+                        <p class="d-none d-sm-block d-md-none">SM</p>
+                        <p class="d-none d-md-block d-lg-none">MD</p>
+                        <p class="d-none d-lg-block d-xl-none">LG</p>
+                        <p class="d-none d-xl-block">XL</p>
 
 
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
-            {# top stuff #}
-            <div class="row">
-              <div class="col">
+                        {# top stuff #}
+                        <div class="row">
+                          <div class="col">
 
-              </div>
-            </div>
+                          </div>
+                        </div>
 
 
--->
+            -->
 
             <div class="row">
               <div class="col">
@@ -364,14 +344,18 @@ import TransactionDate from "./TransactionDate";
 import TransactionBudget from "./TransactionBudget";
 import {createNamespacedHelpers} from 'vuex'
 import TransactionAccount from "./TransactionAccount";
+import SwitchAccount from "./SwitchAccount";
+import TransactionAmount from "./TransactionAmount";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 
 export default {
   name: "Create",
-  components: {TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate},
+  components: {TransactionAmount, SwitchAccount, TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate},
   created() {
+    this.storeAllowedOpposingTypes();
+    this.storeAccountToTransaction();
     this.addTransaction();
   },
   data() {
@@ -390,15 +374,26 @@ export default {
     ...mapMutations(
         [
           'addTransaction',
-          'deleteTransaction'
-        ]
+          'deleteTransaction',
+          'setAllowedOpposingTypes',
+          'setAccountToTransaction',
+        ],
     ),
+    /**
+     *
+     */
+    storeAllowedOpposingTypes: function () {
+      this.setAllowedOpposingTypes(window.allowedOpposingTypes);
+    },
+    storeAccountToTransaction: function() {
+      this.setAccountToTransaction(window.accountToTransaction);
+    },
     /**
      *
      */
     submitTransaction: function () {
       this.isSubmitting = true;
-      console.log('Now in submit()');
+      // console.log('Now in submit()');
       const uri = './api/v1/transactions';
       const data = this.convertData();
 
@@ -411,7 +406,7 @@ export default {
      *
      */
     convertData: function () {
-      console.log('now in convertData');
+      // console.log('now in convertData');
       let data = {
         //'group_title': null,
         'transactions': []
@@ -434,6 +429,12 @@ export default {
         // basic
         description: array.description,
         date: array.date + ' ' + array.time,
+
+        // account
+        source_id: array.source_account.id ?? null,
+        source_name: array.source_account.name ?? null,
+        destination_id: array.destination_account.id ?? null,
+        destination_name: array.destination_account.name ?? null,
 
         // meta
         budget_id: array.budget_id,

@@ -178,7 +178,7 @@ export default {
       let ret = [];
       for (const key in array) {
         if (array.hasOwnProperty(key)) {
-          console.log('Currency ID seems to be ' + this.currencyId);
+          // console.log('Currency ID seems to be ' + this.currencyId);
           if (array[key].currency_id === this.currencyId) {
             ret.push(array[key]);
           }

@@ -20,11 +20,16 @@
 
 let date = new Date;
 
+const lodashClonedeep = require('lodash.clonedeep');
+
 // initial state
 const state = () => ({
         transactionType: 'any',
         transactions: [],
-        sourceAllowedTypes: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage'],
+        allowedOpposingTypes: {},
+        accountToTransaction: {},
+        sourceAllowedTypes: ['Asset account','Loan','Debt','Mortgage','Revenue account'],
+        destinationAllowedTypes: ['Asset account','Loan','Debt','Mortgage','Expense account'],
         defaultTransaction: {
             // basic
             description: '',
@@ -35,12 +40,23 @@ const state = () => ({
             source_account: {
                 id: 0,
                 name: "",
+                name_with_balance: "",
                 type: "",
                 currency_id: 0,
                 currency_name: '',
                 currency_code: '',
                 currency_decimal_places: 2
             },
+            destination_account: {
+                id: 0,
+                name: "",
+                type: "",
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2
+            },
+
             source_allowed_types: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage'],
 
             // meta data
@@ -64,6 +80,12 @@ const getters = {
     sourceAllowedTypes: state => {
         return state.sourceAllowedTypes;
     },
+    destinationAllowedTypes: state => {
+        return state.destinationAllowedTypes;
+    },
+    allowedOpposingTypes: state => {
+        return state.allowedOpposingTypes;
+    },
     // // `getters` is localized to this module's getters
     // // you can use rootGetters via 4th argument of getters
     // someGetter (state, getters, rootState, rootGetters) {
@@ -75,20 +97,74 @@ const getters = {
 }
 
 // actions
-const actions = {}
+const actions = {
+    calcTransactionType(context) {
+        let source = context.state.transactions[0].source_account;
+        let dest = context.state.transactions[0].destination_account;
+        if (null === source || null === dest) {
+            // console.log('transactionType any');
+            context.commit('setTransactionType', 'any');
+            return;
+        }
+        if ('' === source.type || '' === dest.type) {
+            // console.log('transactionType any');
+            context.commit('setTransactionType', 'any');
+            return;
+        }
+
+        // ok so type is set on both:
+        let expectedDestinationTypes = context.state.accountToTransaction[source.type];
+        if ('undefined' !== typeof expectedDestinationTypes) {
+            let transactionType = expectedDestinationTypes[dest.type];
+            if ('undefined' !== typeof expectedDestinationTypes[dest.type]) {
+                // console.log('Found a type: ' + transactionType);
+                context.commit('setTransactionType', transactionType);
+                return;
+            }
+        }
+        // console.log('Found no type for ' + source.type + ' --> ' + dest.type);
+        if('Asset account' !== source.type) {
+            console.log('Drop ID from source. TODO');
+            // source.id =null
+            // context.commit('updateField', {field: 'source_account',index: })
+            // context.state.transactions[0].source_account.id = null;
+        }
+        if('Asset account' !== dest.type) {
+            console.log('Drop ID from destination. TODO');
+            //context.state.transactions[0].destination_account.id = null;
+        }
+
+        context.commit('setTransactionType', 'any');
+    }
+}
 
 // mutations
 const mutations = {
     addTransaction(state) {
-        state.transactions.push(state.defaultTransaction);
+        let newTransaction = lodashClonedeep(state.defaultTransaction);
+        state.transactions.push(newTransaction);
     },
     deleteTransaction(state, index) {
-        this.state.transactions.splice(index, 1);
+        state.transactions.splice(index, 1);
+    },
+    setTransactionType(state, transactionType) {
+        state.transactionType = transactionType;
+    },
+    setAllowedOpposingTypes(state, allowedOpposingTypes) {
+        state.allowedOpposingTypes = allowedOpposingTypes;
+    },
+    setAccountToTransaction(state, payload) {
+        state.accountToTransaction = payload;
     },
     updateField(state, payload) {
-        console.log('I am update field');
-        console.log(payload)
         state.transactions[payload.index][payload.field] = payload.value;
+    },
+    setDestinationAllowedTypes(state, payload) {
+        // console.log('Destination allowed types was changed!');
+        state.destinationAllowedTypes = payload;
+    },
+    setSourceAllowedTypes(state, payload) {
+        state.sourceAllowedTypes = payload;
     }
 }
 

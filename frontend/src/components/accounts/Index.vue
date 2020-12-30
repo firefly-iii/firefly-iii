@@ -103,7 +103,7 @@ export default {
     }
   },
   created() {
-    console.log('mounted account list.');
+    //console.log('mounted account list.');
     axios.get('./api/v1/accounts?type=' + this.$props.accountTypes)
         .then(response => {
                 this.loadAccounts(response.data.data);

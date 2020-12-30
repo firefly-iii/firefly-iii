@@ -23,7 +23,35 @@
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.description') }}
     </div>
-    <div class="input-group">
+      <vue-typeahead-bootstrap
+          inputName="description[]"
+          v-model="query"
+          :data="descriptions"
+          :placeholder="$t('firefly.description')"
+          :showOnFocus=true
+          :minMatchingChars="3"
+          :serializer="item => item.description"
+          @hit="selectedDescription = $event"
+          @input="lookupDescription"
+      >
+        <template slot="append">
+          <div class="input-group-append">
+            <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          </div>
+        </template>
+      </vue-typeahead-bootstrap>
+
+
+      <!--
+      <vue-typeahead-bootstrap
+        v-model="description"
+        :data="descriptions"
+        :serializer="item => item.name_with_balance"
+        @hit="selectedAccount = $event"
+        :placeholder="$t('firefly.' + this.direction + '_account')"
+        @input="lookupAccount"
+        >
+      </vue-typeahead-bootstrap>
       <input
           ref="description"
           :title="$t('firefly.description')"
@@ -36,10 +64,8 @@
           :placeholder="$t('firefly.description')"
           v-on:submit.prevent
       >
-      <div class="input-group-append">
-        <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
-      </div>
-    </div>
+
+      -->
   </div>
 
 </template>
@@ -47,12 +73,35 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
+import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
+import {debounce} from "lodash";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
+// https://firefly.sd.home/api/v1/autocomplete/transactions?query=test
+
 export default {
   props: ['index'],
+  components: {VueTypeaheadBootstrap},
   name: "TransactionDescription",
+  data() {
+    return {
+      descriptions: [],
+      query: '',
+      initialSet: []
+    }
+  },
+
+  created() {
+
+    // initial list of accounts:
+    axios.get(this.getACURL(''))
+        .then(response => {
+          this.descriptions = response.data;
+          this.initialSet = response.data;
+        });
+  },
+
   methods: {
     ...mapMutations(
         [
@@ -60,15 +109,26 @@ export default {
         ],
     ),
     clearDescription: function () {
-      this.description = '';
-    }
+      this.selectedDescription = '';
+    },
+    getACURL: function (query) {
+      // update autocomplete URL:
+      return document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/transactions?query=' + query;
+    },
+    lookupDescription: debounce(function () {
+      // update autocomplete URL:
+      axios.get(this.getACURL(this.query))
+          .then(response => {
+            this.descriptions = response.data;
+          })
+    }, 300)
   },
   computed: {
     ...mapGetters([
                     'transactionType',
                     'transactions',
                   ]),
-    description: {
+    selectedDescription: {
       get() {
         return this.transactions[this.index].description;
       },

@@ -42,8 +42,9 @@ export default new Vuex.Store(
             locale: 'en-US'
         },
         mutations: {
-            setCurrencyPreference(state, object) {
-                state.currencyPreference = object;
+            setCurrencyPreference(state, payload) {
+                console.log('setCurrencyPreference', payload);
+                state.currencyPreference = payload.payload;
             },
             initialiseStore(state) {
                 // if locale in local storage:
@@ -63,6 +64,9 @@ export default new Vuex.Store(
             currencyCode: state => {
                 return state.currencyPreference.code;
             },
+            currencyPreference: state => {
+                return state.currencyPreference;
+            },
             currencyId: state => {
                 return state.currencyPreference.id;
             },
@@ -73,7 +77,10 @@ export default new Vuex.Store(
         actions: {
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
-                    context.commit('setCurrencyPreference', localStorage.currencyPreference);
+                    console.log('set from local storage.');
+                    console.log(localStorage.currencyPreference);
+                    console.log({payload: JSON.parse(localStorage.currencyPreference)});
+                    context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;
                 }
                 axios.get('./api/v1/currencies/default')
@@ -85,17 +92,21 @@ export default new Vuex.Store(
                             code: response.data.data.attributes.code,
                             decimal_places: parseInt(response.data.data.attributes.decimal_places),
                         };
-                        localStorage.currencyPreference = currencyResponse;
-                        context.commit('setCurrencyPreference', currencyResponse);
+                        localStorage.currencyPreference = JSON.stringify(currencyResponse);
+                        console.log('getCurrencyPreference from server')
+                        console.log(JSON.stringify(currencyResponse));
+                        context.commit('setCurrencyPreference', {payload: currencyResponse});
                     }).catch(err => {
-                    console.log('Got error response.');
+                    // console.log('Got error response.');
                     console.error(err);
                     context.commit('setCurrencyPreference', {
-                        id: 1,
-                        name: 'Euro',
-                        symbol: '€',
-                        code: 'EUR',
-                        decimal_places: 2
+                        payload: {
+                            id: 1,
+                            name: 'Euro',
+                            symbol: '€',
+                            code: 'EUR',
+                            decimal_places: 2
+                        }
                     });
                 });
 
