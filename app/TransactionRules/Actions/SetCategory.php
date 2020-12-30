@@ -52,6 +52,10 @@ class SetCategory implements ActionInterface
     {
         $user = User::find($journal['user_id']);
         $search = $this->action->action_value;
+        if(null === $user) {
+            Log::error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
+            return false;
+        }
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);
