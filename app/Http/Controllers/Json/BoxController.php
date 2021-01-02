@@ -97,7 +97,8 @@ class BoxController extends Controller
         // also calculate spent per day.
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
         $spentAmount = $spent[(int) $currency->id]['sum'] ?? '0';
-        $days        = min( $today->diffInDays($start), $end->diffInDays($start) ) + 1;
+
+        $days = $today->between($start, $end) ? $today->diffInDays($start) + 1  : $end->diffInDays($start) + 1;
         $spentPerDay = bcdiv($spentAmount, (string) $days);
         if ($availableBudgets->count() > 0) {
             $display           = 0; // assume user overspent
