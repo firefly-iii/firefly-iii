@@ -3,9 +3,10 @@
         "Transfer": "Transfer",
         "Withdrawal": "Wyp\u0142ata",
         "Deposit": "Wp\u0142ata",
-        "date_and_time": "Date and time",
+        "date_and_time": "Data i czas",
+        "no_currency": "(brak waluty)",
         "date": "Data",
-        "time": "Time",
+        "time": "Czas",
         "no_budget": "(brak bud\u017cetu)",
         "destination_account": "Konto docelowe",
         "source_account": "Konto \u017ar\u00f3d\u0142owe",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "pl"
+    },
+    "form": {
+        "foreign_amount": "Kwota zagraniczna",
+        "interest_date": "Data odsetek",
+        "book_date": "Data ksi\u0119gowania",
+        "process_date": "Data przetworzenia",
+        "due_date": "Termin realizacji",
+        "payment_date": "Data p\u0142atno\u015bci",
+        "invoice_date": "Data faktury"
     }
 }

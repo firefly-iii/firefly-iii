@@ -4,6 +4,7 @@
         "Withdrawal": "Ausgabe",
         "Deposit": "Einnahme",
         "date_and_time": "Datum und Uhrzeit",
+        "no_currency": "(ohne W\u00e4hrung)",
         "date": "Datum",
         "time": "Uhrzeit",
         "no_budget": "(kein Budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "de"
+    },
+    "form": {
+        "foreign_amount": "Ausl\u00e4ndischer Betrag",
+        "interest_date": "Zinstermin",
+        "book_date": "Buchungsdatum",
+        "process_date": "Bearbeitungsdatum",
+        "due_date": "F\u00e4lligkeitstermin",
+        "payment_date": "Zahlungsdatum",
+        "invoice_date": "Rechnungsdatum"
     }
 }

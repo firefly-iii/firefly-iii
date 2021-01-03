@@ -4,6 +4,7 @@
         "Withdrawal": "\u63d0\u6b3e",
         "Deposit": "\u5b58\u6b3e",
         "date_and_time": "Date and time",
+        "no_currency": "(\u6ca1\u6709\u8d27\u5e01)",
         "date": "\u65e5\u671f",
         "time": "Time",
         "no_budget": "(\u65e0\u9884\u7b97)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "zh-cn"
+    },
+    "form": {
+        "foreign_amount": "\u5916\u5e01\u91d1\u989d",
+        "interest_date": "\u5229\u7387\u65e5\u671f",
+        "book_date": "\u767b\u8bb0\u65e5\u671f",
+        "process_date": "\u5904\u7406\u65e5\u671f",
+        "due_date": "\u5230\u671f\u65e5",
+        "payment_date": "\u4ed8\u6b3e\u65e5\u671f",
+        "invoice_date": "\u53d1\u7968\u65e5\u671f"
     }
 }

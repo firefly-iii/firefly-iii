@@ -29,6 +29,7 @@
           :data="descriptions"
           :placeholder="$t('firefly.description')"
           :showOnFocus=true
+          autofocus
           :minMatchingChars="3"
           :serializer="item => item.description"
           @hit="selectedDescription = $event"

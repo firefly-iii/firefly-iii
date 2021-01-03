@@ -28,8 +28,16 @@ const state = () => ({
         transactions: [],
         allowedOpposingTypes: {},
         accountToTransaction: {},
-        sourceAllowedTypes: ['Asset account','Loan','Debt','Mortgage','Revenue account'],
-        destinationAllowedTypes: ['Asset account','Loan','Debt','Mortgage','Expense account'],
+        sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
+        destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
+        customDateFields: {
+            interest_date: false,
+            book_date: false,
+            process_date: false,
+            due_date: false,
+            payment_date: false,
+            invoice_date: false,
+        },
         defaultTransaction: {
             // basic
             description: '',
@@ -57,10 +65,22 @@ const state = () => ({
                 currency_decimal_places: 2
             },
 
-            source_allowed_types: ['Asset account', 'Revenue account', 'Loan', 'Debt', 'Mortgage'],
+            // amount:
+            amount: '',
+            currency_id: 0,
+            foreign_amount: '',
+            foreign_currency_id: 0,
 
             // meta data
-            budget_id: 0
+            budget_id: 0,
+
+            // optional date fields (6x):
+            interest_date: null,
+            book_date: null,
+            process_date: null,
+            due_date: null,
+            payment_date: null,
+            invoice_date: null,
         },
     }
 )
@@ -86,6 +106,9 @@ const getters = {
     allowedOpposingTypes: state => {
         return state.allowedOpposingTypes;
     },
+    customDateFields: state => {
+        return state.customDateFields;
+    }
     // // `getters` is localized to this module's getters
     // // you can use rootGetters via 4th argument of getters
     // someGetter (state, getters, rootState, rootGetters) {
@@ -123,13 +146,13 @@ const actions = {
             }
         }
         // console.log('Found no type for ' + source.type + ' --> ' + dest.type);
-        if('Asset account' !== source.type) {
+        if ('Asset account' !== source.type) {
             console.log('Drop ID from source. TODO');
             // source.id =null
             // context.commit('updateField', {field: 'source_account',index: })
             // context.state.transactions[0].source_account.id = null;
         }
-        if('Asset account' !== dest.type) {
+        if ('Asset account' !== dest.type) {
             console.log('Drop ID from destination. TODO');
             //context.state.transactions[0].destination_account.id = null;
         }
@@ -143,6 +166,9 @@ const mutations = {
     addTransaction(state) {
         let newTransaction = lodashClonedeep(state.defaultTransaction);
         state.transactions.push(newTransaction);
+    },
+    setCustomDateFields(state, payload) {
+        state.customDateFields = payload;
     },
     deleteTransaction(state, index) {
         state.transactions.splice(index, 1);

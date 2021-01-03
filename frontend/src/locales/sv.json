@@ -4,6 +4,7 @@
         "Withdrawal": "Uttag",
         "Deposit": "Ins\u00e4ttning",
         "date_and_time": "Date and time",
+        "no_currency": "(ingen valuta)",
         "date": "Datum",
         "time": "Time",
         "no_budget": "(ingen budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "sv"
+    },
+    "form": {
+        "foreign_amount": "Utl\u00e4ndskt belopp",
+        "interest_date": "R\u00e4ntedatum",
+        "book_date": "Bokf\u00f6ringsdatum",
+        "process_date": "Behandlingsdatum",
+        "due_date": "F\u00f6rfallodatum",
+        "payment_date": "Betalningsdatum",
+        "invoice_date": "Fakturadatum"
     }
 }

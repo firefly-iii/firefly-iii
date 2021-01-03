@@ -4,6 +4,7 @@
         "Withdrawal": "D\u00e9pense",
         "Deposit": "D\u00e9p\u00f4t",
         "date_and_time": "Date et heure",
+        "no_currency": "(pas de devise)",
         "date": "Date",
         "time": "Heure",
         "no_budget": "(pas de budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "fr"
+    },
+    "form": {
+        "foreign_amount": "Montant en devise \u00e9trang\u00e8re",
+        "interest_date": "Date de valeur (int\u00e9r\u00eats)",
+        "book_date": "Date de r\u00e9servation",
+        "process_date": "Date de traitement",
+        "due_date": "\u00c9ch\u00e9ance",
+        "payment_date": "Date de paiement",
+        "invoice_date": "Date de facturation"
     }
 }

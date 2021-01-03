@@ -4,6 +4,7 @@
         "Withdrawal": "Prelievo",
         "Deposit": "Entrata",
         "date_and_time": "Data e ora",
+        "no_currency": "(nessuna valuta)",
         "date": "Data",
         "time": "Ora",
         "no_budget": "(nessun budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "it"
+    },
+    "form": {
+        "foreign_amount": "Importo estero",
+        "interest_date": "Data di valuta",
+        "book_date": "Data contabile",
+        "process_date": "Data elaborazione",
+        "due_date": "Data scadenza",
+        "payment_date": "Data pagamento",
+        "invoice_date": "Data fatturazione"
     }
 }

@@ -4,6 +4,7 @@
         "Withdrawal": "\u0420\u0430\u0441\u0445\u043e\u0434",
         "Deposit": "\u0414\u043e\u0445\u043e\u0434",
         "date_and_time": "Date and time",
+        "no_currency": "(\u043d\u0435\u0442 \u0432\u0430\u043b\u044e\u0442\u044b)",
         "date": "\u0414\u0430\u0442\u0430",
         "time": "Time",
         "no_budget": "(\u0432\u043d\u0435 \u0431\u044e\u0434\u0436\u0435\u0442\u0430)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "ru"
+    },
+    "form": {
+        "foreign_amount": "\u0421\u0443\u043c\u043c\u0430 \u0432 \u0438\u043d\u043e\u0441\u0442\u0440\u0430\u043d\u043d\u043e\u0439 \u0432\u0430\u043b\u044e\u0442\u0435",
+        "interest_date": "\u0414\u0430\u0442\u0430 \u0432\u044b\u043f\u043b\u0430\u0442\u044b",
+        "book_date": "\u0414\u0430\u0442\u0430 \u0431\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+        "process_date": "\u0414\u0430\u0442\u0430 \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438",
+        "due_date": "\u0421\u0440\u043e\u043a",
+        "payment_date": "\u0414\u0430\u0442\u0430 \u043f\u043b\u0430\u0442\u0435\u0436\u0430",
+        "invoice_date": "\u0414\u0430\u0442\u0430 \u0432\u044b\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u0441\u0447\u0451\u0442\u0430"
     }
 }

@@ -23,16 +23,17 @@
     <div class="text-xs">{{ $t('firefly.amount') }}</div>
     <div class="input-group">
       <div class="input-group-prepend">
-        <div class="input-group-text">{{ this.currencySymbol }}</div>
+        <div class="input-group-text">{{ currencySymbol }}</div>
       </div>
+      <input type="hidden" name="currency_id[]" :value="currencyId"/>
       <input
-          title="Amount"
+          :title="$t('firefly.amount')"
           autocomplete="off"
-          autofocus
           class="form-control"
           name="amount[]"
           type="number"
-          placeholder="Amount"
+          v-model="amount"
+          :placeholder="$t('firefly.amount')"
       >
     </div>
   </div>
@@ -48,26 +49,65 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 
 export default {
   name: "TransactionAmount",
+  props: ['index'],
   data() {
     return {
-      currencySymbol: '',
+      currencySymbol: ''
     }
   },
   watch: {
-    selectedTransactionType: function (value) {
-      console.log('TransactionAmount just noticed transaction type is now ' + value);
-    }
+    transactionType: function (value) {
+      switch (value) {
+        case 'Transfer':
+        case 'Withdrawal':
+          // take currency from source:
+          this.currencyId = this.transactions[this.index].source_account.currency_id;
+          this.currencySymbol = this.transactions[this.index].source_account.currency_symbol;
+          return;
+        case 'Deposit':
+          // take currency from destination:
+          this.currencyId = this.transactions[this.index].destination_account.currency_id;
+          this.currencySymbol = this.transactions[this.index].destination_account.currency_symbol;
+          return;
+      }
+    },
+    destinationAllowedTypes: function (value) {
+      // aka source was updated. if source is asset/loan/debt/mortgage use it to set the currency:
+      if ('undefined' !== typeof this.transactions[this.index].source_account.type) {
+        if (['Asset account', 'Loan', 'Debt', 'Mortgage'].indexOf(this.transactions[this.index].source_account.type) !== -1) {
+          // get currency pref from source account
+          this.currencyId = this.transactions[this.index].source_account.currency_id;
+          this.currencySymbol = this.transactions[this.index].source_account.currency_symbol;
+        }
+      }
+    },
+    sourceAllowedTypes: function (value) {
+      // aka destination was updated. if destination is asset/loan/debt/mortgage use it to set the currency:
+      // unless its already known to be a transfer
+      if ('undefined' !== typeof this.transactions[this.index].destination_account.type && 'Transfer' !== this.transactionType) {
+        if (['Asset account', 'Loan', 'Debt', 'Mortgage'].indexOf(this.transactions[this.index].destination_account.type) !== -1) {
+          // get currency pref from destination account
+          this.currencyId = this.transactions[this.index].destination_account.currency_id;
+          this.currencySymbol = this.transactions[this.index].destination_account.currency_symbol;
+        }
+      }
+    },
+
   },
-  created: function() {
-    console.log('TransactionAmount is created.');
+  created: function () {
     this.updateCurrency();
   },
   methods: {
-    updateCurrency: function() {
-      if('any' === this.transactionType) {
+    ...mapMutations(
+        [
+          'updateField',
+        ],
+    ),
+    updateCurrency: function () {
+      if (0 === this.currencyId) {
         // use default currency from store.
         this.currencySymbol = this.currencyPreference.symbol;
-
+        this.currencyId = this.currencyPreference.id;
       }
     }
   },
@@ -80,7 +120,25 @@ export default {
     ...mapGetters([
                     'transactionType',
                     'transactions',
+                    'destinationAllowedTypes',
+                    'sourceAllowedTypes',
                   ]),
+    amount: {
+      get() {
+        return this.transactions[this.index].amount;
+      },
+      set(value) {
+        this.updateField({field: 'amount', index: this.index, value: value});
+      }
+    },
+    currencyId: {
+      get() {
+        return this.transactions[this.index].currency_id;
+      },
+      set(value) {
+        this.updateField({field: 'currency_id', index: this.index, value: value});
+      }
+    },
     selectedTransactionType: {
       get() {
         return this.transactionType;

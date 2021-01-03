@@ -4,6 +4,7 @@
         "Withdrawal": "Uttak",
         "Deposit": "Innskudd",
         "date_and_time": "Date and time",
+        "no_currency": "(ingen valuta)",
         "date": "Dato",
         "time": "Time",
         "no_budget": "(ingen budsjett)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "nb"
+    },
+    "form": {
+        "foreign_amount": "Utenlandske bel\u00f8p",
+        "interest_date": "Rentedato",
+        "book_date": "Bokf\u00f8ringsdato",
+        "process_date": "Prosesseringsdato",
+        "due_date": "Forfallsdato",
+        "payment_date": "Betalingsdato",
+        "invoice_date": "Fakturadato"
     }
 }

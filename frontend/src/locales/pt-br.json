@@ -4,6 +4,7 @@
         "Withdrawal": "Retirada",
         "Deposit": "Dep\u00f3sito",
         "date_and_time": "Data e hora",
+        "no_currency": "(sem moeda)",
         "date": "Data",
         "time": "Hor\u00e1rio",
         "no_budget": "(sem or\u00e7amento)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "pt-br"
+    },
+    "form": {
+        "foreign_amount": "Montante em moeda estrangeira",
+        "interest_date": "Data de interesse",
+        "book_date": "Data reserva",
+        "process_date": "Data de processamento",
+        "due_date": "Data de vencimento",
+        "payment_date": "Data de pagamento",
+        "invoice_date": "Data da Fatura"
     }
 }

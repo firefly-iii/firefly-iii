@@ -4,6 +4,7 @@
         "Withdrawal": "V\u00fdber",
         "Deposit": "Vklad",
         "date_and_time": "Date and time",
+        "no_currency": "(\u017eiadna mena)",
         "date": "D\u00e1tum",
         "time": "Time",
         "no_budget": "(\u017eiadny rozpo\u010det)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "sk"
+    },
+    "form": {
+        "foreign_amount": "Suma v cudzej mene",
+        "interest_date": "\u00darokov\u00fd d\u00e1tum",
+        "book_date": "D\u00e1tum rezerv\u00e1cie",
+        "process_date": "D\u00e1tum spracovania",
+        "due_date": "D\u00e1tum splatnosti",
+        "payment_date": "D\u00e1tum \u00fahrady",
+        "invoice_date": "D\u00e1tum vystavenia"
     }
 }

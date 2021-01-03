@@ -4,6 +4,7 @@
         "Withdrawal": "K\u00f6lts\u00e9g",
         "Deposit": "Bev\u00e9tel",
         "date_and_time": "Date and time",
+        "no_currency": "(nincs p\u00e9nznem)",
         "date": "D\u00e1tum",
         "time": "Time",
         "no_budget": "(nincs k\u00f6lts\u00e9gkeret)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "hu"
+    },
+    "form": {
+        "foreign_amount": "K\u00fclf\u00f6ldi \u00f6sszeg",
+        "interest_date": "Kamatfizet\u00e9si id\u0151pont",
+        "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
+        "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
+        "due_date": "Lej\u00e1rati id\u0151pont",
+        "payment_date": "Fizet\u00e9s d\u00e1tuma",
+        "invoice_date": "Sz\u00e1mla d\u00e1tuma"
     }
 }

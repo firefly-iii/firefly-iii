@@ -4,6 +4,7 @@
         "Withdrawal": "Retragere",
         "Deposit": "Depozit",
         "date_and_time": "Date and time",
+        "no_currency": "(nici o moned\u0103)",
         "date": "Dat\u0103",
         "time": "Time",
         "no_budget": "(nici un buget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "ro"
+    },
+    "form": {
+        "foreign_amount": "Sum\u0103 str\u0103in\u0103",
+        "interest_date": "Data de interes",
+        "book_date": "Rezerv\u0103 dat\u0103",
+        "process_date": "Data proces\u0103rii",
+        "due_date": "Data scadent\u0103",
+        "payment_date": "Data de plat\u0103",
+        "invoice_date": "Data facturii"
     }
 }

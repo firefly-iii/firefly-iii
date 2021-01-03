@@ -4,6 +4,7 @@
         "Withdrawal": "Nosto",
         "Deposit": "Talletus",
         "date_and_time": "Date and time",
+        "no_currency": "(ei valuuttaa)",
         "date": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
         "time": "Time",
         "no_budget": "(ei budjettia)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "fi"
+    },
+    "form": {
+        "foreign_amount": "Ulkomaan summa",
+        "interest_date": "Korkop\u00e4iv\u00e4",
+        "book_date": "Kirjausp\u00e4iv\u00e4",
+        "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
+        "due_date": "Er\u00e4p\u00e4iv\u00e4",
+        "payment_date": "Maksup\u00e4iv\u00e4",
+        "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
     }
 }

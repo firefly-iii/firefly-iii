@@ -3,18 +3,19 @@
         "Transfer": "Transferencia",
         "Withdrawal": "Retiro",
         "Deposit": "Dep\u00f3sito",
-        "date_and_time": "Date and time",
+        "date_and_time": "Fecha y hora",
+        "no_currency": "(sin moneda)",
         "date": "Fecha",
-        "time": "Time",
+        "time": "Hora",
         "no_budget": "(sin presupuesto)",
         "destination_account": "Cuenta destino",
         "source_account": "Cuenta origen",
         "single_split": "Divisi\u00f3n",
-        "create_new_transaction": "Create a new transaction",
+        "create_new_transaction": "Crear una nueva transacci\u00f3n",
         "balance": "Balance",
-        "transaction_journal_extra": "Extra information",
+        "transaction_journal_extra": "Informaci\u00f3n adicional",
         "transaction_journal_meta": "Informaci\u00f3n Meta",
-        "basic_journal_information": "Basic transaction information",
+        "basic_journal_information": "Informaci\u00f3n b\u00e1sica de transacci\u00f3n",
         "bills_to_pay": "Facturas por pagar",
         "left_to_spend": "Disponible para gastar",
         "net_worth": "Valor Neto",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "es"
+    },
+    "form": {
+        "foreign_amount": "Cantidad extranjera",
+        "interest_date": "Fecha de inter\u00e9s",
+        "book_date": "Fecha de registro",
+        "process_date": "Fecha de procesamiento",
+        "due_date": "Fecha de vencimiento",
+        "payment_date": "Fecha de pago",
+        "invoice_date": "Fecha de la factura"
     }
 }

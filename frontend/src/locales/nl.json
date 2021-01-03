@@ -4,6 +4,7 @@
         "Withdrawal": "Uitgave",
         "Deposit": "Inkomsten",
         "date_and_time": "Datum en tijd",
+        "no_currency": "(geen valuta)",
         "date": "Datum",
         "time": "Tijd",
         "no_budget": "(geen budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "nl"
+    },
+    "form": {
+        "foreign_amount": "Bedrag in vreemde valuta",
+        "interest_date": "Rentedatum",
+        "book_date": "Boekdatum",
+        "process_date": "Verwerkingsdatum",
+        "due_date": "Vervaldatum",
+        "payment_date": "Betalingsdatum",
+        "invoice_date": "Factuurdatum"
     }
 }

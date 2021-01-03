@@ -60,7 +60,7 @@ return [
     'delete_journal_link'    => 'Удалить связь между транзакциями',
     'telemetry_index'        => 'Телеметрия',
     'telemetry_view'         => 'Просмотр телеметрии',
-    'edit_object_group'      => 'Изменить группу ":title"',
+    'edit_object_group'      => 'Редактировать группу ":title"',
     'delete_object_group'    => 'Удалить группу ":title"',
     'logout_others'          => 'Завершить другие сессии'
 ];

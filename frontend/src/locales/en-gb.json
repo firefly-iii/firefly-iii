@@ -4,6 +4,7 @@
         "Withdrawal": "Withdrawal",
         "Deposit": "Deposit",
         "date_and_time": "Date and time",
+        "no_currency": "(no currency)",
         "date": "Date",
         "time": "Time",
         "no_budget": "(no budget)",
@@ -74,5 +75,14 @@
     },
     "config": {
         "html_language": "en-gb"
+    },
+    "form": {
+        "foreign_amount": "Foreign amount",
+        "interest_date": "Interest date",
+        "book_date": "Book date",
+        "process_date": "Processing date",
+        "due_date": "Due date",
+        "payment_date": "Payment date",
+        "invoice_date": "Invoice date"
     }
 }

@@ -56,7 +56,6 @@
             </div>
 
 
-
             <!-- source and destination -->
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
@@ -70,7 +69,7 @@
               <!-- switcharoo! -->
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
                 <SwitchAccount
-                :index="index"
+                    :index="index"
                 />
               </div>
 
@@ -89,22 +88,16 @@
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
                 <!-- AMOUNT -->
-                <TransactionAmount />
+                <TransactionAmount :index="index"/>
                 <!--
 
                 -->
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
-                <!-- SELECT FOR FOREIGN -->
-                <!--
-                (select)
-                -->
+                <TransactionForeignCurrency :index="index"/>
               </div>
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                <!-- FOREIGN AMOUNT -->
-                <!--
-                Foreign
-                -->
+                <TransactionForeignAmount :index="index"/>
               </div>
             </div>
 
@@ -119,23 +112,7 @@
               </div>
 
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
-                <!-- TODO other time slots -->
-                <div class="form-group">
-                  <div class="text-xs d-none d-lg-block d-xl-block">
-                    other dates
-                  </div>
-                  <div class="input-group">
-                    <input class="form-control" type="date" value="2020-12-12">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="text-xs d-none d-lg-block d-xl-block">
-                    other dates
-                  </div>
-                  <div class="input-group">
-                    <input class="form-control" type="date" value="2020-12-12">
-                  </div>
-                </div>
+                <TransactionCustomDates :index="index" :enabled-dates="customDateFields"/>
               </div>
             </div>
 
@@ -206,7 +183,6 @@
                   <input
                       title="Category"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -219,7 +195,6 @@
                   <input
                       title="Bill"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -230,7 +205,6 @@
                   <input
                       title="Tags"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -241,7 +215,6 @@
                   <input
                       title="Piggy"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -259,7 +232,6 @@
                   <input
                       title="internal ref"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -270,7 +242,6 @@
                   <input
                       title="Piggy"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -286,7 +257,6 @@
                   <input
                       title="Piggy"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -297,7 +267,6 @@
                   <input
                       title="Piggy"
                       autocomplete="off"
-                      autofocus
                       class="form-control"
                       name="something[]"
                       type="text"
@@ -346,16 +315,24 @@ import {createNamespacedHelpers} from 'vuex'
 import TransactionAccount from "./TransactionAccount";
 import SwitchAccount from "./SwitchAccount";
 import TransactionAmount from "./TransactionAmount";
+import TransactionForeignAmount from "./TransactionForeignAmount";
+import TransactionForeignCurrency from "./TransactionForeignCurrency";
+import TransactionCustomDates from "./TransactionCustomDates";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 
 export default {
   name: "Create",
-  components: {TransactionAmount, SwitchAccount, TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate},
+  components: {
+    TransactionCustomDates,
+    TransactionForeignCurrency,
+    TransactionForeignAmount, TransactionAmount, SwitchAccount, TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate
+  },
   created() {
     this.storeAllowedOpposingTypes();
     this.storeAccountToTransaction();
+    this.storeCustomDateFields();
     this.addTransaction();
   },
   data() {
@@ -368,6 +345,7 @@ export default {
     ...mapGetters([
                     'transactionType', // -> this.someGetter
                     'transactions', // -> this.someOtherGetter
+                    'customDateFields'
                   ])
   },
   methods: {
@@ -379,13 +357,36 @@ export default {
           'setAccountToTransaction',
         ],
     ),
+    storeCustomDateFields: function () {
+      // TODO may include all custom fields in the future.
+      axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
+        let fields = response.data.data.attributes.data;
+        let allDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+        let selectedDateFields = {
+          interest_date: false,
+          book_date: false,
+          process_date: false,
+          due_date: false,
+          payment_date: false,
+          invoice_date: false,
+        };
+        for (let key in fields) {
+          if (fields.hasOwnProperty(key)) {
+            if(-1 !== allDateFields.indexOf(key)) {
+              selectedDateFields[key] = fields[key];
+            }
+          }
+        }
+        this.$store.commit('transactions/create/setCustomDateFields', selectedDateFields);
+      });
+    },
     /**
      *
      */
     storeAllowedOpposingTypes: function () {
       this.setAllowedOpposingTypes(window.allowedOpposingTypes);
     },
-    storeAccountToTransaction: function() {
+    storeAccountToTransaction: function () {
       this.setAccountToTransaction(window.accountToTransaction);
     },
     /**
@@ -428,13 +429,20 @@ export default {
       let currentSplit = {
         // basic
         description: array.description,
-        date: array.date + ' ' + array.time,
+        date: (array.date + ' ' + array.time).trim(),
 
         // account
         source_id: array.source_account.id ?? null,
         source_name: array.source_account.name ?? null,
         destination_id: array.destination_account.id ?? null,
         destination_name: array.destination_account.name ?? null,
+
+        // amount:
+        currency_id: array.currency_id,
+        amount: array.amount,
+        foreign_currency_id: array.foreign_currency_id,
+        foreign_amount: array.foreign_amount,
+
 
         // meta
         budget_id: array.budget_id,
