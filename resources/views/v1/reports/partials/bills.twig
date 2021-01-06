@@ -15,10 +15,10 @@
                 <td>
                     <a href="{{ route('bills.show',bill.id) }}">{{ bill.name }}</a>
                 </td>
-                <td style="text-align:right;">
+                <td class="hidden-xs" style="text-align:right;">
                     {{ formatAmountBySymbol(bill.amount_min, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
-                <td style="text-align:right;">
+                <td class="hidden-xs" style="text-align:right;">
                     {{ formatAmountBySymbol(bill.amount_max, bill.currency_symbol, bill.currency_decimal_places) }}
                 </td>
                 <td data-value="{{ bill.expected_dates[0].format('Y-m-d')|default('0000-00-00') }}">
