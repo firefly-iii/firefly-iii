@@ -57,7 +57,7 @@ if (!function_exists('limitStringLength')) {
         $length   = \strlen($string);
         $result   = $string;
         if ($length > $maxChars) {
-            $result = substr_replace($string, ' ... ', $maxChars / 2, $length - $maxChars);
+            $result = substr_replace($string, ' ... ', (int)($maxChars / 2), $length - $maxChars);
         }
 
         return $result;
