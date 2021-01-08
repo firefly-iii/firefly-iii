@@ -458,7 +458,7 @@ Route::group(
         Route::get('budget/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']);
         Route::get('source/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@sourceExpense', 'as' => 'source-expense']);
         Route::get('source/income/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@sourceIncome', 'as' => 'source-income']);
-        Route::get('dest/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'tagReportController@destinationExpense', 'as' => 'dest-expense']);
+        Route::get('dest/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@destinationExpense', 'as' => 'dest-expense']);
         Route::get('dest/income/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@destinationIncome', 'as' => 'dest-income']);
 
         Route::get('operations/{accountList}/{tag}/{start_date}/{end_date}', ['uses' => 'TagReportController@mainChart', 'as' => 'main']);
