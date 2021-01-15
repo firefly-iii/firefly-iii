@@ -82,7 +82,7 @@ class Webhook extends Model
     // delivery
     public const DELIVERY_JSON = 300;
 
-    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'url'];
+    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'url', 'title', 'secret'];
 
     protected $casts
         = [

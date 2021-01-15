@@ -57,6 +57,7 @@ class UpdateRequest extends FormRequest
         $return['trigger']  = $triggers[$return['trigger']] ?? 0;
         $return['response'] = $responses[$return['response']] ?? 0;
         $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
+        $return['secret']   = null !== $this->get('secret');
 
         return $return;
     }
@@ -74,7 +75,7 @@ class UpdateRequest extends FormRequest
         $webhook    = $this->route()->parameter('webhook');
 
         return [
-            'title'    => 'between:1,512',
+            'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
             'active'   => [new IsBoolean],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),

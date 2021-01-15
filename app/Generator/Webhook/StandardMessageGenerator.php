@@ -53,6 +53,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     public function generateMessages(): void
     {
+        Log::debug(__METHOD__);
         // get the webhooks:
         $this->webhooks = $this->getWebhooks();
 
@@ -105,6 +106,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         foreach ($this->webhooks as $webhook) {
             $this->runWebhook($webhook);
         }
+        Log::debug('Done with StandardMessageGenerator::run');
     }
 
     /**

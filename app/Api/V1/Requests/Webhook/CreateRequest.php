@@ -73,7 +73,7 @@ class CreateRequest extends FormRequest
         $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
 
         return [
-            'title'    => 'between:1,512',
+            'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),

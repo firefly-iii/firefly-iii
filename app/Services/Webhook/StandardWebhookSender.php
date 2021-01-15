@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Webhook;
 
+use Exception;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
+use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -68,12 +70,17 @@ class StandardWebhookSender implements WebhookSenderInterface
         try {
             $json = json_encode($this->message->message, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            // TODO throw Firefly Exception
-            //            $attempt = new WebhookAttempt;
-            //            $attempt->webhookMessage()->associate($this->message);
-            //            $attempt->status_code = 0;
-            //            $attempt->logs        = sprintf('Json error: %s', $e->getMessage());
-            //            $attempt->save();
+            Log::error('Did not send message because of a JSON error.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $attempt = new WebhookAttempt;
+            $attempt->webhookMessage()->associate($this->message);
+            $attempt->status_code = 0;
+            $attempt->logs        = sprintf('Json error: %s', $e->getMessage());
+            $attempt->save();
+            $this->message->errored = true;
+            $this->message->sent    = false;
+            $this->message->save();
 
             return;
         }
@@ -89,7 +96,6 @@ class StandardWebhookSender implements WebhookSenderInterface
             ],
         ];
         $client  = new Client;
-        //$logs    = $this->message->logs ?? [];
         try {
             $res                 = $client->request('POST', $this->message->webhook->url, $options);
             $this->message->sent = true;
@@ -99,22 +105,13 @@ class StandardWebhookSender implements WebhookSenderInterface
             //$logs[]           = sprintf('%s: %s', date('Y-m-d H:i:s'), $e->getMessage());
             $this->message->errored = true;
             $this->message->sent    = false;
+            $this->message->save();
+            return;
         }
         $this->message->save();
-
-        //        $attempt = new WebhookAttempt;
-        //        $attempt->webhookMessage()->associate($this->message);
-        //        $attempt->status_code = $res->getStatusCode();
-        //        $attempt->logs        = '';
-        //        $attempt->response    = (string)$res->getBody();
-        //        $attempt->save();
 
         Log::debug(sprintf('Webhook message #%d was sent. Status code %d', $this->message->id, $res->getStatusCode()));
         Log::debug(sprintf('Webhook request body size: %d bytes', strlen($json)));
         Log::debug(sprintf('Response body: %s', $res->getBody()));
-
-        //$sender
-
-        //$this->sendMessageV0($this->message);
     }
 }

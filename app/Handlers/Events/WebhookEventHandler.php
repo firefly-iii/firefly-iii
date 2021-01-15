@@ -37,7 +37,7 @@ class WebhookEventHandler
      */
     public function sendWebhookMessages(): void
     {
-        // kick offf the job!
+        // kick off the job!
         $messages = WebhookMessage
             ::where('webhook_messages.sent', 0)
             ->where('webhook_messages.errored', 0)

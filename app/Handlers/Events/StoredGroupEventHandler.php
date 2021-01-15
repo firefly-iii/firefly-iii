@@ -86,7 +86,7 @@ class StoredGroupEventHandler
      */
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
-        Log::debug('StoredTransactionGroup:triggerWebhooks');
+        Log::debug(__METHOD__);
         $group    = $storedGroupEvent->transactionGroup;
         $user     = $group->user;
         /** @var MessageGeneratorInterface $engine */

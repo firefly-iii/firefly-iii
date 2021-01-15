@@ -55,6 +55,7 @@ class WebhookTransformer extends AbstractTransformer
             'updated_at' => $webhook->updated_at->toAtomString(),
             'active'     => $webhook->active,
             'title'      => $webhook->title,
+            'secret'     => $webhook->secret,
             'trigger'    => $this->getEnum($webhook->trigger),
             'response'   => $this->getEnum($webhook->response),
             'delivery'   => $this->getEnum($webhook->delivery),

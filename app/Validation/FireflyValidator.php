@@ -655,6 +655,7 @@ class FireflyValidator extends Validator
                                 ->where('id', '!=', $existingId)
                                 ->where('url', $url)->count();
         }
+
         return false;
     }
 

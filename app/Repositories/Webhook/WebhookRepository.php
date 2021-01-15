@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Webhook;
 use FireflyIII\Models\Webhook;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Str;
 
 /**
  * Class WebhookRepository
@@ -54,6 +55,7 @@ class WebhookRepository implements WebhookRepositoryInterface
      */
     public function store(array $data): Webhook
     {
+        $secret   = $random = Str::random(24);
         $fullData = [
             'user_id'  => $this->user->id,
             'active'   => $data['active'] ?? false,
@@ -61,6 +63,7 @@ class WebhookRepository implements WebhookRepositoryInterface
             'trigger'  => $data['trigger'],
             'response' => $data['response'],
             'delivery' => $data['delivery'],
+            'secret'   => $secret,
             'url'      => $data['url'],
         ];
 
@@ -77,6 +80,12 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->response = $data['response'] ?? $webhook->response;
         $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
         $webhook->url      = $data['url'] ?? $webhook->url;
+
+        if (array_key_exists('secret', $data) && null !== $data['secret']) {
+            $secret          = $random = Str::random(24);
+            $webhook->secret = $secret;
+        }
+
         $webhook->save();
 
         return $webhook;

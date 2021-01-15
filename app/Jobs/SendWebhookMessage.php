@@ -23,7 +23,7 @@ class SendWebhookMessage implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param WebhookMessage $message
      */
     public function __construct(WebhookMessage $message)
     {
