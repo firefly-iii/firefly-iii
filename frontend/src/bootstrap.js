@@ -18,12 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// imports
+// // imports
 import Vue from 'vue';
 import VueI18n from 'vue-i18n'
 import * as uiv from 'uiv';
-
-Vue.config.productionTip = false;
 
 // export jquery for others scripts to use
 window.$ = window.jQuery = require('jquery');

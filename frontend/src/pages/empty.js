@@ -18,20 +18,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Dashboard from "../components/dashboard/Dashboard";
-import TopBoxes from "../components/dashboard/TopBoxes";
-import MainAccount from "../components/dashboard/MainAccount";
-import MainAccountList from "../components/dashboard/MainAccountList";
-import MainBillsList from "../components/dashboard/MainBillsList";
-import MainBudget from "../components/dashboard/MainBudget";
-import MainCategory from "../components/dashboard/MainCategory";
-import MainCredit from "../components/dashboard/MainCredit";
-import MainDebit from "../components/dashboard/MainDebit";
-import MainPiggyList from "../components/dashboard/MainPiggyList";
-import TransactionListLarge from "../components/transactions/TransactionListLarge";
-import TransactionListMedium from "../components/transactions/TransactionListMedium";
-import TransactionListSmall from "../components/transactions/TransactionListSmall";
-
 /**
  * First we will load Axios via bootstrap.js
  * jquery and bootstrap-sass preloaded in app.js
