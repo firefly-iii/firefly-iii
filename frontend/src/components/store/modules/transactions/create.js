@@ -73,6 +73,9 @@ const state = () => ({
 
             // meta data
             budget_id: 0,
+            bill_id: 0,
+            piggy_bank_id: 0,
+            tags: [],
 
             // optional date fields (6x):
             interest_date: null,
@@ -81,6 +84,11 @@ const state = () => ({
             due_date: null,
             payment_date: null,
             invoice_date: null,
+
+            // optional other fields:
+            internal_reference: null,
+            external_url: null,
+            notes: null
         },
     }
 )
@@ -148,6 +156,7 @@ const actions = {
         // console.log('Found no type for ' + source.type + ' --> ' + dest.type);
         if ('Asset account' !== source.type) {
             console.log('Drop ID from source. TODO');
+
             // source.id =null
             // context.commit('updateField', {field: 'source_account',index: })
             // context.state.transactions[0].source_account.id = null;
@@ -170,8 +179,8 @@ const mutations = {
     setCustomDateFields(state, payload) {
         state.customDateFields = payload;
     },
-    deleteTransaction(state, index) {
-        state.transactions.splice(index, 1);
+    deleteTransaction(state, payload) {
+        state.transactions.splice(payload.index, 1);
     },
     setTransactionType(state, transactionType) {
         state.transactionType = transactionType;

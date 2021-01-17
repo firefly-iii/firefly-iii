@@ -23,55 +23,29 @@
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.description') }}
     </div>
-      <vue-typeahead-bootstrap
-          inputName="description[]"
-          v-model="query"
-          :data="descriptions"
-          :placeholder="$t('firefly.description')"
-          :showOnFocus=true
-          autofocus
-          :minMatchingChars="3"
-          :serializer="item => item.description"
-          @hit="selectedDescription = $event"
-          @input="lookupDescription"
-      >
-        <template slot="append">
-          <div class="input-group-append">
-            <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
-          </div>
-        </template>
-      </vue-typeahead-bootstrap>
-
-
-      <!--
-      <vue-typeahead-bootstrap
+    <vue-typeahead-bootstrap
+        inputName="description[]"
         v-model="description"
         :data="descriptions"
-        :serializer="item => item.name_with_balance"
-        @hit="selectedAccount = $event"
-        :placeholder="$t('firefly.' + this.direction + '_account')"
-        @input="lookupAccount"
-        >
-      </vue-typeahead-bootstrap>
-      <input
-          ref="description"
-          :title="$t('firefly.description')"
-          v-model="description"
-          autocomplete="off"
-          autofocus
-          class="form-control"
-          name="description[]"
-          type="text"
-          :placeholder="$t('firefly.description')"
-          v-on:submit.prevent
-      >
-
-      -->
+        :placeholder="$t('firefly.description')"
+        :showOnFocus=true
+        autofocus
+        :minMatchingChars="3"
+        :serializer="item => item.description"
+        @input="lookupDescription"
+    >
+      <template slot="append">
+        <div class="input-group-append">
+          <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+        </div>
+      </template>
+    </vue-typeahead-bootstrap>
   </div>
 
 </template>
 
 <script>
+
 
 import {createNamespacedHelpers} from "vuex";
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
@@ -79,16 +53,13 @@ import {debounce} from "lodash";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
-// https://firefly.sd.home/api/v1/autocomplete/transactions?query=test
-
 export default {
-  props: ['index'],
+  props: ['index', 'description'],
   components: {VueTypeaheadBootstrap},
   name: "TransactionDescription",
   data() {
     return {
       descriptions: [],
-      query: '',
       initialSet: []
     }
   },
@@ -110,19 +81,26 @@ export default {
         ],
     ),
     clearDescription: function () {
-      this.selectedDescription = '';
+      this.description = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
       return document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/transactions?query=' + query;
     },
     lookupDescription: debounce(function () {
+      console.log('lookupDescription');
       // update autocomplete URL:
-      axios.get(this.getACURL(this.query))
+      axios.get(this.getACURL(this.description))
           .then(response => {
             this.descriptions = response.data;
           })
     }, 300)
+  },
+  watch: {
+    description: function (value) {
+      console.log('Index ' + this.index + ': ' + value);
+      //this.updateField({field: 'description', index: this.index, value: value});
+    }
   },
   computed: {
     ...mapGetters([
@@ -131,16 +109,13 @@ export default {
                   ]),
     selectedDescription: {
       get() {
-        return this.transactions[this.index].description;
+        //return this.description;
       },
       set(value) {
-        this.updateField({field: 'description', index: this.index, value: value});
+        this.description = value.description;
+        //this.updateField({field: 'description', index: this.index, value: value.description});
       }
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

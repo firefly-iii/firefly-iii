@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <div class="row" v-for="(transaction, index) in transactions">
+    <div class="row" v-for="(transaction, index) in this.transactions">
       <div class="col">
         <div class="card">
           <div class="card-header">
@@ -29,13 +29,13 @@
               <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{ transactions.length }}</span>
             </h3>
             <div v-if="transactions.length > 1" class="card-tools">
-              <button class="btn btn-xs btn-danger" type="button" v-on:click="deleteTransaction(index, $event)"><i
+              <button class="btn btn-xs btn-danger" type="button" v-on:click="removeTransaction(index)"><i
                   class="fa fa-trash"></i></button>
             </div>
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <h4>{{ $t('firefly.basic_journal_information') }}</h4>
+            <h4>{{ $t('firefly.basic_journal_information') }}: {{ transaction.description }}</h4>
             <div class="row">
               <div class="col">
                 <p class="d-block d-sm-none">XS</p>
@@ -48,8 +48,9 @@
             <!-- description etc, 3 rows -->
             <div class="row">
               <div class="col">
+                Description:
                 <TransactionDescription
-                    :description="transactions[index].description"
+                    v-bind:description.sync="transaction.description"
                     :index="index"
                 ></TransactionDescription>
               </div>
@@ -61,7 +62,7 @@
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
                 <!-- SOURCE -->
                 <TransactionAccount
-                    :selectedAccount="transactions[index].source_account"
+                    :selectedAccount="transaction.source_account"
                     direction="source"
                     :index="index"
                 />
@@ -77,7 +78,7 @@
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <!-- DESTINATION -->
                 <TransactionAccount
-                    :selectedAccount="transactions[index].destination_account"
+                    :selectedAccount="transaction.destination_account"
                     direction="destination"
                     :index="index"
                 />
@@ -105,8 +106,8 @@
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <TransactionDate
-                    :date="transactions[index].date"
-                    :time="transactions[index].time"
+                    :date="transaction.date"
+                    :time="transaction.time"
                     :index="index"
                 />
               </div>
@@ -115,60 +116,6 @@
                 <TransactionCustomDates :index="index" :enabled-dates="customDateFields"/>
               </div>
             </div>
-
-            <!--
-                        <p class="d-block d-sm-none">XS</p>
-                        <p class="d-none d-sm-block d-md-none">SM</p>
-                        <p class="d-none d-md-block d-lg-none">MD</p>
-                        <p class="d-none d-lg-block d-xl-none">LG</p>
-                        <p class="d-none d-xl-block">XL</p>
-
-
-                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-
-                        {# top stuff #}
-                        <div class="row">
-                          <div class="col">
-
-                          </div>
-                        </div>
-
-
-            -->
-
-            <div class="row">
-              <div class="col">
-                <!-- AMOUNT -->
-                <!--
-                <div class="input-group">
-                  <input
-                      title="Amount"
-                      autocomplete="off"
-                      autofocus
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Amount"
-                  >
-                </div>
-                <div class="input-group">
-                  <input
-                      title="Foreign"
-                      autocomplete="off"
-                      autofocus
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Foreign"
-                  >
-                </div>
-                -->
-              </div>
-              <div class="col">
-
-              </div>
-            </div>
-
 
             <h4>{{ $t('firefly.transaction_journal_meta') }}</h4>
 
@@ -179,48 +126,27 @@
                     :budget_id="transactions[index].budget_id"
                     :index="index"
                 />
-                <div class="input-group">
-                  <input
-                      title="Category"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Category"
-                  >
-                </div>
+
+                <TransactionCategory
+                    :category="transaction.category"
+                    :index="index"
+                />
+
               </div>
               <div class="col">
-                <div class="input-group">
-                  <input
-                      title="Bill"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Bill"
-                  >
-                </div>
-                <div class="input-group">
-                  <input
-                      title="Tags"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Tags"
-                  >
-                </div>
-                <div class="input-group">
-                  <input
-                      title="Piggy"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="Piggy"
-                  >
-                </div>
+                <TransactionBill
+                    :bill_id="transactions[index].bill_id"
+                    :index="index"
+                />
+
+                <TransactionTags
+                    :index="index"
+                    :tags="transactions[index].tags"
+                />
+                <TransactionPiggyBank
+                    :index="index"
+                    :piggy_bank_id="transactions[index].piggy_bank_id"
+                />
               </div>
             </div>
 
@@ -228,50 +154,53 @@
 
             <div class="row">
               <div class="col">
-                <div class="input-group">
-                  <input
-                      title="internal ref"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="internal ref"
-                  >
-                </div>
-                <div class="input-group">
-                  <input
-                      title="Piggy"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="external url"
-                  >
-                </div>
-                <div class="input-group">
-                  <textarea class="form-control" placeholder="Notes"></textarea>
-                </div>
+                <TransactionInternalReference
+                    :index="index"
+                    :internalReference="transaction.internal_reference"
+                />
+
+                <TransactionExternalUrl
+                    :index="index"
+                    :externalUrl="transaction.external_url"
+                />
+                <TransactionNotes
+                    :index="index"
+                    :notes="transaction.notes"
+                />
               </div>
               <div class="col">
-                <div class="input-group">
-                  <input
-                      title="Piggy"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="transaction links"
-                  >
-                </div>
-                <div class="input-group">
-                  <input
-                      title="Piggy"
-                      autocomplete="off"
-                      class="form-control"
-                      name="something[]"
-                      type="text"
-                      placeholder="piggy bank"
-                  >
+                <div class="form-group">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    {{ $t('firefly.journal_links') }}
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <p>
+                        <em>No transaction links</em>
+                      </p>
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <em>is paid by</em>
+                          <a href="#">Some other transaction</a> (<span class="text-success">$ 12.34</span>)
+                          <div class="btn-group btn-group-xs float-right">
+                            <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
+                            <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
+                          </div>
+                        </li>
+                        <li class="list-group-item">
+                          <em>is paid by</em>
+                          <a href="#">Some other transaction</a> (<span class="text-success">$ 12.34</span>)
+                          <div class="btn-group btn-group-xs float-right">
+                            <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
+                            <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
+                          </div>
+                        </li>
+                      </ul>
+                      <div class="form-text">
+                        <a href="#" class="btn btn-default"><i class="fas fa-plus"></i></a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -308,16 +237,24 @@
 </template>
 
 <script>
+import {createNamespacedHelpers} from 'vuex'
+
 import TransactionDescription from "./TransactionDescription";
 import TransactionDate from "./TransactionDate";
 import TransactionBudget from "./TransactionBudget";
-import {createNamespacedHelpers} from 'vuex'
 import TransactionAccount from "./TransactionAccount";
 import SwitchAccount from "./SwitchAccount";
 import TransactionAmount from "./TransactionAmount";
 import TransactionForeignAmount from "./TransactionForeignAmount";
 import TransactionForeignCurrency from "./TransactionForeignCurrency";
 import TransactionCustomDates from "./TransactionCustomDates";
+import TransactionCategory from "./TransactionCategory";
+import TransactionBill from "./TransactionBill";
+import TransactionTags from "./TransactionTags";
+import TransactionPiggyBank from "./TransactionPiggyBank";
+import TransactionInternalReference from "./TransactionInternalReference";
+import TransactionExternalUrl from "./TransactionExternalUrl";
+import TransactionNotes from "./TransactionNotes";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
@@ -325,6 +262,13 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   name: "Create",
   components: {
+    TransactionNotes,
+    TransactionExternalUrl,
+    TransactionInternalReference,
+    TransactionPiggyBank,
+    TransactionTags,
+    TransactionBill,
+    TransactionCategory,
     TransactionCustomDates,
     TransactionForeignCurrency,
     TransactionForeignAmount, TransactionAmount, SwitchAccount, TransactionAccount, TransactionBudget, TransactionDescription, TransactionDate
@@ -357,6 +301,10 @@ export default {
           'setAccountToTransaction',
         ],
     ),
+    removeTransaction: function(index) {
+      // store.commit('addCustomer'
+      this.$store.commit('transactions/create/deleteTransaction', {index: index});
+    },
     storeCustomDateFields: function () {
       // TODO may include all custom fields in the future.
       axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
@@ -372,7 +320,7 @@ export default {
         };
         for (let key in fields) {
           if (fields.hasOwnProperty(key)) {
-            if(-1 !== allDateFields.indexOf(key)) {
+            if (-1 !== allDateFields.indexOf(key)) {
               selectedDateFields[key] = fields[key];
             }
           }
@@ -444,9 +392,25 @@ export default {
         foreign_amount: array.foreign_amount,
 
 
-        // meta
+        // meta data
         budget_id: array.budget_id,
+        category: array.category,
+        bill_id: array.bill_id,
+        tags: array.tags,
+        piggy_bank_id: array.piggy_bank_id,
 
+        // optional date fields (6x):
+        interest_date: array.interest_date,
+        book_date: array.book_date,
+        process_date: array.process_date,
+        due_date: array.due_date,
+        payment_date: array.payment_date,
+        invoice_date: array.invoice_date,
+
+        // other optional fields:
+        internal_reference: array.internal_reference,
+        external_url: array.external_url,
+        notes: array.notes,
       };
 
       // return it.
