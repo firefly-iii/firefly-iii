@@ -27,7 +27,7 @@
       <input
           type="text"
           name="internal_reference[]"
-          v-model="internalReference"
+          v-model="value"
           :placeholder="$t('firefly.internal_reference')"
           class="form-control"/>
       <div class="input-group-append">
@@ -43,7 +43,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['index', 'value'],
   name: "TransactionInternalReference",
   methods: {
     ...mapMutations(
@@ -52,13 +52,8 @@ export default {
         ],
     ),
   },
-  data() {
-    return {
-      internalReference: '',
-    }
-  },
   watch: {
-    internalReference: function (value) {
+    value: function (value) {
       this.updateField({field: 'internal_reference', index: this.index, value: value});
     }
   }

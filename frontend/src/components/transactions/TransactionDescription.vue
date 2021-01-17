@@ -25,7 +25,7 @@
     </div>
     <vue-typeahead-bootstrap
         inputName="description[]"
-        v-model="description"
+        v-model="value"
         :data="descriptions"
         :placeholder="$t('firefly.description')"
         :showOnFocus=true
@@ -54,7 +54,7 @@ import {debounce} from "lodash";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index', 'description'],
+  props: ['index', 'value'],
   components: {VueTypeaheadBootstrap},
   name: "TransactionDescription",
   data() {
@@ -65,8 +65,6 @@ export default {
   },
 
   created() {
-
-    // initial list of accounts:
     axios.get(this.getACURL(''))
         .then(response => {
           this.descriptions = response.data;
@@ -81,41 +79,32 @@ export default {
         ],
     ),
     clearDescription: function () {
-      this.description = '';
+      this.value = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
       return document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/transactions?query=' + query;
     },
     lookupDescription: debounce(function () {
-      console.log('lookupDescription');
       // update autocomplete URL:
-      axios.get(this.getACURL(this.description))
+      axios.get(this.getACURL(this.value))
           .then(response => {
             this.descriptions = response.data;
           })
     }, 300)
   },
   watch: {
-    description: function (value) {
-      console.log('Index ' + this.index + ': ' + value);
-      //this.updateField({field: 'description', index: this.index, value: value});
+    value: function (value) {
+      this.updateField({field: 'description', index: this.index, value: value});
     }
   },
   computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'transactions',
-                  ]),
-    selectedDescription: {
-      get() {
-        //return this.description;
-      },
-      set(value) {
-        this.description = value.description;
-        //this.updateField({field: 'description', index: this.index, value: value.description});
-      }
-    }
+    ...mapGetters(
+        [
+          'transactionType',
+          'transactions',
+        ]
+    )
   }
 }
 </script>

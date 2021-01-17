@@ -25,40 +25,63 @@
     </div>
     <div class="input-group">
       <vue-tags-input
-          v-model="tag"
+          v-model="currentTag"
           :add-only-from-autocomplete="false"
           :autocomplete-items="autocompleteItems"
           :tags="tags"
           :title="$t('firefly.tags')"
           v-bind:placeholder="$t('firefly.tags')"
-          @tags-changed="update"/>
+          @tags-changed="newTags => this.tags = newTags"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 import VueTagsInput from "@johmun/vue-tags-input";
 import axios from "axios";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   name: "TransactionTags",
   components: {
     VueTagsInput
   },
-  props: ['value', 'error', 'index'],
+  props: ['value', 'index'],
   data() {
     return {
-      tag: '',
       autocompleteItems: [],
       debounce: null,
-      tags: this.value,
+      tags: [],
+      currentTag: '',
+      updateTags: true // the idea is that this is always true, except when the tags-function sets the value.
     };
   },
   watch: {
-    'tag': 'initItems',
+    'currentTag': 'initItems',
+    value: function (value) {
+      console.log('watch: value');
+      console.log(value);
+      this.updateField({field: 'tags', index: this.index, value: value});
+      this.updateTags = false;
+      this.tags = value;
+    },
+    tags: function (value) {
+      if (this.updateTags) {
+        console.log('watch: tags');
+
+        let shortList = [];
+        for (let key in value) {
+          if (value.hasOwnProperty(key)) {
+            shortList.push({text: value[key].text});
+          }
+        }
+        this.value = shortList;
+      }
+      this.updateTags = true;
+    }
   },
   methods: {
     ...mapMutations(
@@ -66,36 +89,20 @@ export default {
           'updateField',
         ],
     ),
-    update(newTags) {
-      this.autocompleteItems = [];
-      this.tags = newTags;
-      // create array for update field thing:
-      let shortList = [];
-      for(let key in newTags) {
-        if (newTags.hasOwnProperty(key)) {
-          shortList.push(newTags[key].text);
-        }
-      }
-      this.updateField({field: 'tags', index: this.index, value: shortList});
-    },
-    hasError: function () {
-      return this.error.length > 0;
-    },
     initItems() {
-      // console.log('Now in initItems');
-      if (this.tag.length < 2) {
+      if (this.currentTag.length < 2) {
         return;
       }
-      const url = document.getElementsByTagName('base')[0].href + `api/v1/autocomplete/tags?query=${this.tag}`;
+      const url = document.getElementsByTagName('base')[0].href + `api/v1/autocomplete/tags?query=${this.currentTag}`;
 
       clearTimeout(this.debounce);
       this.debounce = setTimeout(() => {
         axios.get(url).then(response => {
-          this.autocompleteItems = response.data.map(a => {
-            return {text: a.tag};
+          this.autocompleteItems = response.data.map(item => {
+            return {text: item.tag};
           });
         }).catch(() => console.warn('Oh. Something went wrong loading tags.'));
-      }, 600);
+      }, 300);
     },
   },
 

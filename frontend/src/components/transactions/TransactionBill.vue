@@ -27,7 +27,7 @@
       <select
           ref="bill"
           :title="$t('firefly.bill')"
-          v-model="bill_id"
+          v-model="value"
           autocomplete="off"
           class="form-control"
           name="bill_id[]"
@@ -47,7 +47,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['value', 'index'],
   name: "TransactionBill",
   data() {
     return {
@@ -93,19 +93,18 @@ export default {
       }
     },
   },
+  watch: {
+    value: function(value) {
+      this.updateField({field: 'bill_id', index: this.index, value: value});
+    }
+  },
   computed: {
-    ...mapGetters([
+    ...mapGetters(
+        [
                     'transactionType',
                     'transactions',
-                  ]),
-    bill_id: {
-      get() {
-        return this.transactions[this.index].bill_id;
-      },
-      set(value) {
-        this.updateField({field: 'bill_id', index: this.index, value: value});
-      }
-    }
+                  ]
+    )
   }
 }
 </script>

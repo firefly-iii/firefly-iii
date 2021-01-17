@@ -25,7 +25,7 @@
       {{ $t('firefly.notes') }}
     </div>
     <div class="input-group">
-      <textarea v-model="notes" class="form-control" placeholder="Notes"></textarea>
+      <textarea v-model="value" class="form-control" :placeholder="$t('firefly.notes')"></textarea>
     </div>
   </div>
 
@@ -37,7 +37,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['index', 'value'],
   name: "TransactionNotes",
   methods: {
     ...mapMutations(
@@ -46,13 +46,8 @@ export default {
         ],
     ),
   },
-  data() {
-    return {
-      notes: '',
-    }
-  },
   watch: {
-    notes: function (value) {
+    value: function (value) {
       this.updateField({field: 'notes', index: this.index, value: value});
     }
   }

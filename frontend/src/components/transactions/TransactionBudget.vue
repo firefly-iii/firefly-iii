@@ -27,14 +27,13 @@
       <select
           ref="budget"
           :title="$t('firefly.budget')"
-          v-model="budget_id"
+          v-model="value"
           autocomplete="off"
           class="form-control"
           name="budget_id[]"
           v-on:submit.prevent
       >
         <option v-for="budget in this.budgetList" :value="budget.id" :label="budget.name">{{ budget.name }}</option>
-
       </select>
     </div>
   </div>
@@ -47,7 +46,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['index', 'value'],
   name: "TransactionBudget",
   data() {
     return {
@@ -93,19 +92,18 @@ export default {
       }
     },
   },
-  computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'transactions',
-                  ]),
-    budget_id: {
-      get() {
-        return this.transactions[this.index].budget_id;
-      },
-      set(value) {
-        this.updateField({field: 'budget_id', index: this.index, value: value});
-      }
+  watch: {
+    value: function (value) {
+      this.updateField({field: 'budget_id', index: this.index, value: value});
     }
+  },
+  computed: {
+    ...mapGetters(
+        [
+          'transactionType',
+          'transactions',
+        ]
+    )
   }
 }
 </script>

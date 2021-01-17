@@ -18,7 +18,6 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-
 <template>
   <div class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
@@ -28,7 +27,7 @@
       <select
           ref="piggy_bank_id"
           :title="$t('firefly.piggy_bank')"
-          v-model="piggy_bank_id"
+          v-model="value"
           autocomplete="off"
           class="form-control"
           name="piggy_bank_id[]"
@@ -48,7 +47,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['index', 'value'],
   name: "TransactionPiggyBank",
   data() {
     return {
@@ -94,19 +93,16 @@ export default {
       }
     },
   },
+  watch: {
+    value: function (value) {
+      this.updateField({field: 'piggy_bank_id', index: this.index, value: value});
+    }
+  },
   computed: {
     ...mapGetters([
                     'transactionType',
                     'transactions',
-                  ]),
-    piggy_bank_id: {
-      get() {
-        return this.transactions[this.index].piggy_bank_id;
-      },
-      set(value) {
-        this.updateField({field: 'piggy_bank_id', index: this.index, value: value});
-      }
-    }
+                  ])
   }
 }
 </script>

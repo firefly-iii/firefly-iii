@@ -35,7 +35,7 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <h4>{{ $t('firefly.basic_journal_information') }}: {{ transaction.description }}</h4>
+            <h4>{{ $t('firefly.basic_journal_information') }}</h4>
             <div class="row">
               <div class="col">
                 <p class="d-block d-sm-none">XS</p>
@@ -50,19 +50,18 @@
               <div class="col">
                 Description:
                 <TransactionDescription
-                    v-bind:description.sync="transaction.description"
+                    v-model="transaction.description"
                     :index="index"
                 ></TransactionDescription>
               </div>
             </div>
-
 
             <!-- source and destination -->
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
                 <!-- SOURCE -->
                 <TransactionAccount
-                    :selectedAccount="transaction.source_account"
+                    v-model="transaction.source_account"
                     direction="source"
                     :index="index"
                 />
@@ -78,7 +77,7 @@
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <!-- DESTINATION -->
                 <TransactionAccount
-                    :selectedAccount="transaction.destination_account"
+                    v-model="transaction.destination_account"
                     direction="destination"
                     :index="index"
                 />
@@ -106,14 +105,12 @@
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <TransactionDate
-                    :date="transaction.date"
-                    :time="transaction.time"
                     :index="index"
                 />
               </div>
 
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
-                <TransactionCustomDates :index="index" :enabled-dates="customDateFields"/>
+                <TransactionCustomDates :index="index" :enabled-dates="customDateFields" />
               </div>
             </div>
 
@@ -123,29 +120,26 @@
             <div class="row">
               <div class="col">
                 <TransactionBudget
-                    :budget_id="transactions[index].budget_id"
+                    v-model="transaction.budget_id"
                     :index="index"
                 />
-
                 <TransactionCategory
-                    :category="transaction.category"
+                    v-model="transaction.category"
                     :index="index"
                 />
-
               </div>
               <div class="col">
                 <TransactionBill
-                    :bill_id="transactions[index].bill_id"
+                    v-model="transaction.bill_id"
                     :index="index"
                 />
-
                 <TransactionTags
                     :index="index"
-                    :tags="transactions[index].tags"
+                    v-model="transaction.tags"
                 />
                 <TransactionPiggyBank
                     :index="index"
-                    :piggy_bank_id="transactions[index].piggy_bank_id"
+                    v-model="transaction.piggy_bank_id"
                 />
               </div>
             </div>
@@ -156,16 +150,16 @@
               <div class="col">
                 <TransactionInternalReference
                     :index="index"
-                    :internalReference="transaction.internal_reference"
+                    v-model="transaction.internal_reference"
                 />
 
                 <TransactionExternalUrl
                     :index="index"
-                    :externalUrl="transaction.external_url"
+                    v-model="transaction.external_url"
                 />
                 <TransactionNotes
                     :index="index"
-                    :notes="transaction.notes"
+                    v-model="transaction.notes"
                 />
               </div>
               <div class="col">
@@ -205,6 +199,8 @@
               </div>
 
             </div>
+
+
           </div>
           <!-- /.card-body -->
         </div>
@@ -289,7 +285,8 @@ export default {
     ...mapGetters([
                     'transactionType', // -> this.someGetter
                     'transactions', // -> this.someOtherGetter
-                    'customDateFields'
+                    'customDateFields',
+                    'date'
                   ])
   },
   methods: {

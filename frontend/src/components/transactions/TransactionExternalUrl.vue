@@ -28,7 +28,7 @@
           type="url"
           name="external_url[]"
           :placeholder="$t('firefly.external_url')"
-          v-model="externalUrl"
+          v-model="value"
           class="form-control"/>
       <div class="input-group-append">
         <button type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
@@ -43,7 +43,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['index', 'value'],
   name: "TransactionExternalUrl",
   methods: {
     ...mapMutations(
@@ -52,13 +52,8 @@ export default {
         ],
     ),
   },
-  data() {
-    return {
-      externalUrl: '',
-    }
-  },
   watch: {
-    externalUrl: function (value) {
+    value: function (value) {
       this.updateField({field: 'external_url', index: this.index, value: value});
     }
   }

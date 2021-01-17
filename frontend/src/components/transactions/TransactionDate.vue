@@ -29,11 +29,11 @@
           type="date"
           ref="date"
           :title="$t('firefly.date')"
-          v-model="date"
+          v-model="localDate"
           :disabled="index > 0"
           autocomplete="off"
           name="date[]"
-          :placeholder="date"
+          :placeholder="localDate"
           v-on:submit.prevent
       >
       <input
@@ -41,11 +41,11 @@
           type="time"
           ref="time"
           :title="$t('firefly.time')"
-          v-model="time"
+          v-model="localTime"
           :disabled="index > 0"
           autocomplete="off"
           name="time[]"
-          :placeholder="time"
+          :placeholder="localTime"
           v-on:submit.prevent
       >
     </div>
@@ -60,35 +60,46 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 
 export default {
   name: "TransactionDate",
-  props: ['value', 'index'],
+  props: ['index'],
   methods: {
     ...mapMutations(
         [
           'updateField',
+          'setDate'
         ],
     ),
   },
   computed: {
     ...mapGetters([
                     'transactionType',
-                    'transactions',
+                    'date'
                   ]),
-    date: {
+    localDate: {
       get() {
-        // always return first index.
-        return this.transactions[0].date;
+        return this.date.toISOString().split('T')[0];
       },
       set(value) {
-        this.updateField({field: 'date', index: this.index, value: value});
+        // bit of a hack but meh.
+        let newDate = new Date(value);
+        let current = new Date(this.date.getTime());
+        current.setFullYear(newDate.getFullYear());
+        current.setMonth(newDate.getMonth());
+        current.setDate(newDate.getDate());
+        this.setDate({date: current});
       }
     },
-    time: {
+    localTime: {
       get() {
-        // always return first index.
-        return this.transactions[0].time;
+        return ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2) + ':' + ('0' + this.date.getSeconds()).slice(-2);
       },
       set(value) {
-        this.updateField({field: 'time', index: this.index, value: value});
+        // bit of a hack but meh.
+        let current = new Date(this.date.getTime());
+        let parts = value.split(':');
+        current.setHours(parseInt(parts[0]));
+        current.setMinutes(parseInt(parts[1]));
+        current.setSeconds(parseInt(parts[2]));
+        this.setDate({date: current});
       }
     }
   }

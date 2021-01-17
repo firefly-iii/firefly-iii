@@ -49,32 +49,21 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   name: "TransactionCustomDates",
   props: ['enabledDates', 'index'],
-  data() {
-    return {
-      dates: {
-        interest_date: '',
-        book_date: '',
-        process_date: '',
-        due_date: '',
-        payment_date: '',
-        invoice_date: '',
-      }
-    }
-  },
-  created() {
-
-  },
   methods: {
+    ...mapGetters(
+        [
+            'transactions'
+        ]
+    ),
     ...mapMutations(
         [
           'updateField',
         ],
     ),
     getFieldValue(field) {
-      return this.dates[field];
+      return this.transactions()[parseInt(this.index)][field] ?? '';
     },
     setFieldValue(event, field) {
-      this.dates[field] = event.target.value;
       this.updateField({index: this.index, field: field, value: event.target.value});
     }
   }

@@ -26,7 +26,7 @@
 
     <vue-typeahead-bootstrap
         inputName="category[]"
-        v-model="category"
+        v-model="value"
         :data="categories"
         :placeholder="$t('firefly.category')"
         :showOnFocus=true
@@ -54,15 +54,13 @@ import {debounce} from "lodash";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index'],
+  props: ['value', 'index'],
   components: {VueTypeaheadBootstrap},
   name: "TransactionCategory",
   data() {
     return {
       categories: [],
-      initialSet: [],
-      category: '',
-
+      initialSet: []
     }
   },
 
@@ -83,7 +81,7 @@ export default {
         ],
     ),
     clearCategory: function () {
-      this.category = '';
+      this.value = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -91,29 +89,30 @@ export default {
     },
     lookupCategory: debounce(function () {
       // update autocomplete URL:
-      axios.get(this.getACURL(this.category))
+      axios.get(this.getACURL(this.value))
           .then(response => {
             this.categories = response.data;
           })
     }, 300)
   },
   watch: {
-    category: function (value) {
-      console.log('Watch category: "' + value + '"');
+    value: function (value) {
       this.updateField({field: 'category', index: this.index, value: value});
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters(
+        [
                     'transactionType',
                     'transactions',
-                  ]),
+                  ]
+    ),
     selectedCategory: {
       get() {
         return this.categories[this.index].name;
       },
       set(value) {
-        this.updateField({field: 'category', index: this.index, value: value.name});
+        this.value = value.name;
       }
     }
   }

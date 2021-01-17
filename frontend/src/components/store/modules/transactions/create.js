@@ -18,13 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-let date = new Date;
-
 const lodashClonedeep = require('lodash.clonedeep');
 
 // initial state
 const state = () => ({
         transactionType: 'any',
+        date: new Date,
         transactions: [],
         allowedOpposingTypes: {},
         accountToTransaction: {},
@@ -41,8 +40,6 @@ const state = () => ({
         defaultTransaction: {
             // basic
             description: '',
-            date: date.toISOString().split('T')[0],
-            time: ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2),
 
             // accounts:
             source_account: {
@@ -98,6 +95,9 @@ const state = () => ({
 const getters = {
     transactions: state => {
         return state.transactions;
+    },
+    date: state => {
+        return state.date;
     },
     transactionType: state => {
         return state.transactionType;
@@ -175,6 +175,9 @@ const mutations = {
     addTransaction(state) {
         let newTransaction = lodashClonedeep(state.defaultTransaction);
         state.transactions.push(newTransaction);
+    },
+    setDate(state, payload) {
+        state.date = payload.date;
     },
     setCustomDateFields(state, payload) {
         state.customDateFields = payload;
