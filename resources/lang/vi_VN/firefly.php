@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Tài khoản gửi',
     'back_to_index'                                       => 'Quay lại chỉ mục',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Kiểm tra cập nhật',

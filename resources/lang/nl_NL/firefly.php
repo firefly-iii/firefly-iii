@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Bronrekeningen',
     'back_to_index'                                       => 'Terug naar de index',
     'cant_logout_guard'                                   => 'Firefly III kan je niet uitloggen.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Op updates controleren',

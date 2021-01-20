@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Cuentas origen',
     'back_to_index'                                       => 'Volver al Índice',
     'cant_logout_guard'                                   => 'Firefly III no puede cerrar sesión.',
+    'external_url'                                        => 'URL externa',
+    'internal_reference'                                  => 'Referencia interna',
 
     // check for updates:
     'update_check_title'                                  => 'Ver actualizaciones',

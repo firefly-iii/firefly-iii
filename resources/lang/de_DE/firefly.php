@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Quellkonten',
     'back_to_index'                                       => 'Zurück zum Index',
     'cant_logout_guard'                                   => 'Firefly III kann Sie nicht abmelden.',
+    'external_url'                                        => 'Externe URL',
+    'internal_reference'                                  => 'Interner Verweis',
 
     // check for updates:
     'update_check_title'                                  => 'Nach Updates suchen',

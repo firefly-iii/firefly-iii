@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Zjistit dostupnost případných aktualizací',

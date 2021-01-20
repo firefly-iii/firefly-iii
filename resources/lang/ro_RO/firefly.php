@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Conturi sursă',
     'back_to_index'                                       => 'Înapoi la index',
     'cant_logout_guard'                                   => 'Firefly III nu vă poate deconecta.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Verifică actualizări',

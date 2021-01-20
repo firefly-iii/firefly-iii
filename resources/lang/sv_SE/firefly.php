@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Källkonton',
     'back_to_index'                                       => 'Åter till index',
     'cant_logout_guard'                                   => 'Firefly III kan inte logga ut dig.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Sök uppdateringar',

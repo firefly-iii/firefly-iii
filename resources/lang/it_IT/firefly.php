@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Conti di origine',
     'back_to_index'                                       => 'Torna all\'indice',
     'cant_logout_guard'                                   => 'Firefly III non può disconnetterti.',
+    'external_url'                                        => 'URL esterno',
+    'internal_reference'                                  => 'Riferimento interno',
 
     // check for updates:
     'update_check_title'                                  => 'Controlla aggiornamenti',

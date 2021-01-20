@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Contas de origem',
     'back_to_index'                                       => 'Voltar ao índice',
     'cant_logout_guard'                                   => 'Firefly III não pode te deslogar.',
+    'external_url'                                        => 'URL externa',
+    'internal_reference'                                  => 'Referência interna',
 
     // check for updates:
     'update_check_title'                                  => 'Verificar Atualizações',

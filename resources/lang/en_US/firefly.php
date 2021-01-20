@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Source accounts',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Check for updates',
@@ -275,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III is searching for transactions with all of these words in them: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',

@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Разходни сметки',
     'back_to_index'                                       => 'Обратно към списъка',
     'cant_logout_guard'                                   => 'Firefly III не може да ви отпише.',
+    'external_url'                                        => 'External URL',
+    'internal_reference'                                  => 'Internal reference',
 
     // check for updates:
     'update_check_title'                                  => 'Проверка за обновления',

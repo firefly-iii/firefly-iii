@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Konta źródłowe',
     'back_to_index'                                       => 'Wróć do indeksu',
     'cant_logout_guard'                                   => 'Firefly III nie może cię wylogować.',
+    'external_url'                                        => 'Zewnętrzny adres URL',
+    'internal_reference'                                  => 'Wewnętrzny nr referencyjny',
 
     // check for updates:
     'update_check_title'                                  => 'Sprawdź aktualizacje',

@@ -241,6 +241,8 @@ return [
     'all_source_accounts'                                 => 'Comptes source',
     'back_to_index'                                       => 'Retour à l\'accueil',
     'cant_logout_guard'                                   => 'Firefly III ne peut pas vous déconnecter.',
+    'external_url'                                        => 'URL externe',
+    'internal_reference'                                  => 'Référence interne',
 
     // check for updates:
     'update_check_title'                                  => 'Vérifier les mises à jour',
@@ -1361,7 +1363,7 @@ return [
     'leftInBudget'                              => 'Budget restant',
     'sumOfSums'                                 => 'Somme des montants',
     'noCategory'                                => '(aucune catégorie)',
-    'notCharged'                                => 'Pas encore chargé',
+    'notCharged'                                => 'Pas (encore) facturé',
     'inactive'                                  => 'Inactif',
     'active'                                    => 'Actif',
     'difference'                                => 'Différence',
