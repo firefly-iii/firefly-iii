@@ -36,15 +36,6 @@
           <!-- /.card-header -->
           <div class="card-body">
             <h4>{{ $t('firefly.basic_journal_information') }}</h4>
-            <div class="row">
-              <div class="col">
-                <p class="d-block d-sm-none">XS</p>
-                <p class="d-none d-sm-block d-md-none">SM</p>
-                <p class="d-none d-md-block d-lg-none">MD</p>
-                <p class="d-none d-lg-block d-xl-none">LG</p>
-                <p class="d-none d-xl-block">XL</p>
-              </div>
-            </div>
             <!-- description etc, 3 rows -->
             <div class="row">
               <div class="col">
@@ -110,7 +101,7 @@
               </div>
 
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
-                <TransactionCustomDates :index="index" :enabled-dates="customDateFields" />
+                <TransactionCustomDates :index="index" :enabled-dates="customDateFields"/>
               </div>
             </div>
 
@@ -191,7 +182,8 @@
                         </li>
                       </ul>
                       <div class="form-text">
-                        <a href="#" class="btn btn-default"><i class="fas fa-plus"></i></a>
+
+                        <button data-toggle="modal" data-target="#linkModal" class="btn btn-default"><i class="fas fa-plus"></i></button>
                       </div>
                     </div>
                   </div>
@@ -229,7 +221,51 @@
       </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="linkModal">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Transaction thing dialog.</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col">
+                  <p>
+                    Use this form to search for transactions. When in doubt, use <code>id:*</code> where the ID is the number from the URL.
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="input-group">
+                    <input autocomplete="off" maxlength="255" type="text" name="search" id="query" value="" class="form-control" placeholder="Search query">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  Search results.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
 </template>
 
 <script>
@@ -298,7 +334,7 @@ export default {
           'setAccountToTransaction',
         ],
     ),
-    removeTransaction: function(index) {
+    removeTransaction: function (index) {
       // store.commit('addCustomer'
       this.$store.commit('transactions/create/deleteTransaction', {index: index});
     },
