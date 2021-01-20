@@ -332,6 +332,10 @@ class OperatorQuerySearch implements SearchInterface
                 $parts = explode(',', $value);
                 $this->collector->setJournalIds($parts);
                 break;
+            case 'id':
+                $parts = explode(',', $value);
+                $this->collector->setIds($parts);
+                break;
             case 'destination_account_starts':
                 $this->searchAccount($value, 2, 1);
                 break;

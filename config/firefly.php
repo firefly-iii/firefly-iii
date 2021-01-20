@@ -482,6 +482,7 @@ return [
             'any_notes'                       => ['alias' => false, 'needs_context' => false,],
 
             // one exact (or array of) journals:
+            'id'                              => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
             'journal_id'                      => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
 
             // exact amount

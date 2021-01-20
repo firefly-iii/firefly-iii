@@ -241,6 +241,15 @@ interface GroupCollectorInterface
     public function setJournalIds(array $journalIds): GroupCollectorInterface;
 
     /**
+     * Limit the result to a set of specific transaction groups.
+     *
+     * @param array $groupIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setIds(array $groupIds): GroupCollectorInterface;
+
+    /**
      * Limit the number of returned entries.
      *
      * @param int $limit
