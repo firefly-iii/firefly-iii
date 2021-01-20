@@ -109,7 +109,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $locale = app('steam')->getLocale();
 
@@ -121,7 +121,13 @@ class BillController extends Controller
         usort(
             $journals,
             static function (array $left, array $right) {
-                return $left['date']->gte($right['date']) ? 1 : 0;
+                if($left['date']->gt($right['date'])) {
+                    return 1;
+                }
+                if($left['date']->lt($right['date'])) {
+                    return -1;
+                }
+                return 0;
             }
         );
 
