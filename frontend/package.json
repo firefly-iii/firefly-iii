@@ -36,7 +36,7 @@
         "overlayscrollbars": "^1.13.1",
         "popper.js": "^1.16.1",
         "tempusdominus": "^5.16.0",
-        "v-calendar": "^2.2.0",
+        "v-calendar": "^2.2.1",
         "vue-chartjs": "^3.5.1",
         "vue-router": "^3.4.9",
         "vue-simple-suggest": "^1.10.3",
