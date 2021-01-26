@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III đã tìm thấy hơn :count giao dịch trong :time giây.',
     'search_for_query'                                    => 'Firefly III đang tìm kiếm các giao dịch với tất cả những từ này trong đó: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',

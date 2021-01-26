@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III a găsit mai mult de :count tranzacții în :time secunde.',
     'search_for_query'                                    => 'Firefly III este în căutarea pentru tranzacţii cu toate aceste cuvinte în ele: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Data tranzacţiei este ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Data tranzacției este înainte sau pe ":value"',
     'search_modifier_date_after'                          => 'Data tranzacției este după sau pe ":value"',
     'search_modifier_created_on'                          => 'Tranzacția a fost creată pe ":value"',

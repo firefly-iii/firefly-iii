@@ -241,8 +241,8 @@ return [
     'all_source_accounts'                                 => 'Zdrojové účty',
     'back_to_index'                                       => 'Späť na zoznam',
     'cant_logout_guard'                                   => 'Firefly III sa nepodarilo vás odhlásiť.',
-    'external_url'                                        => 'External URL',
-    'internal_reference'                                  => 'Internal reference',
+    'external_url'                                        => 'Externá URL',
+    'internal_reference'                                  => 'Interná referencia',
 
     // check for updates:
     'update_check_title'                                  => 'Zistiť dostupnosť aktualizácií',
@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
     'search_for_query'                                    => 'Firefly III vyhľadáva transakcie obsahujúce tieto výrazy: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Dátum transakcie je ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Dátum transakcie je pred alebo v deň ":value"',
     'search_modifier_date_after'                          => 'Dátum transakcie je po alebo v deň ":value"',
     'search_modifier_created_on'                          => 'Transakcia bola vytvorená ":value"',

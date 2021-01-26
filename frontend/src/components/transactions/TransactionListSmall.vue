@@ -64,7 +64,7 @@ export default {
       locale: 'en-US'
     }
   },
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
   },
   methods: {

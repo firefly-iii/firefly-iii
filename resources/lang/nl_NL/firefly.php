@@ -241,8 +241,8 @@ return [
     'all_source_accounts'                                 => 'Bronrekeningen',
     'back_to_index'                                       => 'Terug naar de index',
     'cant_logout_guard'                                   => 'Firefly III kan je niet uitloggen.',
-    'external_url'                                        => 'External URL',
-    'internal_reference'                                  => 'Internal reference',
+    'external_url'                                        => 'Externe URL',
+    'internal_reference'                                  => 'Interne referentie',
 
     // check for updates:
     'update_check_title'                                  => 'Op updates controleren',
@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III vond meer dan :count transacties in :time seconden.',
     'search_for_query'                                    => 'Firefly III zoekt transacties met al deze woorden: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Transactiedatum is ":value"',
+    'search_modifier_id'                                  => 'Transactie ID is ":value"',
     'search_modifier_date_before'                         => 'Transactiedatum is vóór of op ":value"',
     'search_modifier_date_after'                          => 'Transactiedatum is na of op ":value"',
     'search_modifier_created_on'                          => 'Transactie werd gemaakt op ":value"',

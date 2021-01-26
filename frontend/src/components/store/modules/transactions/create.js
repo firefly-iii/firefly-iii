@@ -85,7 +85,11 @@ const state = () => ({
             // optional other fields:
             internal_reference: null,
             external_url: null,
-            notes: null
+            notes: null,
+
+            // transaction links:
+            links: [],
+            attachments: []
         },
     }
 )

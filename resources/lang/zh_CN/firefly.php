@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III 正搜索含有 <span class="text-info">:query</span> 的交易。',
     'search_modifier_date_is'                             => '交易日期为:value',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',

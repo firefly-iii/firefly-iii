@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III hat mehr als :count Transaktionen in :time Sekunden gefunden.',
     'search_for_query'                                    => 'Firefly III sucht nach Buchungen mit folgenden Wörtern im Namen: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Buchungsdatum ist „:value”',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Buchungsdatum ist vor oder am ":value"',
     'search_modifier_date_after'                          => 'Buchungsdatum ist nach oder am „:value”',
     'search_modifier_created_on'                          => 'Buchung wurde am „:value” erstellt',

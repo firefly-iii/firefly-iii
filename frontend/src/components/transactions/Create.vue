@@ -154,40 +154,15 @@
                 />
               </div>
               <div class="col">
-                <div class="form-group">
-                  <div class="text-xs d-none d-lg-block d-xl-block">
-                    {{ $t('firefly.journal_links') }}
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <p>
-                        <em>No transaction links</em>
-                      </p>
-                      <ul class="list-group">
-                        <li class="list-group-item">
-                          <em>is paid by</em>
-                          <a href="#">Some other transaction</a> (<span class="text-success">$ 12.34</span>)
-                          <div class="btn-group btn-group-xs float-right">
-                            <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
-                            <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
-                          </div>
-                        </li>
-                        <li class="list-group-item">
-                          <em>is paid by</em>
-                          <a href="#">Some other transaction</a> (<span class="text-success">$ 12.34</span>)
-                          <div class="btn-group btn-group-xs float-right">
-                            <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
-                            <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
-                          </div>
-                        </li>
-                      </ul>
-                      <div class="form-text">
 
-                        <button data-toggle="modal" data-target="#linkModal" class="btn btn-default"><i class="fas fa-plus"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <TransactionAttachments
+                    :index="index"
+                    v-model="transaction.attachments"
+                />
+
+                <TransactionLinks :index="index"
+                                  v-model="transaction.links"
+                />
               </div>
 
             </div>
@@ -220,50 +195,6 @@
         </p>
       </div>
     </div>
-
-    <div class="modal" tabindex="-1" id="linkModal">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Transaction thing dialog.</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col">
-                  <p>
-                    Use this form to search for transactions. When in doubt, use <code>id:*</code> where the ID is the number from the URL.
-                  </p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="input-group">
-                    <input autocomplete="off" maxlength="255" type="text" name="search" id="query" value="" class="form-control" placeholder="Search query">
-                    <div class="input-group-append">
-                      <button type="button" class="btn btn-default"><i class="fas fa-search"></i> Search</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  Search results.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
 </template>
@@ -287,6 +218,9 @@ import TransactionPiggyBank from "./TransactionPiggyBank";
 import TransactionInternalReference from "./TransactionInternalReference";
 import TransactionExternalUrl from "./TransactionExternalUrl";
 import TransactionNotes from "./TransactionNotes";
+import TransactionLinks from "./TransactionLinks";
+import TransactionAttachments from "./TransactionAttachments";
+
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
@@ -294,11 +228,13 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   name: "Create",
   components: {
+    TransactionAttachments,
     TransactionNotes,
     TransactionExternalUrl,
     TransactionInternalReference,
     TransactionPiggyBank,
     TransactionTags,
+    TransactionLinks,
     TransactionBill,
     TransactionCategory,
     TransactionCustomDates,
@@ -314,7 +250,8 @@ export default {
   data() {
     return {
       groupTitle: '',
-      isSubmitting: false
+      isSubmitting: false,
+      linkSearchResults: [],
     }
   },
   computed: {
@@ -444,7 +381,15 @@ export default {
         internal_reference: array.internal_reference,
         external_url: array.external_url,
         notes: array.notes,
+
+        // links (TODO)
+        links: array.links
       };
+      for(let i in array.links) {
+        if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+
+        }
+      }
 
       // return it.
       return currentSplit;

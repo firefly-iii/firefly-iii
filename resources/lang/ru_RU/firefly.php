@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III нашёл более :count транзакций за :time секунд.',
     'search_for_query'                                    => 'Firefly III ищет транзакции со всеми этими словами: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Дата транзакции — ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Дата транзакции до или равна ":value"',
     'search_modifier_date_after'                          => 'Дата транзакции после или равна ":value"',
     'search_modifier_created_on'                          => 'Транзакция была создана ":value"',

@@ -277,6 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Το Firefly III βρήκε περισσότερες από :count συναλλαγές σε :time δευτερόλεπτα.',
     'search_for_query'                                    => 'Το Firefly III αναζητεί για συναλλαγές που περιέχουν όλες αυτές τις λέξεις: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Η ημερομηνία συναλλαγής είναι ":value"',
+    'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Η ημερομηνία συναλλαγής είναι πριν ή στις ":value"',
     'search_modifier_date_after'                          => 'Η ημερομηνία συναλλαγής είναι μετά ή στις ":value"',
     'search_modifier_created_on'                          => 'Η συναλλαγή δημιουργήθηκε στις ":value"',
