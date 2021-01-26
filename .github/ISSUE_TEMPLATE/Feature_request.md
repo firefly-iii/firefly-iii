@@ -1,6 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea or feature for Firefly III
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
