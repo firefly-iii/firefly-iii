@@ -26,6 +26,8 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\UniqueAccountNumber;
+use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -98,12 +100,13 @@ class AccountStoreRequest extends FormRequest
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
+        $type           = $this->string('type');
         $rules          = [
             'name'                 => 'required|min:1|uniqueAccountForUser',
             'type'                 => 'required|' . sprintf('in:%s', $types),
-            'iban'                 => 'iban|nullable',
+            'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
-            'account_number'       => 'between:1,255|nullable|uniqueAccountNumberForUser',
+            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -122,6 +125,7 @@ class AccountStoreRequest extends FormRequest
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
+
         return Location::requestRules($rules);
     }
 }

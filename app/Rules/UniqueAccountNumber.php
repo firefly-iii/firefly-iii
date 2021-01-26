@@ -1,7 +1,7 @@
 <?php
 /**
- * UniqueIban.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * UniqueAccountNumber.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,14 +24,15 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
 /**
- * Class UniqueIban
+ * Class UniqueAccountNumber
  */
-class UniqueIban implements Rule
+class UniqueAccountNumber implements Rule
 {
     private ?Account $account;
     private ?string $expectedType;
@@ -69,7 +70,7 @@ class UniqueIban implements Rule
      */
     public function message(): string
     {
-        return (string)trans('validation.unique_iban_for_user');
+        return (string)trans('validation.unique_account_number_for_user');
     }
 
     /**
@@ -93,11 +94,11 @@ class UniqueIban implements Rule
 
         foreach ($maxCounts as $type => $max) {
             $count = $this->countHits($type, $value);
-            Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
+            Log::debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
             if ($count > $max) {
                 Log::debug(
                     sprintf(
-                        'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
+                        'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
                         $value, $count, $type, $this->expectedType
                     )
                 );
@@ -111,18 +112,18 @@ class UniqueIban implements Rule
 
     /**
      * @param string $type
-     * @param string $iban
+     * @param string $accountNumber
      *
      * @return int
      */
-    private function countHits(string $type, string $iban): int
+    private function countHits(string $type, string $accountNumber): int
     {
-        $query
-            = auth()->user()
-                    ->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('accounts.iban', $iban)
-                    ->where('account_types.type', $type);
+        $query = AccountMeta
+            ::leftJoin('accounts','accounts.id','=','account_meta.account_id')
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_meta.name','=','account_number')
+            ->where('account_meta.data',json_encode($accountNumber));
 
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);
