@@ -62,5 +62,5 @@ return [
     'telemetry_view'         => 'Zobacz telemetrię',
     'edit_object_group'      => 'Modyfikuj grupę ":title"',
     'delete_object_group'    => 'Usuń grupę ":title"',
-    'logout_others'          => 'Wyloguj inne sesje'
+    'logout_others'          => 'Wyloguj z pozostałych sesji'
 ];

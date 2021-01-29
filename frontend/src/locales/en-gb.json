@@ -18,6 +18,7 @@
         "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Bills to pay",
         "left_to_spend": "Left to spend",
+        "attachments": "Attachments",
         "net_worth": "Net worth",
         "bill": "Bill",
         "no_bill": "(no bill)",

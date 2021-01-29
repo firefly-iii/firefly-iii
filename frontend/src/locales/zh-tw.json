@@ -18,6 +18,7 @@
         "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "\u5f85\u4ed8\u5e33\u55ae",
         "left_to_spend": "\u5269\u9918\u53ef\u82b1\u8cbb",
+        "attachments": "\u9644\u52a0\u6a94\u6848",
         "net_worth": "\u6de8\u503c",
         "bill": "\u5e33\u55ae",
         "no_bill": "(no bill)",

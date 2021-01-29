@@ -96,7 +96,7 @@ return [
         'webhooks'  => false,
     ],
 
-    'version'                      => '5.5.0-alpha.1',
+    'version'                      => '5.5.0-beta.1',
     'api_version'                  => '1.5.0',
     'db_version'                   => 15,
     'maxUploadSize'                => 1073741824, // 1 GB

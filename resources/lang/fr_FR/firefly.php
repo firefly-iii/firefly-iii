@@ -277,7 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III a trouvé plus de :count transactions en :time secondes.',
     'search_for_query'                                    => 'Firefly III recherche des opérations contenant tous ces mots : <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'La date de l\'opération est ":value"',
-    'search_modifier_id'                                  => 'Transaction ID is ":value"',
+    'search_modifier_id'                                  => 'L\'ID de l\'opération est ":value"',
     'search_modifier_date_before'                         => 'La date de l\'opération est avant ou le ":value"',
     'search_modifier_date_after'                          => 'La date de l\'opération est après ou le ":value"',
     'search_modifier_created_on'                          => 'L\'opération a été créée le ":value"',
