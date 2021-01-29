@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 
-use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
+use FireflyIII\Api\V1\Requests\BudgetLimitStoreRequest;
+use FireflyIII\Api\V1\Requests\BudgetLimitUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\BudgetLimit;
@@ -49,11 +50,8 @@ class BudgetLimitController extends Controller
 {
     use TransactionFilter;
 
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private BudgetRepositoryInterface      $repository;
 
 
     /**
@@ -104,9 +102,10 @@ class BudgetLimitController extends Controller
     public function index(Request $request): JsonResponse
     {
         $manager  = $this->getManager();
-        $budgetId = (int) ($request->get('budget_id') ?? 0);
+        $manager->parseIncludes('budget');
+        $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $this->parameters->set('budget_id', $budgetId);
 
         $collection = new Collection;
@@ -156,13 +155,13 @@ class BudgetLimitController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param BudgetLimitRequest $request
+     * @param BudgetLimitStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      *
      */
-    public function store(BudgetLimitRequest $request): JsonResponse
+    public function store(BudgetLimitStoreRequest $request): JsonResponse
     {
         $data               = $request->getAll();
         $data['start_date'] = $data['start'];
@@ -192,7 +191,7 @@ class BudgetLimitController extends Controller
      */
     public function transactions(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -237,12 +236,12 @@ class BudgetLimitController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param BudgetLimitRequest $request
-     * @param BudgetLimit        $budgetLimit
+     * @param BudgetLimitUpdateRequest $request
+     * @param BudgetLimit              $budgetLimit
      *
      * @return JsonResponse
      */
-    public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
+    public function update(BudgetLimitUpdateRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $data        = $request->getAll();
         $budgetLimit = $this->blRepository->update($budgetLimit, $data);

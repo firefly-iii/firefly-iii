@@ -125,6 +125,7 @@ class ShowController extends Controller
             ->setPage($page)->withAccountInformation()->withCategoryInformation()
             ->setRange($start, $end);
         $groups = $collector->getPaginatedGroups();
+
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll = false;
         $balance = app('steam')->balance($account, $end);

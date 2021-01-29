@@ -37,11 +37,6 @@
                             <input type="hidden" name="rule" value="{{ ruleId }}" />
                         {% endif %}
                     </form>
-                    {% if longQueryWarning %}
-                    <p class="text-danger">
-                        {{ 'long_query_warning'|_ }}
-                    </p>
-                    {% endif %}
                     {% if '' != query %}
                     <p>
                         {{ trans('firefly.search_for_query', {query: query|escape})|raw}}

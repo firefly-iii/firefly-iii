@@ -22,14 +22,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -112,4 +115,21 @@ class UpdatedGroupEventHandler
         $newRuleEngine->fire();
     }
 
+    /**
+     * @param UpdatedTransactionGroup $updatedGroupEvent
+     */
+    public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
+    {
+        Log::debug('UpdatedGroupEventHandler:triggerWebhooks');
+        $group    = $updatedGroupEvent->transactionGroup;
+        $user     = $group->user;
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser($user);
+        $engine->setObjects(new Collection([$group]));
+        $engine->setTrigger(Webhook::TRIGGER_UPDATE_TRANSACTION);
+        $engine->generateMessages();
+
+        event(new RequestedSendWebhookMessages);
+    }
 }

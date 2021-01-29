@@ -54,13 +54,13 @@ return [
     'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
     'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
     'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
-    'registered_closing'               => 'Enjoy!',
+    'registered_closing'               => 'Užívejte!',
     'registered_firefly_iii_link'      => 'Firefly III:',
-    'registered_pw_reset_link'         => 'Password reset:',
+    'registered_pw_reset_link'         => 'Obnovení hesla:',
     'registered_doc_link'              => 'Documentation:',
 
     // email change
-    'email_change_subject'             => 'Your Firefly III email address has changed',
+    'email_change_subject'             => 'Vaše Firefly III e-mailová adresa se změnila',
     'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
     'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
     'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',

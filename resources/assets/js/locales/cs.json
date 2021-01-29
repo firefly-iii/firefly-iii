@@ -5,7 +5,7 @@
         "flash_success": "\u00dasp\u011b\u0161n\u011b dokon\u010deno!",
         "close": "Zav\u0159\u00edt",
         "split_transaction_title": "Popis roz\u00fa\u010dtov\u00e1n\u00ed",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "split": "Rozd\u011blit",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",

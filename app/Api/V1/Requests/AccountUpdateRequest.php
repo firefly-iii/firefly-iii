@@ -26,7 +26,10 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\UniqueAccountNumber;
+use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,18 +40,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes, AppendsLocationData;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
 
     /**
      * @return array
@@ -113,9 +105,9 @@ class AccountUpdateRequest extends FormRequest
         $rules = [
             'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
-            'iban'                 => 'iban|nullable',
+            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->nullableString('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => sprintf('between:1,255|nullable|uniqueAccountNumberForUser:%d', $account->id),
+            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->nullableString('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -134,6 +126,7 @@ class AccountUpdateRequest extends FormRequest
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
+
         return Location::requestRules($rules);
     }
 }

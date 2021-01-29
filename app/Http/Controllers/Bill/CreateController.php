@@ -75,7 +75,7 @@ class CreateController extends Controller
         /** @var array $billPeriods */
         $billPeriods = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
-            $periods[$current] = strtolower((string) trans('firefly.repeat_freq_' . $current));
+            $periods[$current] = (string) trans('firefly.repeat_freq_' . $current);
         }
         $subTitle        = (string) trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();

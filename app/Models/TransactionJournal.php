@@ -40,55 +40,57 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
- * Class TransactionJournal.
+ * FireflyIII\Models\TransactionJournal
  *
- * @property User                                                                                      $user
- * @property int                                                                                       $bill_id
- * @property Collection                                                                                $categories
- * @property bool                                                                                      $completed
- * @property string                                                                                    $description
- * @property int                                                                                       $transaction_type_id
- * @property int                                                                                       transaction_currency_id
- * @property TransactionCurrency                                                                       $transactionCurrency
- * @property Collection                                                                                $tags
- * @property int                                                                                       user_id
- * @property Collection                                                                                transactions
- * @property int                                                                                       transaction_count
- * @property Carbon                                                                                    interest_date
- * @property Carbon                                                                                    book_date
- * @property Carbon                                                                                    process_date
- * @property bool                                                                                      encrypted
- * @property int                                                                                       order
- * @property int                                                                                       budget_id
- * @property string                                                                                    period_marker
- * @property Carbon                                                                                    $date
- * @property string                                                                                    $transaction_type_type
- * @property int                                                                                       $id
- * @property TransactionType                                                                           $transactionType
- * @property Collection                                                                                budgets
- * @property Bill                                                                   $bill
- * @property Collection                                                             transactionJournalMeta
- * @property TransactionGroup                                                       transactionGroup
- * @property int                                                                    transaction_group_id
- * @SuppressWarnings (PHPMD.TooManyPublicMethods)
- * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
- * @property \Illuminate\Support\Carbon|null                                        $created_at
- * @property \Illuminate\Support\Carbon|null                                        $updated_at
- * @property \Illuminate\Support\Carbon|null                                        $deleted_at
- * @property int                                                                    $tag_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]             $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|Note[]                   $notes
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBankEvent[]         $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournalLink[] $sourceJournalLinks
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[]               $transactionGroups
- * @method static EloquentBuilder|TransactionJournal after(Carbon $date)
- * @method static EloquentBuilder|TransactionJournal before(Carbon $date)
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $transaction_type_id
+ * @property int|null $transaction_group_id
+ * @property int|null $bill_id
+ * @property int|null $transaction_currency_id
+ * @property string $description
+ * @property \Illuminate\Support\Carbon $date
+ * @property \Illuminate\Support\Carbon|null $interest_date
+ * @property \Illuminate\Support\Carbon|null $book_date
+ * @property \Illuminate\Support\Carbon|null $process_date
+ * @property int $order
+ * @property int $tag_count
+ * @property bool $encrypted
+ * @property bool $completed
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read \FireflyIII\Models\Bill|null $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read int|null $budgets_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $destJournalLinks
+ * @property-read int|null $dest_journal_links_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
+ * @property-read int|null $piggy_bank_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $sourceJournalLinks
+ * @property-read int|null $source_journal_links_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
+ * @property-read int|null $tags_count
+ * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionGroup|null $transactionGroup
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionJournalMeta
+ * @property-read int|null $transaction_journal_meta_count
+ * @property-read \FireflyIII\Models\TransactionType $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read User $user
+ * @method static EloquentBuilder|TransactionJournal after(\Carbon\Carbon $date)
+ * @method static EloquentBuilder|TransactionJournal before(\Carbon\Carbon $date)
  * @method static EloquentBuilder|TransactionJournal newModelQuery()
  * @method static EloquentBuilder|TransactionJournal newQuery()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal onlyTrashed()
  * @method static EloquentBuilder|TransactionJournal query()
- * @method static bool|null restore()
  * @method static EloquentBuilder|TransactionJournal transactionTypes($types)
  * @method static EloquentBuilder|TransactionJournal whereBillId($value)
  * @method static EloquentBuilder|TransactionJournal whereBookDate($value)
@@ -104,24 +106,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|TransactionJournal whereProcessDate($value)
  * @method static EloquentBuilder|TransactionJournal whereTagCount($value)
  * @method static EloquentBuilder|TransactionJournal whereTransactionCurrencyId($value)
+ * @method static EloquentBuilder|TransactionJournal whereTransactionGroupId($value)
  * @method static EloquentBuilder|TransactionJournal whereTransactionTypeId($value)
  * @method static EloquentBuilder|TransactionJournal whereUpdatedAt($value)
  * @method static EloquentBuilder|TransactionJournal whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null                                                          $attachments_count
- * @property-read int|null                                                          $budgets_count
- * @property-read int|null                                                          $categories_count
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournalLink[] $destJournalLinks
- * @property-read int|null                                                          $dest_journal_links_count
- * @property-read int|null                                                          $notes_count
- * @property-read int|null                                                          $piggy_bank_events_count
- * @property-read int|null                                                          $source_journal_links_count
- * @property-read int|null                                                          $tags_count
- * @property-read int|null                                                          $transaction_journal_meta_count
- * @property-read int|null                                                          $transactions_count
- * @method static EloquentBuilder|TransactionJournal whereTransactionGroupId($value)
  */
 class TransactionJournal extends Model
 {

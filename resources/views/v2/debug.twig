@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>{{ trans('firefly.debug_page') }}</title>
+</head>
+<body>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
+    {{ trans('firefly.debug_submit_instructions')|raw }}
+</p>
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
+    <strong>{{ trans('firefly.debug_pretty_table') }}</strong>
+</p>
+<textarea rows="30" cols="100" name="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
+Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
+
+| Scope | Version |
+| --- | --- |
+| Firefly III | {{ FF_VERSION }} |
+| Firefly III API | {{ config('firefly.api_version') }} |
+| PHP | {{ phpVersion }} |
+| Host | {{ phpOs }} |
+
+| System info | Value |
+| --- | --- |
+| Installation ID | {{ installationId }} |
+| Using docker? | {% if isDocker %}true{% else %}false{% endif %} |
+| Telemetry | {% if telemetry %}true{% else%}false{% endif%} |
+| Layout | {{ layout }} |
+| App environment | {{ appEnv }} |
+| App debug mode | {{ appDebug }} |
+| App cache driver | {{ cacheDriver }} |
+| App logging | {{ appLogLevel }}, {{ logChannel }} |
+| Display errors | {{ displayErrors }} |
+| Error reporting | {{ errorReporting }} |
+| Interface | {{ interface }} |
+| Default language | {{ defaultLanguage }} |
+| Default locale | {{ defaultLocale }} |
+| BCscale | {{ bcscale }} |
+| DB drivers | {{ drivers }} |
+| Current driver | {{ currentDriver }} |
+| DB version | {{ foundDBversion }} (exp. {{ expectedDBversion}}) |
+| Login provider | {{ loginProvider }}  |
+| Trusted proxies (.env) | {{ trustedProxies }} |
+
+| User info | Value |
+| --- | --- |
+| Session start | {{ session('start') }} |
+| Session end | {{ session('end') }} |
+| Session first | {{ session('first') }} |
+| User ID | {{ Auth.user.id }} |
+| User language | {{ userLanguage }} |
+| User locale | {{ userLocale }} |
+{% for code,result in localeAttempts %}
+| Attempt at "{{ code }}" | {{ result }} |
+{% endfor %}
+| User agent | {{ userAgent }} |
+</textarea>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
+</p>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    {{ trans('firefly.debug_additional_data')|raw }}
+</p>
+
+<textarea rows="30" cols="100" name="log_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:7pt;">
+```
+{{ logContent }}
+```
+</textarea>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>
+</p>
+
+</body>
+</html>

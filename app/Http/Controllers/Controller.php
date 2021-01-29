@@ -56,11 +56,14 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false,),);
-        $isDemoSite = $isDemoSiteConfig ? $isDemoSiteConfig->data : false;
+        $isDemoSite       = $isDemoSiteConfig ? $isDemoSiteConfig->data : false;
         app('view')->share('IS_DEMO_SITE', $isDemoSite,);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
+
+        // is webhooks enabled?
+        app('view')->share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
 
         // share custom auth guard info.
         $authGuard = config('firefly.authentication_guard');
@@ -95,9 +98,9 @@ abstract class Controller extends BaseController
             function ($request, $next) {
                 $locale = app('steam')->getLocale();
                 // translations for specific strings:
-                $this->monthFormat       = (string) trans('config.month', [], $locale);
-                $this->monthAndDayFormat = (string) trans('config.month_and_day', [], $locale);
-                $this->dateTimeFormat    = (string) trans('config.date_time', [], $locale);
+                $this->monthFormat       = (string)trans('config.month', [], $locale);
+                $this->monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
+                $this->dateTimeFormat    = (string)trans('config.date_time', [], $locale);
 
                 // get shown-intro-preference:
                 if (auth()->check()) {

@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Le montant actuel doit être inférieur au montant cible.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
     'unique_object_group'            => 'Le nom du groupe doit être unique',
+    'starts_with'                    => 'La valeur doit commencer par :values.',
+    'unique_webhook'                 => 'Vous avez déjà un webhook avec ces valeurs.',
+    'unique_existing_webhook'        => 'Vous avez déjà un autre webhook avec ces valeurs.',
 
-    'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
-    'valid_recurrence_rep_moment'    => 'Période de répétition non valide pour ce type de répétition.',
-    'invalid_account_info'           => 'Informations de compte non valides.',
-    'attributes'                     => [
+    'secure_password'             => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Type de répétition non valide pour des opérations périodiques.',
+    'valid_recurrence_rep_moment' => 'Période de répétition non valide pour ce type de répétition.',
+    'invalid_account_info'        => 'Informations de compte non valides.',
+    'attributes'                  => [
         'email'                   => 'adresse email',
         'description'             => 'description',
         'amount'                  => 'montant',
+        'transactions.*.amount'   => 'montant de l\'opération',
         'name'                    => 'nom',
         'piggy_bank_id'           => 'ID de tirelire',
         'targetamount'            => 'montant cible',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
-    'withdrawal_source_bad_data'     => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
-    'withdrawal_dest_need_data'      => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
-    'withdrawal_dest_bad_data'       => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'withdrawal_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'withdrawal_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'withdrawal_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'deposit_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Le montant est requis.',
     'auto_budget_amount_positive'     => 'Le montant doit être supérieur à zéro.',
-    'auto_budget_period_mandatory' => 'La période du budget automatique est un champ obligatoire.',
+    'auto_budget_period_mandatory'    => 'La période du budget automatique est un champ obligatoire.',
 ];

@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "\u8f6c\u5e10",
+        "Withdrawal": "\u63d0\u6b3e",
+        "Deposit": "\u5b58\u6b3e",
+        "date_and_time": "Date and time",
+        "no_currency": "(\u6ca1\u6709\u8d27\u5e01)",
+        "date": "\u65e5\u671f",
+        "time": "Time",
+        "no_budget": "(\u65e0\u9884\u7b97)",
+        "destination_account": "\u76ee\u6807\u5e10\u6237",
+        "source_account": "\u6765\u6e90\u5e10\u6237",
+        "single_split": "Split",
+        "create_new_transaction": "\u65b0\u5efa\u4ea4\u6613",
         "balance": "\u4f59\u989d",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "\u540e\u8bbe\u8d44\u8baf",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "\u5f85\u4ed8\u5e10\u5355",
         "left_to_spend": "\u5269\u4f59\u53ef\u82b1\u8d39",
+        "attachments": "\u9644\u52a0\u6863\u6848",
         "net_worth": "\u51c0\u503c",
+        "bill": "\u5e10\u5355",
+        "no_bill": "(no bill)",
+        "tags": "\u6807\u7b7e",
+        "internal_reference": "\u5185\u90e8\u53c2\u8003",
+        "external_url": "\u5916\u90e8\u94fe\u63a5",
+        "no_piggy_bank": "\uff08\u65e0\u5b58\u94b1\u7f50\uff09",
         "paid": "\u5df2\u4ed8\u6b3e",
+        "notes": "\u6ce8\u91ca",
         "yourAccounts": "\u60a8\u7684\u5e10\u6237",
         "go_to_asset_accounts": "\u68c0\u89c6\u60a8\u7684\u8d44\u4ea7\u5e10\u6237",
         "transaction_table_description": "A table containing your transactions",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "\u50a8\u84c4\u5e10\u6237",
         "account_role_sharedAsset": "\u5171\u7528\u8d44\u4ea7\u5e10\u6237",
         "account_role_ccAsset": "\u4fe1\u7528\u5361",
-        "account_role_cashWalletAsset": "\u73b0\u91d1\u94b1\u5305"
+        "account_role_cashWalletAsset": "\u73b0\u91d1\u94b1\u5305",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "\u4ea4\u6613\u8fde\u7ed3",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "\u6536\u5165\u5e10\u6237",
+        "add_another_split": "\u589e\u52a0\u62c6\u5206"
     },
     "list": {
         "piggy_bank": "\u5b58\u94b1\u7f50",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "zh-cn"
+    },
+    "form": {
+        "foreign_amount": "\u5916\u5e01\u91d1\u989d",
+        "interest_date": "\u5229\u7387\u65e5\u671f",
+        "book_date": "\u767b\u8bb0\u65e5\u671f",
+        "process_date": "\u5904\u7406\u65e5\u671f",
+        "due_date": "\u5230\u671f\u65e5",
+        "payment_date": "\u4ed8\u6b3e\u65e5\u671f",
+        "invoice_date": "\u53d1\u7968\u65e5\u671f"
     }
 }

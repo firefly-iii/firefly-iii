@@ -32,25 +32,23 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
- * Class AutoBudget
+ * FireflyIII\Models\AutoBudget
  *
- * @property int                             $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property int                             $budget_id
- * @property int                             $transaction_currency_id
- * @property int                             $auto_budget_type
- * @property float                           $amount
- * @property string                          $period
- * @property-read Budget                     $budget
- * @property-read TransactionCurrency        $transactionCurrency
- * @method static bool|null forceDelete()
+ * @property int $budget_id
+ * @property int $transaction_currency_id
+ * @property int $auto_budget_type
+ * @property string $amount
+ * @property string $period
+ * @property-read \FireflyIII\Models\Budget $budget
+ * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget newQuery()
  * @method static Builder|AutoBudget onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereAutoBudgetType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AutoBudget whereBudgetId($value)

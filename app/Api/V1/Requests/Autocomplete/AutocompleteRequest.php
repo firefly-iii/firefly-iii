@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests\Autocomplete;
 
 
 use FireflyIII\Models\AccountType;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,18 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AutocompleteRequest extends FormRequest
 {
-    use ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use ConvertsDataTypes, ChecksLogin;
 
     /**
      * @return array
@@ -60,7 +50,7 @@ class AutocompleteRequest extends FormRequest
         $limit = 0 === $limit ? 10 : $limit;
 
         // remove 'initial balance' from allowed types. its internal
-        $array = array_diff($array, [AccountType::INITIAL_BALANCE]);
+        $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
 
         return [
             'types' => $array,

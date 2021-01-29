@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "\u00d6verf\u00f6ring",
+        "Withdrawal": "Uttag",
+        "Deposit": "Ins\u00e4ttning",
+        "date_and_time": "Date and time",
+        "no_currency": "(ingen valuta)",
+        "date": "Datum",
+        "time": "Time",
+        "no_budget": "(ingen budget)",
+        "destination_account": "Till konto",
+        "source_account": "K\u00e4llkonto",
+        "single_split": "Dela",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metadata",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Notor att betala",
         "left_to_spend": "\u00c5terst\u00e5r att spendera",
+        "attachments": "Bilagor",
         "net_worth": "Nettof\u00f6rm\u00f6genhet",
+        "bill": "Nota",
+        "no_bill": "(ingen r\u00e4kning)",
+        "tags": "Etiketter",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(ingen spargris)",
         "paid": "Betald",
+        "notes": "Noteringar",
         "yourAccounts": "Dina konton",
         "go_to_asset_accounts": "Visa dina tillg\u00e5ngskonton",
         "transaction_table_description": "En tabell som inneh\u00e5ller dina transaktioner",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Sparkonto",
         "account_role_sharedAsset": "Delat tillg\u00e5ngskonto",
         "account_role_ccAsset": "Kreditkort",
-        "account_role_cashWalletAsset": "Pl\u00e5nbok"
+        "account_role_cashWalletAsset": "Pl\u00e5nbok",
+        "daily_budgets": "Dagliga budgetar",
+        "weekly_budgets": "Veckovis budgetar",
+        "monthly_budgets": "M\u00e5natliga budgetar",
+        "quarterly_budgets": "Kvartalsbudgetar",
+        "half_year_budgets": "Halv\u00e5rsbudgetar",
+        "yearly_budgets": "\u00c5rliga budgetar",
+        "other_budgets": "Anpassade tidsinst\u00e4llda budgetar",
+        "journal_links": "Transaktionsl\u00e4nkar",
+        "go_to_withdrawals": "G\u00e5 till dina uttag",
+        "revenue_accounts": "Int\u00e4ktskonton",
+        "add_another_split": "L\u00e4gga till en annan delning"
     },
     "list": {
         "piggy_bank": "Spargris",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "sv"
+    },
+    "form": {
+        "foreign_amount": "Utl\u00e4ndskt belopp",
+        "interest_date": "R\u00e4ntedatum",
+        "book_date": "Bokf\u00f6ringsdatum",
+        "process_date": "Behandlingsdatum",
+        "due_date": "F\u00f6rfallodatum",
+        "payment_date": "Betalningsdatum",
+        "invoice_date": "Fakturadatum"
     }
 }

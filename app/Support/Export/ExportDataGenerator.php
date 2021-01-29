@@ -48,6 +48,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\User;
 use League\Csv\Writer;
 
@@ -656,18 +657,29 @@ class ExportDataGenerator
     private function exportTransactions(): string
     {
         // TODO better place for keys?
-        $header    = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
-                      'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
-                      'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes'];
+        $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
+                   'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
+                   'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',
+                   // all optional meta fields:
+        ];
+
+        $metaFields = config('firefly.journal_meta_fields');
+        $header     = array_merge($header, $metaFields);
+
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()
                   ->withBudgetInformation()->withTagInformation()->withNotes();
         $journals = $collector->getExtractedJournals();
 
+        // get repository for meta data:
+        $repository = app(TransactionGroupRepositoryInterface::class);
+        $repository->setUser($this->user);
+
         $records = [];
         /** @var array $journal */
         foreach ($journals as $journal) {
+            $metaData  = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
             $records[] = [
                 $journal['user_id'],
                 $journal['transaction_group_id'],
@@ -694,6 +706,40 @@ class ExportDataGenerator
                 $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
                 $journal['notes'],
+
+                // export also the optional fields (ALL)
+
+                // sepa
+                $metaData['sepa_cc'],
+                $metaData['sepa_ct_op'],
+                $metaData['sepa_ct_id'],
+                $metaData['sepa_db'],
+                $metaData['sepa_country'],
+                $metaData['sepa_ep'],
+                $metaData['sepa_ci'],
+                $metaData['sepa_batch_id'],
+                $metaData['external_uri'],
+
+                // dates
+                $metaData['interest_date'],
+                $metaData['book_date'],
+                $metaData['process_date'],
+                $metaData['due_date'],
+                $metaData['payment_date'],
+                $metaData['invoice_date'],
+
+                // others
+                $metaData['recurrence_id'],
+                $metaData['internal_reference'],
+                $metaData['bunq_payment_id'],
+                $metaData['import_hash'],
+                $metaData['import_hash_v2'],
+                $metaData['external_id'],
+                $metaData['original_source'],
+
+                // recurring transactions
+                $metaData['recurrence_total'],
+                $metaData['recurrence_count'],
             ];
 
         }

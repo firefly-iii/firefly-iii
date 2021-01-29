@@ -1,25 +1,26 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "production": "mix --production",
+        "prod": "mix --production"
     },
     "devDependencies": {
-        "@johmun/vue-tags-input": "^2.1.0",
-        "axios": "^0.21.1",
-        "bootstrap-sass": "^3.3.7",
+        "@johmun/vue-tags-input": "^2",
+        "axios": "^0.21",
+        "bootstrap-sass": "^3",
         "cross-env": "^7.0",
         "font-awesome": "^4.7.0",
-        "jquery": "^3.4.1",
-        "laravel-mix": "^5.0",
-        "uiv": "^1.1",
+        "jquery": "^3",
+        "laravel-mix": "^6.0",
+        "postcss": "^8.1",
+        "uiv": "^1.2",
         "vue": "^2.6",
         "vue-i18n": "^8.22",
-        "vue-template-compiler": "^2.6.11"
+        "vue-loader": "^15.9.5",
+        "vue-template-compiler": "^2.6"
     }
 }

@@ -54,7 +54,7 @@ class JavascriptController extends Controller
         );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         /** @noinspection NullPointerExceptionInspection */
-        $default = $currencyRepository->findByCodeNull($preference->data);
+        $default = $currencyRepository->findByCodeNull((string) $preference->data);
 
         $data = ['accounts' => []];
 

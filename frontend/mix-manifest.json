@@ -5,12 +5,18 @@
     "/public/js/vendor.js.map": "/public/js/vendor.js.map",
     "/public/js/accounts/index.js": "/public/js/accounts/index.js",
     "/public/js/accounts/index.js.map": "/public/js/accounts/index.js.map",
+    "/public/js/accounts/show.js": "/public/js/accounts/show.js",
+    "/public/js/accounts/show.js.map": "/public/js/accounts/show.js.map",
     "/public/js/dashboard.js": "/public/js/dashboard.js",
     "/public/css/app.css": "/public/css/app.css",
     "/public/js/dashboard.js.map": "/public/js/dashboard.js.map",
     "/public/css/app.css.map": "/public/css/app.css.map",
     "/public/js/empty.js": "/public/js/empty.js",
     "/public/js/empty.js.map": "/public/js/empty.js.map",
+    "/public/js/new-user/index.js": "/public/js/new-user/index.js",
+    "/public/js/new-user/index.js.map": "/public/js/new-user/index.js.map",
     "/public/js/register.js": "/public/js/register.js",
-    "/public/js/register.js.map": "/public/js/register.js.map"
+    "/public/js/register.js.map": "/public/js/register.js.map",
+    "/public/js/transactions/create.js": "/public/js/transactions/create.js",
+    "/public/js/transactions/create.js.map": "/public/js/transactions/create.js.map"
 }

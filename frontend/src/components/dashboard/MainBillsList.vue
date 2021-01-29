@@ -19,71 +19,78 @@
   -->
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">{{ $t('firefly.bills') }}</h3>
-        </div>
-        <div class="card-body table-responsive p-0">
-            <table class="table table-striped">
-              <caption style="display:none;">{{ $t('firefly.bills') }}</caption>
-                <thead>
-                <tr>
-                    <th scope="col" style="width:35%;">{{ $t('list.name') }}</th>
-                    <th scope="col" style="width:40%;">{{ $t('list.amount') }}</th>
-                    <th scope="col" style="width:25%;">{{ $t('list.next_expected_match') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="bill in this.bills">
-                    <td><a :href="'./bills/show' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a></td>
-                    <td>~{{ Intl.NumberFormat('en-US', {style: 'currency', currency: bill.attributes.currency_code}).format((bill.attributes.amount_min +
-                        bill.attributes.amount_max) / 2) }}
-                    </td>
-                    <td>
-                        <span v-for="payDate in bill.attributes.pay_dates">
-                            {{ payDate }}<br />
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer">
-            <a href="./bills" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_bills') }}</a>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">{{ $t('firefly.bills') }}</h3>
     </div>
+    <div class="card-body table-responsive p-0">
+      <table class="table table-striped">
+        <caption style="display:none;">{{ $t('firefly.bills') }}</caption>
+        <thead>
+        <tr>
+          <th scope="col" style="width:35%;">{{ $t('list.name') }}</th>
+          <th scope="col" style="width:25%;">{{ $t('list.next_expected_match') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="bill in this.bills">
+          <td><a :href="'./bills/show' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
+            ~{{
+              Intl.NumberFormat(locale, {style: 'currency', currency: bill.attributes.currency_code}).format((parseFloat(bill.attributes.amount_min) +
+                                                                                                              parseFloat(bill.attributes.amount_max)) / 2)
+            }}
+            <br />
+          </td>
+          <td>
+                        <span v-for="payDate in bill.attributes.pay_dates">
+                          {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(payDate)) }}
+                            <br />
+                        </span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+      <a href="./bills" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_bills') }}</a>
+    </div>
+  </div>
 </template>
 <script>
 
-    export default {
-        name: "MainBillsList",
-        mounted() {
-            axios.get('./api/v1/bills?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-                .then(response => {
-                          this.loadBills(response.data.data);
-                      }
-                );
-        },
-        components: {},
-        methods: {
-            loadBills(data) {
-                for (let key in data) {
-                    if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-
-                        let bill = data[key];
-                        let active = bill.attributes.active;
-                        if (bill.attributes.pay_dates.length > 0 && active) {
-                            this.bills.push(bill);
-                        }
-                    }
-                }
-            }
-        },
-        data() {
-            return {
-                bills: []
-            }
-        },
-        computed: {},
+export default {
+  name: "MainBillsList",
+  computed: {
+    locale() {
+      return this.$store.getters.locale;
     }
+  },
+  created() {
+    axios.get('./api/v1/bills?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+        .then(response => {
+                this.loadBills(response.data.data);
+              }
+        );
+  },
+  components: {},
+  methods: {
+    loadBills(data) {
+      for (let key in data) {
+        if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+
+          let bill = data[key];
+          let active = bill.attributes.active;
+          if (bill.attributes.pay_dates.length > 0 && active) {
+            this.bills.push(bill);
+          }
+        }
+      }
+    }
+  },
+  data() {
+    return {
+      bills: []
+    }
+  },
+}
 </script>

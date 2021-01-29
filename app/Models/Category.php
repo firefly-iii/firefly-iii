@@ -36,26 +36,28 @@ use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Category.
+ * FireflyIII\Models\Category
  *
- * @property string                                                                                $name
- * @property int                                  $id
- * @property float                                $spent // used in category reports
- * @property Carbon|null                          lastActivity
- * @property bool                                 encrypted
- * @property User                                 $user
- * @property Carbon                               $created_at
- * @property Carbon                               $updated_at
- * @property \Illuminate\Support\Carbon|null      $deleted_at
- * @property int                                  $user_id
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read Collection|Transaction[]        $transactions
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string $name
+ * @property bool $encrypted
+ * @property-read Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static Builder|Category onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereEncrypted($value)
@@ -66,10 +68,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
  * @mixin Eloquent
- * @property-read Collection|Attachment[] $attachments
- * @property-read int|null                $attachments_count
- * @property-read int|null                $transaction_journals_count
- * @property-read int|null                $transactions_count
  */
 class Category extends Model
 {

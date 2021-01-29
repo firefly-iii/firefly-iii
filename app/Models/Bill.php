@@ -35,37 +35,42 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Bill.
+ * FireflyIII\Models\Bill
  *
- * @property bool                                                                                  $active
- * @property int                                                                                   $transaction_currency_id
- * @property string                                                                                $amount_min
- * @property string                                                                                $amount_max
- * @property int                                                                                   $id
- * @property string                                                                                $name
- * @property Collection                                                                            $notes
- * @property TransactionCurrency                                                                   $transactionCurrency
- * @property Carbon                                                                                $created_at
- * @property Carbon                                                                                $updated_at
- * @property Carbon                                                                                $date
- * @property string                                                                                $repeat_freq
- * @property int                                                                                   $skip
- * @property bool                                                               $automatch
- * @property User                                                               $user
- * @property string                                                             $match
- * @property bool                                                               match_encrypted
- * @property bool                                                               name_encrypted
- * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
- * @property \Illuminate\Support\Carbon|null                                    $deleted_at
- * @property int                                                                $user_id
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]         $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int|null $transaction_currency_id
+ * @property string $name
+ * @property string $match
+ * @property string $amount_min
+ * @property string $amount_max
+ * @property \Illuminate\Support\Carbon $date
+ * @property string|null $end_date
+ * @property string|null $extension_date
+ * @property string $repeat_freq
+ * @property int $skip
+ * @property bool $automatch
+ * @property bool $active
+ * @property bool $name_encrypted
+ * @property bool $match_encrypted
+ * @property int $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newQuery()
  * @method static Builder|Bill onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereAmountMax($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereAmountMin($value)
@@ -73,11 +78,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereExtensionDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereMatch($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereMatchEncrypted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereNameEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bill whereOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereRepeatFreq($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereSkip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereTransactionCurrencyId($value)
@@ -86,11 +94,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
  * @mixin Eloquent
- * @property-read int|null $attachments_count
- * @property-read int|null $notes_count
- * @property-read int|null $transaction_journals_count
- * @property bool $name_encrypted
- * @property bool $match_encrypted
  */
 class Bill extends Model
 {

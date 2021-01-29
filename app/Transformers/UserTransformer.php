@@ -34,20 +34,7 @@ use Log;
 class UserTransformer extends AbstractTransformer
 {
     /** @var UserRepositoryInterface */
-    private $repository;
-
-    /**
-     * UserTransformer constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        $this->repository = app(UserRepositoryInterface::class);
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    private UserRepositoryInterface $repository;
 
     /**
      * Transform user.
@@ -58,6 +45,7 @@ class UserTransformer extends AbstractTransformer
      */
     public function transform(User $user): array
     {
+        $this->repository = $this->repository ?? app(UserRepositoryInterface::class);
         return [
             'id'           => (int)$user->id,
             'created_at'   => $user->created_at->toAtomString(),

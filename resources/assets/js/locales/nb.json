@@ -5,7 +5,7 @@
         "flash_success": "Suksess!",
         "close": "Lukk",
         "split_transaction_title": "Description of the split transaction",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "split": "Del opp",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",

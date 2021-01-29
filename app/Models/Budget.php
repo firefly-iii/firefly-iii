@@ -36,28 +36,32 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class Budget.
+ * FireflyIII\Models\Budget
  *
- * @property int                                                                                   $id
- * @property string                                                                                $name
- * @property bool                                                               $active
- * @property int                                                                $user_id
- * @property-read string                                                        $email
- * @property bool                                                               encrypted
- * @property Collection                                                         budgetlimits
- * @property int                                                                $order
- * @property Carbon                                                             created_at
- * @property Carbon                                                             updated_at
- * @property User                                                               $user
- * @property \Illuminate\Support\Carbon|null                                    $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[] $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]        $transactions
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string $name
+ * @property bool $active
+ * @property bool $encrypted
+ * @property int $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read int|null $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AutoBudget[] $autoBudgets
+ * @property-read int|null $auto_budgets_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetlimits
+ * @property-read int|null $budgetlimits_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget newQuery()
  * @method static Builder|Budget onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereDeletedAt($value)
@@ -70,17 +74,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[] $attachments
- * @property-read int|null                                              $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|AutoBudget[] $autoBudgets
- * @property-read int|null                                              $auto_budgets_count
- * @property-read int|null                                              $budgetlimits_count
- * @property-read int|null                                              $transaction_journals_count
- * @property-read int|null                                              $transactions_count
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetlimits
  */
 class Budget extends Model
 {

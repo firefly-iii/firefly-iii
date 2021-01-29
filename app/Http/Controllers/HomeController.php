@@ -83,7 +83,7 @@ class HomeController extends Controller
             Log::debug('Range is now marked as "custom".');
         }
 
-        $diff = $start->diffInDays($end);
+        $diff = $start->diffInDays($end) + 1;
 
         if ($diff > 50) {
             $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => $diff]));

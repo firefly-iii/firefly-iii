@@ -102,11 +102,9 @@ interface RuleGroupRepositoryInterface
     public function getHighestOrderRuleGroup(): int;
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(User $user): Collection;
+    public function getRuleGroupsWithRules(): Collection;
 
     /**
      * @param RuleGroup $group

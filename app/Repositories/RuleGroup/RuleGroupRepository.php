@@ -38,16 +38,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @return int
      */
     public function count(): int
@@ -208,14 +198,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(User $user): Collection
+    public function getRuleGroupsWithRules(): Collection
     {
-        return $user->ruleGroups()
+        return $this->user->ruleGroups()
                     ->orderBy('order', 'ASC')
+                    ->where('active', true)
                     ->with(
                         [
                             'rules'              => static function (HasMany $query) {

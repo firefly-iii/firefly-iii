@@ -83,7 +83,7 @@
                                 callback: function (tickValue) {
                                     "use strict";
                                     let currencyCode = this.chart.data.datasets[0] ? this.chart.data.datasets[0].currency_code : 'EUR';
-                                    return new Intl.NumberFormat(window.localeValue, {style: 'currency', currency: currencyCode}).format(tickValue);
+                                    return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
                                 },
 
                             }
@@ -95,7 +95,7 @@
                             label: function (tooltipItem, data) {
                                 "use strict";
                                 let currencyCode = data.datasets[tooltipItem.datasetIndex] ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
-                                let nrString = new Intl.NumberFormat(window.localeValue, {
+                                let nrString = new Intl.NumberFormat(localStorage.locale, {
                                     style: 'currency',
                                     currency: currencyCode
                                 }).format(tooltipItem.yLabel);

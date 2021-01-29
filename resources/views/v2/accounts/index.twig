@@ -1,6 +1,7 @@
-{% set bcArgs = [objectType] %}
-
 {% extends "./layout/default" %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
 {% block content %}
 <div id="accounts"></div>
 {% endblock %}

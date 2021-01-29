@@ -29,6 +29,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use Log;
+use Exception;
 
 /**
  * Class CategoryUpdateService

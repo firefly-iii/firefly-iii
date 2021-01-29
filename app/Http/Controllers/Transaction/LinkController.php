@@ -40,10 +40,8 @@ use URL;
  */
 class LinkController extends Controller
 {
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $journalRepository;
-    /** @var LinkTypeRepositoryInterface Link repository. */
-    private $repository;
+    private JournalRepositoryInterface $journalRepository;
+    private LinkTypeRepositoryInterface $repository;
 
     /**
      * LinkController constructor.

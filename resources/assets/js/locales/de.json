@@ -5,7 +5,7 @@
         "flash_success": "Geschafft!",
         "close": "Schlie\u00dfen",
         "split_transaction_title": "Beschreibung der Splittbuchung",
-        "errors_submission": "Problem bei der \u00dcbermittlung. Bitte \u00fcberpr\u00fcfen Sie die nachfolgenden Fehler.",
+        "errors_submission": "Ihre \u00dcbermittlung ist fehlgeschlagen. Bitte \u00fcberpr\u00fcfen Sie die Fehler.",
         "split": "Teilen",
         "single_split": "Teil",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID} (\"{title}\")<\/a> wurde gespeichert.",

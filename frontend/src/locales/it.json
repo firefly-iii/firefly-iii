@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Trasferimento",
+        "Withdrawal": "Prelievo",
+        "Deposit": "Entrata",
+        "date_and_time": "Data e ora",
+        "no_currency": "(nessuna valuta)",
+        "date": "Data",
+        "time": "Ora",
+        "no_budget": "(nessun budget)",
+        "destination_account": "Conto destinazione",
+        "source_account": "Conto di origine",
+        "single_split": "Divisione",
+        "create_new_transaction": "Crea una nuova transazione",
         "balance": "Saldo",
+        "transaction_journal_extra": "Informazioni aggiuntive",
+        "transaction_journal_meta": "Meta informazioni",
+        "basic_journal_information": "Informazioni di base sulla transazione",
         "bills_to_pay": "Bollette da pagare",
         "left_to_spend": "Altro da spendere",
+        "attachments": "Allegati",
         "net_worth": "Patrimonio",
+        "bill": "Bolletta",
+        "no_bill": "(nessuna bolletta)",
+        "tags": "Etichette",
+        "internal_reference": "Riferimento interno",
+        "external_url": "URL esterno",
+        "no_piggy_bank": "(nessun salvadanaio)",
         "paid": "Pagati",
+        "notes": "Note",
         "yourAccounts": "I tuoi conti",
         "go_to_asset_accounts": "Visualizza i tuoi conti attivit\u00e0",
         "transaction_table_description": "Una tabella contenente le tue transazioni",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Conto risparmio",
         "account_role_sharedAsset": "Conto attivit\u00e0 condiviso",
         "account_role_ccAsset": "Carta di credito",
-        "account_role_cashWalletAsset": "Portafoglio"
+        "account_role_cashWalletAsset": "Portafoglio",
+        "daily_budgets": "Budget giornalieri",
+        "weekly_budgets": "Budget settimanali",
+        "monthly_budgets": "Budget mensili",
+        "quarterly_budgets": "Bilanci trimestrali",
+        "half_year_budgets": "Bilanci semestrali",
+        "yearly_budgets": "Budget annuali",
+        "other_budgets": "Budget a periodi personalizzati",
+        "journal_links": "Collegamenti della transazione",
+        "go_to_withdrawals": "Vai ai tuoi prelievi",
+        "revenue_accounts": "Conti entrate",
+        "add_another_split": "Aggiungi un'altra divisione"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "it"
+    },
+    "form": {
+        "foreign_amount": "Importo estero",
+        "interest_date": "Data di valuta",
+        "book_date": "Data contabile",
+        "process_date": "Data elaborazione",
+        "due_date": "Data scadenza",
+        "payment_date": "Data pagamento",
+        "invoice_date": "Data fatturazione"
     }
 }

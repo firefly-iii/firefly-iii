@@ -1,8 +1,9 @@
-{% set bcArgs = [[objectType], [1,2,3]] %}
-
 {% extends "./layout/default" %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
 {% block content %}
-<div id="accounts"></div>
+<div id="accounts_show"></div>
 {% endblock %}
 
 {% block styles %}
@@ -10,5 +11,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="v2/js/accounts.js" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/accounts/show.js" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

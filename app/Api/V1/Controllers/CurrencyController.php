@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\CurrencyRequest;
+use FireflyIII\Api\V1\Requests\CurrencyUpdateRequest;
+use FireflyIII\Api\V1\Requests\CurrencyStoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -580,12 +581,12 @@ class CurrencyController extends Controller
     /**
      * Store new currency.
      *
-     * @param CurrencyRequest $request
+     * @param CurrencyStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(CurrencyRequest $request): JsonResponse
+    public function store(CurrencyStoreRequest $request): JsonResponse
     {
         $currency = $this->repository->store($request->getAll());
         if (true === $request->boolean('default')) {
@@ -664,12 +665,12 @@ class CurrencyController extends Controller
     /**
      * Update a currency.
      *
-     * @param CurrencyRequest     $request
+     * @param CurrencyUpdateRequest     $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
      */
-    public function update(CurrencyRequest $request, TransactionCurrency $currency): JsonResponse
+    public function update(CurrencyUpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
         $data     = $request->getAll();
         $currency = $this->repository->update($currency, $data);

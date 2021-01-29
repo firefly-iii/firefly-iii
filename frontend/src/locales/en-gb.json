@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Transfer",
+        "Withdrawal": "Withdrawal",
+        "Deposit": "Deposit",
+        "date_and_time": "Date and time",
+        "no_currency": "(no currency)",
+        "date": "Date",
+        "time": "Time",
+        "no_budget": "(no budget)",
+        "destination_account": "Destination account",
+        "source_account": "Source account",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Balance",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta information",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Bills to pay",
         "left_to_spend": "Left to spend",
+        "attachments": "Attachments",
         "net_worth": "Net worth",
+        "bill": "Bill",
+        "no_bill": "(no bill)",
+        "tags": "Tags",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(no piggy bank)",
         "paid": "Paid",
+        "notes": "Notes",
         "yourAccounts": "Your accounts",
         "go_to_asset_accounts": "View your asset accounts",
         "transaction_table_description": "A table containing your transactions",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Savings account",
         "account_role_sharedAsset": "Shared asset account",
         "account_role_ccAsset": "Credit card",
-        "account_role_cashWalletAsset": "Cash wallet"
+        "account_role_cashWalletAsset": "Cash wallet",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "Transaction links",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Revenue accounts",
+        "add_another_split": "Add another split"
     },
     "list": {
         "piggy_bank": "Piggy bank",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "en-gb"
+    },
+    "form": {
+        "foreign_amount": "Foreign amount",
+        "interest_date": "Interest date",
+        "book_date": "Book date",
+        "process_date": "Processing date",
+        "due_date": "Due date",
+        "payment_date": "Payment date",
+        "invoice_date": "Invoice date"
     }
 }

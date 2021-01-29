@@ -39,7 +39,7 @@
     import DataConverter from "../charts/DataConverter";
     export default {
         name: "MainCategory",
-        mounted() {
+      created() {
             axios.get('./api/v1/chart/category/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
                     let chartData = DataConverter.methods.convertChart(response.data);

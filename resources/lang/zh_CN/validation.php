@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => '当前金额必须小于目标金额。',
     'unique_piggy_bank_for_user'     => '存钱罐的名称必须是独一无二的。',
     'unique_object_group'            => '组名必须是唯一的',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => '这不是一个安全的密码，请重试一次。如需更多讯息，请访问 https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => '对定期重复交易是无效的重复类型。',
-    'valid_recurrence_rep_moment'    => '对此重复类型是无效的重复时刻。',
-    'invalid_account_info'           => '无效的帐户资讯。',
-    'attributes'                     => [
+    'secure_password'             => '这不是一个安全的密码，请重试一次。如需更多讯息，请访问 https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => '对定期重复交易是无效的重复类型。',
+    'valid_recurrence_rep_moment' => '对此重复类型是无效的重复时刻。',
+    'invalid_account_info'        => '无效的帐户资讯。',
+    'attributes'                  => [
         'email'                   => '电子邮件地址',
         'description'             => '描述',
         'amount'                  => '金额',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => '名称',
         'piggy_bank_id'           => '存钱罐 ID',
         'targetamount'            => '目标金额',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
-    'withdrawal_source_bad_data'     => '搜索 ID":id"或名称":name"时找不到有效的来源帐户。',
-    'withdrawal_dest_need_data'      => '需要一个有效的目标账户ID和/或目标账户名称才能继续。',
-    'withdrawal_dest_bad_data'       => '搜索 ID":id"或名称":name"时找不到有效的目标帐户。',
+    'withdrawal_source_need_data' => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
+    'withdrawal_source_bad_data'  => '搜索 ID":id"或名称":name"时找不到有效的来源帐户。',
+    'withdrawal_dest_need_data'   => '需要一个有效的目标账户ID和/或目标账户名称才能继续。',
+    'withdrawal_dest_bad_data'    => '搜索 ID":id"或名称":name"时找不到有效的目标帐户。',
 
     'deposit_source_need_data' => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
     'deposit_source_bad_data'  => '搜索 ID":id"或名称":name"时找不到有效的来源帐户。',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => '请填写金额。',
     'auto_budget_amount_positive'     => '金额必须大于零。',
-    'auto_budget_period_mandatory' => '自动预算周期是必填的。',
+    'auto_budget_period_mandatory'    => '自动预算周期是必填的。',
 ];

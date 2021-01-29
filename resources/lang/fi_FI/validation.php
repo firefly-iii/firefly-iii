@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Nykyisen summan täytyy olla tavoitesummaa pienempi.',
     'unique_piggy_bank_for_user'     => 'Säästöpossu tarvitsee yksilöllisen nimen.',
     'unique_object_group'            => 'Ryhmän nimen täytyy olla yksilöllinen',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => 'Tämä ei ole turvallinen salasana. Yritäpä uudestaan. Lisätietoja löydät osoitteesta https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Virheellinen toiston tyyppi toistuville tapahtumille.',
-    'valid_recurrence_rep_moment'    => 'Virheellinen arvo tämän tyyppiselle toistolle.',
-    'invalid_account_info'           => 'Virheellinen tilitieto.',
-    'attributes'                     => [
+    'secure_password'             => 'Tämä ei ole turvallinen salasana. Yritäpä uudestaan. Lisätietoja löydät osoitteesta https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Virheellinen toiston tyyppi toistuville tapahtumille.',
+    'valid_recurrence_rep_moment' => 'Virheellinen arvo tämän tyyppiselle toistolle.',
+    'invalid_account_info'        => 'Virheellinen tilitieto.',
+    'attributes'                  => [
         'email'                   => 'sähköpostiosoite',
         'description'             => 'kuvaus',
         'amount'                  => 'summa',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => 'nimi',
         'piggy_bank_id'           => 'säästöpossun tunniste',
         'targetamount'            => 'tavoitesumma',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
-    'withdrawal_source_bad_data'     => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
-    'withdrawal_dest_need_data'      => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
-    'withdrawal_dest_bad_data'       => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
+    'withdrawal_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
+    'withdrawal_source_bad_data'  => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
+    'withdrawal_dest_need_data'   => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
+    'withdrawal_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
 
     'deposit_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
     'deposit_source_bad_data'  => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Summa on pakollinen.',
     'auto_budget_amount_positive'     => 'Summan on oltava enemmän nollaa suurempi.',
-    'auto_budget_period_mandatory' => 'Automaattisen budjetin jakso on pakollinen kenttä.',
+    'auto_budget_period_mandatory'    => 'Automaattisen budjetin jakso on pakollinen kenttä.',
 ];

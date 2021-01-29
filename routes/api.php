@@ -315,6 +315,7 @@ Route::group(
 
         // Preference API routes:
         Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
+        Route::get('date-ranges', ['uses' => 'Preferences\IndexController@dateRanges', 'as' => 'date-ranges']);
         Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
     }
@@ -386,6 +387,23 @@ Route::group(
 );
 
 Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
+     'as'        => 'api.v1.webhooks.',],
+    static function () {
+
+        // Webhook API routes:
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+
+        // create new one.
+        Route::post('', ['uses' => 'CreateController@store', 'as' => 'store']);
+
+        // update
+        Route::put('{webhook}', ['uses' => 'EditController@update', 'as' => 'update']);
+        Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+    }
+);
+
+Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'        => 'api.v1.summary.',],
     static function () {
@@ -395,6 +413,7 @@ Route::group(
     }
 );
 
+// destroy data route.
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
      'as'        => 'api.v1.data.',],
@@ -402,6 +421,22 @@ Route::group(
 
         // Overview API routes:
         Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
+// INSIGHT
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight', 'prefix' => 'insight',
+     'as'        => 'api.v1.insight.',],
+    static function () {
+
+        // Insight in expenses.
+        // Insight in expenses by date.
+        Route::get('expense/date/basic', ['uses' => 'Expense\DateController@basic', 'as' => 'expense.date.basic']);
+
+        // Insight in income.
+        // Insight in income by date.
+        Route::get('income/date/basic', ['uses' => 'Income\DateController@basic', 'as' => 'income.date.basic']);
     }
 );
 

@@ -192,8 +192,8 @@ class ReconcileController extends Controller
         $startDate->subDay();
 
         $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
+        $startBalance = round((float) app('steam')->balance($account, $startDate), $currency->decimal_places);
+        $endBalance   = round((float) app('steam')->balance($account, $end), $currency->decimal_places);
 
         // get the transactions
         $selectionStart = clone $start;

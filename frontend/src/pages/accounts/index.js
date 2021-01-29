@@ -20,36 +20,13 @@
 
 require('../../bootstrap');
 
-import VueRouter from 'vue-router';
 import Index from "../../components/accounts/Index";
-
-const routes = [
-    {path: '/', component: Index},
-    // maybe "create" and "edit" in component.
-]
-
-// 3. Create the router instance and pass the `routes` option
-// You can pass in additional options here, but let's
-// keep it simple for now.
-const router = new VueRouter({
-                                 mode: 'history',
-                                 routes // short for `routes: routes`
-                             })
 
 // i18n
 let i18n = require('../../i18n');
 
 let props = {};
-// new Vue({router,
-//             i18n,
-//             el: "#accounts",
-//             render: (createElement) => {
-//                 return createElement(List, { props: props });
-//             },
-//         });
-Vue.use(VueRouter);          // <== very important
 new Vue({
-            router,
             i18n,
             render(createElement) {
                 return createElement(Index, {props: props});

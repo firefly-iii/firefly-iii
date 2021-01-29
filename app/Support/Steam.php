@@ -34,6 +34,7 @@ use stdClass;
 
 /**
  * Class Steam.
+ *
  * @codeCoverageIgnore
  */
 class Steam
@@ -228,11 +229,11 @@ class Steam
             $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
             $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
             $amount          = '0';
-            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int) $entry->foreign_currency_id) {
+            if ($currencyId === (int)$entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
@@ -488,7 +489,7 @@ class Steam
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
         foreach ($set as $entry) {
-            $date = new Carbon($entry->max_date,'UTC');
+            $date = new Carbon($entry->max_date, 'UTC');
             $date->setTimezone(config('app.timezone'));
             $list[(int)$entry->account_id] = $date;
         }
@@ -520,6 +521,7 @@ class Steam
         if (null === $amount) {
             return null;
         }
+
         return bcmul($amount, '-1');
     }
 
@@ -530,25 +532,25 @@ class Steam
      */
     public function phpBytes(string $string): int
     {
-        $string = strtolower($string);
+        $string = str_replace(['kb', 'mb', 'gb'], ['k', 'm', 'g'], strtolower($string));
 
         if (false !== stripos($string, 'k')) {
             // has a K in it, remove the K and multiply by 1024.
-            $bytes = bcmul(rtrim($string, 'kK'), '1024');
+            $bytes = bcmul(rtrim($string, 'k'), '1024');
 
             return (int)$bytes;
         }
 
         if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
-            $bytes = bcmul(rtrim($string, 'mM'), '1048576');
+            $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
             return (int)$bytes;
         }
 
         if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
-            $bytes = bcmul(rtrim($string, 'gG'), '1073741824');
+            $bytes = bcmul(rtrim($string, 'g'), '1073741824');
 
             return (int)$bytes;
         }
@@ -592,7 +594,7 @@ class Steam
         if ('equal' === $locale) {
             $locale = $this->getLanguage();
         }
-        
+
         // Check for Windows to replace the locale correctly.
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $locale = str_replace('_', '-', $locale);
@@ -606,7 +608,8 @@ class Steam
      *
      * @return array
      */
-    public function getLocaleArray(string $locale): array {
+    public function getLocaleArray(string $locale): array
+    {
         return [
             sprintf('%s.utf8', $locale),
             sprintf('%s.UTF-8', $locale),

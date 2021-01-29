@@ -21,6 +21,13 @@
 
 declare(strict_types=1);
 
+// simple hack to force v2. Used for demo until next release.
+$layout = env('FIREFLY_III_LAYOUT', 'v1');
+if (isset($_GET['layout']) && 'v2' === $_GET['layout'] && 'demo@firefly' === env('DEMO_USERNAME')) {
+    $layout = 'v2';
+}
+
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +41,7 @@ return [
     */
 
     'paths' => [
-        realpath(base_path(sprintf('resources/views/%s', env('FIREFLY_III_LAYOUT', 'v1')))),
+        realpath(base_path(sprintf('resources/views/%s', $layout))),
     ],
 
     /*
@@ -48,6 +55,6 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path(sprintf('framework/views/%s', env('FIREFLY_III_LAYOUT', 'v1')))),
+    'compiled' => realpath(storage_path(sprintf('framework/views/%s', $layout))),
 
 ];

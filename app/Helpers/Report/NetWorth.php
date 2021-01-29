@@ -48,16 +48,6 @@ class NetWorth implements NetWorthInterface
     private $user;
 
     /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * Returns the user's net worth in an array with the following layout:
      *
      * -

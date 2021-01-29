@@ -32,22 +32,20 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
- * Class RecurrenceMeta
+ * FireflyIII\Models\RecurrenceMeta
  *
- * @property string                          $name
- * @property string                          $value
- * @property int                             $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property int                             $recurrence_id
- * @property-read Recurrence                 $recurrence
- * @method static bool|null forceDelete()
+ * @property int $recurrence_id
+ * @property string $name
+ * @property string $value
+ * @property-read \FireflyIII\Models\Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newQuery()
  * @method static Builder|RecurrenceMeta onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereId($value)

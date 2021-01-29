@@ -32,19 +32,20 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class TransactionJournalLink.
+ * FireflyIII\Models\TransactionJournalLink
  *
- * @property int                                                  $id
- * @property Carbon                                               $created_at
- * @property Carbon                                               $updated_at
- * @property string                                               $comment
- * @property TransactionJournal                                   $source
- * @property TransactionJournal                                   $destination
- * @property LinkType                                             $linkType
- * @property int                                                  $link_type_id
- * @property int                                                  $source_id
- * @property int                                                  $destination_id
- * @property-read Collection|Note[] $notes
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $link_type_id
+ * @property int $source_id
+ * @property int $destination_id
+ * @property string|null $comment
+ * @property-read \FireflyIII\Models\TransactionJournal $destination
+ * @property-read \FireflyIII\Models\LinkType $linkType
+ * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read int|null $notes_count
+ * @property-read \FireflyIII\Models\TransactionJournal $source
  * @method static Builder|TransactionJournalLink newModelQuery()
  * @method static Builder|TransactionJournalLink newQuery()
  * @method static Builder|TransactionJournalLink query()
@@ -56,7 +57,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionJournalLink whereSourceId($value)
  * @method static Builder|TransactionJournalLink whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read int|null                                        $notes_count
  */
 class TransactionJournalLink extends Model
 {

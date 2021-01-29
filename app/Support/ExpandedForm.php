@@ -59,7 +59,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round($value, 8);
+            $value = round((float) $value, 8);
         }
         try {
             $html = view('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
@@ -252,7 +252,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round($value, $selectedCurrency->decimal_places);
+            $value = round((float) $value, $selectedCurrency->decimal_places);
         }
         try {
             $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();

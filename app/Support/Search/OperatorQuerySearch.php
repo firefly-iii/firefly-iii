@@ -47,6 +47,7 @@ use Gdbots\QueryParser\Node\Mention;
 use Gdbots\QueryParser\Node\Node;
 use Gdbots\QueryParser\Node\Numbr;
 use Gdbots\QueryParser\Node\Phrase;
+use Gdbots\QueryParser\Node\Subquery;
 use Gdbots\QueryParser\Node\Url;
 use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\ParsedQuery;
@@ -210,6 +211,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository->setUser($user);
         $this->categoryRepository->setUser($user);
         $this->budgetRepository->setUser($user);
+        $this->tagRepository->setUser($user);
         $this->collector = app(GroupCollectorInterface::class);
         $this->collector->setUser($this->user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
@@ -230,6 +232,12 @@ class OperatorQuerySearch implements SearchInterface
             default:
                 Log::error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
+            case Subquery::class:
+                // loop all notes in subquery:
+                foreach($searchNode->getNodes() as $subNode) {
+                    $this->handleSearchNode($subNode); // lets hope its not too recursive!
+                }
+                break;
             case Word::class:
             case Phrase::class:
             case Numbr::class:
@@ -323,6 +331,10 @@ class OperatorQuerySearch implements SearchInterface
             case 'journal_id':
                 $parts = explode(',', $value);
                 $this->collector->setJournalIds($parts);
+                break;
+            case 'id':
+                $parts = explode(',', $value);
+                $this->collector->setIds($parts);
                 break;
             case 'destination_account_starts':
                 $this->searchAccount($value, 2, 1);
@@ -498,17 +510,27 @@ class OperatorQuerySearch implements SearchInterface
             // amount
             //
             case 'amount_exactly':
-                $amount = app('steam')->positive((string)$value);
+
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
             case 'amount_less':
-                $amount = app('steam')->positive((string)$value);
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
             case 'amount_more':
-                $amount = app('steam')->positive((string)$value);
+                // strip comma's, make dots.
+                $value = str_replace(',', '.', (string)$value);
+
+                $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;

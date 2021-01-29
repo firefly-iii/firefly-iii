@@ -35,22 +35,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
- * Class TransactionGroup.
+ * FireflyIII\Models\TransactionGroup
  *
- * @property int                                                                $id
- * @property Carbon|null                                    $created_at
- * @property Carbon|null                                    $updated_at
- * @property Carbon|null                                    $deleted_at
- * @property int                                                                $user_id
- * @property string|null                                                        $title
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read User                                                          $user
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string|null $title
+ * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read int|null $transaction_journals_count
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newQuery()
  * @method static Builder|TransactionGroup onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereId($value)
@@ -60,12 +59,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
  * @mixin Eloquent
- * @property string        amount
- * @property string        foreign_amount
- * @property int           transaction_group_id
- * @property int           transaction_journal_id
- * @property string        transaction_group_title
- * @property-read int|null $transaction_journals_count
  */
 class TransactionGroup extends Model
 {

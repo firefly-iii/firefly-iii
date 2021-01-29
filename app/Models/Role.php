@@ -31,15 +31,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
- * Class Role.
+ * FireflyIII\Models\Role
  *
- * @property int                                                  $id
- * @property string                                               $name
- * @property Carbon|null                      $created_at
- * @property Carbon|null                      $updated_at
- * @property string|null                                          $display_name
- * @property string|null                                          $description
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $name
+ * @property string|null $display_name
+ * @property string|null $description
  * @property-read Collection|User[] $users
+ * @property-read int|null $users_count
  * @method static Builder|Role newModelQuery()
  * @method static Builder|Role newQuery()
  * @method static Builder|Role query()
@@ -50,7 +51,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Role whereName($value)
  * @method static Builder|Role whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read int|null                                        $users_count
  */
 class Role extends Model
 {

@@ -44,17 +44,6 @@ interface OperationsRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string;
 
-    /**
-     * This method collects various info on budgets, used on the budget page and on the index.
-     *
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $budgets
@@ -71,17 +60,6 @@ interface OperationsRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user): void;
-
-    /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return string
-     * @deprecated
-     */
-    public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
      * Return multi-currency spent information.

@@ -95,7 +95,7 @@ class IndexController extends Controller
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = app('preferences')->get('viewRange', '1M')->data;
+        $range           = (string) app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -276,6 +276,7 @@ class IndexController extends Controller
         // complement budget with budget limits in range, and expenses in currency X in range.
         /** @var Budget $current */
         foreach ($collection as $current) {
+            Log::debug(sprintf('Working on budget #%d ("%s")', $current->id, $current->name));
             $array                = $current->toArray();
             $array['spent']       = [];
             $array['budgeted']    = [];
@@ -284,6 +285,7 @@ class IndexController extends Controller
             $budgetLimits         = $this->blRepository->getBudgetLimits($current, $start, $end);
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
+                Log::debug(sprintf('Working on budget limit #%d', $limit->id));
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,

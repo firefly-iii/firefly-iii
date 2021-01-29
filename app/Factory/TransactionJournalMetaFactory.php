@@ -35,18 +35,6 @@ use Log;
 class TransactionJournalMetaFactory
 {
     /**
-     * Constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * @param array $data
      *
      * @return TransactionJournalMeta|null

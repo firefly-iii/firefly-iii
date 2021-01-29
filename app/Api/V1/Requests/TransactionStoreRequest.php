@@ -28,6 +28,7 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
@@ -41,20 +42,7 @@ use Log;
  */
 class TransactionStoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes;
-
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        Log::debug('Authorize TransactionStoreRequest');
-
-        // Only allow authenticated users
-        return auth()->check();
-    }
+    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes, ChecksLogin;
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.

@@ -106,13 +106,6 @@ interface GroupCollectorInterface
     public function getPaginatedGroups(): LengthAwarePaginator;
 
     /**
-     * Return the sum of all journals.
-     *
-     * @return string
-     */
-    public function getSum(): string;
-
-    /**
      * Define which accounts can be part of the source and destination transactions.
      *
      * @param Collection $accounts
@@ -246,6 +239,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface;
+
+    /**
+     * Limit the result to a set of specific transaction groups.
+     *
+     * @param array $groupIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setIds(array $groupIds): GroupCollectorInterface;
 
     /**
      * Limit the number of returned entries.

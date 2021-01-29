@@ -29,23 +29,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
+
 /**
- * Class AccountType.
+ * FireflyIII\Models\AccountType
  *
- * @property string                    $type
- * @method whereType(string $type)
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property-read Collection|Account[] $accounts
+ * @property int $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $type
+ * @property-read Collection|\FireflyIII\Models\Account[] $accounts
+ * @property-read int|null $accounts_count
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
  * @method static Builder|AccountType query()
  * @method static Builder|AccountType whereCreatedAt($value)
  * @method static Builder|AccountType whereId($value)
+ * @method static Builder|AccountType whereType($value)
  * @method static Builder|AccountType whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read int|null             $accounts_count
  */
 class AccountType extends Model
 {

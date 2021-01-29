@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Der aktuelle Betrag muss niedriger als der Zielbetrag sein.',
     'unique_piggy_bank_for_user'     => 'Der Name des Sparschweins muss eindeutig sein.',
     'unique_object_group'            => 'Der Gruppenname muss eindeutig sein',
+    'starts_with'                    => 'Der Wert muss mit :values beginnen.',
+    'unique_webhook'                 => 'Sie haben bereits einen Webhook mit diesen Werten.',
+    'unique_existing_webhook'        => 'Sie haben bereits einen anderen Webhook mit diesen Werten.',
 
-    'secure_password'                => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
-    'valid_recurrence_rep_type'      => 'Ungültige Wiederholungsart für Daueraufträge.',
-    'valid_recurrence_rep_moment'    => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
-    'invalid_account_info'           => 'Ungültige Kontodaten.',
-    'attributes'                     => [
+    'secure_password'             => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
+    'valid_recurrence_rep_type'   => 'Ungültige Wiederholungsart für Daueraufträge.',
+    'valid_recurrence_rep_moment' => 'Ungültiges Wiederholungsmoment für diese Art der Wiederholung.',
+    'invalid_account_info'        => 'Ungültige Kontodaten.',
+    'attributes'                  => [
         'email'                   => 'E-Mail Adresse',
         'description'             => 'Beschreibung',
         'amount'                  => 'Betrag',
+        'transactions.*.amount'   => 'Buchungsbetrag',
         'name'                    => 'Name',
         'piggy_bank_id'           => 'Sparschwein ID',
         'targetamount'            => 'Zielbetrag',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
-    'withdrawal_source_bad_data'     => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
-    'withdrawal_dest_need_data'      => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
-    'withdrawal_dest_bad_data'       => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
+    'withdrawal_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'withdrawal_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Betrag ist erforderlich.',
     'auto_budget_amount_positive'     => 'Der Betrag muss größer als Null sein.',
-    'auto_budget_period_mandatory' => 'Der Zeitraum für das automatische Budget ist ein Pflichtfeld.',
+    'auto_budget_period_mandatory'    => 'Der Zeitraum für das automatische Budget ist ein Pflichtfeld.',
 ];
