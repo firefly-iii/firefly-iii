@@ -25,7 +25,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              <span v-if="0 === transactions.length">{{ $t('firefly.create_new_transaction') }}</span>
+              <span v-if="1 === transactions.length">{{ $t('firefly.create_new_transaction') }}</span>
               <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{ transactions.length }}</span>
             </h3>
             <div v-if="transactions.length > 1" class="card-tools">
@@ -35,11 +35,10 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <h4>{{ $t('firefly.basic_journal_information') }}</h4>
+            <h5>{{ $t('firefly.basic_journal_information') }}</h5>
             <!-- description etc, 3 rows -->
             <div class="row">
               <div class="col">
-                Description:
                 <TransactionDescription
                     v-model="transaction.description"
                     :index="index"
@@ -252,6 +251,8 @@ export default {
       groupTitle: '',
       isSubmitting: false,
       linkSearchResults: [],
+      errorMessage: null,
+      successMessage: null,
     }
   },
   computed: {
@@ -313,19 +314,85 @@ export default {
     submitTransaction: function () {
       this.isSubmitting = true;
       // console.log('Now in submit()');
-      const uri = './api/v1/transactions';
+      const url = './api/v1/transactions';
       const data = this.convertData();
 
-      console.log('Would have submitted:');
+      console.log('Submitting:');
       console.log(data);
 
+      axios.post(url, data)
+          .then(response => {
+            console.log('Axios post OK');
+          })
+          .catch(error => {
+            console.log('Error in transaction submission.');
+            this.parseErrors(error.response.data);
+          });
       this.isSubmitting = false;
     },
+
+    parseErrors: function(errors) {
+      // set the error message:
+      this.successMessage = null;
+      this.errorMessage = this.$t('firefly.errors_submission');
+      if (typeof errors.errors === 'undefined') {
+        this.successMessage = null;
+        this.errorMessage = errors.message;
+      }
+
+      let transactionIndex;
+      let fieldName;
+
+      // fairly basic way of exploding the error array.
+      for (const key in errors.errors) {
+        if (errors.errors.hasOwnProperty(key)) {
+          if (key === 'group_title') {
+            this.group_title_errors = errors.errors[key];
+          }
+          if (key !== 'group_title') {
+            // lol dumbest way to explode "transactions.0.something" ever.
+            transactionIndex = parseInt(key.split('.')[1]);
+            fieldName = key.split('.')[2];
+            // set error in this object thing.
+            switch (fieldName) {
+              case 'amount':
+              case 'date':
+              case 'budget_id':
+              case 'bill_id':
+              case 'description':
+              case 'tags':
+                //this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
+                break;
+              case 'source_name':
+              case 'source_id':
+                //this.transactions[transactionIndex].errors.source_account = this.transactions[transactionIndex].errors.source_account.concat(errors.errors[key]);
+                break;
+              case 'destination_name':
+              case 'destination_id':
+                //this.transactions[transactionIndex].errors.destination_account = this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[key]);
+                break;
+              case 'foreign_amount':
+              case 'foreign_currency_id':
+                //this.transactions[transactionIndex].errors.foreign_amount = this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
+                break;
+            }
+          }
+          // unique some things
+          if (typeof this.transactions[transactionIndex] !== 'undefined') {
+            //this.transactions[transactionIndex].errors.source_account = Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
+            //this.transactions[transactionIndex].errors.destination_account = Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
+          }
+
+        }
+      }
+
+    },
+
     /**
      *
      */
     convertData: function () {
-      // console.log('now in convertData');
+      console.log('now in convertData');
       let data = {
         //'group_title': null,
         'transactions': []
@@ -344,10 +411,12 @@ export default {
      * @param array
      */
     convertSplit: function (key, array) {
+      console.log('now in convertSplit');
       let currentSplit = {
         // basic
         description: array.description,
-        date: (array.date + ' ' + array.time).trim(),
+        date: this.toW3CString(this.date),
+        type: this.transactionType,
 
         // account
         source_id: array.source_account.id ?? null,
@@ -364,7 +433,7 @@ export default {
 
         // meta data
         budget_id: array.budget_id,
-        category: array.category,
+        category_name: array.category,
         bill_id: array.bill_id,
         tags: array.tags,
         piggy_bank_id: array.piggy_bank_id,
@@ -381,18 +450,96 @@ export default {
         internal_reference: array.internal_reference,
         external_url: array.external_url,
         notes: array.notes,
+        external_id: array.external_id,
 
-        // links (TODO)
-        links: array.links
+        // from thing:
+        order: 0,
+        reconciled: false,
       };
-      for(let i in array.links) {
-        if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
 
+      // do transaction type
+      let transactionType;
+      let firstSource;
+      let firstDestination;
+
+      // get transaction type from first transaction
+      transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
+
+      // if the transaction type is invalid, might just be that we can deduce it from
+      // the presence of a source or destination account
+      firstSource = this.transactions[0].source_account.type;
+      firstDestination = this.transactions[0].destination_account.type;
+      // console.log('Type of first source is  ' + firstSource);
+
+      if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+        transactionType = 'withdrawal';
+      }
+
+      if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
+        transactionType = 'deposit';
+      }
+      currentSplit.type = transactionType;
+
+      let links = [];
+      for (let i in array.links) {
+        if (array.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = array.links[i];
+          let linkTypeParts = current.link_type_id.split('-');
+          let inwardId = 'inward' === linkTypeParts[1] ? 0 : parseInt(current.transaction_journal_id);
+          let outwardId = 'outward' === linkTypeParts[1] ? 0 : parseInt(current.transaction_journal_id);
+          let newLink = {
+            link_type_id: parseInt(linkTypeParts[0]),
+            inward_id: inwardId,
+            outward_id: outwardId,
+          };
+          links.push(newLink);
         }
       }
+      currentSplit.links = links;
 
       // return it.
       return currentSplit;
+    },
+    toW3CString: function (date) {
+      // https://gist.github.com/tristanlins/6585391
+      let year = date.getFullYear();
+      let month = date.getMonth();
+      month++;
+      if (month < 10) {
+        month = '0' + month;
+      }
+      let day = date.getDate();
+      if (day < 10) {
+        day = '0' + day;
+      }
+      let hours = date.getHours();
+      if (hours < 10) {
+        hours = '0' + hours;
+      }
+      let minutes = date.getMinutes();
+      if (minutes < 10) {
+        minutes = '0' + minutes;
+      }
+      let seconds = date.getSeconds();
+      if (seconds < 10) {
+        seconds = '0' + seconds;
+      }
+      let offset = -date.getTimezoneOffset();
+      let offsetHours = Math.abs(Math.floor(offset / 60));
+      let offsetMinutes = Math.abs(offset) - offsetHours * 60;
+      if (offsetHours < 10) {
+        offsetHours = '0' + offsetHours;
+      }
+      if (offsetMinutes < 10) {
+        offsetMinutes = '0' + offsetMinutes;
+      }
+      let offsetSign = '+';
+      if (offset < 0) {
+        offsetSign = '-';
+      }
+      return year + '-' + month + '-' + day +
+             'T' + hours + ':' + minutes + ':' + seconds +
+             offsetSign + offsetHours + ':' + offsetMinutes;
     }
 
     // addTransactionToArray: function (e) {

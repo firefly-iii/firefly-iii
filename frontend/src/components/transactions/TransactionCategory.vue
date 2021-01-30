@@ -81,7 +81,7 @@ export default {
         ],
     ),
     clearCategory: function () {
-      this.value = '';
+      this.value = null;
     },
     getACURL: function (query) {
       // update autocomplete URL:

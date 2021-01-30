@@ -69,6 +69,7 @@ const state = () => ({
             foreign_currency_id: 0,
 
             // meta data
+            category: null,
             budget_id: 0,
             bill_id: 0,
             piggy_bank_id: 0,
@@ -85,11 +86,17 @@ const state = () => ({
             // optional other fields:
             internal_reference: null,
             external_url: null,
+            external_id: null,
             notes: null,
 
             // transaction links:
             links: [],
-            attachments: []
+            attachments: [],
+
+            // error handling
+            errors: {
+                description: []
+            },
         },
     }
 )
