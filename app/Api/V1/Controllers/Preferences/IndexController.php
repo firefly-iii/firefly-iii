@@ -1,8 +1,8 @@
 <?php
-declare(strict_types=1);
+
 /*
  * IndexController.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,8 +20,9 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Preferences;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Preferences;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;

@@ -29,7 +29,7 @@
           :title="$t('firefly.bill')"
           v-model="value"
           autocomplete="off"
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="bill_id[]"
           v-on:submit.prevent
       >
@@ -37,6 +37,9 @@
 
       </select>
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -47,7 +50,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['value', 'index'],
+  props: ['value', 'index', 'errors'],
   name: "TransactionBill",
   data() {
     return {
@@ -94,16 +97,16 @@ export default {
     },
   },
   watch: {
-    value: function(value) {
+    value: function (value) {
       this.updateField({field: 'bill_id', index: this.index, value: value});
     }
   },
   computed: {
     ...mapGetters(
         [
-                    'transactionType',
-                    'transactions',
-                  ]
+          'transactionType',
+          'transactions',
+        ]
     )
   }
 }

@@ -184,8 +184,9 @@
 </template>
 
 <script>
+// TODO error handling
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors'],
   name: "TransactionLinks",
   data() {
     return {

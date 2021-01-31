@@ -1,6 +1,6 @@
 <!--
-  - TransactionDescription.vue
-  - Copyright (c) 2020 james@firefly-iii.org
+  - TransactionGroupTitle.vue
+  - Copyright (c) 2021 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
   -
@@ -20,17 +20,19 @@
 
 <template>
   <div class="form-group">
+    <div class="text-xs d-none d-lg-block d-xl-block">
+      {{ $t('firefly.split_transaction_title') }}
+    </div>
     <vue-typeahead-bootstrap
-        inputName="description[]"
+        inputName="group_title"
         v-model="value"
         :data="descriptions"
-        :placeholder="$t('firefly.description')"
+        :placeholder="$t('firefly.split_transaction_title')"
         :showOnFocus=true
-        autofocus
-        :inputClass="errors.length > 0 ? 'is-invalid' : ''"
         :minMatchingChars="3"
         :serializer="item => item.description"
         @input="lookupDescription"
+        :inputClass="errors.length > 0 ? 'is-invalid' : ''"
     >
       <template slot="append">
         <div class="input-group-append">
@@ -38,30 +40,26 @@
         </div>
       </template>
     </vue-typeahead-bootstrap>
-    <span v-if="errors.length > 0">
-      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
-    </span>
   </div>
 </template>
 
 <script>
-
-import {createNamespacedHelpers} from "vuex";
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from "lodash";
+import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'value', 'errors'],
+  props: ['value', 'errors'],
+  name: "TransactionGroupTitle",
   components: {VueTypeaheadBootstrap},
-  name: "TransactionDescription",
   data() {
     return {
       descriptions: [],
       initialSet: []
     }
   },
+
   created() {
     axios.get(this.getACURL(''))
         .then(response => {
@@ -69,14 +67,26 @@ export default {
           this.initialSet = response.data;
         });
   },
-
+  watch: {
+    value: function (value) {
+      console.log('set');
+      this.setGroupTitle({groupTitle: value});
+    }
+  },
   methods: {
     ...mapMutations(
         [
-          'updateField',
+          'setGroupTitle'
         ],
     ),
+    ...mapGetters(
+        [
+          'groupTitle'
+        ]
+    ),
     clearDescription: function () {
+      console.log('cear');
+      this.setGroupTitle({groupTitle: ''});
       this.value = '';
     },
     getACURL: function (query) {
@@ -90,19 +100,10 @@ export default {
             this.descriptions = response.data;
           })
     }, 300)
-  },
-  watch: {
-    value: function (value) {
-      this.updateField({field: 'description', index: this.index, value: value});
-    }
-  },
-  computed: {
-    ...mapGetters(
-        [
-          'transactionType',
-          'transactions',
-        ]
-    )
   }
 }
 </script>
+
+<style scoped>
+
+</style>

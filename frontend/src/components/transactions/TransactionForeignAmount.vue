@@ -27,7 +27,7 @@
       <input
           :title="$t('form.foreign_amount')"
           autocomplete="off"
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :disabled="0===currencyId"
           name="foreign_amount[]"
           type="number"
@@ -35,6 +35,9 @@
           :placeholder="$t('form.foreign_amount')"
       >
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -48,7 +51,7 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 
 export default {
   name: "TransactionForeignAmount",
-  props: ['index'],
+  props: ['index','errors'],
   data() {
     return {
       currencySymbol: '',

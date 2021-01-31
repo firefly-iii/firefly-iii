@@ -25,7 +25,11 @@
       {{ $t('firefly.notes') }}
     </div>
     <div class="input-group">
-      <textarea v-model="value" class="form-control" :placeholder="$t('firefly.notes')"></textarea>
+      <textarea
+          v-model="value"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('firefly.notes')"
+      ></textarea>
     </div>
   </div>
 
@@ -37,7 +41,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors'],
   name: "TransactionNotes",
   methods: {
     ...mapMutations(

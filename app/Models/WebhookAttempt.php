@@ -49,6 +49,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class WebhookAttempt
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property int $webhook_message_id
+ * @property int $status_code
+ * @property string|null $logs
+ * @property string|null $response
+ * @property-read \FireflyIII\Models\WebhookMessage $webhookMessage
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt query()
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereLogs($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereStatusCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereWebhookMessageId($value)
+ * @mixin \Eloquent
  */
 class WebhookAttempt extends Model
 {

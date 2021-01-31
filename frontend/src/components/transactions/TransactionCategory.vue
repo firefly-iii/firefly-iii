@@ -30,6 +30,7 @@
         :data="categories"
         :placeholder="$t('firefly.category')"
         :showOnFocus=true
+        :inputClass="errors.length > 0 ? 'is-invalid' : ''"
         :minMatchingChars="3"
         :serializer="item => item.name"
         @hit="selectedCategory = $event"
@@ -41,7 +42,9 @@
         </div>
       </template>
     </vue-typeahead-bootstrap>
-
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -54,7 +57,7 @@ import {debounce} from "lodash";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['value', 'index'],
+  props: ['value', 'index', 'errors'],
   components: {VueTypeaheadBootstrap},
   name: "TransactionCategory",
   data() {

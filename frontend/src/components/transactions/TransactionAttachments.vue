@@ -28,7 +28,6 @@
           type="file"
           multiple
           name="attachments[]"
-          :placeholder="$t('firefly.attachment')"
           class="form-control"/>
     </div>
   </div>

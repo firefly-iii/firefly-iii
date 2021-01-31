@@ -78,6 +78,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereWebhookId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookAttempt[] $webhookAttempts
+ * @property-read int|null $webhook_attempts_count
  */
 class WebhookMessage extends Model
 {

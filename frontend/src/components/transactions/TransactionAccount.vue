@@ -27,6 +27,7 @@
         v-model="value.name"
         :data="accounts"
         :showOnFocus=true
+        :inputClass="errors.length > 0 ? 'is-invalid' : ''"
         :inputName="direction + '[]'"
         :serializer="item => item.name_with_balance"
         :minMatchingChars="3"
@@ -39,9 +40,10 @@
           <button class="btn btn-outline-secondary" v-on:click="clearAccount" type="button"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
-
-
     </vue-typeahead-bootstrap>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+      </span>
   </div>
 </template>
 
@@ -56,7 +58,7 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   name: "TransactionAccount",
   components: {VueTypeaheadBootstrap},
-  props: ['index', 'direction', 'value'],
+  props: ['index', 'direction', 'value', 'errors'],
   data() {
     return {
       query: '',

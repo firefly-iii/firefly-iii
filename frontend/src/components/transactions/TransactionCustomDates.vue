@@ -43,12 +43,13 @@
 </template>
 
 <script>
+// TODO: error handling
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   name: "TransactionCustomDates",
-  props: ['enabledDates', 'index'],
+  props: ['enabledDates', 'index', 'errors'],
   methods: {
     ...mapGetters(
         [

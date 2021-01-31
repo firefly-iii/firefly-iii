@@ -25,7 +25,7 @@
     </div>
     <div class="input-group">
       <input
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           type="date"
           ref="date"
           :title="$t('firefly.date')"
@@ -34,10 +34,9 @@
           autocomplete="off"
           name="date[]"
           :placeholder="localDate"
-          v-on:submit.prevent
       >
       <input
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           type="time"
           ref="time"
           :title="$t('firefly.time')"
@@ -46,9 +45,11 @@
           autocomplete="off"
           name="time[]"
           :placeholder="localTime"
-          v-on:submit.prevent
       >
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -59,8 +60,8 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
+  props: ['index', 'errors'],
   name: "TransactionDate",
-  props: ['index'],
   methods: {
     ...mapMutations(
         [
@@ -70,13 +71,19 @@ export default {
     ),
   },
   computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'date'
-                  ]),
+    ...mapGetters(
+        [
+          'transactionType',
+          'date',
+          'transactions'
+        ]
+    ),
     localDate: {
       get() {
-        return this.date.toISOString().split('T')[0];
+        if (this.date instanceof Date && !isNaN(this.date)) {
+          return this.date.toISOString().split('T')[0];
+        }
+        return '';
       },
       set(value) {
         // bit of a hack but meh.
@@ -90,7 +97,10 @@ export default {
     },
     localTime: {
       get() {
-        return ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2) + ':' + ('0' + this.date.getSeconds()).slice(-2);
+        if (this.date instanceof Date && !isNaN(this.date)) {
+          return ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2) + ':' + ('0' + this.date.getSeconds()).slice(-2);
+        }
+        return '';
       },
       set(value) {
         // bit of a hack but meh.
@@ -105,7 +115,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

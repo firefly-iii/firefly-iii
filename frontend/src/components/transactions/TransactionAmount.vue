@@ -29,13 +29,16 @@
       <input
           :title="$t('firefly.amount')"
           autocomplete="off"
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="amount[]"
           type="number"
           v-model="amount"
           :placeholder="$t('firefly.amount')"
       >
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -49,7 +52,7 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 
 export default {
   name: "TransactionAmount",
-  props: ['index'],
+  props: ['index', 'errors'],
   data() {
     return {
       currencySymbol: ''

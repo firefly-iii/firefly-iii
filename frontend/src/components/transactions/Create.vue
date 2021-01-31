@@ -20,181 +20,250 @@
 
 <template>
   <div>
-    <div class="row" v-for="(transaction, index) in this.transactions">
+    <div class="alert alert-danger alert-dismissible" v-if="this.errorMessage.length > 0">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h5><i class="icon fas fa-ban"></i> {{ $t("firefly.flash_error") }}</h5>
+      {{ errorMessage }}
+    </div>
+
+    <div class="row" v-if="transactions.length > 1">
       <div class="col">
-        <div class="card">
+        <!-- tabs -->
+        <ul class="nav nav-pills ml-auto p-2">
+          <li v-for="(transaction, index) in this.transactions" class="nav-item"><a :class="'nav-link' + (0===index ? ' active' : '')" :href="'#split_' + index"
+                                                                                    data-toggle="tab">
+            <span v-if="'' !== transaction.description">{{ transaction.description }}</span>
+            <span v-if="'' === transaction.description">Split {{ index + 1 }}</span>
+          </a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="tab-content">
+      <div v-for="(transaction, index) in this.transactions" :class="'tab-pane' + (0===index ? ' active' : '')" :id="'split_' + index">
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  {{ $t('firefly.basic_journal_information') }}
+                  <span v-if="transactions.length > 1">({{ index + 1 }} / {{ transactions.length }}) </span>
+                </h3>
+              </div>
+              <div class="card-body">
+                <!-- start of body -->
+                <div class="row">
+                  <div class="col">
+                    <TransactionDescription
+                        v-model="transaction.description"
+                        :index="index"
+                        :errors="transaction.errors.description"
+                    ></TransactionDescription>
+                  </div>
+                </div>
+                <!-- source and destination -->
+                <div class="row">
+                  <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
+                    <!-- SOURCE -->
+                    <TransactionAccount
+                        v-model="transaction.source_account"
+                        direction="source"
+                        :index="index"
+                        :errors="transaction.errors.source"
+                    />
+                  </div>
+                  <!-- switcharoo! -->
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
+                    <SwitchAccount
+                        :index="index"
+                    />
+                  </div>
+
+                  <!-- destination -->
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                    <!-- DESTINATION -->
+                    <TransactionAccount
+                        v-model="transaction.destination_account"
+                        direction="destination"
+                        :index="index"
+                        :errors="transaction.errors.destination"
+                    />
+                  </div>
+                </div>
+
+
+                <!-- amount  -->
+                <div class="row">
+                  <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
+                    <!-- AMOUNT -->
+                    <TransactionAmount :index="index" :errors="transaction.errors.amount"/>
+                    <!--
+
+                    -->
+                  </div>
+                  <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
+                    <TransactionForeignCurrency :index="index"/>
+                  </div>
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                    <TransactionForeignAmount :index="index" :errors="transaction.errors.foreign_amount"/>
+                  </div>
+                </div>
+
+                <!-- dates -->
+                <div class="row">
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                    <TransactionDate
+                        :index="index"
+                        :errors="transaction.errors.date"
+                    />
+                  </div>
+
+                  <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
+                    <TransactionCustomDates :index="index" :enabled-dates="customDateFields" :errors="transaction.errors.custom_dates"/>
+                  </div>
+                </div>
+
+                <!-- end of body -->
+              </div>
+            </div>
+          </div>
+        </div> <!-- end of basic card -->
+
+        <!-- card for meta -->
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  {{ $t('firefly.transaction_journal_meta') }}
+                  <span v-if="transactions.length > 1">({{ index + 1 }} / {{ transactions.length }}) </span>
+                </h3>
+              </div>
+              <div class="card-body">
+                <!-- start of body -->
+                <!-- meta -->
+                <div class="row">
+                  <div class="col">
+                    <TransactionBudget
+                        v-model="transaction.budget_id"
+                        :index="index"
+                        :errors="transaction.errors.budget"
+                    />
+                    <TransactionCategory
+                        v-model="transaction.category"
+                        :index="index"
+                        :errors="transaction.errors.category"
+                    />
+                  </div>
+                  <div class="col">
+                    <TransactionBill
+                        v-model="transaction.bill_id"
+                        :index="index"
+                        :errors="transaction.errors.bill"
+                    />
+                    <TransactionTags
+                        :index="index"
+                        v-model="transaction.tags"
+                        :errors="transaction.errors.tags"
+                    />
+                    <TransactionPiggyBank
+                        :index="index"
+                        v-model="transaction.piggy_bank_id"
+                        :errors="transaction.errors.piggy_bank"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end card for meta -->
+        <!-- card for extra -->
+        <div class="row">
+          <div class="col">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  {{ $t('firefly.transaction_journal_meta') }}
+                  <span v-if="transactions.length > 1">({{ index + 1 }} / {{ transactions.length }}) </span>
+                </h3>
+              </div>
+              <div class="card-body">
+                <!-- start of body -->
+                <div class="row">
+                  <div class="col">
+                    <TransactionInternalReference
+                        :index="index"
+                        v-model="transaction.internal_reference"
+                    />
+
+                    <TransactionExternalUrl
+                        :index="index"
+                        v-model="transaction.external_url"
+                    />
+                    <TransactionNotes
+                        :index="index"
+                        v-model="transaction.notes"
+                    />
+                  </div>
+                  <div class="col">
+
+                    <TransactionAttachments
+                        :index="index"
+                        v-model="transaction.attachments"
+                    />
+
+                    <TransactionLinks :index="index"
+                                      v-model="transaction.links"
+                    />
+                  </div>
+
+                </div>
+                <!-- end of body -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end card for extra -->
+        <!-- end of card -->
+      </div>
+    </div>
+    <div class="row">
+      <!-- group title -->
+      <div class="col">
+        <div class="card" v-if="transactions.length > 1">
           <div class="card-header">
             <h3 class="card-title">
-              <span v-if="1 === transactions.length">{{ $t('firefly.create_new_transaction') }}</span>
-              <span v-if="transactions.length > 1">{{ $t('firefly.single_split') }} {{ index + 1 }} / {{ transactions.length }}</span>
+              {{ $t('firefly.split_transaction_title') }}
             </h3>
-            <div v-if="transactions.length > 1" class="card-tools">
-              <button class="btn btn-xs btn-danger" type="button" v-on:click="removeTransaction(index)"><i
-                  class="fa fa-trash"></i></button>
-            </div>
           </div>
-          <!-- /.card-header -->
           <div class="card-body">
-            <h5>{{ $t('firefly.basic_journal_information') }}</h5>
-            <!-- description etc, 3 rows -->
             <div class="row">
               <div class="col">
-                <TransactionDescription
-                    v-model="transaction.description"
-                    :index="index"
-                ></TransactionDescription>
+                <TransactionGroupTitle v-model="this.groupTitle"/>
               </div>
             </div>
-
-            <!-- source and destination -->
-            <div class="row">
-              <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
-                <!-- SOURCE -->
-                <TransactionAccount
-                    v-model="transaction.source_account"
-                    direction="source"
-                    :index="index"
-                />
-              </div>
-              <!-- switcharoo! -->
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
-                <SwitchAccount
-                    :index="index"
-                />
-              </div>
-
-              <!-- destination -->
-              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                <!-- DESTINATION -->
-                <TransactionAccount
-                    v-model="transaction.destination_account"
-                    direction="destination"
-                    :index="index"
-                />
-              </div>
-            </div>
-
-            <!-- amount  -->
-            <div class="row">
-              <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
-                <!-- AMOUNT -->
-                <TransactionAmount :index="index"/>
-                <!--
-
-                -->
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
-                <TransactionForeignCurrency :index="index"/>
-              </div>
-              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                <TransactionForeignAmount :index="index"/>
-              </div>
-            </div>
-
-            <!-- dates -->
-            <div class="row">
-              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
-                <TransactionDate
-                    :index="index"
-                />
-              </div>
-
-              <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
-                <TransactionCustomDates :index="index" :enabled-dates="customDateFields"/>
-              </div>
-            </div>
-
-            <h4>{{ $t('firefly.transaction_journal_meta') }}</h4>
-
-            <!-- meta -->
-            <div class="row">
-              <div class="col">
-                <TransactionBudget
-                    v-model="transaction.budget_id"
-                    :index="index"
-                />
-                <TransactionCategory
-                    v-model="transaction.category"
-                    :index="index"
-                />
-              </div>
-              <div class="col">
-                <TransactionBill
-                    v-model="transaction.bill_id"
-                    :index="index"
-                />
-                <TransactionTags
-                    :index="index"
-                    v-model="transaction.tags"
-                />
-                <TransactionPiggyBank
-                    :index="index"
-                    v-model="transaction.piggy_bank_id"
-                />
-              </div>
-            </div>
-
-            <h4>{{ $t('firefly.transaction_journal_extra') }}</h4>
-
-            <div class="row">
-              <div class="col">
-                <TransactionInternalReference
-                    :index="index"
-                    v-model="transaction.internal_reference"
-                />
-
-                <TransactionExternalUrl
-                    :index="index"
-                    v-model="transaction.external_url"
-                />
-                <TransactionNotes
-                    :index="index"
-                    v-model="transaction.notes"
-                />
-              </div>
-              <div class="col">
-
-                <TransactionAttachments
-                    :index="index"
-                    v-model="transaction.attachments"
-                />
-
-                <TransactionLinks :index="index"
-                                  v-model="transaction.links"
-                />
-              </div>
-
-            </div>
-
-
           </div>
-          <!-- /.card-body -->
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <!-- buttons! -->
+          <div class="col">
+            <p>
+              <button @click="addTransaction" class="btn btn-primary"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}</button>
+            </p>
+          </div>
+          <div class="col">
+            <p class="float-right">
+              <button @click="submitTransaction" :disabled="isSubmitting" class="btn btn-success"><i class="far fa-save"></i> Store transaction</button>
+              <br/>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- buttons -->
-    <!-- button -->
-    <div class="row">
-      <div class="col">
-        <button @click="addTransaction" class="btn btn-primary">{{ $t('firefly.add_another_split') }}</button>
-      </div>
-      <div class="col">
-        <p class="float-right">
-          <button @click="submitTransaction" :disabled="isSubmitting" class="btn btn-success">Store transaction</button>
-          <br/>
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col float-right">
-        <p class="text-right">
-          <small class="text-muted">Create another another another <input type="checkbox"/></small><br/>
-          <small class="text-muted">Return here <input type="checkbox"/></small><br/>
-        </p>
-      </div>
-    </div>
   </div>
+
 
 </template>
 
@@ -219,10 +288,9 @@ import TransactionExternalUrl from "./TransactionExternalUrl";
 import TransactionNotes from "./TransactionNotes";
 import TransactionLinks from "./TransactionLinks";
 import TransactionAttachments from "./TransactionAttachments";
-
+import TransactionGroupTitle from "./TransactionGroupTitle";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 
 export default {
   name: "Create",
@@ -230,6 +298,7 @@ export default {
     TransactionAttachments,
     TransactionNotes,
     TransactionExternalUrl,
+    TransactionGroupTitle,
     TransactionInternalReference,
     TransactionPiggyBank,
     TransactionTags,
@@ -248,10 +317,9 @@ export default {
   },
   data() {
     return {
-      groupTitle: '',
       isSubmitting: false,
       linkSearchResults: [],
-      errorMessage: null,
+      errorMessage: '',
       successMessage: null,
     }
   },
@@ -260,7 +328,8 @@ export default {
                     'transactionType', // -> this.someGetter
                     'transactions', // -> this.someOtherGetter
                     'customDateFields',
-                    'date'
+                    'date',
+                    'groupTitle'
                   ])
   },
   methods: {
@@ -270,10 +339,11 @@ export default {
           'deleteTransaction',
           'setAllowedOpposingTypes',
           'setAccountToTransaction',
+          'setTransactionError',
+          'resetErrors'
         ],
     ),
     removeTransaction: function (index) {
-      // store.commit('addCustomer'
       this.$store.commit('transactions/create/deleteTransaction', {index: index});
     },
     storeCustomDateFields: function () {
@@ -322,17 +392,27 @@ export default {
 
       axios.post(url, data)
           .then(response => {
-            console.log('Axios post OK');
+            console.log('Axios post OK!');
+            console.log(response);
           })
           .catch(error => {
-            console.log('Error in transaction submission.');
+            //console.log('Error in transaction submission.');
             this.parseErrors(error.response.data);
           });
       this.isSubmitting = false;
     },
 
-    parseErrors: function(errors) {
-      // set the error message:
+    parseErrors: function (errors) {
+      console.log('parseErrors()');
+      console.log(errors.errors);
+      //this.setTransactionError({index: 0, field: 'date', errors: ['I AM ERRROR']});
+
+      // reset errors
+      for (let i in this.transactions) {
+        console.log('reset errors for index ' + i);
+        this.resetErrors({index: i});
+      }
+
       this.successMessage = null;
       this.errorMessage = this.$t('firefly.errors_submission');
       if (typeof errors.errors === 'undefined') {
@@ -347,40 +427,63 @@ export default {
       for (const key in errors.errors) {
         if (errors.errors.hasOwnProperty(key)) {
           if (key === 'group_title') {
-            this.group_title_errors = errors.errors[key];
+            console.log('cant handle "group_title".');
+            //this.group_title_errors = errors.errors[key];
           }
           if (key !== 'group_title') {
             // lol dumbest way to explode "transactions.0.something" ever.
             transactionIndex = parseInt(key.split('.')[1]);
+
             fieldName = key.split('.')[2];
             // set error in this object thing.
+            console.log('Found an error for transactions[' + transactionIndex + '][' + fieldName + ']');
+            let payload;
             switch (fieldName) {
               case 'amount':
-              case 'date':
-              case 'budget_id':
-              case 'bill_id':
               case 'description':
+              case 'date':
               case 'tags':
-                //this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
+                payload = {index: transactionIndex, field: fieldName, errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'budget_id':
+                payload = {index: transactionIndex, field: 'budget', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'bill_id':
+                payload = {index: transactionIndex, field: 'bill', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'piggy_bank_id':
+                payload = {index: transactionIndex, field: 'piggy_bank', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'category_name':
+                payload = {index: transactionIndex, field: 'category', errors: errors.errors[key]};
+                this.setTransactionError(payload);
                 break;
               case 'source_name':
               case 'source_id':
-                //this.transactions[transactionIndex].errors.source_account = this.transactions[transactionIndex].errors.source_account.concat(errors.errors[key]);
+                payload = {index: transactionIndex, field: 'source', errors: errors.errors[key]};
+                this.setTransactionError(payload);
                 break;
               case 'destination_name':
               case 'destination_id':
-                //this.transactions[transactionIndex].errors.destination_account = this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[key]);
+                payload = {index: transactionIndex, field: 'destination', errors: errors.errors[key]};
+                this.setTransactionError(payload);
                 break;
               case 'foreign_amount':
-              case 'foreign_currency_id':
-                //this.transactions[transactionIndex].errors.foreign_amount = this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
+              case 'foreign_currency':
+                payload = {index: transactionIndex, field: 'foreign_amount', errors: errors.errors[key]};
+                this.setTransactionError(payload);
                 break;
             }
           }
           // unique some things
           if (typeof this.transactions[transactionIndex] !== 'undefined') {
-            //this.transactions[transactionIndex].errors.source_account = Array.from(new Set(this.transactions[transactionIndex].errors.source_account));
-            //this.transactions[transactionIndex].errors.destination_account = Array.from(new Set(this.transactions[transactionIndex].errors.destination_account));
+            // TODO
+            //this.transactions[transactionIndex].errors.source = Array.from(new Set(this.transactions[transactionIndex].errors.source));
+            //this.transactions[transactionIndex].errors.destination = Array.from(new Set(this.transactions[transactionIndex].errors.destination));
           }
 
         }
@@ -394,9 +497,11 @@ export default {
     convertData: function () {
       console.log('now in convertData');
       let data = {
-        //'group_title': null,
         'transactions': []
       };
+      if (this.groupTitle.length > 0) {
+        data.group_title = this.groupTitle;
+      }
       for (let key in this.transactions) {
         if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           data.transactions.push(this.convertSplit(key, this.transactions[key]));
@@ -404,18 +509,20 @@ export default {
       }
       return data;
     },
-
     /**
      *
      * @param key
      * @param array
      */
     convertSplit: function (key, array) {
-      console.log('now in convertSplit');
+      let dateStr = 'invalid';
+      if (this.date instanceof Date && !isNaN(this.date)) {
+        dateStr = this.toW3CString(this.date);
+      }
       let currentSplit = {
         // basic
         description: array.description,
-        date: this.toW3CString(this.date),
+        date: dateStr,
         type: this.transactionType,
 
         // account
@@ -427,16 +534,11 @@ export default {
         // amount:
         currency_id: array.currency_id,
         amount: array.amount,
-        foreign_currency_id: array.foreign_currency_id,
-        foreign_amount: array.foreign_amount,
-
 
         // meta data
         budget_id: array.budget_id,
         category_name: array.category,
-        bill_id: array.bill_id,
         tags: array.tags,
-        piggy_bank_id: array.piggy_bank_id,
 
         // optional date fields (6x):
         interest_date: array.interest_date,
@@ -456,6 +558,21 @@ export default {
         order: 0,
         reconciled: false,
       };
+      // bills and piggy banks
+      if (0 !== array.piggy_bank_id) {
+        currentSplit.piggy_bank_id = array.piggy_bank_id;
+      }
+      if (0 !== array.bill_id) {
+        currentSplit.bill_id = array.bill_id;
+      }
+
+      // foreign amount:
+      if (0 !== array.foreign_currency_id) {
+        currentSplit.foreign_currency_id = array.foreign_currency_id;
+      }
+      if ('' !== array.foreign_amount) {
+        currentSplit.foreign_amount = array.foreign_amount;
+      }
 
       // do transaction type
       let transactionType;
@@ -463,22 +580,26 @@ export default {
       let firstDestination;
 
       // get transaction type from first transaction
-      transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
-
+      transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'any';
+      console.log('Transaction type is now ' + transactionType);
       // if the transaction type is invalid, might just be that we can deduce it from
       // the presence of a source or destination account
       firstSource = this.transactions[0].source_account.type;
       firstDestination = this.transactions[0].destination_account.type;
-      // console.log('Type of first source is  ' + firstSource);
+      console.log(this.transactions[0].source_account);
+      console.log(this.transactions[0].destination_account);
+      console.log('Type of first source is  ' + firstSource);
+      console.log('Type of first destination is  ' + firstDestination);
 
-      if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+      if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
         transactionType = 'withdrawal';
       }
 
-      if ('invalid' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
+      if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
         transactionType = 'deposit';
       }
       currentSplit.type = transactionType;
+      console.log('Final type is ' + transactionType);
 
       let links = [];
       for (let i in array.links) {
@@ -542,16 +663,6 @@ export default {
              offsetSign + offsetHours + ':' + offsetMinutes;
     }
 
-    // addTransactionToArray: function (e) {
-    //   console.log('Now in addTransactionToArray()');
-    //   this.$store.
-    //
-    //   this.transactions.push({
-    //                            description: '',
-    //                          });
-    //   if (e) {
-    //     e.preventDefault();
-    //   }
   },
 }
 </script>

@@ -29,13 +29,16 @@
           :title="$t('firefly.budget')"
           v-model="value"
           autocomplete="off"
-          class="form-control"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="budget_id[]"
           v-on:submit.prevent
       >
         <option v-for="budget in this.budgetList" :value="budget.id" :label="budget.name">{{ budget.name }}</option>
       </select>
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -46,7 +49,7 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors'],
   name: "TransactionBudget",
   data() {
     return {

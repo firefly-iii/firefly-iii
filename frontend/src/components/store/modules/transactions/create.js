@@ -24,6 +24,7 @@ const lodashClonedeep = require('lodash.clonedeep');
 const state = () => ({
         transactionType: 'any',
         date: new Date,
+        groupTitle: '',
         transactions: [],
         allowedOpposingTypes: {},
         accountToTransaction: {},
@@ -36,6 +37,22 @@ const state = () => ({
             due_date: false,
             payment_date: false,
             invoice_date: false,
+        },
+        defaultErrors: {
+            description: [],
+            amount: [],
+            source: [],
+            destination: [],
+            currency: [],
+            foreign_currency: [],
+            foreign_amount: [],
+            date: [],
+            custom_dates: [],
+            budget: [],
+            category: [],
+            bill: [],
+            tags: [],
+            piggy_bank: []
         },
         defaultTransaction: {
             // basic
@@ -94,9 +111,7 @@ const state = () => ({
             attachments: [],
 
             // error handling
-            errors: {
-                description: []
-            },
+            errors: {},
         },
     }
 )
@@ -109,6 +124,9 @@ const getters = {
     },
     date: state => {
         return state.date;
+    },
+    groupTitle: state => {
+        return state.groupTitle;
     },
     transactionType: state => {
         return state.transactionType;
@@ -185,10 +203,18 @@ const actions = {
 const mutations = {
     addTransaction(state) {
         let newTransaction = lodashClonedeep(state.defaultTransaction);
+        newTransaction.errors = lodashClonedeep(state.defaultErrors);
         state.transactions.push(newTransaction);
+    },
+    resetErrors(state, payload) {
+        console.log('resetErrors for index ' + payload.index);
+        state.transactions[payload.index].errors = lodashClonedeep(state.defaultErrors);
     },
     setDate(state, payload) {
         state.date = payload.date;
+    },
+    setGroupTitle(state, payload) {
+        state.groupTitle = payload.groupTitle;
     },
     setCustomDateFields(state, payload) {
         state.customDateFields = payload;
@@ -207,6 +233,11 @@ const mutations = {
     },
     updateField(state, payload) {
         state.transactions[payload.index][payload.field] = payload.value;
+    },
+    setTransactionError(state, payload) {
+        console.log('Will set transactions[' + payload.index + '][errors][' + payload.field + '] to ');
+        console.log(payload.errors);
+        state.transactions[payload.index].errors[payload.field] = payload.errors;
     },
     setDestinationAllowedTypes(state, payload) {
         // console.log('Destination allowed types was changed!');

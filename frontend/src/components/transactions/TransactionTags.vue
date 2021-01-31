@@ -34,6 +34,9 @@
           @tags-changed="newTags => this.tags = newTags"
       />
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
@@ -49,7 +52,7 @@ export default {
   components: {
     VueTagsInput
   },
-  props: ['value', 'index'],
+  props: ['value', 'index', 'errors'],
   data() {
     return {
       autocompleteItems: [],

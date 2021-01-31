@@ -84,6 +84,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
  * @mixin \Eloquent
+ * @property string $title
+ * @property string $secret
+ * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereTitle($value)
  */
 class Webhook extends Model
 {
