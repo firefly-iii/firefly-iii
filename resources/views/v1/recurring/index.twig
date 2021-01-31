@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -155,7 +155,7 @@
 
 
     {% if total == 0 and page == 1 %}
-        {% include 'partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
+        {% include 'v1.partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
     {% endif %}
 {% endblock %}
 

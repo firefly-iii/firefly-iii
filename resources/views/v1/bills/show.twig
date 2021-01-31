@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, bill) }}
@@ -122,7 +122,7 @@
                         <h3 class="box-title">{{ 'attachments'|_ }}</h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             {% endif %}
@@ -149,7 +149,7 @@
                     <h3 class="box-title">{{ 'connected_journals'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.groups' %}
+                    {% include 'v1.list.groups' %}
                 </div>
             </div>
         </div>

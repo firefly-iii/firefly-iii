@@ -1,4 +1,4 @@
-{% include 'emails.header-text' %}
+{% include 'v2.emails.header-text' %}
 {{ trans('email.error_intro', { version: version, errorMessage: errorMessage })|striptags|raw }}
 
 {{ trans('email.error_type', {class: class })|raw }}
@@ -24,4 +24,4 @@
 {{ trans('email.error_stacktrace_below')|raw }}
 
 {{ stackTrace|raw }}
-{% include 'emails.footer-text' %}
+{% include 'v2.emails.footer-text' %}

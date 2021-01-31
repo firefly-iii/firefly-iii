@@ -1,10 +1,10 @@
-{% extends "./layout/default" %}
+{% extends "./v1/layout/default" %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
-    {% include 'partials.boxes' %}
+    {% include 'v1.partials.boxes' %}
     <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12">
             {# ACCOUNTS #}
@@ -65,7 +65,7 @@
 
                         {% if data.transactions|length > 0 %}
                             <div class="box-body no-padding">
-                                {% include 'list.groups-tiny' with {'transactions': data.transactions,'account': data.account} %}
+                                {% include 'v1.list.groups-tiny' with {'transactions': data.transactions,'account': data.account} %}
                             </div>
                         {% else %}
                             <div class="box-body">

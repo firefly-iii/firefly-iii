@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, piggyBank) }}
@@ -97,7 +97,7 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body no-padding" id="piggyEvents">
-                    {% include 'list/piggy-bank-events' %}
+                    {% include 'v1.list/piggy-bank-events' %}
                 </div>
             </div>
         </div>
@@ -126,7 +126,7 @@
                         </h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             </div>

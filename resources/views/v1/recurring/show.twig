@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, recurrence) }}
@@ -167,7 +167,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.groups' %}
+                    {% include 'v1.list.groups' %}
                 </div>
             </div>
         </div>

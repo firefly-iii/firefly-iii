@@ -1,4 +1,4 @@
-{% include 'emails.header-html' %}
+{% include 'v1.emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans_choice('email.new_journals_header', transformed|length ) }}
 </p>
@@ -75,4 +75,4 @@
     {% endfor %}
 </ol>
 
-{% include 'emails.footer-html' %}
+{% include 'v1.emails.footer-html' %}

@@ -1,4 +1,4 @@
-{% include 'emails.header-text' %}
+{% include 'v1.emails.header-text' %}
 {{ trans('email.email_change_body_to_new')|raw }}
 
 {{trans('email.email_change_old', { email: oldEmail })|raw }}
@@ -7,4 +7,4 @@
 
 {{ trans('email.email_change_instructions')|raw }}
 {{ uri }}
-{% include 'emails.footer-text' %}
+{% include 'v1.emails.footer-text' %}

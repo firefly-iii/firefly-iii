@@ -49,7 +49,7 @@
     <script type="text/javascript" nonce="{{ JS_NONCE }}">var forceDemoOff = false;</script>
 
     {# favicons #}
-    {% include('partials.favicons') %}
+    {% include 'v1.partials.favicons' %}
 
 </head>
 <body class="skin-blue-light sidebar-mini hold-transition">
@@ -107,13 +107,13 @@
               </span>
                 </div>
             </form>
-            {% include('partials.menu-sidebar') %}
+            {% include('v1.partials.menu-sidebar') %}
         </section>
     </aside>
 
     <div class="content-wrapper">
         <section class="content-header">
-            {% include('partials.page-header') %}
+            {% include('v1.partials.page-header') %}
             {% block breadcrumbs %}{% endblock %}
         </section>
 
@@ -128,7 +128,7 @@
                 </div>
             {% endif %}
 
-            {% include('partials.flashes') %}
+            {% include('v1.partials.flashes') %}
 
             {% block content %}{% endblock %}
         </section>
@@ -143,7 +143,7 @@
         {% if FF_IS_BETA %}<small class="text-warning hidden-xs"><br>{{ 'is_beta_warning'|_ }}</small>{% endif %}
     </footer>
 
-    {% include('partials.control-bar') %}
+    {% include('v1.partials.control-bar') %}
 
 </div>
 <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">

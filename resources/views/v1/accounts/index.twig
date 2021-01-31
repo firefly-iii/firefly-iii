@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType) }}
@@ -32,7 +32,7 @@
                             <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
                         </div>
 
-                        {% include 'list.accounts' %}
+                        {% include 'v1.list.accounts' %}
                     </div>
                     <div class="box-footer">
                         <p>
@@ -66,7 +66,7 @@
         </div>
     {% endif %}
     {% if accounts.count() == 0 and page == 1 %}
-        {% include 'partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
+        {% include 'v1.partials.empty' with {objectType: objectType, type: 'accounts',route: route('accounts.create', [objectType])} %}
     {% endif %}
 {% endblock %}
 
