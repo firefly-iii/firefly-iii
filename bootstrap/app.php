@@ -91,12 +91,11 @@ if (!function_exists('prefixView')) {
             // do something with view:
             $layout = env('FIREFLY_III_LAYOUT', 'v1');
             $prefixView   = sprintf('%s/%s', $layout, $view);
-            if(false ===$factory->exists($view)) {
+            if(false ===$factory->exists($prefixView)) {
                 // fall back to v1.
                 $prefixView   = sprintf('%s/%s', 'v1', $view);
             }
         }
-
         return $factory->make($prefixView, $data, $mergeData);
     }
 }
