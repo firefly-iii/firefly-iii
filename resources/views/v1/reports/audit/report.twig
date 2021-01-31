@@ -61,7 +61,7 @@
                             balance: formatAmountByAccount(account, auditData[account.id].dayBeforeBalance)
                         })|raw }}
                 </p>
-                {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
+                {% include 'v1.reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
 
                 <p style="padding:10px;">
 
