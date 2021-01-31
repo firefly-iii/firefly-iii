@@ -137,7 +137,7 @@ class EditController extends Controller
 
         $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
-        return view(
+        return prefixView(
             'recurring.edit',
             compact('recurrence', 'array', 'weekendResponses', 'budgets', 'preFilled', 'currentRepType', 'repetitionEnd', 'repetitionEnds')
         );

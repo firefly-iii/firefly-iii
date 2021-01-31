@@ -47,7 +47,7 @@ class TwoFactorController extends Controller
         $siteOwner = config('firefly.site_owner');
         $title     = (string) trans('firefly.two_factor_forgot_title');
 
-        return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
+        return prefixView('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
     }
 
     /**

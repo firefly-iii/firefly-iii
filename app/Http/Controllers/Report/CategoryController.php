@@ -165,7 +165,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.account-per-category', compact('report', 'categories'));
+        return prefixView('reports.category.partials.account-per-category', compact('report', 'categories'));
     }
 
     /**
@@ -269,7 +269,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.accounts', compact('sums', 'report'));
+        return prefixView('reports.category.partials.accounts', compact('sums', 'report'));
     }
 
     /**
@@ -314,7 +314,7 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.category.partials.avg-expenses', compact('result'))->render();
+            $result = prefixView('reports.category.partials.avg-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -366,7 +366,7 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.category.partials.avg-income', compact('result'))->render();
+            $result = prefixView('reports.category.partials.avg-income', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -481,7 +481,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.categories', compact('sums', 'report'));
+        return prefixView('reports.category.partials.categories', compact('sums', 'report'));
     }
 
     /**
@@ -550,7 +550,7 @@ class CategoryController extends Controller
         $report = $data;
 
         try {
-            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            $result = prefixView('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
@@ -629,7 +629,7 @@ class CategoryController extends Controller
         $report = $data;
 
         try {
-            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            $result = prefixView('reports.partials.category-period', compact('report', 'periods'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
@@ -674,7 +674,7 @@ class CategoryController extends Controller
 
         // @codeCoverageIgnoreStart
         try {
-            $result = view('reports.partials.categories', compact('report'))->render();
+            $result = prefixView('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
@@ -726,7 +726,7 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.category.partials.top-expenses', compact('result'))->render();
+            $result = prefixView('reports.category.partials.top-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -776,7 +776,7 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.category.partials.top-income', compact('result'))->render();
+            $result = prefixView('reports.category.partials.top-income', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));

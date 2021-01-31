@@ -105,7 +105,7 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return prefixView('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -143,6 +143,6 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return prefixView('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 }

@@ -80,7 +80,7 @@ class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
+        return prefixView('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
     }
 
 

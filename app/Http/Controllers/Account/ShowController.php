@@ -130,7 +130,7 @@ class ShowController extends Controller
         $showAll = false;
         $balance = app('steam')->balance($account, $end);
 
-        return view(
+        return prefixView(
             'accounts.show',
             compact(
                 'account',
@@ -191,7 +191,7 @@ class ShowController extends Controller
         $showAll  = true;
         $balance  = app('steam')->balance($account, $end);
 
-        return view(
+        return prefixView(
             'accounts.show',
             compact(
                 'account',

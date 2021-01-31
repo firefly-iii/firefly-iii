@@ -101,7 +101,7 @@ class EditController extends Controller
         session()->forget('rule-groups.edit.fromUpdate');
         session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
+        return prefixView('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
     }
 
     /**

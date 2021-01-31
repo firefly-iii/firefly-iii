@@ -160,7 +160,7 @@ class LoginController extends Controller
         }
 
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
+        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
 
     /**

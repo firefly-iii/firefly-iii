@@ -94,7 +94,7 @@ class TagController extends Controller
         }
         session()->forget('tags.create.fromStore');
 
-        return view('tags.create', compact('subTitle', 'subTitleIcon', 'locations'));
+        return prefixView('tags.create', compact('subTitle', 'subTitleIcon', 'locations'));
     }
 
     /**
@@ -111,7 +111,7 @@ class TagController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
 
-        return view('tags.delete', compact('tag', 'subTitle'));
+        return prefixView('tags.delete', compact('tag', 'subTitle'));
     }
 
     /**
@@ -164,7 +164,7 @@ class TagController extends Controller
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'locations'));
+        return prefixView('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'locations'));
     }
 
     /**
@@ -192,7 +192,7 @@ class TagController extends Controller
         }
         $count = $repository->count();
 
-        return view('tags.index', compact('tags', 'count'));
+        return prefixView('tags.index', compact('tags', 'count'));
     }
 
     /**
@@ -262,7 +262,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return prefixView('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**
@@ -295,7 +295,7 @@ class TagController extends Controller
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
+        return prefixView('tags.show', compact('tag', 'attachments', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end', 'location'));
     }
 
     /**

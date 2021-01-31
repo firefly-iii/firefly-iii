@@ -97,7 +97,7 @@ class CurrencyController extends Controller
 
         Log::channel('audit')->info('Create new currency.');
 
-        return view('currencies.create', compact('subTitleIcon', 'subTitle'));
+        return prefixView('currencies.create', compact('subTitleIcon', 'subTitle'));
     }
 
     /**
@@ -156,7 +156,7 @@ class CurrencyController extends Controller
         $subTitle = (string) trans('form.delete_currency', ['name' => $currency->name]);
         Log::channel('audit')->info(sprintf('Visit page to delete currency %s.', $currency->code));
 
-        return view('currencies.delete', compact('currency', 'subTitle'));
+        return prefixView('currencies.delete', compact('currency', 'subTitle'));
     }
 
     /**
@@ -299,7 +299,7 @@ class CurrencyController extends Controller
         }
         $request->session()->forget('currencies.edit.fromUpdate');
 
-        return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
+        return prefixView('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -344,7 +344,7 @@ class CurrencyController extends Controller
             $isOwner = false;
         }
 
-        return view('currencies.index', compact('currencies', 'defaultCurrency', 'isOwner'));
+        return prefixView('currencies.index', compact('currencies', 'defaultCurrency', 'isOwner'));
     }
 
 

@@ -98,7 +98,7 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         $this->validator($request->all())->validate();
@@ -149,12 +149,12 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
+        return prefixView('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
 
 }

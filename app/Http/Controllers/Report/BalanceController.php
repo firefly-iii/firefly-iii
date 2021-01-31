@@ -139,7 +139,7 @@ class BalanceController extends Controller
 
 
         try {
-            $result = view('reports.partials.balance', compact('report'))->render();
+            $result = prefixView('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));

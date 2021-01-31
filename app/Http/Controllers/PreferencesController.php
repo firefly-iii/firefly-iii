@@ -118,7 +118,7 @@ class PreferencesController extends Controller
             $frontPageAccounts = $accountIds;
         }
 
-        return view(
+        return prefixView(
             'preferences.index',
             compact(
                 'language',

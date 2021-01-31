@@ -143,7 +143,7 @@ class IndexController extends Controller
         $sums   = $this->getSums($bills);
         $totals = $this->getTotals($sums);
 
-        return view('bills.index', compact('bills', 'sums', 'total', 'totals'));
+        return prefixView('bills.index', compact('bills', 'sums', 'total', 'totals'));
     }
 
 

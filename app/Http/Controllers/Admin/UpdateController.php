@@ -85,7 +85,7 @@ class UpdateController extends Controller
             'alpha'  => (string) trans('firefly.update_channel_alpha'),
         ];
 
-        return view('admin.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options', 'channelSelected', 'channelOptions'));
+        return prefixView('admin.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options', 'channelSelected', 'channelOptions'));
     }
 
     /**

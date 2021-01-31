@@ -107,7 +107,7 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return prefixView('budgets.no-budget', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 
     /**
@@ -134,7 +134,7 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('groups', 'subTitle', 'start', 'end'));
+        return prefixView('budgets.no-budget', compact('groups', 'subTitle', 'start', 'end'));
     }
 
 
@@ -170,7 +170,7 @@ class ShowController extends Controller
 
         $subTitle = (string) trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
-        return view('budgets.show', compact('limits','attachments', 'budget', 'repetition', 'groups', 'subTitle'));
+        return prefixView('budgets.show', compact('limits','attachments', 'budget', 'repetition', 'groups', 'subTitle'));
     }
 
     /**
@@ -215,6 +215,6 @@ class ShowController extends Controller
         $attachments = $this->repository->getAttachments($budget);
         $limits = $this->getLimits($budget, $start, $end);
 
-        return view('budgets.show', compact('limits','attachments', 'budget', 'budgetLimit', 'groups', 'subTitle'));
+        return prefixView('budgets.show', compact('limits','attachments', 'budget', 'budgetLimit', 'groups', 'subTitle'));
     }
 }

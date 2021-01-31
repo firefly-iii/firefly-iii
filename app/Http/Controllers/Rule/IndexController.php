@@ -79,7 +79,7 @@ class IndexController extends Controller
         $this->ruleGroupRepos->resetRuleGroupOrder();
         $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
 
-        return view('rules.index', compact('ruleGroups'));
+        return prefixView('rules.index', compact('ruleGroups'));
     }
 
     /**

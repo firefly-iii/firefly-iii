@@ -184,7 +184,7 @@ class ShowController extends Controller
         // @codeCoverageIgnoreEnd
 
 
-        return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return prefixView('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
 }

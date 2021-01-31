@@ -110,7 +110,7 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.double.partials.avg-expenses', compact('result'))->render();
+            $result = prefixView('reports.double.partials.avg-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -162,7 +162,7 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.double.partials.avg-income', compact('result'))->render();
+            $result = prefixView('reports.double.partials.avg-income', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -288,7 +288,7 @@ class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts', compact('sums', 'report'));
+        return prefixView('reports.double.partials.accounts', compact('sums', 'report'));
     }
 
     /**
@@ -388,7 +388,7 @@ class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts-per-asset', compact('sums', 'report'));
+        return prefixView('reports.double.partials.accounts-per-asset', compact('sums', 'report'));
     }
 
     /**
@@ -431,7 +431,7 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.double.partials.top-expenses', compact('result'))->render();
+            $result = prefixView('reports.double.partials.top-expenses', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
@@ -481,7 +481,7 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.double.partials.top-income', compact('result'))->render();
+            $result = prefixView('reports.double.partials.top-income', compact('result'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));

@@ -140,7 +140,7 @@ class ReconcileController extends Controller
         $indexUri        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
         $objectType      = 'asset';
 
-        return view(
+        return prefixView(
             'accounts.reconcile.index',
             compact(
                 'account',
