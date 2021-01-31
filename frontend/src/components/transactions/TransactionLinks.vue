@@ -204,8 +204,8 @@ export default {
   },
   watch: {
     value: function (value) {
-      console.log('Selected transactions is now:');
-      console.log(value);
+      //console.log('Selected transactions is now:');
+      //console.log(value);
     }
   },
   methods: {
@@ -214,8 +214,8 @@ export default {
       for (let i in this.linkTypes) {
         if (this.linkTypes.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = this.linkTypes[i];
-          console.log(parts);
-          console.log(current);
+          //console.log(parts);
+          //console.log(current);
           if (parts[0] === current.id && parts[1] === current.direction) {
             return current.type;
           }

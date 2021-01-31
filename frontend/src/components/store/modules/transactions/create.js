@@ -22,7 +22,7 @@ const lodashClonedeep = require('lodash.clonedeep');
 
 // initial state
 const state = () => ({
-        transactionType: 'any',
+        transactionType: '',
         date: new Date,
         groupTitle: '',
         transactions: [],
@@ -52,12 +52,15 @@ const state = () => ({
             category: [],
             bill: [],
             tags: [],
-            piggy_bank: []
+            piggy_bank: [],
+            internal_reference: [],
+            external_url: [],
+            notes: []
         },
         defaultTransaction: {
             // basic
             description: '',
-
+            transaction_journal_id: 0,
             // accounts:
             source_account: {
                 id: 0,
@@ -207,7 +210,7 @@ const mutations = {
         state.transactions.push(newTransaction);
     },
     resetErrors(state, payload) {
-        console.log('resetErrors for index ' + payload.index);
+        //console.log('resetErrors for index ' + payload.index);
         state.transactions[payload.index].errors = lodashClonedeep(state.defaultErrors);
     },
     setDate(state, payload) {
@@ -235,8 +238,8 @@ const mutations = {
         state.transactions[payload.index][payload.field] = payload.value;
     },
     setTransactionError(state, payload) {
-        console.log('Will set transactions[' + payload.index + '][errors][' + payload.field + '] to ');
-        console.log(payload.errors);
+        //console.log('Will set transactions[' + payload.index + '][errors][' + payload.field + '] to ');
+        //console.log(payload.errors);
         state.transactions[payload.index].errors[payload.field] = payload.errors;
     },
     setDestinationAllowedTypes(state, payload) {

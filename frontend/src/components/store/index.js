@@ -43,7 +43,7 @@ export default new Vuex.Store(
         },
         mutations: {
             setCurrencyPreference(state, payload) {
-                console.log('setCurrencyPreference', payload);
+                //console.log('setCurrencyPreference', payload);
                 state.currencyPreference = payload.payload;
             },
             initialiseStore(state) {
@@ -77,9 +77,9 @@ export default new Vuex.Store(
         actions: {
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
-                    console.log('set from local storage.');
-                    console.log(localStorage.currencyPreference);
-                    console.log({payload: JSON.parse(localStorage.currencyPreference)});
+                    //console.log('set from local storage.');
+                    //console.log(localStorage.currencyPreference);
+                    //console.log({payload: JSON.parse(localStorage.currencyPreference)});
                     context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;
                 }
@@ -93,8 +93,8 @@ export default new Vuex.Store(
                             decimal_places: parseInt(response.data.data.attributes.decimal_places),
                         };
                         localStorage.currencyPreference = JSON.stringify(currencyResponse);
-                        console.log('getCurrencyPreference from server')
-                        console.log(JSON.stringify(currencyResponse));
+                        //console.log('getCurrencyPreference from server')
+                        //console.log(JSON.stringify(currencyResponse));
                         context.commit('setCurrencyPreference', {payload: currencyResponse});
                     }).catch(err => {
                     // console.log('Got error response.');

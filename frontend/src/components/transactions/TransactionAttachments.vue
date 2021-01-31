@@ -27,15 +27,65 @@
       <input
           type="file"
           multiple
+          ref="att"
           name="attachments[]"
-          class="form-control"/>
+          class="form-control"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-name: "TransactionAttachments"
+  name: "TransactionAttachments",
+  props: ['transaction_journal_id'],
+  watch: {
+    transaction_journal_id: function (value) {
+      // do upload!
+      if (0 !== value) {
+        this.doUpload();
+      }
+    }
+  },
+  methods: {
+    doUpload: function () {
+      let uploads = [];
+      for (let i in this.$refs.att.files) {
+        if (this.$refs.att.files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.$refs.att.files[i];
+          let fileReader = new FileReader();
+          let theParent = this; // dont ask me why i need to do this.
+          fileReader.onloadend = function (evt) {
+            if (evt.target.readyState === FileReader.DONE) {
+              // do upload here
+              const uri = './api/v1/attachments';
+              const data = {
+                filename: current.name,
+                attachable_type: 'TransactionJournal',
+                attachable_id: theParent.transaction_journal_id,
+              };
+              // create new attachment:
+              axios.post(uri, data).then(response => {
+                // upload actual file:
+                const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
+                axios
+                    .post(uploadUri, new Blob([evt.target.result]))
+                    .then(attachmentResponse => {
+                      // TODO feedback etc.
+                      theParent.$emit('uploaded-attachments');
+                    });
+              });
+            }
+          }
+          fileReader.readAsArrayBuffer(current);
+        }
+      }
+      if (0 === this.$refs.att.files.length) {
+        this.$emit('uploaded-attachments', this.transaction_journal_id);
+      }
+    }
+  }
+
 }
 </script>
 

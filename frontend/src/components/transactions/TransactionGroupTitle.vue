@@ -40,6 +40,11 @@
         </div>
       </template>
     </vue-typeahead-bootstrap>
+
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
+
   </div>
 </template>
 
@@ -69,7 +74,7 @@ export default {
   },
   watch: {
     value: function (value) {
-      console.log('set');
+      //console.log('set');
       this.setGroupTitle({groupTitle: value});
     }
   },
@@ -85,7 +90,6 @@ export default {
         ]
     ),
     clearDescription: function () {
-      console.log('cear');
       this.setGroupTitle({groupTitle: ''});
       this.value = '';
     },

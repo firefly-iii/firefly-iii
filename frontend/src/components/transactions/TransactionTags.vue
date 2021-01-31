@@ -65,15 +65,15 @@ export default {
   watch: {
     'currentTag': 'initItems',
     value: function (value) {
-      console.log('watch: value');
-      console.log(value);
+      //console.log('watch: value');
+      //console.log(value);
       this.updateField({field: 'tags', index: this.index, value: value});
       this.updateTags = false;
       this.tags = value;
     },
     tags: function (value) {
       if (this.updateTags) {
-        console.log('watch: tags');
+        //console.log('watch: tags');
 
         let shortList = [];
         for (let key in value) {
