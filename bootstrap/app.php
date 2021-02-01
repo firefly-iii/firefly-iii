@@ -83,19 +83,22 @@ if (!function_exists('prefixView')) {
         if (func_num_args() === 0) {
             return $factory;
         }
+        // original view:
         $prefixView = $view;
-        if (
-            true === env('APP_DEBUG', false)
-            && null !== $view
-            && is_string($view)) {
-            // do something with view:
+
+        // try to find the view file first:
+        if(!$factory->exists($prefixView)) {
+            // prepend it with the view in the layout:
             $layout = env('FIREFLY_III_LAYOUT', 'v1');
-            $prefixView   = sprintf('%s/%s', $layout, $view);
-            if(false ===$factory->exists($prefixView)) {
-                // fall back to v1.
-                $prefixView   = sprintf('%s/%s', 'v1', $view);
+            $prefixView   = sprintf('%s.%s', $layout, $view);
+
+            // try again:
+            if(!$factory->exists($prefixView)) {
+                // if does not exist, force v1 and just continue.
+                $prefixView   = sprintf('%s.%s', 'v1', $view);
             }
         }
+
         return $factory->make($prefixView, $data, $mergeData);
     }
 }
