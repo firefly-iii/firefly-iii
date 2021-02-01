@@ -67,6 +67,7 @@
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
         "errors_submission": "Hubo un problema con su env\u00edo. Por favor, compruebe los errores.",
         "flash_error": "\u00a1Error!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Presupuestos de tiempo personalizado",
         "journal_links": "Enlaces de transacciones",
         "go_to_withdrawals": "Ir a tus retiradas",

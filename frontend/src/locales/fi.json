@@ -67,6 +67,7 @@
         "split_transaction_title": "Jaetun tapahtuman kuvaus",
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Virhe!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Tapahtuman linkit",
         "go_to_withdrawals": "Go to your withdrawals",

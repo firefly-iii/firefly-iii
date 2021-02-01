@@ -67,6 +67,7 @@
         "split_transaction_title": "Descrierea tranzac\u021biei divizate",
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Eroare!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Link-uri de tranzac\u021bii",
         "go_to_withdrawals": "Go to your withdrawals",

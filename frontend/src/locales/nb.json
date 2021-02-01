@@ -67,6 +67,7 @@
         "split_transaction_title": "Description of the split transaction",
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Feil!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Transaksjonskoblinger",
         "go_to_withdrawals": "Go to your withdrawals",

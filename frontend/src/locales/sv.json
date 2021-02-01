@@ -67,6 +67,7 @@
         "split_transaction_title": "Beskrivning av delad transaktion",
         "errors_submission": "N\u00e5got fel uppstod med inskickningen. V\u00e4nligen kontrollera felen nedan.",
         "flash_error": "Fel!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Anpassade tidsinst\u00e4llda budgetar",
         "journal_links": "Transaktionsl\u00e4nkar",
         "go_to_withdrawals": "G\u00e5 till dina uttag",

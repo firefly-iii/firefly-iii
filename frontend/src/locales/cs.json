@@ -67,6 +67,7 @@
         "split_transaction_title": "Popis roz\u00fa\u010dtov\u00e1n\u00ed",
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Chyba!",
+        "store_transaction": "Store transaction",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Transaction links",
         "go_to_withdrawals": "Go to your withdrawals",

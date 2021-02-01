@@ -67,6 +67,7 @@
         "split_transaction_title": "\u62c6\u5206\u4ea4\u6613\u7684\u63cf\u8ff0",
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "\u932f\u8aa4\uff01",
+        "store_transaction": "Store transaction",
         "other_budgets": "Custom timed budgets",
         "journal_links": "\u4ea4\u6613\u9023\u7d50",
         "go_to_withdrawals": "Go to your withdrawals",
