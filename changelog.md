@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - OAuth is visible for LDAP users.
+- If you set `FIREFLY_III_LAYOUT=v2`, Firefly III will show you the new layout on pages where it's available. 
 
 ### Fixed
 - [Issue 4045](https://github.com/firefly-iii/firefly-iii/issues/4045) Error message for "Amount Missing" doesn't have a look up value
