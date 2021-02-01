@@ -22,7 +22,7 @@ const lodashClonedeep = require('lodash.clonedeep');
 
 // initial state
 const state = () => ({
-        transactionType: '',
+        transactionType: 'any',
         date: new Date,
         groupTitle: '',
         transactions: [],

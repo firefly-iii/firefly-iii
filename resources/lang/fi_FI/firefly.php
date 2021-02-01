@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automaatio',
     'others'                                    => 'Muut',
     'classification'                            => 'Luokitus',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Talousraportti välillä :start ja :end',

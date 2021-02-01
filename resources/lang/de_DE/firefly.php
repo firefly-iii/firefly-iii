@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatisierungen',
     'others'                                    => 'Weitere',
     'classification'                            => 'Klassifizierung',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Standardfinanzbericht zwischen :start und :end',

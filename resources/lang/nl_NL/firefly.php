@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Overige',
     'classification'                            => 'Indeling',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',

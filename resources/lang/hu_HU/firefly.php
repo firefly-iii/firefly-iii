@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatizálás',
     'others'                                    => 'Egyebek',
     'classification'                            => 'Besorolás',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Alapértelmezett pénzügyi jelentés :start és :end között',

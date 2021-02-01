@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Laporan keuangan standar antara :start dan :end',

@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Автоматизация',
     'others'                                    => 'Други',
     'classification'                            => 'Класификация',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Финансов отчет по подразбиране между :start и :end',

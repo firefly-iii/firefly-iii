@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatizácia',
     'others'                                    => 'Iné',
     'classification'                            => 'Klasifikácia',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Predvolený finančný výkaz v období :start a :end',

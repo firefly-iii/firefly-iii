@@ -83,7 +83,7 @@ class NewIPAddressWarningMail extends Mailable
             $this->host = $hostName;
         }
 
-        return $this->view('emails.new-ip-html')->text('emails.new-ip-text')
+        return $this->view('v1.emails.new-ip-html')->text('v1.emails.new-ip-text')
                     ->subject((string) trans('email.login_from_new_ip'));
     }
 }

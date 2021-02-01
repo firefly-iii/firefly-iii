@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Andra',
     'classification'                            => 'Klassificering',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Standard ekonomisk rapport mellan :start och :end',

@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatizare',
     'others'                                    => 'Altele',
     'classification'                            => 'Clasificare',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Raportul financiar prestabilit între :start și :end',

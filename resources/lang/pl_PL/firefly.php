@@ -277,7 +277,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III znalazł więcej niż :count transakcji w :time sekund.',
     'search_for_query'                                    => 'Firefly III szuka transakcji zawierających wszystkie słowa: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Data transakcji to ":value"',
-    'search_modifier_id'                                  => 'Transaction ID is ":value"',
+    'search_modifier_id'                                  => 'ID transakcji to ":value"',
     'search_modifier_date_before'                         => 'Data transakcji jest przed lub w ":value"',
     'search_modifier_date_after'                          => 'Data transakcji jest po lub w ":value"',
     'search_modifier_created_on'                          => 'Transakcja stworzona ":value"',
@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatyzacja',
     'others'                                    => 'Pozostałe',
     'classification'                            => 'Klasyfikacja',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Domyślny raport finansowy między :start i :end',

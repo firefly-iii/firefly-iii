@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Tự động',
     'others'                                    => 'Khác',
     'classification'                            => 'Phân loại',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Báo cáo tài chính mặc định giữa: start và: end',

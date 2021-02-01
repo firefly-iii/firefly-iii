@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Automatización',
     'others'                                    => 'Otros',
     'classification'                            => 'Clasificación',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Reporte financiero por defecto entre :start y :end',
@@ -1479,7 +1480,7 @@ return [
     'stored_piggy_bank'                         => 'Crear hucha ":name"',
     'account_status'                            => 'Estado de cuenta',
     'left_for_piggy_banks'                      => 'Apartado para las huchas',
-    'sum_of_piggy_banks'                        => 'Total de huchas',
+    'sum_of_piggy_banks'                        => 'Total de las huchas',
     'saved_so_far'                              => 'Guardado hasta el momento',
     'left_to_save'                              => 'Disponible para ahorro',
     'suggested_amount'                          => 'Cantidad mensual sugerida para ahorrar',

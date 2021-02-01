@@ -101,7 +101,7 @@ class RecurrenceController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getAll();
@@ -180,7 +180,7 @@ class RecurrenceController extends Controller
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -243,11 +243,8 @@ class RecurrenceController extends Controller
         if (false === $result) {
             return response()->json([], 204);
         }
-        if (true === $result) {
-            return response()->json();
-        }
 
-        return response()->json([], 418); // @codeCoverageIgnore
+        return response()->json();
     }
 
     /**

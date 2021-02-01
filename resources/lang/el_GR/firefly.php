@@ -1337,6 +1337,7 @@ return [
     'automation'                                => 'Αυτοματοποίηση',
     'others'                                    => 'Λοιπά',
     'classification'                            => 'Ταξινόμηση',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Προεπιλεγμένη οικονομική αναφορά μεταξύ :start και :end',
