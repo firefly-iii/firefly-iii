@@ -2,9 +2,9 @@
     <thead>
     <tr>
         {% if showCategory or showBudget %}
-            <td colspan="7" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
+            <td colspan="7" class="no-margin-pagination">{{ groups.links('v1.pagination.bootstrap-4')|raw }}</td>
         {% else %}
-            <td colspan="6" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
+            <td colspan="6" class="no-margin-pagination">{{ groups.links('v1.pagination.bootstrap-4')|raw }}</td>
         {% endif %}
         <td colspan="1" class="hidden-xs">
             <!-- Single button -->
@@ -279,9 +279,9 @@
     </tr>
     <tr>
         {% if showCategory or showBudget %}
-            <td colspan="9" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
+            <td colspan="9" class="no-margin-pagination">{{ groups.links('v1.pagination.bootstrap-4')|raw }}</td>
         {% else %}
-            <td colspan="8" class="no-margin-pagination">{{ groups.links('pagination.bootstrap-4')|raw }}</td>
+            <td colspan="8" class="no-margin-pagination">{{ groups.links('v1.pagination.bootstrap-4')|raw }}</td>
         {% endif %}
     </tr>
     </tfoot>
