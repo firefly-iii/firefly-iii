@@ -20,10 +20,16 @@
 
 <template>
   <div>
-    <div class="alert alert-danger alert-dismissible" v-if="this.errorMessage.length > 0">
+    <div class="alert alert-danger alert-dismissible" v-if="errorMessage.length > 0">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h5><i class="icon fas fa-ban"></i> {{ $t("firefly.flash_error") }}</h5>
       {{ errorMessage }}
+    </div>
+
+    <div class="alert alert-success alert-dismissible" v-if="successMessage.length > 0">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h5><i class="icon fas fa-thumbs-up"></i> {{ $t("firefly.flash_success") }}</h5>
+      {{ successMessage }}
     </div>
 
     <div class="row" v-if="transactions.length > 1">
@@ -259,12 +265,12 @@
                     <div class="text-xs d-none d-lg-block d-xl-block">
                       &nbsp;
                     </div>
-                      <button @click="addTransaction" class="btn btn-primary float-left"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
-                      </button>
-                      <button class="btn btn-success float-right" @click="submitTransaction" :disabled="isSubmitting && !submitted">
-                        <span v-if="!isSubmitting"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                        <span v-if="isSubmitting && !submitted"><i class="fas fa-spinner fa-spin"></i></span>
-                      </button>
+                    <button @click="addTransaction" class="btn btn-primary float-left"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                    </button>
+                    <button class="btn btn-success float-right" @click="submitTransaction" :disabled="isSubmitting && !submitted">
+                      <span v-if="!isSubmitting"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
+                      <span v-if="isSubmitting && !submitted"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -328,7 +334,7 @@ export default {
     return {
       linkSearchResults: [],
       errorMessage: '',
-      successMessage: null,
+      successMessage: '',
 
       // process steps:
       isSubmitting: false,
@@ -353,8 +359,8 @@ export default {
       groupTitle: '',
 
       // some button flag things
-      createAnother: false,
-      resetFormAfter: false
+      createAnother: true,
+      resetFormAfter: true
     }
   },
   computed: {
@@ -386,7 +392,8 @@ export default {
           'setAccountToTransaction',
           'setTransactionError',
           'resetErrors',
-          'updateField'
+          'updateField',
+          'resetTransactions'
         ],
     ),
     removeTransaction: function (index) {
@@ -421,8 +428,17 @@ export default {
         this.isSubmitting = false;
 
         // show message, redirect.
-
-
+        if (false === this.createAnother) {
+          window.location.href = window.previousURL + '?transaction_group_id=' + this.groupId + '&message=created';
+          return;
+        }
+        // render msg:
+        this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.groupId, title: this.groupTitle});
+        if(this.resetFormAfter) {
+          this.resetTransactions();
+          // do a short time out?
+          setTimeout(() => this.addTransaction(), 50);
+        }
       }
 
     },

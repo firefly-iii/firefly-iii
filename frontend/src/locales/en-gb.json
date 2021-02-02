@@ -68,6 +68,8 @@
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Error!",
         "store_transaction": "Store transaction",
+        "flash_success": "Success!",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Transaction links",
         "go_to_withdrawals": "Go to your withdrawals",

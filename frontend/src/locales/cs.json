@@ -68,6 +68,8 @@
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "Chyba!",
         "store_transaction": "Store transaction",
+        "flash_success": "\u00dasp\u011b\u0161n\u011b dokon\u010deno!",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Transaction links",
         "go_to_withdrawals": "Go to your withdrawals",

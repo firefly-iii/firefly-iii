@@ -213,6 +213,9 @@ const mutations = {
         //console.log('resetErrors for index ' + payload.index);
         state.transactions[payload.index].errors = lodashClonedeep(state.defaultErrors);
     },
+    resetTransactions(state) {
+        state.transactions = [];
+    },
     setDate(state, payload) {
         state.date = payload.date;
     },

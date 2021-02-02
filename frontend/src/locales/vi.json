@@ -68,6 +68,8 @@
         "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "flash_error": "L\u1ed7i!",
         "store_transaction": "Store transaction",
+        "flash_success": "Th\u00e0nh c\u00f4ng!",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Giao d\u1ecbch #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Li\u00ean k\u1ebft giao d\u1ecbch",
         "go_to_withdrawals": "Go to your withdrawals",

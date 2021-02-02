@@ -68,6 +68,8 @@
         "errors_submission": "Pri odosielan\u00ed sa nie\u010do nepodarilo. Skontrolujte pros\u00edm chyby.",
         "flash_error": "Chyba!",
         "store_transaction": "Store transaction",
+        "flash_success": "Hotovo!",
+        "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcia #{ID} (\"{title}\")<\/a> bola ulo\u017een\u00e1.",
         "other_budgets": "\u0160pecifick\u00e9 \u010dasovan\u00e9 rozpo\u010dty",
         "journal_links": "Prepojenia transakcie",
         "go_to_withdrawals": "Zobrazi\u0165 v\u00fdbery",
