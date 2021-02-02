@@ -308,7 +308,7 @@ return [
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
-        // 'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
+        'pt_PT' => ['name_locale' => 'Português', 'name_english' => 'Portuguese'],
         'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         // 'si_LK' => ['name_locale' => 'සිංහල', 'name_english' => 'Sinhala (Sri Lanka)'],

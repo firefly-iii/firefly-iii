@@ -1337,7 +1337,7 @@ return [
     'automation'                                => 'Automação',
     'others'                                    => 'Outros',
     'classification'                            => 'Classificação',
-    'store_transaction'                         => 'Store transaction',
+    'store_transaction'                         => 'Salvar transação',
 
     // reports:
     'report_default'                            => 'Relatório financeiro padrão entre :start e :end',
