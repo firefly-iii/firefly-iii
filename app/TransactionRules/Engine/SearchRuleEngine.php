@@ -311,6 +311,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function findStrictRule(Rule $rule): Collection
     {
+        Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
         $searchArray = [];
         /** @var RuleTrigger $ruleTrigger */
         foreach ($rule->ruleTriggers as $ruleTrigger) {
@@ -318,18 +319,18 @@ class SearchRuleEngine implements RuleEngineInterface
             $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
-                $searchArray[$ruleTrigger->trigger_type] = 'true';
+                $searchArray[$ruleTrigger->trigger_type][] = 'true';
             }
             if (true === $needsContext) {
                 Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
-                $searchArray[$ruleTrigger->trigger_type] = sprintf('"%s"', $ruleTrigger->trigger_value);
+                $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
         }
 
         // add local operators:
         foreach ($this->operators as $operator) {
             Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
-            $searchArray[$operator['type']] = sprintf('"%s"', $operator['value']);
+            $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
         }
 
         // build and run the search engine.
@@ -338,10 +339,11 @@ class SearchRuleEngine implements RuleEngineInterface
         $searchEngine->setPage(1);
         $searchEngine->setLimit(31337);
 
-        foreach ($searchArray as $type => $value) {
-            $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+        foreach ($searchArray as $type => $searches) {
+            foreach($searches as $value) {
+                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+            }
         }
-
 
         $result = $searchEngine->searchTransactions();
 
