@@ -86,6 +86,12 @@ class EditController extends Controller
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
+        // TODO should be in repos
+        $count = $recurrence->recurrenceTransactions()->count();
+        if(0 === $count) {
+            throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
+        }
+
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
