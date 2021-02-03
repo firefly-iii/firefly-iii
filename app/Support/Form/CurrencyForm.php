@@ -154,7 +154,7 @@ class CurrencyForm
             $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
-            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+            $html = prefixView('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
@@ -205,7 +205,7 @@ class CurrencyForm
             $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
-            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+            $html = prefixView('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
