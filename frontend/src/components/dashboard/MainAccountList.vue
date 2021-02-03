@@ -24,7 +24,12 @@
          v-for="account in accounts">
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title"><a :href="account.uri">{{ account.title }}</a></h3>
+          <h3 class="card-title"><a :href="account.url">{{ account.title }}</a></h3>
+          <div class="card-tools">
+            <span :class="parseFloat(account.current_balance) < 0 ? 'text-danger' : 'text-success'">
+            {{ Intl.NumberFormat(locale, {style: 'currency', currency: account.currency_code}).format(parseFloat(account.current_balance)) }}
+              </span>
+          </div>
         </div>
         <div class="card-body table-responsive p-0">
           <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id"/>
@@ -42,9 +47,11 @@ export default {
   data() {
     return {
       accounts: [],
+      locale: 'en-US'
     }
   },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     axios.get('./api/v1/preferences/frontpageAccounts')
         .then(response => {
                 this.loadAccounts(response);
@@ -60,7 +67,9 @@ export default {
               this.accounts.push({
                                    id: accountIds[key],
                                    title: '',
-                                   uri: '',
+                                   url: '',
+                                   current_balance: '',
+                                   currency_code: '',
                                    transactions: []
                                  });
               this.loadSingleAccount(key, accountIds[key]);
@@ -71,7 +80,10 @@ export default {
           axios.get('./api/v1/accounts/' + accountId)
               .then(response => {
                       this.accounts[key].title = response.data.data.attributes.name;
-                      this.accounts[key].uri = './accounts/show/' + response.data.data.id;
+                      this.accounts[key].url = './accounts/show/' + response.data.data.id;
+                      this.accounts[key].current_balance = response.data.data.attributes.current_balance;
+                      this.accounts[key].currency_code = response.data.data.attributes.currency_code;
+
                       this.loadTransactions(key, accountId);
                     }
               );

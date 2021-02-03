@@ -93,7 +93,7 @@
 <script>
 export default {
   name: "BudgetLimitRow",
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
   },
   data() {

@@ -29,7 +29,7 @@
     <div class="alert alert-success alert-dismissible" v-if="successMessage.length > 0">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h5><i class="icon fas fa-thumbs-up"></i> {{ $t("firefly.flash_success") }}</h5>
-      {{ successMessage }}
+      <span v-html="successMessage"></span>
     </div>
 
     <div class="row" v-if="transactions.length > 1">
@@ -434,10 +434,12 @@ export default {
         }
         // render msg:
         this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.groupId, title: this.groupTitle});
-        if(this.resetFormAfter) {
-          this.resetTransactions();
+        if (this.resetFormAfter) {
+          this.submitted = false;
+            this.resetTransactions();
           // do a short time out?
           setTimeout(() => this.addTransaction(), 50);
+          // reset the form:
         }
       }
 

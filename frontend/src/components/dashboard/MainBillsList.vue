@@ -34,7 +34,7 @@
         </thead>
         <tbody>
         <tr v-for="bill in this.bills">
-          <td><a :href="'./bills/show' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
+          <td><a :href="'./bills/show/' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
             ~{{
               Intl.NumberFormat(locale, {style: 'currency', currency: bill.attributes.currency_code}).format((parseFloat(bill.attributes.amount_min) +
                                                                                                               parseFloat(bill.attributes.amount_max)) / 2)
