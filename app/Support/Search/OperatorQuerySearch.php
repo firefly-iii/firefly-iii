@@ -100,6 +100,7 @@ class OperatorQuerySearch implements SearchInterface
     private Collection                         $modifiers; // obsolete
     private Collection                         $operators;
     private string                             $originalQuery;
+    private Carbon                             $date;
 
     /**
      * OperatorQuerySearch constructor.
@@ -115,6 +116,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->words              = [];
         $this->limit              = 25;
         $this->originalQuery      = '';
+        $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -142,6 +144,14 @@ class OperatorQuerySearch implements SearchInterface
     public function getOperators(): Collection
     {
         return $this->operators;
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
     }
 
     /**
@@ -255,7 +265,7 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
                 // loop all notes in subquery:
-                foreach($searchNode->getNodes() as $subNode) {
+                foreach ($searchNode->getNodes() as $subNode) {
                     $this->handleSearchNode($subNode); // lets hope its not too recursive!
                 }
                 break;
@@ -831,7 +841,7 @@ class OperatorQuerySearch implements SearchInterface
     {
         $parser = new ParseDateString;
         if ($parser->isDateRange($value)) {
-            return $parser->parseRange($value, today(config('app.timezone')));
+            return $parser->parseRange($value, $this->date);
         }
         $date = $parser->parseDate($value);
 

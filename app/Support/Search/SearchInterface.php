@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -80,4 +81,9 @@ interface SearchInterface
      * @param User $user
      */
     public function setUser(User $user);
+
+    /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void;
 }

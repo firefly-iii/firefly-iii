@@ -43,11 +43,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Engine;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
 use FireflyIII\TransactionRules\Factory\ActionFactory;
 use FireflyIII\User;
@@ -274,8 +276,9 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
 
         $result = $collection->count() > 0;
-        if(true === $result) {
+        if (true === $result) {
             Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
             return true;
         }
         Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
@@ -332,15 +335,21 @@ class SearchRuleEngine implements RuleEngineInterface
             Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
             $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
         }
+        $date = today(config('app.timezone'));
+        if ($this->hasSpecificJournalTrigger($searchArray)) {
+            $date = $this->setDateFromJournalTrigger($searchArray);
+        }
+
 
         // build and run the search engine.
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
         $searchEngine->setPage(1);
         $searchEngine->setLimit(31337);
+        $searchEngine->setDate($date);
 
         foreach ($searchArray as $type => $searches) {
-            foreach($searches as $value) {
+            foreach ($searches as $value) {
                 $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
             }
         }
@@ -423,6 +432,38 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
+     * Search in the triggers of this particular search and if it contains
+     * one search operator for "journal_id" it means the date ranges
+     * in the search may need to be updated.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function hasSpecificJournalTrigger(array $array): bool
+    {
+        Log::debug('Now in hasSpecificJournalTrigger.');
+        $journalTrigger = false;
+        $dateTrigger    = false;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName) {
+                if (is_array($values) && 1 === count($values)) {
+                    Log::debug('Found a journal_id trigger with 1 journal, true.');
+                    $journalTrigger = true;
+                }
+            }
+            if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
+                Log::debug('Found a date related trigger, set to true.');
+                $dateTrigger = true;
+            }
+        }
+        $result = $journalTrigger && $dateTrigger;
+        Log::debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
+
+        return $result;
+    }
+
+    /**
      * @param RuleGroup $group
      *
      * @return bool
@@ -446,5 +487,37 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         return $all;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return Carbon
+     */
+    private function setDateFromJournalTrigger(array $array): Carbon
+    {
+        Log::debug('Now in setDateFromJournalTrigger()');
+        $journalId = 0;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName) {
+                if (is_array($values) && 1 === count($values)) {
+                    $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
+                    Log::debug(sprintf('Found journal ID #%d', $journalId));
+                }
+            }
+        }
+        if (0 !== $journalId) {
+            $repository = app(JournalRepositoryInterface::class);
+            $journal    = $repository->findNull($journalId);
+            if (null !== $journal) {
+                $date = $journal->date;
+                Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
+
+                return $date;
+            }
+        }
+        Log::debug('Found no journal, return default date.');
+
+        return today(config('app.timezone'));
     }
 }
