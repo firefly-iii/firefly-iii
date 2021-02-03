@@ -21,10 +21,9 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
-use FireflyIII\Api\V1\Requests\AccountStoreRequest;
-use FireflyIII\Api\V1\Requests\AccountUpdateRequest;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -44,16 +43,15 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
 /**
- * Class AccountController.
+ * Class ListController
  */
-class AccountController extends Controller
+class ListController extends Controller
 {
     use AccountFilter, TransactionFilter;
 
     public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
-
 
     /**
      * AccountController constructor.
@@ -65,11 +63,8 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-                // @var AccountRepositoryInterface repository
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }
@@ -85,7 +80,7 @@ class AccountController extends Controller
     public function attachments(Account $account): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
@@ -106,21 +101,6 @@ class AccountController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param Account $account
-     *
-     * @codeCoverageIgnore
-     * @return JsonResponse
-     */
-    public function delete(Account $account): JsonResponse
-    {
-        $this->repository->destroy($account, null);
-
-        return response()->json([], 204);
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @param Request $request
@@ -136,7 +116,7 @@ class AccountController extends Controller
 
         // types to get, page size:
         $types    = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection = $this->repository->getAccountsByType($types);
@@ -147,7 +127,6 @@ class AccountController extends Controller
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.index') . $this->buildParams());
 
-
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -157,7 +136,6 @@ class AccountController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
     /**
      * List all piggies.
@@ -173,7 +151,7 @@ class AccountController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks($account);
@@ -215,28 +193,6 @@ class AccountController extends Controller
     }
 
     /**
-     * Store a new instance.
-     *
-     * @param AccountStoreRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function store(AccountStoreRequest $request): JsonResponse
-    {
-        $data    = $request->getAllAccountData();
-        $account = $this->repository->store($data);
-        $manager = $this->getManager();
-
-        /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
      * Show all transaction groups related to the account.
      *
      * @codeCoverageIgnore
@@ -248,7 +204,7 @@ class AccountController extends Controller
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -282,29 +238,6 @@ class AccountController extends Controller
 
         $resource = new FractalCollection($groups, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update account.
-     *
-     * @param AccountUpdateRequest $request
-     * @param Account              $account
-     *
-     * @return JsonResponse
-     */
-    public function update(AccountUpdateRequest $request, Account $account): JsonResponse
-    {
-        $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $this->repository->update($account, $data);
-        $manager = $this->getManager();
-
-        /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

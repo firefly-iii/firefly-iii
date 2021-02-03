@@ -44,15 +44,15 @@ Route::group(
     static function () {
 
         // Accounts API routes:
-        Route::get('', ['uses' => 'AccountController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'AccountController@store', 'as' => 'store']);
-        Route::get('{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
-        Route::put('{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
-        Route::delete('{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+        Route::get('', ['uses' => 'Models\Account\ListController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'Models\Account\StoreController@store', 'as' => 'store']);
+        Route::get('{account}', ['uses' => 'Models\Account\ListController@show', 'as' => 'show']);
+        Route::put('{account}', ['uses' => 'Models\Account\UpdateController@update', 'as' => 'update']);
+        Route::delete('{account}', ['uses' => 'Models\Account\DestroyController@destroy', 'as' => 'delete']);
 
-        Route::get('{account}/piggy_banks', ['uses' => 'AccountController@piggyBanks', 'as' => 'piggy_banks']);
-        Route::get('{account}/transactions', ['uses' => 'AccountController@transactions', 'as' => 'transactions']);
-        Route::get('{account}/attachments', ['uses' => 'AccountController@attachments', 'as' => 'attachments']);
+        Route::get('{account}/piggy_banks', ['uses' => 'Models\Account\ListController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{account}/transactions', ['uses' => 'Models\Account\ListController@transactions', 'as' => 'transactions']);
+        Route::get('{account}/attachments', ['uses' => 'Models\Account\ListController@attachments', 'as' => 'attachments']);
     }
 );
 

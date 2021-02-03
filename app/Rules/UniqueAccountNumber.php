@@ -47,6 +47,7 @@ class UniqueAccountNumber implements Rule
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
+        Log::debug('Constructed UniqueAccountNumber');
         $this->account      = $account;
         $this->expectedType = $expectedType;
         // a very basic fix to make sure we get the correct account type:
@@ -59,6 +60,7 @@ class UniqueAccountNumber implements Rule
         if ('asset' === $expectedType) {
             $this->expectedType = AccountType::ASSET;
         }
+        Log::debug(sprintf('Expected type is "%s"', $this->expectedType));
     }
 
     /**
@@ -106,7 +108,7 @@ class UniqueAccountNumber implements Rule
                 return false;
             }
         }
-
+        Log::debug('Account number is valid.');
         return true;
     }
 
@@ -122,6 +124,7 @@ class UniqueAccountNumber implements Rule
             ::leftJoin('accounts','accounts.id','=','account_meta.account_id')
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_types.type', $type)
             ->where('account_meta.name','=','account_number')
             ->where('account_meta.data',json_encode($accountNumber));
 
