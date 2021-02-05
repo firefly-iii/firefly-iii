@@ -448,7 +448,7 @@ export default {
 
         // show message, redirect.
         if (false === this.createAnother) {
-          window.location.href = window.previousURL + '?transaction_group_id=' + this.groupId + '&message=created';
+          window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=created';
           return;
         }
         // render msg:
