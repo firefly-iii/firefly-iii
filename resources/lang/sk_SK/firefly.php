@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Niektoré stránky Firefly III majú pod týmto tlačítkom skryté pokročilé nastavenia. Táto stránka síce nič také neobsahuje, ale určite to skúste na iných!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Požiadavka na overenie – Firefly III verzia :version',
     'authorization_request_intro'                         => '<strong>:client</strong> žiada o oprávnenie pre prístup k vašej správe financií. Chcete <strong>:client</strong> autorizovať?',
@@ -1019,6 +1022,7 @@ return [
     'list_inactive_rule'                        => 'neaktívne pravidlo',
     'bill_edit_rules'                           => 'Firefly III sa pokúsi upraviť aj pravidlo týkajúce sa tohto účtu. Ak ste si však toto pravidlo upravili sami, Firefly III ho nebude meniť.|Firefly III sa pokúsi upraviť aj :count pravidiel súvisiacich s týmto účtom. Ak ste si však tieto pravidlá upravili sami, Firefly III ich nebude meniť.',
     'bill_expected_date'                        => 'Očakávané :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Máte :count neaktívny (archivovaný) bankový účet, ktorý môžete zobraziť na tejto samostatnej stránke.|Máte :count neaktívnych (archivovaných) bankových účtov, ktoré môžete zobraziť na tejto samostatnej stránke.',

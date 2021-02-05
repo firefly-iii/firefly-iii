@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Някои страници в Firefly III имат разширени опции, скрити зад този бутон. Тази страница няма нищо интересно тук, но проверете останалите!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version заявка за потвърждение',
     'authorization_request_intro'                         => '<strong>:client</strong> иска разрешение за достъп до вашето финансово управление. Искате ли да упълномощите <strong>:client</strong> за достъп до тези записи?',
@@ -1019,6 +1022,7 @@ return [
     'list_inactive_rule'                        => 'неактивно правило',
     'bill_edit_rules'                           => 'Firefly III ще се опита да редактира и правилото, свързано с тази сметка. Ако сами сте редактирали това правило, Firefly III няма да промени нищо.|Firefly III също ще се опита да редактира и :count правила, свързани с тази сметка. Ако сами сте редактирали тези правила, Firefly III няма да промени нищо.',
     'bill_expected_date'                        => 'Очаквано :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Имате :count неактивна (архивирана) сметка, която можете да видите на тази отделна страница.|Имате :count неактивни (архивирани) сметки, които можете да видите на тази отделна страница.',

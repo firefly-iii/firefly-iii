@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Algunas páginas de Firefly III tienen opciones avanzadas ocultas detrás de este botón. Esta página no tiene nada elegante, ¡pero echa un vistazo a las demás!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Solicitud de autorización',
     'authorization_request_intro'                         => '<strong>:client</strong> está solicitando permiso para acceder a tu administración financiera. ¿Deseas autorizar a <strong>:client</strong> para acceder a estos registros?',
@@ -1019,6 +1022,7 @@ return [
     'list_inactive_rule'                        => 'regla inactiva',
     'bill_edit_rules'                           => 'Firefly III también intentará editar la regla relacionada con esta factura. Sin embargo, si ha editado esta regla usted mismo, Firefly III no cambiará nada.|Firefly III intentará editar también las :count reglas relacionadas con esta factura. Sin embargo, si ha editado estas reglas usted mismo, Firefly III no cambiará nada.',
     'bill_expected_date'                        => 'Se espera :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Tiene :count cuenta inactiva (archivada), que puedes ver en esta página separada.|Tienes cuentas :count inactivas (archivadas), que puedes ver en esta página separada.',

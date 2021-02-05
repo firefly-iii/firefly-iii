@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
     'authorization_request_intro'                         => '<strong>:client</strong> đang yêu cầu sự cho phép truy cập quản trị tài chính của bạn. Bạn có muốn ủy quyền <strong>:client</strong> để truy cập những hồ sơ này?',
@@ -1019,6 +1022,7 @@ return [
     'list_inactive_rule'                        => 'quy tắc không hoạt động',
     'bill_edit_rules'                           => 'Firefly III cũng sẽ cố gắng chỉnh sửa quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì. | Firefly III cũng sẽ cố gắng chỉnh sửa :count các quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa các quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì.',
     'bill_expected_date'                        => 'Ngày đáo hạn :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
