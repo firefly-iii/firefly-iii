@@ -148,7 +148,7 @@
                 <!-- start of body -->
                 <!-- meta -->
                 <div class="row">
-                  <div class="col">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <TransactionBudget
                         v-model="transaction.budget_id"
                         :index="index"
@@ -160,7 +160,7 @@
                         :errors="transaction.errors.category"
                     />
                   </div>
-                  <div class="col">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <TransactionBill
                         v-model="transaction.bill_id"
                         :index="index"
@@ -196,7 +196,7 @@
               <div class="card-body">
                 <!-- start of body -->
                 <div class="row">
-                  <div class="col">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
                     <TransactionInternalReference
                         :index="index"
@@ -215,7 +215,7 @@
                         :errors="transaction.errors.notes"
                     />
                   </div>
-                  <div class="col">
+                  <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
                     <TransactionAttachments
                         :index="index"
@@ -243,7 +243,7 @@
     </div>
     <div class="row">
       <!-- group title -->
-      <div class="col">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
         <div class="card" v-if="transactions.length > 1">
           <div class="card-body">
             <div class="row">
@@ -254,24 +254,43 @@
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="row">
-          <!-- buttons! -->
-          <div class="col">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col">
-                    <div class="text-xs d-none d-lg-block d-xl-block">
-                      &nbsp;
-                    </div>
-                    <button @click="addTransaction" class="btn btn-primary float-left"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
-                    </button>
-                    <button class="btn btn-success float-right" @click="submitTransaction" :disabled="isSubmitting && !submitted">
-                      <span v-if="!isSubmitting"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                      <span v-if="isSubmitting && !submitted"><i class="fas fa-spinner fa-spin"></i></span>
-                    </button>
-                  </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <div class="text-xs d-none d-lg-block d-xl-block">
+                  &nbsp;
+                </div>
+                <button @click="addTransaction" class="btn btn-outline-primary btn-block"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                </button>
+              </div>
+              <div class="col">
+                <div class="text-xs d-none d-lg-block d-xl-block">
+                  &nbsp;
+                </div>
+                <button class="btn btn-success btn-block" @click="submitTransaction" :disabled="isSubmitting && !submitted">
+                  <span v-if="!isSubmitting"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
+                  <span v-if="isSubmitting && !submitted"><i class="fas fa-spinner fa-spin"></i></span>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                &nbsp;
+              </div>
+              <div class="col">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" v-model="createAnother" id="createAnother">
+                  <label class="form-check-label" for="createAnother">
+                    <span class="small">{{ $t('firefly.create_another') }}</span>
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" v-model="resetFormAfter" id="resetFormAfter" :disabled="!createAnother">
+                  <label class="form-check-label" for="resetFormAfter">
+                    <span class="small">{{ $t('firefly.reset_after') }}</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -359,8 +378,8 @@ export default {
       groupTitle: '',
 
       // some button flag things
-      createAnother: true,
-      resetFormAfter: true
+      createAnother: false,
+      resetFormAfter: false
     }
   },
   computed: {
@@ -436,7 +455,7 @@ export default {
         this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.groupId, title: this.groupTitle});
         if (this.resetFormAfter) {
           this.submitted = false;
-            this.resetTransactions();
+          this.resetTransactions();
           // do a short time out?
           setTimeout(() => this.addTransaction(), 50);
           // reset the form:

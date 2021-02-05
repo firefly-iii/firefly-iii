@@ -34,7 +34,8 @@
         </thead>
         <tbody>
         <tr v-for="piggy in this.piggy_banks">
-          <td>{{ piggy.attributes.name }}
+          <td>
+            <a :href="'./piggy-banks/show/' + piggy.id" :title="piggy.attributes.name">{{ piggy.attributes.name }}</a>
             <small v-if="piggy.attributes.object_group_title" class="text-muted">
               <br/>
               {{ piggy.attributes.object_group_title }}

@@ -35,17 +35,22 @@
         <tbody>
         <tr v-for="bill in this.bills">
           <td><a :href="'./bills/show/' + bill.id" :title="bill.attributes.name">{{ bill.attributes.name }}</a>
-            ~{{
-              Intl.NumberFormat(locale, {style: 'currency', currency: bill.attributes.currency_code}).format((parseFloat(bill.attributes.amount_min) +
-                                                                                                              parseFloat(bill.attributes.amount_max)) / 2)
-            }}
-            <br />
+            (~ <span class="text-danger">{{
+                Intl.NumberFormat(locale, {style: 'currency', currency: bill.attributes.currency_code}).format((parseFloat(bill.attributes.amount_min) +
+                                                                                                                parseFloat(bill.attributes.amount_max)) / -2)
+              }}</span>)
+            <small v-if="bill.attributes.object_group_title" class="text-muted">
+              <br/>
+              {{ bill.attributes.object_group_title }}
+            </small>
           </td>
           <td>
-                        <span v-for="payDate in bill.attributes.pay_dates">
-                          {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(payDate)) }}
-                            <br />
-                        </span>
+            <span v-for="paidDate in bill.attributes.paid_dates">
+              <span v-html="renderPaidDate(paidDate)"/><br/>
+            </span>
+            <span v-for="payDate in bill.attributes.pay_dates" v-if="0===bill.attributes.paid_dates.length">
+              {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(payDate)) }}<br/>
+            </span>
           </td>
         </tr>
         </tbody>
@@ -60,12 +65,8 @@
 
 export default {
   name: "MainBillsList",
-  computed: {
-    locale() {
-      return this.$store.getters.locale;
-    }
-  },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     axios.get('./api/v1/bills?start=' + window.sessionStart + '&end=' + window.sessionEnd)
         .then(response => {
                 this.loadBills(response.data.data);
@@ -74,7 +75,13 @@ export default {
   },
   components: {},
   methods: {
-    loadBills(data) {
+    renderPaidDate: function (obj) {
+      console.log(obj);
+      let dateStr = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(obj.date));
+      let str = this.$t('firefly.bill_paid_on', {date: dateStr});
+      return '<a href="./transactions/show/' + obj.transaction_group_id + '" title="' + str + '">' + str + '</a>';
+    },
+    loadBills: function (data) {
       for (let key in data) {
         if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
 
@@ -89,7 +96,8 @@ export default {
   },
   data() {
     return {
-      bills: []
+      bills: [],
+      locale: 'en-US'
     }
   },
 }

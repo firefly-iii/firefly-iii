@@ -34,7 +34,7 @@
 <script>
 export default {
   name: "BudgetRow",
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
   },
   data() {
