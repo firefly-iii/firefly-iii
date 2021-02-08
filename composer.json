@@ -110,7 +110,7 @@
     "fakerphp/faker": "1.*",
     "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^0.6.2",
+    "nunomaduro/larastan": "^0.7.0",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.2",
