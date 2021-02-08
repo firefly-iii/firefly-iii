@@ -5181,10 +5181,10 @@ postcss-value-parser@^4.0.2, postcss-value-parser@^4.1.0:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postcss@^8.1, postcss@^8.1.4:
-  version "8.2.4"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.2.4.tgz#20a98a39cf303d15129c2865a9ec37eda0031d04"
-  integrity sha512-kRFftRoExRVXZlwUuay9iC824qmXPcQQVzAjbCCgjpXnkdMCJYBu2gTwAaFBzv8ewND6O8xFb3aELmEkh9zTzg==
+postcss@^8.1.4, postcss@^8.2:
+  version "8.2.5"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.2.5.tgz#3c75149ada4e93db9521913654c0144517f77c9a"
+  integrity sha512-wMcb7BpDcm3gxQOQx46NDNT36Kk0Ao6PJLLI2ed5vehbbbxCEuslSQzbQ2sfSKy+gkYxhWcGWSeaK+gwm4KIZg==
   dependencies:
     colorette "^1.2.1"
     nanoid "^3.1.20"
@@ -6124,9 +6124,9 @@ type-is@~1.6.17, type-is@~1.6.18:
     mime-types "~2.1.24"
 
 uiv@^1.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.2.2.tgz#1aff302104bc936c670922eba32822fb9a5562ba"
-  integrity sha512-/kKGZlkbxqRzJIoB72RF/74Z1wLZ0W2u4Z0UjhOtVBM8EjzMrkYpqYRkMMMcJNJr5bmhBwTKcPeERVoGNUBPtg==
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.2.3.tgz#c83a324befbddaaf1e113db6554b24426f3952f5"
+  integrity sha512-HXWkhplzAziGsqV6TZlGI8nKi3L4wqQ0W5/+Kj+U9EKgAjqOfLtn4Y7++TLCVyT81ZtbqbOrgtxDZw2dYOJWJQ==
   dependencies:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.0.0"
