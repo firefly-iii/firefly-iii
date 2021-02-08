@@ -21,25 +21,6 @@
  */
 
 declare(strict_types=1);
-/*
- * SearchRuleEngine.php
- * Copyright (c) 2020 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 
 namespace FireflyIII\TransactionRules\Engine;
 
@@ -65,12 +46,14 @@ class SearchRuleEngine implements RuleEngineInterface
     private Collection $rules;
     private array      $operators;
     private Collection $groups;
+    private array      $resultCount;
 
     public function __construct()
     {
-        $this->rules     = new Collection;
-        $this->groups    = new Collection;
-        $this->operators = [];
+        $this->rules       = new Collection;
+        $this->groups      = new Collection;
+        $this->operators   = [];
+        $this->resultCount = [];
     }
 
     /**
@@ -125,6 +108,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function fire(): void
     {
+        $this->resultCount = [];
         Log::debug('SearchRuleEngine::fire()!');
 
         // if rules and no rule groups, file each rule separately.
@@ -167,6 +151,16 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         return $collection->unique();
+    }
+
+    /**
+     * Return the number of changed transactions from the previous "fire" action.
+     *
+     * @return int
+     */
+    public function getResults(): int
+    {
+        return count($this->resultCount);
     }
 
     /**
@@ -249,9 +243,28 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('Executing rule action "%s" with value "%s"', $ruleAction->action_type, $ruleAction->action_value));
         $actionClass = ActionFactory::getAction($ruleAction);
-        $actionClass->actOnArray($transaction);
+        $result      = $actionClass->actOnArray($transaction);
+        $journalId   = $transaction['transaction_journal_id'] ?? 0;
+        if (true === $result) {
+            $this->resultCount[$journalId] = isset($this->resultCount[$journalId]) ? $this->resultCount[$journalId]++ : 1;
+            Log::debug(
+                sprintf(
+                    'Action "%s" on journal #%d was executed, so count a result. Updated transaction journal count is now %d.',
+                    $ruleAction->action_type,
+                    $transaction['transaction_journal_id'] ?? 0,
+                    count($this->resultCount),
+                )
+            );
+        }
+        if (false === $result) {
+            Log::debug(sprintf('Action "%s" reports NO changes were made.', $ruleAction->action_type));
+        }
+
+        // pick up from the action if it actually acted or not:
+
+
         if ($ruleAction->stop_processing) {
-            Log::debug(sprintf('Rule action "%s" asks to break, so break!', $ruleAction->action_value));
+            Log::debug(sprintf('Rule action "%s" asks to break, so break!', $ruleAction->action_type));
 
             return true;
         }

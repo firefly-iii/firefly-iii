@@ -60,7 +60,7 @@ class SelectController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
@@ -97,9 +97,9 @@ class SelectController extends Controller
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
         $newRuleEngine->fire();
+        $resultCount = $newRuleEngine->getResults();
 
-        // Tell the user that the job is queued
-        session()->flash('success', (string) trans('firefly.applied_rule_selection', ['title' => $rule->title]));
+        session()->flash('success', (string)trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
         return redirect()->route('rules.index');
     }
@@ -116,12 +116,13 @@ class SelectController extends Controller
     {
         if (false === $rule->active) {
             session()->flash('warning', trans('firefly.cannot_fire_inactive_rules'));
+
             return redirect(route('rules.index'));
         }
         // does the user have shared accounts?
         $first    = session('first', Carbon::now()->subYear())->format('Y-m-d');
         $today    = Carbon::now()->format('Y-m-d');
-        $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
         return prefixView('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
@@ -147,7 +148,7 @@ class SelectController extends Controller
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
         foreach ($textTriggers as $textTrigger) {
@@ -170,7 +171,7 @@ class SelectController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
         }
 
         // Return json response
@@ -203,7 +204,7 @@ class SelectController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
 
@@ -217,7 +218,7 @@ class SelectController extends Controller
 
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
         }
 
         // Return json response

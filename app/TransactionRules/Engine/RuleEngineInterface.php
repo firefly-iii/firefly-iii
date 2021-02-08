@@ -55,6 +55,7 @@ interface RuleEngineInterface
      * @param User $user
      */
     public function setUser(User $user): void;
+
     /**
      * Add rules for the engine to execute.
      *
@@ -85,5 +86,12 @@ interface RuleEngineInterface
      * Find all transactions only, dont apply anything.
      */
     public function find(): Collection;
+
+    /**
+     * Return the number of changed transactions from the previous "fire" action.
+     *
+     * @return int
+     */
+    public function getResults(): int;
 
 }
