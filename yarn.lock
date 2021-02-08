@@ -6124,9 +6124,9 @@ type-is@~1.6.17, type-is@~1.6.18:
     mime-types "~2.1.24"
 
 uiv@^1.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.2.2.tgz#1aff302104bc936c670922eba32822fb9a5562ba"
-  integrity sha512-/kKGZlkbxqRzJIoB72RF/74Z1wLZ0W2u4Z0UjhOtVBM8EjzMrkYpqYRkMMMcJNJr5bmhBwTKcPeERVoGNUBPtg==
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/uiv/-/uiv-1.2.3.tgz#c83a324befbddaaf1e113db6554b24426f3952f5"
+  integrity sha512-HXWkhplzAziGsqV6TZlGI8nKi3L4wqQ0W5/+Kj+U9EKgAjqOfLtn4Y7++TLCVyT81ZtbqbOrgtxDZw2dYOJWJQ==
   dependencies:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.0.0"
