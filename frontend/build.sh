@@ -36,7 +36,7 @@ mkdir -p public/css
 # build new stuff
 yarn install
 yarn audit fix
-#yarn upgrade
+yarn upgrade
 yarn prod
 
 # yarn watch
