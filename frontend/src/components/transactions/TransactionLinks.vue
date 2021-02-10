@@ -59,8 +59,8 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
+                <a tabindex="-1" href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
+                <a tabindex="-1" href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
               </div>
             </li>
           </ul>

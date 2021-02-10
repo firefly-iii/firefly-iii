@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aja sääntö ":title" valitsemillesi tapahtumille',
     'apply_rule_selection_intro'                          => 'Säännöt kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan sen myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun päivität sääntöä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',
     'include_transactions_from_accounts'                  => 'Sisällytä tapahtumat näiltä tileiltä',
-    'applied_rule_selection'                              => 'Sääntö ":title" on ajettu valituille tapahtumille.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Suorita',
     'apply_rule_group_selection'                          => 'Aja sääntöryhmä ":title" valituille tapahtumille',
     'apply_rule_group_selection_intro'                    => 'Sääntöryhmät kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan kaikki ryhmän säännöt myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun olet päivittänyt ryhmän sääntöjä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',

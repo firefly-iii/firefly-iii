@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplicați regula ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_selection_intro'                          => 'Reguli de genul ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, dar puteți să-i spuneți aplicației să o ruleze pe o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat o regulă și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',
     'include_transactions_from_accounts'                  => 'Includeți tranzacții din aceste conturi',
-    'applied_rule_selection'                              => 'Regula ":title" a fost aplicată selecției dvs..',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Execută',
     'apply_rule_group_selection'                          => 'Aplicați grupul de reguli ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_group_selection_intro'                    => 'Grupul de reguli precum ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, însă puteți spune aplicației că rulează toate regulile din acest grup cu privire la o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat un grup de reguli și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',

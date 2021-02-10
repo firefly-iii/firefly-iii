@@ -32,7 +32,7 @@
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
       />
       <div class="input-group-append">
-        <button type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
+        <button tabindex="-1" type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
       </div>
     </div>
   </div>

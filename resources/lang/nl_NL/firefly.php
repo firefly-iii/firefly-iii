@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Pas regel ":title" toe op een selectie van je transacties',
     'apply_rule_selection_intro'                          => 'Regels zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je een regels hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'include_transactions_from_accounts'                  => 'Gebruik transacties van deze rekeningen',
-    'applied_rule_selection'                              => 'Regel ":title" is toegepast op je selectie.',
+    'applied_rule_selection'                              => '{0} Er zijn geen transacties in je selectie veranderd door regel ":title".|[1] Eén transactie in je selectie is veranderd door regel ":title".|[2,*] :count transacties in je selectie zijn veranderd door regel ":title".',
     'execute'                                             => 'Uitvoeren',
     'apply_rule_group_selection'                          => 'Pas regelgroep ":title" toe op een selectie van je transacties',
     'apply_rule_group_selection_intro'                    => 'Regelgroepen zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je regels in de groep hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'inactieve regel',
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
     'bill_expected_date'                        => 'Verwacht :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Betaald op {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -1341,7 +1341,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Overige',
     'classification'                            => 'Indeling',
-    'store_transaction'                         => 'Store transaction',
+    'store_transaction'                         => 'Transactie opslaan',
 
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',

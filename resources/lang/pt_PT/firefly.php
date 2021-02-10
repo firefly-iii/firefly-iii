@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplicar a regra ":title" a uma selecção de transacções',
     'apply_rule_selection_intro'                          => 'Regras como ":title" são normalmente aplicadas a transações novas ou atualizadas, no entanto pode dizer ao Firefly III para executar as mesmas em transações selecionadas. Isto pode ser útil quando tiver atualizado uma regra e necessite de aplicar as alterações a todas as transações que devem ser afetas.',
     'include_transactions_from_accounts'                  => 'Incluir transações destas contas',
-    'applied_rule_selection'                              => 'A regra ":title" foi aplicada à sua seleção.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Executar',
     'apply_rule_group_selection'                          => 'Aplicar grupo de regras ":title" a uma selecção de transacções',
     'apply_rule_group_selection_intro'                    => 'Regras de grupo como ":title" são normalmente aplicadas a transações novas ou atualizadas, no entanto pode dizer ao Firefly III para executar as mesmas neste grupo em transações selecionadas. Isto pode ser útil quando tiver atualizado regras de grupo e necessite de aplicar as alterações a todas as transações que devem ser afetas.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'regra inactiva',
     'bill_edit_rules'                           => 'O Firefly III tentará editar a regra relacionada a esta conta também. Se editou esta regra, o Firefly III não vai mudar nada.|Firefly III tentará editar as regras de :count relacionadas a esta conta também. Se editou estas regras, no entanto, o Firefly III não vai mudar nada.',
     'bill_expected_date'                        => 'Esperado :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Pago a {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Você tem :count conta inativa (arquivada), que pode visualizar nesta página separada.| Você tem :count contas inativas (arquivadas), que pode visualizar nesta página separada.',

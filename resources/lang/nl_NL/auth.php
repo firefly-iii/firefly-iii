@@ -23,6 +23,6 @@
 declare(strict_types=1);
 
 return [
-    'failed'   => 'Deze gegevens zijn niet correct.',
+    'failed'   => 'De combinatie van gebruikersnaam of e-mailadres en wachtwoord is onjuist.',
     'throttle' => 'Te veel inlogpogingen. Probeer opnieuw in :seconds seconden.',
 ];

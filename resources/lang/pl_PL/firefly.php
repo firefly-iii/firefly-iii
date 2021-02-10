@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Zastosuj regułę ":title" do niektórych swoich transakcji',
     'apply_rule_selection_intro'                          => 'Reguły takie jak ":title" są zwykle stosowane tylko do nowych lub modyfikowanych transakcji, ale możesz powiedzieć Firefly III aby uruchomił ją dla istniejących transakcji. Może to być przydatne, gdy zmodyfikowałeś regułę i potrzebujesz zastosować zmiany dla wszystkich pozostałych transakcji.',
     'include_transactions_from_accounts'                  => 'Uwzględnij transakcje z tych kont',
-    'applied_rule_selection'                              => 'Reguła ":title" została zastosowana do Twojego wyboru.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Wykonaj',
     'apply_rule_group_selection'                          => 'Zastosuj grupę reguł ":title" do niektórych swoich transakcji',
     'apply_rule_group_selection_intro'                    => 'GRupy reguł takie jak ":title" są zwykle stosowane tylko do nowych lub modyfikowanych transakcji, ale możesz powiedzieć Firefly III aby uruchomił ją dla istniejących transakcji. Może to być przydatne, gdy zmodyfikowałeś grupę reguł i potrzebujesz zastosować zmiany dla wszystkich pozostałych transakcji.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'nieaktywna reguła',
     'bill_edit_rules'                           => 'Firefly III spróbuje edytować regułę związaną z tym rachunkiem. Jeśli jednak reguła była edytowana przez Ciebie, Firefly III nic nie zmieni. Firefly III spróbuje edytować reguły :count również związane z tym rachunkiem. Jeśli jednak reguły były edytowane przez Ciebie, Firefly III nic nie zmieni.',
     'bill_expected_date'                        => 'Oczekiwane :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Zapłacone {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Masz :count nieaktywne (zarchiwizowane) konto, które możesz zobaczyć na tej stronie.|Masz :count nieaktywnych (zarchiwizowanych) kont, które możesz zobaczyć na tej stronie.',

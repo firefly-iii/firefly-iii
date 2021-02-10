@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Приложете правило ":title" към селекция от вашите транзакции',
     'apply_rule_selection_intro'                          => 'Правила като ":title" обикновено се прилагат само за нови или актуализирани транзакции, но можете да кажете на Firefly III да го стартира върху селекция от вашите съществуващи транзакции. Това може да бъде полезно, когато сте актуализирали правило и се нуждаете промените, да се отразят на всички останали транзакции.',
     'include_transactions_from_accounts'                  => 'Включете транзакции от тези сметки',
-    'applied_rule_selection'                              => 'Правило ":title" е приложено към вашия избор.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Изпълни',
     'apply_rule_group_selection'                          => 'Приложете групата правила ":title" към селекция от вашите транзакции',
     'apply_rule_group_selection_intro'                    => 'Групи правила като ":title" обикновено се прилагат само за нови или актуализирани транзакции, но можете да кажете на Firefly III да го стартира върху селекция от вашите съществуващи транзакции. Това може да бъде полезно, когато сте актуализирали група правила и се нуждаете промените, да се отразят на всички останали транзакции.',

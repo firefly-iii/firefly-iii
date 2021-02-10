@@ -87,6 +87,9 @@ export default {
       },
       set(value) {
         // bit of a hack but meh.
+        if('' === value) {
+
+        }
         let newDate = new Date(value);
         let current = new Date(this.date.getTime());
         current.setFullYear(newDate.getFullYear());
@@ -103,6 +106,13 @@ export default {
         return '';
       },
       set(value) {
+        if('' === value) {
+          this.date.setHours(0);
+          this.date.setMinutes(0);
+          this.date.setSeconds(0);
+          this.setDate({date: this.date});
+          return;
+        }
         // bit of a hack but meh.
         let current = new Date(this.date.getTime());
         let parts = value.split(':');

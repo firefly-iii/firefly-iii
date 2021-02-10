@@ -79,8 +79,8 @@
                   </div>
                   <!-- switcharoo! -->
                   <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
-                    <SwitchAccount
-                        :index="index"
+                    <SwitchAccount v-if="0 === index"
+                                   :index="index"
                     />
                   </div>
 
@@ -153,6 +153,7 @@
                         v-model="transaction.budget_id"
                         :index="index"
                         :errors="transaction.errors.budget"
+                        v-if="!('Transfer' === transactionType || 'Deposit' === transactionType)"
                     />
                     <TransactionCategory
                         v-model="transaction.category"
@@ -165,6 +166,7 @@
                         v-model="transaction.bill_id"
                         :index="index"
                         :errors="transaction.errors.bill"
+                        v-if="!('Transfer' === transactionType || 'Deposit' === transactionType)"
                     />
                     <TransactionTags
                         :index="index"
@@ -175,6 +177,7 @@
                         :index="index"
                         v-model="transaction.piggy_bank_id"
                         :errors="transaction.errors.piggy_bank"
+                        v-if="!('Withdrawal' === transactionType || 'Deposit' === transactionType)"
                     />
                   </div>
                 </div>
@@ -269,9 +272,9 @@
                 <div class="text-xs d-none d-lg-block d-xl-block">
                   &nbsp;
                 </div>
-                <button class="btn btn-success btn-block" @click="submitTransaction" :disabled="isSubmitting && !submitted">
-                  <span v-if="!isSubmitting"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                  <span v-if="isSubmitting && !submitted"><i class="fas fa-spinner fa-spin"></i></span>
+                <button class="btn btn-success btn-block" @click="submitTransaction" :disabled="!enableSubmit">
+                  <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
+                  <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
                 </button>
               </div>
             </div>
@@ -351,35 +354,34 @@ export default {
   },
   data() {
     return {
-      linkSearchResults: [],
+      // error or success message
       errorMessage: '',
       successMessage: '',
 
-      // process steps:
-      isSubmitting: false,
-      isSubmittingTransaction: false,
-      isSubmittingLinks: false,
-      isSubmittingAttachments: false,
+      // states for the form (makes sense right)
+      enableSubmit: true,
+      createAnother: false,
+      resetFormAfter: false,
 
-      // ready steps:
-      submitted: false,
+      // things the process is done working on (3 phases):
       submittedTransaction: false,
       submittedLinks: false,
       submittedAttachments: false,
 
+      // transaction was actually submitted?
+      inError: false,
+
       // number of uploaded attachments
-      submittedAttCount: 0,
+      // its an object because we count per transaction journal (which can have multiple attachments)
+      // and array doesn't work right.
+      submittedAttCount: {},
 
       // errors in the group title:
       groupTitleErrors: [],
 
-      // group ID once submitted:
+      // group ID + title once submitted:
       groupId: 0,
       groupTitle: '',
-
-      // some button flag things
-      createAnother: false,
-      resetFormAfter: false
     }
   },
   computed: {
@@ -393,16 +395,22 @@ export default {
   },
   watch: {
     submittedTransaction: function () {
+      // see finalizeSubmit()
       this.finalizeSubmit();
     },
     submittedLinks: function () {
+      // see finalizeSubmit()
       this.finalizeSubmit();
     },
     submittedAttachments: function () {
+      // see finalizeSubmit()
       this.finalizeSubmit();
     }
   },
   methods: {
+    /**
+     * Store related mutators used by this component.
+     */
     ...mapMutations(
         [
           'addTransaction',
@@ -415,11 +423,20 @@ export default {
           'resetTransactions'
         ],
     ),
+    /**
+     * Removes a split from the array.
+     */
     removeTransaction: function (index) {
       this.$store.commit('transactions/create/deleteTransaction', {index: index});
     },
+    /**
+     * This method grabs the users preferred custom transaction fields. It's used when configuring the
+     * custom date selects that will be available. It could be something the component does by itself,
+     * thereby separating concerns. This is on my list. If it changes to a per-component thing, then
+     * it should be done via the create.js Vue store because multiple components are interested in the
+     * user's custom transaction fields.
+     */
     storeCustomDateFields: function () {
-      // TODO may include all custom fields in the future.
       axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
         let fields = response.data.data.attributes.data;
         let allDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
@@ -438,69 +455,109 @@ export default {
             }
           }
         }
+        // see we already store it in the store, so this would be an easy change.
         this.$store.commit('transactions/create/setCustomDateFields', selectedDateFields);
       });
     },
+    /**
+     * Submitting a transaction consists of 3 steps: submitting the transaction, uploading attachments
+     * and creating links. Only once all three steps are executed may the message be shown or the user be
+     * forwarded.
+     */
     finalizeSubmit() {
-      if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks && false === this.submitted) {
-        this.submitted = true;
-        this.isSubmitting = false;
-
-        // show message, redirect.
-        if (false === this.createAnother) {
+      // console.log('finalizeSubmit (' + this.submittedTransaction + ', ' + this.submittedAttachments + ', ' + this.submittedLinks + ')');
+      if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
+        if (false === this.createAnother && false === this.inError) {
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=created';
           return;
         }
-        // render msg:
+        // enable flags:
+        this.enableSubmit = true;
+        this.submittedTransaction = false;
+        this.submittedLinks = false;
+        this.submittedAttachments = false;
+        this.inError = false;
+
+        // show message:
+        this.errorMessage = '';
         this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.groupId, title: this.groupTitle});
+
+        // reset attachments (always do this)
+        for (let i in this.transactions) {
+          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            if (this.transactions.hasOwnProperty(i)) {
+              // console.log('Reset attachment #' + i);
+              this.updateField({index: i, field: 'transaction_journal_id', value: 0});
+            }
+          }
+        }
+        this.submittedAttCount = [];
+
+        // reset the form:
         if (this.resetFormAfter) {
-          this.submitted = false;
           this.resetTransactions();
           // do a short time out?
           setTimeout(() => this.addTransaction(), 50);
-          // reset the form:
         }
+        // console.log('Done with finalizeSubmit!');
+        // return;
       }
-
+      // console.log('Did nothing in finalizeSubmit');
     },
     /**
-     *
-     */
-    storeAllowedOpposingTypes: function () {
-      this.setAllowedOpposingTypes(window.allowedOpposingTypes);
-    },
-    storeAccountToTransaction: function () {
-      this.setAccountToTransaction(window.accountToTransaction);
-    },
-    /**
-     *
+     * Actually submit the transaction to Firefly III. This is a fairly complex beast of a thing because multiple things
+     * need to happen in the right order.
      */
     submitTransaction: function () {
-      this.isSubmitting = true;
-      this.isSubmittingTransaction = true;
-      this.isSubmittingLinks = true;
-      this.isSubmittingAttachments = true;
+      // disable the submit button:
+      this.enableSubmit = false;
+      // console.log('enable submit = false');
 
+      // convert the data so its ready to be submitted:
       const url = './api/v1/transactions';
       const data = this.convertData();
 
+      // POST the transaction.
       axios.post(url, data)
           .then(response => {
-            this.isSubmittingTransaction = false; // done with submitting the transaction.
-            this.submittedTransaction = true; // transaction is submitted.
+            // report the transaction is submitted.
+            this.submittedTransaction = true;
+
+            // submit links and attachments (can only be done when the transaction is created)
             this.submitTransactionLinks(data, response);
             this.submitAttachments(data, response);
+
+            // meanwhile, store the ID and the title in some easy to access variables.
             this.groupId = parseInt(response.data.data.id);
             this.groupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+            // console.log('Group title is now "' + this.groupTitle + '"');
           })
           .catch(error => {
+            // oh noes Firefly III has something to bitch about.
+            this.enableSubmit = true;
+            // console.log('enable submit = true');
+            // report the transaction is submitted.
+            this.submittedTransaction = true;
+            // also report attachments and links are submitted:
+            this.submittedAttachments = true;
+            this.submittedLinks = true;
+
+            // but report an error because error:
+            this.inError = true;
             this.parseErrors(error.response.data);
           });
     },
 
+    /**
+     * Submitting transactions means we will give each TransactionAttachment component
+     * the ID of the transaction journal (so it works for multiple splits). Each component
+     * will then start uploading their transactions (so its a separated concern) and report
+     * back to the "uploadedAttachment" function below via an event emitter.
+     *
+     * The ID is set via the store.
+     */
     submitAttachments: function (data, response) {
-      this.isSubmittingAttachments = true;
-      // tell each attachment thing that they can upload their attachments by giving them a valid transaction journal ID to upload to.
+      // console.log('submitAttachments');
       let result = response.data.data.attributes.transactions
       for (let i in data.transactions) {
         if (data.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -510,17 +567,25 @@ export default {
         }
       }
     },
-    uploadedAttachment: function () {
-      this.submittedAttCount++;
-      if (this.submittedAttCount === this.transactions.length) {
+    /**
+     * When a attachment component is done uploading it ends up here. We create an object where we count how many
+     * attachment components have reported back they're done uploading. Of course if they have nothing to upload
+     * they will be pretty fast in reporting they're done.
+     *
+     * Once the number of components matches the number of splits we know all attachments have been uploaded.
+     */
+    uploadedAttachment: function (journalId) {
+      // console.log('Triggered uploadedAttachment(' + journalId + ')');
+      let key = 'str' + journalId;
+      this.submittedAttCount[key] = 1;
+      let count = Object.keys(this.submittedAttCount).length;
+      if (count === this.transactions.length) {
+        // mark the attachments as stored:
         this.submittedAttachments = true;
-        this.isSubmittingAttachments = false;
       }
     },
 
     submitTransactionLinks(data, response) {
-      this.isSubmittingLinks = true;
-      this.submittedLinks = false;
       let promises = [];
       let result = response.data.data.attributes.transactions;
       let total = 0;
@@ -551,11 +616,10 @@ export default {
         }
       }
       if (0 === total) {
-        this.isSubmittingLinks = false;
         this.submittedLinks = true;
+        return;
       }
       Promise.all(promises).then(function () {
-        this.isSubmittingLinks = false;
         this.submittedLinks = true;
       });
     },
@@ -564,19 +628,26 @@ export default {
       for (let i in this.transactions) {
         this.resetErrors({index: i});
       }
-
-      this.successMessage = null;
+      this.successMessage = '';
       this.errorMessage = this.$t('firefly.errors_submission');
       if (typeof errors.errors === 'undefined') {
-        this.successMessage = null;
+        this.successMessage = '';
         this.errorMessage = errors.message;
       }
+
+      let payload;
+      //payload = {index: 0, field: 'description', errors: ['Test error index 0']};
+      //this.setTransactionError(payload);
+
+      //payload = {index: 1, field: 'description', errors: ['Test error index 1']};
+      //this.setTransactionError(payload);
 
       let transactionIndex;
       let fieldName;
 
       // fairly basic way of exploding the error array.
       for (const key in errors.errors) {
+        // console.log('Error index: "' + key + '"');
         if (errors.errors.hasOwnProperty(key)) {
           if (key === 'group_title') {
             this.groupTitleErrors = errors.errors[key];
@@ -587,8 +658,10 @@ export default {
             transactionIndex = parseInt(key.split('.')[1]);
 
             fieldName = key.split('.')[2];
+
             // set error in this object thing.
-            let payload;
+            // console.log('The errors in key "' + key + '" are');
+            // console.log(errors.errors[key]);
             switch (fieldName) {
               case 'amount':
               case 'description':
@@ -632,16 +705,12 @@ export default {
           }
           // unique some things
           if (typeof this.transactions[transactionIndex] !== 'undefined') {
-            // TODO
             //this.transactions[transactionIndex].errors.source = Array.from(new Set(this.transactions[transactionIndex].errors.source));
             //this.transactions[transactionIndex].errors.destination = Array.from(new Set(this.transactions[transactionIndex].errors.destination));
           }
 
         }
       }
-      this.isSubmittingTransaction = false;
-      this.submittedTransaction = true;
-      this.isSubmitting = false;
     },
 
     /**
@@ -656,16 +725,63 @@ export default {
         data.group_title = this.groupTitle;
       }
 
-      for (let key in this.transactions) {
-        if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          data.transactions.push(this.convertSplit(key, this.transactions[key]));
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          data.transactions.push(this.convertSplit(i, this.transactions[i]));
         }
       }
       if (data.transactions.length > 1) {
         data.group_title = data.transactions[0].description;
       }
+
+      // depending on the transaction type for this thing, we need to
+      // make sure other splits match the data we submit.
+      if (data.transactions.length > 1) {
+        // console.log('This is a split!');
+        data = this.synchronizeAccounts(data);
+      }
+
       return data;
     },
+    synchronizeAccounts: function (data) {
+      // console.log('synchronizeAccounts: ' + this.transactionType);
+      // make sure all splits have whatever is in split 0.
+      // since its a transfer we can drop the name and use ID's only.
+      for (let i in data.transactions) {
+        if (data.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          // console.log('now at ' + i);
+
+          // for transfers, overrule both the source and the destination:
+          if ('Transfer' === this.transactionType) {
+            data.transactions[i].source_name = null;
+            data.transactions[i].destination_name = null;
+            if (i > 0) {
+              data.transactions[i].source_id = data.transactions[0].source_id;
+              data.transactions[i].destination_id = data.transactions[0].destination_id;
+            }
+          }
+          // for deposits, overrule the destination and ignore the rest.
+          if ('Deposit' === this.transactionType) {
+            data.transactions[i].destination_name = null;
+            if (i > 0) {
+              data.transactions[i].destination_id = data.transactions[0].destination_id;
+            }
+          }
+
+          // for withdrawals, overrule the source and ignore the rest.
+          if ('Withdrawal' === this.transactionType) {
+            data.transactions[i].source_name = null;
+            if (i > 0) {
+              data.transactions[i].source_id = data.transactions[0].source_id;
+            }
+          }
+        }
+      }
+      return data;
+
+    },
+
+
     /**
      *
      * @param key
@@ -818,9 +934,16 @@ export default {
       return year + '-' + month + '-' + day +
              'T' + hours + ':' + minutes + ':' + seconds +
              offsetSign + offsetHours + ':' + offsetMinutes;
-    }
+    },
+    storeAllowedOpposingTypes: function () {
+      this.setAllowedOpposingTypes(window.allowedOpposingTypes);
+    },
+    storeAccountToTransaction: function () {
+      this.setAccountToTransaction(window.accountToTransaction);
+    },
 
   },
+
 }
 </script>
 

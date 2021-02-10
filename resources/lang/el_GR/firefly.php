@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Εφαρμογή του κανόνα ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_selection_intro'                          => 'Κανόνες όπως ":title" εφαρμόζονται συνήθως σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly ΙΙΙ να τους εκτελέσει σε μια επιλογή υπαρχόντων συναλλαγών. Αυτό μπορεί να είναι χρήσιμο όταν έχετε ενημερώσει έναν κανόνα και χρειάζεστε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',
     'include_transactions_from_accounts'                  => 'Συμπερίληψη συναλλαγών από αυτούς τους λογαριασμούς',
-    'applied_rule_selection'                              => 'Ο κανόνας ":title" έχει εφαρμοστεί στην επιλογή σας.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Εκτέλεση',
     'apply_rule_group_selection'                          => 'Εφαρμογή ομάδας κανόνων ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_group_selection_intro'                    => 'Ομάδες κανόνων όπως ":title" συνήθως εφαρμόζονται σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly III να εκτελέσει όλους τους κανόνες σε αυτή την ομάδα σε μία επιλογή των υπαρχόντων συναλλαγών σας. Αυτό μπορεί να είναι χρήσιμο εάν ενημερώσατε μια ομάδα κανόνων και θέλετε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',

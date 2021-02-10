@@ -76,7 +76,7 @@ export default {
   components: {},
   methods: {
     renderPaidDate: function (obj) {
-      console.log(obj);
+      // console.log(obj);
       let dateStr = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(obj.date));
       let str = this.$t('firefly.bill_paid_on', {date: dateStr});
       return '<a href="./transactions/show/' + obj.transaction_group_id + '" title="' + str + '">' + str + '</a>';

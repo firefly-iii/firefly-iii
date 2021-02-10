@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Apply rule ":title" to a selection of your transactions',
     'apply_rule_selection_intro'                          => 'Rules like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run it on a selection of your existing transactions. This can be useful when you have updated a rule and you need the changes to be applied to all of your other transactions.',
     'include_transactions_from_accounts'                  => 'Include transactions from these accounts',
-    'applied_rule_selection'                              => 'Rule ":title" has been applied to your selection.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Execute',
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',

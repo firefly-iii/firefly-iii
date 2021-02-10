@@ -280,7 +280,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
     'search_for_query'                                    => 'Firefly III vyhľadáva transakcie obsahujúce tieto výrazy: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Dátum transakcie je ":value"',
-    'search_modifier_id'                                  => 'Transaction ID is ":value"',
+    'search_modifier_id'                                  => 'ID transakcie je ":value"',
     'search_modifier_date_before'                         => 'Dátum transakcie je pred alebo v deň ":value"',
     'search_modifier_date_after'                          => 'Dátum transakcie je po alebo v deň ":value"',
     'search_modifier_created_on'                          => 'Transakcia bola vytvorená ":value"',
@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Uplatniť pravidlo „:title“ na vybrané transakcie',
     'apply_rule_selection_intro'                          => 'Pravidlá ako „:title“ sa zvyčajne uplatňujú iba na nové alebo aktualizované transakcie, môžete však Firefly III povedať, aby ho spustil pri výbere vašich existujúcich transakcií. To môže byť užitočné, keď ste aktualizovali pravidlo a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
     'include_transactions_from_accounts'                  => 'Zahrnúť transakcie z týchto účtov',
-    'applied_rule_selection'                              => 'Pravidlo „:title“ bolo uplatnené na váš výber.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Vykonať',
     'apply_rule_group_selection'                          => 'Uplatniť skupinu pravidiel „:title“ na vybrané transakcie',
     'apply_rule_group_selection_intro'                    => 'Skupiny pravidiel ako „:title“ sa zvyčajne používajú iba na nové alebo aktualizované transakcie, ale môžete Firefly III povedať, aby pri výbere vašich existujúcich transakcií spustil všetky pravidlá v tejto skupine. To môže byť užitočné, keď ste aktualizovali skupinu pravidiel a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'neaktívne pravidlo',
     'bill_edit_rules'                           => 'Firefly III sa pokúsi upraviť aj pravidlo týkajúce sa tohto účtu. Ak ste si však toto pravidlo upravili sami, Firefly III ho nebude meniť.|Firefly III sa pokúsi upraviť aj :count pravidiel súvisiacich s týmto účtom. Ak ste si však tieto pravidlá upravili sami, Firefly III ich nebude meniť.',
     'bill_expected_date'                        => 'Očakávané :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Uhradené {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Máte :count neaktívny (archivovaný) bankový účet, ktorý môžete zobraziť na tejto samostatnej stránke.|Máte :count neaktívnych (archivovaných) bankových účtov, ktoré môžete zobraziť na tejto samostatnej stránke.',
@@ -1341,7 +1341,7 @@ return [
     'automation'                                => 'Automatizácia',
     'others'                                    => 'Iné',
     'classification'                            => 'Klasifikácia',
-    'store_transaction'                         => 'Store transaction',
+    'store_transaction'                         => 'Uložiť transakciu',
 
     // reports:
     'report_default'                            => 'Predvolený finančný výkaz v období :start a :end',

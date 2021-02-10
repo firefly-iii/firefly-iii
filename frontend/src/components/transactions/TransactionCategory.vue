@@ -38,7 +38,7 @@
     >
       <template slot="append">
         <div class="input-group-append">
-          <button v-on:click="clearCategory" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          <button tabindex="-1" v-on:click="clearCategory" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>

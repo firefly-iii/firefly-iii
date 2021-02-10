@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_selection_intro'                          => 'Regeln wie „:title” werden im Normalfall nur auf neue oder aktualisierte Buchungen angewandt. Sie können die Regel aber auch auf eine Auswahl Ihrer bestehenden Buchungen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'include_transactions_from_accounts'                  => 'Buchungen von diesem Konto einbeziehen',
-    'applied_rule_selection'                              => 'Regel ":title" wurde auf Ihre Auswahl angewendet.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Ausführen',
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_group_selection_intro'                    => 'Regelgruppen wie „:title” werden in der Regel nur auf neue oder aktualisierte Buchungen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'Inaktive Regeln',
     'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die mit dieser Rechnung zusammenhängende Regel zu ändern. Wenn Sie diese Regel jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.|Firefly III wird versuchen, die :count mit dieser Rechnung zusammenhängenden Regeln ebenfalls zu bearbeiten. Wenn Sie diese Regeln jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
     'bill_expected_date'                        => 'Voraussichtlich :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Bezahlt am {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können.|Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',

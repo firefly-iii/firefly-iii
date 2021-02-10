@@ -20,10 +20,15 @@
 
 <template>
   <div class="form-group">
-    <div class="text-xs d-none d-lg-block d-xl-block">
-      {{ $t('firefly.' + this.direction + '_account') }}
+    <div class="text-xs d-none d-lg-block d-xl-block" v-if="visible">
+      <span v-if="0 === this.index">{{ $t('firefly.' + this.direction + '_account') }}</span>
+      <span class="text-warning" v-if="this.index > 0">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
+    </div>
+    <div class="text-xs d-none d-lg-block d-xl-block" v-if="!visible">
+      &nbsp;
     </div>
     <vue-typeahead-bootstrap
+        v-if="visible"
         v-model="value.name"
         :data="accounts"
         :showOnFocus=true
@@ -31,16 +36,19 @@
         :inputName="direction + '[]'"
         :serializer="item => item.name_with_balance"
         :minMatchingChars="3"
-        :placeholder="$t('firefly.' + this.direction + '_account')"
+        :placeholder="$t('firefly.' + direction + '_account')"
         @input="lookupAccount"
         @hit="selectedAccount = $event"
     >
       <template slot="append">
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" v-on:click="clearAccount" type="button"><i class="far fa-trash-alt"></i></button>
+          <button tabindex="-1" class="btn btn-outline-secondary" v-on:click="clearAccount" type="button"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>
+    <div class="form-control-static" v-if="!visible">
+      <span class="small text-muted"><em>{{ $t('firefly.first_split_decides') }}</em></span>
+    </div>
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
       </span>
@@ -205,6 +213,21 @@ export default {
         return 'source' === this.direction ? 'source_account' : 'destination_account';
       }
     },
+    visible: {
+      get() {
+        // index  0 is always visible:
+        if (0 === this.index) {
+          return true;
+        }
+        if ('source' === this.direction) {
+          return 'any' === this.transactionType || 'Deposit' === this.transactionType
+        }
+        if ('destination' === this.direction) {
+          return 'any' === this.transactionType || 'Withdrawal' === this.transactionType;
+        }
+        return false;
+      }
+    }
     // selectedAccount: {
     //   get() {
     //     return this.transactions[this.index][this.accountKey];

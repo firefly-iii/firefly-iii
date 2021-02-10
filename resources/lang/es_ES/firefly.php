@@ -397,7 +397,7 @@ return [
     'stored_new_rule'                                     => 'Guardar la nueva regla con titulo ":title"',
     'deleted_rule'                                        => 'Regla eliminada con titulo ":title"',
     'store_new_rule'                                      => 'Crear regla',
-    'updated_rule'                                        => 'Regla eliminada con titulo ":title"',
+    'updated_rule'                                        => 'Regla actualizada con titulo ":title"',
     'default_rule_group_name'                             => 'Reglaspredeterminada',
     'default_rule_group_description'                      => 'Todas las reglas que no pertenecen a ningún grupo.',
     'default_rule_name'                                   => 'Su primera regla por defecto',
@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplique la regla ":title" a una seleccion de sus transacciones',
     'apply_rule_selection_intro'                          => 'Las reglas como ":title" normalmente sólo se aplican a transacciones nuevas o actualizadas, pero puedes indicarle a Firefly III que las ejecute en una selección de transacciones existentes. Esto puede ser útil si has actualizado una regla y necesitas que los cambios se apliquen a todas tus otras transacciones.',
     'include_transactions_from_accounts'                  => 'Introduzca transacciones desde estas cuentas',
-    'applied_rule_selection'                              => 'Regla ":title" ha sido aplicada a su seleccion.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Ejecutar',
     'apply_rule_group_selection'                          => 'Aplique la regla de grupo ":title" a una selección de sus transacciones',
     'apply_rule_group_selection_intro'                    => 'Los grupos de reglas como ":title" normalmente sólo se aplican a transacciones nuevas o actualizadas, pero puedes indicarle a Firefly III que ejecute todas las reglas de este grupo en una selección de transacciones existentes. Esto puede ser útil si has actualizado un grupo de reglas y necesitas que los cambios se apliquen a todas tus otras transacciones.',
@@ -1022,7 +1022,7 @@ return [
     'list_inactive_rule'                        => 'regla inactiva',
     'bill_edit_rules'                           => 'Firefly III también intentará editar la regla relacionada con esta factura. Sin embargo, si ha editado esta regla usted mismo, Firefly III no cambiará nada.|Firefly III intentará editar también las :count reglas relacionadas con esta factura. Sin embargo, si ha editado estas reglas usted mismo, Firefly III no cambiará nada.',
     'bill_expected_date'                        => 'Se espera :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Pagado el {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Tiene :count cuenta inactiva (archivada), que puedes ver en esta página separada.|Tienes cuentas :count inactivas (archivadas), que puedes ver en esta página separada.',
@@ -1341,7 +1341,7 @@ return [
     'automation'                                => 'Automatización',
     'others'                                    => 'Otros',
     'classification'                            => 'Clasificación',
-    'store_transaction'                         => 'Store transaction',
+    'store_transaction'                         => 'Guardar transacción',
 
     // reports:
     'report_default'                            => 'Reporte financiero por defecto entre :start y :end',
