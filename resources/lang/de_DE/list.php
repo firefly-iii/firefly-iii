@@ -93,7 +93,7 @@ return [
     'budget_count'            => 'Anzahl Kostenpläne',
     'rule_and_groups_count'   => 'Anzahl Regeln und Regelgruppen',
     'tags_count'              => 'Anzahl Tags',
-    'tags'                    => 'Tags',
+    'tags'                    => 'Schlagwörter',
     'inward'                  => 'Beschreibung der Eingänge',
     'outward'                 => 'Beschreibung der Ausgänge',
     'number_of_transactions'  => 'Anzahl der Zahlungsvorgänge',

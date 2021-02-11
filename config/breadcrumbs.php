@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'view' => 'partials/breadcrumbs',
+    'view' => 'partials/layout/breadcrumbs',
 
     /*
     |--------------------------------------------------------------------------

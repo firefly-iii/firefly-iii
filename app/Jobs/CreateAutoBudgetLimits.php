@@ -45,8 +45,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var Carbon The current date */
-    private $date;
+    private Carbon $date;
 
     /**
      * Create a new job instance.
@@ -60,8 +59,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
         if (null !== $date) {
             $date->startOfDay();
             $this->date = $date;
+            Log::debug(sprintf('Created new CreateAutoBudgetLimits("%s")', $this->date->format('Y-m-d')));
         }
-        Log::debug(sprintf('Created new CreateAutoBudgetLimits("%s")', $this->date->format('Y-m-d')));
     }
 
     /**
@@ -106,6 +105,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetLimit->start_date = $start;
         $budgetLimit->end_date   = $end;
         $budgetLimit->amount     = $amount ?? $autoBudget->amount;
+        $budgetLimit->period     = $autoBudget->period;
+        $budgetLimit->generated  = true;
         $budgetLimit->save();
 
         Log::debug(sprintf('Created budget limit #%d.', $budgetLimit->id));
@@ -203,6 +204,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         if (null === $autoBudget->budget) {
             Log::info(sprintf('Auto budget #%d is associated with a deleted budget.', $autoBudget->id));
             $autoBudget->delete();
+
             return;
         }
         if (!$this->isMagicDay($autoBudget)) {

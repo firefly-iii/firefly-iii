@@ -10,7 +10,11 @@ I am running Firefly III version x.x.x.
 <!-- (if relevant of course) -->
 
 **Extra info**
-<!-- Please add extra info here, such as OS, browser, and the output from the `/debug`-page of your Firefly III installation (click the version at the bottom). --> 
+<!-- Please add extra info here, such as OS, browser, and the output from the `/debug`-page of your Firefly III installation (click the version at the bottom). 
+
+DO NOT PUT ```BACKTICKS``` AROUND THE OUTPUT OF THE /debug PAGE
+
+--> 
 
 **Bonus points**
 

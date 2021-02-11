@@ -41,10 +41,8 @@ class RecurrenceFactory
 {
 
     use TransactionTypeTrait, RecurringTransactionTrait;
-    /** @var MessageBag */
-    private $errors;
-    /** @var User */
-    private $user;
+    private MessageBag $errors;
+    private User $user;
 
 
     /**
@@ -54,9 +52,6 @@ class RecurrenceFactory
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         $this->errors = new MessageBag;
     }
 

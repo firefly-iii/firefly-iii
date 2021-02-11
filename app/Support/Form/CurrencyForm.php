@@ -151,7 +151,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round($value, $defaultCurrency->decimal_places);
+            $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
             $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
@@ -202,7 +202,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round($value, $defaultCurrency->decimal_places);
+            $value = round((float) $value, $defaultCurrency->decimal_places);
         }
         try {
             $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();

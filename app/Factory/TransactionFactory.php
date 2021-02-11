@@ -38,18 +38,12 @@ use Log;
  */
 class TransactionFactory
 {
-    /** @var Account */
-    private $account;
-    /** @var TransactionCurrency */
-    private $currency;
-    /** @var TransactionCurrency */
-    private $foreignCurrency;
-    /** @var TransactionJournal */
-    private $journal;
-    /** @var bool */
-    private $reconciled;
-    /** @var User */
-    private $user;
+    private Account $account;
+    private TransactionCurrency $currency;
+    private ?TransactionCurrency $foreignCurrency;
+    private TransactionJournal $journal;
+    private bool $reconciled;
+    private User $user;
 
 
     /**
@@ -59,9 +53,6 @@ class TransactionFactory
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         $this->reconciled = false;
     }
 

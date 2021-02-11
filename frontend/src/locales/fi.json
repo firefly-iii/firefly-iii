@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Siirto",
+        "Withdrawal": "Nosto",
+        "Deposit": "Talletus",
+        "date_and_time": "Date and time",
+        "no_currency": "(ei valuuttaa)",
+        "date": "P\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
+        "time": "Time",
+        "no_budget": "(ei budjettia)",
+        "destination_account": "Kohdetili",
+        "source_account": "L\u00e4hdetili",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metatiedot",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Laskuja maksettavana",
         "left_to_spend": "K\u00e4ytett\u00e4viss\u00e4",
+        "attachments": "Liitteet",
         "net_worth": "Varallisuus",
+        "bill": "Lasku",
+        "no_bill": "(no bill)",
+        "tags": "T\u00e4git",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(ei s\u00e4\u00e4st\u00f6possu)",
         "paid": "Maksettu",
+        "notes": "Muistiinpanot",
         "yourAccounts": "Omat tilisi",
         "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si",
         "transaction_table_description": "A table containing your transactions",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "S\u00e4\u00e4st\u00f6tili",
         "account_role_sharedAsset": "Jaettu k\u00e4ytt\u00f6tili",
         "account_role_ccAsset": "Luottokortti",
-        "account_role_cashWalletAsset": "K\u00e4teinen"
+        "account_role_cashWalletAsset": "K\u00e4teinen",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "Tapahtuman linkit",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Tuottotilit",
+        "add_another_split": "Lis\u00e4\u00e4 tapahtumaan uusi osa"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "fi"
+    },
+    "form": {
+        "foreign_amount": "Ulkomaan summa",
+        "interest_date": "Korkop\u00e4iv\u00e4",
+        "book_date": "Kirjausp\u00e4iv\u00e4",
+        "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
+        "due_date": "Er\u00e4p\u00e4iv\u00e4",
+        "payment_date": "Maksup\u00e4iv\u00e4",
+        "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
     }
 }

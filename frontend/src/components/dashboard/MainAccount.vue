@@ -19,40 +19,40 @@
   -->
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
-        </div>
-        <div class="card-body">
-            <div>
-                <canvas id="mainAccountsChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
-            </div>
-        </div>
-        <div class="card-footer">
-            <a href="./accounts/asset" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
     </div>
+    <div class="card-body">
+      <div>
+        <canvas id="mainAccountsChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="./accounts/asset" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
+    </div>
+  </div>
 </template>
 
 <script>
-    import DataConverter from "../charts/DataConverter";
-    import DefaultLineOptions from "../charts/DefaultLineOptions";
+import DataConverter from "../charts/DataConverter";
+import DefaultLineOptions from "../charts/DefaultLineOptions";
 
-    export default {
-        name: "MainAccount",
-        mounted() {
-            axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-                .then(response => {
+export default {
+  name: "MainAccount",
+  created() {
+    axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+        .then(response => {
 
-                    let chartData = DataConverter.methods.convertChart(response.data);
-                    chartData = DataConverter.methods.colorizeLineData(chartData);
-                    let lineChartCanvas = $('#mainAccountsChart').get(0).getContext('2d');
-                    new Chart(lineChartCanvas, {
-                        type: 'line',
-                        data: chartData,
-                        options: DefaultLineOptions.methods.getDefaultOptions()
-                    });
-                });
-        },
-    }
+          let chartData = DataConverter.methods.convertChart(response.data);
+          chartData = DataConverter.methods.colorizeLineData(chartData);
+          let lineChartCanvas = $('#mainAccountsChart').get(0).getContext('2d');
+          new Chart(lineChartCanvas, {
+            type: 'line',
+            data: chartData,
+            options: DefaultLineOptions.methods.getDefaultOptions()
+          });
+        });
+  },
+}
 </script>

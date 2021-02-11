@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hejsan,',
+    'greeting'                         => 'Hej,',
     'closing'                          => 'Pip boop,',
     'signature'                        => 'Firefly III Epost Robot',
     'footer_ps'                        => 'P.S. Detta meddelande skickades efter en begäran från IP :ipAddress begärde det.',
@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => 'Välkommen till <a style="color:#337ab7" href=":address">Firefly III</a>. Din registrering lyckades, och detta e-postmeddelande är här för att bekräfta det. Yay!',
     'registered_pw'                    => 'Om du redan har glömt ditt lösenord, vänligen återställ det med <a style="color:#337ab7" href=":address/password/reset">lösenordsåterställningsverktyget</a>.',
     'registered_help'                  => 'Det finns en hjälp-ikon i det övre högra hörnet av varje sida. Om du behöver hjälp, klicka på den!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
+    'registered_doc_html'              => 'Om du inte redan har gjort det, läs <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory">stora idén.</a>.',
     'registered_doc_text'              => 'Om du inte redan har gjort det, läs den första användarguiden och den fullständiga beskrivningen.',
     'registered_closing'               => 'Ha det så kul!',
     'registered_firefly_iii_link'      => 'Firefly III:',

@@ -19,28 +19,7 @@
  */
 
 let mix = require('laravel-mix');
- 
-/*
- |--------------------------------------------------------------------------
- | Mix Asset Management
- |--------------------------------------------------------------------------
- |
- | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
- | file for the application as well as bundling up all the JS files.
- |
- */
 
-// development:
-// mix.webpackConfig({
-//                       resolve: {
-//                           alias: {
-//                               'vue$': 'vue/dist/vue.runtime.js'
-//                           }
-//                       }
-//                   });
-
-// production
 mix.webpackConfig({
                       resolve: {
                           alias: {
@@ -49,9 +28,8 @@ mix.webpackConfig({
                       }
                   });
 
-//mix.sourceMaps().js('resources/assets/js/app.js', 'public/v2/js');
 mix.js('resources/assets/js/app.js', 'public/v1/js');
-mix.js('resources/assets/js/app_vue.js', 'public/v1/js');
-mix.js('resources/assets/js/create_transaction.js', 'public/v1/js');
-mix.js('resources/assets/js/edit_transaction.js', 'public/v1/js');
-mix.js('resources/assets/js/profile.js', 'public/v1/js');
+mix.js('resources/assets/js/app_vue.js', 'public/v1/js').vue({version: 2});
+mix.js('resources/assets/js/create_transaction.js', 'public/v1/js').vue({version: 2});
+mix.js('resources/assets/js/edit_transaction.js', 'public/v1/js').vue({version: 2});
+mix.js('resources/assets/js/profile.js', 'public/v1/js').vue({version: 2});

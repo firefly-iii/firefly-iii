@@ -202,7 +202,7 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format($amount);
+        $result = $fmt->format((float) $amount);
 
         if (true === $coloured) {
             if ($amount > 0) {

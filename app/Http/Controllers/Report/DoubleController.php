@@ -100,8 +100,8 @@ class DoubleController extends Controller
                     ];
                 $result[$key]['transactions']++;
                 $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                $result[$key]['avg_float'] = (float)$result[$key]['avg'];
             }
         }
         // sort by amount_float
@@ -152,8 +152,8 @@ class DoubleController extends Controller
                     ];
                 $result[$key]['transactions']++;
                 $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                $result[$key]['avg_float'] = (float)$result[$key]['avg'];
             }
         }
         // sort by amount_float
@@ -410,9 +410,10 @@ class DoubleController extends Controller
                 $result[] = [
                     'description'              => $journal['description'],
                     'transaction_group_id'     => $journal['transaction_group_id'],
-                    'amount_float'             => (float) $journal['amount'],
+                    'amount_float'             => (float)$journal['amount'],
                     'amount'                   => $journal['amount'],
                     'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                    'date_sort'                => $journal['date']->format('Y-m-d'),
                     'destination_account_name' => $journal['destination_account_name'],
                     'destination_account_id'   => $journal['destination_account_id'],
                     'currency_id'              => $currency['currency_id'],
@@ -459,9 +460,10 @@ class DoubleController extends Controller
                 $result[] = [
                     'description'              => $journal['description'],
                     'transaction_group_id'     => $journal['transaction_group_id'],
-                    'amount_float'             => (float) $journal['amount'],
+                    'amount_float'             => (float)$journal['amount'],
                     'amount'                   => $journal['amount'],
                     'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                    'date_sort'                => $journal['date']->format('Y-m-d'),
                     'destination_account_name' => $journal['destination_account_name'],
                     'destination_account_id'   => $journal['destination_account_id'],
                     'currency_id'              => $currency['currency_id'],

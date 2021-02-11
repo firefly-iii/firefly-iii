@@ -44,6 +44,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
+use FireflyIII\Models\Webhook;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Binder\BudgetList;
 use FireflyIII\Support\Binder\CategoryList;
@@ -85,17 +86,18 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration'                => [
+    'configuration' => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags'                => [
+    'feature_flags' => [
         'export'    => true,
         'telemetry' => true,
+        'webhooks'  => false,
     ],
 
-    'version'                      => '5.4.6',
-    'api_version'                  => '1.4.0',
+    'version'                      => '5.5.0-beta.1',
+    'api_version'                  => '1.5.0',
     'db_version'                   => 15,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -120,6 +122,7 @@ return [
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
+    'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
     'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
     'update_minimum_age'           => 6,
@@ -282,43 +285,43 @@ return [
     'languages'                    => [
         // currently enabled languages
         'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
+        // 'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
+        // 'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
-        'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
         'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
+        'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
         'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
+        // 'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
+        // 'fa_IR' => ['name_locale' => 'فارسی', 'name_english' => 'Persian'],
         'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        // 'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
         'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
+        // 'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
+        // 'is_IS' => ['name_locale' => 'Icelandic', 'name_english' => 'Icelandic'],
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
+        // 'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
         // 'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
         'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
+        // 'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
         'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
+        // 'si_LK' => ['name_locale' => 'සිංහල', 'name_english' => 'Sinhala (Sri Lanka)'],
         'sk_SK' => ['name_locale' => 'Slovenčina', 'name_english' => 'Slovak'],
+        // 'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
+        // 'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
         'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
+        // 'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
+        // 'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
+        // 'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
         'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
-
-        // currently disabled languages:
-        //        'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
-        //        'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
-        //        'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
-        //        'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
-        //        'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
-        //        'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
-        //        'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
-        //        'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
-        //        'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
-        //
-        //        'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
-        //        'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
-        //        'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
     ],
     'transactionTypesByWhat'       => [
         'expenses'   => ['Withdrawal'],
@@ -375,6 +378,7 @@ return [
         'ruleGroup'        => RuleGroup::class,
         'transactionGroup' => TransactionGroup::class,
         'user'             => User::class,
+        'webhook'          => Webhook::class,
 
         // strings
         'currency_code'    => CurrencyCode::class,
@@ -478,6 +482,7 @@ return [
             'any_notes'                       => ['alias' => false, 'needs_context' => false,],
 
             // one exact (or array of) journals:
+            'id'                              => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
             'journal_id'                      => ['alias' => false, 'trigger_class' => null, 'needs_context' => true,],
 
             // exact amount
@@ -798,6 +803,40 @@ return [
         TransactionTypeModel::RECONCILIATION  => [
             AccountType::RECONCILIATION => [AccountType::ASSET],
             AccountType::ASSET          => [AccountType::RECONCILIATION],
+        ],
+    ],
+    // if you add fields to this array, dont forget to update the export routine (ExportDataGenerator).
+    'journal_meta_fields'       => [
+        // sepa
+        'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
+        'sepa_db', 'sepa_country', 'sepa_ep',
+        'sepa_ci', 'sepa_batch_id', 'external_uri',
+
+        // dates
+        'interest_date', 'book_date', 'process_date',
+        'due_date', 'payment_date', 'invoice_date',
+
+        // others
+        'recurrence_id', 'internal_reference', 'bunq_payment_id',
+        'import_hash', 'import_hash_v2', 'external_id', 'original_source',
+
+        // recurring transactions
+        'recurrence_total', 'recurrence_count',
+    ],
+    'webhooks'                  => [
+        'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
+        'triggers'     => [
+            Webhook::TRIGGER_STORE_TRANSACTION   => 'TRIGGER_STORE_TRANSACTION',
+            Webhook::TRIGGER_UPDATE_TRANSACTION  => 'TRIGGER_UPDATE_TRANSACTION',
+            Webhook::TRIGGER_DESTROY_TRANSACTION => 'TRIGGER_DESTROY_TRANSACTION',
+        ],
+        'responses'    => [
+            Webhook::RESPONSE_TRANSACTIONS => 'RESPONSE_TRANSACTIONS',
+            Webhook::RESPONSE_ACCOUNTS     => 'RESPONSE_ACCOUNTS',
+            Webhook::RESPONSE_NONE         => 'RESPONSE_NONE',
+        ],
+        'deliveries'   => [
+            Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
         ],
     ],
 ];

@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Het huidige bedrag moet minder zijn dan het doelbedrag.',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
     'unique_object_group'            => 'De groepsnaam moet uniek zijn',
+    'starts_with'                    => 'De waarde moet beginnen met :values.',
+    'unique_webhook'                 => 'Je hebt al een webhook met deze waarden.',
+    'unique_existing_webhook'        => 'Je hebt al een andere webhook met deze waarden.',
 
-    'secure_password'                => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties.',
-    'valid_recurrence_rep_moment'    => 'Ongeldig herhaalmoment voor dit type herhaling.',
-    'invalid_account_info'           => 'Ongeldige rekeninginformatie.',
-    'attributes'                     => [
+    'secure_password'             => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Dit is geen geldige herhaling voor periodieke transacties.',
+    'valid_recurrence_rep_moment' => 'Ongeldig herhaalmoment voor dit type herhaling.',
+    'invalid_account_info'        => 'Ongeldige rekeninginformatie.',
+    'attributes'                  => [
         'email'                   => 'e-mailadres',
         'description'             => 'omschrijving',
         'amount'                  => 'bedrag',
+        'transactions.*.amount'   => 'transactiebedrag',
         'name'                    => 'naam',
         'piggy_bank_id'           => 'spaarpot ID',
         'targetamount'            => 'doelbedrag',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
-    'withdrawal_source_bad_data'     => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
-    'withdrawal_dest_need_data'      => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
-    'withdrawal_dest_bad_data'       => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'withdrawal_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'withdrawal_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'withdrawal_dest_need_data'   => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'withdrawal_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
     'deposit_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'deposit_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Bedrag is vereist.',
     'auto_budget_amount_positive'     => 'Het bedrag moet meer zijn dan nul.',
-    'auto_budget_period_mandatory' => 'De auto-budgetperiode is verplicht.',
+    'auto_budget_period_mandatory'    => 'De auto-budgetperiode is verplicht.',
 ];

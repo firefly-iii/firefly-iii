@@ -32,24 +32,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 
 /**
- * Class RecurrenceRepetition
+ * FireflyIII\Models\RecurrenceRepetition
  *
- * @property string          $repetition_type
- * @property string          $repetition_moment
- * @property int             $repetition_skip
- * @property int             $weekend
- * @property Carbon  $created_at
- * @property Carbon  $deleted_at
- * @property Carbon  $updated_at
- * @property int             $id
- * @property int             $recurrence_id
- * @property-read Recurrence $recurrence
- * @method static bool|null forceDelete()
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $recurrence_id
+ * @property string $repetition_type
+ * @property string $repetition_moment
+ * @property int $repetition_skip
+ * @property int $weekend
+ * @property-read \FireflyIII\Models\Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
  * @method static Builder|RecurrenceRepetition onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereId($value)

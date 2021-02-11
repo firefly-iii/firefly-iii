@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "\u00c1tvezet\u00e9s",
+        "Withdrawal": "K\u00f6lts\u00e9g",
+        "Deposit": "Bev\u00e9tel",
+        "date_and_time": "Date and time",
+        "no_currency": "(nincs p\u00e9nznem)",
+        "date": "D\u00e1tum",
+        "time": "Time",
+        "no_budget": "(nincs k\u00f6lts\u00e9gkeret)",
+        "destination_account": "C\u00e9lsz\u00e1mla",
+        "source_account": "Forr\u00e1s sz\u00e1mla",
+        "single_split": "Feloszt\u00e1s",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Egyenleg",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta-inform\u00e1ci\u00f3",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Fizetend\u0151 sz\u00e1ml\u00e1k",
         "left_to_spend": "Elk\u00f6lthet\u0151",
+        "attachments": "Mell\u00e9kletek",
         "net_worth": "Nett\u00f3 \u00e9rt\u00e9k",
+        "bill": "Sz\u00e1mla",
+        "no_bill": "(no bill)",
+        "tags": "C\u00edmk\u00e9k",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(nincs malacpersely)",
         "paid": "Kifizetve",
+        "notes": "Megjegyz\u00e9sek",
         "yourAccounts": "Banksz\u00e1ml\u00e1k",
         "go_to_asset_accounts": "Eszk\u00f6zsz\u00e1ml\u00e1k megtekint\u00e9se",
         "transaction_table_description": "Tranzakci\u00f3kat tartalmaz\u00f3 t\u00e1bl\u00e1zat",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Megtakar\u00edt\u00e1si sz\u00e1mla",
         "account_role_sharedAsset": "Megosztott eszk\u00f6zsz\u00e1mla",
         "account_role_ccAsset": "Hitelk\u00e1rtya",
-        "account_role_cashWalletAsset": "K\u00e9szp\u00e9nz"
+        "account_role_cashWalletAsset": "K\u00e9szp\u00e9nz",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "Tranzakci\u00f3 \u00f6sszekapcsol\u00e1sok",
+        "go_to_withdrawals": "Ugr\u00e1s a k\u00f6lts\u00e9gekhez",
+        "revenue_accounts": "J\u00f6vedelemsz\u00e1ml\u00e1k",
+        "add_another_split": "M\u00e1sik feloszt\u00e1s hozz\u00e1ad\u00e1sa"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "hu"
+    },
+    "form": {
+        "foreign_amount": "K\u00fclf\u00f6ldi \u00f6sszeg",
+        "interest_date": "Kamatfizet\u00e9si id\u0151pont",
+        "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
+        "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
+        "due_date": "Lej\u00e1rati id\u0151pont",
+        "payment_date": "Fizet\u00e9s d\u00e1tuma",
+        "invoice_date": "Sz\u00e1mla d\u00e1tuma"
     }
 }

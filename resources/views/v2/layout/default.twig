@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="v2/plugins/local-fonts/gf-source.css">
     <link rel="stylesheet" href="v2/css/app.css">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 <div class="wrapper">
 
     <!-- Navbar -->
@@ -70,13 +70,21 @@
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Control sidebar content goes here -->
-        bla bla bla
+        {% block control %}
+            <div class="p-3 control-sidebar-content">
+                <h5>{{ 'advanced_options'|_ }}</h5>
+                <hr class="mb-2">
+                <p>
+                    {{ 'advanced_options_explain'|_ }}
+                </p>
+            </div>
+        {% endblock %}
     </aside>
     <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
-<script src="{{ route('javascript.v2.variables') }}" nonce="{{ JS_NONCE }}"></script>
+<script src="{{ route('javascript.v2.variables') }}?layout=v2" nonce="{{ JS_NONCE }}"></script>
 <script src="v2/js/manifest.js" nonce="{{ JS_NONCE }}"></script>
 <script src="v2/js/vendor.js" nonce="{{ JS_NONCE }}"></script>
 {% block scripts %}{% endblock %}

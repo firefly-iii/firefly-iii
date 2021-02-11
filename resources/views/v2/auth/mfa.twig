@@ -1,0 +1,56 @@
+{% extends "./layout/auth" %}
+{% block content %}
+    {# error when logging in with MFA #}
+    {% if session_has('error') %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-ban"></i> {{ 'flash_error'|_ }}</h5>
+                {{ session('error') }}
+            </div>
+        </div>
+    {% endif %}
+
+
+    {# default header #}
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
+            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+        </div>
+
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">{{ trans('firefly.two_factor_welcome', {user: user.email}) }}</p>
+                <p class="login-box-msg">{{ 'two_factor_enter_code'|_ }}</p>
+
+                <form action="{{ route('two-factor.submit') }}" method="POST">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                    <div class="input-group mb-3">
+                        <input type="text" id="oneTimeInput" name="one_time_password" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}"/>
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block">{{ 'authenticate'|_ }}</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+            document.getElementById("oneTimeInput").focus();
+    </script>
+    <!-- /.login-box -->
+{% endblock %}

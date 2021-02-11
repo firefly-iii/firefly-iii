@@ -53,25 +53,13 @@ use Log;
  */
 class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
-    /** @var User */
-    private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
+    private User $user;
 
     /**
      * @param TransactionGroup $group
      */
     public function destroy(TransactionGroup $group): void
     {
-        /** @var TransactionGroupDestroyService $service */
         $service = new TransactionGroupDestroyService;
         $service->destroy($group);
     }

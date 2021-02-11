@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'L\'importo corrente deve essere minore dell\'importo obiettivo.',
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
     'unique_object_group'            => 'Il nome del gruppo deve essere unico',
+    'starts_with'                    => 'Il valore deve iniziare con :values.',
+    'unique_webhook'                 => 'Hai già un webhook con questi valori.',
+    'unique_existing_webhook'        => 'Hai già un altro webhook con questi valori.',
 
-    'secure_password'                => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
-    'valid_recurrence_rep_moment'    => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
-    'invalid_account_info'           => 'Informazione sul conto non valida.',
-    'attributes'                     => [
+    'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
+    'valid_recurrence_rep_moment' => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
+    'invalid_account_info'        => 'Informazione sul conto non valida.',
+    'attributes'                  => [
         'email'                   => 'indirizzo email',
         'description'             => 'descrizione',
         'amount'                  => 'importo',
+        'transactions.*.amount'   => 'importo della transazione',
         'name'                    => 'nome',
         'piggy_bank_id'           => 'ID salvadanaio',
         'targetamount'            => 'importo obiettivo',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
-    'withdrawal_source_bad_data'     => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
-    'withdrawal_dest_need_data'      => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
-    'withdrawal_dest_bad_data'       => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'withdrawal_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'withdrawal_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'withdrawal_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'withdrawal_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
 
     'deposit_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'deposit_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'L\'importo è obbligatorio.',
     'auto_budget_amount_positive'     => 'L\'importo deve essere maggiore di zero.',
-    'auto_budget_period_mandatory' => 'Il periodo per il budget automatico è un campo obbligatorio.',
+    'auto_budget_period_mandatory'    => 'Il periodo per il budget automatico è un campo obbligatorio.',
 ];

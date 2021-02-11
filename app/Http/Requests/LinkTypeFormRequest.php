@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
+use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -30,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class LinkTypeFormRequest extends FormRequest
 {
-    use ChecksLogin;
+    use ChecksLogin, ConvertsDataTypes;
 
     /**
      * Rules for this request.

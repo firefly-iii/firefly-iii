@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'The current amount must be less than the target amount.',
     'unique_piggy_bank_for_user'     => '小豬撲滿的名稱必須是獨一無二的。',
     'unique_object_group'            => 'The group name must be unique',
+    'starts_with'                    => 'The value must start with :values.',
+    'unique_webhook'                 => 'You already have a webhook with these values.',
+    'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
-    'secure_password'                => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => '定期重複交易的重複類型無效。',
-    'valid_recurrence_rep_moment'    => '重複時刻在此重複類型無效。',
-    'invalid_account_info'           => '無效的帳戶資訊。',
-    'attributes'                     => [
+    'secure_password'             => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => '定期重複交易的重複類型無效。',
+    'valid_recurrence_rep_moment' => '重複時刻在此重複類型無效。',
+    'invalid_account_info'        => '無效的帳戶資訊。',
+    'attributes'                  => [
         'email'                   => '電子郵件地址',
         'description'             => '描述',
         'amount'                  => '金額',
+        'transactions.*.amount'   => 'transaction amount',
         'name'                    => '名稱',
         'piggy_bank_id'           => '小豬撲滿 ID',
         'targetamount'            => '目標金額',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
-    'withdrawal_source_bad_data'     => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
-    'withdrawal_dest_need_data'      => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
-    'withdrawal_dest_bad_data'       => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+    'withdrawal_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
+    'withdrawal_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
+    'withdrawal_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
+    'withdrawal_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
 
     'deposit_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
     'deposit_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
-    'auto_budget_period_mandatory' => 'The auto budget period is a mandatory field.',
+    'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 ];

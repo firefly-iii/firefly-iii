@@ -28,18 +28,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+
 /**
- * Class PiggyBankEvent.
+ * FireflyIII\Models\PiggyBankEvent
  *
- * @property PiggyBank          $piggyBank
- * @property int                $transaction_journal_id
- * @property int                $piggy_bank_id
- * @property int                $id
- * @property Carbon             date
- * @property TransactionJournal transactionJournal
- * @property string             $amount
- * @property Carbon             created_at
- * @property Carbon             updated_at
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $piggy_bank_id
+ * @property int|null $transaction_journal_id
+ * @property \Illuminate\Support\Carbon $date
+ * @property string $amount
+ * @property-read \FireflyIII\Models\PiggyBank $piggyBank
+ * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
  * @method static Builder|PiggyBankEvent query()
@@ -51,10 +52,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|PiggyBankEvent whereTransactionJournalId($value)
  * @method static Builder|PiggyBankEvent whereUpdatedAt($value)
  * @mixin Eloquent
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon $date
- * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
  */
 class PiggyBankEvent extends Model
 {

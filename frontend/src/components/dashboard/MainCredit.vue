@@ -42,7 +42,7 @@
                 transactions: []
             }
         },
-        mounted() {
+      created() {
             axios.get('./api/v1/transactions?type=deposit&limit=10&start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
                           this.transactions = response.data.data;

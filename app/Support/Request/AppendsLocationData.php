@@ -87,7 +87,7 @@ trait AppendsLocationData
         $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
         $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
-        $hasLocation    = $this->boolean($hasLocationKey);
+        $hasLocation    = $this->boolean($hasLocationKey) || true === ($data['has_location'] ?? false);
 
         // for a POST (store), all fields must be present and accounted for:
         if (
@@ -115,6 +115,10 @@ trait AppendsLocationData
         }
         if (false === $hasLocation || null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
             Log::debug('One of the fields is NULL or hasLocation is false, wont save.');
+            Log::debug(sprintf('Longitude   : %s', var_export($data['longitude'], true)));
+            Log::debug(sprintf('Latitude    : %s', var_export($data['latitude'], true)));
+            Log::debug(sprintf('Zoom level  : %s', var_export($data['zoom_level'], true)));
+            Log::debug(sprintf('Has location: %s', var_export($hasLocation, true)));
             $data['store_location']  = false;
             $data['update_location'] = true; // update is always true, but the values are null:
             $data['longitude']       = null;

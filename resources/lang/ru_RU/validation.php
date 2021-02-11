@@ -130,15 +130,19 @@ return [
     'current_target_amount'          => 'Текущая сумма должна быть меньше целевой суммы.',
     'unique_piggy_bank_for_user'     => 'Название копилки должно быть уникальным.',
     'unique_object_group'            => 'Название группы должно быть уникальным',
+    'starts_with'                    => 'Значение должно начинаться с :values.',
+    'unique_webhook'                 => 'У вас уже есть webhook с таким именем.',
+    'unique_existing_webhook'        => 'У вас уже есть другой webhook с таким именем.',
 
-    'secure_password'                => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'      => 'Недопустимый тип для повторяющихся транзакций.',
-    'valid_recurrence_rep_moment'    => 'Неверный период повторения для данного типа повторений.',
-    'invalid_account_info'           => 'Неверные данные о счёте.',
-    'attributes'                     => [
+    'secure_password'             => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
+    'valid_recurrence_rep_type'   => 'Недопустимый тип для повторяющихся транзакций.',
+    'valid_recurrence_rep_moment' => 'Неверный период повторения для данного типа повторений.',
+    'invalid_account_info'        => 'Неверные данные о счёте.',
+    'attributes'                  => [
         'email'                   => '"Адрес электронной почты"',
         'description'             => '"Описание"',
         'amount'                  => 'Сумма',
+        'transactions.*.amount'   => 'сумма транзакции',
         'name'                    => '"Название"',
         'piggy_bank_id'           => 'ID копилки',
         'targetamount'            => '"Целевая сумма"',
@@ -173,10 +177,10 @@ return [
     ],
 
     // validation of accounts:
-    'withdrawal_source_need_data'    => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'withdrawal_source_bad_data'     => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
-    'withdrawal_dest_need_data'      => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
-    'withdrawal_dest_bad_data'       => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
+    'withdrawal_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
+    'withdrawal_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
+    'withdrawal_dest_need_data'   => 'Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
+    'withdrawal_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
 
     'deposit_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
     'deposit_source_bad_data'  => 'Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
@@ -205,5 +209,5 @@ return [
 
     'amount_required_for_auto_budget' => 'Нужно указать сумму.',
     'auto_budget_amount_positive'     => 'Сумма должна быть больше 0.',
-    'auto_budget_period_mandatory' => 'Период авто-бюджета - это обязательно поле.',
+    'auto_budget_period_mandatory'    => 'Период авто-бюджета - это обязательно поле.',
 ];

@@ -5,7 +5,7 @@
         "flash_success": "Sukces!",
         "close": "Zamknij",
         "split_transaction_title": "Opis podzielonej transakcji",
-        "errors_submission": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119 sprawd\u017a b\u0142\u0119dy poni\u017cej.",
+        "errors_submission": "Co\u015b posz\u0142o nie tak w czasie zapisu. Prosz\u0119 sprawd\u017a b\u0142\u0119dy.",
         "split": "Podziel",
         "single_split": "Podzia\u0142",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID} (\"{title}\")<\/a> zosta\u0142a zapisana.",

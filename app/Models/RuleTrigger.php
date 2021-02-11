@@ -29,18 +29,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class RuleTrigger.
+ * FireflyIII\Models\RuleTrigger
  *
- * @property string    $trigger_value
- * @property string    $trigger_type
- * @property int       $id
- * @property Carbon    $created_at
- * @property Carbon    $updated_at
- * @property int       $order
- * @property bool      $active
- * @property bool      $stop_processing
- * @property int       $rule_id
- * @property-read Rule $rule
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $rule_id
+ * @property string $trigger_type
+ * @property string $trigger_value
+ * @property int $order
+ * @property bool $active
+ * @property bool $stop_processing
+ * @property-read \FireflyIII\Models\Rule $rule
  * @method static Builder|RuleTrigger newModelQuery()
  * @method static Builder|RuleTrigger newQuery()
  * @method static Builder|RuleTrigger query()

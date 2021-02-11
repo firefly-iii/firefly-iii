@@ -30,23 +30,21 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 /**
- * Class TransactionJournalMeta.
+ * FireflyIII\Models\TransactionJournalMeta
  *
- * @property string                          $name
- * @property int                             $transaction_journal_id
- * @property TransactionJournal              $transactionJournal
- * @property string                          $data
- * @property int                             $id
+ * @property int $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property string                          $hash
+ * @property int $transaction_journal_id
+ * @property string $name
+ * @property mixed $data
+ * @property string $hash
  * @property Carbon|null $deleted_at
- * @method static bool|null forceDelete()
+ * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newQuery()
  * @method static Builder|TransactionJournalMeta onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta query()
- * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereDeletedAt($value)

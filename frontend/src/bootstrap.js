@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// imports
+// // imports
 import Vue from 'vue';
 import VueI18n from 'vue-i18n'
 import * as uiv from 'uiv';
@@ -43,21 +43,22 @@ if (token) {
 let localeToken = document.head.querySelector('meta[name="locale"]');
 
 if (localeToken) {
-    window.localeValue = localeToken.content;
+    localStorage.locale = localeToken.content;
 } else {
-    window.localeValue = 'en_US';
+    localStorage.locale = 'en_US';
 }
 
 // admin stuff
 require('jquery-ui');
-//require('bootstrap'); // bootstrap CSS?
+require('bootstrap'); // bootstrap CSS?
 
 require('./dist/js/adminlte');
 require('overlayscrollbars');
 
+
 // vue
 window.vuei18n = VueI18n;
-window.uiv =uiv;
+window.uiv = uiv;
 Vue.use(vuei18n);
 Vue.use(uiv);
 window.Vue = Vue;

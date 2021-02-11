@@ -76,7 +76,7 @@ class AccountController extends Controller
         $date  = $data['date'] ?? today(config('app.timezone'));
 
         $return          = [];
-        $result          = $this->repository->searchAccount((string) $query, $types, $data['limit']);
+        $result          = $this->repository->searchAccount((string)$query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         /** @var Account $account */
@@ -97,6 +97,7 @@ class AccountController extends Controller
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
         }
@@ -105,11 +106,14 @@ class AccountController extends Controller
         $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
 
 
-        usort($return, function ($a, $b) use ($order) {
+        usort(
+            $return, function ($a, $b) use ($order) {
             $pos_a = array_search($a['type'], $order);
             $pos_b = array_search($b['type'], $order);
+
             return $pos_a - $pos_b;
-        });
+        }
+        );
 
         return response()->json($return);
     }

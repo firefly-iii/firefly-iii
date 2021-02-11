@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Prevod",
+        "Withdrawal": "V\u00fdber",
+        "Deposit": "Vklad",
+        "date_and_time": "D\u00e1tum a \u010das",
+        "no_currency": "(\u017eiadna mena)",
+        "date": "D\u00e1tum",
+        "time": "\u010cas",
+        "no_budget": "(\u017eiadny rozpo\u010det)",
+        "destination_account": "Cie\u013eov\u00fd \u00fa\u010det",
+        "source_account": "Zdrojov\u00fd \u00fa\u010det",
+        "single_split": "Roz\u00fa\u010dtova\u0165",
+        "create_new_transaction": "Vytvori\u0165 nov\u00fa transakciu",
         "balance": "Zostatok",
+        "transaction_journal_extra": "\u010eal\u0161ie inform\u00e1cie",
+        "transaction_journal_meta": "Meta inform\u00e1cie",
+        "basic_journal_information": "Z\u00e1kladn\u00e9 Inform\u00e1cie o transakcii",
         "bills_to_pay": "\u00da\u010dty na \u00fahradu",
         "left_to_spend": "Zost\u00e1va k \u00fatrate",
+        "attachments": "Pr\u00edlohy",
         "net_worth": "\u010cist\u00e9 imanie",
+        "bill": "\u00da\u010det",
+        "no_bill": "(\u017eiadny \u00fa\u010det)",
+        "tags": "\u0160t\u00edtky",
+        "internal_reference": "Intern\u00e1 referencia",
+        "external_url": "Extern\u00e1 URL",
+        "no_piggy_bank": "(\u017eiadna pokladni\u010dka)",
         "paid": "Uhraden\u00e9",
+        "notes": "Pozn\u00e1mky",
         "yourAccounts": "Va\u0161e \u00fa\u010dty",
         "go_to_asset_accounts": "Zobrazi\u0165 \u00fa\u010dty akt\u00edv",
         "transaction_table_description": "Tabu\u013eka obsahuj\u00faca va\u0161e transakcie",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "\u0160etriaci \u00fa\u010det",
         "account_role_sharedAsset": "Zdie\u013ean\u00fd \u00fa\u010det akt\u00edv",
         "account_role_ccAsset": "Kreditn\u00e1 karta",
-        "account_role_cashWalletAsset": "Pe\u0148a\u017eenka"
+        "account_role_cashWalletAsset": "Pe\u0148a\u017eenka",
+        "daily_budgets": "Denn\u00e9 rozpo\u010dty",
+        "weekly_budgets": "T\u00fd\u017edenn\u00e9 rozpo\u010dty",
+        "monthly_budgets": "Mesa\u010dn\u00e9 rozpo\u010dty",
+        "quarterly_budgets": "\u0160tvr\u0165ro\u010dn\u00e9 rozpo\u010dty",
+        "half_year_budgets": "Polro\u010dn\u00e9 rozpo\u010dty",
+        "yearly_budgets": "Ro\u010dn\u00e9 rozpo\u010dty",
+        "other_budgets": "\u0160pecifick\u00e9 \u010dasovan\u00e9 rozpo\u010dty",
+        "journal_links": "Prepojenia transakcie",
+        "go_to_withdrawals": "Zobrazi\u0165 v\u00fdbery",
+        "revenue_accounts": "V\u00fdnosov\u00e9 \u00fa\u010dty",
+        "add_another_split": "Prida\u0165 \u010fal\u0161ie roz\u00fa\u010dtovanie"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "sk"
+    },
+    "form": {
+        "foreign_amount": "Suma v cudzej mene",
+        "interest_date": "\u00darokov\u00fd d\u00e1tum",
+        "book_date": "D\u00e1tum rezerv\u00e1cie",
+        "process_date": "D\u00e1tum spracovania",
+        "due_date": "D\u00e1tum splatnosti",
+        "payment_date": "D\u00e1tum \u00fahrady",
+        "invoice_date": "D\u00e1tum vystavenia"
     }
 }

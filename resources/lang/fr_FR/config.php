@@ -26,7 +26,7 @@ return [
     'html_language'           => 'fr',
     'locale'                  => 'fr, French, fr_FR.utf8, fr_FR.UTF-8',
     'month'                   => '%B %Y',
-    'month_and_day'           => '%B %e %Y',
+    'month_and_day'           => '%e %B %Y',
     'month_and_day_moment_js' => 'D MMMM YYYY',
     'month_and_date_day'      => '%A %e %B %Y',
     'month_and_day_no_year'   => '%e %B',

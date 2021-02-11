@@ -4,7 +4,7 @@
     {% elseif 0 == groups.count() %}
         {{ trans_choice('firefly.search_found_transactions', 0, {time: searchTime}) }}
     {% else %}
-        {{ trans_choice('firefly.search_found_transactions', groups.perPage(), {time: searchTime}) }}
+        {{ trans_choice('firefly.search_found_transactions', groups.count(), {time: searchTime}) }}
     {% endif %}
 </p>
 

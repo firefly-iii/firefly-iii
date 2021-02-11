@@ -19,46 +19,51 @@
   -->
 
 <template>
-    <div>
-        <top-boxes/>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <main-account />
-            </div>
-        </div>
-        <main-account-list/>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-budget/>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-category />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                <main-debit/>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                <main-credit/>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-piggy-list/>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                <main-bills-list/>
-            </div>
-        </div>
+  <div>
+    <top-boxes/>
+    <div class="row">
+      <div class="col">
+        <main-account/>
+      </div>
     </div>
+    <main-account-list/>
+
+    <div class="row">
+      <div class="col">
+        <main-budget-list/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <main-category-list/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <main-debit-list/>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <main-credit-list/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <main-piggy-list/>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <main-bills-list/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Dashboard"
-    }
+export default {
+  name: "Dashboard",
+  created() {},
+  computed: {},
+  methods: {}
+}
 </script>

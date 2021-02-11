@@ -51,15 +51,21 @@ mix
     // COPY SCRIPT
     //.copy('../resources/assets/js/v2/classic/adminlte.js', 'public/v2/js/classic.js')
 
-    // dashboard component (frontpage):
+    // misc pages
     .js('src/pages/dashboard.js', 'public/js')
     .js('src/pages/empty.js', 'public/js')
+    .js('src/pages/new-user/index.js', 'public/js/new-user')
 
     // accounts.
     .js('src/pages/accounts/index.js', 'public/js/accounts')
+    .js('src/pages/accounts/show.js', 'public/js/accounts')
 
+    // transactions.
+    .js('src/pages/transactions/create.js', 'public/js/transactions')
     // register page
     .js('src/pages/register.js', 'public/js')
+
+
 
     .extract().sourceMaps()
     .sass('src/app.scss', 'public/css')

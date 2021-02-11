@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Transfert",
+        "Withdrawal": "D\u00e9pense",
+        "Deposit": "D\u00e9p\u00f4t",
+        "date_and_time": "Date et heure",
+        "no_currency": "(pas de devise)",
+        "date": "Date",
+        "time": "Heure",
+        "no_budget": "(pas de budget)",
+        "destination_account": "Compte de destination",
+        "source_account": "Compte source",
+        "single_split": "Ventilation",
+        "create_new_transaction": "Cr\u00e9er une nouvelle op\u00e9ration",
         "balance": "Solde",
+        "transaction_journal_extra": "Informations suppl\u00e9mentaires",
+        "transaction_journal_meta": "M\u00e9ta informations",
+        "basic_journal_information": "Informations de base sur l'op\u00e9ration",
         "bills_to_pay": "Factures \u00e0 payer",
         "left_to_spend": "Reste \u00e0 d\u00e9penser",
+        "attachments": "Pi\u00e8ces jointes",
         "net_worth": "Avoir net",
+        "bill": "Facture",
+        "no_bill": "(aucune facture)",
+        "tags": "Tags",
+        "internal_reference": "R\u00e9f\u00e9rence interne",
+        "external_url": "URL externe",
+        "no_piggy_bank": "(aucune tirelire)",
         "paid": "Pay\u00e9",
+        "notes": "Notes",
         "yourAccounts": "Vos comptes",
         "go_to_asset_accounts": "Afficher vos comptes d'actifs",
         "transaction_table_description": "Une table contenant vos op\u00e9rations",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Compte d\u2019\u00e9pargne",
         "account_role_sharedAsset": "Compte d'actif partag\u00e9",
         "account_role_ccAsset": "Carte de cr\u00e9dit",
-        "account_role_cashWalletAsset": "Porte-monnaie"
+        "account_role_cashWalletAsset": "Porte-monnaie",
+        "daily_budgets": "Budgets quotidiens",
+        "weekly_budgets": "Budgets hebdomadaires",
+        "monthly_budgets": "Budgets mensuels",
+        "quarterly_budgets": "Budgets trimestriels",
+        "half_year_budgets": "Budgets semestriels",
+        "yearly_budgets": "Budgets annuels",
+        "other_budgets": "Budgets \u00e0 p\u00e9riode personnalis\u00e9e",
+        "journal_links": "Liens d'op\u00e9ration",
+        "go_to_withdrawals": "Acc\u00e9der \u00e0 vos retraits",
+        "revenue_accounts": "Comptes de recettes",
+        "add_another_split": "Ajouter une autre fraction"
     },
     "list": {
         "piggy_bank": "Tirelire",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "fr"
+    },
+    "form": {
+        "foreign_amount": "Montant en devise \u00e9trang\u00e8re",
+        "interest_date": "Date de valeur (int\u00e9r\u00eats)",
+        "book_date": "Date de r\u00e9servation",
+        "process_date": "Date de traitement",
+        "due_date": "\u00c9ch\u00e9ance",
+        "payment_date": "Date de paiement",
+        "invoice_date": "Date de facturation"
     }
 }

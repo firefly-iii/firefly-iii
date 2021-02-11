@@ -23,6 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\LinkType;
 
 use Exception;
+use FireflyIII\Events\DestroyedTransactionLink;
+use FireflyIII\Events\RemovedTransactionLink;
+use FireflyIII\Events\StoredTransactionLink;
+use FireflyIII\Events\UpdatedTransactionLink;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -39,16 +43,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
 
     /**
      * @param LinkType $linkType
@@ -85,6 +79,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
+        event(new DestroyedTransactionLink($link));
         $link->delete();
 
         return true;
@@ -287,6 +282,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         // make note in noteable:
         $this->setNoteText($link, (string)$information['notes']);
 
+        event(new StoredTransactionLink($link));
+
         return $link;
     }
 
@@ -336,6 +333,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $journalLink->link_type_id   = $data['link_type_id'];
         $journalLink->save();
         $this->setNoteText($journalLink, $data['notes']);
+
+        event(new UpdatedTransactionLink($journalLink));
 
         return $journalLink;
     }

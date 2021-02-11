@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install composer packages
-composer install --no-suggest --no-scripts --no-ansi
+composer install --no-scripts --no-ansi
 
 # enable test .env file.
 cp .ci/.env.ci .env

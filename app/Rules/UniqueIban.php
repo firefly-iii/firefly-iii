@@ -33,11 +33,8 @@ use Log;
  */
 class UniqueIban implements Rule
 {
-    /** @var Account */
-    private $account;
-
-    /** @var string */
-    private $expectedType;
+    private ?Account $account;
+    private ?string $expectedType;
 
     /**
      * Create a new rule instance.
@@ -51,6 +48,16 @@ class UniqueIban implements Rule
     {
         $this->account      = $account;
         $this->expectedType = $expectedType;
+        // a very basic fix to make sure we get the correct account type:
+        if ('expense' === $expectedType) {
+            $this->expectedType = AccountType::EXPENSE;
+        }
+        if ('revenue' === $expectedType) {
+            $this->expectedType = AccountType::REVENUE;
+        }
+        if ('asset' === $expectedType) {
+            $this->expectedType = AccountType::ASSET;
+        }
     }
 
     /**
@@ -68,8 +75,8 @@ class UniqueIban implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      *

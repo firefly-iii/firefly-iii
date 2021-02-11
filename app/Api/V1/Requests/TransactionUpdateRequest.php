@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
@@ -40,7 +41,7 @@ use Log;
  */
 class TransactionUpdateRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, ConvertsDataTypes;
+    use TransactionValidation, GroupValidation, ConvertsDataTypes, ChecksLogin;
 
     private array $arrayFields;
     private array $booleanFields;
@@ -50,16 +51,7 @@ class TransactionUpdateRequest extends FormRequest
     private array $textareaFields;
 
 
-    /**
-     * Authorize logged in users.
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        // Only allow authenticated users
-        return auth()->check();
-    }
+
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
@@ -382,26 +374,10 @@ class TransactionUpdateRequest extends FormRequest
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
-                // If type is set, source + destination info is mandatory.
-                // Not going to do this. Not sure where the demand came from.
-
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
                 $this->validateAccountInformationUpdate($validator);
 
-                // The currency info must match the accounts involved.
-                // Instead will ignore currency info as much as possible.
-
-                // TODO if the transaction_journal_id is empty, some fields are mandatory, like the amount!
-
-                // all journals must have a description
-
-                //                // validate foreign currency info
-                //
-
-                //
-                //                // make sure all splits have valid source + dest info
-                //                 the group must have a description if > 1 journal.
             }
         );
     }

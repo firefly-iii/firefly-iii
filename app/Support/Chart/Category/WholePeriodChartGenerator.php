@@ -119,8 +119,8 @@ class WholePeriodChartGenerator
                 $earnedInfoKey                                = sprintf('earned-in-%s', $code);
                 $spentAmount                                  = $spent[$key][$currencyId]['sum'] ?? '0';
                 $earnedAmount                                 = $earned[$key][$currencyId]['sum'] ?? '0';
-                $chartData[$spentInfoKey]['entries'][$label]  = round($spentAmount, $currency['currency_decimal_places']);
-                $chartData[$earnedInfoKey]['entries'][$label] = round($earnedAmount, $currency['currency_decimal_places']);
+                $chartData[$spentInfoKey]['entries'][$label]  = round((float) $spentAmount, $currency['currency_decimal_places']);
+                $chartData[$earnedInfoKey]['entries'][$label] = round((float) $earnedAmount, $currency['currency_decimal_places']);
             }
             $current = app('navigation')->addPeriod($current, $step, 0);
         }

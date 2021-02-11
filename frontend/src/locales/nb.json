@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "Overf\u00f8ring",
+        "Withdrawal": "Uttak",
+        "Deposit": "Innskudd",
+        "date_and_time": "Date and time",
+        "no_currency": "(ingen valuta)",
+        "date": "Dato",
+        "time": "Time",
+        "no_budget": "(ingen budsjett)",
+        "destination_account": "Destination account",
+        "source_account": "Source account",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Saldo",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Metainformasjon",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Regninger \u00e5 betale",
         "left_to_spend": "Igjen \u00e5 bruke",
+        "attachments": "Vedlegg",
         "net_worth": "Formue",
+        "bill": "Regning",
+        "no_bill": "(no bill)",
+        "tags": "Tagger",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(no piggy bank)",
         "paid": "Betalt",
+        "notes": "Notater",
         "yourAccounts": "Dine kontoer",
         "go_to_asset_accounts": "Se aktivakontoene dine",
         "transaction_table_description": "A table containing your transactions",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Sparekonto",
         "account_role_sharedAsset": "Delt aktivakonto",
         "account_role_ccAsset": "Kredittkort",
-        "account_role_cashWalletAsset": "Kontant lommebok"
+        "account_role_cashWalletAsset": "Kontant lommebok",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "Transaksjonskoblinger",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "Inntektskontoer",
+        "add_another_split": "Legg til en oppdeling til"
     },
     "list": {
         "piggy_bank": "Sparegris",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "nb"
+    },
+    "form": {
+        "foreign_amount": "Utenlandske bel\u00f8p",
+        "interest_date": "Rentedato",
+        "book_date": "Bokf\u00f8ringsdato",
+        "process_date": "Prosesseringsdato",
+        "due_date": "Forfallsdato",
+        "payment_date": "Betalingsdato",
+        "invoice_date": "Fakturadato"
     }
 }

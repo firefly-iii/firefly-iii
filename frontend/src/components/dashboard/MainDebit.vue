@@ -41,7 +41,7 @@
 
     export default {
         name: "MainDebit",
-        mounted() {
+      created() {
             axios.get('./api/v1/chart/account/expense?start=' + window.sessionStart + '&end=' + window.sessionEnd)
                 .then(response => {
                     let chartData = DataConverter.methods.convertChart(response.data);

@@ -59,6 +59,7 @@ class CategoryController extends Controller
             function ($request, $next) {
                 $this->opsRepository   = app(OperationsRepositoryInterface::class);
                 $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -302,8 +303,8 @@ class CategoryController extends Controller
                         ];
                     $result[$key]['transactions']++;
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -354,8 +355,8 @@ class CategoryController extends Controller
                         ];
                     $result[$key]['transactions']++;
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -703,9 +704,10 @@ class CategoryController extends Controller
                     $result[] = [
                         'description'              => $journal['description'],
                         'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float) $journal['amount'],
+                        'amount_float'             => (float)$journal['amount'],
                         'amount'                   => $journal['amount'],
                         'date'                     => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'date_sort'                => $journal['date']->format('Y-m-d'),
                         'destination_account_name' => $journal['destination_account_name'],
                         'destination_account_id'   => $journal['destination_account_id'],
                         'currency_id'              => $currency['currency_id'],
@@ -752,9 +754,10 @@ class CategoryController extends Controller
                     $result[] = [
                         'description'             => $journal['description'],
                         'transaction_group_id'    => $journal['transaction_group_id'],
-                        'amount_float'            => (float) $journal['amount'],
+                        'amount_float'            => (float)$journal['amount'],
                         'amount'                  => $journal['amount'],
                         'date'                    => $journal['date']->formatLocalized($this->monthAndDayFormat),
+                        'date_sort'               => $journal['date']->format('Y-m-d'),
                         'source_account_name'     => $journal['source_account_name'],
                         'source_account_id'       => $journal['source_account_id'],
                         'currency_id'             => $currency['currency_id'],

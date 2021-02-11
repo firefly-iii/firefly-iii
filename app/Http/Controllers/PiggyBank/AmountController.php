@@ -123,6 +123,7 @@ class AmountController extends Controller
         }
         if ($this->piggyRepos->canAddAmount($piggyBank, $amount)) {
             $this->piggyRepos->addAmount($piggyBank, $amount);
+            $this->piggyRepos->createEvent($piggyBank, $amount);
             session()->flash(
                 'success',
                 (string) trans(

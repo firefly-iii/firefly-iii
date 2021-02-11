@@ -31,18 +31,6 @@ use Log;
 class ChartJsGenerator implements GeneratorInterface
 {
     /**
-     * Constructor.
-     *
-     * @codeCoverageIgnore
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
-    /**
      * Expects data as:.
      *
      * key => [value => x, 'currency_symbol' => 'x']

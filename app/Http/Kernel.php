@@ -144,7 +144,7 @@ class Kernel extends HttpKernel
             // MUST be logged in
             // MUST have 2fa
             // MUST be confirmed.
-            // (this group includes the other Firefly middleware)
+            // (this group includes the other Firefly III middleware)
             'user-full-auth'        => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -162,7 +162,7 @@ class Kernel extends HttpKernel
             // MUST have 2fa
             // MUST be confirmed.
             // MUST have owner role
-            // (this group includes the other Firefly middleware)
+            // (this group includes the other Firefly III middleware)
             'admin'                 => [
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

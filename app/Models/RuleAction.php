@@ -29,18 +29,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class RuleAction.
+ * FireflyIII\Models\RuleAction
  *
- * @property string $action_value
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $rule_id
  * @property string $action_type
- * @property int    $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property int    $order
- * @property bool   $active
- * @property bool   $stop_processing
- * @property Rule   $rule
- * @property int    $rule_id
+ * @property string $action_value
+ * @property int $order
+ * @property bool $active
+ * @property bool $stop_processing
+ * @property-read \FireflyIII\Models\Rule $rule
  * @method static Builder|RuleAction newModelQuery()
  * @method static Builder|RuleAction newQuery()
  * @method static Builder|RuleAction query()

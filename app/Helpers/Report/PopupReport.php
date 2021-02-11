@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -39,16 +40,6 @@ use Log;
  */
 class PopupReport implements PopupReportInterface
 {
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
-    }
-
     /**
      * Collect the transactions for one account and one budget.
      *
@@ -216,10 +207,17 @@ class PopupReport implements PopupReportInterface
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
 
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountRepository->setUser($account->user);
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts(new Collection([$account]))
+        // set report accounts + the request accounts:
+        $set = $attributes['accounts'] ?? new Collection;
+        $set->push($account);
+
+        $collector->setBothAccounts($set)
                   ->setRange($attributes['startDate'], $attributes['endDate'])
                   ->withAccountInformation()
                   ->withBudgetInformation()

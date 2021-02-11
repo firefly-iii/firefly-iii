@@ -1,10 +1,33 @@
 {
     "firefly": {
+        "Transfer": "P\u0159evod",
+        "Withdrawal": "V\u00fdb\u011br",
+        "Deposit": "Vklad",
+        "date_and_time": "Date and time",
+        "no_currency": "(\u017e\u00e1dn\u00e1 m\u011bna)",
+        "date": "Datum",
+        "time": "Time",
+        "no_budget": "(\u017e\u00e1dn\u00fd rozpo\u010det)",
+        "destination_account": "C\u00edlov\u00fd \u00fa\u010det",
+        "source_account": "Zdrojov\u00fd \u00fa\u010det",
+        "single_split": "Split",
+        "create_new_transaction": "Create a new transaction",
         "balance": "Z\u016fstatek",
+        "transaction_journal_extra": "Extra information",
+        "transaction_journal_meta": "Meta informace",
+        "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Faktury k zaplacen\u00ed",
         "left_to_spend": "Zb\u00fdv\u00e1 k utracen\u00ed",
+        "attachments": "P\u0159\u00edlohy",
         "net_worth": "\u010cist\u00e9 jm\u011bn\u00ed",
+        "bill": "\u00da\u010det",
+        "no_bill": "(no bill)",
+        "tags": "\u0160t\u00edtky",
+        "internal_reference": "Internal reference",
+        "external_url": "External URL",
+        "no_piggy_bank": "(\u017e\u00e1dn\u00e1 pokladni\u010dka)",
         "paid": "Zaplaceno",
+        "notes": "Pozn\u00e1mky",
         "yourAccounts": "Va\u0161e \u00fa\u010dty",
         "go_to_asset_accounts": "Zobrazit \u00fa\u010dty s aktivy",
         "transaction_table_description": "A table containing your transactions",
@@ -34,7 +57,18 @@
         "account_role_savingAsset": "Spo\u0159ic\u00ed \u00fa\u010det",
         "account_role_sharedAsset": "Sd\u00edlen\u00fd \u00fa\u010det aktiv",
         "account_role_ccAsset": "Kreditn\u00ed karta",
-        "account_role_cashWalletAsset": "Pen\u011b\u017eenka"
+        "account_role_cashWalletAsset": "Pen\u011b\u017eenka",
+        "daily_budgets": "Daily budgets",
+        "weekly_budgets": "Weekly budgets",
+        "monthly_budgets": "Monthly budgets",
+        "quarterly_budgets": "Quarterly budgets",
+        "half_year_budgets": "Half-yearly budgets",
+        "yearly_budgets": "Yearly budgets",
+        "other_budgets": "Custom timed budgets",
+        "journal_links": "Transaction links",
+        "go_to_withdrawals": "Go to your withdrawals",
+        "revenue_accounts": "P\u0159\u00edjmov\u00e9 \u00fa\u010dty",
+        "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -50,5 +84,14 @@
     },
     "config": {
         "html_language": "cs"
+    },
+    "form": {
+        "foreign_amount": "\u010c\u00e1stka v ciz\u00ed m\u011bn\u011b",
+        "interest_date": "\u00darokov\u00e9 datum",
+        "book_date": "Datum rezervace",
+        "process_date": "Datum zpracov\u00e1n\u00ed",
+        "due_date": "Datum splatnosti",
+        "payment_date": "Datum zaplacen\u00ed",
+        "invoice_date": "Datum vystaven\u00ed"
     }
 }

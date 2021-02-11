@@ -5,7 +5,7 @@
         "flash_success": "Siker!",
         "close": "Bez\u00e1r\u00e1s",
         "split_transaction_title": "Felosztott tranzakci\u00f3 le\u00edr\u00e1sa",
-        "errors_submission": "Hiba t\u00f6rt\u00e9nt a bek\u00fcld\u00e9s sor\u00e1n. K\u00e9rem, jav\u00edtsa az al\u00e1bbi hib\u00e1kat.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
         "split": "Feloszt\u00e1s",
         "single_split": "Feloszt\u00e1s",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> mentve.",
