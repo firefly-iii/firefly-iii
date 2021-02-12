@@ -380,8 +380,8 @@ export default {
       groupTitleErrors: [],
 
       // group ID + title once submitted:
-      groupId: 0,
-      groupTitle: '',
+      returnedGroupId: 0,
+      returnedGroupTitle: '',
     }
   },
   computed: {
@@ -468,7 +468,7 @@ export default {
       // console.log('finalizeSubmit (' + this.submittedTransaction + ', ' + this.submittedAttachments + ', ' + this.submittedLinks + ')');
       if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
         if (false === this.createAnother && false === this.inError) {
-          window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=created';
+          window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
           return;
         }
         // enable flags:
@@ -480,7 +480,7 @@ export default {
 
         // show message:
         this.errorMessage = '';
-        this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.groupId, title: this.groupTitle});
+        this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
 
         // reset attachments (always do this)
         for (let i in this.transactions) {
@@ -528,8 +528,8 @@ export default {
             this.submitAttachments(data, response);
 
             // meanwhile, store the ID and the title in some easy to access variables.
-            this.groupId = parseInt(response.data.data.id);
-            this.groupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+            this.returnedGroupId = parseInt(response.data.data.id);
+            this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
             // console.log('Group title is now "' + this.groupTitle + '"');
           })
           .catch(error => {

@@ -60,10 +60,28 @@
 </template>
 
 <script>
+
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
 export default {
   name: "Dashboard",
-  created() {},
-  computed: {},
-  methods: {}
+  created() {
+  },
+
+  computed: {
+    ...mapGetters([
+                    'viewRange',
+                    'start',
+                    'end'
+                  ])
+  },
+  methods: {},
+  watch: {
+    start: function (value) {
+      console.log('Value of start is now ' + value);
+    }
+  }
 }
 </script>

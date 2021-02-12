@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Appliquer la règle ":title" à une sélection de vos opérations',
     'apply_rule_selection_intro'                          => 'Les règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III de l’exécuter sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour une règle et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
     'include_transactions_from_accounts'                  => 'Inclure les opérations depuis ces comptes',
-    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
+    'applied_rule_selection'                              => '{0} Aucune opération dans votre sélection n\'a été modifiée par la règle ":title".[1] Une opération dans votre sélection a été modifiée par la règle ":title".|[2,*] :count opérations dans votre sélection ont été modifiées par la règle ":title".',
     'execute'                                             => 'Exécuter',
     'apply_rule_group_selection'                          => 'Appliquer le groupe de règles ":title" à une sélection de vos opérations',
     'apply_rule_group_selection_intro'                    => 'Les groupes de règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III d\'exécuter toutes les règles de ce groupe sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour un groupe de règles et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">L\'opération n°{ID} ("{title}")</a> a été enregistrée.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été enregistrée.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été mise à jour.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Bienvenue sur Firefly III !',

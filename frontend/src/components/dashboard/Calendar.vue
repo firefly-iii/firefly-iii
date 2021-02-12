@@ -39,15 +39,17 @@
           <div class="col">
             <div class="btn-group btn-group-sm d-flex">
               <button
-                  class="btn btn-secondary btn-sm"
+                  class="btn btn-secondary btn-sm" :title="$t('firefly.custom_period')"
                   @click="togglePopover({ placement: 'auto-start', positionFixed:true })"
               ><i class="fas fa-calendar-alt"></i></button>
               <button
                   class="btn btn-secondary"
+                  :title="$t('firefly.reset_to_current')"
               ><i class="fas fa-history"></i></button>
 
 
               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                      :title="$t('firefly.select_period')"
                       aria-expanded="false">
                 <i class="fas fa-list"></i>
               </button>
@@ -79,11 +81,7 @@
 export default {
   name: "Calendar",
   created() {
-    // this.locale = localStorage.locale ?? 'en-US';
-    // this.$store.commit('increment');
-    // console.log(this.$store.state.count);
-    // get dates for current period (history button):
-    // get dates for optional periods (dropdown) + descriptions.
+    this.locale = localStorage.locale ?? 'en-US';
   },
   data() {
     return {

@@ -226,7 +226,7 @@ return [
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // Webhooks
-    'webhooks'                                            => 'Webhooks',
+    'webhooks'                                            => 'Webhook',
 
     // API access
     'authorization_request'                               => 'Firefly III v:version Richiesta Autorizzazione',
@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Applica la regola ":title" a una selezione delle tue transazioni',
     'apply_rule_selection_intro'                          => 'Regole come ":title" sono normalmente applicate solo a transazioni nuove o aggiornate, ma puoi dire a Firefly III di eseguirle su una selezione delle tue transazioni esistenti. Questo può essere utile quando hai aggiornato una regola e hai bisogno che le modifiche vengano applicate a tutte le altre transazioni.',
     'include_transactions_from_accounts'                  => 'Includi transazioni da questi conti',
-    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
+    'applied_rule_selection'                              => '{0} Nessuna transazione della selezione è stata cambiata dalla regola ":title".|[1] Una transazione della selezione è stata modificata dalla regola ":title".|[2,*] :count transazioni della selezione sono state modificate dalla regola ":title".',
     'execute'                                             => 'Eseguire',
     'apply_rule_group_selection'                          => 'Applica il gruppo di regole ":title" a una selezione delle tue transazioni',
     'apply_rule_group_selection_intro'                    => 'Gruppi di regole come ":title" sono normalmente applicati solo a transazioni nuove o aggiornate, ma puoi dire a Firefly III di eseguire tutte le regole in questo gruppo su una selezione delle tue transazioni esistenti. Questo può essere utile quando hai aggiornato un gruppo di regole e hai bisogno delle modifiche da applicare a tutte le tue altre transazioni.',
@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => 'La <a href="transactions/show/{ID}">transazione #{ID} ("{title}")</a> è stata salvata.',
     'transaction_new_stored_link'               => 'La <a href="transactions/show/{ID}">transazione #{ID}</a> è stata salvata.',
     'transaction_updated_link'                  => 'La <a href="transactions/show/{ID}">transazione #{ID}</a> è stata aggiornata.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Benvenuto in Firefly III!',

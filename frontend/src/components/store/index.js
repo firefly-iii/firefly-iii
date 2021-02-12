@@ -21,6 +21,7 @@
 import Vue from 'vue'
 import Vuex, {createLogger} from 'vuex'
 import transactions_create from './modules/transactions/create';
+import dashboard_index from './modules/dashboard/index';
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
@@ -32,6 +33,12 @@ export default new Vuex.Store(
                 namespaced: true,
                 modules: {
                     create: transactions_create
+                }
+            },
+            dashboard: {
+                namespaced: true,
+                modules: {
+                    index: dashboard_index
                 }
             }
         },

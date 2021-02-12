@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transactie #{ID} ("{title}")</a> is opgeslagen.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is opgeslagen.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is geüpdatet.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',

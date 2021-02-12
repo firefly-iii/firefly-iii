@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplicar a regra ":title" para uma seleção de suas transações',
     'apply_rule_selection_intro'                          => 'As regras como ":title" normalmente são aplicadas apenas a transações novas ou atualizadas, mas você pode informar o Firefly III para executá-lo em uma seleção de suas transações existentes. Isso pode ser útil quando você atualizou uma regra e você precisa das alterações a serem aplicadas a todas as suas outras transações.',
     'include_transactions_from_accounts'                  => 'Incluir as transações destas contas',
-    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
+    'applied_rule_selection'                              => '{0} Nenhuma transação em sua seleção foi alterada pela regra ":title".|[1] Uma transação em sua seleção foi alterada pela regra ":title".|[2,*] :count transações em sua seleção foram alteradas pela regra ":title".',
     'execute'                                             => 'Executar',
     'apply_rule_group_selection'                          => 'Aplicar grupo de regras ":title" para uma seleção de suas transações',
     'apply_rule_group_selection_intro'                    => 'Os grupos de regras como ":title" normalmente são aplicados apenas a transações novas ou atualizadas, mas você pode informar ao Firefly III para executar todas as regras neste grupo em uma seleção de suas transações existentes. Isso pode ser útil quando você atualizou um grupo de regras e você precisa das alterações a serem aplicadas a todas as suas outras transações.',
@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transação #{ID} ("{title}")</a> foi salva.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transação #{ID}</a> foi salva.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transação #{ID}</a> foi atualizada.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Bem Vindo ao Firefly III!',

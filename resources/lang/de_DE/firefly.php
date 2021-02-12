@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_selection_intro'                          => 'Regeln wie „:title” werden im Normalfall nur auf neue oder aktualisierte Buchungen angewandt. Sie können die Regel aber auch auf eine Auswahl Ihrer bestehenden Buchungen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'include_transactions_from_accounts'                  => 'Buchungen von diesem Konto einbeziehen',
-    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
+    'applied_rule_selection'                              => '{0} In Ihrer Auswahl wurden keine Buchungen durch die Regel „:title” geändert.|[1] In Ihrer Auswahl wurde eine Buchung durch die Regel „:title” geändert.|[2,*] In Ihrer Auswahl wurden :count Buchungen durch die Regel „:title” geändert.',
     'execute'                                             => 'Ausführen',
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_group_selection_intro'                    => 'Regelgruppen wie „:title” werden in der Regel nur auf neue oder aktualisierte Buchungen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Buchung #{ID} ("{title}")</a> wurde gespeichert.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Buchung #{ID}</a> wurde gespeichert.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Buchung#{ID}</a> wurde aktualisiert.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',

@@ -1276,6 +1276,9 @@ return [
     'per_day'                                   => 'Per day',
     'left_to_spend_per_day'                     => 'Left to spend per day',
     'bills_paid'                                => 'Bills paid',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Currency',

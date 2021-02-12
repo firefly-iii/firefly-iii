@@ -1235,6 +1235,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Транзакция #{ID}("{title}")</a> беше записана.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> беше записана.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> беше обновена.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Добре дошли в Firefly III!',
