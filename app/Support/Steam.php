@@ -29,7 +29,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 use stdClass;
 
 /**
@@ -79,17 +78,9 @@ class Steam
                                   ->where('transactions.transaction_currency_id', '!=', $currency->id)
                                   ->get(['transactions.foreign_amount'])->toArray();
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
-
-        // check:
-        Log::debug(sprintf('Steam::balance. Native balance is "%s"', $nativeBalance));
-        Log::debug(sprintf('Steam::balance. Foreign balance is "%s"', $foreignBalance));
-
-        $balance = bcadd($nativeBalance, $foreignBalance);
-        $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
-
-        Log::debug(sprintf('Steam::balance. Virtual balance is "%s"', $virtual));
-
-        $balance = bcadd($balance, $virtual);
+        $balance        = bcadd($nativeBalance, $foreignBalance);
+        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $balance        = bcadd($balance, $virtual);
 
         $cache->store($balance);
 

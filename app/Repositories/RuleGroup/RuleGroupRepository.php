@@ -34,8 +34,7 @@ use Log;
  */
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * @return int
@@ -198,26 +197,56 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @param string|null $filter
+     *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(): Collection
+    public function getRuleGroupsWithRules(?string $filter): Collection
     {
-        return $this->user->ruleGroups()
-                    ->orderBy('order', 'ASC')
-                    ->where('active', true)
-                    ->with(
-                        [
-                            'rules'              => static function (HasMany $query) {
-                                $query->orderBy('order', 'ASC');
-                            },
-                            'rules.ruleTriggers' => static function (HasMany $query) {
-                                $query->orderBy('order', 'ASC');
-                            },
-                            'rules.ruleActions'  => static function (HasMany $query) {
-                                $query->orderBy('order', 'ASC');
-                            },
-                        ]
-                    )->get();
+        $groups = $this->user->ruleGroups()
+                             ->orderBy('order', 'ASC')
+                             ->where('active', true)
+                             ->with(
+                                 [
+                                     'rules'              => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                     'rules.ruleTriggers' => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                     'rules.ruleActions'  => static function (HasMany $query) {
+                                         $query->orderBy('order', 'ASC');
+                                     },
+                                 ]
+                             )->get();
+        if (null === $filter) {
+            return $groups;
+        }
+        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+
+        return $groups->map(
+            function (RuleGroup $group) use ($filter) {
+                Log::debug(sprintf('Now filtering group #%d', $group->id));
+                // filter the rules in the rule group:
+                $group->rules = $group->rules->filter(
+                    function (Rule $rule) use ($filter) {
+                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
+                        foreach ($rule->ruleTriggers as $trigger) {
+                            if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
+                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+
+                                return true;
+                            }
+                        }
+                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+
+                        return false;
+                    }
+                );
+
+                return $group;
+            }
+        );
     }
 
     /**

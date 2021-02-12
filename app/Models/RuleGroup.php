@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int $order
  * @property bool $active
  * @property bool $stop_processing
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
+ * @property \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
  * @property-read int|null $rules_count
  * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()

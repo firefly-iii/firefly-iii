@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -103,15 +104,16 @@ class UpdatedGroupEventHandler
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
-        $ruleRepository = app(RuleRepositoryInterface::class);
-        $ruleRepository->setUser($updatedGroupEvent->transactionGroup->user);
-        $rules = $ruleRepository->getUpdateRules();
+        $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $ruleGroupRepository->setUser($updatedGroupEvent->transactionGroup->user);
+
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
 
         // file rule engine.
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
-        $newRuleEngine->setRules($rules);
+        $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
 

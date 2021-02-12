@@ -77,7 +77,7 @@ class IndexController extends Controller
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
         $this->ruleGroupRepos->resetRuleGroupOrder();
-        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules($user);
+        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules(null);
 
         return prefixView('rules.index', compact('ruleGroups'));
     }
