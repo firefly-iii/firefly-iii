@@ -62,21 +62,45 @@
   </div>
 </template>
 <script>
+import {createNamespacedHelpers} from "vuex";
 
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 export default {
   name: "MainBillsList",
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        // console.log(this.chartOptions);
+        this.initialiseBills();
+      }
+    }
+  },
   created() {
+    this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
-    axios.get('./api/v1/bills?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-        .then(response => {
-                this.loadBills(response.data.data);
-              }
-        );
   },
   components: {},
   methods: {
+    initialiseBills: function () {
+      let startStr = this.start.toISOString().split('T')[0];
+      let endStr = this.end.toISOString().split('T')[0];
+
+      axios.get('./api/v1/bills?start=' + startStr + '&end=' + endStr)
+          .then(response => {
+                  this.loadBills(response.data.data);
+                }
+          );
+    },
     renderPaidDate: function (obj) {
-      // console.log(obj);
       let dateStr = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(obj.date));
       let str = this.$t('firefly.bill_paid_on', {date: dateStr});
       return '<a href="./transactions/show/' + obj.transaction_group_id + '" title="' + str + '">' + str + '</a>';
@@ -97,7 +121,8 @@ export default {
   data() {
     return {
       bills: [],
-      locale: 'en-US'
+      locale: 'en-US',
+      ready: false
     }
   },
 }

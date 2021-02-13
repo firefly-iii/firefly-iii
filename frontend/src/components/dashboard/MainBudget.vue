@@ -19,39 +19,40 @@
   -->
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">{{ $t('firefly.budgets') }}</h3>
-        </div>
-        <div class="card-body">
-            <div style="position: relative;">
-                <canvas id="mainBudgetChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
-            </div>
-        </div>
-        <div class="card-footer">
-            <a href="./budgets" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">{{ $t('firefly.budgets') }}</h3>
     </div>
+    <div class="card-body">
+      <div style="position: relative;">
+        <canvas id="mainBudgetChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a href="./budgets" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
+    </div>
+  </div>
 </template>
 
 <script>
-    import DefaultBarOptions from "../charts/DefaultBarOptions";
-    import DataConverter from "../charts/DataConverter";
-    export default {
-        name: "MainBudget",
-      created() {
-            axios.get('./api/v1/chart/budget/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-                .then(response => {
-                    let chartData = DataConverter.methods.convertChart(response.data);
-                    let stackedBarChartCanvas = $('#mainBudgetChart').get(0).getContext('2d')
-                    new Chart(stackedBarChartCanvas, {
-                        type: 'bar',
-                        data: chartData,
-                        options: DefaultBarOptions.methods.getDefaultOptions()
-                    });
-                });
-        },
-    }
+import DefaultBarOptions from "../charts/DefaultBarOptions";
+import DataConverter from "../charts/DataConverter";
+
+export default {
+  name: "MainBudget",
+  created() {
+    axios.get('./api/v1/chart/budget/overview?start=' + window.sessionXStart + '&end=' + window.sessionXEnd)
+        .then(response => {
+          let chartData = DataConverter.methods.convertChart(response.data);
+          let stackedBarChartCanvas = $('#mainBudgetChart').get(0).getContext('2d')
+          new Chart(stackedBarChartCanvas, {
+            type: 'bar',
+            data: chartData,
+            options: DefaultBarOptions.methods.getDefaultOptions()
+          });
+        });
+  },
+}
 </script>
 
 <style scoped>

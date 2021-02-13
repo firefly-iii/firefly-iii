@@ -53,7 +53,7 @@ const actions = {
                           context.dispatch('setDatesFromViewRange');
                       }
                 ).catch(error => {
-                console.log(error);
+                // console.log(error);
                 context.commit('setViewRange', '1M');
                 // call another action:
                 context.dispatch('setDatesFromViewRange');
@@ -61,24 +61,23 @@ const actions = {
         }
     },
     setDatesFromViewRange(context) {
-        console.log('Must set dates from viewRange "' + context.state.viewRange + '"');
+        // console.log('Must set dates from viewRange "' + context.state.viewRange + '"');
         // check local storage first?
         if (localStorage.viewRangeStart) {
-            console.log('view range set from local storage.');
-            context.commit('setStart', localStorage.viewRangeStart);
+            // console.log('view range set from local storage.');
+            context.commit('setStart', new Date(localStorage.viewRangeStart));
         }
         if (localStorage.viewRangeEnd) {
-            console.log('view range set from local storage.');
-            context.commit('setEnd', localStorage.viewRangeEnd);
+            // console.log('view range set from local storage.');
+            context.commit('setEnd', new Date(localStorage.viewRangeEnd));
         }
         if (null !== context.getters.end && null !== context.getters.start) {
             return;
         }
-        console.log('view range must be calculated.');
         let start;
         let end;
         let viewRange = context.getters.viewRange;
-        viewRange = '1Y';
+        // console.log('Will recreate view range on ' + viewRange);
         switch (viewRange) {
             case '1D':
                 // one day:
@@ -113,10 +112,10 @@ const actions = {
                 // this quarter
                 start = new Date;
                 end = new Date;
-                let quarter = Math.floor((start.getMonth() + 3) / 3)-1;
+                let quarter = Math.floor((start.getMonth() + 3) / 3) - 1;
                 // start and end months? I'm sure this could be better:
-                let startMonths = [0,3,6,9];
-                let endMonths = [2,5,8,11];
+                let startMonths = [0, 3, 6, 9];
+                let endMonths = [2, 5, 8, 11];
                 // set start to the correct month, day one:
                 start = new Date(start.getFullYear(), startMonths[quarter], 1);
                 start.setHours(0, 0, 0, 0);
@@ -131,10 +130,10 @@ const actions = {
                 // this half-year
                 start = new Date;
                 end = new Date;
-                let half = start.getMonth()<= 5 ? 0 : 1;
+                let half = start.getMonth() <= 5 ? 0 : 1;
 
-                let startHalf = [0,6];
-                let endHalf = [5,11];
+                let startHalf = [0, 6];
+                let endHalf = [5, 11];
                 // set start to the correct month, day one:
                 start = new Date(start.getFullYear(), startHalf[half], 1);
                 start.setHours(0, 0, 0, 0);
@@ -156,9 +155,9 @@ const actions = {
                 end.setHours(23, 59, 59, 999);
                 break;
         }
-        console.log('Range is ' + viewRange);
-        console.log('Start is ' + start);
-        console.log('End is   ' + end);
+        // console.log('Range is ' + viewRange);
+        // console.log('Start is ' + start);
+        // console.log('End is   ' + end);
         context.commit('setStart', start);
         context.commit('setEnd', end);
     }
@@ -168,9 +167,11 @@ const actions = {
 const mutations = {
     setStart(state, value) {
         state.start = value;
+        window.localStorage.setItem('viewRangeStart', value);
     },
     setEnd(state, value) {
         state.end = value;
+        window.localStorage.setItem('viewRangeEnd', value);
     },
     setViewRange(state, range) {
         state.viewRange = range;

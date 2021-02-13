@@ -80,8 +80,11 @@ export default {
   methods: {},
   watch: {
     start: function (value) {
-      console.log('Value of start is now ' + value);
-    }
+      // console.log('Value of start is now ' + value);
+    },
+    end: function (value) {
+      // console.log('Value of end is now ' + value);
+    },
   }
 }
 </script>

@@ -57,6 +57,16 @@
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount) }}
                       </span>
         </div>
+
+        <!-- amount if bar is very small -->
+        <span v-if="budgetLimit.pctGreen <= 35 && 0 === budgetLimit.pctOrange && 0 === budgetLimit.pctRed">
+          &nbsp;
+                        Spent
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}
+                        of
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount) }}
+                      </span>
+
       </div>
       <small class="d-none d-lg-block">
         {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(budgetLimit.start) }}

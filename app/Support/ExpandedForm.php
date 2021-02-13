@@ -64,7 +64,7 @@ class ExpandedForm
         try {
             $html = prefixView('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
+            Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
         }
 

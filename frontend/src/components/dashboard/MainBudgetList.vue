@@ -57,6 +57,8 @@
 
 <script>
 import BudgetListGroup from "./BudgetListGroup";
+import {createNamespacedHelpers} from "vuex";
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
 export default {
   name: "MainBudgetList",
@@ -76,11 +78,28 @@ export default {
       budgets: {},
       rawBudgets: [],
       locale: 'en-US',
+      ready: false
     }
   },
   created() {
+    this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
-    this.collectData();
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.collectData();
+      }
+    }
+  },
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
   },
   methods:
       {
@@ -88,7 +107,9 @@ export default {
           this.getBudgets();
         },
         getBudgets() {
-          axios.get('./api/v1/budgets?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+          let startStr = this.start.toISOString().split('T')[0];
+          let endStr = this.end.toISOString().split('T')[0];
+          axios.get('./api/v1/budgets?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgets(response.data);
                     }
@@ -120,7 +141,9 @@ export default {
 
 
         getBudgetLimits() {
-          axios.get('./api/v1/budgets/limits?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+          let startStr = this.start.toISOString().split('T')[0];
+          let endStr = this.end.toISOString().split('T')[0];
+          axios.get('./api/v1/budgets/limits?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgetLimits(response.data);
                     }

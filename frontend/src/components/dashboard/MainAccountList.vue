@@ -32,9 +32,17 @@
           </div>
         </div>
         <div class="card-body table-responsive p-0">
-          <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id"/>
-          <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id"/>
-          <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id"/>
+          <div v-if="!loading && !error">
+            <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id"/>
+            <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id"/>
+            <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id"/>
+          </div>
+          <div v-if="loading && !error" class="text-center">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+          <div v-if="error" class="text-center">
+            <i class="fas fa-exclamation-triangle text-danger"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -46,6 +54,9 @@ export default {
   name: "MainAccountList",
   data() {
     return {
+      loading: true,
+      error: false,
+      ready: false,
       accounts: [],
       locale: 'en-US'
     }
@@ -92,6 +103,8 @@ export default {
           axios.get('./api/v1/accounts/' + accountId + '/transactions?page=1&limit=10')
               .then(response => {
                       this.accounts[key].transactions = response.data.data;
+                      this.loading = false;
+                      this.error = false;
                     }
               );
         },

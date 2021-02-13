@@ -78,22 +78,43 @@
 </template>
 
 <script>
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
 export default {
   name: "Calendar",
   created() {
+    this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
+  },
+
+  computed: {
+    ...mapGetters([
+                    'viewRange',
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.range.start = new Date(this.start);
+        this.range.end = new Date(this.end);
+      }
+    },
   },
   data() {
     return {
       locale: 'en-US',
+      ready: false,
       range: {
-        start: new Date(window.sessionStart),
-        end: new Date(window.sessionEnd),
-      },
-      defaultRange: {
-        start: new Date(window.sessionStart),
-        end: new Date(window.sessionEnd),
-      },
+        start: new Date,
+        end: new Date,
+      }
     };
   },
 }
