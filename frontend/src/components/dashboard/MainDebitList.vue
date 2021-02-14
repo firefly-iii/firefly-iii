@@ -23,7 +23,20 @@
     <div class="card-header">
       <h3 class="card-title">{{ $t('firefly.expense_accounts') }}</h3>
     </div>
-    <div class="card-body table-responsive p-0">
+    <!-- body if loading -->
+    <div class="card-body" v-if="loading && !error">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+    </div>
+    <!-- body if error -->
+    <div class="card-body" v-if="error">
+      <div class="text-center">
+        <i class="fas fa-exclamation-triangle text-danger"></i>
+      </div>
+    </div>
+    <!-- body if normal -->
+    <div class="card-body table-responsive p-0" v-if="!loading && !error">
       <table class="table table-sm">
         <tbody>
         <tr v-for="entry in expenses">
@@ -53,26 +66,55 @@
 </template>
 
 <script>
+
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
+
 export default {
   name: "MainDebitList",
   data() {
     return {
       locale: 'en-US',
       expenses: [],
-      max: 0
+      max: 0,
+      loading: true,
+      error: false
     }
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
-    this.getExpenses();
+    this.ready = true;
+  },
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.getExpenses();
+      }
+    }
   },
   methods: {
     getExpenses() {
-      axios.get('./api/v1/insight/expense/date/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+      let startStr = this.start.toISOString().split('T')[0];
+      let endStr = this.end.toISOString().split('T')[0];
+      axios.get('./api/v1/insight/expense/date/basic?start=' + startStr + '&end=' + endStr)
           .then(response => {
             // do something with response.
             this.parseExpenses(response.data);
-          });
+            this.loading = false
+          }).catch(error => {
+        this.error = true
+      });
     },
     parseExpenses(data) {
       for (let mainKey in data) {
@@ -83,7 +125,7 @@ export default {
             this.max = data[mainKey].difference_float;
             current.pct = 100;
           }
-          if(0 !== parseInt(mainKey)) {
+          if (0 !== parseInt(mainKey)) {
             // calc percentage:
             current.pct = (data[mainKey].difference_float / this.max) * 100;
           }

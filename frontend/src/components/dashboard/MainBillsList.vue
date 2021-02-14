@@ -23,7 +23,20 @@
     <div class="card-header">
       <h3 class="card-title">{{ $t('firefly.bills') }}</h3>
     </div>
-    <div class="card-body table-responsive p-0">
+    <!-- body if loading -->
+    <div class="card-body" v-if="loading && !error">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+    </div>
+    <!-- body if error -->
+    <div class="card-body" v-if="error">
+      <div class="text-center">
+        <i class="fas fa-exclamation-triangle text-danger"></i>
+      </div>
+    </div>
+    <!-- body if normal -->
+    <div class="card-body table-responsive p-0" v-if="!loading && !error">
       <table class="table table-striped">
         <caption style="display:none;">{{ $t('firefly.bills') }}</caption>
         <thead>
@@ -67,6 +80,15 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 export default {
   name: "MainBillsList",
+  data() {
+    return {
+      bills: [],
+      locale: 'en-US',
+      ready: false,
+      loading: true,
+      error: false
+    }
+  },
   computed: {
     ...mapGetters([
                     'start',
@@ -79,7 +101,6 @@ export default {
   watch: {
     datesReady: function (value) {
       if (true === value) {
-        // console.log(this.chartOptions);
         this.initialiseBills();
       }
     }
@@ -98,7 +119,10 @@ export default {
           .then(response => {
                   this.loadBills(response.data.data);
                 }
-          );
+          ).catch(error => {
+        this.error = true;
+        this.loading = false;
+      });
     },
     renderPaidDate: function (obj) {
       let dateStr = new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(obj.date));
@@ -116,14 +140,9 @@ export default {
           }
         }
       }
+      this.error = false;
+      this.loading = false;
     }
-  },
-  data() {
-    return {
-      bills: [],
-      locale: 'en-US',
-      ready: false
-    }
-  },
+  }
 }
 </script>

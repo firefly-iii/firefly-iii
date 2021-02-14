@@ -21,7 +21,7 @@
 <template>
   <div>
     <!-- daily budgets (will be the exception, I expect) -->
-    <div class="row">
+    <div class="row" v-if="!loading">
       <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.daily.length > 0">
         <BudgetListGroup :title="$t('firefly.daily_budgets')" :budgetLimits=budgetLimits.daily
         />
@@ -51,13 +51,24 @@
         />
       </div>
     </div>
-
+    <div class="row" v-if="loading && !error">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import BudgetListGroup from "./BudgetListGroup";
 import {createNamespacedHelpers} from "vuex";
+
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
 export default {
@@ -78,7 +89,9 @@ export default {
       budgets: {},
       rawBudgets: [],
       locale: 'en-US',
-      ready: false
+      ready: false,
+      loading: true,
+      error: false
     }
   },
   created() {
@@ -112,6 +125,7 @@ export default {
           axios.get('./api/v1/budgets?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgets(response.data);
+                      this.loading = false;
                     }
               );
         },
@@ -197,53 +211,8 @@ export default {
 
               let period = data.data[key].attributes.period ?? 'other';
               this.budgetLimits[period].push(obj);
-
             }
           }
-
-
-          // // loop budgets (and do what?)
-          // for (let key in data.included) {
-          //   if (data.included.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          //     let obj = {
-          //       name: data.included[key].attributes.name,
-          //       id: data.included[key].id,
-          //     };
-          //     this.budgets[data.included[key].id] = obj;
-          //   }
-          // }
-
-          // loop budget limits:
-          // for (let key in data.data) {
-          //   if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          //     let pctGreen = 0;
-          //     let pctOrange = 0;
-          //     let pctRed = 0;
-          //
-
-          //
-          //     let obj = {
-          //       id: data.data[key].id,
-          //       amount: data.data[key].attributes.amount,
-          //       budget_id: data.data[key].attributes.budget_id,
-          //       currency_id: data.data[key].attributes.currency_id,
-          //       currency_code: data.data[key].attributes.currency_code,
-          //       period: data.data[key].attributes.period,
-          //       start: new Date(data.data[key].attributes.start),
-          //       end: new Date(data.data[key].attributes.end),
-          //       spent: data.data[key].attributes.spent,
-          //       pctGreen: pctGreen,
-          //       pctOrange: pctOrange,
-          //       pctRed: pctRed,
-          //     };
-          //
-          //
-          //
-          //     let period = data.data[key].attributes.period ?? 'other';
-          //     this.budgetLimits[period].push(obj);
-          //   }
-          // }
-
         },
         filterBudgets(budgetId, currencyId) {
           for (let key in this.rawBudgets) {

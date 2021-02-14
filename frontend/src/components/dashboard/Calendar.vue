@@ -31,7 +31,7 @@
     <date-picker
         v-model="range"
         mode="date"
-        rows="2"
+        :rows="2"
         is-range
     >
       <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
@@ -40,7 +40,7 @@
             <div class="btn-group btn-group-sm d-flex">
               <button
                   class="btn btn-secondary btn-sm" :title="$t('firefly.custom_period')"
-                  @click="togglePopover({ placement: 'auto-start', positionFixed:true })"
+                  @click="togglePopover({ placement: 'auto-start', positionFixed: true })"
               ><i class="fas fa-calendar-alt"></i></button>
               <button
                   class="btn btn-secondary"
@@ -78,6 +78,7 @@
 </template>
 
 <script>
+
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
@@ -88,7 +89,14 @@ export default {
     this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
   },
-
+  methods: {
+    ...mapMutations(
+        [
+          'setEnd',
+          'setStart',
+        ],
+    ),
+  },
   computed: {
     ...mapGetters([
                     'viewRange',
@@ -106,6 +114,11 @@ export default {
         this.range.end = new Date(this.end);
       }
     },
+    range: function(value) {
+      console.log('User updated range');
+      this.setStart(value.start);
+      this.setEnd(value.end);
+    }
   },
   data() {
     return {

@@ -50,7 +50,7 @@
 
         <div class="progress-bar bg-danger progress-bar-striped" role="progressbar"
              :aria-valuenow="budgetLimit.pctRed" aria-valuemin="0" aria-valuemax="100" :style="'width: '+ budgetLimit.pctRed + '%;'">
-                      <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35">
+                      <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35" class="text-muted">
                         Spent
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}
                         of
@@ -59,7 +59,7 @@
         </div>
 
         <!-- amount if bar is very small -->
-        <span v-if="budgetLimit.pctGreen <= 35 && 0 === budgetLimit.pctOrange && 0 === budgetLimit.pctRed">
+        <span v-if="budgetLimit.pctGreen <= 35 && 0 === budgetLimit.pctOrange && 0 === budgetLimit.pctRed && 0 !== budgetLimit.pctGreen">
           &nbsp;
                         Spent
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}

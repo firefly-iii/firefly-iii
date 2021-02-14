@@ -25,7 +25,7 @@
     </div>
     <div class="card-body">
       <div v-if="!loading">
-        <MainAccountChart :chart-data="dataCollection" :options="chartOptions" v-if="!loading && !error" />
+        <MainAccountChart :chart-data="dataCollection" :options="chartOptions" v-if="!loading && !error"/>
       </div>
       <div v-if="loading && !error" class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
@@ -41,11 +41,13 @@
 </template>
 
 <script>
+
 import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 
 import {createNamespacedHelpers} from "vuex";
 import MainAccountChart from "./MainAccountChart";
+
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
 export default {
@@ -61,7 +63,7 @@ export default {
     }
   },
   created() {
-    this.ready= true;
+    this.ready = true;
     this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
   },
   computed: {
@@ -79,10 +81,17 @@ export default {
         // console.log(this.chartOptions);
         this.initialiseChart();
       }
-    }
+    },
+    start: function () {
+      this.initialiseChart();
+    },
+    end: function () {
+      this.initialiseChart();
+    },
   },
   methods: {
     initialiseChart: function () {
+      this.loading = true;
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;

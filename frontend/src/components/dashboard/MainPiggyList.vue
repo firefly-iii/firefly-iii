@@ -23,7 +23,21 @@
     <div class="card-header">
       <h3 class="card-title">{{ $t('firefly.piggy_banks') }}</h3>
     </div>
-    <div class="card-body table-responsive p-0">
+
+    <!-- body if loading -->
+    <div class="card-body" v-if="loading && !error">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+    </div>
+    <!-- body if error -->
+    <div class="card-body" v-if="error">
+      <div class="text-center">
+        <i class="fas fa-exclamation-triangle text-danger"></i>
+      </div>
+    </div>
+    <!-- body if normal -->
+    <div class="card-body table-responsive p-0" v-if="!loading && !error">
       <table class="table table-striped">
         <caption style="display:none;">{{ $t('firefly.piggy_banks') }}</caption>
         <thead>
@@ -45,7 +59,8 @@
             <div class="progress-group">
               <div class="progress progress-sm">
                 <div class="progress-bar progress-bar-striped primary" v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}"></div>
-                <div class="progress-bar progress-bar-striped bg-success" v-if="100 === piggy.attributes.pct" :style="{'width': piggy.attributes.pct + '%'}"></div>
+                <div class="progress-bar progress-bar-striped bg-success" v-if="100 === piggy.attributes.pct"
+                     :style="{'width': piggy.attributes.pct + '%'}"></div>
               </div>
             </div>
             <span class="text-success">
@@ -74,17 +89,24 @@
 <script>
 export default {
   name: "MainPiggyList",
+  data() {
+    return {
+      piggy_banks: [],
+      loading: true,
+      error: false,
+      locale: 'en-US'
+    }
+  },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     axios.get('./api/v1/piggy_banks')
         .then(response => {
                 this.loadPiggyBanks(response.data.data);
+                this.loading = false;
               }
-        );
-  },
-  computed: {
-    locale() {
-      return this.$store.getters.locale;
-    }
+        ).catch(error => {
+      this.error = true
+    });
   },
   methods: {
     loadPiggyBanks(data) {
@@ -100,11 +122,6 @@ export default {
       this.piggy_banks.sort(function (a, b) {
         return b.attributes.pct - a.attributes.pct;
       });
-    }
-  },
-  data() {
-    return {
-      piggy_banks: []
     }
   }
 }
