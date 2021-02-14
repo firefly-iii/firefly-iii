@@ -27,7 +27,7 @@
       <select
           ref="budget"
           :title="$t('firefly.budget')"
-          v-model="value"
+          v-model="budget"
           autocomplete="off"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="budget_id[]"
@@ -53,7 +53,8 @@ export default {
   name: "TransactionBudget",
   data() {
     return {
-      budgetList: []
+      budgetList: [],
+      budget: this.value
     }
   },
   created() {
@@ -96,7 +97,7 @@ export default {
     },
   },
   watch: {
-    value: function (value) {
+    budget: function (value) {
       this.updateField({field: 'budget_id', index: this.index, value: value});
     }
   },

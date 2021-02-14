@@ -49,28 +49,47 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   name: "TransactionCustomDates",
-  props: ['enabledDates', 'index', 'errors'],
+  props: ['index', 'errors'],
+  data() {
+    return {
+      enabledDates: {},
+    }
+  },
+  created() {
+    this.getCustomDates();
+  },
   methods: {
-    ...mapGetters(
-        [
-            'transactions'
-        ]
-    ),
-    ...mapMutations(
-        [
-          'updateField',
-        ],
+    ...mapGetters(['transactions']),
+    ...mapMutations(['updateField',],
     ),
     getFieldValue(field) {
       return this.transactions()[parseInt(this.index)][field] ?? '';
     },
     setFieldValue(event, field) {
       this.updateField({index: this.index, field: field, value: event.target.value});
-    }
+    },
+    getCustomDates: function () {
+      axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
+        let fields = response.data.data.attributes.data;
+        let allDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+        let selectedDateFields = {
+          interest_date: false,
+          book_date: false,
+          process_date: false,
+          due_date: false,
+          payment_date: false,
+          invoice_date: false,
+        };
+        for (let key in fields) {
+          if (fields.hasOwnProperty(key)) {
+            if (-1 !== allDateFields.indexOf(key)) {
+              selectedDateFields[key] = fields[key];
+            }
+          }
+        }
+        this.enabledDates = selectedDateFields;
+      });
+    },
   }
 }
 </script>
-
-<style scoped>
-
-</style>

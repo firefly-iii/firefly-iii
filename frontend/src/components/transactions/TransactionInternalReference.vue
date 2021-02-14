@@ -27,7 +27,7 @@
       <input
           type="text"
           name="internal_reference[]"
-          v-model="value"
+          v-model="reference"
           :placeholder="$t('firefly.internal_reference')"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
       />
@@ -46,6 +46,11 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   props: ['index', 'value', 'errors'],
   name: "TransactionInternalReference",
+  data() {
+    return {
+      reference: this.value
+    }
+  },
   methods: {
     ...mapMutations(
         [
@@ -54,13 +59,9 @@ export default {
     ),
   },
   watch: {
-    value: function (value) {
+    reference: function (value) {
       this.updateField({field: 'internal_reference', index: this.index, value: value});
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

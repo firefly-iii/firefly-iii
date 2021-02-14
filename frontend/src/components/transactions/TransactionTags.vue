@@ -59,14 +59,13 @@ export default {
       debounce: null,
       tags: [],
       currentTag: '',
-      updateTags: true // the idea is that this is always true, except when the tags-function sets the value.
+      updateTags: true, // the idea is that this is always true, except when the tags-function sets the value.
+      tagList: this.value
     };
   },
   watch: {
     'currentTag': 'initItems',
-    value: function (value) {
-      //console.log('watch: value');
-      //console.log(value);
+    tagList: function (value) {
       this.updateField({field: 'tags', index: this.index, value: value});
       this.updateTags = false;
       this.tags = value;
@@ -81,7 +80,7 @@ export default {
             shortList.push({text: value[key].text});
           }
         }
-        this.value = shortList;
+        this.tagList = shortList;
       }
       this.updateTags = true;
     }

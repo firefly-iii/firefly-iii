@@ -25,7 +25,7 @@
     </div>
     <vue-typeahead-bootstrap
         inputName="group_title"
-        v-model="value"
+        v-model="title"
         :data="descriptions"
         :placeholder="$t('firefly.split_transaction_title')"
         :showOnFocus=true
@@ -61,7 +61,8 @@ export default {
   data() {
     return {
       descriptions: [],
-      initialSet: []
+      initialSet: [],
+      title: this.value
     }
   },
 
@@ -73,7 +74,7 @@ export default {
         });
   },
   watch: {
-    value: function (value) {
+    title: function (value) {
       //console.log('set');
       this.setGroupTitle({groupTitle: value});
     }
@@ -91,7 +92,7 @@ export default {
     ),
     clearDescription: function () {
       this.setGroupTitle({groupTitle: ''});
-      this.value = '';
+      this.title = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -99,7 +100,7 @@ export default {
     },
     lookupDescription: debounce(function () {
       // update autocomplete URL:
-      axios.get(this.getACURL(this.value))
+      axios.get(this.getACURL(this.title))
           .then(response => {
             this.descriptions = response.data;
           })

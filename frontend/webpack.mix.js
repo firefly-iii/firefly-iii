@@ -62,6 +62,7 @@ mix
 
     // transactions.
     .js('src/pages/transactions/create.js', 'public/js/transactions')
+    .js('src/pages/transactions/edit.js', 'public/js/transactions')
     // register page
     .js('src/pages/register.js', 'public/js')
 

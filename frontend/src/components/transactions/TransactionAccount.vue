@@ -29,7 +29,7 @@
     </div>
     <vue-typeahead-bootstrap
         v-if="visible"
-        v-model="value.name"
+        v-model="accountName"
         :data="accounts"
         :showOnFocus=true
         :inputClass="errors.length > 0 ? 'is-invalid' : ''"
@@ -73,7 +73,9 @@ export default {
       accounts: [],
       accountTypes: [],
       initialSet: [],
-      selectedAccount: {}
+      selectedAccount: {},
+      account: this.value,
+      accountName: ''
     }
   },
   created() {
@@ -97,7 +99,8 @@ export default {
     },
     clearAccount: function () {
       this.accounts = this.initialSet;
-      this.value = {name: ''};
+      this.account = {name: ''};
+      this.accountName = '';
     },
     lookupAccount: debounce(function () {
       if (0 === this.accountTypes.length) {
@@ -106,11 +109,12 @@ export default {
       }
 
       // update autocomplete URL:
-      axios.get(this.getACURL(this.accountTypes, this.value.name))
+      axios.get(this.getACURL(this.accountTypes, this.account.name))
           .then(response => {
             this.accounts = response.data;
           })
     }, 300),
+
     createInitialSet: function () {
       let types = this.sourceAllowedTypes;
       if ('destination' === this.direction) {
@@ -119,7 +123,6 @@ export default {
 
       axios.get(this.getACURL(types, ''))
           .then(response => {
-            // console.log('initial set of accounts. ' + this.direction);
             this.accounts = response.data;
             this.initialSet = response.data;
           });
@@ -127,10 +130,10 @@ export default {
   },
   watch: {
     selectedAccount: function (value) {
-      this.value = value;
-      this.value.name = this.value.name_with_balance;
+      this.accountName = this.account.name_with_balance;
+      this.account = value;
     },
-    value: function (value) {
+    account: function (value) {
       this.updateField({field: this.accountKey, index: this.index, value: value});
       // set the opposing account allowed set.
       let opposingAccounts = [];
@@ -150,60 +153,10 @@ export default {
 
       this.calcTransactionType();
     },
-    // account: function (value) {
-    //   //this.value.name = value;
-    //   //console.log('watch account in direction ' + this.direction + ' change to "' + value + '"');
-    //   //   this.account = value ? value.name_with_balance : null;
-    //   //   // console.log('this.account (' + this.direction + ') = "' + this.account + '"');
-    //   //
-    //   //
-    //   //   // set the opposing account allowed set.
-    //   //   // console.log('opposing:');
-    //   //   let opposingAccounts = [];
-    //   //   let type = value.type ? value.type : 'no_type';
-    //   //   if ('undefined' !== typeof this.allowedOpposingTypes[this.direction]) {
-    //   //     if ('undefined' !== typeof this.allowedOpposingTypes[this.direction][type]) {
-    //   //       opposingAccounts = this.allowedOpposingTypes[this.direction][type];
-    //   //     }
-    //   //   }
-    //   //
-    //   //   if ('source' === this.direction) {
-    //   //     this.setDestinationAllowedTypes(opposingAccounts);
-    //   //   }
-    //   //   if ('destination' === this.direction) {
-    //   //     this.setSourceAllowedTypes(opposingAccounts);
-    //   //   }
-    //
-    //
-    //   //
-    //   // this.calcTransactionType();
-    //
-    //
-    // }
-
-    // selectedAccount: function (value) {
-
-    // },
-    // sourceAllowedTypes: function (value) {
-    //   if ('source' === this.direction) {
-    //     // console.log('do update initial set in direction ' + this.direction + ' because allowed types changed');
-    //     // update initial set:
-    //     this.createInitialSet();
-    //   }
-    // },
-    // destinationAllowedTypes: function (value) {
-    //   if ('destination' === this.direction) {
-    //     // console.log('do update initial set in direction ' + this.direction + ' because allowed types changed');
-    //     // update initial set:
-    //     this.createInitialSet();
-    //   }
-    // }
   },
   computed: {
     ...mapGetters([
                     'transactionType',
-                    'transactions',
-                    'defaultTransaction',
                     'sourceAllowedTypes',
                     'destinationAllowedTypes',
                     'allowedOpposingTypes'
@@ -228,20 +181,6 @@ export default {
         return false;
       }
     }
-    // selectedAccount: {
-    //   get() {
-    //     return this.transactions[this.index][this.accountKey];
-    //   },
-    //   set(value) {
-    //     // console.log('set selectedAccount for ' + this.direction);
-    //     // console.log(value);
-    //     this.updateField({field: this.accountKey, index: this.index, value: value});
-    //   }
-    // }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

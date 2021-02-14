@@ -21,6 +21,7 @@
 import Vue from 'vue'
 import Vuex, {createLogger} from 'vuex'
 import transactions_create from './modules/transactions/create';
+import transactions_edit from './modules/transactions/edit';
 import dashboard_index from './modules/dashboard/index';
 
 Vue.use(Vuex)
@@ -32,7 +33,8 @@ export default new Vuex.Store(
             transactions: {
                 namespaced: true,
                 modules: {
-                    create: transactions_create
+                    create: transactions_create,
+                    edit: transactions_edit
                 }
             },
             dashboard: {

@@ -27,7 +27,7 @@
       <select
           ref="bill"
           :title="$t('firefly.bill')"
-          v-model="value"
+          v-model="bill"
           autocomplete="off"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="bill_id[]"
@@ -54,7 +54,8 @@ export default {
   name: "TransactionBill",
   data() {
     return {
-      billList: []
+      billList: [],
+      bill: this.value
     }
   },
   created() {
@@ -97,7 +98,7 @@ export default {
     },
   },
   watch: {
-    value: function (value) {
+    bill: function (value) {
       this.updateField({field: 'bill_id', index: this.index, value: value});
     }
   },

@@ -22,7 +22,7 @@
   <div class="form-group">
     <vue-typeahead-bootstrap
         inputName="description[]"
-        v-model="value"
+        v-model="description"
         :data="descriptions"
         :placeholder="$t('firefly.description')"
         :showOnFocus=true
@@ -59,7 +59,8 @@ export default {
   data() {
     return {
       descriptions: [],
-      initialSet: []
+      initialSet: [],
+      description: this.value
     }
   },
   created() {
@@ -77,7 +78,7 @@ export default {
         ],
     ),
     clearDescription: function () {
-      this.value = '';
+      this.description = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -92,7 +93,7 @@ export default {
     }, 300)
   },
   watch: {
-    value: function (value) {
+    description: function (value) {
       this.updateField({field: 'description', index: this.index, value: value});
     }
   },

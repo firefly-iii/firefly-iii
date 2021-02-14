@@ -26,7 +26,7 @@
     </div>
     <div class="input-group">
       <textarea
-          v-model="value"
+          v-model="notes"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :placeholder="$t('firefly.notes')"
       ></textarea>
@@ -43,6 +43,11 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   props: ['index', 'value', 'errors'],
   name: "TransactionNotes",
+  data() {
+    return {
+      notes: this.value
+    }
+  },
   methods: {
     ...mapMutations(
         [
@@ -51,7 +56,7 @@ export default {
     ),
   },
   watch: {
-    value: function (value) {
+    notes: function (value) {
       this.updateField({field: 'notes', index: this.index, value: value});
     }
   }

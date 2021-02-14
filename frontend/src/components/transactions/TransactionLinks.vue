@@ -26,11 +26,11 @@
       </div>
       <div class="row">
         <div class="col">
-          <p v-if="value.length === 0">
+          <p v-if="links.length === 0">
             <button data-toggle="modal" data-target="#linkModal" class="btn btn-default btn-xs"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
-          <ul class="list-group" v-if="value.length > 0">
-            <li class="list-group-item" v-for="transaction in value">
+          <ul class="list-group" v-if="links.length > 0">
+            <li class="list-group-item" v-for="transaction in links">
               <em>{{ getTextForLinkType(transaction.link_type_id) }}</em>
               <a :href='"./transaction/show/" + transaction.transaction_group_id'>{{ transaction.description }}</a>
 
@@ -64,7 +64,7 @@
               </div>
             </li>
           </ul>
-          <div class="form-text" v-if="value.length > 0">
+          <div class="form-text" v-if="links.length > 0">
             <button data-toggle="modal" data-target="#linkModal" class="btn btn-default"><i class="fas fa-plus"></i></button>
           </div>
         </div>
@@ -184,6 +184,11 @@
 </template>
 
 <script>
+import {createNamespacedHelpers} from 'vuex'
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
+
+const lodashClonedeep = require('lodash.clonedeep');
 // TODO error handling
 export default {
   props: ['index', 'value', 'errors'],
@@ -195,27 +200,31 @@ export default {
       locale: 'en-US',
       linkTypes: [],
       query: '',
-      searching: false
+      searching: false,
+      links: [],
     }
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
+    this.links = lodashClonedeep(this.value);
     this.getLinkTypes();
   },
   watch: {
-    value: function (value) {
-      //console.log('Selected transactions is now:');
-      //console.log(value);
+    links: function (value) {
+      this.updateField({index: this.index, field: 'links', value: lodashClonedeep(value)});
     }
   },
   methods: {
+    ...mapMutations(
+        [
+          'updateField',
+        ],
+    ),
     getTextForLinkType: function (linkTypeId) {
       let parts = linkTypeId.split('-');
       for (let i in this.linkTypes) {
         if (this.linkTypes.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = this.linkTypes[i];
-          //console.log(parts);
-          //console.log(current);
           if (parts[0] === current.id && parts[1] === current.direction) {
             return current.type;
           }
@@ -246,27 +255,27 @@ export default {
       }
     },
     updateSelected(journalId, linkTypeId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (parseInt(current.transaction_journal_id) === journalId) {
-            this.value[i].link_type_id = linkTypeId;
+            this.links[i].link_type_id = linkTypeId;
           }
         }
       }
     },
     addToSelected(journal) {
-      const result = this.value.find(({transaction_journal_id}) => transaction_journal_id === journal.transaction_journal_id);
+      let result = this.links.find(({transaction_journal_id}) => transaction_journal_id === journal.transaction_journal_id);
       if (typeof result === 'undefined') {
-        this.value.push(journal);
+        this.links.push(journal);
       }
     },
     removeFromSelected(journal) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journal.transaction_journal_id) {
-            this.value.splice(parseInt(i), 1);
+            this.links.splice(parseInt(i), 1);
           }
         }
       }
@@ -330,9 +339,9 @@ export default {
       this.searching = false;
     },
     getJournalLinkType: function (journalId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journalId) {
             return current.link_type_id;
           }
@@ -341,9 +350,9 @@ export default {
       return '1-inward';
     },
     isJournalSelected: function (journalId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journalId) {
             return true;
           }

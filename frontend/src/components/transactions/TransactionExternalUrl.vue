@@ -28,7 +28,7 @@
           type="url"
           name="external_url[]"
           :placeholder="$t('firefly.external_url')"
-          v-model="value"
+          v-model="url"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
       />
       <div class="input-group-append">
@@ -46,6 +46,11 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 export default {
   props: ['index', 'value', 'errors'],
   name: "TransactionExternalUrl",
+  data() {
+    return {
+      url: this.value
+    }
+  },
   methods: {
     ...mapMutations(
         [
@@ -54,7 +59,7 @@ export default {
     ),
   },
   watch: {
-    value: function (value) {
+    url: function (value) {
       this.updateField({field: 'external_url', index: this.index, value: value});
     }
   }

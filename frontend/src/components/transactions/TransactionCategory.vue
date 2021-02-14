@@ -26,7 +26,7 @@
 
     <vue-typeahead-bootstrap
         inputName="category[]"
-        v-model="value"
+        v-model="category"
         :data="categories"
         :placeholder="$t('firefly.category')"
         :showOnFocus=true
@@ -63,7 +63,8 @@ export default {
   data() {
     return {
       categories: [],
-      initialSet: []
+      initialSet: [],
+      category: this.value
     }
   },
 
@@ -84,7 +85,7 @@ export default {
         ],
     ),
     clearCategory: function () {
-      this.value = null;
+      this.category = null;
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -99,7 +100,7 @@ export default {
     }, 300)
   },
   watch: {
-    value: function (value) {
+    category: function (value) {
       this.updateField({field: 'category', index: this.index, value: value});
     }
   },
@@ -115,7 +116,7 @@ export default {
         return this.categories[this.index].name;
       },
       set(value) {
-        this.value = value.name;
+        this.category = value.name;
       }
     }
   }

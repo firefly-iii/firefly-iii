@@ -27,7 +27,7 @@
       <select
           ref="piggy_bank_id"
           :title="$t('firefly.piggy_bank')"
-          v-model="value"
+          v-model="piggy_bank_id"
           autocomplete="off"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="piggy_bank_id[]"
@@ -54,7 +54,8 @@ export default {
   name: "TransactionPiggyBank",
   data() {
     return {
-      piggyList: []
+      piggyList: [],
+      piggy_bank_id: this.value
     }
   },
   created() {
@@ -97,7 +98,7 @@ export default {
     },
   },
   watch: {
-    value: function (value) {
+    piggy_bank_id: function (value) {
       this.updateField({field: 'piggy_bank_id', index: this.index, value: value});
     }
   },
