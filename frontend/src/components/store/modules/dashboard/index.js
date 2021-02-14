@@ -21,9 +21,12 @@
 // initial state
 const state = () => (
     {
+        viewRange: 'default',
         start: null,
         end: null,
-        viewRange: 'default'
+        // default range:
+        defaultStart: null,
+        defaultEnd: null,
     }
 )
 
@@ -35,6 +38,12 @@ const getters = {
     },
     end: state => {
         return state.end;
+    },
+    defaultStart: state => {
+        return state.defaultStart;
+    },
+    defaultEnd: state => {
+        return state.defaultEnd;
     },
     viewRange: state => {
         return state.viewRange;
@@ -64,13 +73,25 @@ const actions = {
         // console.log('Must set dates from viewRange "' + context.state.viewRange + '"');
         // check local storage first?
         if (localStorage.viewRangeStart) {
-            // console.log('view range set from local storage.');
+            // console.log('view range start set from local storage.');
             context.commit('setStart', new Date(localStorage.viewRangeStart));
         }
         if (localStorage.viewRangeEnd) {
-            // console.log('view range set from local storage.');
+            // console.log('view range end set from local storage.');
             context.commit('setEnd', new Date(localStorage.viewRangeEnd));
         }
+        // also set default:
+        if(localStorage.viewRangeDefaultStart) {
+            // console.log('view range default start set from local storage.');
+            // console.log(localStorage.viewRangeDefaultStart);
+            context.commit('setDefaultStart', new Date(localStorage.viewRangeDefaultStart));
+        }
+        if(localStorage.viewRangeDefaultEnd) {
+            // console.log('view range default end set from local storage.');
+            // console.log(localStorage.viewRangeDefaultEnd);
+            context.commit('setDefaultEnd', new Date(localStorage.viewRangeDefaultEnd));
+        }
+
         if (null !== context.getters.end && null !== context.getters.start) {
             return;
         }
@@ -160,6 +181,8 @@ const actions = {
         // console.log('End is   ' + end);
         context.commit('setStart', start);
         context.commit('setEnd', end);
+        context.commit('setDefaultStart', start);
+        context.commit('setDefaultEnd', end);
     }
 }
 
@@ -172,6 +195,14 @@ const mutations = {
     setEnd(state, value) {
         state.end = value;
         window.localStorage.setItem('viewRangeEnd', value);
+    },
+    setDefaultStart(state, value) {
+        state.defaultStart = value;
+        window.localStorage.setItem('viewRangeDefaultStart', value);
+    },
+    setDefaultEnd(state, value) {
+        state.defaultEnd = value;
+        window.localStorage.setItem('viewRangeDefaultEnd', value);
     },
     setViewRange(state, range) {
         state.viewRange = range;

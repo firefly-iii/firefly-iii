@@ -117,11 +117,26 @@ export default {
       if (true === value) {
         this.getCategories();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.getCategories();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.getCategories();
+      }
+    },
   },
   methods:
       {
         getCategories() {
+          this.categories = [];
+          this.sortedList = [];
+          this.spent = 0;
+          this.earned = 0;
+          this.loading = true;
           let startStr = this.start.toISOString().split('T')[0];
           let endStr = this.end.toISOString().split('T')[0];
           axios.get('./api/v1/categories?start=' + startStr + '&end=' + endStr)

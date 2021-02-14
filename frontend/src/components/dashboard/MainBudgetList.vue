@@ -101,9 +101,19 @@ export default {
   watch: {
     datesReady: function (value) {
       if (true === value) {
-        this.collectData();
+        this.getBudgets();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.getBudgets();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.getBudgets();
+      }
+    },
   },
   computed: {
     ...mapGetters([
@@ -116,16 +126,24 @@ export default {
   },
   methods:
       {
-        collectData() {
-          this.getBudgets();
-        },
         getBudgets() {
+          this.budgets = {};
+          this.rawBudgets = [];
+          this.budgetLimits = {
+            daily: [],
+            weekly: [],
+            monthly: [],
+            quarterly: [],
+            half_year: [],
+            yearly: [],
+            other: [],
+          };
+          this.loading = true;
           let startStr = this.start.toISOString().split('T')[0];
           let endStr = this.end.toISOString().split('T')[0];
           axios.get('./api/v1/budgets?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgets(response.data);
-                      this.loading = false;
                     }
               );
         },
@@ -152,14 +170,13 @@ export default {
           }
           this.getBudgetLimits();
         },
-
-
         getBudgetLimits() {
           let startStr = this.start.toISOString().split('T')[0];
           let endStr = this.end.toISOString().split('T')[0];
           axios.get('./api/v1/budgets/limits?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgetLimits(response.data);
+                      this.loading = false;
                     }
               );
         },

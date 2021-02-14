@@ -194,7 +194,17 @@ export default {
       if (true === value) {
         this.prepareComponent();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.prepareComponent();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.prepareComponent();
+      }
+    },
   },
   created() {
     this.ready = true;
@@ -231,6 +241,14 @@ export default {
      * Prepare the component.
      */
     prepareComponent() {
+      this.error=false;
+      this.loading = true;
+      this.summary = [];
+      this.balances = [];
+      this.billsPaid = [];
+      this.billsUnpaid = [];
+      this.leftToSpend = [];
+      this.netWorth = [];
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       axios.get('./api/v1/summary/basic?start=' + startStr + '&end=' + endStr)

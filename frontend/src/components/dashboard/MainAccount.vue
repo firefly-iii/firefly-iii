@@ -92,6 +92,7 @@ export default {
   methods: {
     initialiseChart: function () {
       this.loading = true;
+      this.error = false;
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;

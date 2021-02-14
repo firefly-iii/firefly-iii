@@ -101,10 +101,23 @@ export default {
       if (true === value) {
         this.getExpenses();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.getExpenses();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.getExpenses();
+      }
+    },
   },
   methods: {
     getExpenses() {
+      this.loading = true;
+      this.error=false;
+      this.expenses = [];
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       axios.get('./api/v1/insight/expense/date/basic?start=' + startStr + '&end=' + endStr)

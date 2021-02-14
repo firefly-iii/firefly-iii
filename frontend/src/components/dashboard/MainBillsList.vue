@@ -103,7 +103,17 @@ export default {
       if (true === value) {
         this.initialiseBills();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.initialiseBills();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.initialiseBills();
+      }
+    },
   },
   created() {
     this.ready = true;
@@ -112,6 +122,8 @@ export default {
   components: {},
   methods: {
     initialiseBills: function () {
+      this.loading = true;
+      this.bills = [];
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
 

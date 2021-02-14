@@ -42,21 +42,17 @@
                   class="btn btn-secondary btn-sm" :title="$t('firefly.custom_period')"
                   @click="togglePopover({ placement: 'auto-start', positionFixed: true })"
               ><i class="fas fa-calendar-alt"></i></button>
-              <button
-                  class="btn btn-secondary"
-                  :title="$t('firefly.reset_to_current')"
+              <button @click="resetDate"
+                      class="btn btn-secondary"
+                      :title="$t('firefly.reset_to_current')"
               ><i class="fas fa-history"></i></button>
-
-
               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                       :title="$t('firefly.select_period')"
                       aria-expanded="false">
                 <i class="fas fa-list"></i>
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">(prev period)</a>
-                <a class="dropdown-item" href="#">(next period)</a>
-                <a class="dropdown-item" href="#">(this week?)</a>
+                <a v-for="period in periods" class="dropdown-item" href="#" @click="customDate(period.start, period.end)">{{ period.title }}</a>
               </div>
 
             </div>
@@ -89,6 +85,21 @@ export default {
     this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
   },
+  data() {
+    return {
+      locale: 'en-US',
+      ready: false,
+      range: {
+        start: null,
+        end: null,
+      },
+      defaultRange: {
+        start: null,
+        end: null,
+      },
+      periods: []
+    };
+  },
   methods: {
     ...mapMutations(
         [
@@ -96,40 +107,76 @@ export default {
           'setStart',
         ],
     ),
+    resetDate: function () {
+      //console.log('Reset date to');
+      //console.log(this.defaultStart);
+      //console.log(this.defaultEnd);
+      this.range.start = this.defaultStart;
+      this.range.end = this.defaultEnd;
+      this.setStart(this.defaultStart);
+      this.setEnd(this.defaultEnd);
+    },
+    customDate: function (startStr, endStr) {
+      let start = new Date(startStr);
+      let end = new Date(endStr);
+      this.setStart(start);
+      this.setEnd(end);
+      this.range.start = start;
+      this.range.end = end;
+      return false;
+    }
   },
   computed: {
     ...mapGetters([
                     'viewRange',
                     'start',
-                    'end'
+                    'end',
+                    'defaultStart',
+                    'defaultEnd'
                   ]),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
-    }
+    },
   },
   watch: {
     datesReady: function (value) {
-      if (true === value) {
-        this.range.start = new Date(this.start);
-        this.range.end = new Date(this.end);
+      if (false === value) {
+        return;
       }
+      this.range.start = new Date(this.start);
+      this.range.end = new Date(this.end);
+      this.periods = [];
+      // create periods.
+      // last 7 days
+      let today = new Date;
+      let end = new Date;
+      end.setDate(end.getDate() - 7);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_seven_days')
+          }
+      );
+
+      // last 30 days:
+      end.setDate(end.getDate() - 23);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_thirty_days')
+          }
+      );
+      // last 30 days
+      // everything
     },
-    range: function(value) {
-      console.log('User updated range');
+    range: function (value) {
+      //console.log('User updated range');
       this.setStart(value.start);
       this.setEnd(value.end);
     }
-  },
-  data() {
-    return {
-      locale: 'en-US',
-      ready: false,
-      range: {
-        start: new Date,
-        end: new Date,
-      }
-    };
-  },
+  }
 }
 </script>
 

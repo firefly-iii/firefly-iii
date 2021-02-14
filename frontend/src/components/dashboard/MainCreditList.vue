@@ -101,10 +101,23 @@ export default {
       if (true === value) {
         this.getIncome();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.getIncome();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.getIncome();
+      }
+    },
   },
   methods: {
     getIncome() {
+      this.loading = true;
+      this.income = [];
+      this.error=false;
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       axios.get('./api/v1/insight/income/date/basic?start=' + startStr + '&end=' + endStr)

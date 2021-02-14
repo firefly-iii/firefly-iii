@@ -107,10 +107,22 @@ export default {
       if (true === value) {
         this.initialiseList();
       }
-    }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.initialiseList();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.initialiseList();
+      }
+    },
   },
   methods: {
     initialiseList: function () {
+      this.loading = true;
+      this.accounts = [];
       axios.get('./api/v1/preferences/frontpageAccounts')
           .then(response => {
                   this.loadAccounts(response);
