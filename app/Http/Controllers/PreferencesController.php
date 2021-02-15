@@ -49,7 +49,7 @@ class PreferencesController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.preferences'));
+                app('view')->share('title', (string)trans('firefly.preferences'));
                 app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
@@ -111,7 +111,7 @@ class PreferencesController extends Controller
             Log::error($e->getMessage());
             $locales = [];
         }
-        $locales = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
+        $locales = ['equal' => (string)trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
         if (0 === count($frontPageAccounts->data)) {
@@ -151,7 +151,7 @@ class PreferencesController extends Controller
         $frontPageAccounts = [];
         if (is_array($request->get('frontPageAccounts')) && count($request->get('frontPageAccounts')) > 0) {
             foreach ($request->get('frontPageAccounts') as $id) {
-                $frontPageAccounts[] = (int) $id;
+                $frontPageAccounts[] = (int)$id;
             }
             app('preferences')->set('frontPageAccounts', $frontPageAccounts);
         }
@@ -164,14 +164,14 @@ class PreferencesController extends Controller
         session()->forget('range');
 
         // custom fiscal year
-        $customFiscalYear = 1 === (int) $request->get('customFiscalYear');
-        $fiscalYearStart  = date('m-d', strtotime((string) $request->get('fiscalYearStart')));
+        $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
+        $fiscalYearStart  = date('m-d', strtotime((string)$request->get('fiscalYearStart')));
         app('preferences')->set('customFiscalYear', $customFiscalYear);
         app('preferences')->set('fiscalYearStart', $fiscalYearStart);
 
         // save page size:
         app('preferences')->set('listPageSize', 50);
-        $listPageSize = (int) $request->get('listPageSize');
+        $listPageSize = (int)$request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             app('preferences')->set('listPageSize', $listPageSize);
         }
@@ -207,10 +207,12 @@ class PreferencesController extends Controller
             'notes'              => isset($setOptions['notes']),
             'attachments'        => isset($setOptions['attachments']),
             'external_uri'       => isset($setOptions['external_uri']),
+            'location'           => isset($setOptions['location']),
+            'links'              => isset($setOptions['links']),
         ];
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 
-        session()->flash('success', (string) trans('firefly.saved_preferences'));
+        session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
 
         // telemetry: user language preference + default language.

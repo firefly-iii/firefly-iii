@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div>
+  <div v-if="showField">
     <div class="form-group">
       <div class="text-xs d-none d-lg-block d-xl-block">
         {{ $t('firefly.journal_links') }}
@@ -191,7 +191,7 @@ const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers
 const lodashClonedeep = require('lodash.clonedeep');
 // TODO error handling
 export default {
-  props: ['index', 'value', 'errors'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionLinks",
   data() {
     return {
@@ -202,6 +202,7 @@ export default {
       query: '',
       searching: false,
       links: [],
+      availableFields: this.customFields
     }
   },
   created() {
@@ -209,9 +210,20 @@ export default {
     this.links = lodashClonedeep(this.value);
     this.getLinkTypes();
   },
+  computed: {
+    showField: function () {
+      if ('links' in this.availableFields) {
+        return this.availableFields.links;
+      }
+      return false;
+    }
+  },
   watch: {
     links: function (value) {
       this.updateField({index: this.index, field: 'links', value: lodashClonedeep(value)});
+    },
+    customFields: function (value) {
+      this.availableFields = value;
     }
   },
   methods: {

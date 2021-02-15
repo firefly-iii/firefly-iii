@@ -79,6 +79,7 @@
         "custom_period": "Custom period",
         "reset_to_current": "Reset to current period",
         "select_period": "Select a period",
+        "location": "Sijainti",
         "other_budgets": "Custom timed budgets",
         "journal_links": "Tapahtuman linkit",
         "go_to_withdrawals": "Go to your withdrawals",

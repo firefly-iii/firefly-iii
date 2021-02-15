@@ -100,6 +100,7 @@
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
                 <TransactionCustomDates
                     :index="index"
+                    :custom-fields.sync="customFields"
                     :errors="transaction.errors.custom_dates"
                 />
               </div>
@@ -164,12 +165,12 @@
     </div>
     <!-- end card for meta -->
     <!-- card for extra -->
-    <div class="row">
+    <div class="row" v-if="hasMetaFields">
       <div class="col">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              {{ $t('firefly.transaction_journal_meta') }}
+              {{ $t('firefly.transaction_journal_extra') }}
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
           </div>
@@ -182,17 +183,20 @@
                     :index="index"
                     v-model="transaction.internal_reference"
                     :errors="transaction.errors.internal_reference"
+                    :custom-fields.sync="customFields"
                 />
 
                 <TransactionExternalUrl
                     :index="index"
                     v-model="transaction.external_url"
                     :errors="transaction.errors.external_url"
+                    :custom-fields.sync="customFields"
                 />
                 <TransactionNotes
                     :index="index"
                     v-model="transaction.notes"
                     :errors="transaction.errors.notes"
+                    :custom-fields.sync="customFields"
                 />
               </div>
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
@@ -204,9 +208,20 @@
                     :transaction_journal_id="transaction.transaction_journal_id"
                     :submitted_transaction="submittedTransaction"
                     v-model="transaction.attachments"
+                    :custom-fields.sync="customFields"
+                />
+                <TransactionLocation
+                    :index="index"
+                    v-model="transaction.notes"
+                    :errors="transaction.errors.location"
+                    :custom-fields.sync="customFields"
                 />
 
-                <TransactionLinks :index="index" v-model="transaction.links" />
+                <TransactionLinks
+                    :index="index"
+                    v-model="transaction.links"
+                    :custom-fields.sync="customFields"
+                />
               </div>
 
             </div>
@@ -242,6 +257,7 @@ import TransactionLinks from "./TransactionLinks";
 import TransactionAttachments from "./TransactionAttachments";
 import SplitPills from "./SplitPills";
 import {createNamespacedHelpers} from "vuex";
+import TransactionLocation from "./TransactionLocation";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
@@ -251,13 +267,35 @@ export default {
     'transaction',
     'split',
     'count',
+    'customFields', // for custom transaction form fields.
     'index',
     'submittedTransaction' // need to know if transaction is submitted.
   ],
   computed: {
-    ...mapGetters(['transactionType',])
+    ...mapGetters(['transactionType',]),
+    hasMetaFields: function () {
+      let requiredFields = [
+        'internal_reference',
+        'notes',
+        'attachments',
+        'external_uri',
+        'location',
+        'links',
+      ];
+      for (let field in this.customFields) {
+        if (this.customFields.hasOwnProperty(field)) {
+          if (requiredFields.includes(field)) {
+            if (true === this.customFields[field]) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
   },
   components: {
+    TransactionLocation,
     SplitPills,
     TransactionAttachments,
     TransactionNotes,

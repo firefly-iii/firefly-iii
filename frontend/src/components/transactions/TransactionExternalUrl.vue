@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div class="form-group">
+  <div class="form-group" v-if="showField">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.external_url') }}
     </div>
@@ -44,11 +44,20 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index', 'value', 'errors'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionExternalUrl",
   data() {
     return {
-      url: this.value
+      url: this.value,
+      availableFields: this.customFields
+    }
+  },
+  computed: {
+    showField: function () {
+      if ('external_uri' in this.availableFields) {
+        return this.availableFields.external_uri;
+      }
+      return false;
     }
   },
   methods: {
@@ -59,6 +68,9 @@ export default {
     ),
   },
   watch: {
+    customFields: function (value) {
+      this.availableFields = value;
+    },
     url: function (value) {
       this.updateField({field: 'external_url', index: this.index, value: value});
     }

@@ -55,7 +55,8 @@ const state = () => ({
             piggy_bank: [],
             internal_reference: [],
             external_url: [],
-            notes: []
+            notes: [],
+            location: []
         },
         defaultTransaction: {
             // basic

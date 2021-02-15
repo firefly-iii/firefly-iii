@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div class="form-group">
+  <div class="form-group" v-if="showField">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.internal_reference') }}
     </div>
@@ -44,11 +44,20 @@ import {createNamespacedHelpers} from "vuex";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
-  props: ['index', 'value', 'errors'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionInternalReference",
   data() {
     return {
-      reference: this.value
+      reference: this.value,
+      availableFields: this.customFields
+    }
+  },
+  computed: {
+    showField: function () {
+      if ('internal_reference' in this.availableFields) {
+        return this.availableFields.internal_reference;
+      }
+      return false;
     }
   },
   methods: {
@@ -59,6 +68,9 @@ export default {
     ),
   },
   watch: {
+    customFields: function (value) {
+      this.availableFields = value;
+    },
     reference: function (value) {
       this.updateField({field: 'internal_reference', index: this.index, value: value});
     }

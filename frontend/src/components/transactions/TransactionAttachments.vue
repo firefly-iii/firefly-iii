@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div class="form-group">
+  <div class="form-group" v-if="showField">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.attachments') }}
     </div>
@@ -38,14 +38,33 @@
 <script>
 export default {
   name: "TransactionAttachments",
-  props: ['transaction_journal_id'],
+  props: ['transaction_journal_id', 'customFields'],
+  data() {
+    return {
+      availableFields: this.customFields
+    }
+  },
   watch: {
+    customFields: function (value) {
+      this.availableFields = value;
+    },
     transaction_journal_id: function (value) {
-      console.log('transaction_journal_id changed to ' + value);
+      if (!this.showField) {
+        return;
+      }
+      // console.log('transaction_journal_id changed to ' + value);
       // do upload!
       if (0 !== value) {
         this.doUpload();
       }
+    }
+  },
+  computed: {
+    showField: function () {
+      if ('attachments' in this.availableFields) {
+        return this.availableFields.attachments;
+      }
+      return false;
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <!--
-  - TransactionNotes.vue
+  - TransactionLocation.vue
   - Copyright (c) 2021 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,58 +19,37 @@
   -->
 
 <template>
-
   <div class="form-group" v-if="showField">
     <div class="text-xs d-none d-lg-block d-xl-block">
-      {{ $t('firefly.notes') }}
+      {{ $t('firefly.location') }}
     </div>
     <div class="input-group">
-      <textarea
-          v-model="notes"
-          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
-          :placeholder="$t('firefly.notes')"
-      ></textarea>
+      (TODO)
     </div>
   </div>
-
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
+  name: "TransactionLocation",
   props: ['index', 'value', 'errors', 'customFields'],
-  name: "TransactionNotes",
   data() {
     return {
-      notes: this.value,
       availableFields: this.customFields
     }
   },
   computed: {
     showField: function () {
-      if ('notes' in this.availableFields) {
-        return this.availableFields.notes;
+      if ('location' in this.availableFields) {
+        return this.availableFields.location;
       }
       return false;
     }
-  },
-  methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
   },
   watch: {
     customFields: function (value) {
       this.availableFields = value;
     },
-    notes: function (value) {
-      this.updateField({field: 'notes', index: this.index, value: value});
-    }
   }
 }
 </script>

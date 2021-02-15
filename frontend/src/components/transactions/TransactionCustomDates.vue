@@ -20,11 +20,11 @@
 
 <template>
   <div>
-    <div class="form-group" v-for="(enabled, name) in enabledDates">
-      <div class="text-xs d-none d-lg-block d-xl-block" v-if="enabled">
+    <div class="form-group" v-for="(enabled, name) in availableFields">
+      <div class="text-xs d-none d-lg-block d-xl-block" v-if="enabled && isDateField(name)">
         {{ $t('form.' + name) }}
       </div>
-      <div class="input-group" v-if="enabled">
+      <div class="input-group" v-if="enabled && isDateField(name)">
         <input
             class="form-control"
             type="date"
@@ -44,51 +44,36 @@
 
 <script>
 // TODO: error handling
+// TODO dont use store?
 import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   name: "TransactionCustomDates",
-  props: ['index', 'errors'],
+  props: ['index', 'errors', 'customFields'],
   data() {
     return {
-      enabledDates: {},
+      dateFields: ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'],
+      availableFields: this.customFields
     }
   },
-  created() {
-    this.getCustomDates();
+  watch: {
+    customFields: function(value) {
+      this.availableFields = value;
+    }
   },
   methods: {
     ...mapGetters(['transactions']),
     ...mapMutations(['updateField',],
     ),
+    isDateField: function (name) {
+      return this.dateFields.includes(name)
+    },
     getFieldValue(field) {
       return this.transactions()[parseInt(this.index)][field] ?? '';
     },
     setFieldValue(event, field) {
       this.updateField({index: this.index, field: field, value: event.target.value});
-    },
-    getCustomDates: function () {
-      axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
-        let fields = response.data.data.attributes.data;
-        let allDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
-        let selectedDateFields = {
-          interest_date: false,
-          book_date: false,
-          process_date: false,
-          due_date: false,
-          payment_date: false,
-          invoice_date: false,
-        };
-        for (let key in fields) {
-          if (fields.hasOwnProperty(key)) {
-            if (-1 !== allDateFields.indexOf(key)) {
-              selectedDateFields[key] = fields[key];
-            }
-          }
-        }
-        this.enabledDates = selectedDateFields;
-      });
     },
   }
 }

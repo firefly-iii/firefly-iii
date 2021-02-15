@@ -22,7 +22,7 @@
   <div>
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
-    <SplitPills :transactions="transactions" />
+    <SplitPills :transactions="transactions"/>
     <div class="tab-content">
       <SplitForm
           v-for="(transaction, index) in this.transactions"
@@ -30,6 +30,7 @@
           :transaction="transaction"
           :index="index"
           :count="transactions.length"
+          :custom-fields="customFields"
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
       />
@@ -116,7 +117,7 @@ export default {
   created() {
     this.storeAllowedOpposingTypes();
     this.storeAccountToTransaction();
-    this.storeCustomDateFields();
+    this.storeCustomFields();
     this.addTransaction();
   },
   data() {
@@ -124,6 +125,9 @@ export default {
       // error or success message
       errorMessage: '',
       successMessage: '',
+
+      // custom fields, useful for components:
+      customFields: [],
 
       // states for the form (makes sense right)
       enableSubmit: true,
@@ -155,7 +159,6 @@ export default {
     ...mapGetters([
                     'transactionType',
                     'transactions',
-                    'customDateFields',
                     'date',
                     'groupTitle'
                   ])
@@ -203,27 +206,9 @@ export default {
      * it should be done via the create.js Vue store because multiple components are interested in the
      * user's custom transaction fields.
      */
-    storeCustomDateFields: function () {
+    storeCustomFields: function () {
       axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
-        let fields = response.data.data.attributes.data;
-        let allDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
-        let selectedDateFields = {
-          interest_date: false,
-          book_date: false,
-          process_date: false,
-          due_date: false,
-          payment_date: false,
-          invoice_date: false,
-        };
-        for (let key in fields) {
-          if (fields.hasOwnProperty(key)) {
-            if (-1 !== allDateFields.indexOf(key)) {
-              selectedDateFields[key] = fields[key];
-            }
-          }
-        }
-        // see we already store it in the store, so this would be an easy change.
-        this.$store.commit('transactions/create/setCustomDateFields', selectedDateFields);
+        this.customFields = response.data.data.attributes.data;
       });
     },
     /**
