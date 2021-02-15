@@ -162,16 +162,16 @@ Route::group(
     static function () {
 
         // Budget API routes:
-        Route::get('', ['uses' => 'BudgetController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'BudgetController@store', 'as' => 'store']);
-        Route::get('{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
-        Route::put('{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
-        Route::delete('{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
+        Route::get('', ['uses' => 'Models\Budget\ListController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'Models\Budget\StoreController@store', 'as' => 'store']);
+        Route::get('{budget}', ['uses' => 'Models\Budget\ListController@show', 'as' => 'show']);
+        Route::put('{budget}', ['uses' => 'Models\Budget\UpdateController@update', 'as' => 'update']);
+        Route::delete('{budget}', ['uses' => 'Models\Budget\DestroyController@destroy', 'as' => 'delete']);
         Route::post('{budget}/limits', ['uses' => 'BudgetLimitController@store', 'as' => 'store_budget_limit']);
 
-        Route::get('{budget}/transactions', ['uses' => 'BudgetController@transactions', 'as' => 'transactions']);
-        Route::get('{budget}/attachments', ['uses' => 'BudgetController@attachments', 'as' => 'attachments']);
-        Route::get('{budget}/limits', ['uses' => 'BudgetController@budgetLimits', 'as' => 'budget_limits']);
+        Route::get('{budget}/transactions', ['uses' => 'Models\Budget\ListController@transactions', 'as' => 'transactions']);
+        Route::get('{budget}/attachments', ['uses' => 'Models\Budget\ListController@attachments', 'as' => 'attachments']);
+        Route::get('{budget}/limits', ['uses' => 'Models\Budget\ListController@budgetLimits', 'as' => 'budget_limits']);
     }
 );
 

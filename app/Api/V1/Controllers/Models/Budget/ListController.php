@@ -1,7 +1,7 @@
 <?php
-/**
- * BudgetController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ListController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,13 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Budget;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BudgetStoreRequest;
-use FireflyIII\Api\V1\Requests\BudgetUpdateRequest;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
@@ -43,22 +40,17 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
-/**
- * Class BudgetController.
+/***
+ * Class ListController
  */
-class BudgetController extends Controller
+class ListController extends Controller
 {
     use TransactionFilter;
-
-    /** @var BudgetLimitRepositoryInterface */
-    private $blRepository;
-
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
-
+    private BudgetLimitRepositoryInterface $blRepository;
+    private BudgetRepositoryInterface $repository;
 
     /**
-     * BudgetController constructor.
+     * ListController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -67,13 +59,10 @@ class BudgetController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $admin */
-                $admin = auth()->user();
-
                 $this->repository   = app(BudgetRepositoryInterface::class);
                 $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->repository->setUser($admin);
-                $this->blRepository->setUser($admin);
+                $this->repository->setUser(auth()->user());
+                $this->blRepository->setUser(auth()->user());
 
                 return $next($request);
             }
@@ -140,21 +129,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param Budget $budget
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function delete(Budget $budget): JsonResponse
-    {
-        $this->repository->destroy($budget);
-
-        return response()->json([], 204);
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -207,28 +181,7 @@ class BudgetController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Store a budget.
-     *
-     * @param BudgetStoreRequest $request
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     *
-     */
-    public function store(BudgetStoreRequest $request): JsonResponse
-    {
-        $budget  = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
 
-        /** @var BudgetTransformer $transformer */
-        $transformer = app(BudgetTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($budget, $transformer, 'budgets');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * Show all transactions.
@@ -292,30 +245,6 @@ class BudgetController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update a budget.
-     *
-     * @param BudgetUpdateRequest $request
-     * @param Budget              $budget
-     *
-     * @return JsonResponse
-     */
-    public function update(BudgetUpdateRequest $request, Budget $budget): JsonResponse
-    {
-        $data    = $request->getAll();
-        $budget  = $this->repository->update($budget, $data);
-        $manager = $this->getManager();
-
-        /** @var BudgetTransformer $transformer */
-        $transformer = app(BudgetTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($budget, $transformer, 'budgets');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
 }

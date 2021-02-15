@@ -269,7 +269,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // try to create associated auto budget:
         $type = $data['auto_budget_type'] ?? 0;
-        if (0 === $type) {
+        if (0 === $type || '' === $type || 'none' === $type) {
             return $newBudget;
         }
         if ('reset' === $type) {

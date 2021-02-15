@@ -55,9 +55,11 @@ class BudgetStoreRequest extends FormRequest
             'name'                      => $this->string('name'),
             'active'                    => $active,
             'order'                     => 0,
-            'auto_budget_type'          => $this->string('auto_budget_type'),
             'transaction_currency_id'   => $this->integer('auto_budget_currency_id'),
             'transaction_currency_code' => $this->string('auto_budget_currency_code'),
+
+            // auto budget info
+            'auto_budget_type'          => $this->string('auto_budget_type'),
             'auto_budget_amount'        => $this->string('auto_budget_amount'),
             'auto_budget_period'        => $this->string('auto_budget_period'),
         ];
@@ -73,14 +75,14 @@ class BudgetStoreRequest extends FormRequest
         return [
             'name'                      => 'required|between:1,100|uniqueObjectForUser:budgets,name',
             'active'                    => [new IsBoolean],
-            'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
+            // auto budget info
+            'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_amount'        => 'min:0|max:1000000000',
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         ];
     }
-
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
