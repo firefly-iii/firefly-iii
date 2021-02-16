@@ -26,8 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Account;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -35,12 +33,9 @@ use Illuminate\Http\JsonResponse;
  */
 class DestroyController extends Controller
 {
-    use AccountFilter, TransactionFilter;
-
     public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
-
 
     /**
      * AccountController constructor.

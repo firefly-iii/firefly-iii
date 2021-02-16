@@ -26,8 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Account;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\AccountStoreRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
@@ -37,8 +35,6 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    use AccountFilter, TransactionFilter;
-
     public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;

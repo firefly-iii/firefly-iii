@@ -54,6 +54,7 @@ class UpdateController extends Controller
             }
         );
     }
+
     /**
      * Update a budget.
      *

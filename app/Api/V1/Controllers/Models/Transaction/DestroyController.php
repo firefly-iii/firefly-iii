@@ -19,12 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Budget;
+namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Models\Budget;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Events\DestroyedTransactionGroup;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -32,10 +36,11 @@ use Illuminate\Http\JsonResponse;
  */
 class DestroyController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private JournalRepositoryInterface $repository;
+
 
     /**
-     * DestroyController constructor.
+     * TransactionController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -44,25 +49,47 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $admin */
+                $admin = auth()->user();
+
+                $this->repository = app(JournalRepositoryInterface::class);
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
         );
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
-     * @param Budget $budget
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function destroy(Budget $budget): JsonResponse
+    public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
-        $this->repository->destroy($budget);
+        $this->repository->destroyGroup($transactionGroup);
+        // trigger just after destruction
+        event(new DestroyedTransactionGroup($transactionGroup));
+
+        return response()->json([], 204);
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param TransactionJournal $transactionJournal
+     *
+     * @codeCoverageIgnore
+     * @return JsonResponse
+     */
+    public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse
+    {
+        $this->repository->destroyJournal($transactionJournal);
 
         return response()->json([], 204);
     }

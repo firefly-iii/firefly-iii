@@ -1,7 +1,7 @@
 <?php
-/**
- * AccountController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ShowController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,27 +19,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
+
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\AccountUpdateRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
 /**
- * Class UpdateController
+ * Class ShowController
  */
-class UpdateController extends Controller
+class ShowController extends Controller
 {
+    use AccountFilter;
+
     public const RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
-
 
     /**
      * AccountController constructor.
@@ -60,18 +64,51 @@ class UpdateController extends Controller
     }
 
     /**
-     * Update account.
+     * Display a listing of the resource.
      *
-     * @param AccountUpdateRequest $request
-     * @param Account              $account
+     * @param Request $request
+     *
+     * @codeCoverageIgnore
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $manager = $this->getManager();
+        $type    = $request->get('type') ?? 'all';
+        $this->parameters->set('type', $type);
+
+        // types to get, page size:
+        $types    = $this->mapAccountTypes($this->parameters->get('type'));
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+
+        // get list of accounts. Count it and split it.
+        $collection = $this->repository->getAccountsByType($types);
+        $count      = $collection->count();
+        $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.accounts.index') . $this->buildParams());
+
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($accounts, $transformer, self::RESOURCE_KEY);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * Show single instance.
+     *
+     * @param Account $account
      *
      * @return JsonResponse
      */
-    public function update(AccountUpdateRequest $request, Account $account): JsonResponse
+    public function show(Account $account): JsonResponse
     {
-        $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $this->repository->update($account, $data);
         $manager = $this->getManager();
 
         /** @var AccountTransformer $transformer */
@@ -81,4 +118,5 @@ class UpdateController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
+
 }

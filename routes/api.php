@@ -44,9 +44,9 @@ Route::group(
     static function () {
 
         // Accounts API routes:
-        Route::get('', ['uses' => 'Models\Account\ListController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'Models\Account\ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'Models\Account\StoreController@store', 'as' => 'store']);
-        Route::get('{account}', ['uses' => 'Models\Account\ListController@show', 'as' => 'show']);
+        Route::get('{account}', ['uses' => 'Models\Account\ShowController@show', 'as' => 'show']);
         Route::put('{account}', ['uses' => 'Models\Account\UpdateController@update', 'as' => 'update']);
         Route::delete('{account}', ['uses' => 'Models\Account\DestroyController@destroy', 'as' => 'delete']);
 
@@ -162,9 +162,9 @@ Route::group(
     static function () {
 
         // Budget API routes:
-        Route::get('', ['uses' => 'Models\Budget\ListController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'Models\Budget\ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'Models\Budget\StoreController@store', 'as' => 'store']);
-        Route::get('{budget}', ['uses' => 'Models\Budget\ListController@show', 'as' => 'show']);
+        Route::get('{budget}', ['uses' => 'Models\Budget\ShowController@show', 'as' => 'show']);
         Route::put('{budget}', ['uses' => 'Models\Budget\UpdateController@update', 'as' => 'update']);
         Route::delete('{budget}', ['uses' => 'Models\Budget\DestroyController@destroy', 'as' => 'delete']);
         Route::post('{budget}/limits', ['uses' => 'BudgetLimitController@store', 'as' => 'store_budget_limit']);
@@ -499,15 +499,15 @@ Route::group(
     static function () {
 
         // Transaction API routes:
-        Route::get('', ['uses' => 'TransactionController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'TransactionController@store', 'as' => 'store']);
-        Route::get('{transactionGroup}', ['uses' => 'TransactionController@show', 'as' => 'show']);
-        Route::get('{transactionGroup}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
-        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-        Route::get('{tj}/transaction_links', ['uses' => 'TransactionController@transactionLinks', 'as' => 'transaction_links']);
-        Route::put('{transactionGroup}', ['uses' => 'TransactionController@update', 'as' => 'update']);
-        Route::delete('{transactionGroup}/{tj}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
-        Route::delete('{transactionGroup}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
+        Route::get('', ['uses' => 'Models\Transaction\ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'Models\Transaction\StoreController@store', 'as' => 'store']);
+        Route::get('{transactionGroup}', ['uses' => 'Models\Transaction\ShowController@show', 'as' => 'show']);
+        Route::get('{transactionGroup}/attachments', ['uses' => 'Models\Transaction\ListController@attachments', 'as' => 'attachments']);
+        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'Models\Transaction\ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+        Route::get('{tj}/transaction_links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
+        Route::put('{transactionGroup}', ['uses' => 'Models\Transaction\UpdateController@update', 'as' => 'update']);
+        Route::delete('{transactionGroup}/{tj}', ['uses' => 'Models\Transaction\DestroyController@destroyJournal', 'as' => 'delete-journal']);
+        Route::delete('{transactionGroup}', ['uses' => 'Models\Transaction\DestroyController@destroy', 'as' => 'delete']);
     }
 );
 
