@@ -32,6 +32,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
@@ -471,5 +472,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $journal = $this->user->transactionJournals()->find($journalId);
 
         return $journal->tags()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(int $journalId): ?Location
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->locations()->first();
     }
 }

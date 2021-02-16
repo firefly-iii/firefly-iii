@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\TransactionGroup;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
@@ -95,6 +96,16 @@ interface TransactionGroupRepositoryInterface
      * @return NullArrayObject
      */
     public function getMetaFields(int $journalId, array $fields): NullArrayObject;
+
+
+    /**
+     * Get the location of a journal or NULL.
+     *
+     * @param int $journalId
+     *
+     * @return Location|null
+     */
+    public function getLocation(int $journalId): ?Location;
 
     /**
      * Get the note text for a journal (by ID).
