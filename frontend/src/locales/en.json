@@ -56,6 +56,7 @@
         "account_role_defaultAsset": "Default asset account",
         "account_role_savingAsset": "Savings account",
         "account_role_sharedAsset": "Shared asset account",
+        "clear_location": "Clear location",
         "account_role_ccAsset": "Credit card",
         "account_role_cashWalletAsset": "Cash wallet",
         "daily_budgets": "Daily budgets",

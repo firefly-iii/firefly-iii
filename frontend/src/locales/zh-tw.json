@@ -56,6 +56,7 @@
         "account_role_defaultAsset": "\u9810\u8a2d\u8cc7\u7522\u5e33\u6236",
         "account_role_savingAsset": "\u5132\u84c4\u5e33\u6236",
         "account_role_sharedAsset": "\u5171\u7528\u8cc7\u7522\u5e33\u6236",
+        "clear_location": "\u6e05\u9664\u4f4d\u7f6e",
         "account_role_ccAsset": "\u4fe1\u7528\u5361",
         "account_role_cashWalletAsset": "\u73fe\u91d1\u9322\u5305",
         "daily_budgets": "Daily budgets",

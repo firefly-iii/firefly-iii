@@ -95,7 +95,10 @@ export default {
         ]
     ),
     getACURL: function (types, query) {
-      return document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
+
+      let URL = './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
+      //console.log('AC URL is ' + URL);
+      return URL;
     },
     clearAccount: function () {
       this.accounts = this.initialSet;
@@ -103,15 +106,18 @@ export default {
       this.accountName = '';
     },
     lookupAccount: debounce(function () {
+      //console.log('In lookupAccount()');
       if (0 === this.accountTypes.length) {
         // set the types from the default types for this direction:
         this.accountTypes = 'source' === this.direction ? this.sourceAllowedTypes : this.destinationAllowedTypes;
       }
 
       // update autocomplete URL:
-      axios.get(this.getACURL(this.accountTypes, this.account.name))
+      axios.get(this.getACURL(this.accountTypes, this.accountName))
           .then(response => {
+            //console.log('Got a response!');
             this.accounts = response.data;
+            //console.log(response.data);
           })
     }, 300),
 
@@ -130,8 +136,10 @@ export default {
   },
   watch: {
     selectedAccount: function (value) {
-      this.accountName = this.account.name_with_balance;
+      //console.log('Now in selectedAccount');
+      //console.log(value);
       this.account = value;
+      this.accountName = this.account.name_with_balance;
     },
     account: function (value) {
       this.updateField({field: this.accountKey, index: this.index, value: value});

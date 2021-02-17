@@ -56,6 +56,7 @@
         "account_role_defaultAsset": "Standard-Bestandskonto",
         "account_role_savingAsset": "Sparkonto",
         "account_role_sharedAsset": "Gemeinsames Bestandskonto",
+        "clear_location": "Ort leeren",
         "account_role_ccAsset": "Kreditkarte",
         "account_role_cashWalletAsset": "Geldb\u00f6rse",
         "daily_budgets": "Tagesbudgets",

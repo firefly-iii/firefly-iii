@@ -22,6 +22,7 @@ const mix = require('laravel-mix');
 require('laravel-mix-bundle-analyzer');
 
 
+
 // production
 mix.webpackConfig({
                       resolve: {
@@ -74,6 +75,7 @@ mix
     // move to right dir
     .copy('public/js','../public/v2/js')
     .copy('fonts','../public/fonts')
+    .copy('images','../public/images')
     .copy('public/css','../public/v2/css')
 ;
 

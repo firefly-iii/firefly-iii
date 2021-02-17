@@ -28,6 +28,7 @@ php /sites/FF3/dev/tools/cli.php ff3:json-translations v2
 # remove old stuff
 rm -rf public/
 rm -rf ../public/fonts
+rm -rf ../public/images
 rm -rf ../public/v2/js
 rm -rf ../public/v2/css
 mkdir -p public/js
