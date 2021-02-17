@@ -101,6 +101,8 @@ class ChangesForV550 extends Migration
             $table->unsignedInteger('created_at');
         }
         );
+        // drop failed jobs table.
+        Schema::dropIfExists('failed_jobs');
 
         // create new failed_jobs table.
         Schema::create(
