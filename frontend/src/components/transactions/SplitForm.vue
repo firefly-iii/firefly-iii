@@ -211,6 +211,7 @@
                     :custom-fields.sync="customFields"
                 />
                 <TransactionLocation
+                    v-on="$listeners"
                     :index="index"
                     v-model="transaction.notes"
                     :errors="transaction.errors.location"

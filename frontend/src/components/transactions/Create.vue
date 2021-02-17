@@ -33,6 +33,7 @@
           :custom-fields="customFields"
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
+          v-on:set-marker-location="storeLocation(index, $event)"
       />
     </div>
 
@@ -346,7 +347,14 @@ export default {
         this.submittedAttachments = true;
       }
     },
-
+    storeLocation: function(index, event) {
+      let zoomLevel = event.hasMarker ? event.zoomLevel : null;
+      let lat = event.hasMarker ? event.lat : null;
+      let lng = event.hasMarker ? event.lng : null;
+      this.updateField({index: index, field: 'zoom_level', value: zoomLevel});
+      this.updateField({index: index, field: 'latitude', value: lat});
+      this.updateField({index: index, field: 'longitude', value: lng});
+    },
     submitTransactionLinks(data, response) {
       console.log('submitTransactionLinks()');
       let promises = [];
@@ -589,6 +597,11 @@ export default {
         external_url: array.external_url,
         notes: array.notes,
         external_id: array.external_id,
+
+        // location:
+        zoom_level: array.zoom_level,
+        longitude: array.longitude,
+        latitude: array.latitude,
 
         // from thing:
         order: 0,

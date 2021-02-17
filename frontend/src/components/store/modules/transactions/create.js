@@ -113,6 +113,10 @@ const state = () => ({
             // transaction links:
             links: [],
             attachments: [],
+            // location:
+            zoom_level: null,
+            longitude: null,
+            latitude: null,
 
             // error handling
             errors: {},
