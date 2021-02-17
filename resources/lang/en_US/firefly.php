@@ -975,7 +975,6 @@ return [
     'available_amount_indication'               => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                 => 'Suggested',
     'average_between'                           => 'Average between :start and :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
