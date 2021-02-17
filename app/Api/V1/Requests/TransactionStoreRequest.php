@@ -59,6 +59,8 @@ class TransactionStoreRequest extends FormRequest
             'apply_rules'             => $this->boolean('apply_rules', true),
             'transactions'            => $this->getTransactionData(),
         ];
+        // TODO location
+        return $data;
     }
 
     /**

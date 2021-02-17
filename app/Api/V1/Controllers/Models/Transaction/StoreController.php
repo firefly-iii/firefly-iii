@@ -36,6 +36,7 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
+use Log;
 
 /**
  * Class StoreController
@@ -79,7 +80,7 @@ class StoreController extends Controller
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
-        Log::debug('Now in API TransactionController::store()');
+        Log::debug('Now in API StoreController::store()');
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
 
