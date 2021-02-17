@@ -1,7 +1,7 @@
 <?php
-/**
- * ConfigurationName.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * DynamicConfigKey.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,20 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Support\Binder;
-
 
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class ConfigurationName
+ * Class DynamicConfigKey
  */
-class ConfigurationName implements BinderInterface
+class DynamicConfigKey
 {
-
     /**
      * @param string $value
      * @param Route  $route
@@ -48,4 +44,5 @@ class ConfigurationName implements BinderInterface
         }
         throw new NotFoundHttpException;
     }
+
 }

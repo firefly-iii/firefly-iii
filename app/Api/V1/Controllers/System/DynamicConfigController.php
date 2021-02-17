@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * ConfigurationController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,25 +21,23 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\System;
 
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\ConfigurationRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class ConfigurationController.
+ * Class DynamicConfigController.
  *
  * @codeCoverageIgnore
  */
-class ConfigurationController extends Controller
+class DynamicConfigController extends Controller
 {
-    /** @var UserRepositoryInterface The user repository */
-    private $repository;
-
+    private UserRepositoryInterface $repository;
 
     /**
      * ConfigurationController constructor.
@@ -50,12 +48,6 @@ class ConfigurationController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(UserRepositoryInterface::class);
-                /** @var User $admin */
-                $admin = auth()->user();
-
-                if (!$this->repository->hasRole($admin, 'owner')) {
-                    throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
-                }
 
                 return $next($request);
             }
@@ -72,6 +64,18 @@ class ConfigurationController extends Controller
         $configData = $this->getConfigData();
 
         return response()->json(['data' => $configData])->header('Content-Type', self::CONTENT_TYPE);
+    }
+    /**
+     * Show all configuration.
+     *
+     * @param string $value
+     * @return JsonResponse
+     */
+    public function show(string $value): JsonResponse
+    {
+        $configData = $this->getConfigData();
+
+        return response()->json([$value => $configData[$value]])->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**
@@ -92,8 +96,8 @@ class ConfigurationController extends Controller
 
         return [
             'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
-            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
+            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
             'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
         ];
     }
@@ -108,6 +112,9 @@ class ConfigurationController extends Controller
      */
     public function update(ConfigurationRequest $request, string $name): JsonResponse
     {
+        if (!$this->repository->hasRole(auth()->user(), 'owner')) {
+            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
+        }
         $data = $request->getAll();
         app('fireflyconfig')->set($name, $data['value']);
         $configData = $this->getConfigData();

@@ -49,10 +49,11 @@ use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Binder\BudgetList;
 use FireflyIII\Support\Binder\CategoryList;
 use FireflyIII\Support\Binder\CLIToken;
-use FireflyIII\Support\Binder\ConfigurationName;
 use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
+use FireflyIII\Support\Binder\DynamicConfigKey;
 use FireflyIII\Support\Binder\JournalList;
+use FireflyIII\Support\Binder\StaticConfigKey;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\TransactionRules\Actions\AddTag;
@@ -401,7 +402,8 @@ return [
         'toCurrencyCode'   => CurrencyCode::class,
         'cliToken'         => CLIToken::class,
         'tagOrId'          => TagOrId::class,
-        'configName'       => ConfigurationName::class,
+        'dynamicConfigKey' => DynamicConfigKey::class,
+        'staticConfigKey'  => StaticConfigKey::class,
 
     ],
     'rule-actions'                 => [

@@ -25,10 +25,15 @@ declare(strict_types=1);
 
 use FireflyIII\Http\Middleware\IsAdmin;
 
+/**
+ * System and configuration controllers
+ */
 
+// ABOUT FIREFLY III
+// TODO VERIFY API DOCS
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'about',
+        'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'about',
         'as'        => 'api.v1.about.'],
     static function () {
 
@@ -37,6 +42,36 @@ Route::group(
         Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
     }
 );
+
+
+// DYNAMIC CONFIGURATION (CHANGEABLE)
+// TODO VERIFY API DOCS
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/dynamic',
+     'as'        => 'api.v1.configuration.dynamic.',],
+    static function () {
+
+        // Configuration API routes:
+        Route::get('', ['uses' => 'DynamicConfigController@index', 'as' => 'index']);
+        Route::get('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@show', 'as' => 'show']);
+        Route::post('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@update', 'as' => 'update']);
+    }
+);
+
+// STATIC CONFIGURATION (NOT CHANGEABLE)
+// TODO VERIFY API DOCS
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
+     'as'        => 'api.v1.configuration.static.',],
+    static function () {
+
+        // Configuration API routes:
+        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
+        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
+    }
+);
+
+
 
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts',
@@ -240,17 +275,6 @@ Route::group(
     }
 );
 
-// Configuration
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration',
-     'as'        => 'api.v1.configuration.',],
-    static function () {
-
-        // Configuration API routes:
-        Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
-        Route::post('{configName}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
-    }
-);
 
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',

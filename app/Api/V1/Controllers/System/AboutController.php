@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * AboutController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,9 +22,10 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\System;
 
 use DB;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Transformers\UserTransformer;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;

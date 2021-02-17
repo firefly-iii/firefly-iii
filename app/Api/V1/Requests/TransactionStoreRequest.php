@@ -28,6 +28,7 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
@@ -42,7 +43,7 @@ use Log;
  */
 class TransactionStoreRequest extends FormRequest
 {
-    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes, ChecksLogin;
+    use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes, ChecksLogin, AppendsLocationData;
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
@@ -52,8 +53,7 @@ class TransactionStoreRequest extends FormRequest
     public function getAll(): array
     {
         Log::debug('get all data in TransactionStoreRequest');
-
-        return [
+        $data = [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
             'apply_rules'             => $this->boolean('apply_rules', true),

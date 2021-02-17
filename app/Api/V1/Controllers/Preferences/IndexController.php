@@ -41,6 +41,8 @@ class IndexController extends Controller
      * Return users preferred date range settings, the current period
      * and some previous / next periods.
      *
+     * TODO unused and undocumented.
+     *
      * @return JsonResponse
      */
     public function dateRanges(): JsonResponse
