@@ -148,11 +148,6 @@ class BillTransformer extends AbstractTransformer
         $start = clone $bill->date;
         Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
         while ($start < $date) {
-            Log::debug(
-                sprintf(
-                    '%s (bill start date) < %s (given date) so we jump ahead one period (with a skip maybe).', $start->format('Y-m-d'), $date->format('Y-m-d')
-                )
-            );
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
         Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));

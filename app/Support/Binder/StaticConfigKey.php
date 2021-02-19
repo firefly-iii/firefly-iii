@@ -33,7 +33,8 @@ class StaticConfigKey
     public static array $accepted = [
         'firefly.version',
         'firefly.api_version',
-        'firefly.default_location'
+        'firefly.default_location',
+        'firefly.account_to_transaction'
     ];
     /**
      * @param string $value
