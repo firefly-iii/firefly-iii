@@ -521,6 +521,7 @@ class SearchRuleEngine implements RuleEngineInterface
         }
         if (0 !== $journalId) {
             $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->user);
             $journal    = $repository->findNull($journalId);
             if (null !== $journal) {
                 $date = $journal->date;
