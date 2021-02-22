@@ -463,24 +463,21 @@ class BillRepository implements BillRepositoryInterface
     {
         $set          = new Collection;
         $currentStart = clone $start;
-        Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
             Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
-                Log::debug(
-                    sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
-                );
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
             $currentStart = clone $nextExpectedMatch;
         }
@@ -489,7 +486,7 @@ class BillRepository implements BillRepositoryInterface
                 return $date->format('Y-m-d');
             }
         );
-        Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
+        //Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
 
         return $set;
     }
