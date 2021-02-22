@@ -33,7 +33,7 @@
           :custom-fields="customFields"
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
-          v-on:set-description="storeDescription(index, $event)"
+          v-on:set-description="storeField($event)"
           v-on:set-marker-location="storeLocation(index, $event)"
           v-on:set-source-account-id="storeAccountValue(index, 'source', 'id', $event)"
           v-on:set-source-account-name="storeAccountValue(index, 'source', 'name', $event)"
@@ -407,6 +407,9 @@ export default {
       if ('type' === field) {
         this.calculateTransactionType(index);
       }
+    },
+    storeField: function(payload) {
+      this.updateField(payload);
     },
     storeDescription: function (index, value) {
       this.updateField({field: 'description', index: index, value: value});
