@@ -439,7 +439,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        Log::debug('Now in getPaidDatesInRange()');
+        //Log::debug('Now in getPaidDatesInRange()');
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
@@ -634,8 +634,8 @@ class BillRepository implements BillRepositoryInterface
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
 
-        Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
-        Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
 
         $cache->store($start);
 

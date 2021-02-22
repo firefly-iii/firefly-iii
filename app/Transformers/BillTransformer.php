@@ -144,13 +144,13 @@ class BillTransformer extends AbstractTransformer
      */
     protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
-        Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
+        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
         $start = clone $bill->date;
-        Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
+        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
         while ($start < $date) {
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
-        Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
+        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
 
         return $start;
     }
@@ -224,7 +224,7 @@ class BillTransformer extends AbstractTransformer
             'paid_dates'          => $result,
             'next_expected_match' => $nextMatch->format('Y-m-d'),
         ];
-        Log::debug('Result', $result);
+        //Log::debug('Result', $result);
 
         return $result;
     }
