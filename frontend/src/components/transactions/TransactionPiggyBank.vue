@@ -45,10 +45,6 @@
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   props: ['index', 'value', 'errors'],
   name: "TransactionPiggyBank",
@@ -62,11 +58,6 @@ export default {
     this.collectData();
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     collectData() {
       this.piggyList.push(
           {
@@ -99,14 +90,8 @@ export default {
   },
   watch: {
     piggy_bank_id: function (value) {
-      this.updateField({field: 'piggy_bank_id', index: this.index, value: value});
+      this.$emit('set-piggy-bank', value);
     }
-  },
-  computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'transactions',
-                  ])
   }
 }
 </script>

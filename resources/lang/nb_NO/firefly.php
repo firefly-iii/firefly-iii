@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Valgfrie felt for transaksjoner',
     'pref_optional_fields_transaction_help'     => 'Som standard er ikke alle felt aktivert når du oppretter en ny transaksjon (for å unngå forvirring). Nedenfor kan du aktivere disse feltene hvis du tror de kan være nyttige for deg. Selvfølgelig vil et felt som er deaktivert, men allerede fylt inn, være synlig, uavhengig av innstillingen.',
     'optional_tj_date_fields'                   => 'Datofelter',
-    'optional_tj_business_fields'               => 'Forretningsfelter',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Vedleggsfelter',
     'pref_optional_tj_interest_date'            => 'Rentedato',
     'pref_optional_tj_book_date'                => 'Bokføringsdato',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Intern referanse',
     'pref_optional_tj_notes'                    => 'Notater',
     'pref_optional_tj_attachments'              => 'Vedlegg',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datoer',
     'optional_field_meta_business'              => 'Bedrift',
     'optional_field_attachments'                => 'Vedlegg',
     'optional_field_meta_data'                  => 'Valgfri metadata',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Bruk disse beløpene for å få en indikasjon på hva ditt totale budsjett kan være.',
     'suggested'                                 => 'Foreslått',
     'average_between'                           => 'Gjennomsnitt mellom :start og :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Igjen å bruke per dag',
     'bills_paid'                                => 'Regninger betalt',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',

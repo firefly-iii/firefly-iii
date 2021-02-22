@@ -39,10 +39,6 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionInternalReference",
@@ -61,18 +57,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
   },
   watch: {
     customFields: function (value) {
       this.availableFields = value;
     },
     reference: function (value) {
-      this.updateField({field: 'internal_reference', index: this.index, value: value});
+      this.$emit('set-internal-reference', value);
     }
   }
 }

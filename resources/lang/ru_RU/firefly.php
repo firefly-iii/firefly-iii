@@ -226,7 +226,7 @@ return [
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
     // Webhooks
-    'webhooks'                                            => 'Webhooks',
+    'webhooks'                                            => 'Веб-хуки',
 
     // API access
     'authorization_request'                               => 'Запрос авторизации Firefly III v:version',
@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Применить ":title" к выбранным вами транзакциям',
     'apply_rule_selection_intro'                          => 'Такие правила, как ":title", обычно применяются только к новым или обновлённым транзакциям, но Firefly III может применить его для выбранных вами существующих транзакций. Это может быть полезно, если вы обновили правило, и вам нужно изменить ранее созданные транзакции в соответствии с новыми условиями.',
     'include_transactions_from_accounts'                  => 'Включить транзакции с указанных счетов',
-    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
+    'applied_rule_selection'                              => '{0} В вашем выборе ни одна транзакция не была изменена правилом ":title".|[1] В вашем выборе одна транзакция была изменена правилом ":title".|[2,*] :count транзакции(-ий) в вашем выборе было изменено правилом ":title".',
     'execute'                                             => 'Выполнить',
     'apply_rule_group_selection'                          => 'Применить группу правил":title" к выбранным вами транзакциям',
     'apply_rule_group_selection_intro'                    => 'Такие группы правил, как ":title", обычно применяются только к новым или обновлённым транзакциям, но Firefly III может применить все правила из этой группы для выбранных вами существующих транзакций. Это может быть полезно, если вы обновили одно или несколько правил в группе и вам нужно изменить ранее созданные транзакции в соответствии с новыми условиями.',
@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Дополнительные поля для транзакций',
     'pref_optional_fields_transaction_help'     => 'По умолчанию при создании новой транзакции включены не все поля (чтобы не создавать беспорядок). Но вы можете включить эти поля, если лично вам они могут быть полезны. Любое поле, которое в последствии будет отключено, будет по-прежнему отображаться, если оно уже заполнено (независимо от данный настроек).',
     'optional_tj_date_fields'                   => 'Поля с датами',
-    'optional_tj_business_fields'               => 'Бизнес-поля',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Поля вложений',
     'pref_optional_tj_interest_date'            => 'Дата начисления процентов',
     'pref_optional_tj_book_date'                => 'Дата внесения записи',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Внутренняя ссылка',
     'pref_optional_tj_notes'                    => 'Заметки',
     'pref_optional_tj_attachments'              => 'Вложения',
-    'pref_optional_tj_external_uri'             => 'Внешний URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Даты',
     'optional_field_meta_business'              => 'Бизнес',
     'optional_field_attachments'                => 'Вложения',
     'optional_field_meta_data'                  => 'Расширенные данные',
-    'external_uri'                              => 'Внешний URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Удалить данные',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Используйте эти суммы, чтобы узнать, каким может быть ваш суммарный бюджет.',
     'suggested'                                 => 'Рекомендуемые',
     'average_between'                           => 'В среднем между :start и :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Обычно ваш бюджет - около :amount в день. Сейчас - :over_amount в день. Вы уверены?',
     'transferred_in'                            => 'Переведено (в)',
     'transferred_away'                          => 'Переведено (из)',
     'auto_budget_none'                          => 'Без автобюджета',
@@ -1235,9 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Транзакция #{ID} ("{title}")</a> сохранена.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> сохранена.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> обновлена.',
-    'first_split_decides'                       => 'The first split determines the value of this field',
-    'first_split_overrules_source'              => 'The first split may overrule the source account',
-    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'first_split_decides'                       => 'В данном поле используется значение из первой части разделенной транзакции',
+    'first_split_overrules_source'              => 'Значение из первой части транзакции может изменить счет источника',
+    'first_split_overrules_destination'         => 'Значение из первой части транзакции может изменить счет назначения',
 
     // new user:
     'welcome'                                   => 'Добро пожаловать в Firefly III!',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'В день',
     'left_to_spend_per_day'                     => 'Можно тратить в день',
     'bills_paid'                                => 'Оплаченные счета',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Валюта',

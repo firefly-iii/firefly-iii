@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 return [
     // common items
-    'greeting'                         => 'Hi there,',
-    'closing'                          => 'Beep boop,',
-    'signature'                        => 'The Firefly III Mail Robot',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'greeting'                         => '嗨，您好！',
+    'closing'                          => '嗶嗶嗶嗶嗶',
+    'signature'                        => 'The Firefly III 郵件機器人',
+    'footer_ps'                        => '備註：這個訊息是因為 IP 位址 :ipAddress 觸發的要求所遞出。',
 
     // admin test
-    'admin_test_subject'               => 'A test message from your Firefly III installation',
-    'admin_test_body'                  => 'This is a test message from your Firefly III instance. It was sent to :email.',
+    'admin_test_subject'               => '來自 Firefly III 安裝程式的測試訊息',
+    'admin_test_body'                  => '這是您 Firefly III 載體的測試訊息，是寄給 :email 的。',
 
     // new IP
-    'login_from_new_ip'                => 'New login on Firefly III',
-    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
+    'login_from_new_ip'                => '自 Firefly III 的新登入',
+    'new_ip_body'                      => 'Firefly III 監測到未知 IP 位址在您帳號的1筆新登入訊息，若您未曾使用下列 IP 位址，或是使用該位址登入已超過6個月餘，Firefly III 會警示您。',
     'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
     'ip_address'                       => 'IP address',
     'host_name'                        => 'Host',

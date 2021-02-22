@@ -44,11 +44,6 @@
 </template>
 
 <script>
-
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   props: ['value', 'index', 'errors'],
   name: "TransactionBill",
@@ -62,11 +57,6 @@ export default {
     this.collectData();
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     collectData() {
       this.billList.push(
           {
@@ -99,17 +89,9 @@ export default {
   },
   watch: {
     bill: function (value) {
-      this.updateField({field: 'bill_id', index: this.index, value: value});
+      this.$emit('set-bill', value);
     }
   },
-  computed: {
-    ...mapGetters(
-        [
-          'transactionType',
-          'transactions',
-        ]
-    )
-  }
 }
 </script>
 

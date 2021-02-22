@@ -40,6 +40,7 @@
         <button class="btn btn-default btn-xs" @click="clearLocation">{{ $t('firefly.clear_location') }}</button>
       </span>
     </div>
+    <p>&nbsp;</p>
   </div>
 </template>
 

@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Campos opcionais para transacções',
     'pref_optional_fields_transaction_help'     => 'Por defeito, nem todos os campos estão habilitados ao criar uma nova transacção (para não atrapalhar). Abaixo, pode habilitar os campos se achar que eles podem lhe úteis. Claro, qualquer campo que estiver desabilitado, mas já preenchido, será visível independente da configuração.',
     'optional_tj_date_fields'                   => 'Campos de data',
-    'optional_tj_business_fields'               => 'Campos empresariais',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Campos de anexo',
     'pref_optional_tj_interest_date'            => 'Data de juros',
     'pref_optional_tj_book_date'                => 'Data do agendamento',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referência interna',
     'pref_optional_tj_notes'                    => 'Notas',
     'pref_optional_tj_attachments'              => 'Anexos',
-    'pref_optional_tj_external_uri'             => 'URI externo',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datas',
     'optional_field_meta_business'              => 'Empresariais',
     'optional_field_attachments'                => 'Anexos',
     'optional_field_meta_data'                  => 'Meta data opcional',
-    'external_uri'                              => 'URI externo',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Apagar dados',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilize estes valores para obter uma indicação do que seu orçamento total poderia ser.',
     'suggested'                                 => 'Sugerido',
     'average_between'                           => 'Media entre :start e :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Normalmente tem um orçamento de :amount por dia. Desta vez o valor é :over_amount por dia. Tem certeza?',
     'transferred_in'                            => 'Transferido (para)',
     'transferred_away'                          => 'Transferido (de)',
     'auto_budget_none'                          => 'Sem orçamento automático',
@@ -1235,9 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transação #{ID} ("{title}")</a> foi guardada.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transação#{ID}</a> foi guardada.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transação#{ID}</a> foi atualizada.',
-    'first_split_decides'                       => 'The first split determines the value of this field',
-    'first_split_overrules_source'              => 'The first split may overrule the source account',
-    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'first_split_decides'                       => 'A primeira divisão determina o valor deste campo',
+    'first_split_overrules_source'              => 'A primeira divisão pode anular a conta de origem',
+    'first_split_overrules_destination'         => 'A primeira divisão pode anular a conta de destino',
 
     // new user:
     'welcome'                                   => 'Bem vindo ao Firefly III!',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Por dia',
     'left_to_spend_per_day'                     => 'Restante para gastar por dia',
     'bills_paid'                                => 'Contas pagas',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Moeda',

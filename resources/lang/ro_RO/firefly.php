@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Câmpuri opționale pentru tranzacții',
     'pref_optional_fields_transaction_help'     => 'În mod prestabilit, toate câmpurile nu sunt activate atunci când creați o nouă tranzacție (din cauza aglomerării). Mai jos, puteți activa aceste câmpuri dacă credeți că acestea ar putea fi utile pentru dvs. Desigur, orice câmp care este dezactivat, dar deja completat, va fi vizibil indiferent de setare.',
     'optional_tj_date_fields'                   => 'Câmpurile de date',
-    'optional_tj_business_fields'               => 'Domenii de activitate',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Câmpuri de atașament',
     'pref_optional_tj_interest_date'            => 'Data de interes',
     'pref_optional_tj_book_date'                => 'Data revervării',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referință internă',
     'pref_optional_tj_notes'                    => 'Notițe',
     'pref_optional_tj_attachments'              => 'Ataşamente',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Date',
     'optional_field_meta_business'              => 'Afaceri',
     'optional_field_attachments'                => 'Ataşamente',
     'optional_field_meta_data'                  => 'Meta date opționale',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilizați aceste sume pentru a obține o indicație cu privire la bugetul dvs. total.',
     'suggested'                                 => 'Sugerat',
     'average_between'                           => 'Media între :start și :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> În mod normal bugetați aproximativ :amount pe zi. Acum este :over_amount pe zi. Sunteți sigur?',
     'transferred_in'                            => 'Transferat (în)',
     'transferred_away'                          => 'Transferat (departe)',
     'auto_budget_none'                          => 'Fără auto-buget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Pe zi',
     'left_to_spend_per_day'                     => 'Rămas de cheltui pe zi',
     'bills_paid'                                => 'Facturile plătite',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Monedă',

@@ -46,11 +46,8 @@
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from "lodash";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   props: ['index', 'value', 'errors'],
@@ -72,11 +69,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     clearDescription: function () {
       this.description = '';
     },
@@ -94,16 +86,9 @@ export default {
   },
   watch: {
     description: function (value) {
-      this.updateField({field: 'description', index: this.index, value: value});
+      this.$emit('set-description', value);
+      //
     }
   },
-  computed: {
-    ...mapGetters(
-        [
-          'transactionType',
-          'transactions',
-        ]
-    )
-  }
 }
 </script>

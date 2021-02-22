@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Bidang opsional untuk transaksi',
     'pref_optional_fields_transaction_help'     => 'Secara default tidak semua bidang diaktifkan saat membuat transaksi baru (karena kekacauan). Di bawah, Anda dapat mengaktifkan bidang ini jika Anda berpikir mereka bisa berguna bagi Anda. Tentu saja, setiap bidang yang dinonaktifkan, tapi sudah diisi, akan terlihat terlepas dari pengaturan.',
     'optional_tj_date_fields'                   => 'Bidang tanggal',
-    'optional_tj_business_fields'               => 'Bidang usaha',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Bidang lampiran',
     'pref_optional_tj_interest_date'            => 'Tanggal bunga',
     'pref_optional_tj_book_date'                => 'Buku tanggal',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referensi internal',
     'pref_optional_tj_notes'                    => 'Catatan',
     'pref_optional_tj_attachments'              => 'Lampiran',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tanggal',
     'optional_field_meta_business'              => 'Bisnis',
     'optional_field_attachments'                => 'Lampiran',
     'optional_field_meta_data'                  => 'Data meta opsional',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Gunakan jumlah ini untuk mendapatkan indikasi berapa total anggaran Anda.',
     'suggested'                                 => 'Disarankan',
     'average_between'                           => 'Rata-rata antara :start dan :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Per hari',
     'left_to_spend_per_day'                     => 'Kiri untuk dibelanjakan per hari',
     'bills_paid'                                => 'Tagihan dibayar',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Mata uang',

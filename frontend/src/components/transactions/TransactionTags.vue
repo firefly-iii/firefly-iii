@@ -41,11 +41,8 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
 import VueTagsInput from "@johmun/vue-tags-input";
 import axios from "axios";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   name: "TransactionTags",
@@ -66,14 +63,12 @@ export default {
   watch: {
     'currentTag': 'initItems',
     tagList: function (value) {
-      this.updateField({field: 'tags', index: this.index, value: value});
+      this.$emit('set-tags', value);
       this.updateTags = false;
       this.tags = value;
     },
     tags: function (value) {
       if (this.updateTags) {
-        //console.log('watch: tags');
-
         let shortList = [];
         for (let key in value) {
           if (value.hasOwnProperty(key)) {
@@ -86,11 +81,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     initItems() {
       if (this.currentTag.length < 2) {
         return;

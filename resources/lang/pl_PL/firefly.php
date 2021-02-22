@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Opcjonalne pola dla transakcji',
     'pref_optional_fields_transaction_help'     => 'Domyślnie nie wszystkie pola są aktywne podczas tworzenia nowej transakcji (aby uniknąć bałaganu). Poniżej możesz włączyć te pola, jeśli uważasz, że mogą one być przydatne dla Ciebie. Oczywiście każde pole, które jest wyłączone, ale już wypełnione, będzie widoczne niezależnie od ustawienia.',
     'optional_tj_date_fields'                   => 'Pola dat',
-    'optional_tj_business_fields'               => 'Pola biznesowe',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Pola załączników',
     'pref_optional_tj_interest_date'            => 'Data odsetek',
     'pref_optional_tj_book_date'                => 'Data księgowania',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Wewnętrzny numer',
     'pref_optional_tj_notes'                    => 'Notatki',
     'pref_optional_tj_attachments'              => 'Załączniki',
-    'pref_optional_tj_external_uri'             => 'Zewnętrzne URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Daty',
     'optional_field_meta_business'              => 'Biznesowe',
     'optional_field_attachments'                => 'Załączniki',
     'optional_field_meta_data'                  => 'Opcjonalne metadane',
-    'external_uri'                              => 'Zewnętrzne URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Usuń dane',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Skorzystaj z tych kwot, aby uzyskać wskazówkę ile może wynosić Twój całkowity budżet.',
     'suggested'                                 => 'Sugerowane',
     'average_between'                           => 'Średnia pomiędzy :start a :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Zwykle budżetujesz około :amount dziennie. Obecna wartość to :over_amount dziennie. Na pewno?',
     'transferred_in'                            => 'Przesłane (do)',
     'transferred_away'                          => 'Przesłane (od)',
     'auto_budget_none'                          => 'Brak automatycznego budżetu',
@@ -1235,9 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transakcja #{ID} ("{title}")</a> została zapisana.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transakcja #{ID}</a> została zapisana.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transakcja #{ID}</a> została zaktualizowana.',
-    'first_split_decides'                       => 'The first split determines the value of this field',
-    'first_split_overrules_source'              => 'The first split may overrule the source account',
-    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'first_split_decides'                       => 'Pierwszy podział określa wartość tego pola',
+    'first_split_overrules_source'              => 'Pierwszy podział może nadpisać konto źródłowe',
+    'first_split_overrules_destination'         => 'Pierwszy podział może nadpisać konto docelowe',
 
     // new user:
     'welcome'                                   => 'Witaj w Firefly III!',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Dziennie',
     'left_to_spend_per_day'                     => 'Kwota możliwa do wydania codziennie',
     'bills_paid'                                => 'Zapłacone rachunki',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Waluta',

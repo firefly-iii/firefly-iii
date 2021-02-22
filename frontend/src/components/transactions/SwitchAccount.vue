@@ -49,18 +49,11 @@ export default {
     ),
 
     switchAccounts() {
-      let source = this.transactions[this.index].source_account;
-      let dest = this.transactions[this.index].destination_account;
-
-      this.updateField({field: 'source_account', index: this.index, value: dest});
-      this.updateField({field: 'destination_account', index: this.index, value: source});
-
-      // trigger other components.
-
+      this.$emit('switch-accounts', this.index);
     }
   },
   computed: {
-    ...mapGetters(['transactions', 'transactionType']),
+    ...mapGetters(['transactionType']),
   }
 }
 </script>

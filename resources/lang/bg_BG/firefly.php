@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Незадължителни полета за транзакции',
     'pref_optional_fields_transaction_help'     => 'По подразбиране не всички полета са активирани при създаване на нова транзакция (поради претрупването). По-долу можете да активирате тези полета, ако смятате че биха могли да бъдат полезни за вас. Разбира се, всяко поле, което е деактивирано но вече попълнено, ще бъде видимо независимо от настройката.',
     'optional_tj_date_fields'                   => 'Полета за дати',
-    'optional_tj_business_fields'               => 'Бизнес полета',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Полета за прикачени файлове',
     'pref_optional_tj_interest_date'            => 'Полета за лихви',
     'pref_optional_tj_book_date'                => 'Дата на осчетоводяване',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Вътрешна референция',
     'pref_optional_tj_notes'                    => 'Бележки',
     'pref_optional_tj_attachments'              => 'Прикачени файлове',
-    'pref_optional_tj_external_uri'             => 'Външно URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Дати',
     'optional_field_meta_business'              => 'Бизнес',
     'optional_field_attachments'                => 'Прикачени файлове',
     'optional_field_meta_data'                  => 'Незадължителни мета данни',
-    'external_uri'                              => 'Външно URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Изтрий данните',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Използвайте тези суми, за да получите насока какъв може да бъде общият ви бюджет.',
     'suggested'                                 => 'Предложен',
     'average_between'                           => 'Средно между :start и :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>Обикновено бюджетирате около :amount на ден. Този път е :over_amount на ден. Сигурен ли сте?',
     'transferred_in'                            => 'Прехвърлени (към)',
     'transferred_away'                          => 'Прехвърлени (от)',
     'auto_budget_none'                          => 'Няма автоматичен бюджет',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'На ден',
     'left_to_spend_per_day'                     => 'Остава за разходи на ден',
     'bills_paid'                                => 'Платени сметки',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Валута',

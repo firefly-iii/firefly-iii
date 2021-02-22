@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Volitelné kolonky pro transakce',
     'pref_optional_fields_transaction_help'     => 'By default not all fields are enabled when creating a new transaction (because of the clutter). Below, you can enable these fields if you think they could be useful for you. Of course, any field that is disabled, but already filled in, will be visible regardless of the setting.',
     'optional_tj_date_fields'                   => 'Kolonky pro datum',
-    'optional_tj_business_fields'               => 'Business fields',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Kolonky příloh',
     'pref_optional_tj_interest_date'            => 'Úrokové datum',
     'pref_optional_tj_book_date'                => 'Book date',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interní reference',
     'pref_optional_tj_notes'                    => 'Poznámky',
     'pref_optional_tj_attachments'              => 'Přílohy',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datumy',
     'optional_field_meta_business'              => 'Business',
     'optional_field_attachments'                => 'Přílohy',
     'optional_field_meta_data'                  => 'Volitelná metadata',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Use these amounts to get an indication of what your total budget could be.',
     'suggested'                                 => 'Navrhované',
     'average_between'                           => 'Průměr mezi :start a :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Převedeno (k nám)',
     'transferred_away'                          => 'Převedeno (pryč)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Za den',
     'left_to_spend_per_day'                     => 'Zbývá na denní útratu',
     'bills_paid'                                => 'Bills paid',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Měna',

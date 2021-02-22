@@ -29,22 +29,22 @@
           type="date"
           ref="date"
           :title="$t('firefly.date')"
-          v-model="localDate"
+          v-model="dateStr"
           :disabled="index > 0"
           autocomplete="off"
           name="date[]"
-          :placeholder="localDate"
+          :placeholder="dateStr"
       >
       <input
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           type="time"
           ref="time"
           :title="$t('firefly.time')"
-          v-model="localTime"
+          v-model="timeStr"
           :disabled="index > 0"
           autocomplete="off"
           name="time[]"
-          :placeholder="localTime"
+          :placeholder="timeStr"
       >
     </div>
     <span v-if="errors.length > 0">
@@ -55,71 +55,59 @@
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'errors'],
+  props: ['index', 'errors', 'date', 'time'],
   name: "TransactionDate",
-  methods: {
-    ...mapMutations(
-        [
-          'updateField',
-          'setDate'
-        ],
-    ),
+  data() {
+    return {
+      localDate: this.date,
+      localTime: this.time
+    }
   },
+  methods: {},
   computed: {
-    ...mapGetters(
-        [
-          'transactionType',
-          'date',
-          'transactions'
-        ]
-    ),
-    localDate: {
+    dateStr: {
       get() {
-        if (this.date instanceof Date && !isNaN(this.date)) {
-          return this.date.toISOString().split('T')[0];
+        if (this.localDate instanceof Date && !isNaN(this.localDate)) {
+          return this.localDate.toISOString().split('T')[0];
         }
         return '';
       },
       set(value) {
         // bit of a hack but meh.
-        if('' === value) {
-
+        if ('' === value) {
+          // reset to today
+          this.localDate = new Date();
+          this.$emit('set-date', {date: this.localDate});
+          return;
         }
-        let newDate = new Date(value);
-        let current = new Date(this.date.getTime());
-        current.setFullYear(newDate.getFullYear());
-        current.setMonth(newDate.getMonth());
-        current.setDate(newDate.getDate());
-        this.setDate({date: current});
+        this.localDate = new Date(value);
+        this.$emit('set-date', {date: this.localDate});
       }
     },
-    localTime: {
+    timeStr: {
       get() {
-        if (this.date instanceof Date && !isNaN(this.date)) {
-          return ('0' + this.date.getHours()).slice(-2) + ':' + ('0' + this.date.getMinutes()).slice(-2) + ':' + ('0' + this.date.getSeconds()).slice(-2);
+        if (this.localTime instanceof Date && !isNaN(this.localTime)) {
+          return ('0' + this.localTime.getHours()).slice(-2) + ':' + ('0' + this.localTime.getMinutes()).slice(-2) + ':' + ('0' + this.localTime.getSeconds()).slice(-2);
         }
         return '';
       },
       set(value) {
-        if('' === value) {
-          this.date.setHours(0);
-          this.date.setMinutes(0);
-          this.date.setSeconds(0);
-          this.setDate({date: this.date});
+        if ('' === value) {
+          this.localTime.setHours(0);
+          this.localTime.setMinutes(0);
+          this.localTime.setSeconds(0);
+          this.$emit('set-time', {time: this.localTime});
           return;
         }
         // bit of a hack but meh.
-        let current = new Date(this.date.getTime());
+        let current = new Date(this.localTime.getTime());
         let parts = value.split(':');
         current.setHours(parseInt(parts[0]));
         current.setMinutes(parseInt(parts[1]));
         current.setSeconds(parseInt(parts[2]));
-        this.setDate({date: current});
+        this.localTime = current;
+        this.$emit('set-time', {time: this.localTime});
       }
     }
   }

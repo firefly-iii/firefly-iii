@@ -184,10 +184,6 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from 'vuex'
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 const lodashClonedeep = require('lodash.clonedeep');
 // TODO error handling
 export default {
@@ -220,18 +216,15 @@ export default {
   },
   watch: {
     links: function (value) {
-      this.updateField({index: this.index, field: 'links', value: lodashClonedeep(value)});
+      // TODO
+      this.$emit('set-links', lodashClonedeep(value));
+      //this.updateField({index: this.index, field: 'links', value: lodashClonedeep(value)});
     },
     customFields: function (value) {
       this.availableFields = value;
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     getTextForLinkType: function (linkTypeId) {
       let parts = linkTypeId.split('-');
       for (let i in this.linkTypes) {

@@ -40,6 +40,12 @@
         @input="lookupAccount"
         @hit="selectedAccount = $event"
     >
+
+      <template slot="suggestion" slot-scope="{ data, htmlText }">
+        <div class="d-flex" :title="data.type">
+          <span v-html="htmlText"></span><br>
+        </div>
+      </template>
       <template slot="append">
         <div class="input-group-append">
           <button tabindex="-1" class="btn btn-outline-secondary" v-on:click="clearAccount" type="button"><i class="far fa-trash-alt"></i></button>
@@ -75,7 +81,8 @@ export default {
       initialSet: [],
       selectedAccount: {},
       account: this.value,
-      accountName: ''
+      accountName: '',
+      selectedAccountTrigger: false,
     }
   },
   created() {
@@ -89,20 +96,12 @@ export default {
           'setSourceAllowedTypes'
         ],
     ),
-    ...mapActions(
-        [
-          'calcTransactionType'
-        ]
-    ),
     getACURL: function (types, query) {
-
-      let URL = './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
-      //console.log('AC URL is ' + URL);
-      return URL;
+      return './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
     },
     clearAccount: function () {
       this.accounts = this.initialSet;
-      this.account = {name: ''};
+      this.account = {name: '', type: 'no_type', id: null, currency_id: null, currency_code: null, currency_symbol: null};
       this.accountName = '';
     },
     lookupAccount: debounce(function () {
@@ -136,13 +135,41 @@ export default {
   },
   watch: {
     selectedAccount: function (value) {
-      //console.log('Now in selectedAccount');
-      //console.log(value);
+      //console.log('Emit on selected account');
+      this.selectedAccountTrigger = true;
       this.account = value;
+      this.$emit(this.emitAccountId, value.id);
+      this.$emit(this.emitAccountType, value.type);
+      this.$emit(this.emitAccountName, value.name);
+      this.$emit(this.emitAccountCurrencyId, value.currency_id);
+      this.$emit(this.emitAccountCurrencyCode, value.currency_code);
+      this.$emit(this.emitAccountCurrencySymbol, value.currency_symbol);
+      //this.$emit(this.emitAccount, value);
       this.accountName = this.account.name_with_balance;
+
+      // call method to set what the opposing accounts should be.
+      // and what the
+
+    },
+    accountName: function (value) {
+      if (false === this.selectedAccountTrigger) {
+        console.log('Save to change name!');
+        this.$emit(this.emitAccountId, null);
+        this.$emit(this.emitAccountType, null);
+        this.$emit(this.emitAccountName, value);
+        this.$emit(this.emitAccountCurrencyId, null);
+        this.$emit(this.emitAccountCurrencyCode, null);
+        this.$emit(this.emitAccountCurrencySymbol, null);
+        //this.$emit(this.emitAccount, {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null});
+        // also reset local account thing, but dont be weird about it
+        this.accountTrigger = false;
+        this.account = {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null};
+
+      }
+      this.selectedAccountTrigger = false;
     },
     account: function (value) {
-      this.updateField({field: this.accountKey, index: this.index, value: value});
+      //this.updateField({field: this.accountKey, index: this.index, value: value});
       // set the opposing account allowed set.
       let opposingAccounts = [];
       let type = value.type ? value.type : 'no_type';
@@ -158,9 +185,13 @@ export default {
       if ('destination' === this.direction) {
         this.setSourceAllowedTypes(opposingAccounts);
       }
-
-      this.calcTransactionType();
     },
+    value: function (value) {
+      console.log(this.direction + ' account overruled by external forces.');
+      this.account = value;
+      this.selectedAccountTrigger = true;
+      this.accountName = value.name;
+    }
   },
   computed: {
     ...mapGetters([
@@ -174,6 +205,42 @@ export default {
         return 'source' === this.direction ? 'source_account' : 'destination_account';
       }
     },
+    emitAccountId: {
+      get() {
+        return 'set-' + this.direction + '-account-id';
+      }
+    },
+    emitAccount: {
+      get() {
+        return 'set-' + this.direction + '-account';
+      }
+    },
+    emitAccountName: {
+      get() {
+        return 'set-' + this.direction + '-account-name';
+      }
+    },
+    emitAccountType: {
+      get() {
+        return 'set-' + this.direction + '-account-type';
+      }
+    },
+    emitAccountCurrencyId: {
+      get() {
+        return 'set-' + this.direction + '-account-currency-id';
+      }
+    },
+    emitAccountCurrencyCode: {
+      get() {
+        return 'set-' + this.direction + '-account-currency-code';
+      }
+    },
+    emitAccountCurrencySymbol: {
+      get() {
+        return 'set-' + this.direction + '-account-currency-symbol';
+      }
+    },
+
     visible: {
       get() {
         // index  0 is always visible:

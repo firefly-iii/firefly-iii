@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Các trường tùy chọn cho giao dịch',
     'pref_optional_fields_transaction_help'     => 'Theo mặc định, không phải tất cả các trường đều được bật khi tạo giao dịch mới (vì sự lộn xộn). Dưới đây, bạn có thể kích hoạt các trường này nếu bạn nghĩ rằng chúng có thể hữu ích cho bạn. Tất nhiên, bất kỳ trường nào bị vô hiệu hóa, nhưng đã được điền vào, sẽ hiển thị bất kể cài đặt.',
     'optional_tj_date_fields'                   => 'Trường ngày',
-    'optional_tj_business_fields'               => 'Lĩnh vực kinh doanh',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Trường đính kèm',
     'pref_optional_tj_interest_date'            => 'Ngày lãi',
     'pref_optional_tj_book_date'                => 'Ngày đặt sách',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Tài liệu tham khảo nội bộ',
     'pref_optional_tj_notes'                    => 'Ghi chú',
     'pref_optional_tj_attachments'              => 'Tài liệu đính kèm',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Ngày',
     'optional_field_meta_business'              => 'Kinh doanh',
     'optional_field_attachments'                => 'Tài liệu đính kèm',
     'optional_field_meta_data'                  => 'Dữ liệu meta tùy chọn',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Sử dụng những số tiền này để có được một dấu hiệu về tổng ngân sách của bạn có thể là bao nhiêu.',
     'suggested'                                 => 'Đề xuất',
     'average_between'                           => 'Trung bình giữa :start và :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Thông thường bạn ngân sách về: số tiền mỗi ngày. Lần này là: over_amount mỗi ngày. Bạn có chắc không?',
     'transferred_in'                            => 'Đã chuyển (vào)',
     'transferred_away'                          => 'Đã chuyển (ra)',
     'auto_budget_none'                          => ' Không có ngân sách tự động',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Mỗi ngày',
     'left_to_spend_per_day'                     => 'Còn lại để chi tiêu mỗi ngày',
     'bills_paid'                                => 'Hóa đơn thanh toán',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Tiền tệ',

@@ -43,37 +43,48 @@
 </template>
 
 <script>
-// TODO: error handling
-// TODO dont use store?
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   name: "TransactionCustomDates",
-  props: ['index', 'errors', 'customFields'],
+  props: [
+    'index',
+    'errors',
+    'customFields',
+    'interestDate',
+    'bookDate',
+    'processDate',
+    'dueDate',
+    'paymentDate',
+    'invoiceDate'
+  ],
   data() {
     return {
       dateFields: ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'],
-      availableFields: this.customFields
+      availableFields: this.customFields,
+      dates: {
+        interest_date: this.interestDate,
+        book_date: this.bookDate,
+        process_date: this.processDate,
+        due_date: this.dueDate,
+        payment_date: this.paymentDate,
+        invoice_date: this.invoiceDate,
+      }
+      ,
     }
   },
   watch: {
-    customFields: function(value) {
+    customFields: function (value) {
       this.availableFields = value;
     }
   },
   methods: {
-    ...mapGetters(['transactions']),
-    ...mapMutations(['updateField',],
-    ),
     isDateField: function (name) {
       return this.dateFields.includes(name)
     },
     getFieldValue(field) {
-      return this.transactions()[parseInt(this.index)][field] ?? '';
+      return this.dates[field] ?? '';
     },
     setFieldValue(event, field) {
-      this.updateField({index: this.index, field: field, value: event.target.value});
+      this.$emit('set-custom-date', { field: field, date: event.target.value});
     },
   }
 }

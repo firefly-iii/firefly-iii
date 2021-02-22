@@ -24,6 +24,7 @@ const lodashClonedeep = require('lodash.clonedeep');
 const state = () => ({
         transactionType: 'any',
         date: new Date,
+        time: new Date,
         groupTitle: '',
         transactions: [],
         allowedOpposingTypes: {},
@@ -63,6 +64,22 @@ const state = () => ({
             description: '',
             transaction_journal_id: 0,
             // accounts:
+            source_account_id: null,
+            source_account_name: null,
+            source_account_type: null,
+
+            source_account_currency_id: null,
+            source_account_currency_code: null,
+            source_account_currency_symbol: null,
+
+            destination_account_id: null,
+            destination_account_name: null,
+            destination_account_type: null,
+
+            destination_account_currency_id: null,
+            destination_account_currency_code: null,
+            destination_account_currency_symbol: null,
+
             source_account: {
                 id: 0,
                 name: "",
@@ -133,11 +150,19 @@ const getters = {
     date: state => {
         return state.date;
     },
+    time: state => {
+        return state.time;
+    },
     groupTitle: state => {
         return state.groupTitle;
     },
     transactionType: state => {
         return state.transactionType;
+    },
+    accountToTransaction: state => {
+        // TODO better architecture here, does not need the store.
+        // possible API point!!
+        return state.accountToTransaction;
     },
     defaultTransaction: state => {
         return state.defaultTransaction;
@@ -166,45 +191,7 @@ const getters = {
 
 // actions
 const actions = {
-    calcTransactionType(context) {
-        let source = context.state.transactions[0].source_account;
-        let dest = context.state.transactions[0].destination_account;
-        if (null === source || null === dest) {
-            // console.log('transactionType any');
-            context.commit('setTransactionType', 'any');
-            return;
-        }
-        if ('' === source.type || '' === dest.type) {
-            // console.log('transactionType any');
-            context.commit('setTransactionType', 'any');
-            return;
-        }
 
-        // ok so type is set on both:
-        let expectedDestinationTypes = context.state.accountToTransaction[source.type];
-        if ('undefined' !== typeof expectedDestinationTypes) {
-            let transactionType = expectedDestinationTypes[dest.type];
-            if ('undefined' !== typeof expectedDestinationTypes[dest.type]) {
-                // console.log('Found a type: ' + transactionType);
-                context.commit('setTransactionType', transactionType);
-                return;
-            }
-        }
-        // console.log('Found no type for ' + source.type + ' --> ' + dest.type);
-        if ('Asset account' !== source.type) {
-            console.log('Drop ID from source. TODO');
-
-            // source.id =null
-            // context.commit('updateField', {field: 'source_account',index: })
-            // context.state.transactions[0].source_account.id = null;
-        }
-        if ('Asset account' !== dest.type) {
-            console.log('Drop ID from destination. TODO');
-            //context.state.transactions[0].destination_account.id = null;
-        }
-
-        context.commit('setTransactionType', 'any');
-    }
 }
 
 // mutations
@@ -223,6 +210,9 @@ const mutations = {
     },
     setDate(state, payload) {
         state.date = payload.date;
+    },
+    setTime(state, payload) {
+        state.time = payload.time;
     },
     setGroupTitle(state, payload) {
         state.groupTitle = payload.groupTitle;

@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Campos opcionales para transacciones',
     'pref_optional_fields_transaction_help'     => 'Por defecto no todos los campos se habilitan al crear una nueva transacción (debido al desorden). abajo usted puede habilitar estos campos si usted piensa que pueden ser útiles. por supuesto, cualquier campo que este desactivado, pero ya completado, sera visible a pesar de la configuración.',
     'optional_tj_date_fields'                   => 'Campos de fecha',
-    'optional_tj_business_fields'               => 'Campos comerciales',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Campos de datos adjuntos',
     'pref_optional_tj_interest_date'            => 'Fecha de intereses',
     'pref_optional_tj_book_date'                => 'Fecha del libro de registro',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referencia interna',
     'pref_optional_tj_notes'                    => 'Notas',
     'pref_optional_tj_attachments'              => 'Adjuntos',
-    'pref_optional_tj_external_uri'             => 'URI externa',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Fechas',
     'optional_field_meta_business'              => 'Negocios',
     'optional_field_attachments'                => 'Adjuntos',
     'optional_field_meta_data'                  => 'Opcional meta datos',
-    'external_uri'                              => 'URI externa',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Borrar datos',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilice estas cantidades para obtener una indicación de lo que podría ser su presupuesto total.',
     'suggested'                                 => 'Sugerido',
     'average_between'                           => 'Promedio entre :start y :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Generalmente usted presupone :amount por día. Esta vez es :over_amount por día. ¿Está seguro?',
     'transferred_in'                            => 'Transferido (dentro)',
     'transferred_away'                          => 'Transferido (fuera)',
     'auto_budget_none'                          => 'Sin autopresupuesto',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Por dia',
     'left_to_spend_per_day'                     => 'Disponible para gasto diario',
     'bills_paid'                                => 'Facturas pagadas',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Moneda',

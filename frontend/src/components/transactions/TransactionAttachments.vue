@@ -50,6 +50,8 @@ export default {
     },
     transaction_journal_id: function (value) {
       if (!this.showField) {
+        console.log('Field is hidden. Emit event!');
+        this.$emit('uploaded-attachments', value);
         return;
       }
       // console.log('transaction_journal_id changed to ' + value);

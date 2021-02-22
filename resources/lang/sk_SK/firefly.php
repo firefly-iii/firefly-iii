@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Voliteľné údaje pre transakcie',
     'pref_optional_fields_transaction_help'     => 'Pri vytváraní novej transakcie nie sú predvolene povolené všetky polia (kvôli neprehľadnosti). Nižšie môžete tieto polia povoliť, ak si myslíte, že by mohli byť pre vás užitočné. Samozrejme, každé pole, ktoré je zakázané, ale už je vyplnené, bude viditeľné bez ohľadu na nastavenie.',
     'optional_tj_date_fields'                   => 'Políčka pre dátum',
-    'optional_tj_business_fields'               => 'Firemné údaje',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Políčka pre prílohy',
     'pref_optional_tj_interest_date'            => 'Úrokový dátum',
     'pref_optional_tj_book_date'                => 'Dátum rezervácie',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interná referencia',
     'pref_optional_tj_notes'                    => 'Poznámky',
     'pref_optional_tj_attachments'              => 'Prílohy',
-    'pref_optional_tj_external_uri'             => 'Externá URL',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dátumy',
     'optional_field_meta_business'              => 'Spoločnosť',
     'optional_field_attachments'                => 'Prílohy',
     'optional_field_meta_data'                  => 'Voliteľné metadata',
-    'external_uri'                              => 'Externá URL',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Odstrániť údaje',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Pomocou týchto súm získate informáciu o tom, aký môže byť váš celkový rozpočet.',
     'suggested'                                 => 'Navrhované',
     'average_between'                           => 'Priemer medzi :start a :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Zvyčajne plánujete na deň sumu :amount. Tentokrát je to :over_amount. Ste si istý?',
     'transferred_in'                            => 'Prevedené (k nám)',
     'transferred_away'                          => 'Prevedené (preč)',
     'auto_budget_none'                          => 'Žiadny automatický rozpočet',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Za deň',
     'left_to_spend_per_day'                     => 'Zostáva na denné útraty',
     'bills_paid'                                => 'Zaplatené účty',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Mena',

@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Tapahtumien valinnaiset kentät',
     'pref_optional_fields_transaction_help'     => 'Yksinkertaisuuden nimissä kaikki kentät eivät alkuun ole näkyvissä luodessasi uusia tapahtumia. Alla voit ottaa käyttöön sinulle hyödyllisiä kenttiä. Asetuksesta huolimatta kaikki kentät joissa jo on sisältöä näytetään - tietenkin.',
     'optional_tj_date_fields'                   => 'Päivämääräkentät',
-    'optional_tj_business_fields'               => 'Yrityskäytön kentät',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Liitekentät',
     'pref_optional_tj_interest_date'            => 'Korkopäivä',
     'pref_optional_tj_book_date'                => 'Kirjauspäivä',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Sisäinen viite',
     'pref_optional_tj_notes'                    => 'Muistiinpanot',
     'pref_optional_tj_attachments'              => 'Liitteet',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Päivämäärät',
     'optional_field_meta_business'              => 'Yritys',
     'optional_field_attachments'                => 'Liitteet',
     'optional_field_meta_data'                  => 'Valinnainen metatieto',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Käytä näitä arvoja arvioidaksesi kokonaisbudjettiasi.',
     'suggested'                                 => 'Ehdotus',
     'average_between'                           => 'Keskiarvo välillä :start ja :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Yleensä budjetoit summan :amount päivälle. Tällä kerralla budjetoit :over_amount päivälle. Oletko varma?',
     'transferred_in'                            => 'Siirretty (sisään)',
     'transferred_away'                          => 'Siirretty (ulos)',
     'auto_budget_none'                          => 'Ei automaattibudjettia',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Päivässä',
     'left_to_spend_per_day'                     => 'Käytettävissä per päivä',
     'bills_paid'                                => 'Maksetut laskut',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuutta',

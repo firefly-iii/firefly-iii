@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => '交易的選填欄位',
     'pref_optional_fields_transaction_help'     => '建立新交易時，預設不會啟用全部欄位 (以免版面空間不敷應用)。您可在下方啟用您覺得有用的欄位。當然，若欄位本身停用卻已填入資料，則不論設定如何均會顯示。',
     'optional_tj_date_fields'                   => '日期欄位',
-    'optional_tj_business_fields'               => '商務欄位',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => '附加檔案欄位',
     'pref_optional_tj_interest_date'            => '利率日期',
     'pref_optional_tj_book_date'                => '登記日期',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => '內部參照',
     'pref_optional_tj_notes'                    => '備註',
     'pref_optional_tj_attachments'              => '附加檔案',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => '日期',
     'optional_field_meta_business'              => '商務',
     'optional_field_attachments'                => '附加檔案',
     'optional_field_meta_data'                  => '可選中繼資料',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => '使用這些金額以獲得您總預算可能為何的指標',
     'suggested'                                 => '建議',
     'average_between'                           => '自 :start 至 :end 的平均',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> 您通常每日預算 :amount。這回卻是每日 :over_amount。您確定嗎？',
     'transferred_in'                            => '轉帳 (轉入)',
     'transferred_away'                          => '轉帳 (轉出)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => '每日',
     'left_to_spend_per_day'                     => '每日剩餘花費',
     'bills_paid'                                => '已繳帳單',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => '貨幣',

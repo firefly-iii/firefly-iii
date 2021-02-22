@@ -36,10 +36,6 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionNotes",
@@ -57,19 +53,12 @@ export default {
       return false;
     }
   },
-  methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
-  },
   watch: {
     customFields: function (value) {
       this.availableFields = value;
     },
     notes: function (value) {
-      this.updateField({field: 'notes', index: this.index, value: value});
+      this.$emit('set-notes', value);
     }
   }
 }

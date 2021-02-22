@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optionale Felder für Buchungen',
     'pref_optional_fields_transaction_help'     => 'Wenn Sie eine Buchung anlegen sind standardmäßig nicht alle vorhandenen Felder aktiviert. Hier können Sie alle Felder aktivieren, die Sie gerne nutzen möchten. Alle Felder die deaktiviert sind, aber bereits ausgefüllt sind, werden unabhängig von ihren Einstellungen sichtbar sein.',
     'optional_tj_date_fields'                   => 'Datumsfelder',
-    'optional_tj_business_fields'               => 'Fachliche Felder',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Anlage Felder',
     'pref_optional_tj_interest_date'            => 'Zinstermin',
     'pref_optional_tj_book_date'                => 'Buchungstermin',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interner Verweis',
     'pref_optional_tj_notes'                    => 'Notizen',
     'pref_optional_tj_attachments'              => 'Anhänge',
-    'pref_optional_tj_external_uri'             => 'Externe URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Daten',
     'optional_field_meta_business'              => 'Geschäftlich',
     'optional_field_attachments'                => 'Anhänge',
     'optional_field_meta_data'                  => 'Optionale Metadaten',
-    'external_uri'                              => 'Externe URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Daten löschen',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Verwenden Sie diese Angaben, um einen Anhaltspunkt darüber zu erhalten, wie hoch Ihr komplettes Budget sein könnte.',
     'suggested'                                 => 'Vorgeschlagen',
     'average_between'                           => 'Durchschnitt zwischen :start und :end',
-    'over_budget_warn'                          => '<i class="fa fa fa-money"></i>Normalerweise kalkulieren Sie etwa :amount pro Tag. Diesmal ist es :over_amount pro Tag. Möchten Sie fortfahren?',
     'transferred_in'                            => 'Übertragen (eingehend)',
     'transferred_away'                          => 'Übertragen (ausgehend)',
     'auto_budget_none'                          => 'Kein Auto-Budget',
@@ -1235,9 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Buchung #{ID} ("{title}")</a> wurde gespeichert.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Buchung #{ID}</a> wurde gespeichert.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Buchung#{ID}</a> wurde aktualisiert.',
-    'first_split_decides'                       => 'The first split determines the value of this field',
-    'first_split_overrules_source'              => 'The first split may overrule the source account',
-    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'first_split_decides'                       => 'Die erste Aufteilung bestimmt den Wert dieses Feldes',
+    'first_split_overrules_source'              => 'Die erste Aufteilung könnte das Quellkonto überschreiben',
+    'first_split_overrules_destination'         => 'Die erste Aufteilung könnte das Zielkonto überschreiben',
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Pro Tag',
     'left_to_spend_per_day'                     => 'Verbleibend zum Ausgeben je Tag',
     'bills_paid'                                => 'Rechnungen bezahlt',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Währung',

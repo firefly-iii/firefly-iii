@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Προαιρετικά πεδία για συναλλαγές',
     'pref_optional_fields_transaction_help'     => 'Από προεπιλογή δεν μπορούν να ενεργοποιηθούν όλα τα πεδία όταν δημιουργείται μία νέα συναλλαγή (εξαιτίας της σύγχυσης). Παρακάτω, μπορείτε να ενεργοποιήσετε αυτά τα πεδία εάν νομίζετε ότι θα σας φανούν χρήσιμα. Φυσικά, όποιο πεδίο απενεργοποιείται, αλλά είναι ήδη συμπληρωμένο, θα συνεχίζει να εμφανίζεται ασχέτως της ρύθμισης.',
     'optional_tj_date_fields'                   => 'Πεδία ημερομηνίας',
-    'optional_tj_business_fields'               => 'Πεδία εταιρίας',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Πεδία συνημμένου',
     'pref_optional_tj_interest_date'            => 'Ημερομηνία τοκισμού',
     'pref_optional_tj_book_date'                => 'Ημερομηνία εγγραφής',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Εσωτερική αναφορά',
     'pref_optional_tj_notes'                    => 'Σημειώσεις',
     'pref_optional_tj_attachments'              => 'Συνημμένα',
-    'pref_optional_tj_external_uri'             => 'Εξωτερικό URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Ημερομηνίες',
     'optional_field_meta_business'              => 'Επιχείρηση',
     'optional_field_attachments'                => 'Συνημμένα',
     'optional_field_meta_data'                  => 'Προαιρετικά μετα-δεδομένα',
-    'external_uri'                              => 'Εξωτερικό URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Διαγραφή δεδομένων',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Χρησιμοποιήστε αυτά τα ποσά για μια ένδειξη του συνολικού προϋπολογισμού σας.',
     'suggested'                                 => 'Πρόταση',
     'average_between'                           => 'Μέσος όρος μεταξύ :start και :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Συνήθως έχετε προϋπολογισμό περίπου :amount ανά ημέρα. Αυτή τη φορά είναι :over_amount ανά ημέρα. Είστε σίγουροι;',
     'transferred_in'                            => 'Μεταφέρθηκαν (εντός)',
     'transferred_away'                          => 'Μεταφέρθηκαν (εκτός)',
     'auto_budget_none'                          => 'Χωρίς αυτόματο προϋπολογισμό',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Ανά ημέρα',
     'left_to_spend_per_day'                     => 'Διαθέσιμα προϋπολογισμών ανά ημέρα',
     'bills_paid'                                => 'Πληρωμένα πάγια έξοδα',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Νόμισμα',

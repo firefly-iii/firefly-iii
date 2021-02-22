@@ -50,11 +50,8 @@
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from "lodash";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   props: ['value', 'index', 'errors'],
@@ -79,11 +76,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     clearCategory: function () {
       this.category = null;
     },
@@ -101,16 +93,10 @@ export default {
   },
   watch: {
     category: function (value) {
-      this.updateField({field: 'category', index: this.index, value: value});
+      this.$emit('set-category', value);
     }
   },
   computed: {
-    ...mapGetters(
-        [
-                    'transactionType',
-                    'transactions',
-                  ]
-    ),
     selectedCategory: {
       get() {
         return this.categories[this.index].name;

@@ -679,7 +679,7 @@ return [
     'pref_optional_fields_transaction'          => 'İşlemler için bağlı alanlar',
     'pref_optional_fields_transaction_help'     => 'Yeni bir işlem oluşturulurken (dağınıklık nedeniyle) varsayılan olarak tüm alanlar ektinleştirilmez. Aşağıdan, eğer işinize yarayacağını düşünüyorsanız bu alanları ektinleştirebilirsiniz. Tabii ki, devre dışı bırakılmış ama zaten doldurulmuş alanlar ayarlar ne olursa olsun görünecektir.',
     'optional_tj_date_fields'                   => 'Tarih alanları',
-    'optional_tj_business_fields'               => 'İş alanları',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Ek alanları',
     'pref_optional_tj_interest_date'            => 'Faiz tarihi',
     'pref_optional_tj_book_date'                => 'Kitap tarihi',
@@ -690,12 +690,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Dahili referans',
     'pref_optional_tj_notes'                    => 'Notlar',
     'pref_optional_tj_attachments'              => 'Ekler',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tarih',
     'optional_field_meta_business'              => 'İş',
     'optional_field_attachments'                => 'Ekler',
     'optional_field_meta_data'                  => 'İsteğe bağlı meta veriler',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -974,7 +976,6 @@ return [
     'available_amount_indication'               => 'Toplam bütçenizin ne olabileceğinin bir göstergesi olarak bu tutarı kullanın.',
     'suggested'                                 => 'Önerilen',
     'average_between'                           => ':start ve :end arasında Averaj',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1277,6 +1278,9 @@ return [
     'per_day'                                   => 'Hergün',
     'left_to_spend_per_day'                     => 'Günlük harcama için bırakıldı',
     'bills_paid'                                => 'Ödenen Faturalar',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Para birimi',

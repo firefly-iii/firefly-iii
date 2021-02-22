@@ -39,10 +39,6 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionExternalUrl",
@@ -61,18 +57,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
   },
   watch: {
     customFields: function (value) {
       this.availableFields = value;
     },
     url: function (value) {
-      this.updateField({field: 'external_url', index: this.index, value: value});
+      this.$emit('set-external-url', value);
     }
   }
 }

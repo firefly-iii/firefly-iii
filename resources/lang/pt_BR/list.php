@@ -38,7 +38,7 @@ return [
     'active'                  => 'Está ativo?',
     'percentage'              => 'pct.',
     'recurring_transaction'   => 'Transação recorrente',
-    'next_due'                => 'Next due',
+    'next_due'                => 'Próximo vencimento',
     'transaction_type'        => 'Tipo',
     'lastActivity'            => 'Última atividade',
     'balanceDiff'             => 'Diferença de saldo',

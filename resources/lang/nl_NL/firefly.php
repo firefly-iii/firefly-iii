@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optionele velden voor transacties',
     'pref_optional_fields_transaction_help'     => 'Standaard staan niet alle velden aan (vanwege het overzicht). Hier kan je zulke extra velden alsnog aanzetten, als je denkt dat ze handig zijn. Als je een veld uitzet, maar deze heeft wel degelijk een waarde, dan is-ie altijd zichtbaar, wat je ook doet.',
     'optional_tj_date_fields'                   => 'Datumvelden',
-    'optional_tj_business_fields'               => 'Zakelijke velden',
+    'optional_tj_other_fields'                  => 'Overige velden',
     'optional_tj_attachment_fields'             => 'Bijlagen',
     'pref_optional_tj_interest_date'            => 'Rentedatum',
     'pref_optional_tj_book_date'                => 'Boekdatum',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
     'pref_optional_tj_notes'                    => 'Notities',
     'pref_optional_tj_attachments'              => 'Bijlagen',
-    'pref_optional_tj_external_uri'             => 'Externe URI',
+    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_location'                 => 'Locatie',
+    'pref_optional_tj_links'                    => 'Transactiekoppelingen',
     'optional_field_meta_dates'                 => 'Data',
     'optional_field_meta_business'              => 'Zakelijk',
     'optional_field_attachments'                => 'Bijlagen',
     'optional_field_meta_data'                  => 'Optionele meta-gegevens',
-    'external_uri'                              => 'Externe URI',
+    'external_uri'                              => 'Externe URL',
 
     // profile:
     'delete_stuff_header'                       => 'Verwijder gegevens',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
     'suggested'                                 => 'Gesuggereerd',
     'average_between'                           => 'Gemiddelde tussen :start en :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
     'auto_budget_none'                          => 'Geen auto-budget',
@@ -1235,9 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transactie #{ID} ("{title}")</a> is opgeslagen.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is opgeslagen.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is geüpdatet.',
-    'first_split_decides'                       => 'The first split determines the value of this field',
-    'first_split_overrules_source'              => 'The first split may overrule the source account',
-    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'first_split_decides'                       => 'De eerste split bepaalt wat hier staat',
+    'first_split_overrules_source'              => 'De eerste split kan de bronrekening overschrijven',
+    'first_split_overrules_destination'         => 'De eerste split kan de doelrekening overschrijven',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Te besteden per dag',
     'bills_paid'                                => 'Betaalde contracten',
+    'custom_period'                             => 'Aangepaste periode',
+    'reset_to_current'                          => 'Reset naar huidige periode',
+    'select_period'                             => 'Selecteer een periode',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',

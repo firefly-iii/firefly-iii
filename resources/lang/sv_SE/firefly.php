@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Alternativa fält för transaktioner',
     'pref_optional_fields_transaction_help'     => 'Per default är inte alla fält aktiverade vid skapande av en ny transaktion (underlätta röran). Nedanför går det att aktivera dessa fält om de är användbara för dig. Självklar, ett fält som är ifyllt men inaktiverat, visas oavsett denna inställning.',
     'optional_tj_date_fields'                   => 'Datumfält',
-    'optional_tj_business_fields'               => 'Affärsområden',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Bilagefält',
     'pref_optional_tj_interest_date'            => 'Räntedatum',
     'pref_optional_tj_book_date'                => 'Bokföringsdatum',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Intern referens',
     'pref_optional_tj_notes'                    => 'Anteckningar',
     'pref_optional_tj_attachments'              => 'Bilagor',
-    'pref_optional_tj_external_uri'             => 'Extern URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datum',
     'optional_field_meta_business'              => 'Affärsverksamhet',
     'optional_field_attachments'                => 'Bilagor',
     'optional_field_meta_data'                  => 'Valfri metadata',
-    'external_uri'                              => 'Extern URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Ta bort data',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Använd dessa summor för en indikering av vad din totala budget kan bli.',
     'suggested'                                 => 'Föreslagen',
     'average_between'                           => 'Genomsnitt mellan :start och :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>Vanligen budgeterar du :amount per dag. Nu är det :over_amount per dag. Är du säker?',
     'transferred_in'                            => 'Överfört (in)',
     'transferred_away'                          => 'Överfört (bort)',
     'auto_budget_none'                          => 'Ingen auto-budget',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Kvar att spendera per dag',
     'bills_paid'                                => 'Notor betalda',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',

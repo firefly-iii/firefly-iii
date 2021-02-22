@@ -178,12 +178,12 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'withdrawal_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
-    'withdrawal_dest_need_data'   => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
+    'withdrawal_source_bad_data'  => 'Não foi possível encontrar uma conta de origem válida ao pesquisar por ID ":id" ou nome ":name".',
+    'withdrawal_dest_need_data'   => 'É necessário obter um ID de uma conta de destino válida e/ou um nome de conta de destino válido para continuar.',
     'withdrawal_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
 
     'deposit_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'deposit_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+    'deposit_source_bad_data'  => 'Não foi possível encontrar uma conta de origem válida ao pesquisar por ID ":id" ou nome ":name".',
     'deposit_dest_need_data'   => 'É necessário obter obter um ID de conta de destino válido e/ou nome de conta de destino válido para continuar.',
     'deposit_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
     'deposit_dest_wrong_type'  => 'A conta de destino enviada não é do tipo certo.',
@@ -202,12 +202,12 @@ return [
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
     'gte.numeric' => ':attribute deve ser maior ou igual a :value.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
-    'gte.file'    => 'The :attribute must be greater than or equal to :value kilobytes.',
-    'gte.string'  => 'The :attribute must be greater than or equal to :value characters.',
-    'gte.array'   => 'The :attribute must have :value items or more.',
+    'gt.numeric'  => 'O campo :attribute deve ser maior que :value.',
+    'gte.file'    => 'O campo :attribute deve ser maior ou igual a :value kilobytes.',
+    'gte.string'  => 'O campo :attribute deve ser maior ou igual a :value caracteres.',
+    'gte.array'   => 'O campo :attribute deve ter :value itens ou mais.',
 
-    'amount_required_for_auto_budget' => 'The amount is required.',
+    'amount_required_for_auto_budget' => 'O valor é necessário.',
     'auto_budget_amount_positive'     => 'A quantidade deve ser maior do que zero.',
-    'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
+    'auto_budget_period_mandatory'    => 'O período de orçamento automático é um campo obrigatório.',
 ];

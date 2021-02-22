@@ -33,7 +33,36 @@
           :custom-fields="customFields"
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
+          v-on:set-description="storeDescription(index, $event)"
           v-on:set-marker-location="storeLocation(index, $event)"
+          v-on:set-source-account-id="storeAccountValue(index, 'source', 'id', $event)"
+          v-on:set-source-account-name="storeAccountValue(index, 'source', 'name', $event)"
+          v-on:set-source-account-type="storeAccountValue(index, 'source', 'type', $event)"
+          v-on:set-source-account-currency-id="storeAccountValue(index, 'source', 'currency_id', $event)"
+          v-on:set-source-account-currency-code="storeAccountValue(index, 'source', 'currency_code', $event)"
+          v-on:set-source-account-currency-symbol="storeAccountValue(index, 'source', 'currency_symbol', $event)"
+          v-on:set-destination-account-id="storeAccountValue(index, 'destination', 'id', $event)"
+          v-on:set-destination-account-name="storeAccountValue(index, 'destination', 'name', $event)"
+          v-on:set-destination-account-type="storeAccountValue(index, 'destination', 'type', $event)"
+          v-on:set-destination-account-currency-id="storeAccountValue(index, 'destination', 'currency_id', $event)"
+          v-on:set-destination-account-currency-code="storeAccountValue(index, 'destination', 'currency_code', $event)"
+          v-on:set-destination-account-currency-symbol="storeAccountValue(index, 'destination', 'currency_symbol', $event)"
+          v-on:switch-accounts="switchAccounts($event)"
+          v-on:set-amount="storeAmount(index, $event)"
+          v-on:set-foreign-currency-id="storeForeignCurrencyId(index, $event)"
+          v-on:set-foreign-amount="storeForeignAmount(index, $event)"
+          v-on:set-date="storeDate($event)"
+          v-on:set-time="storeTime($event)"
+          v-on:set-custom-date="storeCustomDate(index, $event)"
+          v-on:set-budget="storeBudget(index, $event)"
+          v-on:set-category="storeCategory(index, $event)"
+          v-on:set-bill="storeBill(index, $event)"
+          v-on:set-tags="storeTags(index, $event)"
+          v-on:set-piggy-bank="storePiggyBank(index, $event)"
+          v-on:set-internal-reference="storeInternalReference(index, $event)"
+          v-on:set-external-url="storeExternalUrl(index, $event)"
+          v-on:set-notes="storeNotes(index, $event)"
+          v-on:set-links="storeLinks(index, $event)"
       />
     </div>
 
@@ -154,6 +183,9 @@ export default {
       // group ID + title once submitted:
       returnedGroupId: 0,
       returnedGroupTitle: '',
+
+      // meta data:
+      accountToTransaction: {}
     }
   },
   computed: {
@@ -161,6 +193,7 @@ export default {
                     'transactionType',
                     'transactions',
                     'date',
+                    'time',
                     'groupTitle'
                   ])
   },
@@ -187,11 +220,13 @@ export default {
           'addTransaction',
           'deleteTransaction',
           'setAllowedOpposingTypes',
-          'setAccountToTransaction',
           'setTransactionError',
+          'setTransactionType',
           'resetErrors',
           'updateField',
-          'resetTransactions'
+          'resetTransactions',
+          'setDate',
+          'setTime'
         ],
     ),
     /**
@@ -279,6 +314,9 @@ export default {
       const url = './api/v1/transactions';
       const data = this.convertData();
 
+      console.log('Will submit:');
+      console.log(data);
+
       // POST the transaction.
       axios.post(url, data)
           .then(response => {
@@ -347,7 +385,10 @@ export default {
         this.submittedAttachments = true;
       }
     },
-    storeLocation: function(index, event) {
+    /**
+     * Responds to changed location.
+     */
+    storeLocation: function (index, event) {
       let zoomLevel = event.hasMarker ? event.zoomLevel : null;
       let lat = event.hasMarker ? event.lat : null;
       let lng = event.hasMarker ? event.lng : null;
@@ -355,8 +396,127 @@ export default {
       this.updateField({index: index, field: 'latitude', value: lat});
       this.updateField({index: index, field: 'longitude', value: lng});
     },
+    /**
+     * Responds to changed account.
+     */
+    storeAccountValue: function (index, direction, field, value) {
+      // depending on these account values
+      let key = direction + '_account_' + field;
+      //console.log('storeAccountValue(' + index + ', "' + direction + '", "' + field + '", "' + key + '") = "' + value + '"');
+      this.updateField({index: index, field: key, value: value});
+      if ('type' === field) {
+        this.calculateTransactionType(index);
+      }
+    },
+    storeDescription: function (index, value) {
+      this.updateField({field: 'description', index: index, value: value});
+    },
+    storeForeignCurrencyId: function (index, value) {
+      console.log('storeForeignCurrencyId(' + index + ',' + value + ')');
+      this.updateField({field: 'foreign_currency_id', index: index, value: value});
+    },
+    storeAmount: function (index, value) {
+      this.updateField({field: 'amount', index: index, value: value});
+    },
+    storeForeignAmount: function (index, value) {
+      this.updateField({field: 'foreign_amount', index: index, value: value});
+    },
+    storeDate: function (value) {
+      this.setDate(value.date)
+    },
+    storeTime: function (value) {
+      this.setTime(value.time)
+    },
+    storeCustomDate: function (index, payload) {
+      this.updateField({field: payload.field, index: index, value: payload.date});
+    },
+    storeBudget: function (index, value) {
+      this.updateField({field: 'budget_id', index: index, value: value});
+    },
+    storeCategory: function (index, value) {
+      this.updateField({field: 'category', index: index, value: value});
+    },
+    storeBill: function (index, value) {
+      this.updateField({field: 'bill_id', index: index, value: value});
+    },
+    storeTags: function (index, value) {
+      this.updateField({field: 'tags', index: index, value: value});
+    },
+    storePiggyBank: function (index, value) {
+      this.updateField({field: 'piggy_bank_id', index: index, value: value});
+    },
+    storeInternalReference: function (index, value) {
+      this.updateField({field: 'internal_reference', index: index, value: value});
+    },
+    storeExternalUrl: function (index, value) {
+      this.updateField({field: 'external_url', index: index, value: value});
+    },
+    storeNotes: function (index, value) {
+      this.updateField({field: 'notes', index: index, value: value});
+    },
+    storeLinks: function (index, value) {
+      this.updateField({field: 'links', index: index, value: value});
+    },
+
+    /**
+     * Calculate the transaction type based on what's currently in the store.
+     */
+    calculateTransactionType: function (index) {
+      //console.log('calculateTransactionType(' + index + ')');
+      if (0 === index) {
+        let source = this.transactions[0].source_account_type;
+        let dest = this.transactions[0].destination_account_type;
+        if (null === source || null === dest) {
+          //console.log('transactionType any');
+          this.setTransactionType('any');
+          //this.$store.commit('setTransactionType', 'any');
+          //console.log('calculateTransactionType: either type is NULL so no dice.');
+          return;
+        }
+        if ('' === source || '' === dest) {
+          //console.log('transactionType any');
+          this.setTransactionType('any');
+          //this.$store.commit('setTransactionType', 'any');
+          //console.log('calculateTransactionType: either type is empty so no dice.');
+          return;
+        }
+        // ok so type is set on both:
+        let expectedDestinationTypes = this.accountToTransaction[source];
+        if ('undefined' !== typeof expectedDestinationTypes) {
+          let transactionType = expectedDestinationTypes[dest];
+          if ('undefined' !== typeof expectedDestinationTypes[dest]) {
+            //console.log('Found a type: ' + transactionType);
+            this.setTransactionType(transactionType);
+            //this.$store.commit('setTransactionType', transactionType);
+            //console.log('calculateTransactionType: ' + source + ' --> ' + dest + ' = ' + transactionType);
+            return;
+          }
+        }
+        //console.log('Found no type for ' + source + ' --> ' + dest);
+        if ('Asset account' !== source) {
+          //console.log('Drop ID from destination.');
+          this.updateField({index: 0, field: 'destination_account_id', value: null});
+          //console.log('calculateTransactionType: drop ID from destination.');
+          // source.id =null
+          // context.commit('updateField', {field: 'source_account',index: })
+          // context.state.transactions[0].source_account.id = null;
+        }
+        if ('Asset account' !== dest) {
+          //console.log('Drop ID from source.');
+          this.updateField({index: 0, field: 'source_account_id', value: null});
+          //console.log('calculateTransactionType: drop ID from source.');
+          //context.state.transactions[0].destination_account.id = null;
+        }
+        //console.log('calculateTransactionType: fallback, type to any.');
+        this.setTransactionType('any');
+        //this.$store.commit('setTransactionType', 'any');
+      }
+    },
+    /**
+     * Submit transaction links.
+     */
     submitTransactionLinks(data, response) {
-      console.log('submitTransactionLinks()');
+      //console.log('submitTransactionLinks()');
       let promises = [];
       let result = response.data.data.attributes.transactions;
       let total = 0;
@@ -552,6 +712,26 @@ export default {
 
     },
 
+    switchAccounts: function (index) {
+      console.log('user wants to switch Accounts');
+      let origSourceId = this.transactions[index].source_account_id;
+      let origSourceName = this.transactions[index].source_account_name;
+      let origSourceType = this.transactions[index].source_account_type;
+
+      let origDestId = this.transactions[index].destination_account_id;
+      let origDestName = this.transactions[index].destination_account_name;
+      let origDestType = this.transactions[index].destination_account_type;
+
+      this.updateField({index: 0, field: 'source_account_id', value: origDestId});
+      this.updateField({index: 0, field: 'source_account_name', value: origDestName});
+      this.updateField({index: 0, field: 'source_account_type', value: origDestType});
+
+      this.updateField({index: 0, field: 'destination_account_id', value: origSourceId});
+      this.updateField({index: 0, field: 'destination_account_name', value: origSourceName});
+      this.updateField({index: 0, field: 'destination_account_type', value: origSourceType});
+      this.calculateTransactionType(0);
+    },
+
 
     /**
      *
@@ -560,9 +740,18 @@ export default {
      */
     convertSplit: function (key, array) {
       let dateStr = 'invalid';
-      if (this.date instanceof Date && !isNaN(this.date)) {
+      if (
+          this.time instanceof Date && !isNaN(this.time) &&
+          this.date instanceof Date && !isNaN(this.date)
+      ) {
+        let theDate = new Date(this.date);
+        // update time in date object.
+        theDate.setHours(this.time.getHours());
+        theDate.setMinutes(this.time.getMinutes());
+        theDate.setSeconds(this.time.getSeconds());
         dateStr = this.toW3CString(this.date);
       }
+
       let currentSplit = {
         // basic
         description: array.description,
@@ -570,10 +759,10 @@ export default {
         type: this.transactionType,
 
         // account
-        source_id: array.source_account.id ?? null,
-        source_name: array.source_account.name ?? null,
-        destination_id: array.destination_account.id ?? null,
-        destination_name: array.destination_account.name ?? null,
+        source_id: array.source_account_id ?? null,
+        source_name: array.source_account_name ?? null,
+        destination_id: array.destination_account_id ?? null,
+        destination_name: array.destination_account_name ?? null,
 
         // amount:
         currency_id: array.currency_id,
@@ -616,7 +805,7 @@ export default {
       }
 
       // foreign amount:
-      if (0 !== array.foreign_currency_id) {
+      if (0 !== array.foreign_currency_id && '' !== array.foreign_amount) {
         currentSplit.foreign_currency_id = array.foreign_currency_id;
       }
       if ('' !== array.foreign_amount) {
@@ -633,19 +822,22 @@ export default {
       //console.log('Transaction type is now ' + transactionType);
       // if the transaction type is invalid, might just be that we can deduce it from
       // the presence of a source or destination account
-      firstSource = this.transactions[0].source_account.type;
-      firstDestination = this.transactions[0].destination_account.type;
+      firstSource = this.transactions[0].source_account_type;
+      firstDestination = this.transactions[0].destination_account_type;
       //console.log(this.transactions[0].source_account);
       //console.log(this.transactions[0].destination_account);
       //console.log('Type of first source is  ' + firstSource);
       //console.log('Type of first destination is  ' + firstDestination);
 
+      // default to source:
+      currentSplit.currency_id = array.source_account_currency_id;
       if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
         transactionType = 'withdrawal';
       }
 
       if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
         transactionType = 'deposit';
+        currentSplit.currency_id = array.destination_account_currency_id;
       }
       currentSplit.type = transactionType;
       //console.log('Final type is ' + transactionType);
@@ -712,10 +904,14 @@ export default {
              offsetSign + offsetHours + ':' + offsetMinutes;
     },
     storeAllowedOpposingTypes: function () {
+      // take this from API:
       this.setAllowedOpposingTypes(window.allowedOpposingTypes);
     },
     storeAccountToTransaction: function () {
-      this.setAccountToTransaction(window.accountToTransaction);
+      axios.get('./api/v1/configuration/static/firefly.account_to_transaction')
+          .then(response => {
+            this.accountToTransaction = response.data['firefly.account_to_transaction'];
+          });
     },
 
   },

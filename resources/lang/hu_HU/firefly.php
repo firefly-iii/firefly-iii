@@ -678,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Tranzakciók választható mezői',
     'pref_optional_fields_transaction_help'     => 'Alapértelmezés szerint új tranzakció létrehozásakor nem minden mező engedélyezett (hogy elkerüljük a túlzsúfoltságot). Ezeket a mezőket lent lehet engedélyezni ha valamelyikre szükség van. Természetesen azok a letiltott mezők amelyek már ki vannak töltve, a beállítástól függetlenül láthatóak lesznek.',
     'optional_tj_date_fields'                   => 'Dátummezők',
-    'optional_tj_business_fields'               => 'Üzleti mezők',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Melléklet mezők',
     'pref_optional_tj_interest_date'            => 'Kamatfizetési időpont',
     'pref_optional_tj_book_date'                => 'Könyvelés dátuma',
@@ -689,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Belső hivatkozás',
     'pref_optional_tj_notes'                    => 'Megjegyzések',
     'pref_optional_tj_attachments'              => 'Mellékletek',
-    'pref_optional_tj_external_uri'             => 'Külső hivatkozás',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dátumok',
     'optional_field_meta_business'              => 'Üzleti',
     'optional_field_attachments'                => 'Mellékletek',
     'optional_field_meta_data'                  => 'Opcionális metaadat',
-    'external_uri'                              => 'Külső hivatkozás',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Adatok törlése',
@@ -973,7 +975,6 @@ return [
     'available_amount_indication'               => 'Ezeket az összeget felhasználva lehet megtudni, hogy mekkorának kéne lennie a teljes költségkeretnek.',
     'suggested'                                 => 'Javasolt',
     'average_between'                           => 'Átlag :start és :end között',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>A költségkeret általában napi :amount körül van. Jelenleg napi :over_amount. Biztos?',
     'transferred_in'                            => 'Átvezetett (be)',
     'transferred_away'                          => '(Máshova) átvezetett',
     'auto_budget_none'                          => 'Nincs auto-költségkeret',
@@ -1276,6 +1277,9 @@ return [
     'per_day'                                   => 'Naponta',
     'left_to_spend_per_day'                     => 'Naponta elkölthető',
     'bills_paid'                                => 'Befizetett számlák',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Pénznem',
