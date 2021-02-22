@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -67,6 +68,9 @@ class CreateController extends Controller
         /** @var GroupCloneService $service */
         $service  = app(GroupCloneService::class);
         $newGroup = $service->cloneGroup($group);
+
+        // event!
+        event(new StoredTransactionGroup($newGroup, true));
 
         app('preferences')->mark();
 
