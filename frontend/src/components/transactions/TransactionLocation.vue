@@ -112,7 +112,14 @@ export default {
       this.emitEvent();
     },
     emitEvent() {
-      this.$emit('set-marker-location', {zoomLevel: this.zoom, lat: this.marker[0], lng: this.marker[1], hasMarker: this.hasMarker});
+      this.$emit('set-marker-location', {
+                   index: this.index,
+                   zoomLevel: this.zoom,
+                   lat: this.marker[0],
+                   lng: this.marker[1],
+                   hasMarker: this.hasMarker
+                 }
+      );
     },
     zoomUpdated(zoom) {
       this.zoom = zoom;

@@ -34,7 +34,7 @@
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
           v-on:set-description="storeField($event)"
-          v-on:set-marker-location="storeLocation(index, $event)"
+          v-on:set-marker-location="storeLocation($event)"
           v-on:set-source-account-id="storeAccountValue(index, 'source', 'id', $event)"
           v-on:set-source-account-name="storeAccountValue(index, 'source', 'name', $event)"
           v-on:set-source-account-type="storeAccountValue(index, 'source', 'type', $event)"
@@ -388,13 +388,13 @@ export default {
     /**
      * Responds to changed location.
      */
-    storeLocation: function (index, event) {
-      let zoomLevel = event.hasMarker ? event.zoomLevel : null;
-      let lat = event.hasMarker ? event.lat : null;
-      let lng = event.hasMarker ? event.lng : null;
-      this.updateField({index: index, field: 'zoom_level', value: zoomLevel});
-      this.updateField({index: index, field: 'latitude', value: lat});
-      this.updateField({index: index, field: 'longitude', value: lng});
+    storeLocation: function (payload) {
+      let zoomLevel = payload.hasMarker ? payload.zoomLevel : null;
+      let lat = payload.hasMarker ? payload.lat : null;
+      let lng = payload.hasMarker ? payload.lng : null;
+      this.updateField({index: payload.index, field: 'zoom_level', value: zoomLevel});
+      this.updateField({index: payload.index, field: 'latitude', value: lat});
+      this.updateField({index: payload.index, field: 'longitude', value: lng});
     },
     /**
      * Responds to changed account.
