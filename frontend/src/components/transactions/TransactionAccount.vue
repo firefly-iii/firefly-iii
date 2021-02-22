@@ -135,42 +135,45 @@ export default {
   },
   watch: {
     selectedAccount: function (value) {
-      //console.log('Emit on selected account');
+      console.log('Emit on selected account');
       this.selectedAccountTrigger = true;
       this.account = value;
-      this.$emit(this.emitAccountId, value.id);
-      this.$emit(this.emitAccountType, value.type);
-      this.$emit(this.emitAccountName, value.name);
-      this.$emit(this.emitAccountCurrencyId, value.currency_id);
-      this.$emit(this.emitAccountCurrencyCode, value.currency_code);
-      this.$emit(this.emitAccountCurrencySymbol, value.currency_symbol);
-      //this.$emit(this.emitAccount, value);
+
+      this.$emit('set-account',
+                 {
+                   index: this.index,
+                   direction: this.direction,
+                   id: value.id,
+                   type: value.type,
+                   name: value.name,
+                   currency_id: value.currency_id,
+                   currency_code: value.currency_code,
+                   currency_symbol: value.currency_symbol,
+                 }
+      );
       this.accountName = this.account.name_with_balance;
-
-      // call method to set what the opposing accounts should be.
-      // and what the
-
     },
     accountName: function (value) {
       if (false === this.selectedAccountTrigger) {
         console.log('Save to change name!');
-        this.$emit(this.emitAccountId, null);
-        this.$emit(this.emitAccountType, null);
-        this.$emit(this.emitAccountName, value);
-        this.$emit(this.emitAccountCurrencyId, null);
-        this.$emit(this.emitAccountCurrencyCode, null);
-        this.$emit(this.emitAccountCurrencySymbol, null);
-        //this.$emit(this.emitAccount, {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null});
-        // also reset local account thing, but dont be weird about it
+        this.$emit('set-account',
+                   {
+                     index: this.index,
+                     direction: this.direction,
+                     id: null,
+                     type: null,
+                     name: value,
+                     currency_id: null,
+                     currency_code: null,
+                     currency_symbol: null,
+                   }
+        );
         this.accountTrigger = false;
         this.account = {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null};
-
       }
       this.selectedAccountTrigger = false;
     },
     account: function (value) {
-      //this.updateField({field: this.accountKey, index: this.index, value: value});
-      // set the opposing account allowed set.
       let opposingAccounts = [];
       let type = value.type ? value.type : 'no_type';
       if ('undefined' !== typeof this.allowedOpposingTypes[this.direction]) {

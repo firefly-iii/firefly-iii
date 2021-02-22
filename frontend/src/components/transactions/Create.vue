@@ -35,18 +35,7 @@
           v-on:uploaded-attachments="uploadedAttachment($event)"
           v-on:set-description="storeField($event)"
           v-on:set-marker-location="storeLocation($event)"
-          v-on:set-source-account-id="storeAccountValue(index, 'source', 'id', $event)"
-          v-on:set-source-account-name="storeAccountValue(index, 'source', 'name', $event)"
-          v-on:set-source-account-type="storeAccountValue(index, 'source', 'type', $event)"
-          v-on:set-source-account-currency-id="storeAccountValue(index, 'source', 'currency_id', $event)"
-          v-on:set-source-account-currency-code="storeAccountValue(index, 'source', 'currency_code', $event)"
-          v-on:set-source-account-currency-symbol="storeAccountValue(index, 'source', 'currency_symbol', $event)"
-          v-on:set-destination-account-id="storeAccountValue(index, 'destination', 'id', $event)"
-          v-on:set-destination-account-name="storeAccountValue(index, 'destination', 'name', $event)"
-          v-on:set-destination-account-type="storeAccountValue(index, 'destination', 'type', $event)"
-          v-on:set-destination-account-currency-id="storeAccountValue(index, 'destination', 'currency_id', $event)"
-          v-on:set-destination-account-currency-code="storeAccountValue(index, 'destination', 'currency_code', $event)"
-          v-on:set-destination-account-currency-symbol="storeAccountValue(index, 'destination', 'currency_symbol', $event)"
+          v-on:set-account="storeAccountValue($event)"
           v-on:switch-accounts="switchAccounts($event)"
           v-on:set-amount="storeAmount(index, $event)"
           v-on:set-foreign-currency-id="storeForeignCurrencyId(index, $event)"
@@ -399,16 +388,18 @@ export default {
     /**
      * Responds to changed account.
      */
-    storeAccountValue: function (index, direction, field, value) {
-      // depending on these account values
-      let key = direction + '_account_' + field;
-      //console.log('storeAccountValue(' + index + ', "' + direction + '", "' + field + '", "' + key + '") = "' + value + '"');
-      this.updateField({index: index, field: key, value: value});
-      if ('type' === field) {
-        this.calculateTransactionType(index);
-      }
+    storeAccountValue: function (payload) {
+      this.updateField({index: payload.index, field: payload.direction + '_account_id', value: payload.id});
+      this.updateField({index: payload.index, field: payload.direction + '_account_type', value: payload.type});
+      this.updateField({index: payload.index, field: payload.direction + '_account_name', value: payload.name});
+
+      this.updateField({index: payload.index, field: payload.direction + '_account_currency_id', value: payload.currency_id});
+      this.updateField({index: payload.index, field: payload.direction + '_account_currency_code', value: payload.currency_code});
+      this.updateField({index: payload.index, field: payload.direction + '_account_currency_symbol', value: payload.currency_symbol});
+
+      this.calculateTransactionType(payload.index);
     },
-    storeField: function(payload) {
+    storeField: function (payload) {
       this.updateField(payload);
     },
     storeDescription: function (index, value) {
