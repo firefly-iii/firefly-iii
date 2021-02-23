@@ -90,7 +90,7 @@ export default {
   },
   watch: {
     piggy_bank_id: function (value) {
-      this.$emit('set-piggy-bank', value);
+      this.$emit('set-piggy-bank', {field: 'piggy_bank_id', index: this.index, value: value});
     }
   }
 }
