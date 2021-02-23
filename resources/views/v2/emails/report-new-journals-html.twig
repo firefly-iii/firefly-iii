@@ -15,23 +15,23 @@
                 <!-- amount -->
                 {% if journal.type == 'deposit' %}
                     <span style="color:#3c763d;">
-                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
                         {% if null != journal.foreign_amount*-1 %}
-                            ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                            ({{ formatAmountBySymbol(journal.foreign_amount|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                         {% endif %}
                   </span>
                 {% elseif journal.type == 'transfer' %}
                     <span style="color:#31708f">
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                        {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
                         {% if null != journal.foreign_amount %}
-                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                            ({{ formatAmountBySymbol((journal.foreign_amount*-1)|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                         {% endif %}
                 </span>
                 {% else %}
                     <span style="color:#a94442">
-                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                    {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
                         {% if null != journal.foreign_amount %}
-                            ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                            ({{ formatAmountBySymbol((journal.foreign_amount*-1)|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
                         {% endif %}
                     </span>
 
@@ -41,33 +41,33 @@
                 <a href="{{ route('transactions.show', [group.id]) }}">{{ group.group_title }}</a>
                 <ol>
                     {% for journal in group.transactions %}
-                    <li>
-                        {{ journal.description }},
-                        <!-- amount -->
-                        {% if journal.type == 'deposit' %}
-                            <span style="color:#3c763d;">
-                {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
-                                {% if null != journal.foreign_amount*-1 %}
-                                    ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
-                                {% endif %}
+                        <li>
+                            {{ journal.description }},
+                            <!-- amount -->
+                            {% if journal.type == 'deposit' %}
+                                <span style="color:#3c763d;">
+                {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                    {% if null != journal.foreign_amount*-1 %}
+                                        ({{ formatAmountBySymbol(journal.foreign_amount|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                    {% endif %}
                   </span>
-                        {% elseif journal.type == 'transfer' %}
-                            <span style="color:#31708f">
-                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
-                                {% if null != journal.foreign_amount %}
-                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
-                                {% endif %}
+                            {% elseif journal.type == 'transfer' %}
+                                <span style="color:#31708f">
+                        {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                    {% if null != journal.foreign_amount %}
+                                        ({{ formatAmountBySymbol((journal.foreign_amount*-1)|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                    {% endif %}
                 </span>
-                        {% else %}
-                            <span style="color:#a94442">
-                    {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
-                                {% if null != journal.foreign_amount %}
-                                    ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
-                                {% endif %}
+                            {% else %}
+                                <span style="color:#a94442">
+                    {{ formatAmountBySymbol((journal.amount*-1)|floatval, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                    {% if null != journal.foreign_amount %}
+                                        ({{ formatAmountBySymbol((journal.foreign_amount*-1)|floatval, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})
+                                    {% endif %}
                     </span>
 
-                        {% endif %}
-                    </li>
+                            {% endif %}
+                        </li>
                     {% endfor %}
                 </ol>
             {% endif %}

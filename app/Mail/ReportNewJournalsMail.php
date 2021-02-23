@@ -40,14 +40,10 @@ class ReportNewJournalsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /** @var string Email address of the user */
-    public $email;
-    /** @var Collection A collection of groups */
-    public $groups;
-    /** @var string IP address of user (if known) */
-    public $ipAddress;
-    /** @var array All groups, transformed to array. */
-    public $transformed;
+    public string $email;
+    public Collection $groups;
+    public string $ipAddress;
+    public array $transformed;
 
     /**
      * ConfirmEmailChangeMail constructor.
