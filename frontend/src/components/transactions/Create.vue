@@ -44,7 +44,7 @@
           v-on:set-time="storeTime($event)"
           v-on:set-custom-date="storeField($event)"
           v-on:set-budget="storeField($event)"
-          v-on:set-category="storeCategory(index, $event)"
+          v-on:set-category="storeField($event)"
           v-on:set-bill="storeBill(index, $event)"
           v-on:set-tags="storeTags(index, $event)"
           v-on:set-piggy-bank="storePiggyBank(index, $event)"

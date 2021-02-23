@@ -93,7 +93,7 @@ export default {
   },
   watch: {
     category: function (value) {
-      this.$emit('set-category', value);
+      this.$emit('set-category', {field: 'category', index: this.index, value: value});
     }
   },
   computed: {
