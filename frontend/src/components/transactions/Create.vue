@@ -38,7 +38,7 @@
           v-on:set-account="storeAccountValue($event)"
           v-on:switch-accounts="switchAccounts($event)"
           v-on:set-amount="storeAmount(index, $event)"
-          v-on:set-foreign-currency-id="storeForeignCurrencyId(index, $event)"
+          v-on:set-foreign-currency-id="storeField($event)"
           v-on:set-foreign-amount="storeForeignAmount(index, $event)"
           v-on:set-date="storeDate($event)"
           v-on:set-time="storeTime($event)"
