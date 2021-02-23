@@ -88,7 +88,7 @@ export default {
   },
   watch: {
     budget: function (value) {
-      this.$emit('set-budget', value);
+      this.$emit('set-budget', {field: 'budget_id', index: this.index, value: value});
     }
   },
 }
