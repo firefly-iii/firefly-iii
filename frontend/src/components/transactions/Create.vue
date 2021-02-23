@@ -38,20 +38,7 @@
           v-on:switch-accounts="switchAccounts($event)"
           v-on:set-date="storeDate($event)"
           v-on:set-time="storeTime($event)"
-          v-on:set-amount="storeField($event)"
-          v-on:set-foreign-currency-id="storeField($event)"
-          v-on:set-foreign-amount="storeField($event)"
-          v-on:set-custom-date="storeField($event)"
-          v-on:set-budget="storeField($event)"
-          v-on:set-category="storeField($event)"
-          v-on:set-bill="storeField($event)"
-          v-on:set-tags="storeField($event)"
-          v-on:set-piggy-bank="storeField($event)"
-          v-on:set-internal-reference="storeField($event)"
-          v-on:set-external-url="storeField($event)"
-          v-on:set-notes="storeField($event)"
-          v-on:set-links="storeField($event)"
-          v-on:set-description="storeField($event)"
+          v-on:set-field="storeField($event)"
       />
     </div>
 

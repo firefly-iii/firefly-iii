@@ -63,7 +63,7 @@ export default {
   watch: {
     'currentTag': 'initItems',
     tagList: function (value) {
-      this.$emit('set-tags', {field: 'tags', index: this.index, value: value});
+      this.$emit('set-field', {field: 'tags', index: this.index, value: value});
       this.updateTags = false;
       this.tags = value;
     },

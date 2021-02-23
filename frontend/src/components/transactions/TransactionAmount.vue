@@ -60,7 +60,7 @@ export default {
   },
   watch: {
     transactionAmount: function (value) {
-      this.$emit('set-amount', {field: 'amount', index: this.index, value: value});
+      this.$emit('set-field', {field: 'amount', index: this.index, value: value});
     },
     amount: function (value) {
       this.transactionAmount = value;

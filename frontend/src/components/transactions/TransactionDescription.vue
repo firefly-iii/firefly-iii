@@ -86,7 +86,7 @@ export default {
   },
   watch: {
     description: function (value) {
-      this.$emit('set-description', {field: 'description', index: this.index, value: value});
+      this.$emit('set-field', {field: 'description', index: this.index, value: value});
       //
     }
   },

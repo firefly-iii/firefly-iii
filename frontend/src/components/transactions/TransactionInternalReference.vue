@@ -63,7 +63,7 @@ export default {
       this.availableFields = value;
     },
     reference: function (value) {
-      this.$emit('set-internal-reference', {field: 'internal_reference', index: this.index, value: value});
+      this.$emit('set-field', {field: 'internal_reference', index: this.index, value: value});
     }
   }
 }

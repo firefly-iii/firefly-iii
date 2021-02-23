@@ -58,7 +58,7 @@ export default {
       this.availableFields = value;
     },
     notes: function (value) {
-      this.$emit('set-notes', {field: 'notes', index: this.index, value: value});
+      this.$emit('set-field', {field: 'notes', index: this.index, value: value});
     }
   }
 }

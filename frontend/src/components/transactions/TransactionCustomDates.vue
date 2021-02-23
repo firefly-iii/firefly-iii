@@ -84,7 +84,7 @@ export default {
       return this.dates[field] ?? '';
     },
     setFieldValue(event, field) {
-      this.$emit('set-custom-date', {field: field, index: this.index, value: event.target.value});
+      this.$emit('set-field', {field: field, index: this.index, value: event.target.value});
     },
   }
 }

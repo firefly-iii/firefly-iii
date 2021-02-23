@@ -58,7 +58,7 @@ export default {
       this.dstCurrencyId = value;
     },
     selectedCurrency: function(value) {
-      this.$emit('set-foreign-currency-id',{field: 'foreign_currency_id', index: this.index, value: value});
+      this.$emit('set-field',{field: 'foreign_currency_id', index: this.index, value: value});
     },
     transactionType: function (value) {
       this.lockedCurrency = 0;

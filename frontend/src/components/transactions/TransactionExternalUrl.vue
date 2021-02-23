@@ -62,7 +62,7 @@ export default {
       this.availableFields = value;
     },
     url: function (value) {
-      this.$emit('set-external-url', {field: 'external_url', index: index, value: value});
+      this.$emit('set-field', {field: 'external_url', index: index, value: value});
     }
   }
 }
