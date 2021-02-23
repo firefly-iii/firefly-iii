@@ -33,15 +33,14 @@
           :custom-fields="customFields"
           :submitted-transaction="submittedTransaction"
           v-on:uploaded-attachments="uploadedAttachment($event)"
-          v-on:set-description="storeField($event)"
           v-on:set-marker-location="storeLocation($event)"
           v-on:set-account="storeAccountValue($event)"
           v-on:switch-accounts="switchAccounts($event)"
-          v-on:set-amount="storeAmount(index, $event)"
-          v-on:set-foreign-currency-id="storeField($event)"
-          v-on:set-foreign-amount="storeField($event)"
           v-on:set-date="storeDate($event)"
           v-on:set-time="storeTime($event)"
+          v-on:set-amount="storeField($event)"
+          v-on:set-foreign-currency-id="storeField($event)"
+          v-on:set-foreign-amount="storeField($event)"
           v-on:set-custom-date="storeField($event)"
           v-on:set-budget="storeField($event)"
           v-on:set-category="storeField($event)"
@@ -50,8 +49,9 @@
           v-on:set-piggy-bank="storeField($event)"
           v-on:set-internal-reference="storeField($event)"
           v-on:set-external-url="storeField($event)"
-          v-on:set-notes="storeNotes(index, $event)"
-          v-on:set-links="storeLinks(index, $event)"
+          v-on:set-notes="storeField($event)"
+          v-on:set-links="storeField($event)"
+          v-on:set-description="storeField($event)"
       />
     </div>
 
@@ -402,54 +402,11 @@ export default {
     storeField: function (payload) {
       this.updateField(payload);
     },
-    storeDescription: function (index, value) {
-      this.updateField({field: 'description', index: index, value: value});
-    },
-    storeForeignCurrencyId: function (index, value) {
-      console.log('storeForeignCurrencyId(' + index + ',' + value + ')');
-      this.updateField({field: 'foreign_currency_id', index: index, value: value});
-    },
-    storeAmount: function (index, value) {
-      this.updateField({field: 'amount', index: index, value: value});
-    },
-    storeForeignAmount: function (index, value) {
-      this.updateField({field: 'foreign_amount', index: index, value: value});
-    },
     storeDate: function (value) {
       this.setDate(value.date)
     },
     storeTime: function (value) {
       this.setTime(value.time)
-    },
-    storeCustomDate: function (index, payload) {
-      this.updateField({field: payload.field, index: index, value: payload.date});
-    },
-    storeBudget: function (index, value) {
-      this.updateField({field: 'budget_id', index: index, value: value});
-    },
-    storeCategory: function (index, value) {
-      this.updateField({field: 'category', index: index, value: value});
-    },
-    storeBill: function (index, value) {
-      this.updateField({field: 'bill_id', index: index, value: value});
-    },
-    storeTags: function (index, value) {
-      this.updateField({field: 'tags', index: index, value: value});
-    },
-    storePiggyBank: function (index, value) {
-      this.updateField({field: 'piggy_bank_id', index: index, value: value});
-    },
-    storeInternalReference: function (index, value) {
-      this.updateField({field: 'internal_reference', index: index, value: value});
-    },
-    storeExternalUrl: function (index, value) {
-      this.updateField({field: 'external_url', index: index, value: value});
-    },
-    storeNotes: function (index, value) {
-      this.updateField({field: 'notes', index: index, value: value});
-    },
-    storeLinks: function (index, value) {
-      this.updateField({field: 'links', index: index, value: value});
     },
 
     /**

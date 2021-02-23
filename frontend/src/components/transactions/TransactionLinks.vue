@@ -216,9 +216,7 @@ export default {
   },
   watch: {
     links: function (value) {
-      // TODO
-      this.$emit('set-links', lodashClonedeep(value));
-      //this.updateField({index: this.index, field: 'links', value: lodashClonedeep(value)});
+      this.$emit('set-links', {index: this.index, field: 'links', value: lodashClonedeep(value)});
     },
     customFields: function (value) {
       this.availableFields = value;

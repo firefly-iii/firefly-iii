@@ -38,7 +38,7 @@
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
     </span>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -46,9 +46,9 @@
 export default {
   name: "TransactionAmount",
   props: [
-      'index', 'errors', 'amount', 'transactionType',
-      'sourceCurrencySymbol',
-      'destinationCurrencySymbol',
+    'index', 'errors', 'amount', 'transactionType',
+    'sourceCurrencySymbol',
+    'destinationCurrencySymbol',
   ],
   data() {
     return {
@@ -60,9 +60,9 @@ export default {
   },
   watch: {
     transactionAmount: function (value) {
-      this.$emit('set-amount', value);
+      this.$emit('set-amount', {field: 'amount', index: this.index, value: value});
     },
-    amount: function(value) {
+    amount: function (value) {
       this.transactionAmount = value;
     },
     sourceCurrencySymbol: function (value) {
@@ -72,15 +72,15 @@ export default {
       this.dstCurrencySymbol = value;
     },
 
-    transactionType: function(value) {
-        switch (value) {
-          case 'Transfer':
-          case 'Withdrawal':
-            this.currencySymbol =this.srcCurrencySymbol;
-            break;
-          case 'Deposit':
-            this.currencySymbol =this.dstCurrencySymbol;
-        }
+    transactionType: function (value) {
+      switch (value) {
+        case 'Transfer':
+        case 'Withdrawal':
+          this.currencySymbol = this.srcCurrencySymbol;
+          break;
+        case 'Deposit':
+          this.currencySymbol = this.dstCurrencySymbol;
+      }
     },
   },
 }
