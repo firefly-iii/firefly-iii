@@ -46,11 +46,8 @@ use Illuminate\View\View;
 class ShowController extends Controller
 {
     use PeriodOverview, AugumentData;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
-
-    /** @var BudgetRepositoryInterface */
-    private $repository;
+    private JournalRepositoryInterface $journalRepos;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * ShowController constructor.

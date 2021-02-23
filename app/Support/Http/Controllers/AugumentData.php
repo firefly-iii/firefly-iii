@@ -199,6 +199,7 @@ trait AugumentData
         /** @var BudgetLimitRepositoryInterface $blRepository */
         $blRepository = app(BudgetLimitRepositoryInterface::class);
 
+
         // properties for cache
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -207,18 +208,19 @@ trait AugumentData
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+             return $cache->get(); // @codeCoverageIgnore
         }
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);
         $limits           = new Collection();
         $budgetCollection = new Collection([$budget]);
+
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             $currency = $entry->transactionCurrency;
             // clone because these objects change each other.
-            $currentStart = clone $start;
-            $currentEnd   = clone $end;
+            $currentStart = clone $entry->start_date;
+            $currentEnd   = clone $entry->end_date;
             $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
             $spent        = $expenses[(int)$currency->id]['sum'] ?? '0';
             $entry->spent = $spent;
