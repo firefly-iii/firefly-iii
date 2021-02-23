@@ -89,7 +89,7 @@ export default {
   },
   watch: {
     bill: function (value) {
-      this.$emit('set-bill', value);
+      this.$emit('set-bill', {field: 'bill_id', index: this.index, value: value});
     }
   },
 }
