@@ -49,7 +49,7 @@
           v-on:set-tags="storeField($event)"
           v-on:set-piggy-bank="storeField($event)"
           v-on:set-internal-reference="storeField($event)"
-          v-on:set-external-url="storeExternalUrl(index, $event)"
+          v-on:set-external-url="storeField($event)"
           v-on:set-notes="storeNotes(index, $event)"
           v-on:set-links="storeLinks(index, $event)"
       />
