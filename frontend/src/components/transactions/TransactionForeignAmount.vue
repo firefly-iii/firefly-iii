@@ -59,7 +59,7 @@ export default {
   },
   watch: {
     amount: function(value) {
-      this.$emit('set-foreign-amount', value);
+      this.$emit('set-foreign-amount', {field: 'foreign_amount', index: this.index, value: value});
     }
   },
   computed: {
