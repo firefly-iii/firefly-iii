@@ -46,7 +46,7 @@
           v-on:set-budget="storeField($event)"
           v-on:set-category="storeField($event)"
           v-on:set-bill="storeField($event)"
-          v-on:set-tags="storeTags(index, $event)"
+          v-on:set-tags="storeField($event)"
           v-on:set-piggy-bank="storePiggyBank(index, $event)"
           v-on:set-internal-reference="storeInternalReference(index, $event)"
           v-on:set-external-url="storeExternalUrl(index, $event)"
