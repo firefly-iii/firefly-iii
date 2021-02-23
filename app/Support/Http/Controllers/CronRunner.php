@@ -46,7 +46,7 @@ trait CronRunner
             return $e->getMessage();
         }
         if (false === $result) {
-            return 'The recurring transaction cron job did not fire.';
+            return 'The recurring transaction cron job did not fire. It was fired less than half a day ago.';
         }
 
         return 'The recurring transaction cron job fired successfully.';
