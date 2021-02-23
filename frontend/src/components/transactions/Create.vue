@@ -42,7 +42,7 @@
           v-on:set-foreign-amount="storeField($event)"
           v-on:set-date="storeDate($event)"
           v-on:set-time="storeTime($event)"
-          v-on:set-custom-date="storeCustomDate(index, $event)"
+          v-on:set-custom-date="storeField($event)"
           v-on:set-budget="storeBudget(index, $event)"
           v-on:set-category="storeCategory(index, $event)"
           v-on:set-bill="storeBill(index, $event)"
