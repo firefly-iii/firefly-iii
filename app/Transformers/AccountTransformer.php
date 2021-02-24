@@ -98,7 +98,7 @@ class AccountTransformer extends AbstractTransformer
             'active'                  => $account->active,
             'order'                   => $account->order,
             'name'                    => $account->name,
-            'type'                    => $accountType,
+            'type'                    => strtolower($accountType),
             'account_role'            => $accountRole,
             'currency_id'             => $currencyId,
             'currency_code'           => $currencyCode,
