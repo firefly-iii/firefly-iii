@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       url: this.value,
-      availableFields: this.customFields
+      availableFields: this.customFields,
     }
   },
   computed: {
@@ -61,8 +61,11 @@ export default {
     customFields: function (value) {
       this.availableFields = value;
     },
+    value: function (value) {
+      this.url = value;
+    },
     url: function (value) {
-      this.$emit('set-field', {field: 'external_url', index: index, value: value});
+      this.$emit('set-field', {field: 'external_url', index: this.index, value: value});
     }
   }
 }

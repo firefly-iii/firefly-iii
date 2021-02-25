@@ -45,7 +45,8 @@ export default {
   data() {
     return {
       reference: this.value,
-      availableFields: this.customFields
+      availableFields: this.customFields,
+      emitEvent: true
     }
   },
   computed: {
@@ -61,6 +62,10 @@ export default {
   watch: {
     customFields: function (value) {
       this.availableFields = value;
+    },
+    value: function (value) {
+      this.emitEvent = false;
+      this.reference = value;
     },
     reference: function (value) {
       this.$emit('set-field', {field: 'internal_reference', index: this.index, value: value});

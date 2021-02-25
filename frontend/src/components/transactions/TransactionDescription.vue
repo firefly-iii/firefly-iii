@@ -57,7 +57,8 @@ export default {
     return {
       descriptions: [],
       initialSet: [],
-      description: this.value
+      description: this.value,
+      sendEvent: true
     }
   },
   created() {
@@ -85,9 +86,15 @@ export default {
     }, 300)
   },
   watch: {
+    value: function (value) {
+      this.sendEvent = false;
+      this.description = value;
+    },
     description: function (value) {
-      this.$emit('set-field', {field: 'description', index: this.index, value: value});
-      //
+      if (true === this.sendEvent) {
+        this.$emit('set-field', {field: 'description', index: this.index, value: value});
+      }
+      this.sendEvent = true;
     }
   },
 }

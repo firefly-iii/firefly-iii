@@ -222,6 +222,11 @@ const mutations = {
     },
     deleteTransaction(state, payload) {
         state.transactions.splice(payload.index, 1);
+        // console.log('Deleted transaction ' + payload.index);
+        // console.log(state.transactions);
+        if(0===state.transactions.length) {
+            // console.log('array is empty!');
+        }
     },
     setTransactionType(state, transactionType) {
         state.transactionType = transactionType;

@@ -74,7 +74,25 @@ export default {
   watch: {
     customFields: function (value) {
       this.availableFields = value;
-    }
+    },
+    interestDate: function(value) {
+      this.dates.interest_date = value;
+    },
+    bookDate: function(value) {
+      this.dates.book_date = value;
+    },
+    processDate: function(value) {
+      this.dates.process_date = value;
+    },
+    dueDate: function(value) {
+      this.dates.due_date = value;
+    },
+    paymentDate: function(value) {
+      this.dates.payment_date = value;
+    },
+    invoiceDate: function(value) {
+      this.dates.invoice_date = value;
+    },
   },
   methods: {
     isDateField: function (name) {

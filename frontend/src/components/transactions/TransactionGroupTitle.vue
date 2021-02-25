@@ -51,9 +51,7 @@
 <script>
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from "lodash";
-import {createNamespacedHelpers} from "vuex";
 
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   props: ['value', 'errors'],
   name: "TransactionGroupTitle",
@@ -62,7 +60,8 @@ export default {
     return {
       descriptions: [],
       initialSet: [],
-      title: this.value
+      title: this.value,
+      emitEvent: true
     }
   },
 
@@ -74,24 +73,15 @@ export default {
         });
   },
   watch: {
+    value: function (value) {
+      this.title = value;
+    },
     title: function (value) {
-      //console.log('set');
-      this.setGroupTitle({groupTitle: value});
+      this.$emit('set-group-title', value);
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'setGroupTitle'
-        ],
-    ),
-    ...mapGetters(
-        [
-          'groupTitle'
-        ]
-    ),
     clearDescription: function () {
-      this.setGroupTitle({groupTitle: ''});
       this.title = '';
     },
     getACURL: function (query) {

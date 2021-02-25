@@ -61,7 +61,8 @@ export default {
     return {
       categories: [],
       initialSet: [],
-      category: this.value
+      category: this.value,
+      emitEvent: true
     }
   },
 
@@ -77,7 +78,7 @@ export default {
 
   methods: {
     clearCategory: function () {
-      this.category = null;
+      this.category = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -92,6 +93,10 @@ export default {
     }, 300)
   },
   watch: {
+    value: function (value) {
+      this.emitEvent = false;
+      this.category = value ?? '';
+    },
     category: function (value) {
       this.$emit('set-field', {field: 'category', index: this.index, value: value});
     }

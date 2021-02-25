@@ -51,7 +51,8 @@ export default {
   data() {
     return {
       piggyList: [],
-      piggy_bank_id: this.value
+      piggy_bank_id: this.value,
+      emitEvent: true
     }
   },
   created() {
@@ -89,8 +90,15 @@ export default {
     },
   },
   watch: {
+    value: function (value) {
+      this.emitEvent = false;
+      this.piggy_bank_id = value;
+    },
     piggy_bank_id: function (value) {
-      this.$emit('set-field', {field: 'piggy_bank_id', index: this.index, value: value});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'piggy_bank_id', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
   }
 }

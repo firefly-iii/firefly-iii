@@ -46,7 +46,10 @@
 export default {
   name: "TransactionAmount",
   props: [
-    'index', 'errors', 'amount', 'transactionType',
+    'index',
+    'errors',
+    'amount',
+    'transactionType',
     'sourceCurrencySymbol',
     'destinationCurrencySymbol',
   ],
@@ -71,7 +74,6 @@ export default {
     destinationCurrencySymbol: function (value) {
       this.dstCurrencySymbol = value;
     },
-
     transactionType: function (value) {
       switch (value) {
         case 'Transfer':

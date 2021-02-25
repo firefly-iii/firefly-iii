@@ -38,27 +38,32 @@ export default {
     'transactionType',
     'sourceCurrencyId',
     'destinationCurrencyId',
-    'selectedCurrencyId'
+    'selectedCurrencyId',
+    'value'
   ],
   data() {
     return {
-      selectedCurrency: 0,
+      selectedCurrency: this.value,
       allCurrencies: [],
       selectableCurrencies: [],
       dstCurrencyId: this.destinationCurrencyId,
       srcCurrencyId: this.sourceCurrencyId,
       lockedCurrency: 0,
+      emitEvent: true
     }
   },
   watch: {
+    value: function (value) {
+      this.selectedCurrency = value;
+    },
     sourceCurrencyId: function (value) {
       this.srcCurrencyId = value;
     },
     destinationCurrencyId: function (value) {
       this.dstCurrencyId = value;
     },
-    selectedCurrency: function(value) {
-      this.$emit('set-field',{field: 'foreign_currency_id', index: this.index, value: value});
+    selectedCurrency: function (value) {
+      this.$emit('set-field', {field: 'foreign_currency_id', index: this.index, value: value});
     },
     transactionType: function (value) {
       this.lockedCurrency = 0;

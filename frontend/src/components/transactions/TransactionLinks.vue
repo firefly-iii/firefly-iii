@@ -197,8 +197,9 @@ export default {
       linkTypes: [],
       query: '',
       searching: false,
-      links: [],
-      availableFields: this.customFields
+      links: this.value,
+      availableFields: this.customFields,
+      emitEvent: true
     }
   },
   created() {
@@ -215,8 +216,15 @@ export default {
     }
   },
   watch: {
+    value: function (value) {
+      this.emitEvent = false;
+      this.links = lodashClonedeep(value);
+    },
     links: function (value) {
-      this.$emit('set-field', {index: this.index, field: 'links', value: lodashClonedeep(value)});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {index: this.index, field: 'links', value: lodashClonedeep(value)});
+      }
+      this.emitEvent = true;
     },
     customFields: function (value) {
       this.availableFields = value;

@@ -41,7 +41,7 @@ return [
     'search_result'          => '“:query”的搜索结果',
     'withdrawal_list'        => '支出',
     'Withdrawal_list'        => '支出',
-    'deposit_list'           => '收益、收入与存款',
+    'deposit_list'           => '收入',
     'transfer_list'          => '转账',
     'transfers_list'         => '转账',
     'reconciliation_list'    => '对账',

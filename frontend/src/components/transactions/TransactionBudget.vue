@@ -49,7 +49,8 @@ export default {
   data() {
     return {
       budgetList: [],
-      budget: this.value
+      budget: this.value,
+      emitEvent: true
     }
   },
   created() {
@@ -87,6 +88,10 @@ export default {
     },
   },
   watch: {
+    value: function (value) {
+      this.emitEvent = false;
+      this.budget = value;
+    },
     budget: function (value) {
       this.$emit('set-field', {field: 'budget_id', index: this.index, value: value});
     }

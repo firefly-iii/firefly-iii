@@ -50,7 +50,8 @@ export default {
   data() {
     return {
       billList: [],
-      bill: this.value
+      bill: this.value,
+      emitEvent: true
     }
   },
   created() {
@@ -88,8 +89,15 @@ export default {
     },
   },
   watch: {
+    value: function (value) {
+      this.emitEvent = false;
+      this.bill = value;
+    },
     bill: function (value) {
-      this.$emit('set-field', {field: 'bill_id', index: this.index, value: value});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'bill_id', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
   },
 }

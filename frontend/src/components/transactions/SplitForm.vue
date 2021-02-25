@@ -28,6 +28,9 @@
               {{ $t('firefly.basic_journal_information') }}
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
+            <div class="card-tools" v-if="count>1">
+              <button class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
+            </div>
           </div>
           <div class="card-body">
             <!-- start of body -->
@@ -93,6 +96,7 @@
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
                 <TransactionForeignCurrency
                     v-on="$listeners"
+                    v-model="transaction.foreign_currency_id"
                     :transaction-type="this.transactionType"
                     :source-currency-id="this.transaction.source_account_currency_id"
                     :destination-currency-id="this.transaction.destination_account_currency_id"
@@ -111,6 +115,7 @@
                     :index="index"
                     v-on="$listeners"
                     :errors="transaction.errors.foreign_amount"
+                    v-model="transaction.foreign_amount"
                     :transaction-type="this.transactionType"
                     :source-currency-id="this.transaction.source_account_currency_id"
                     :destination-currency-id="this.transaction.destination_account_currency_id"
@@ -322,7 +327,12 @@ export default {
     'index',
     'submittedTransaction' // need to know if transaction is submitted.
   ],
-  // TODO get rid of mapped getters.
+  methods: {
+    removeTransaction: function () {
+      // console.log('Will remove transaction ' + this.index);
+      this.$emit('remove-transaction', {index: this.index});
+    },
+  },
   computed: {
     ...mapGetters(['transactionType', 'date', 'time']),
     splitDate: function () {

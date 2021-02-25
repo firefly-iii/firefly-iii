@@ -43,23 +43,24 @@
 export default {
   name: "TransactionForeignAmount",
   props: [
-      'index',
-      'errors',
-      'transactionType',
-      'sourceCurrencyId',
-      'destinationCurrencyId'
+    'index',
+    'errors',
+    'value',
+    'transactionType',
+    'sourceCurrencyId',
+    'destinationCurrencyId'
   ],
   data() {
     return {
-      amount: ''
-      // currencySymbol: '',
-      // allCurrencies: [],
-      // selectableCurrencies: [],
+      amount: this.value
     }
   },
   watch: {
-    amount: function(value) {
+    amount: function (value) {
       this.$emit('set-field', {field: 'foreign_amount', index: this.index, value: value});
+    },
+    value: function (value) {
+      this.amount = value;
     }
   },
   computed: {

@@ -39,6 +39,7 @@
           v-on:set-date="storeDate($event)"
           v-on:set-time="storeTime($event)"
           v-on:set-field="storeField($event)"
+          v-on:remove-transaction="removeTransaction($event)"
       />
     </div>
 
@@ -49,7 +50,7 @@
           <div class="card-body">
             <div class="row">
               <div class="col">
-                <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors"/>
+                <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
               </div>
             </div>
           </div>
@@ -174,6 +175,9 @@ export default {
                   ])
   },
   watch: {
+    transactions: function () {
+      // console.log('updated transactions');
+    },
     submittedTransaction: function () {
       // see finalizeSubmit()
       this.finalizeSubmit();
@@ -193,6 +197,7 @@ export default {
      */
     ...mapMutations(
         [
+          'setGroupTitle',
           'addTransaction',
           'deleteTransaction',
           'setAllowedOpposingTypes',
@@ -208,8 +213,9 @@ export default {
     /**
      * Removes a split from the array.
      */
-    removeTransaction: function (index) {
-      this.$store.commit('transactions/create/deleteTransaction', {index: index});
+    removeTransaction: function (payload) {
+      // console.log('Triggered to remove transaction ' + payload.index);
+      this.$store.commit('transactions/create/deleteTransaction', payload);
     },
     /**
      * This method grabs the users preferred custom transaction fields. It's used when configuring the
@@ -229,13 +235,13 @@ export default {
      * forwarded.
      */
     finalizeSubmit() {
-      console.log('finalizeSubmit (' + this.submittedTransaction + ', ' + this.submittedAttachments + ', ' + this.submittedLinks + ')');
+      // console.log('finalizeSubmit (' + this.submittedTransaction + ', ' + this.submittedAttachments + ', ' + this.submittedLinks + ')');
       if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
-        console.log('all true');
-        console.log('createAnother = ' + this.createAnother);
-        console.log('inError = ' + this.inError);
+        // console.log('all true');
+        // console.log('createAnother = ' + this.createAnother);
+        // console.log('inError = ' + this.inError);
         if (false === this.createAnother && false === this.inError) {
-          console.log('redirect');
+          // console.log('redirect');
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
           return;
         }
@@ -282,7 +288,7 @@ export default {
      * need to happen in the right order.
      */
     submitTransaction: function () {
-      console.log('submitTransaction()');
+      // console.log('submitTransaction()');
       // disable the submit button:
       this.enableSubmit = false;
 
@@ -290,13 +296,13 @@ export default {
       const url = './api/v1/transactions';
       const data = this.convertData();
 
-      console.log('Will submit:');
-      console.log(data);
+      // console.log('Will submit:');
+      // console.log(data);
 
       // POST the transaction.
       axios.post(url, data)
           .then(response => {
-            console.log('Response is OK!');
+            // console.log('Response is OK!');
             // report the transaction is submitted.
             this.submittedTransaction = true;
 
@@ -334,12 +340,13 @@ export default {
      * The ID is set via the store.
      */
     submitAttachments: function (data, response) {
-      console.log('submitAttachments()');
+      // console.log('submitAttachments()');
       let result = response.data.data.attributes.transactions
       for (let i in data.transactions) {
         if (data.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           if (result.hasOwnProperty(i)) {
-            this.updateField({index: i, field: 'transaction_journal_id', value: result[0].transaction_journal_id});
+            // console.log('updateField(' + i + ', transaction_journal_id, ' + result[i].transaction_journal_id + ')');
+            this.updateField({index: i, field: 'transaction_journal_id', value: result[i].transaction_journal_id});
           }
         }
       }
@@ -352,13 +359,16 @@ export default {
      * Once the number of components matches the number of splits we know all attachments have been uploaded.
      */
     uploadedAttachment: function (journalId) {
-      console.log('Triggered uploadedAttachment(' + journalId + ')');
+      // console.log('Triggered uploadedAttachment(' + journalId + ')');
       let key = 'str' + journalId;
       this.submittedAttCount[key] = 1;
       let count = Object.keys(this.submittedAttCount).length;
+      // console.log('Count is now ' + count);
+      // console.log('Length is ' + this.transactions.length);
       if (count === this.transactions.length) {
         // mark the attachments as stored:
         this.submittedAttachments = true;
+        // console.log('Got them all!');
       }
     },
     /**
@@ -394,6 +404,10 @@ export default {
     },
     storeTime: function (value) {
       this.setTime(value.time)
+    },
+    storeGroupTitle: function (value) {
+      // console.log('set group title: ' + value);
+      this.setGroupTitle({groupTitle: value});
     },
 
     /**
@@ -590,6 +604,7 @@ export default {
       let data = {
         'transactions': []
       };
+      //console.log('Group title is: "' + this.groupTitle + '"');
       if (this.groupTitle.length > 0) {
         data.group_title = this.groupTitle;
       }
@@ -599,7 +614,7 @@ export default {
           data.transactions.push(this.convertSplit(i, this.transactions[i]));
         }
       }
-      if (data.transactions.length > 1) {
+      if (data.transactions.length > 1 && '' !== data.transactions[0].description) {
         data.group_title = data.transactions[0].description;
       }
 
@@ -651,7 +666,7 @@ export default {
     },
 
     switchAccounts: function (index) {
-      console.log('user wants to switch Accounts');
+      // console.log('user wants to switch Accounts');
       let origSourceId = this.transactions[index].source_account_id;
       let origSourceName = this.transactions[index].source_account_name;
       let origSourceType = this.transactions[index].source_account_type;

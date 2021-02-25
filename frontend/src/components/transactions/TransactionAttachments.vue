@@ -50,7 +50,7 @@ export default {
     },
     transaction_journal_id: function (value) {
       if (!this.showField) {
-        console.log('Field is hidden. Emit event!');
+        // console.log('Field is hidden. Emit event!');
         this.$emit('uploaded-attachments', value);
         return;
       }
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     doUpload: function () {
-      console.log('Now in doUpload() for ' + this.$refs.att.files.length + ' files.');
+      // console.log('Now in doUpload() for ' + this.$refs.att.files.length + ' files.');
       for (let i in this.$refs.att.files) {
         if (this.$refs.att.files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = this.$refs.att.files[i];
@@ -94,7 +94,7 @@ export default {
                     .post(uploadUri, new Blob([evt.target.result]))
                     .then(attachmentResponse => {
                       // TODO feedback etc.
-                      console.log('Uploaded a file. Emit event!');
+                      // console.log('Uploaded a file. Emit event!');
                       // console.log(attachmentResponse);
                       theParent.$emit('uploaded-attachments', this.transaction_journal_id);
                     });
@@ -105,7 +105,7 @@ export default {
         }
       }
       if (0 === this.$refs.att.files.length) {
-        console.log('No files to upload. Emit event!');
+        // console.log('No files to upload. Emit event!');
         this.$emit('uploaded-attachments', this.transaction_journal_id);
       }
     }

@@ -135,7 +135,7 @@ export default {
   },
   watch: {
     selectedAccount: function (value) {
-      console.log('Emit on selected account');
+      // console.log('Emit on selected account');
       this.selectedAccountTrigger = true;
       this.account = value;
 
@@ -155,7 +155,7 @@ export default {
     },
     accountName: function (value) {
       if (false === this.selectedAccountTrigger) {
-        console.log('Save to change name!');
+        // console.log('Save to change name!');
         this.$emit('set-account',
                    {
                      index: this.index,
@@ -190,10 +190,12 @@ export default {
       }
     },
     value: function (value) {
-      console.log(this.direction + ' account overruled by external forces.');
+      // console.log('Index ' + this.index + ' nwAct: ', value);
+      // console.log(this.direction + ' account overruled by external forces.');
+      // console.log(value);
       this.account = value;
       this.selectedAccountTrigger = true;
-      this.accountName = value.name;
+      this.accountName = value.name ?? '';
     }
   },
   computed: {
