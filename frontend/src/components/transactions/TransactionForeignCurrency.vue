@@ -20,10 +20,10 @@
 
 <template>
   <!-- FOREIGN Currency -->
-  <div class="form-group" v-if="isVisible">
+  <div v-if="isVisible" class="form-group">
     <div class="text-xs">&nbsp;</div>
     <div class="input-group">
-      <select name="foreign_currency_id[]" v-model="selectedCurrency" class="form-control">
+      <select v-model="selectedCurrency" class="form-control" name="foreign_currency_id[]">
         <option v-for="currency in selectableCurrencies" :label="currency.name" :value="currency.id">{{ currency.name }}</option>
       </select>
     </div>

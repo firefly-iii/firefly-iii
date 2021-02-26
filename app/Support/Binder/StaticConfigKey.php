@@ -34,7 +34,8 @@ class StaticConfigKey
         'firefly.version',
         'firefly.api_version',
         'firefly.default_location',
-        'firefly.account_to_transaction'
+        'firefly.account_to_transaction',
+        'firefly.allowed_opposing_types'
     ];
     /**
      * @param string $value

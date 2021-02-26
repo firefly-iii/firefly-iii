@@ -81,12 +81,12 @@ const actions = {
             context.commit('setEnd', new Date(localStorage.viewRangeEnd));
         }
         // also set default:
-        if(localStorage.viewRangeDefaultStart) {
+        if (localStorage.viewRangeDefaultStart) {
             // console.log('view range default start set from local storage.');
             // console.log(localStorage.viewRangeDefaultStart);
             context.commit('setDefaultStart', new Date(localStorage.viewRangeDefaultStart));
         }
-        if(localStorage.viewRangeDefaultEnd) {
+        if (localStorage.viewRangeDefaultEnd) {
             // console.log('view range default end set from local storage.');
             // console.log(localStorage.viewRangeDefaultEnd);
             context.commit('setDefaultEnd', new Date(localStorage.viewRangeDefaultEnd));

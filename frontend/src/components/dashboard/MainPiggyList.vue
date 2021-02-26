@@ -25,19 +25,19 @@
     </div>
 
     <!-- body if loading -->
-    <div class="card-body" v-if="loading && !error">
+    <div v-if="loading && !error" class="card-body">
       <div class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
       </div>
     </div>
     <!-- body if error -->
-    <div class="card-body" v-if="error">
+    <div v-if="error" class="card-body">
       <div class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
     </div>
     <!-- body if normal -->
-    <div class="card-body table-responsive p-0" v-if="!loading && !error">
+    <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-striped">
         <caption style="display:none;">{{ $t('firefly.piggy_banks') }}</caption>
         <thead>
@@ -58,9 +58,9 @@
           <td>
             <div class="progress-group">
               <div class="progress progress-sm">
-                <div class="progress-bar progress-bar-striped primary" v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}"></div>
-                <div class="progress-bar progress-bar-striped bg-success" v-if="100 === piggy.attributes.pct"
-                     :style="{'width': piggy.attributes.pct + '%'}"></div>
+                <div v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}" class="progress-bar progress-bar-striped primary"></div>
+                <div v-if="100 === piggy.attributes.pct" :style="{'width': piggy.attributes.pct + '%'}"
+                     class="progress-bar progress-bar-striped bg-success"></div>
               </div>
             </div>
             <span class="text-success">
@@ -81,7 +81,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a href="./piggy-banks" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_piggies') }}</a>
+      <a class="btn btn-default button-sm" href="./piggy-banks"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_piggies') }}</a>
     </div>
   </div>
 </template>

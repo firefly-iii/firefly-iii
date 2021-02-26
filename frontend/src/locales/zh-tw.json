@@ -47,6 +47,8 @@
         "go_to_expenses": "Go to expenses",
         "go_to_bills": "\u524d\u5f80\u60a8\u7684\u5e33\u55ae",
         "bills": "\u5e33\u55ae",
+        "last_thirty_days": "\u6700\u8fd130\u5929",
+        "last_seven_days": "\u6700\u8fd17\u5929",
         "go_to_piggies": "\u524d\u5f80\u60a8\u7684\u5c0f\u8c6c\u64b2\u6eff",
         "saved": "Saved",
         "piggy_banks": "\u5c0f\u8c6c\u64b2\u6eff",

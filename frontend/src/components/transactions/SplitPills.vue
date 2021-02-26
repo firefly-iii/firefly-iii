@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div class="row" v-if="transactions.length > 1">
+  <div v-if="transactions.length > 1" class="row">
     <div class="col">
       <!-- tabs -->
       <ul class="nav nav-pills ml-auto p-2">

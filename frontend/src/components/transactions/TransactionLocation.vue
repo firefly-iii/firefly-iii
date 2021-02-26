@@ -19,16 +19,16 @@
   -->
 
 <template>
-  <div class="form-group" v-if="showField">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.location') }}
     </div>
     <div style="width:100%;height:300px;">
       <l-map
-          style="width:100%;height:300px;"
-          :zoom="zoom"
-          ref="myMap" @ready="prepMap()"
+          ref="myMap"
           :center="center"
+          :zoom="zoom" style="width:100%;height:300px;"
+          @ready="prepMap()"
           @update:zoom="zoomUpdated"
           @update:center="centerUpdated"
           @update:bounds="boundsUpdated"

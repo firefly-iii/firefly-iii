@@ -26,14 +26,14 @@
     <div class="input-group">
       <select
           ref="budget"
-          :title="$t('firefly.budget')"
           v-model="budget"
-          autocomplete="off"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :title="$t('firefly.budget')"
+          autocomplete="off"
           name="budget_id[]"
           v-on:submit.prevent
       >
-        <option v-for="budget in this.budgetList" :value="budget.id" :label="budget.name">{{ budget.name }}</option>
+        <option v-for="budget in this.budgetList" :label="budget.name" :value="budget.id">{{ budget.name }}</option>
       </select>
     </div>
     <span v-if="errors.length > 0">

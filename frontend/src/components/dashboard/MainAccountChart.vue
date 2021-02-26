@@ -1,4 +1,3 @@
-
 <!--
   - MainAccountChart.vue
   - Copyright (c) 2020 james@firefly-iii.org
@@ -21,14 +20,15 @@
 
 <script>
 
-import { Line, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import {Line, mixins} from 'vue-chartjs'
+
+const {reactiveProp} = mixins
 
 export default {
   extends: Line,
   mixins: [reactiveProp],
   props: ['options'],
-  mounted () {
+  mounted() {
     this.renderChart(this.chartData, this.options)
   }
 }

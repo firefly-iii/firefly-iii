@@ -20,21 +20,21 @@
 
 <template>
   <div>
-    <div class="form-group" v-for="(enabled, name) in availableFields">
-      <div class="text-xs d-none d-lg-block d-xl-block" v-if="enabled && isDateField(name)">
+    <div v-for="(enabled, name) in availableFields" class="form-group">
+      <div v-if="enabled && isDateField(name)" class="text-xs d-none d-lg-block d-xl-block">
         {{ $t('form.' + name) }}
       </div>
-      <div class="input-group" v-if="enabled && isDateField(name)">
+      <div v-if="enabled && isDateField(name)" class="input-group">
         <input
-            class="form-control"
-            type="date"
             :ref="name"
-            :title="$t('form.' + name)"
-            :value="getFieldValue(name)"
-            @change="setFieldValue($event, name)"
-            autocomplete="off"
             :name="name + '[]'"
             :placeholder="$t('form.' + name)"
+            :title="$t('form.' + name)"
+            :value="getFieldValue(name)"
+            autocomplete="off"
+            class="form-control"
+            type="date"
+            @change="setFieldValue($event, name)"
             v-on:submit.prevent
         >
       </div>
@@ -75,22 +75,22 @@ export default {
     customFields: function (value) {
       this.availableFields = value;
     },
-    interestDate: function(value) {
+    interestDate: function (value) {
       this.dates.interest_date = value;
     },
-    bookDate: function(value) {
+    bookDate: function (value) {
       this.dates.book_date = value;
     },
-    processDate: function(value) {
+    processDate: function (value) {
       this.dates.process_date = value;
     },
-    dueDate: function(value) {
+    dueDate: function (value) {
       this.dates.due_date = value;
     },
-    paymentDate: function(value) {
+    paymentDate: function (value) {
       this.dates.payment_date = value;
     },
-    invoiceDate: function(value) {
+    invoiceDate: function (value) {
       this.dates.invoice_date = value;
     },
   },

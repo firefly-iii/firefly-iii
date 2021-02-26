@@ -24,19 +24,19 @@
       <h3 class="card-title">{{ $t('firefly.categories') }}</h3>
     </div>
     <!-- body if loading -->
-    <div class="card-body" v-if="loading && !error">
+    <div v-if="loading && !error" class="card-body">
       <div class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
       </div>
     </div>
     <!-- body if error -->
-    <div class="card-body" v-if="error">
+    <div v-if="error" class="card-body">
       <div class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
     </div>
     <!-- body if normal -->
-    <div class="card-body table-responsive p-0" v-if="!loading && !error">
+    <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
         <tbody>
         <tr v-for="category in sortedList">
@@ -45,10 +45,10 @@
           </td>
           <td class="align-middle">
             <!-- SPENT -->
-            <div class="progress" v-if="category.spentPct > 0">
-              <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" :aria-valuenow="category.spentPct"
-                   :style="{ width: category.spentPct  + '%'}" aria-valuemin="0"
-                   aria-valuemax="100">
+            <div v-if="category.spentPct > 0" class="progress">
+              <div :aria-valuenow="category.spentPct" :style="{ width: category.spentPct  + '%'}" aria-valuemax="100"
+                   aria-valuemin="0" class="progress-bar progress-bar-striped bg-danger"
+                   role="progressbar">
                 <span v-if="category.spentPct > 20">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.spent) }}
                 </span>
@@ -59,13 +59,13 @@
             </div>
 
             <!-- EARNED -->
-            <div class="progress justify-content-end" v-if="category.earnedPct > 0" title="hello2">
+            <div v-if="category.earnedPct > 0" class="progress justify-content-end" title="hello2">
               <span v-if="category.earnedPct <= 20">
                 {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.earned) }}
                 &nbsp;</span>
-              <div class="progress-bar progress-bar-striped bg-success" role="progressbar" :aria-valuenow="category.earnedPct"
-                   :style="{ width: category.earnedPct  + '%'}" aria-valuemin="0"
-                   aria-valuemax="100" title="hello">
+              <div :aria-valuenow="category.earnedPct" :style="{ width: category.earnedPct  + '%'}" aria-valuemax="100"
+                   aria-valuemin="0" class="progress-bar progress-bar-striped bg-success"
+                   role="progressbar" title="hello">
                 <span v-if="category.earnedPct > 20">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.earned) }}
                 </span>

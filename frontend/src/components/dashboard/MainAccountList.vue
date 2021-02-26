@@ -21,7 +21,7 @@
 <template>
   <div>
     <!-- row if loading -->
-    <div class="row" v-if="loading && !error">
+    <div v-if="loading && !error" class="row">
       <div class="col">
         <div class="card">
           <div class="card-body">
@@ -34,7 +34,7 @@
     </div>
 
     <!-- row if error -->
-    <div class="row" v-if="error">
+    <div v-if="error" class="row">
       <div class="col">
         <div class="card">
           <div class="card-body">
@@ -47,10 +47,10 @@
     </div>
 
     <!-- row if normal -->
-    <div class="row" v-if="!loading && !error">
+    <div v-if="!loading && !error" class="row">
       <div
-          v-bind:class="{ 'col-lg-12': 1 === accounts.length, 'col-lg-6': 2 === accounts.length, 'col-lg-4': accounts.length > 2 }"
-          v-for="account in accounts">
+          v-for="account in accounts"
+          v-bind:class="{ 'col-lg-12': 1 === accounts.length, 'col-lg-6': 2 === accounts.length, 'col-lg-4': accounts.length > 2 }">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title"><a :href="account.url">{{ account.title }}</a></h3>
@@ -62,9 +62,9 @@
           </div>
           <div class="card-body table-responsive p-0">
             <div>
-              <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id"/>
-              <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id"/>
-              <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id"/>
+              <transaction-list-large v-if="1===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <transaction-list-medium v-if="2===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <transaction-list-small v-if="accounts.length > 2" :account_id="account.id" :transactions="account.transactions"/>
             </div>
           </div>
         </div>

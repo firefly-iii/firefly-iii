@@ -23,9 +23,9 @@
     <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
     <thead>
     <tr>
-      <th scope="col" class="text-left">{{ $t('firefly.description') }}</th>
+      <th class="text-left" scope="col">{{ $t('firefly.description') }}</th>
       <th scope="col">{{ $t('firefly.opposing_account') }}</th>
-      <th scope="col" class="text-right">{{ $t('firefly.amount') }}</th>
+      <th class="text-right" scope="col">{{ $t('firefly.amount') }}</th>
     </tr>
     </thead>
     <tbody>
@@ -38,10 +38,10 @@
       </td>
       <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'accounts/show/' + tr.destination_id" v-if="'withdrawal' === tr.type">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + tr.source_id" v-if="'deposit' === tr.type">{{ tr.source_name }}</a>
-                    <a :href="'accounts/show/' + tr.destination_id" v-if="'transfer' === tr.type && tr.source_id === account_id">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + tr.source_id" v-if="'transfer' === tr.type && tr.destination_id === account_id">{{ tr.source_name }}</a>
+                    <a v-if="'withdrawal' === tr.type" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'deposit' === tr.type" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <a v-if="'transfer' === tr.type && tr.source_id === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'transfer' === tr.type && tr.destination_id === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
                     <br/>
                 </span>
       </td>

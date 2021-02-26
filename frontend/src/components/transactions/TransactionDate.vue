@@ -25,26 +25,26 @@
     </div>
     <div class="input-group">
       <input
-          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
-          type="date"
           ref="date"
-          :title="$t('firefly.date')"
           v-model="dateStr"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :disabled="index > 0"
+          :placeholder="dateStr"
+          :title="$t('firefly.date')"
           autocomplete="off"
           name="date[]"
-          :placeholder="dateStr"
+          type="date"
       >
       <input
-          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
-          type="time"
           ref="time"
-          :title="$t('firefly.time')"
           v-model="timeStr"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :disabled="index > 0"
+          :placeholder="timeStr"
+          :title="$t('firefly.time')"
           autocomplete="off"
           name="time[]"
-          :placeholder="timeStr"
+          type="time"
       >
     </div>
     <span v-if="errors.length > 0">

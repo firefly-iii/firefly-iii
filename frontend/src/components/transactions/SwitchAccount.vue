@@ -21,10 +21,10 @@
 <template>
   <div class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
-      <span class="text-muted" v-if="'any' !== this.transactionType">
+      <span v-if="'any' !== this.transactionType" class="text-muted">
         {{ $t('firefly.' + this.transactionType) }}
       </span>
-      <span class="text-muted" v-if="'any' === this.transactionType">&nbsp;</span>
+      <span v-if="'any' === this.transactionType" class="text-muted">&nbsp;</span>
     </div>
     <div class="btn-group d-flex">
       <button class="btn btn-light" @click="switchAccounts">&harr;</button>
@@ -33,27 +33,13 @@
 </template>
 
 <script>
-
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
   name: "SwitchAccount",
-  props: ['index'],
+  props: ['index', 'transactionType'],
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
-
     switchAccounts() {
       this.$emit('switch-accounts', this.index);
     }
-  },
-  computed: {
-    ...mapGetters(['transactionType']),
   }
 }
 </script>

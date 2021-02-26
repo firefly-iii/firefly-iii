@@ -24,19 +24,19 @@
       {{ $t('firefly.split_transaction_title') }}
     </div>
     <vue-typeahead-bootstrap
-        inputName="group_title"
         v-model="title"
         :data="descriptions"
-        :placeholder="$t('firefly.split_transaction_title')"
-        :showOnFocus=true
-        :minMatchingChars="3"
-        :serializer="item => item.description"
-        @input="lookupDescription"
         :inputClass="errors.length > 0 ? 'is-invalid' : ''"
+        :minMatchingChars="3"
+        :placeholder="$t('firefly.split_transaction_title')"
+        :serializer="item => item.description"
+        :showOnFocus=true
+        inputName="group_title"
+        @input="lookupDescription"
     >
       <template slot="append">
         <div class="input-group-append">
-          <button tabindex="-1" v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          <button class="btn btn-outline-secondary" tabindex="-1" type="button" v-on:click="clearDescription"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>

@@ -19,17 +19,17 @@
   -->
 
 <template>
-  <div class="form-group" v-if="showField">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.attachments') }}
     </div>
     <div class="input-group">
       <input
-          type="file"
-          multiple
           ref="att"
-          name="attachments[]"
           class="form-control"
+          multiple
+          name="attachments[]"
+          type="file"
       />
     </div>
   </div>

@@ -23,14 +23,8 @@ const lodashClonedeep = require('lodash.clonedeep');
 // initial state
 const state = () => ({
         transactionType: 'any',
-        date: new Date,
-        time: new Date,
         groupTitle: '',
         transactions: [],
-        allowedOpposingTypes: {},
-        accountToTransaction: {},
-        sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
-        destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
         customDateFields: {
             interest_date: false,
             book_date: false,
@@ -147,12 +141,6 @@ const getters = {
     transactions: state => {
         return state.transactions;
     },
-    date: state => {
-        return state.date;
-    },
-    time: state => {
-        return state.time;
-    },
     groupTitle: state => {
         return state.groupTitle;
     },
@@ -190,9 +178,7 @@ const getters = {
 }
 
 // actions
-const actions = {
-
-}
+const actions = {}
 
 // mutations
 const mutations = {
@@ -208,12 +194,6 @@ const mutations = {
     resetTransactions(state) {
         state.transactions = [];
     },
-    setDate(state, payload) {
-        state.date = payload.date;
-    },
-    setTime(state, payload) {
-        state.time = payload.time;
-    },
     setGroupTitle(state, payload) {
         state.groupTitle = payload.groupTitle;
     },
@@ -224,7 +204,7 @@ const mutations = {
         state.transactions.splice(payload.index, 1);
         // console.log('Deleted transaction ' + payload.index);
         // console.log(state.transactions);
-        if(0===state.transactions.length) {
+        if (0 === state.transactions.length) {
             // console.log('array is empty!');
         }
     },

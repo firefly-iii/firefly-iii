@@ -27,10 +27,10 @@
       <div class="row">
         <div class="col">
           <p v-if="links.length === 0">
-            <button data-toggle="modal" data-target="#linkModal" class="btn btn-default btn-xs"><i class="fas fa-plus"></i> Add transaction link</button>
+            <button class="btn btn-default btn-xs" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
-          <ul class="list-group" v-if="links.length > 0">
-            <li class="list-group-item" v-for="transaction in links">
+          <ul v-if="links.length > 0" class="list-group">
+            <li v-for="transaction in links" class="list-group-item">
               <em>{{ getTextForLinkType(transaction.link_type_id) }}</em>
               <a :href='"./transaction/show/" + transaction.transaction_group_id'>{{ transaction.description }}</a>
 
@@ -59,24 +59,24 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <a tabindex="-1" href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
-                <a tabindex="-1" href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
+                <a class="btn btn-xs btn-default" href="#" tabindex="-1"><i class="far fa-edit"></i></a>
+                <a class="btn btn-xs btn-danger" href="#" tabindex="-1"><i class="far fa-trash-alt"></i></a>
               </div>
             </li>
           </ul>
-          <div class="form-text" v-if="links.length > 0">
-            <button data-toggle="modal" data-target="#linkModal" class="btn btn-default"><i class="fas fa-plus"></i></button>
+          <div v-if="links.length > 0" class="form-text">
+            <button class="btn btn-default" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
           </div>
         </div>
       </div>
     </div>
     <!-- modal -->
-    <div class="modal" tabindex="-1" id="linkModal">
+    <div id="linkModal" class="modal" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Transaction thing dialog.</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -94,10 +94,10 @@
                 <div class="col">
                   <form v-on:submit.prevent="search">
                     <div class="input-group">
-                      <input autocomplete="off" maxlength="255" type="text" name="search" v-model="query" id="query"
-                             class="form-control" placeholder="Search query">
+                      <input id="query" v-model="query" autocomplete="off" class="form-control" maxlength="255" name="search"
+                             placeholder="Search query" type="text">
                       <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Search</button>
+                        <button class="btn btn-default" type="submit"><i class="fas fa-search"></i> Search</button>
                       </div>
                     </div>
                   </form>
@@ -107,28 +107,28 @@
                 <div class="col">
                   <span v-if="searching"><i class="fas fa-spinner fa-spin"></i></span>
                   <h4 v-if="searchResults.length > 0">Search results</h4>
-                  <table class="table table-sm" v-if="searchResults.length > 0">
+                  <table v-if="searchResults.length > 0" class="table table-sm">
                     <thead>
                     <tr>
-                      <th style="width:33%" colspan="2">Include?</th>
+                      <th colspan="2" style="width:33%">Include?</th>
                       <th>Transaction</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="result in searchResults">
                       <td>
-                        <input type="checkbox" class="form-control"
+                        <input v-model="result.selected" class="form-control"
+                               type="checkbox"
                                @change="selectTransaction($event)"
-                               v-model="result.selected"
                         />
                       </td>
                       <td>
                         <select
-                            @change="selectLinkType($event)"
-                            class="form-control"
                             v-model="result.link_type_id"
+                            class="form-control"
+                            @change="selectLinkType($event)"
                         >
-                          <option v-for="linkType in linkTypes" :value="linkType.id + '-' + linkType.direction" :label="linkType.type">{{
+                          <option v-for="linkType in linkTypes" :label="linkType.type" :value="linkType.id + '-' + linkType.direction">{{
                               linkType.type
                             }}
                           </option>
@@ -175,7 +175,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
           </div>
         </div>
       </div>

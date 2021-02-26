@@ -20,17 +20,17 @@
 
 <template>
   <!-- FOREIGN AMOUNT -->
-  <div class="form-group" v-if="isVisible">
+  <div v-if="isVisible" class="form-group">
     <div class="text-xs">{{ $t('form.foreign_amount') }}</div>
     <div class="input-group">
       <input
+          v-model="amount"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('form.foreign_amount')"
           :title="$t('form.foreign_amount')"
           autocomplete="off"
-          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="foreign_amount[]"
           type="number"
-          v-model="amount"
-          :placeholder="$t('form.foreign_amount')"
       >
     </div>
     <span v-if="errors.length > 0">

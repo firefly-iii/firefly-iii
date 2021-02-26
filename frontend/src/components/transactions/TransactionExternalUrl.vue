@@ -19,20 +19,20 @@
   -->
 
 <template>
-  <div class="form-group" v-if="showField">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.external_url') }}
     </div>
     <div class="input-group">
       <input
-          type="url"
-          name="external_url[]"
-          :placeholder="$t('firefly.external_url')"
           v-model="url"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('firefly.external_url')"
+          name="external_url[]"
+          type="url"
       />
       <div class="input-group-append">
-        <button tabindex="-1" type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
+        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><i class="far fa-trash-alt"></i></button>
       </div>
     </div>
   </div>

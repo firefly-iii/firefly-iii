@@ -26,14 +26,14 @@
     <div class="input-group">
       <select
           ref="piggy_bank_id"
-          :title="$t('firefly.piggy_bank')"
           v-model="piggy_bank_id"
-          autocomplete="off"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :title="$t('firefly.piggy_bank')"
+          autocomplete="off"
           name="piggy_bank_id[]"
           v-on:submit.prevent
       >
-        <option v-for="piggy in this.piggyList" :value="piggy.id" :label="piggy.name_with_balance">{{ piggy.name_with_balance }}</option>
+        <option v-for="piggy in this.piggyList" :label="piggy.name_with_balance" :value="piggy.id">{{ piggy.name_with_balance }}</option>
 
       </select>
     </div>

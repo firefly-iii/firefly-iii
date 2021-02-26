@@ -18,8 +18,8 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <template>
-  <div :class="'alert alert-' + type + ' alert-dismissible'" v-if="message.length > 0">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  <div v-if="message.length > 0" :class="'alert alert-' + type + ' alert-dismissible'">
+    <button aria-hidden="true" class="close" data-dismiss="alert" type="button">×</button>
     <h5>
       <i v-if="'danger' === type" class="icon fas fa-ban"></i>
       <i v-if="'success' === type" class="icon fas fa-thumbs-up"></i>

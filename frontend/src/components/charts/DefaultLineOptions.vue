@@ -105,7 +105,7 @@ export default {
                 callback: function (value, index, values) {
                   // date format
                   let dateObj = new Date(value);
-                  let options = { year: 'numeric', month: 'long', day: 'numeric' };
+                  let options = {year: 'numeric', month: 'long', day: 'numeric'};
                   let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
                   //console.log();
                   //return self.formatLabel(value, 20);

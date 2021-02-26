@@ -24,28 +24,28 @@
       <h3 class="card-title">{{ $t('firefly.expense_accounts') }}</h3>
     </div>
     <!-- body if loading -->
-    <div class="card-body" v-if="loading && !error">
+    <div v-if="loading && !error" class="card-body">
       <div class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
       </div>
     </div>
     <!-- body if error -->
-    <div class="card-body" v-if="error">
+    <div v-if="error" class="card-body">
       <div class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
     </div>
     <!-- body if normal -->
-    <div class="card-body table-responsive p-0" v-if="!loading && !error">
+    <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
         <tbody>
         <tr v-for="entry in expenses">
           <td style="width:20%;"><a :href="'./accounts/show/' +  entry.id">{{ entry.name }}</a></td>
           <td class="align-middle">
-            <div class="progress" v-if="entry.pct > 0">
-              <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" :aria-valuenow="entry.pct"
-                   :style="{ width: entry.pct  + '%'}" aria-valuemin="0"
-                   aria-valuemax="100">
+            <div v-if="entry.pct > 0" class="progress">
+              <div :aria-valuenow="entry.pct" :style="{ width: entry.pct  + '%'}" aria-valuemax="100"
+                   aria-valuemin="0" class="progress-bar progress-bar-striped bg-danger"
+                   role="progressbar">
                 <span v-if="entry.pct > 20">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}
                 </span>
@@ -60,7 +60,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a href="./transactions/withdrawal" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_withdrawals') }}</a>
+      <a class="btn btn-default button-sm" href="./transactions/withdrawal"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_withdrawals') }}</a>
     </div>
   </div>
 </template>
@@ -116,7 +116,7 @@ export default {
   methods: {
     getExpenses() {
       this.loading = true;
-      this.error=false;
+      this.error = false;
       this.expenses = [];
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];

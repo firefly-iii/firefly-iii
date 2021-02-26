@@ -30,41 +30,41 @@
     </div>
     <date-picker
         v-model="range"
-        mode="date"
         :rows="2"
         is-range
+        mode="date"
     >
       <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
         <div class="row">
           <div class="col">
             <div class="btn-group btn-group-sm d-flex">
               <button
-                  class="btn btn-secondary btn-sm" :title="$t('firefly.custom_period')"
+                  :title="$t('firefly.custom_period')" class="btn btn-secondary btn-sm"
                   @click="togglePopover({ placement: 'auto-start', positionFixed: true })"
               ><i class="fas fa-calendar-alt"></i></button>
-              <button @click="resetDate"
+              <button :title="$t('firefly.reset_to_current')"
                       class="btn btn-secondary"
-                      :title="$t('firefly.reset_to_current')"
+                      @click="resetDate"
               ><i class="fas fa-history"></i></button>
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                      :title="$t('firefly.select_period')"
-                      aria-expanded="false">
+              <button id="dropdownMenuButton" :title="$t('firefly.select_period')" aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                      data-toggle="dropdown"
+                      type="button">
                 <i class="fas fa-list"></i>
               </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
                 <a v-for="period in periods" class="dropdown-item" href="#" @click="customDate(period.start, period.end)">{{ period.title }}</a>
               </div>
 
             </div>
-            <input type="hidden"
+            <input v-on="inputEvents.start"
                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
                    :value="inputValue.start"
-                   v-on="inputEvents.start"
+                   type="hidden"
             />
-            <input type="hidden"
+            <input v-on="inputEvents.end"
                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
                    :value="inputValue.end"
-                   v-on="inputEvents.end"
+                   type="hidden"
             />
           </div>
         </div>

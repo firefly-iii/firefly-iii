@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div :class="'tab-pane' + (0===index ? ' active' : '')" :id="'split_' + index">
+  <div :id="'split_' + index" :class="'tab-pane' + (0===index ? ' active' : '')">
     <div class="row">
       <div class="col">
         <div class="card">
@@ -28,7 +28,7 @@
               {{ $t('firefly.basic_journal_information') }}
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
-            <div class="card-tools" v-if="count>1">
+            <div v-if="count>1" class="card-tools">
               <button class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
@@ -37,10 +37,10 @@
             <div class="row">
               <div class="col">
                 <TransactionDescription
-                    v-on="$listeners"
                     v-model="transaction.description"
-                    :index="index"
+                    v-on="$listeners"
                     :errors="transaction.errors.description"
+                    :index="index"
                 ></TransactionDescription>
               </div>
             </div>
@@ -49,11 +49,14 @@
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
                 <!-- SOURCE -->
                 <TransactionAccount
-                    v-on="$listeners"
                     v-model="sourceAccount"
-                    direction="source"
-                    :index="index"
+                    v-on="$listeners"
+                    :allowed-opposing-types="allowedOpposingTypes"
+                    :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.source"
+                    :index="index"
+                    :source-allowed-types="sourceAllowedTypes"
+                    direction="source"
                 />
               </div>
               <!-- switcharoo! -->
@@ -62,6 +65,7 @@
                     v-if="0 === index"
                     v-on="$listeners"
                     :index="index"
+                    :transaction-type="transactionType"
                 />
               </div>
 
@@ -69,11 +73,14 @@
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <!-- DESTINATION -->
                 <TransactionAccount
-                    v-on="$listeners"
                     v-model="destinationAccount"
-                    direction="destination"
-                    :index="index"
+                    v-on="$listeners"
+                    :allowed-opposing-types="allowedOpposingTypes"
+                    :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.destination"
+                    :index="index"
+                    :source-allowed-types="sourceAllowedTypes"
+                    direction="destination"
                 />
               </div>
             </div>
@@ -84,24 +91,24 @@
               <div class="col-xl-5 col-lg-5 col-md-10 col-sm-12 col-xs-12">
                 <!-- AMOUNT -->
                 <TransactionAmount
-                    :index="index"
-                    :errors="transaction.errors.amount"
-                    :amount="transaction.amount"
-                    :transaction-type="this.transactionType"
-                    :source-currency-symbol="this.transaction.source_account_currency_symbol"
-                    :destination-currency-symbol="this.transaction.destination_account_currency_symbol"
                     v-on="$listeners"
+                    :amount="transaction.amount"
+                    :destination-currency-symbol="this.transaction.destination_account_currency_symbol"
+                    :errors="transaction.errors.amount"
+                    :index="index"
+                    :source-currency-symbol="this.transaction.source_account_currency_symbol"
+                    :transaction-type="this.transactionType"
                 />
               </div>
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
                 <TransactionForeignCurrency
-                    v-on="$listeners"
                     v-model="transaction.foreign_currency_id"
-                    :transaction-type="this.transactionType"
-                    :source-currency-id="this.transaction.source_account_currency_id"
+                    v-on="$listeners"
                     :destination-currency-id="this.transaction.destination_account_currency_id"
-                    :selected-currency-id="this.transaction.foreign_currency_id"
                     :index="index"
+                    :selected-currency-id="this.transaction.foreign_currency_id"
+                    :source-currency-id="this.transaction.source_account_currency_id"
+                    :transaction-type="this.transactionType"
                 />
               </div>
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
@@ -112,14 +119,14 @@
                 currency id is submitted to Firefly III.
                 -->
                 <TransactionForeignAmount
-                    :index="index"
-                    v-on="$listeners"
-                    :errors="transaction.errors.foreign_amount"
                     v-model="transaction.foreign_amount"
-                    :transaction-type="this.transactionType"
-                    :source-currency-id="this.transaction.source_account_currency_id"
+                    v-on="$listeners"
                     :destination-currency-id="this.transaction.destination_account_currency_id"
+                    :errors="transaction.errors.foreign_amount"
+                    :index="index"
                     :selected-currency-id="this.transaction.foreign_currency_id"
+                    :source-currency-id="this.transaction.source_account_currency_id"
+                    :transaction-type="this.transactionType"
                 />
               </div>
             </div>
@@ -128,26 +135,26 @@
             <div class="row">
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12">
                 <TransactionDate
-                    :index="index"
                     v-on="$listeners"
                     :date="splitDate"
-                    :time="splitTime"
                     :errors="transaction.errors.date"
+                    :index="index"
+                    :time="splitTime"
                 />
               </div>
 
               <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12 col-xs-12 offset-xl-2 offset-lg-2">
                 <TransactionCustomDates
-                    :index="index"
                     v-on="$listeners"
-                    :custom-fields.sync="customFields"
-                    :errors="transaction.errors.custom_dates"
-                    :interest-date="transaction.interest_date"
                     :book-date="transaction.book_date"
-                    :process-date="transaction.process_date"
+                    :custom-fields.sync="customFields"
                     :due-date="transaction.due_date"
-                    :payment-date="transaction.payment_date"
+                    :errors="transaction.errors.custom_dates"
+                    :index="index"
+                    :interest-date="transaction.interest_date"
                     :invoice-date="transaction.invoice_date"
+                    :payment-date="transaction.payment_date"
+                    :process-date="transaction.process_date"
                 />
               </div>
             </div>
@@ -174,39 +181,39 @@
             <div class="row">
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <TransactionBudget
-                    v-on="$listeners"
-                    v-model="transaction.budget_id"
-                    :index="index"
-                    :errors="transaction.errors.budget"
                     v-if="!('Transfer' === transactionType || 'Deposit' === transactionType)"
+                    v-model="transaction.budget_id"
+                    v-on="$listeners"
+                    :errors="transaction.errors.budget"
+                    :index="index"
                 />
                 <TransactionCategory
-                    v-on="$listeners"
                     v-model="transaction.category"
-                    :index="index"
+                    v-on="$listeners"
                     :errors="transaction.errors.category"
+                    :index="index"
                 />
               </div>
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <TransactionBill
-                    v-on="$listeners"
-                    v-model="transaction.bill_id"
-                    :index="index"
-                    :errors="transaction.errors.bill"
                     v-if="!('Transfer' === transactionType || 'Deposit' === transactionType)"
+                    v-model="transaction.bill_id"
+                    v-on="$listeners"
+                    :errors="transaction.errors.bill"
+                    :index="index"
                 />
                 <TransactionTags
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.tags"
+                    v-on="$listeners"
                     :errors="transaction.errors.tags"
+                    :index="index"
                 />
                 <TransactionPiggyBank
-                    v-on="$listeners"
-                    :index="index"
-                    v-model="transaction.piggy_bank_id"
-                    :errors="transaction.errors.piggy_bank"
                     v-if="!('Withdrawal' === transactionType || 'Deposit' === transactionType)"
+                    v-model="transaction.piggy_bank_id"
+                    v-on="$listeners"
+                    :errors="transaction.errors.piggy_bank"
+                    :index="index"
                 />
               </div>
             </div>
@@ -216,7 +223,7 @@
     </div>
     <!-- end card for meta -->
     <!-- card for extra -->
-    <div class="row" v-if="hasMetaFields">
+    <div v-if="hasMetaFields" class="row">
       <div class="col">
         <div class="card">
           <div class="card-header">
@@ -231,52 +238,52 @@
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
                 <TransactionInternalReference
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.internal_reference"
-                    :errors="transaction.errors.internal_reference"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :errors="transaction.errors.internal_reference"
+                    :index="index"
                 />
 
                 <TransactionExternalUrl
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.external_url"
-                    :errors="transaction.errors.external_url"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :errors="transaction.errors.external_url"
+                    :index="index"
                 />
                 <TransactionNotes
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.notes"
-                    :errors="transaction.errors.notes"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :errors="transaction.errors.notes"
+                    :index="index"
                 />
               </div>
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
                 <TransactionAttachments
-                    :index="index"
                     ref="attachments"
-                    v-on="$listeners"
-                    :transaction_journal_id="transaction.transaction_journal_id"
-                    :submitted_transaction="submittedTransaction"
                     v-model="transaction.attachments"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :index="index"
+                    :submitted_transaction="submittedTransaction"
+                    :transaction_journal_id="transaction.transaction_journal_id"
                 />
                 <TransactionLocation
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.notes"
-                    :errors="transaction.errors.location"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :errors="transaction.errors.location"
+                    :index="index"
                 />
 
                 <TransactionLinks
-                    v-on="$listeners"
-                    :index="index"
                     v-model="transaction.links"
+                    v-on="$listeners"
                     :custom-fields.sync="customFields"
+                    :index="index"
                 />
               </div>
 
@@ -312,10 +319,7 @@ import TransactionNotes from "./TransactionNotes";
 import TransactionLinks from "./TransactionLinks";
 import TransactionAttachments from "./TransactionAttachments";
 import SplitPills from "./SplitPills";
-import {createNamespacedHelpers} from "vuex";
 import TransactionLocation from "./TransactionLocation";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   name: "SplitForm",
@@ -325,8 +329,19 @@ export default {
     'count',
     'customFields', // for custom transaction form fields.
     'index',
-    'submittedTransaction' // need to know if transaction is submitted.
+    'date',
+    'time',
+    'transactionType',
+    'submittedTransaction', // need to know if transaction is submitted.
+    'sourceAllowedTypes', // allowed source account types.
+    'destinationAllowedTypes',
+    'allowedOpposingTypes'
   ],
+  // watch: {
+  //   allowedOpposingTypes: function() {
+  //     console.log('SplitForm noticed change in allowedOpposingTypes');
+  //   }
+  // },
   methods: {
     removeTransaction: function () {
       // console.log('Will remove transaction ' + this.index);
@@ -334,7 +349,6 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['transactionType', 'date', 'time']),
     splitDate: function () {
       return this.date;
     },

@@ -47,6 +47,8 @@
         "go_to_expenses": "Go to expenses",
         "go_to_bills": "Go to your bills",
         "bills": "Bills",
+        "last_thirty_days": "Last thirty days",
+        "last_seven_days": "Last seven days",
         "go_to_piggies": "Go to your piggy banks",
         "saved": "Saved",
         "piggy_banks": "Piggy banks",

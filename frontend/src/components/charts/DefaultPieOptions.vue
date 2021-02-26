@@ -23,9 +23,9 @@
 </template>
 
 <script>
-    export default {
-        name: "DefaultPieOptions"
-    }
+export default {
+  name: "DefaultPieOptions"
+}
 </script>
 
 <style scoped>

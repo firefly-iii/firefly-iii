@@ -21,37 +21,37 @@
 <template>
   <div>
     <!-- daily budgets (will be the exception, I expect) -->
-    <div class="row" v-if="!loading">
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.daily.length > 0">
-        <BudgetListGroup :title="$t('firefly.daily_budgets')" :budgetLimits=budgetLimits.daily
+    <div v-if="!loading" class="row">
+      <div v-if="budgetLimits.daily.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.daily :title="$t('firefly.daily_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.weekly.length > 0">
-        <BudgetListGroup :title="$t('firefly.weekly_budgets')" :budgetLimits=budgetLimits.weekly
+      <div v-if="budgetLimits.weekly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.weekly :title="$t('firefly.weekly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.monthly.length > 0">
-        <BudgetListGroup :title="$t('firefly.monthly_budgets')" :budgetLimits=budgetLimits.monthly
+      <div v-if="budgetLimits.monthly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.monthly :title="$t('firefly.monthly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.quarterly.length > 0">
-        <BudgetListGroup :title="$t('firefly.quarterly_budgets')" :budgetLimits=budgetLimits.quarterly
+      <div v-if="budgetLimits.quarterly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.quarterly :title="$t('firefly.quarterly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.half_year.length > 0">
-        <BudgetListGroup :title="$t('firefly.half_year_budgets')" :budgetLimits=budgetLimits.half_year
+      <div v-if="budgetLimits.half_year.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.half_year :title="$t('firefly.half_year_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.yearly.length > 0">
-        <BudgetListGroup :title="$t('firefly.yearly_budgets')" :budgetLimits=budgetLimits.yearly
+      <div v-if="budgetLimits.yearly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.yearly :title="$t('firefly.yearly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.other.length > 0 || rawBudgets.length > 0">
-        <BudgetListGroup :title="$t('firefly.other_budgets')" :budgetLimits=budgetLimits.other :budgets="rawBudgets"
+      <div v-if="budgetLimits.other.length > 0 || rawBudgets.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.other :budgets="rawBudgets" :title="$t('firefly.other_budgets')"
         />
       </div>
     </div>
-    <div class="row" v-if="loading && !error">
+    <div v-if="loading && !error" class="row">
       <div class="col">
         <div class="card">
           <div class="card-body">

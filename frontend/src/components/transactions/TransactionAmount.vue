@@ -22,17 +22,17 @@
   <div class="form-group">
     <div class="text-xs">{{ $t('firefly.amount') }}</div>
     <div class="input-group">
-      <div class="input-group-prepend" v-if="currencySymbol">
+      <div v-if="currencySymbol" class="input-group-prepend">
         <div class="input-group-text">{{ currencySymbol }}</div>
       </div>
       <input
+          v-model="transactionAmount"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('firefly.amount')"
           :title="$t('firefly.amount')"
           autocomplete="off"
-          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           name="amount[]"
           type="number"
-          v-model="transactionAmount"
-          :placeholder="$t('firefly.amount')"
       >
     </div>
     <span v-if="errors.length > 0">

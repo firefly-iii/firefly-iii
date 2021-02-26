@@ -26,8 +26,8 @@
 
     <td style="vertical-align: middle">
       <div class="progress progress active">
-        <div class="progress-bar bg-success progress-bar-striped" role="progressbar"
-             :aria-valuenow="budgetLimit.pctGreen" aria-valuemin="0" aria-valuemax="100" :style="'width: '+ budgetLimit.pctGreen + '%;'">
+        <div :aria-valuenow="budgetLimit.pctGreen" :style="'width: '+ budgetLimit.pctGreen + '%;'"
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-success progress-bar-striped" role="progressbar">
                       <span v-if="budgetLimit.pctGreen > 35">
                         Spent
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}
@@ -38,8 +38,8 @@
 
         </div>
 
-        <div class="progress-bar bg-warning progress-bar-striped" role="progressbar"
-             :aria-valuenow="budgetLimit.pctOrange" aria-valuemin="0" aria-valuemax="100" :style="'width: '+ budgetLimit.pctOrange + '%;'">
+        <div :aria-valuenow="budgetLimit.pctOrange" :style="'width: '+ budgetLimit.pctOrange + '%;'"
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-warning progress-bar-striped" role="progressbar">
                     <span v-if="budgetLimit.pctRed <= 50 && budgetLimit.pctOrange > 35">
                         Spent
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}
@@ -48,8 +48,8 @@
                       </span>
         </div>
 
-        <div class="progress-bar bg-danger progress-bar-striped" role="progressbar"
-             :aria-valuenow="budgetLimit.pctRed" aria-valuemin="0" aria-valuemax="100" :style="'width: '+ budgetLimit.pctRed + '%;'">
+        <div :aria-valuenow="budgetLimit.pctRed" :style="'width: '+ budgetLimit.pctRed + '%;'"
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-danger progress-bar-striped" role="progressbar">
                       <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35" class="text-muted">
                         Spent
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent) }}
@@ -75,8 +75,8 @@
       </small>
     </td>
 
-    <td style="width:10%;" class="align-middle d-none d-lg-table-cell">
-      <span class="text-success" v-if="parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent) > 0">
+    <td class="align-middle d-none d-lg-table-cell" style="width:10%;">
+      <span v-if="parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent) > 0" class="text-success">
                     {{
           Intl.NumberFormat(locale, {
             style: 'currency',
@@ -84,10 +84,10 @@
           }).format(parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent))
         }}
                   </span>
-      <span class="text-muted" v-if="0.0 === parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent)">
+      <span v-if="0.0 === parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent)" class="text-muted">
                     {{ Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(0) }}
                   </span>
-      <span class="text-danger" v-if="parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent) < 0">
+      <span v-if="parseFloat(budgetLimit.amount) + parseFloat(budgetLimit.spent) < 0" class="text-danger">
                     {{
           Intl.NumberFormat(locale, {
             style: 'currency',

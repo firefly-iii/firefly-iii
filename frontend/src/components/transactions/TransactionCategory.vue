@@ -25,20 +25,20 @@
     </div>
 
     <vue-typeahead-bootstrap
-        inputName="category[]"
         v-model="category"
         :data="categories"
-        :placeholder="$t('firefly.category')"
-        :showOnFocus=true
         :inputClass="errors.length > 0 ? 'is-invalid' : ''"
         :minMatchingChars="3"
+        :placeholder="$t('firefly.category')"
         :serializer="item => item.name"
+        :showOnFocus=true
+        inputName="category[]"
         @hit="selectedCategory = $event"
         @input="lookupCategory"
     >
       <template slot="append">
         <div class="input-group-append">
-          <button tabindex="-1" v-on:click="clearCategory" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          <button class="btn btn-outline-secondary" tabindex="-1" type="button" v-on:click="clearCategory"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>

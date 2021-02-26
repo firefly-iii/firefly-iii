@@ -20,7 +20,7 @@
 
 <template>
 
-  <div class="form-group" v-if="showField">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.notes') }}
     </div>

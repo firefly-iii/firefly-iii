@@ -19,20 +19,20 @@
   -->
 
 <template>
-  <div class="form-group" v-if="showField">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.internal_reference') }}
     </div>
     <div class="input-group">
       <input
-          type="text"
-          name="internal_reference[]"
           v-model="reference"
-          :placeholder="$t('firefly.internal_reference')"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('firefly.internal_reference')"
+          name="internal_reference[]"
+          type="text"
       />
       <div class="input-group-append">
-        <button tabindex="-1" type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
+        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><i class="far fa-trash-alt"></i></button>
       </div>
     </div>
   </div>
@@ -57,8 +57,7 @@ export default {
       return false;
     }
   },
-  methods: {
-  },
+  methods: {},
   watch: {
     customFields: function (value) {
       this.availableFields = value;

@@ -25,7 +25,7 @@
     </div>
     <div class="card-body">
       <div v-if="!loading">
-        <MainAccountChart :chart-data="dataCollection" :options="chartOptions" v-if="!loading && !error"/>
+        <MainAccountChart v-if="!loading && !error" :chart-data="dataCollection" :options="chartOptions"/>
       </div>
       <div v-if="loading && !error" class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="card-footer">
-      <a href="./accounts/asset" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
+      <a class="btn btn-default button-sm" href="./accounts/asset"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
     </div>
   </div>
 </template>

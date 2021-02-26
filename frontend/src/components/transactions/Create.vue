@@ -27,11 +27,17 @@
       <SplitForm
           v-for="(transaction, index) in this.transactions"
           v-bind:key="index"
-          :transaction="transaction"
-          :index="index"
+          :allowed-opposing-types="allowedOpposingTypes"
           :count="transactions.length"
           :custom-fields="customFields"
+          :date="date"
+          :destination-allowed-types="destinationAllowedTypes"
+          :index="index"
+          :source-allowed-types="sourceAllowedTypes"
           :submitted-transaction="submittedTransaction"
+          :time="time"
+          :transaction="transaction"
+          :transaction-type="transactionType"
           v-on:uploaded-attachments="uploadedAttachment($event)"
           v-on:set-marker-location="storeLocation($event)"
           v-on:set-account="storeAccountValue($event)"
@@ -40,13 +46,16 @@
           v-on:set-time="storeTime($event)"
           v-on:set-field="storeField($event)"
           v-on:remove-transaction="removeTransaction($event)"
+          v-on:set-dest-types="setDestinationAllowedTypes($event)"
+          v-on:set-src-types="setSourceAllowedTypes($event)"
+
       />
     </div>
 
     <div class="row">
       <!-- group title -->
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <div class="card" v-if="transactions.length > 1">
+        <div v-if="transactions.length > 1" class="card">
           <div class="card-body">
             <div class="row">
               <div class="col">
@@ -65,14 +74,14 @@
                 <div class="text-xs d-none d-lg-block d-xl-block">
                   &nbsp;
                 </div>
-                <button @click="addTransaction" class="btn btn-outline-primary btn-block"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
                 </button>
               </div>
               <div class="col">
                 <div class="text-xs d-none d-lg-block d-xl-block">
                   &nbsp;
                 </div>
-                <button class="btn btn-success btn-block" @click="submitTransaction" :disabled="!enableSubmit">
+                <button :disabled="!enableSubmit" class="btn btn-success btn-block" @click="submitTransaction">
                   <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
                   <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
                 </button>
@@ -84,13 +93,13 @@
               </div>
               <div class="col">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" v-model="createAnother" id="createAnother">
+                  <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
                   <label class="form-check-label" for="createAnother">
                     <span class="small">{{ $t('firefly.create_another') }}</span>
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" v-model="resetFormAfter" id="resetFormAfter" :disabled="!createAnother">
+                  <input id="resetFormAfter" v-model="resetFormAfter" :disabled="!createAnother" class="form-check-input" type="checkbox">
                   <label class="form-check-label" for="resetFormAfter">
                     <span class="small">{{ $t('firefly.reset_after') }}</span>
                   </label>
@@ -161,16 +170,23 @@ export default {
       returnedGroupId: 0,
       returnedGroupTitle: '',
 
-      // meta data:
-      accountToTransaction: {}
+      // meta data for accounts
+      accountToTransaction: {},
+      allowedOpposingTypes: {},
+      defaultSourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
+      defaultDestinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
+      sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
+      destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
+
+      // date and time not in the store because it was buggy
+      date: new Date,
+      time: new Date,
     }
   },
   computed: {
     ...mapGetters([
                     'transactionType',
                     'transactions',
-                    'date',
-                    'time',
                     'groupTitle'
                   ])
   },
@@ -200,14 +216,11 @@ export default {
           'setGroupTitle',
           'addTransaction',
           'deleteTransaction',
-          'setAllowedOpposingTypes',
           'setTransactionError',
           'setTransactionType',
           'resetErrors',
           'updateField',
           'resetTransactions',
-          'setDate',
-          'setTime'
         ],
     ),
     /**
@@ -245,7 +258,6 @@ export default {
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
           return;
         }
-
 
         if (false === this.inError) {
           // show message:
@@ -399,11 +411,11 @@ export default {
     storeField: function (payload) {
       this.updateField(payload);
     },
-    storeDate: function (value) {
-      this.setDate(value.date)
+    storeDate: function (payload) {
+      this.date = payload.date;
     },
-    storeTime: function (value) {
-      this.setTime(value.time)
+    storeTime: function (payload) {
+      this.time = payload.time;
     },
     storeGroupTitle: function (value) {
       // console.log('set group title: ' + value);
@@ -702,8 +714,10 @@ export default {
         theDate.setHours(this.time.getHours());
         theDate.setMinutes(this.time.getMinutes());
         theDate.setSeconds(this.time.getSeconds());
-        dateStr = this.toW3CString(this.date);
+        dateStr = this.toW3CString(theDate);
       }
+
+      // console.log('dateStr = ' + dateStr);
 
       let currentSplit = {
         // basic
@@ -857,8 +871,11 @@ export default {
              offsetSign + offsetHours + ':' + offsetMinutes;
     },
     storeAllowedOpposingTypes: function () {
-      // take this from API:
-      this.setAllowedOpposingTypes(window.allowedOpposingTypes);
+      axios.get('./api/v1/configuration/static/firefly.allowed_opposing_types')
+          .then(response => {
+            this.allowedOpposingTypes = response.data['firefly.allowed_opposing_types'];
+            // console.log('Set allowedOpposingTypes');
+          });
     },
     storeAccountToTransaction: function () {
       axios.get('./api/v1/configuration/static/firefly.account_to_transaction')
@@ -866,7 +883,26 @@ export default {
             this.accountToTransaction = response.data['firefly.account_to_transaction'];
           });
     },
-
+    setDestinationAllowedTypes: function (value) {
+      // console.log('Create::setDestinationAllowedTypes');
+      // console.log(value);
+      if (0 === value.length) {
+        this.destinationAllowedTypes = this.defaultDestinationAllowedTypes;
+        //console.log('empty so back to defaults');
+        return;
+      }
+      this.destinationAllowedTypes = value;
+    },
+    setSourceAllowedTypes(value) {
+      // console.log('Create::setSourceAllowedTypes');
+      // console.log(value);
+      if (0 === value.length) {
+        this.sourceAllowedTypes = this.defaultSourceAllowedTypes;
+        // console.log('empty so back to defaults');
+        return;
+      }
+      this.sourceAllowedTypes = value;
+    }
   },
 
 }

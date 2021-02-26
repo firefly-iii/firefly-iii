@@ -19,15 +19,15 @@
   -->
 
 <template>
-    <div>
-        I am a show
-    </div>
+  <div>
+    I am a show
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "Show"
-    }
+export default {
+  name: "Show"
+}
 </script>
 
 <style scoped>

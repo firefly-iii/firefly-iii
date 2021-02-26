@@ -26,13 +26,13 @@
     <div class="card-body table-responsive p-0">
       <table class="table table-sm">
         <tbody>
-          <BudgetLimitRow v-bind:key="key" v-for="(budgetLimit, key) in budgetLimits" :budgetLimit="budgetLimit" />
-          <BudgetRow v-bind:key="key" v-for="(budget, key) in budgets" :budget="budget" />
+        <BudgetLimitRow v-for="(budgetLimit, key) in budgetLimits" v-bind:key="key" :budgetLimit="budgetLimit"/>
+        <BudgetRow v-for="(budget, key) in budgets" v-bind:key="key" :budget="budget"/>
         </tbody>
       </table>
     </div>
     <div class="card-footer">
-      <a href="./budgets" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
+      <a class="btn btn-default button-sm" href="./budgets"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@
 <script>
 import BudgetLimitRow from "./BudgetLimitRow";
 import BudgetRow from "./BudgetRow";
+
 export default {
   name: "BudgetListGroup",
   components: {BudgetLimitRow, BudgetRow},

@@ -24,19 +24,19 @@
       <h3 class="card-title">{{ $t('firefly.bills') }}</h3>
     </div>
     <!-- body if loading -->
-    <div class="card-body" v-if="loading && !error">
+    <div v-if="loading && !error" class="card-body">
       <div class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
       </div>
     </div>
     <!-- body if error -->
-    <div class="card-body" v-if="error">
+    <div v-if="error" class="card-body">
       <div class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
     </div>
     <!-- body if normal -->
-    <div class="card-body table-responsive p-0" v-if="!loading && !error">
+    <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-striped">
         <caption style="display:none;">{{ $t('firefly.bills') }}</caption>
         <thead>
@@ -70,7 +70,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a href="./bills" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_bills') }}</a>
+      <a class="btn btn-default button-sm" href="./bills"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_bills') }}</a>
     </div>
   </div>
 </template>

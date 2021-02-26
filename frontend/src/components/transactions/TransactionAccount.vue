@@ -20,39 +20,39 @@
 
 <template>
   <div class="form-group">
-    <div class="text-xs d-none d-lg-block d-xl-block" v-if="visible">
+    <div v-if="visible" class="text-xs d-none d-lg-block d-xl-block">
       <span v-if="0 === this.index">{{ $t('firefly.' + this.direction + '_account') }}</span>
-      <span class="text-warning" v-if="this.index > 0">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
+      <span v-if="this.index > 0" class="text-warning">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
     </div>
-    <div class="text-xs d-none d-lg-block d-xl-block" v-if="!visible">
+    <div v-if="!visible" class="text-xs d-none d-lg-block d-xl-block">
       &nbsp;
     </div>
     <vue-typeahead-bootstrap
         v-if="visible"
         v-model="accountName"
         :data="accounts"
-        :showOnFocus=true
         :inputClass="errors.length > 0 ? 'is-invalid' : ''"
         :inputName="direction + '[]'"
-        :serializer="item => item.name_with_balance"
         :minMatchingChars="3"
         :placeholder="$t('firefly.' + direction + '_account')"
-        @input="lookupAccount"
+        :serializer="item => item.name_with_balance"
+        :showOnFocus=true
         @hit="selectedAccount = $event"
+        @input="lookupAccount"
     >
 
       <template slot="suggestion" slot-scope="{ data, htmlText }">
-        <div class="d-flex" :title="data.type">
+        <div :title="data.type" class="d-flex">
           <span v-html="htmlText"></span><br>
         </div>
       </template>
       <template slot="append">
         <div class="input-group-append">
-          <button tabindex="-1" class="btn btn-outline-secondary" v-on:click="clearAccount" type="button"><i class="far fa-trash-alt"></i></button>
+          <button class="btn btn-outline-secondary" tabindex="-1" type="button" v-on:click="clearAccount"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>
-    <div class="form-control-static" v-if="!visible">
+    <div v-if="!visible" class="form-control-static">
       <span class="small text-muted"><em>{{ $t('firefly.first_split_decides') }}</em></span>
     </div>
     <span v-if="errors.length > 0">
@@ -65,14 +65,19 @@
 
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from 'lodash';
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   name: "TransactionAccount",
   components: {VueTypeaheadBootstrap},
-  props: ['index', 'direction', 'value', 'errors'],
+  props: [
+    'index',
+    'direction',
+    'value',
+    'errors',
+    'sourceAllowedTypes',
+    'destinationAllowedTypes',
+    'allowedOpposingTypes'
+  ],
   data() {
     return {
       query: '',
@@ -89,13 +94,6 @@ export default {
     this.createInitialSet();
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-          'setDestinationAllowedTypes',
-          'setSourceAllowedTypes'
-        ],
-    ),
     getACURL: function (types, query) {
       return './api/v1/autocomplete/accounts?types=' + types.join(',') + '&query=' + query;
     },
@@ -110,6 +108,8 @@ export default {
         // set the types from the default types for this direction:
         this.accountTypes = 'source' === this.direction ? this.sourceAllowedTypes : this.destinationAllowedTypes;
       }
+      // console.log(this.direction + ': Will search for types:');
+      // console.log(this.accountTypes);
 
       // update autocomplete URL:
       axios.get(this.getACURL(this.accountTypes, this.accountName))
@@ -125,6 +125,8 @@ export default {
       if ('destination' === this.direction) {
         types = this.destinationAllowedTypes;
       }
+      // console.log(this.direction + ' initial set searches for');
+      // console.log(types);
 
       axios.get(this.getACURL(types, ''))
           .then(response => {
@@ -134,8 +136,20 @@ export default {
     }
   },
   watch: {
+    // allowedOpposingTypes: function () {
+    //   console.log(this.direction + ' account noticed change in allowedOpposingTypes');
+    // },
+    sourceAllowedTypes: function (value) {
+      // console.log(this.direction + ' account noticed change in sourceAllowedTypes');
+      // console.log(value);
+      this.createInitialSet();
+    },
+    destinationAllowedTypes: function (value) {
+      // console.log(this.direction + ' account noticed change in destinationAllowedTypes');
+      // console.log(value);
+      this.createInitialSet();
+    },
     selectedAccount: function (value) {
-      // console.log('Emit on selected account');
       this.selectedAccountTrigger = true;
       this.account = value;
 
@@ -183,10 +197,10 @@ export default {
       }
 
       if ('source' === this.direction) {
-        this.setDestinationAllowedTypes(opposingAccounts);
+        this.$emit('set-dest-types', opposingAccounts);
       }
       if ('destination' === this.direction) {
-        this.setSourceAllowedTypes(opposingAccounts);
+        this.$emit('set-src-types', opposingAccounts);
       }
     },
     value: function (value) {
@@ -199,53 +213,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'sourceAllowedTypes',
-                    'destinationAllowedTypes',
-                    'allowedOpposingTypes'
-                  ]),
+    // 'transactionType',
+    // 'sourceAllowedTypes',
+    // 'destinationAllowedTypes',
+    // 'allowedOpposingTypes'
     accountKey: {
       get() {
         return 'source' === this.direction ? 'source_account' : 'destination_account';
       }
     },
-    emitAccountId: {
-      get() {
-        return 'set-' + this.direction + '-account-id';
-      }
-    },
-    emitAccount: {
-      get() {
-        return 'set-' + this.direction + '-account';
-      }
-    },
-    emitAccountName: {
-      get() {
-        return 'set-' + this.direction + '-account-name';
-      }
-    },
-    emitAccountType: {
-      get() {
-        return 'set-' + this.direction + '-account-type';
-      }
-    },
-    emitAccountCurrencyId: {
-      get() {
-        return 'set-' + this.direction + '-account-currency-id';
-      }
-    },
-    emitAccountCurrencyCode: {
-      get() {
-        return 'set-' + this.direction + '-account-currency-code';
-      }
-    },
-    emitAccountCurrencySymbol: {
-      get() {
-        return 'set-' + this.direction + '-account-currency-symbol';
-      }
-    },
-
     visible: {
       get() {
         // index  0 is always visible:
