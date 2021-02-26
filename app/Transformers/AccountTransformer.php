@@ -68,6 +68,7 @@ class AccountTransformer extends AbstractTransformer
         // get account role (will only work if the type is asset.
         $accountRole = $this->getAccountRole($account, $accountType);
         $date        = $this->getDate();
+        $date->endOfDay();
 
         [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account);
         [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
