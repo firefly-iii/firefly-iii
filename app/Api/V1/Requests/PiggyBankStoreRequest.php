@@ -44,15 +44,15 @@ class PiggyBankStoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name'            => $this->string('name'),
-            'account_id'      => $this->integer('account_id'),
-            'targetamount'    => $this->string('target_amount'),
-            'current_amount'  => $this->string('current_amount'),
-            'startdate'       => $this->date('start_date'),
-            'targetdate'      => $this->date('target_date'),
-            'notes'           => $this->nlString('notes'),
-            'object_group_id' => $this->integer('object_group_id'),
-            'object_group'    => $this->string('object_group_name'),
+            'name'               => $this->string('name'),
+            'account_id'         => $this->integer('account_id'),
+            'targetamount'       => $this->string('target_amount'),
+            'current_amount'     => $this->string('current_amount'),
+            'startdate'          => $this->date('start_date'),
+            'targetdate'         => $this->date('target_date'),
+            'notes'              => $this->nlString('notes'),
+            'object_group_id'    => $this->integer('object_group_id'),
+            'object_group_title' => $this->string('object_group_title'),
         ];
     }
 
@@ -64,14 +64,15 @@ class PiggyBankStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'            => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'  => ['numeric', 'gte:0', 'lte:target_amount'],
-            'account_id'      => 'required|numeric|belongsToUser:accounts,id',
-            'object_group_id' => 'numeric|belongsToUser:object_groups,id',
-            'target_amount'   => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
-            'start_date'      => 'date|nullable',
-            'target_date'     => 'date|nullable|after:start_date',
-            'notes'           => 'max:65000',
+            'name'               => 'required|between:1,255|uniquePiggyBankForUser',
+            'current_amount'     => ['numeric', 'gte:0', 'lte:target_amount'],
+            'account_id'         => 'required|numeric|belongsToUser:accounts,id',
+            'object_group_id'    => 'numeric|belongsToUser:object_groups,id',
+            'object_group_title' => 'between:1,255',
+            'target_amount'      => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
+            'start_date'         => 'date|nullable',
+            'target_date'        => 'date|nullable|after:start_date',
+            'notes'              => 'max:65000',
         ];
     }
 

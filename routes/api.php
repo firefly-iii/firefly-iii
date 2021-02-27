@@ -72,7 +72,7 @@ Route::group(
 );
 
 
-
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts',
      'as'        => 'api.v1.accounts.',],
@@ -91,6 +91,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete', 'prefix' => 'autocomplete',
      'as'        => 'api.v1.autocomplete.',],
@@ -112,6 +113,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
      'as'        => 'api.v1.object-groups.',],
@@ -127,6 +129,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments',
      'as'        => 'api.v1.attachments.',],
@@ -143,6 +146,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets',
      'as'        => 'api.v1.available_budgets.',],
@@ -157,6 +161,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills',
      'as'        => 'api.v1.bills.',],
@@ -175,6 +180,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits',
      'as'        => 'api.v1.budget_limits.',],
@@ -191,6 +197,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets',
      'as'        => 'api.v1.budgets.',],
@@ -210,6 +217,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories',
      'as'        => 'api.v1.categories.',],
@@ -232,6 +240,7 @@ Route::group(
  */
 
 // Accounts
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
      'as'        => 'api.v1.chart.account.',],
@@ -243,6 +252,7 @@ Route::group(
 );
 
 // Available budgets
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/ab',
      'as'        => 'api.v1.chart.ab.',],
@@ -254,6 +264,7 @@ Route::group(
 );
 
 // Budgets
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/budget',
      'as'        => 'api.v1.chart.budget.',],
@@ -315,20 +326,21 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'piggy_banks',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank', 'prefix' => 'piggy_banks',
      'as'        => 'api.v1.piggy_banks.',],
     static function () {
 
         // Piggy Bank API routes:
-        Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
-        Route::get('{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
-        Route::put('{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
-        Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{piggyBank}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{piggyBank}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{piggyBank}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        Route::get('{piggyBank}/events', ['uses' => 'PiggyBankController@piggyBankEvents', 'as' => 'events']);
-        Route::get('{piggyBank}/attachments', ['uses' => 'PiggyBankController@attachments', 'as' => 'attachments']);
+        Route::get('{piggyBank}/events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'events']);
+        Route::get('{piggyBank}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
     }
 );
 

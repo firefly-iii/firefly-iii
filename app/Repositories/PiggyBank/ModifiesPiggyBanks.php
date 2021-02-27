@@ -105,7 +105,7 @@ trait ModifiesPiggyBanks
         $leftOnAccount = $this->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = (string)min(round((float) $leftOnAccount, 12), round((float)$leftToSave, 12));
+        $maxAmount     = (string)min(round((float)$leftOnAccount, 12), round((float)$leftToSave, 12));
         $compare       = bccomp($amount, $maxAmount);
         $result        = $compare <= 0;
 
@@ -286,11 +286,14 @@ trait ModifiesPiggyBanks
     public function store(array $data): PiggyBank
     {
         $data['order'] = $this->getMaxOrder() + 1;
+        $piggyData     = $data;
+        // unset fields just in case.
+        unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
         try {
             /** @var PiggyBank $piggyBank */
-            $piggyBank = PiggyBank::create($data);
+            $piggyBank = PiggyBank::create($piggyData);
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()));
+            Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
             throw new FireflyException('400005: Could not store new piggy bank.');
         }
 
@@ -303,15 +306,16 @@ trait ModifiesPiggyBanks
             $repetition->save();
         }
 
-        $objectGroupTitle = $data['object_group'] ?? '';
+        $objectGroupTitle = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if (null !== $objectGroup) {
                 $piggyBank->objectGroups()->sync([$objectGroup->id]);
                 $piggyBank->save();
             }
+
         }
-        // try also with ID:
+        // try also with ID
         $objectGroupId = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
