@@ -27,7 +27,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.1",
         "@johmun/vue-tags-input": "^2.1.0",
-        "@popperjs/core": "^2.8.2",
+        "@popperjs/core": "^2.8.6",
         "bootstrap": "^4.5.3",
         "chart.js": "^2.9.4",
         "icheck-bootstrap": "^3.0.1",
