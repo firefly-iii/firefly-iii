@@ -27,10 +27,10 @@
       <div class="row">
         <div class="col">
           <p v-if="links.length === 0">
-            <button class="btn btn-default btn-xs" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
+            <button class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
           <ul v-if="links.length > 0" class="list-group">
-            <li v-for="transaction in links" class="list-group-item">
+            <li v-for="(transaction, index) in links" class="list-group-item" v-bind:key="index">
               <em>{{ getTextForLinkType(transaction.link_type_id) }}</em>
               <a :href='"./transaction/show/" + transaction.transaction_group_id'>{{ transaction.description }}</a>
 
@@ -59,19 +59,18 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <a class="btn btn-xs btn-default" href="#" tabindex="-1"><i class="far fa-edit"></i></a>
-                <a class="btn btn-xs btn-danger" href="#" tabindex="-1"><i class="far fa-trash-alt"></i></a>
+                <button class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><i class="far fa-trash-alt"></i></button>
               </div>
             </li>
           </ul>
           <div v-if="links.length > 0" class="form-text">
-            <button class="btn btn-default" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
+            <button class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
           </div>
         </div>
       </div>
     </div>
     <!-- modal -->
-    <div id="linkModal" class="modal" tabindex="-1">
+    <div id="linkModal" class="modal" tabindex="-1" ref="linkModal">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -204,8 +203,10 @@ export default {
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
+    this.emitEvent = false;
     this.links = lodashClonedeep(this.value);
     this.getLinkTypes();
+
   },
   computed: {
     showField: function () {
@@ -217,8 +218,10 @@ export default {
   },
   watch: {
     value: function (value) {
-      this.emitEvent = false;
-      this.links = lodashClonedeep(value);
+      if (null !== value) {
+        this.emitEvent = false;
+        this.links = lodashClonedeep(value);
+      }
     },
     links: function (value) {
       if (true === this.emitEvent) {
@@ -231,6 +234,9 @@ export default {
     }
   },
   methods: {
+    removeLink: function (index) {
+      this.links.splice(index, 1);
+    },
     getTextForLinkType: function (linkTypeId) {
       let parts = linkTypeId.split('-');
       for (let i in this.linkTypes) {
@@ -299,6 +305,9 @@ export default {
                 }
           );
     },
+    resetModal: function() {
+      this.search();
+    },
     parseLinkTypes: function (data) {
       for (let i in data.data) {
         if (data.data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -323,6 +332,10 @@ export default {
       }
     },
     search: function () {
+      if('' === this.query) {
+        this.searchResults = [];
+        return;
+      }
       this.searching = true;
       this.searchResults = [];
       let url = './api/v1/search/transactions?limit=10&query=' + this.query;

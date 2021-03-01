@@ -50,6 +50,7 @@
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
     </span>
+    <span class="text-muted small" v-if="'' !== timeZone">{{ timeZone }}</span>
   </div>
 </template>
 
@@ -58,10 +59,14 @@
 export default {
   props: ['index', 'errors', 'date', 'time'],
   name: "TransactionDate",
+  created() {
+    this.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  },
   data() {
     return {
       localDate: this.date,
-      localTime: this.time
+      localTime: this.time,
+      timeZone: ''
     }
   },
   methods: {},

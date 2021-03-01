@@ -28,6 +28,7 @@
           ref="att"
           class="form-control"
           multiple
+          @change="selectedFile"
           name="attachments[]"
           type="file"
       />
@@ -70,6 +71,9 @@ export default {
     }
   },
   methods: {
+    selectedFile: function() {
+      this.$emit('selected-attachments', this.transaction_journal_id);
+    },
     doUpload: function () {
       // console.log('Now in doUpload() for ' + this.$refs.att.files.length + ' files.');
       for (let i in this.$refs.att.files) {

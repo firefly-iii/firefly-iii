@@ -62,7 +62,7 @@
               <!-- switcharoo! -->
               <div class="col-xl-2 col-lg-2 col-md-2 col-sm-12 text-center d-none d-sm-block">
                 <SwitchAccount
-                    v-if="0 === index"
+                    v-if="0 === index && allowSwitch"
                     v-on="$listeners"
                     :index="index"
                     :transaction-type="transactionType"
@@ -272,7 +272,7 @@
                     :transaction_journal_id="transaction.transaction_journal_id"
                 />
                 <TransactionLocation
-                    v-model="transaction.notes"
+                    v-model="transaction.location"
                     v-on="$listeners"
                     :custom-fields.sync="customFields"
                     :errors="transaction.errors.location"
@@ -323,20 +323,63 @@ import TransactionLocation from "./TransactionLocation";
 
 export default {
   name: "SplitForm",
-  props: [
-    'transaction',
-    'split',
-    'count',
-    'customFields', // for custom transaction form fields.
-    'index',
-    'date',
-    'time',
-    'transactionType',
-    'submittedTransaction', // need to know if transaction is submitted.
-    'sourceAllowedTypes', // allowed source account types.
-    'destinationAllowedTypes',
-    'allowedOpposingTypes'
-  ],
+  props: {
+    transaction: {
+      type: Object,
+      required: true
+    },
+    count: {
+      type: Number,
+      required: false
+    },
+    customFields: {
+      type: Object,
+      required: false
+    },
+    index: {
+      type: Number,
+      required: true
+    },
+    date: {
+      type: Date,
+      required: true
+    },
+    time: {
+      type: Date,
+      required: true
+    },
+    transactionType: {
+      type: String,
+      required: true
+    },
+    submittedTransaction: {
+      type: Boolean,
+      required: false,
+      default: false
+    }, // need to know if transaction is submitted.
+    sourceAllowedTypes: {
+      type: Array,
+      required: false,
+      default: []
+    }, // allowed source account types.
+    destinationAllowedTypes: {
+      type: Array,
+      required: false,
+      default: []
+    },
+    allowedOpposingTypes: {
+      type: Object,
+      required: false,
+      default: {}
+    },
+    // allow switch?
+    allowSwitch: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+
+  },
   // watch: {
   //   allowedOpposingTypes: function() {
   //     console.log('SplitForm noticed change in allowedOpposingTypes');

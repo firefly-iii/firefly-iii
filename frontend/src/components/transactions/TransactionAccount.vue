@@ -91,6 +91,8 @@ export default {
     }
   },
   created() {
+    this.selectedAccountTrigger = true;
+    this.accountName = this.account.name ?? '';
     this.createInitialSet();
   },
   methods: {

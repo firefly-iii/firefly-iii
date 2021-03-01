@@ -20,6 +20,8 @@
 
 const lodashClonedeep = require('lodash.clonedeep');
 
+import {getDefaultTransaction, getDefaultErrors} from '../../../shared/transactions';
+
 // initial state
 const state = () => ({
         transactionType: 'any',
@@ -33,105 +35,8 @@ const state = () => ({
             payment_date: false,
             invoice_date: false,
         },
-        defaultErrors: {
-            description: [],
-            amount: [],
-            source: [],
-            destination: [],
-            currency: [],
-            foreign_currency: [],
-            foreign_amount: [],
-            date: [],
-            custom_dates: [],
-            budget: [],
-            category: [],
-            bill: [],
-            tags: [],
-            piggy_bank: [],
-            internal_reference: [],
-            external_url: [],
-            notes: [],
-            location: []
-        },
-        defaultTransaction: {
-            // basic
-            description: '',
-            transaction_journal_id: 0,
-            // accounts:
-            source_account_id: null,
-            source_account_name: null,
-            source_account_type: null,
-
-            source_account_currency_id: null,
-            source_account_currency_code: null,
-            source_account_currency_symbol: null,
-
-            destination_account_id: null,
-            destination_account_name: null,
-            destination_account_type: null,
-
-            destination_account_currency_id: null,
-            destination_account_currency_code: null,
-            destination_account_currency_symbol: null,
-
-            source_account: {
-                id: 0,
-                name: "",
-                name_with_balance: "",
-                type: "",
-                currency_id: 0,
-                currency_name: '',
-                currency_code: '',
-                currency_decimal_places: 2
-            },
-            destination_account: {
-                id: 0,
-                name: "",
-                type: "",
-                currency_id: 0,
-                currency_name: '',
-                currency_code: '',
-                currency_decimal_places: 2
-            },
-
-            // amount:
-            amount: '',
-            currency_id: 0,
-            foreign_amount: '',
-            foreign_currency_id: 0,
-
-            // meta data
-            category: null,
-            budget_id: 0,
-            bill_id: 0,
-            piggy_bank_id: 0,
-            tags: [],
-
-            // optional date fields (6x):
-            interest_date: null,
-            book_date: null,
-            process_date: null,
-            due_date: null,
-            payment_date: null,
-            invoice_date: null,
-
-            // optional other fields:
-            internal_reference: null,
-            external_url: null,
-            external_id: null,
-            notes: null,
-
-            // transaction links:
-            links: [],
-            attachments: [],
-            // location:
-            zoom_level: null,
-            longitude: null,
-            latitude: null,
-
-            // error handling
-            errors: {},
-        },
+        defaultTransaction: getDefaultTransaction(),
+        defaultErrors: getDefaultErrors()
     }
 )
 

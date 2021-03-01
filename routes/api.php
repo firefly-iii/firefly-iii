@@ -29,6 +29,8 @@ use FireflyIII\Http\Middleware\IsAdmin;
  * System and configuration controllers
  */
 
+// TODO get rid of underscores.
+
 // ABOUT FIREFLY III
 // TODO VERIFY API DOCS
 Route::group(
@@ -276,6 +278,7 @@ Route::group(
 );
 
 // Categories
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
      'as'        => 'api.v1.chart.category.',],
@@ -286,7 +289,7 @@ Route::group(
     }
 );
 
-
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',
      'as'        => 'api.v1.cer.',],
@@ -297,6 +300,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
      'as'        => 'api.v1.link_types.',],
@@ -312,6 +316,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
      'as'        => 'api.v1.transaction_links.',],
@@ -344,6 +349,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences',
      'as'        => 'api.v1.preferences.',],
@@ -357,6 +363,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'recurrences',
      'as'        => 'api.v1.recurrences.',],
@@ -373,6 +380,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rules',
      'as'        => 'api.v1.rules.',],
@@ -391,6 +399,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rule_groups',
      'as'        => 'api.v1.rule_groups.',],
@@ -411,6 +420,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
      'as'        => 'api.v1.search.',],
@@ -422,6 +432,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
      'as'        => 'api.v1.webhooks.',],
@@ -439,6 +450,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
      'as'        => 'api.v1.summary.',],
@@ -450,6 +462,7 @@ Route::group(
 );
 
 // destroy data route.
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
      'as'        => 'api.v1.data.',],
@@ -461,6 +474,7 @@ Route::group(
 );
 
 // INSIGHT
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight', 'prefix' => 'insight',
      'as'        => 'api.v1.insight.',],
@@ -476,6 +490,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
      'as'        => 'api.v1.currencies.',],
@@ -504,6 +519,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags',
      'as'        => 'api.v1.tags.',],
@@ -520,6 +536,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud',
      'as'        => 'api.v1.tag-cloud.',],
@@ -529,6 +546,7 @@ Route::group(
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions',
      'as'        => 'api.v1.transactions.',],
@@ -540,7 +558,7 @@ Route::group(
         Route::get('{transactionGroup}', ['uses' => 'Models\Transaction\ShowController@show', 'as' => 'show']);
         Route::get('{transactionGroup}/attachments', ['uses' => 'Models\Transaction\ListController@attachments', 'as' => 'attachments']);
         Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'Models\Transaction\ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-        Route::get('{tj}/transaction_links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
+        Route::get('{tj}/links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
         Route::put('{transactionGroup}', ['uses' => 'Models\Transaction\UpdateController@update', 'as' => 'update']);
         Route::delete('{transactionGroup}/{tj}', ['uses' => 'Models\Transaction\DestroyController@destroyJournal', 'as' => 'delete-journal']);
         Route::delete('{transactionGroup}', ['uses' => 'Models\Transaction\DestroyController@destroy', 'as' => 'delete']);
@@ -548,16 +566,18 @@ Route::group(
 );
 
 // special group for transaction journals
+// TODO VERIFY API DOCS
 Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction-journals',
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transaction-journals',
      'as'        => 'api.v1.journals.',],
     static function () {
 
         // Transaction API routes:
-        Route::get('{tj}', ['uses' => 'TransactionController@showByJournal', 'as' => 'showByJournal']);
+        Route::get('{tj}', ['uses' => 'ShowController@showByJournal', 'as' => 'showByJournal']);
     }
 );
 
+// TODO VERIFY API DOCS
 Route::group(
     ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',
      'as'         => 'api.v1.users.',],

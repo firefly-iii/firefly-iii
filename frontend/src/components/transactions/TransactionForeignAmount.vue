@@ -42,25 +42,46 @@
 <script>
 export default {
   name: "TransactionForeignAmount",
-  props: [
-    'index',
-    'errors',
-    'value',
-    'transactionType',
-    'sourceCurrencyId',
-    'destinationCurrencyId'
-  ],
+  props: {
+    index: {},
+    errors: {},
+    value: {},
+    transactionType: {},
+    sourceCurrencyId: {},
+    destinationCurrencyId: {},
+    fractionDigits: {
+      type: Number,
+      default: 2
+    }
+  },
   data() {
     return {
-      amount: this.value
+      amount: this.value,
+      emitEvent: true
+    }
+  },
+  created() {
+    if ('' !== this.amount) {
+      this.emitEvent = false;
+      this.amount = this.formatNumber(this.amount);
+    }
+  },
+  methods: {
+    formatNumber(str) {
+      return parseFloat(str).toFixed(this.fractionDigits);
     }
   },
   watch: {
     amount: function (value) {
-      this.$emit('set-field', {field: 'foreign_amount', index: this.index, value: value});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'foreign_amount', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     },
     value: function (value) {
       this.amount = value;
+
+
     }
   },
   computed: {

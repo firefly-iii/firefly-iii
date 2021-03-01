@@ -61,6 +61,16 @@ export default {
       emitEvent: true
     };
   },
+  created() {
+    let tags = [];
+    for (let i in this.value) {
+      if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+        tags.push({text: this.value[i]});
+      }
+    }
+    this.updateTags = false;
+    this.tags = tags;
+  },
   watch: {
     'currentTag': 'initItems',
     value: function (value) {
@@ -68,6 +78,7 @@ export default {
       this.tagList = value;
     },
     tagList: function (value) {
+      console.log('watch tagList');
       if (true === this.emitEvent) {
         this.$emit('set-field', {field: 'tags', index: this.index, value: value});
       }

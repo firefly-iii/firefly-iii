@@ -64,22 +64,41 @@ L.Icon.Default.mergeOptions({
 
 export default {
   name: "TransactionLocation",
-  props: ['index', 'value', 'errors', 'customFields'],
+  props: {
+    index: {},
+    value: {
+      type: Object,
+      required: false
+    },
+    errors: {},
+    customFields: {},
+  },
   components: {
     LMap,
     LTileLayer,
     LMarker,
   },
   created() {
-    axios.get('./api/v1/configuration/static/firefly.default_location').then(response => {
-      this.zoom = parseInt(response.data['firefly.default_location'].zoom_level);
-      this.center =
-          [
-            parseFloat(response.data['firefly.default_location'].latitude),
-            parseFloat(response.data['firefly.default_location'].longitude),
-          ]
-      ;
-    });
+    if (null === this.value || typeof this.value === 'undefined') {
+      axios.get('./api/v1/configuration/static/firefly.default_location').then(response => {
+        this.zoom = parseInt(response.data['firefly.default_location'].zoom_level);
+        this.center =
+            [
+              parseFloat(response.data['firefly.default_location'].latitude),
+              parseFloat(response.data['firefly.default_location'].longitude),
+            ]
+        ;
+      });
+      return;
+    }
+    if (null !== this.value.zoom_level && null !== this.value.latitude && null !== this.value.longitude) {
+      this.zoom = this.value.zoom_level;
+      this.center = [
+        parseFloat(this.value.latitude),
+        parseFloat(this.value.longitude),
+      ];
+      this.hasMarker = true;
+    }
   },
   data() {
     return {

@@ -119,6 +119,7 @@ import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
+import {toW3CString} from '../shared/transactions';
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
@@ -130,10 +131,13 @@ export default {
     SplitPills,
     TransactionGroupTitle,
   },
+  /**
+   * Grab some stuff from the API, add the first transaction.
+   */
   created() {
-    this.storeAllowedOpposingTypes();
-    this.storeAccountToTransaction();
-    this.storeCustomFields();
+    this.getAllowedOpposingTypes();
+    this.getAccountToTransaction();
+    this.getCustomFields();
     this.addTransaction();
   },
   data() {
@@ -142,8 +146,8 @@ export default {
       errorMessage: '',
       successMessage: '',
 
-      // custom fields, useful for components:
-      customFields: [],
+      // custom fields to show, useful for components:
+      customFields: {},
 
       // states for the form (makes sense right)
       enableSubmit: true,
@@ -184,6 +188,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * Grabbed from the store.
+     */
     ...mapGetters([
                     'transactionType',
                     'transactions',
@@ -191,9 +198,6 @@ export default {
                   ])
   },
   watch: {
-    transactions: function () {
-      // console.log('updated transactions');
-    },
     submittedTransaction: function () {
       // see finalizeSubmit()
       this.finalizeSubmit();
@@ -229,18 +233,6 @@ export default {
     removeTransaction: function (payload) {
       // console.log('Triggered to remove transaction ' + payload.index);
       this.$store.commit('transactions/create/deleteTransaction', payload);
-    },
-    /**
-     * This method grabs the users preferred custom transaction fields. It's used when configuring the
-     * custom date selects that will be available. It could be something the component does by itself,
-     * thereby separating concerns. This is on my list. If it changes to a per-component thing, then
-     * it should be done via the create.js Vue store because multiple components are interested in the
-     * user's custom transaction fields.
-     */
-    storeCustomFields: function () {
-      axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
-        this.customFields = response.data.data.attributes.data;
-      });
     },
     /**
      * Submitting a transaction consists of 3 steps: submitting the transaction, uploading attachments
@@ -714,7 +706,7 @@ export default {
         theDate.setHours(this.time.getHours());
         theDate.setMinutes(this.time.getMinutes());
         theDate.setSeconds(this.time.getSeconds());
-        dateStr = this.toW3CString(theDate);
+        dateStr = toW3CString(theDate);
       }
 
       // console.log('dateStr = ' + dateStr);
@@ -829,59 +821,36 @@ export default {
       // return it.
       return currentSplit;
     },
-    toW3CString: function (date) {
-      // https://gist.github.com/tristanlins/6585391
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      month++;
-      if (month < 10) {
-        month = '0' + month;
-      }
-      let day = date.getDate();
-      if (day < 10) {
-        day = '0' + day;
-      }
-      let hours = date.getHours();
-      if (hours < 10) {
-        hours = '0' + hours;
-      }
-      let minutes = date.getMinutes();
-      if (minutes < 10) {
-        minutes = '0' + minutes;
-      }
-      let seconds = date.getSeconds();
-      if (seconds < 10) {
-        seconds = '0' + seconds;
-      }
-      let offset = -date.getTimezoneOffset();
-      let offsetHours = Math.abs(Math.floor(offset / 60));
-      let offsetMinutes = Math.abs(offset) - offsetHours * 60;
-      if (offsetHours < 10) {
-        offsetHours = '0' + offsetHours;
-      }
-      if (offsetMinutes < 10) {
-        offsetMinutes = '0' + offsetMinutes;
-      }
-      let offsetSign = '+';
-      if (offset < 0) {
-        offsetSign = '-';
-      }
-      return year + '-' + month + '-' + day +
-             'T' + hours + ':' + minutes + ':' + seconds +
-             offsetSign + offsetHours + ':' + offsetMinutes;
-    },
-    storeAllowedOpposingTypes: function () {
+    /**
+     * Get API value.
+     */
+    getAllowedOpposingTypes: function () {
       axios.get('./api/v1/configuration/static/firefly.allowed_opposing_types')
           .then(response => {
             this.allowedOpposingTypes = response.data['firefly.allowed_opposing_types'];
             // console.log('Set allowedOpposingTypes');
           });
     },
-    storeAccountToTransaction: function () {
+    /**
+     * Get API value.
+     */
+    getAccountToTransaction: function () {
       axios.get('./api/v1/configuration/static/firefly.account_to_transaction')
           .then(response => {
             this.accountToTransaction = response.data['firefly.account_to_transaction'];
           });
+    },
+    /**
+     * This method grabs the users preferred custom transaction fields. It's used when configuring the
+     * custom date selects that will be available. It could be something the component does by itself,
+     * thereby separating concerns. This is on my list. If it changes to a per-component thing, then
+     * it should be done via the create.js Vue store because multiple components are interested in the
+     * user's custom transaction fields.
+     */
+    getCustomFields: function () {
+      axios.get('./api/v1/preferences/transaction_journal_optional_fields').then(response => {
+        this.customFields = response.data.data.attributes.data;
+      });
     },
     setDestinationAllowedTypes: function (value) {
       // console.log('Create::setDestinationAllowedTypes');

@@ -45,25 +45,48 @@
 
 export default {
   name: "TransactionAmount",
-  props: [
-    'index',
-    'errors',
-    'amount',
-    'transactionType',
-    'sourceCurrencySymbol',
-    'destinationCurrencySymbol',
-  ],
+  props: {
+    index: {
+      type: Number,
+      default: 0,
+      required: true
+    },
+    errors: {},
+    amount: {},
+    transactionType: {},
+    sourceCurrencySymbol: {},
+    destinationCurrencySymbol: {},
+    fractionDigits: {
+      default: 2,
+      required: false
+    },
+  },
+  created() {
+    if ('' !== this.amount) {
+      this.emitEvent = false;
+      this.transactionAmount = this.formatNumber(this.amount);
+    }
+  },
+  methods: {
+    formatNumber(str) {
+      return parseFloat(str).toFixed(this.fractionDigits);
+    }
+  },
   data() {
     return {
       transactionAmount: this.amount,
       currencySymbol: null,
       srcCurrencySymbol: this.sourceCurrencySymbol,
       dstCurrencySymbol: this.destinationCurrencySymbol,
+      emitEvent: true
     }
   },
   watch: {
     transactionAmount: function (value) {
-      this.$emit('set-field', {field: 'amount', index: this.index, value: value});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'amount', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     },
     amount: function (value) {
       this.transactionAmount = value;
