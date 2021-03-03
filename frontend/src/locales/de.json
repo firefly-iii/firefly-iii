@@ -73,6 +73,8 @@
         "store_transaction": "Buchung speichern",
         "flash_success": "Geschafft!",
         "create_another": "Nach dem Speichern hierher zur\u00fcckkehren, um ein weiteres zu erstellen.",
+        "update_transaction": "Buchung aktualisieren",
+        "after_update_create_another": "Nach dem Aktualisieren hierher zur\u00fcckkehren, um weiter zu bearbeiten.",
         "reset_after": "Formular nach der \u00dcbermittlung zur\u00fccksetzen",
         "bill_paid_on": "Bezahlt am {date}",
         "first_split_decides": "Die erste Aufteilung bestimmt den Wert dieses Feldes",

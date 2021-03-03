@@ -73,6 +73,8 @@
         "store_transaction": "Transactie opslaan",
         "flash_success": "Gelukt!",
         "create_another": "Terug naar deze pagina voor een nieuwe transactie.",
+        "update_transaction": "Update transactie",
+        "after_update_create_another": "Na het opslaan terug om door te gaan met wijzigen.",
         "reset_after": "Reset formulier na opslaan",
         "bill_paid_on": "Betaald op {date}",
         "first_split_decides": "De eerste split bepaalt wat hier staat",

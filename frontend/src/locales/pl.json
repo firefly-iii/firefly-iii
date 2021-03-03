@@ -73,6 +73,8 @@
         "store_transaction": "Zapisz transakcj\u0119",
         "flash_success": "Sukces!",
         "create_another": "Po zapisaniu wr\u00f3\u0107 tutaj, aby utworzy\u0107 kolejny.",
+        "update_transaction": "Zaktualizuj transakcj\u0119",
+        "after_update_create_another": "Po aktualizacji wr\u00f3\u0107 tutaj, aby kontynuowa\u0107 edycj\u0119.",
         "reset_after": "Wyczy\u015b\u0107 formularz po zapisaniu",
         "bill_paid_on": "Zap\u0142acone {date}",
         "first_split_decides": "Pierwszy podzia\u0142 okre\u015bla warto\u015b\u0107 tego pola",

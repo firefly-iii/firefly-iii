@@ -25,10 +25,59 @@
 // iCheck
 @import '~icheck-bootstrap/icheck-bootstrap.css';
 // AdminLTE
-@import 'dist/css/adminlte.css';
+//@import 'dist/css/adminlte.css';
+
+//@import 'adminlte/scss/adminlte.css'
+
+//@import '~admin-lte/build/scss/AdminLTE';
+
+// ADMIN LTE
+@import '~bootstrap/scss/functions';
+@import '~admin-lte/build/scss/bootstrap-variables';
+@import '~bootstrap/scss/bootstrap';
+
+// Variables and Mixins
+// ---------------------------------------------------
+@import '~admin-lte/build/scss/variables';
+
+// Firefly III colors (?)
+@import 'scss/variables';
+
+@import '~admin-lte/build/scss/mixins';
+@import '~admin-lte/build/scss/parts/core';
+
+// admin LTE components
+@import '~admin-lte/build/scss/forms';
+@import '~admin-lte/build/scss/progress-bars';
+@import '~admin-lte/build/scss/cards';
+@import '~admin-lte/build/scss/modals';
+//@import '../toasts';
+@import '~admin-lte/build/scss/buttons';
+//@import '../callout';
+@import '~admin-lte/build/scss/alerts';
+@import '~admin-lte/build/scss/table';
+//@import '../carousel';
+
+// admin LTE extra components
+//@import '../small-box';
+@import '~admin-lte/build/scss/info-box';
+//@import '../timeline';
+//@import '../products';
+//@import '../direct-chat';
+//@import '../users-list';
+//@import '../social-widgets';
+
+// admin LTE pages (unused)
+// @import 'parts/pages';
+
+// admin LTE plugins (unused)
+// @import 'parts/plugins';
+
+// admin LTE misc
+@import '~admin-lte/build/scss/miscellaneous';
+@import '~admin-lte/build/scss/print';
+@import '~admin-lte/build/scss/text';
+@import '~admin-lte/build/scss/elevation';
+@import '~admin-lte/build/scss/colors';
 
 
-
-// Bootstrap
-// Already imported by AdminLTE
-//@import '~bootstrap/scss/bootstrap';

@@ -144,6 +144,10 @@ export default {
       // which custom fields to show TODO
       customFields: {},
 
+      // group ID + title once submitted:
+      returnedGroupId: 0,
+      returnedGroupTitle: '',
+
       // date and time of the transaction, TODO
       date: new Date,
       time: new Date,
@@ -527,7 +531,7 @@ export default {
       if (shouldSubmit) {
         this.submitUpdate(submission);
       }
-      console.log(submission);
+      //console.log(submission);
     },
     compareLinks: function (array) {
       let compare = [];
@@ -550,16 +554,130 @@ export default {
       return JSON.stringify(compare);
     },
     submitUpdate: function (submission) {
+      console.log('submitUpdate');
       const url = './api/v1/transactions/' + this.groupId;
       axios.put(url, submission)
           .then(response => {
-                  console.log('OK!');
+                  // console.log('Response is OK!');
+                  // report the transaction is submitted.
+                  this.submittedTransaction = true;
+
+                  // // submit links and attachments (can only be done when the transaction is created)
+                  // this.submitTransactionLinks(data, response);
+                  // this.submitAttachments(data, response);
+                  //
+                  // // meanwhile, store the ID and the title in some easy to access variables.
+                  // this.returnedGroupId = parseInt(response.data.data.id);
+                  // this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
                 }
-          ).catch(error => {
-        console.log('error :(');
-        console.log(error);
-      });
-    }
+          )
+          .catch(error => {
+                   console.log('error :(');
+                   console.log(error.response.data);
+                   // oh noes Firefly III has something to bitch about.
+                   this.enableSubmit = true;
+                   // report the transaction is submitted.
+                   this.submittedTransaction = true;
+                   // // also report attachments and links are submitted:
+                   this.submittedAttachments = true;
+                   this.submittedLinks = true;
+                   //
+                   // but report an error because error:
+                   this.inError = true;
+                   this.parseErrors(error.response.data);
+                 }
+          );
+    },
+    parseErrors: function (errors) {
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          this.resetErrors({index: i});
+        }
+      }
+      this.successMessage = '';
+      this.errorMessage = this.$t('firefly.errors_submission');
+      if (typeof errors.errors === 'undefined') {
+        this.successMessage = '';
+        this.errorMessage = errors.message;
+      }
+
+      let payload;
+      let transactionIndex;
+      let fieldName;
+
+      // fairly basic way of exploding the error array.
+      for (const key in errors.errors) {
+        // console.log('Error index: "' + key + '"');
+        if (errors.errors.hasOwnProperty(key)) {
+          if (key === 'group_title') {
+            this.groupTitleErrors = errors.errors[key];
+            continue;
+          }
+          if (key !== 'group_title') {
+            // lol dumbest way to explode "transactions.0.something" ever.
+            transactionIndex = parseInt(key.split('.')[1]);
+
+            fieldName = key.split('.')[2];
+
+            // set error in this object thing.
+            // console.log('The errors in key "' + key + '" are');
+            // console.log(errors.errors[key]);
+            switch (fieldName) {
+              case 'amount':
+              case 'description':
+              case 'date':
+              case 'tags':
+                payload = {index: transactionIndex, field: fieldName, errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'budget_id':
+                payload = {index: transactionIndex, field: 'budget', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'bill_id':
+                payload = {index: transactionIndex, field: 'bill', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'piggy_bank_id':
+                payload = {index: transactionIndex, field: 'piggy_bank', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'category_name':
+                payload = {index: transactionIndex, field: 'category', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'source_name':
+              case 'source_id':
+                payload = {index: transactionIndex, field: 'source', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'destination_name':
+              case 'destination_id':
+                payload = {index: transactionIndex, field: 'destination', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+              case 'foreign_amount':
+              case 'foreign_currency':
+                payload = {index: transactionIndex, field: 'foreign_amount', errors: errors.errors[key]};
+                this.setTransactionError(payload);
+                break;
+            }
+          }
+          // unique some things
+          if (typeof this.transactions[transactionIndex] !== 'undefined') {
+            //this.transactions[transactionIndex].errors.source = Array.from(new Set(this.transactions[transactionIndex].errors.source));
+            //this.transactions[transactionIndex].errors.destination = Array.from(new Set(this.transactions[transactionIndex].errors.destination));
+          }
+
+        }
+      }
+    },
+    setTransactionError: function (payload) {
+      this.transactions[payload.index].errors[payload.field] = payload.errors;
+    },
+    resetErrors(payload) {
+      this.transactions[payload.index].errors = lodashClonedeep(getDefaultErrors());
+    },
   }
 }
 </script>

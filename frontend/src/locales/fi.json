@@ -73,6 +73,8 @@
         "store_transaction": "Store transaction",
         "flash_success": "Valmista tuli!",
         "create_another": "Tallennuksen j\u00e4lkeen, palaa takaisin luomaan uusi tapahtuma.",
+        "update_transaction": "P\u00e4ivit\u00e4 tapahtuma",
+        "after_update_create_another": "P\u00e4ivityksen j\u00e4lkeen, palaa takaisin jatkamaan muokkausta.",
         "reset_after": "Tyhjenn\u00e4 lomake l\u00e4hetyksen j\u00e4lkeen",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
