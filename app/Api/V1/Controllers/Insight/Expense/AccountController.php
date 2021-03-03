@@ -35,18 +35,38 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class DateController
+ * TODO per object group?
+ * TODO transfers voor piggies?
+ * TODO currency?
+ * TODO net worth?
+ *
+ * Class AccountController
  *
  * Shows expense information grouped or limited by date.
  * Ie. all expenses grouped by account + currency.
+ *
+ * /api/v1/insight/expenses/expense
+ *  Expenses grouped by expense account. Can be limited by date and by asset account.
+ * /api/v1/insight/expenses/asset
+ *  Expenses grouped by asset account. Can be limited by date and by asset account.
+ * /api/v1/insight/expenses/total
+ *  Expenses, total (no filter). Can be limited by date and by asset account.
+ * /api/v1/insight/expenses/budget
+ *  Expenses per budget or no budget. Can be limited by date and by asset account.
+ * /api/v1/insight/expenses/budget
+ *  Also per budget limit.
+ * /api/v1/insight/expenses/category
+ *  Expenses per category or no category. Can be limited by date and by asset account.
+ * /api/v1/insight/expenses/bill
+ *  Expenses per bill or no bill. Can be limited by date and by asset account.
+ *
  */
-class DateController extends Controller
+class AccountController extends Controller
 {
     use ApiSupport;
 
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountRepositoryInterface  $repository;
-
 
     /**
      * AccountController constructor.
@@ -72,11 +92,12 @@ class DateController extends Controller
     }
 
     /**
+     * @param DateRequest $request
      *
+     * @return JsonResponse
      */
-    public function basic(DateRequest $request): JsonResponse
+    public function expense(DateRequest $request): JsonResponse
     {
-        // parameters for chart:
         $dates = $request->getAll();
         /** @var Carbon $start */
         $start = $dates['start'];
@@ -87,7 +108,6 @@ class DateController extends Controller
 
         // prep some vars:
         $currencies = [];
-        $chartData  = [];
         $tempData   = [];
 
         // grab all accounts and names

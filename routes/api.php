@@ -77,9 +77,51 @@ Route::group(
     }
 );
 
+/**
+ * DATA CONTROLLERS
+ *
+ */
 
+// EXPORT TODO
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
+     'as'        => 'api.v1.data.export.',],
+    static function () {
+        Route::get('transactions', ['uses' => 'TransactionController@export', 'as' => 'transactions']);
+    }
+);
 
+/**
+ * INSIGHT CONTROLLERS
+ */
 
+// Insight in expenses:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Expense', 'prefix' => 'insight/expense',
+     'as'        => 'api.v1.insight.expense.',],
+    static function () {
+        // Insight in expenses.
+
+        //  grouped by expense account or asset account:
+        Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
+        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
+
+        // TODO total:
+        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
+
+        // TODO Budget/no budget and budget limit
+        Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
+        Route::get('no-budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
+
+        // TODO category and no category
+
+        // TODO bill and no bill
+    }
+);
+
+//// Insight in income.
+//        // Insight in income by date.
+//        Route::get('income/date/basic', ['uses' => 'Income\DateController@basic', 'as' => 'income.date.basic']);
 
 
 
@@ -456,22 +498,6 @@ Route::group(
     }
 );
 
-// INSIGHT
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight', 'prefix' => 'insight',
-     'as'        => 'api.v1.insight.',],
-    static function () {
-
-        // Insight in expenses.
-        // Insight in expenses by date.
-        Route::get('expense/date/basic', ['uses' => 'Expense\DateController@basic', 'as' => 'expense.date.basic']);
-
-        // Insight in income.
-        // Insight in income by date.
-        Route::get('income/date/basic', ['uses' => 'Income\DateController@basic', 'as' => 'income.date.basic']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(
