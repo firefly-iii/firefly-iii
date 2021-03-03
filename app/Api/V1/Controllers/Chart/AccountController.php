@@ -73,7 +73,7 @@ class AccountController extends Controller
 
     /**
      * @param DateRequest $request
-     *
+     * @deprecated
      * @return JsonResponse
      */
     public function expenseOverview(DateRequest $request): JsonResponse
@@ -223,7 +223,7 @@ class AccountController extends Controller
 
     /**
      * @param DateRequest $request
-     *
+     * @deprecated
      * @return JsonResponse
      */
     public function revenueOverview(DateRequest $request): JsonResponse

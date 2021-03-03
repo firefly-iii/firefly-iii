@@ -42,7 +42,7 @@ class AvailableBudgetController extends Controller
 
     /**
      * AvailableBudgetController constructor.
-     *
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -64,7 +64,7 @@ class AvailableBudgetController extends Controller
 
     /**
      * @param AvailableBudget $availableBudget
-     *
+     * @deprecated
      * @return JsonResponse
      */
     public function overview(AvailableBudget $availableBudget): JsonResponse

@@ -49,7 +49,7 @@ class BudgetController extends Controller
 
     /**
      * BudgetController constructor.
-     *
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -80,7 +80,7 @@ class BudgetController extends Controller
      * ],
      *
      * @param DateRequest $request
-     *
+     * @deprecated
      * @return JsonResponse
      */
     public function overview(DateRequest $request): JsonResponse
@@ -113,7 +113,7 @@ class BudgetController extends Controller
      * @param Collection $limits
      * @param Carbon     $start
      * @param Carbon     $end
-     *
+     * @deprecated
      * @return array
      */
     protected function getExpenses(Budget $budget, Carbon $start, Carbon $end): array
@@ -135,7 +135,7 @@ class BudgetController extends Controller
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
-     *
+     * @deprecated
      * @return array
      */
     private function getExpenseInRange(Budget $budget, Carbon $start, Carbon $end): array
@@ -171,7 +171,7 @@ class BudgetController extends Controller
 
     /**
      * @param BudgetLimit $limit
-     *
+     * @deprecated
      * @return array
      */
     private function getExpensesForLimit(BudgetLimit $limit): array
@@ -209,7 +209,7 @@ class BudgetController extends Controller
 
     /**
      * @param array $expenses
-     *
+     * @deprecated
      * @return array
      */
     private function filterNulls(array $expenses): array
@@ -228,7 +228,7 @@ class BudgetController extends Controller
     /**
      * @param array $budgetNames
      * @param array $currencyNames
-     *
+     * @deprecated
      * @return array
      */
     private function createSets(array $budgetNames, array $currencyNames): array
@@ -279,7 +279,7 @@ class BudgetController extends Controller
     /**
      * @param array $basic
      * @param array $sets
-     *
+     * @deprecated
      * @return array
      */
     private function fillSets(array $basic, array $sets): array

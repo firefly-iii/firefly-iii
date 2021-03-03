@@ -45,7 +45,7 @@ class CategoryController extends Controller
 
     /**
      * AccountController constructor.
-     *
+     * @deprecated
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -71,7 +71,7 @@ class CategoryController extends Controller
 
     /**
      * @param DateRequest $request
-     *
+     * @deprecated
      * @return JsonResponse
      */
     public function overview(DateRequest $request): JsonResponse
@@ -100,7 +100,7 @@ class CategoryController extends Controller
     /**
      * @param array $tempData
      * @param array $set
-     *
+     * @deprecated
      * @return array
      */
     private function processArray(array $tempData, array $set): array
@@ -135,7 +135,7 @@ class CategoryController extends Controller
 
     /**
      * @param array $tempData
-     *
+     * @deprecated
      * @return array
      */
     private function sortArray(array $tempData): array

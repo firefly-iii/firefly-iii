@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * SummaryController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,10 +22,11 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\Summary;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -43,9 +44,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class SummaryController
+ * Class BasicController
  */
-class SummaryController extends Controller
+class BasicController extends Controller
 {
     private AvailableBudgetRepositoryInterface $abRepository;
     private AccountRepositoryInterface $accountRepository;
@@ -55,7 +56,7 @@ class SummaryController extends Controller
     private OperationsRepositoryInterface $opsRepository;
 
     /**
-     * SummaryController constructor.
+     * BasicController constructor.
      *
      * @codeCoverageIgnore
      */
