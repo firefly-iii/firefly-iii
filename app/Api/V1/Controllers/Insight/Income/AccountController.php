@@ -35,12 +35,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class DateController
- *
- * Shows income information grouped or limited by date.
- * Ie. all income grouped by revenue + currency.
+ * Class AccountController
  */
-class DateController extends Controller
+class AccountController extends Controller
 {
     use ApiSupport;
 
@@ -72,9 +69,11 @@ class DateController extends Controller
     }
 
     /**
+     * @param DateRequest $request
      *
+     * @return JsonResponse
      */
-    public function basic(DateRequest $request): JsonResponse
+    public function revenue(DateRequest $request): JsonResponse
     {
         // parameters for chart:
         $dates = $request->getAll();

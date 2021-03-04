@@ -135,7 +135,7 @@ class AccountController extends Controller
                         'name'             => $accountNames[$accountId],
                         'difference'       => bcmul($diff, '-1'),
                         'difference_float' => ((float)$diff) * -1,
-                        'currency_id'      => $currencyId,
+                        'currency_id'      => (string) $currencyId,
                         'currency_code'    => $currencies[$currencyId]->code,
                     ];
                 }

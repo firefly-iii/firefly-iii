@@ -66,6 +66,46 @@ Route::group(
 );
 
 /**
+ * DATA ROUTES
+ */
+// EXPORT
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
+     'as'        => 'api.v1.data.export.',],
+    static function () {
+        Route::get('accounts', ['uses' => 'ExportController@accounts', 'as' => 'accounts']);
+        Route::get('bills', ['uses' => 'ExportController@bills', 'as' => 'bills']);
+        Route::get('budgets', ['uses' => 'ExportController@budgets', 'as' => 'budgets']);
+        Route::get('categories', ['uses' => 'ExportController@categories', 'as' => 'categories']);
+        Route::get('piggy-banks', ['uses' => 'ExportController@piggyBanks', 'as' => 'piggy-banks']);
+        Route::get('recurring', ['uses' => 'ExportController@recurring', 'as' => 'recurring']);
+        Route::get('rules', ['uses' => 'ExportController@rules', 'as' => 'rules']);
+        Route::get('tags', ['uses' => 'ExportController@tags', 'as' => 'tags']);
+        Route::get('transactions', ['uses' => 'ExportController@transactions', 'as' => 'transactions']);
+    }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
  * SUMMARY CONTROLLER
  */
 // BASIC
@@ -82,14 +122,14 @@ Route::group(
  *
  */
 
-// EXPORT TODO
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
-     'as'        => 'api.v1.data.export.',],
-    static function () {
-        Route::get('transactions', ['uses' => 'TransactionController@export', 'as' => 'transactions']);
-    }
-);
+//// EXPORT
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
+//     'as'        => 'api.v1.data.export.',],
+//    static function () {
+//        Route::get('transactions', ['uses' => 'TransactionController@export', 'as' => 'transactions']);
+//    }
+//);
 
 /**
  * INSIGHT CONTROLLERS
@@ -102,7 +142,7 @@ Route::group(
     static function () {
         // Insight in expenses.
 
-        //  grouped by expense account or asset account:
+        // TODO grouped by expense account or asset account:
         Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
         Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
 
@@ -111,17 +151,48 @@ Route::group(
 
         // TODO Budget/no budget and budget limit
         Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
-        Route::get('no-budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
+        Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
 
         // TODO category and no category
+        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
+        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
         // TODO bill and no bill
+        Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
+        Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
     }
 );
 
-//// Insight in income.
-//        // Insight in income by date.
-//        Route::get('income/date/basic', ['uses' => 'Income\DateController@basic', 'as' => 'income.date.basic']);
+// Insight in expenses:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Income', 'prefix' => 'insight/income',
+     'as'        => 'api.v1.insight.income.',],
+    static function () {
+        // Insight in income
+
+        // TODO grouped by expense account or asset account:
+        Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'expense']);
+        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
+
+        // TODO total:
+        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
+
+        // TODO category and no category
+        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
+        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+
+    }
+);
+
+
+
+
+
+
+
+
+
+
 
 
 

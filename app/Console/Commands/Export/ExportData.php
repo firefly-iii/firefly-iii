@@ -111,8 +111,12 @@ class ExportData extends Command
         /** @var ExportDataGenerator $exporter */
         $exporter = app(ExportDataGenerator::class);
         $exporter->setUser($this->user);
+
         $exporter->setStart($options['start']);
         $exporter->setEnd($options['end']);
+        $exporter->setAccounts($options['accounts']);
+
+
         $exporter->setExportTransactions($options['export']['transactions']);
         $exporter->setExportAccounts($options['export']['accounts']);
         $exporter->setExportBudgets($options['export']['budgets']);
