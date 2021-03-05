@@ -80,11 +80,13 @@ interface OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of accounts, grouped per currency. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $revenue
+     * @param TransactionCurrency|null $currency
      *
      * @return array
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null): array;
 }

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
+namespace FireflyIII\Api\V1\Controllers\Insight\Income;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
@@ -48,7 +48,7 @@ class PeriodController extends Controller
 
         // collect all expenses in this period (regardless of type)
         $collector = app(GroupCollectorInterface::class);
-        $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
+        $collector->setTypes([TransactionType::DEPOSIT])->setRange($start, $end)->setDestinationAccounts($accounts);
         $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $currencyId        = (int)$journal['currency_id'];
@@ -61,7 +61,7 @@ class PeriodController extends Controller
                         'currency_id'      => (string)$currencyId,
                         'currency_code'    => $journal['currency_code'],
                     ];
-                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $journal['amount']);
+                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], app('steam')->positive($journal['amount']));
                 $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference'];
             }
             if (0 !== $foreignCurrencyId) {
@@ -71,7 +71,7 @@ class PeriodController extends Controller
                         'currency_id'      => (string)$foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
-                $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], $journal['foreign_amount']);
+                $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], app('steam')->positive($journal['foreign_amount']));
                 $response[$foreignCurrencyId]['difference_float'] = (float)$response[$foreignCurrencyId]['difference'];
             }
         }

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Insight\ExpenseRequest;
+use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -33,25 +33,11 @@ use FireflyIII\Support\Http\Api\ApiSupport;
 use Illuminate\Http\JsonResponse;
 
 /**
- * TODO per object group?
- * TODO transfers voor piggies?
- * TODO currency?
- * TODO net worth?
  *
  * Class AccountController
  *
  * Shows expense information grouped or limited by date.
  * Ie. all expenses grouped by account + currency.
- *
- * /api/v1/insight/expenses/budget
- *  Expenses per budget or no budget. Can be limited by date and by asset account.
- * /api/v1/insight/expenses/budget
- *  Also per budget limit.
- * /api/v1/insight/expenses/category
- *  Expenses per category or no category. Can be limited by date and by asset account.
- * /api/v1/insight/expenses/bill
- *  Expenses per bill or no bill. Can be limited by date and by asset account.
- *
  */
 class AccountController extends Controller
 {
@@ -87,17 +73,18 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ExpenseRequest $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function expense(ExpenseRequest $request): JsonResponse
+    public function expense(GenericRequest $request): JsonResponse
     {
         $start           = $request->getStart();
         $end             = $request->getEnd();
         $assetAccounts   = $request->getAssetAccounts();
         $expenseAccounts = $request->getExpenseAccounts();
         $expenses        = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, $expenseAccounts);
+        $result          = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {
@@ -113,16 +100,17 @@ class AccountController extends Controller
     }
 
     /**
-     * @param ExpenseRequest $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function asset(ExpenseRequest $request): JsonResponse
+    public function asset(GenericRequest $request): JsonResponse
     {
         $start         = $request->getStart();
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
         $expenses      = $this->opsRepository->sumExpenses($start, $end, $assetAccounts);
+        $result        = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {

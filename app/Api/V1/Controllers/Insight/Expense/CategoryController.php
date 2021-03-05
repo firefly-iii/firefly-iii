@@ -5,7 +5,7 @@ namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Insight\ExpenseRequest;
+use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Category\NoCategoryRepositoryInterface;
@@ -46,11 +46,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param ExpenseRequest $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function category(ExpenseRequest $request): JsonResponse
+    public function category(GenericRequest $request): JsonResponse
     {
         $start         = $request->getStart();
         $end           = $request->getEnd();
@@ -80,11 +80,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param ExpenseRequest $request
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function noCategory(ExpenseRequest $request): JsonResponse
+    public function noCategory(GenericRequest $request): JsonResponse
     {
         $start         = $request->getStart();
         $end           = $request->getEnd();

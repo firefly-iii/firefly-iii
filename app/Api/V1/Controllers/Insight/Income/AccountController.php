@@ -24,26 +24,29 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Insight\Income;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
+ *
  * Class AccountController
+ *
+ * Shows income information grouped or limited by date.
+ * Ie. all income grouped by account + currency.
+ * TODO same code as Expense/AccountController.
  */
 class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface $currencyRepository;
-    private AccountRepositoryInterface  $repository;
-
+    private CurrencyRepositoryInterface   $currencyRepository;
+    private AccountRepositoryInterface    $repository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * AccountController constructor.
@@ -55,7 +58,6 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
                 $user             = auth()->user();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
@@ -63,70 +65,67 @@ class AccountController extends Controller
                 $this->currencyRepository = app(CurrencyRepositoryInterface::class);
                 $this->currencyRepository->setUser($user);
 
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->opsRepository->setUser($user);
+
                 return $next($request);
             }
         );
     }
 
     /**
-     * @param DateRequest $request
+     * // TOOD same as
+     * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function revenue(DateRequest $request): JsonResponse
+    public function revenue(GenericRequest $request): JsonResponse
     {
-        // parameters for chart:
-        $dates = $request->getAll();
-        /** @var Carbon $start */
-        $start = $dates['start'];
-        /** @var Carbon $end */
-        $end = $dates['end'];
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $assetAccounts   = $request->getAssetAccounts();
+        $revenueAccounts = $request->getRevenueAccounts();
+        $income          = $this->opsRepository->sumIncome($start, $end, $assetAccounts, $revenueAccounts);
+        $result          = [];
 
-        $start->subDay();
-
-        // prep some vars:
-        $currencies = [];
-        $chartData  = [];
-        $tempData   = [];
-
-        // grab all accounts and names
-        $accounts      = $this->repository->getAccountsByType([AccountType::REVENUE]);
-        $accountNames  = $this->extractNames($accounts);
-        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
-
-        // loop the end balances. This is an array for each account ($expenses)
-        foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int)$accountId;
-            // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId = (int)$currencyId;
-
-                // see if there is an accompanying start amount.
-                // grab the difference and find the currency.
-                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
-                $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
-                if (0 !== bccomp($diff, '0')) {
-                    // store the values in a temporary array.
-                    $tempData[] = [
-                        'id'               => $accountId,
-                        'name'             => $accountNames[$accountId],
-                        'difference'       => $diff,
-                        'difference_float' => (float)$diff,
-                        'currency_id'      => $currencyId,
-                        'currency_code'    => $currencies[$currencyId]->code,
-                    ];
-                }
-            }
+        /** @var array $entry */
+        foreach ($income as $entry) {
+            $result[] = [
+                'difference'       => $entry['sum'],
+                'difference_float' => (float)$entry['sum'],
+                'currency_id'      => (string)$entry['currency_id'],
+                'currency_code'    => $entry['currency_code'],
+            ];
         }
 
+        return response()->json($result);
+    }
 
-        // sort temp array by amount.
-        $amounts = array_column($tempData, 'difference_float');
-        array_multisort($amounts, SORT_ASC, $tempData);
+    /**
+     * TODO same code as Expense/AccountController.
+     *
+     * @param GenericRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function asset(GenericRequest $request): JsonResponse
+    {
+        $start         = $request->getStart();
+        $end           = $request->getEnd();
+        $assetAccounts = $request->getAssetAccounts();
+        $income        = $this->opsRepository->sumIncome($start, $end, $assetAccounts);
+        $result        = [];
+        /** @var array $entry */
+        foreach ($income as $entry) {
+            $result[] = [
+                'difference'       => $entry['sum'],
+                'difference_float' => (float)$entry['sum'],
+                'currency_id'      => (string)$entry['currency_id'],
+                'currency_code'    => $entry['currency_code'],
+            ];
+        }
 
-        return response()->json($tempData);
+        return response()->json($result);
     }
 
 }

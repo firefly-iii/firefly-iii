@@ -95,19 +95,14 @@ Route::group(
     static function () {
         // Insight in expenses per account:
         Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
-        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
+        Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
-
-        // TODO bill and no bill + asset account.
         Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
         Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
-
         Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
         Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
         Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
-
-        // TODO per tag + asset account
         Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
 
@@ -115,61 +110,41 @@ Route::group(
         // TODO per budget limit?
         // TODO per object group?
         // TODO per recurrence?
-
-
-
-
-
+        // TODO per object group
+        // TODO transfers voor piggies
+        // TODO transfers per piggy?
+        // TODO currency?
+        // TODO net worth?
     }
 );
-
-// Insight in expenses:
+// insight in income
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Income', 'prefix' => 'insight/income',
      'as'        => 'api.v1.insight.income.',],
     static function () {
-        // Insight in income
-
-        // TODO grouped by expense account or asset account:
-        Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'expense']);
-        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
-
-        // TODO total:
+        // Insight in expenses per account:
+        Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'revenue']);
+        Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
-
-        // TODO category and no category
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
         Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
+        Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
+        Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
+
+        // TODO per budget limit?
+        // TODO per object group?
+        // TODO per recurrence?
+        // TODO per object group
+        // TODO transfers voor piggies
+        // TODO transfers per piggy?
+        // TODO currency?
+        // TODO net worth?
     }
 );
 
 
 // Insight in transfers
-// TODO transfers per piggy?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -201,16 +176,6 @@ Route::group(
 /**
  * INSIGHT CONTROLLERS
  */
-
-
-
-
-
-
-
-
-
-
 
 
 /**
@@ -282,7 +247,6 @@ Route::group(
 );
 
 
-
 // TODO VERIFY API DOCS
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
@@ -337,7 +301,7 @@ Route::group(
      'as'        => 'api.v1.bills.',],
     static function () {
 
-    // Bills API routes:
+        // Bills API routes:
         Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
         Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
@@ -404,7 +368,6 @@ Route::group(
         Route::get('{category}/attachments', ['uses' => 'CategoryController@attachments', 'as' => 'attachments']);
     }
 );
-
 
 
 // TODO VERIFY API DOCS
@@ -567,7 +530,6 @@ Route::group(
         Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
-
 
 
 // destroy data route.

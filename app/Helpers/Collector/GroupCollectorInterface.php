@@ -502,6 +502,13 @@ interface GroupCollectorInterface
     public function withoutBudget(): GroupCollectorInterface;
 
     /**
+     * Limit results to a transactions without a bill.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBill(): GroupCollectorInterface;
+
+    /**
      * Limit results to a transactions without a category.
      *
      * @return GroupCollectorInterface
