@@ -25,11 +25,56 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class RecurrenceController
  */
 class RecurrenceController extends Controller
 {
+    private RecurringRepositoryInterface $repository;
+
+
+    /**
+     * RecurrenceController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(RecurringRepositoryInterface::class);
+                $this->repository->setUser(auth()->user());
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function recurring(AutocompleteRequest $request): JsonResponse
+    {
+        $data     = $request->getData();
+        $rules    = $this->repository->searchRecurrence($data['query'], $data['limit']);
+        $response = [];
+
+        /** @var Rule $rule */
+        foreach ($rules as $rule) {
+            $response[] = [
+                'id'          => (string)$rule->id,
+                'name'        => $rule->title,
+                'description' => $rule->description,
+            ];
+        }
+
+        return response()->json($response);
+    }
 
 }

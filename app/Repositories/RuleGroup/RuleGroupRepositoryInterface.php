@@ -37,6 +37,14 @@ interface RuleGroupRepositoryInterface
     public function destroyAll(): void;
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRuleGroup(string $query, int $limit): Collection;
+
+    /**
      * @return int
      */
     public function count(): int;
@@ -155,7 +163,7 @@ interface RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array $data
+     * @param array     $data
      *
      * @return RuleGroup
      */

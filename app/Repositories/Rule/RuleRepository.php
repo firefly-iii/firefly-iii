@@ -565,4 +565,19 @@ class RuleRepository implements RuleRepositoryInterface
         return implode(' ', $params);
 
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchRule(string $query, int $limit): Collection
+    {
+        $search = $this->user->rules();
+        if ('' !== $query) {
+            $search->where('rules.title', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('rules.order', 'ASC')
+               ->orderBy('rules.title', 'ASC');
+
+        return $search->take($limit)->get(['id','title','description']);
+    }
 }

@@ -69,7 +69,7 @@ class TransactionTypeController extends Controller
         foreach ($types as $type) {
             // different key for consistency.
             $array[] = [
-                'id'   => $type->id,
+                'id'   =>(string) $type->id,
                 'name' => $type->type,
                 'type' => $type->type,
             ];

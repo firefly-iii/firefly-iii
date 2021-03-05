@@ -53,6 +53,7 @@ use Log;
 class RecurringRepository implements RecurringRepositoryInterface
 {
     use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
+
     private User $user;
 
 
@@ -522,6 +523,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
         // filter out everything if "repeat_until" is set.
         $repeatUntil = $repetition->recurrence->repeat_until;
+
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
@@ -560,21 +562,36 @@ class RecurringRepository implements RecurringRepositoryInterface
     public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int
     {
         // if repeat = null just return 0.
-        if (null === $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
+        if (null === $recurrence->repeat_until && 0 === (int)$recurrence->repetitions) {
             return 0;
         }
         // expect X transactions then stop. Return that number
-        if (null === $recurrence->repeat_until && 0 !== (int) $recurrence->repetitions) {
-            return (int) $recurrence->repetitions;
+        if (null === $recurrence->repeat_until && 0 !== (int)$recurrence->repetitions) {
+            return (int)$recurrence->repetitions;
         }
 
         // need to calculate, this depends on the repetition:
-        if (null !== $recurrence->repeat_until && 0 === (int) $recurrence->repetitions) {
+        if (null !== $recurrence->repeat_until && 0 === (int)$recurrence->repetitions) {
             $occurrences = $this->getOccurrencesInRange($repetition, $recurrence->first_date ?? today(), $recurrence->repeat_until);
 
             return count($occurrences);
         }
 
         return 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchRecurrence(string $query, int $limit): Collection
+    {
+        $search = $this->user->recurrences();
+        if ('' !== $query) {
+            $search->where('recurrences.title', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search
+            ->orderBy('recurrences.title', 'ASC');
+
+        return $search->take($limit)->get(['id', 'title', 'description']);
     }
 }

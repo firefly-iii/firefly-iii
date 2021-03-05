@@ -42,10 +42,9 @@ Route::group(
         Route::get('object-groups', ['uses' => 'ObjectGroupController@objectGroups', 'as' => 'object-groups']);
         Route::get('piggy-banks', ['uses' => 'PiggyBankController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('piggy-banks-with-balance', ['uses' => 'PiggyBankController@piggyBanksWithBalance', 'as' => 'piggy-banks-with-balance']);
-        // TODO create me:
+        Route::get('recurring', ['uses' => 'RecurrenceController@recurring', 'as' => 'recurring']);
         Route::get('rules', ['uses' => 'RuleController@rules', 'as' => 'rules']);
-        // TODO create me:
-        Route::get('rule-groups', ['uses' => 'RuleGroupController@rules', 'as' => 'rule-groups']);
+        Route::get('rule-groups', ['uses' => 'RuleGroupController@ruleGroups', 'as' => 'rule-groups']);
         Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
         Route::get('transactions', ['uses' => 'TransactionController@transactions', 'as' => 'transactions']);
         Route::get('transactions-with-id', ['uses' => 'TransactionController@transactionsWithID', 'as' => 'transactions-with-id']);
@@ -84,6 +83,60 @@ Route::group(
         Route::get('transactions', ['uses' => 'ExportController@transactions', 'as' => 'transactions']);
     }
 );
+
+/**
+ * INSIGHTS ROUTES
+ */
+
+// Insight in expenses:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Expense', 'prefix' => 'insight/expense',
+     'as'        => 'api.v1.insight.expense.',],
+    static function () {
+        // Insight in expenses.
+        Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
+        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
+        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
+        Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
+
+        // TODO Budget/no budget and budget limit
+        Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
+
+        // TODO category and no category
+        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
+        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+
+        // TODO bill and no bill
+        Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
+        Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
+    }
+);
+
+// Insight in expenses:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Income', 'prefix' => 'insight/income',
+     'as'        => 'api.v1.insight.income.',],
+    static function () {
+        // Insight in income
+
+        // TODO grouped by expense account or asset account:
+        Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'expense']);
+        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
+
+        // TODO total:
+        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
+
+        // TODO category and no category
+        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
+        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+
+    }
+);
+
+
+
+
+
 
 
 
@@ -134,60 +187,6 @@ Route::group(
 /**
  * INSIGHT CONTROLLERS
  */
-
-// Insight in expenses:
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Expense', 'prefix' => 'insight/expense',
-     'as'        => 'api.v1.insight.expense.',],
-    static function () {
-        // Insight in expenses.
-
-        // TODO grouped by expense account or asset account:
-        Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
-        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
-
-        // TODO total:
-        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
-
-        // TODO Budget/no budget and budget limit
-        Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
-        Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
-
-        // TODO category and no category
-        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
-        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
-
-        // TODO bill and no bill
-        Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
-        Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
-    }
-);
-
-// Insight in expenses:
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Income', 'prefix' => 'insight/income',
-     'as'        => 'api.v1.insight.income.',],
-    static function () {
-        // Insight in income
-
-        // TODO grouped by expense account or asset account:
-        Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'expense']);
-        Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
-
-        // TODO total:
-        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
-
-        // TODO category and no category
-        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
-        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
-
-    }
-);
-
-
-
-
-
 
 
 

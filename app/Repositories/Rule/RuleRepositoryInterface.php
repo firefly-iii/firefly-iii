@@ -40,6 +40,14 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRule(string $query, int $limit): Collection;
+
+    /**
      * Return search query for rule.
      *
      * @param Rule $rule

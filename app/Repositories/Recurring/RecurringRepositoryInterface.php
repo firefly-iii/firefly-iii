@@ -45,6 +45,14 @@ interface RecurringRepositoryInterface
     public function destroyAll(): void;
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRecurrence(string $query, int $limit): Collection;
+
+    /**
      * Calculate how many transactions are to be expected from this recurrence.
      *
      * @param Recurrence $recurrence

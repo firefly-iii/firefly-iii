@@ -25,11 +25,55 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class RuleGroupController
  */
 class RuleGroupController extends Controller
 {
+    private RuleGroupRepositoryInterface $repository;
 
+
+    /**
+     * RuleGroupController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(RuleGroupRepositoryInterface::class);
+                $this->repository->setUser(auth()->user());
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function ruleGroups(AutocompleteRequest $request): JsonResponse
+    {
+        $data     = $request->getData();
+        $groups   = $this->repository->searchRuleGroup($data['query'], $data['limit']);
+        $response = [];
+
+        /** @var RuleGroup $group */
+        foreach ($groups as $group) {
+            $response[] = [
+                'id'          => (string)$group->id,
+                'name'        => $group->title,
+                'description' => $group->description,
+            ];
+        }
+
+        return response()->json($response);
+    }
 }

@@ -150,4 +150,63 @@ class AccountController extends Controller
         return response()->json($tempData);
     }
 
+    /**
+     * @param DateRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function asset(DateRequest $request): JsonResponse
+    {
+        $dates = $request->getAll();
+        /** @var Carbon $start */
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
+
+        $start->subDay();
+
+        // prep some vars:
+        $currencies = [];
+        $tempData   = [];
+
+        // grab all accounts and names
+        $accounts      = $this->repository->getAccountsByType([AccountType::ASSET]);
+        $accountNames  = $this->extractNames($accounts);
+        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
+
+        // loop the end balances. This is an array for each account ($expenses)
+        foreach ($endBalances as $accountId => $expenses) {
+            $accountId = (int)$accountId;
+            // loop each expense entry (each entry can be a different currency).
+            foreach ($expenses as $currencyId => $endAmount) {
+                $currencyId = (int)$currencyId;
+
+                // see if there is an accompanying start amount.
+                // grab the difference and find the currency.
+                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
+                $diff                    = bcsub($endAmount, $startAmount);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                if (0 !== bccomp($diff, '0')) {
+                    // store the values in a temporary array.
+                    $tempData[] = [
+                        'id'               => $accountId,
+                        'name'             => $accountNames[$accountId],
+                        'difference'       => bcmul($diff, '-1'),
+                        'difference_float' => ((float)$diff) * -1,
+                        'currency_id'      => (string) $currencyId,
+                        'currency_code'    => $currencies[$currencyId]->code,
+                    ];
+                }
+            }
+        }
+
+
+        // sort temp array by amount.
+        $amounts = array_column($tempData, 'difference_float');
+        array_multisort($amounts, SORT_ASC, $tempData);
+
+        return response()->json($tempData);
+    }
+
 }

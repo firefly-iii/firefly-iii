@@ -388,4 +388,19 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             $group->delete();
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchRuleGroup(string $query, int $limit): Collection
+    {
+        $search = $this->user->ruleGroups();
+        if ('' !== $query) {
+            $search->where('rule_groups.title', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('rule_groups.order', 'ASC')
+               ->orderBy('rule_groups.title', 'ASC');
+
+        return $search->take($limit)->get(['id','title','description']);
+    }
 }
