@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -66,13 +67,15 @@ interface OperationsRepositoryInterface
     /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per currency. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param Collection|null          $accounts
+     * @param Collection|null          $expense
+     * @param TransactionCurrency|null $currency
      *
      * @return array
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null): array;
 
     /**
      * Sum of income journals in period for a set of accounts, grouped per currency. Amounts are always positive.

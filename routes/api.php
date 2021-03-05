@@ -93,22 +93,33 @@ Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Expense', 'prefix' => 'insight/expense',
      'as'        => 'api.v1.insight.expense.',],
     static function () {
-        // Insight in expenses.
+        // Insight in expenses per account:
         Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
         Route::get('asset',   ['uses' => 'AccountController@asset',   'as' => 'asset']);
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
+
+        // TODO bill and no bill + asset account.
+        Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
+        Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
+
         Route::get('budget', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
-
-        // TODO Budget/no budget and budget limit
         Route::get('no-budget', ['uses' => 'BudgetController@noBudget', 'as' => 'no-budget']);
-
-        // TODO category and no category
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
         Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
 
-        // TODO bill and no bill
-        Route::get('bill', ['uses' => 'BillController@bill', 'as' => 'bill']);
-        Route::get('no-bill', ['uses' => 'BillController@noBill', 'as' => 'no-bill']);
+        // TODO per tag + asset account
+        Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
+        Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
+
+
+        // TODO per budget limit?
+        // TODO per object group?
+        // TODO per recurrence?
+
+
+
+
+
     }
 );
 
@@ -133,6 +144,9 @@ Route::group(
     }
 );
 
+
+// Insight in transfers
+// TODO transfers per piggy?
 
 
 

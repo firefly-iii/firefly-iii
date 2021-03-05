@@ -24,14 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
 
-use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Api\V1\Requests\Insight\ExpenseRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -45,12 +43,6 @@ use Illuminate\Http\JsonResponse;
  * Shows expense information grouped or limited by date.
  * Ie. all expenses grouped by account + currency.
  *
- * /api/v1/insight/expenses/expense
- *  Expenses grouped by expense account. Can be limited by date and by asset account.
- * /api/v1/insight/expenses/asset
- *  Expenses grouped by asset account. Can be limited by date and by asset account.
- * /api/v1/insight/expenses/total
- *  Expenses, total (no filter). Can be limited by date and by asset account.
  * /api/v1/insight/expenses/budget
  *  Expenses per budget or no budget. Can be limited by date and by asset account.
  * /api/v1/insight/expenses/budget
@@ -65,8 +57,9 @@ class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface $currencyRepository;
-    private AccountRepositoryInterface  $repository;
+    private CurrencyRepositoryInterface   $currencyRepository;
+    private AccountRepositoryInterface    $repository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * AccountController constructor.
@@ -78,7 +71,6 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
                 $user             = auth()->user();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
@@ -86,127 +78,63 @@ class AccountController extends Controller
                 $this->currencyRepository = app(CurrencyRepositoryInterface::class);
                 $this->currencyRepository->setUser($user);
 
+                $this->opsRepository = app(OperationsRepositoryInterface::class);
+                $this->opsRepository->setUser($user);
+
                 return $next($request);
             }
         );
     }
 
     /**
-     * @param DateRequest $request
+     * @param ExpenseRequest $request
      *
      * @return JsonResponse
      */
-    public function expense(DateRequest $request): JsonResponse
+    public function expense(ExpenseRequest $request): JsonResponse
     {
-        $dates = $request->getAll();
-        /** @var Carbon $start */
-        $start = $dates['start'];
-        /** @var Carbon $end */
-        $end = $dates['end'];
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $assetAccounts   = $request->getAssetAccounts();
+        $expenseAccounts = $request->getExpenseAccounts();
+        $expenses        = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, $expenseAccounts);
 
-        $start->subDay();
-
-        // prep some vars:
-        $currencies = [];
-        $tempData   = [];
-
-        // grab all accounts and names
-        $accounts      = $this->repository->getAccountsByType([AccountType::EXPENSE]);
-        $accountNames  = $this->extractNames($accounts);
-        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
-
-        // loop the end balances. This is an array for each account ($expenses)
-        foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int)$accountId;
-            // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId = (int)$currencyId;
-
-                // see if there is an accompanying start amount.
-                // grab the difference and find the currency.
-                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
-                $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
-                if (0 !== bccomp($diff, '0')) {
-                    // store the values in a temporary array.
-                    $tempData[] = [
-                        'id'               => $accountId,
-                        'name'             => $accountNames[$accountId],
-                        'difference'       => bcmul($diff, '-1'),
-                        'difference_float' => ((float)$diff) * -1,
-                        'currency_id'      => (string) $currencyId,
-                        'currency_code'    => $currencies[$currencyId]->code,
-                    ];
-                }
-            }
+        /** @var array $expense */
+        foreach ($expenses as $expense) {
+            $result[] = [
+                'difference'       => $expense['sum'],
+                'difference_float' => (float)$expense['sum'],
+                'currency_id'      => (string)$expense['currency_id'],
+                'currency_code'    => $expense['currency_code'],
+            ];
         }
 
-
-        // sort temp array by amount.
-        $amounts = array_column($tempData, 'difference_float');
-        array_multisort($amounts, SORT_ASC, $tempData);
-
-        return response()->json($tempData);
+        return response()->json($result);
     }
 
     /**
-     * @param DateRequest $request
+     * @param ExpenseRequest $request
      *
      * @return JsonResponse
      */
-    public function asset(DateRequest $request): JsonResponse
+    public function asset(ExpenseRequest $request): JsonResponse
     {
-        $dates = $request->getAll();
-        /** @var Carbon $start */
-        $start = $dates['start'];
-        /** @var Carbon $end */
-        $end = $dates['end'];
+        $start         = $request->getStart();
+        $end           = $request->getEnd();
+        $assetAccounts = $request->getAssetAccounts();
+        $expenses      = $this->opsRepository->sumExpenses($start, $end, $assetAccounts);
 
-        $start->subDay();
-
-        // prep some vars:
-        $currencies = [];
-        $tempData   = [];
-
-        // grab all accounts and names
-        $accounts      = $this->repository->getAccountsByType([AccountType::ASSET]);
-        $accountNames  = $this->extractNames($accounts);
-        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
-
-        // loop the end balances. This is an array for each account ($expenses)
-        foreach ($endBalances as $accountId => $expenses) {
-            $accountId = (int)$accountId;
-            // loop each expense entry (each entry can be a different currency).
-            foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId = (int)$currencyId;
-
-                // see if there is an accompanying start amount.
-                // grab the difference and find the currency.
-                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
-                $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
-                if (0 !== bccomp($diff, '0')) {
-                    // store the values in a temporary array.
-                    $tempData[] = [
-                        'id'               => $accountId,
-                        'name'             => $accountNames[$accountId],
-                        'difference'       => bcmul($diff, '-1'),
-                        'difference_float' => ((float)$diff) * -1,
-                        'currency_id'      => (string) $currencyId,
-                        'currency_code'    => $currencies[$currencyId]->code,
-                    ];
-                }
-            }
+        /** @var array $expense */
+        foreach ($expenses as $expense) {
+            $result[] = [
+                'difference'       => $expense['sum'],
+                'difference_float' => (float)$expense['sum'],
+                'currency_id'      => (string)$expense['currency_id'],
+                'currency_code'    => $expense['currency_code'],
+            ];
         }
 
-
-        // sort temp array by amount.
-        $amounts = array_column($tempData, 'difference_float');
-        array_multisort($amounts, SORT_ASC, $tempData);
-
-        return response()->json($tempData);
+        return response()->json($result);
     }
 
 }
