@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * RecurrenceStoreRequest.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
 use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
@@ -36,9 +36,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * Class RecurrenceStoreRequest
+ * Class StoreRequest
  */
-class RecurrenceStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 

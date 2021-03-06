@@ -287,31 +287,6 @@ Route::group(
     }
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Piggy Bank API routes:
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank', 'prefix' => 'piggy_banks',
@@ -329,6 +304,23 @@ Route::group(
     }
 );
 
+// Recurrence API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Recurrence', 'prefix' => 'recurrences',
+     'as'        => 'api.v1.recurrences.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{recurrence}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{recurrence}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{recurrence}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+        // TODO
+        Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
+    }
+);
 
 
 
@@ -467,54 +459,39 @@ Route::group(
 //        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
 //    }
 //);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
+//     'as'        => 'api.v1.transaction_links.',],
+//    static function () {
+//
+//        // Transaction Links API routes:
+//        Route::get('', ['uses' => 'TransactionLinkController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'TransactionLinkController@store', 'as' => 'store']);
+//        Route::get('{journalLink}', ['uses' => 'TransactionLinkController@show', 'as' => 'show']);
+//        Route::put('{journalLink}', ['uses' => 'TransactionLinkController@update', 'as' => 'update']);
+//        Route::delete('{journalLink}', ['uses' => 'TransactionLinkController@delete', 'as' => 'delete']);
+//    }
+//);
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
-     'as'        => 'api.v1.transaction_links.',],
-    static function () {
+//
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences',
+//     'as'        => 'api.v1.preferences.',],
+//    static function () {
+//
+//        // Preference API routes:
+//        Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
+//        Route::get('date-ranges', ['uses' => 'Preferences\IndexController@dateRanges', 'as' => 'date-ranges']);
+//        Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
+//        Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
+//    }
+//);
 
-        // Transaction Links API routes:
-        Route::get('', ['uses' => 'TransactionLinkController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'TransactionLinkController@store', 'as' => 'store']);
-        Route::get('{journalLink}', ['uses' => 'TransactionLinkController@show', 'as' => 'show']);
-        Route::put('{journalLink}', ['uses' => 'TransactionLinkController@update', 'as' => 'update']);
-        Route::delete('{journalLink}', ['uses' => 'TransactionLinkController@delete', 'as' => 'delete']);
-    }
-);
 
-
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences',
-     'as'        => 'api.v1.preferences.',],
-    static function () {
-
-        // Preference API routes:
-        Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
-        Route::get('date-ranges', ['uses' => 'Preferences\IndexController@dateRanges', 'as' => 'date-ranges']);
-        Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
-        Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'recurrences',
-     'as'        => 'api.v1.recurrences.',],
-    static function () {
-
-        // Recurrence API routes:
-        Route::get('', ['uses' => 'RecurrenceController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'RecurrenceController@store', 'as' => 'store']);
-        Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
-        Route::get('{recurrence}', ['uses' => 'RecurrenceController@show', 'as' => 'show']);
-        Route::put('{recurrence}', ['uses' => 'RecurrenceController@update', 'as' => 'update']);
-        Route::delete('{recurrence}', ['uses' => 'RecurrenceController@delete', 'as' => 'delete']);
-        Route::get('{recurrence}/transactions', ['uses' => 'RecurrenceController@transactions', 'as' => 'transactions']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(

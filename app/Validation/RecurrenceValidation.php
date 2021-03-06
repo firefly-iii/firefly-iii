@@ -96,7 +96,7 @@ trait RecurrenceValidation
         $data        = $validator->getData();
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
-        if (0 === count($repetitions)) {
+        if (!is_countable($repetitions) || 0 === count($repetitions)) {
             $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
         }
     }
@@ -144,11 +144,20 @@ trait RecurrenceValidation
     {
         $data        = $validator->getData();
         $repetitions = $data['repetitions'] ?? [];
+        if (!is_array($repetitions)) {
+            $validator->errors()->add(sprintf('repetitions.%d.type', 0), (string)trans('validation.valid_recurrence_rep_type'));
+
+            return;
+        }
         /**
          * @var int   $index
          * @var array $repetition
          */
         foreach ($repetitions as $index => $repetition) {
+            if(null === $repetition['moment']) {
+                $repetition['moment'] = '';
+            }
+            $repetition['moment'] = $repetition['moment'] ?? 'invalid';
             switch ($repetition['type'] ?? 'empty') {
                 default:
                     $validator->errors()->add(sprintf('repetitions.%d.type', $index), (string)trans('validation.valid_recurrence_rep_type'));
