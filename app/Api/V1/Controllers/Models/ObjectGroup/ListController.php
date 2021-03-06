@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -95,5 +96,37 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
+    }
+
+    /**
+     * List all bills
+     *
+     * @param ObjectGroup $objectGroup
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function bills(ObjectGroup $objectGroup): JsonResponse
+    {
+        $manager = $this->getManager();
+
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        // get list of piggy banks. Count it and split it.
+        $collection = $this->repository->getBills($objectGroup);
+        $count      = $collection->count();
+        $bills      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.bills', [$objectGroup->id]) . $this->buildParams());
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($bills, $transformer, 'bills');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 }

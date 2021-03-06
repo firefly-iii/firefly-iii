@@ -166,6 +166,14 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function getBills(ObjectGroup $objectGroup): Collection
+    {
+        return $objectGroup->bills;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function deleteAll(): void
     {
         $all = $this->get();

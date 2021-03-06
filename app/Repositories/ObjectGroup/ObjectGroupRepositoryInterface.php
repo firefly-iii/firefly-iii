@@ -62,6 +62,13 @@ interface ObjectGroupRepositoryInterface
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
 
     /**
+     * @param ObjectGroup $objectGroup
+     *
+     * @return Collection
+     */
+    public function getBills(ObjectGroup $objectGroup): Collection;
+
+    /**
      * Sort
      */
     public function sort(): void;
