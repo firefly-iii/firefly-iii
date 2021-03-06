@@ -22,18 +22,18 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\ObjectGroup;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class AccountObjectGroupUpdateRequestUpdateRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class ObjectGroupUpdateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 

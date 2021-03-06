@@ -1,7 +1,7 @@
 <?php
-/**
- * GroupController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ShowController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,16 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\ObjectGroupUpdateRequest;
-use FireflyIII\Models\Account;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Transformers\ObjectGroupTransformer;
-use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,9 +35,9 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
 /**
- * Class GroupController.
+ * Class ShowController
  */
-class ObjectGroupController extends Controller
+class ShowController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
 
@@ -65,20 +62,6 @@ class ObjectGroupController extends Controller
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param ObjectGroup $objectGroup
-     *
-     * @codeCoverageIgnore
-     * @return JsonResponse
-     */
-    public function delete(ObjectGroup $objectGroup): JsonResponse
-    {
-        $this->repository->destroy($objectGroup);
-
-        return response()->json([], 204);
-    }
 
     /**
      * Display a listing of the resource.
@@ -93,7 +76,7 @@ class ObjectGroupController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
         $collection   = $this->repository->get();
@@ -116,42 +99,6 @@ class ObjectGroupController extends Controller
 
 
     /**
-     * List all piggies under the object group.
-     *
-     * @param ObjectGroup $objectGroup
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function piggyBanks(ObjectGroup $objectGroup): JsonResponse
-    {
-        // create some objects:
-        $manager = $this->getManager();
-
-        // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // get list of piggy banks. Count it and split it.
-        $collection = $this->repository->getPiggyBanks($objectGroup);
-        $count      = $collection->count();
-        $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.object-groups.piggy_banks', [$objectGroup->id]) . $this->buildParams());
-
-        /** @var PiggyBankTransformer $transformer */
-        $transformer = app(PiggyBankTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new FractalCollection($piggyBanks, $transformer, 'piggy_banks');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
-
-    /**
      * Show single instance.
      *
      * @param ObjectGroup $objectGroup
@@ -170,26 +117,5 @@ class ObjectGroupController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Update object.
-     *
-     * @param ObjectGroupUpdateRequest $request
-     * @param Account                  $account
-     *
-     * @return JsonResponse
-     */
-    public function update(ObjectGroupUpdateRequest $request, ObjectGroup $objectGroup): JsonResponse
-    {
-        $data = $request->getUpdateData();
-        $this->repository->update($objectGroup, $data);
-        $this->repository->sort();
-        $manager = $this->getManager();
 
-        /** @var ObjectGroupTransformer $transformer */
-        $transformer = app(ObjectGroupTransformer::class);
-        $transformer->setParameters($this->parameters);
-        $resource = new Item($objectGroup, $transformer, 'object_groups');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 }

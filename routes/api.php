@@ -254,6 +254,7 @@ Route::group(
 
     }
 );
+
 // Category API routes:
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Category', 'prefix' => 'categories',
@@ -269,6 +270,47 @@ Route::group(
         Route::get('{category}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
     }
 );
+
+// Object Group API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\ObjectGroup', 'prefix' => 'object_groups',
+     'as'        => 'api.v1.object-groups.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::get('{objectGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{objectGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{objectGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{objectGroup}/bills', ['uses' => 'ListController@bills', 'as' => 'bills']);
+    }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Piggy Bank API routes:
 Route::group(
@@ -388,20 +430,7 @@ Route::group(
 
 
 //// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
-//     'as'        => 'api.v1.object-groups.',],
-//    static function () {
-//
-//        // Accounts API routes:
-//        Route::get('', ['uses' => 'ObjectGroupController@index', 'as' => 'index']);
-//        Route::get('{objectGroup}', ['uses' => 'ObjectGroupController@show', 'as' => 'show']);
-//        Route::put('{objectGroup}', ['uses' => 'ObjectGroupController@update', 'as' => 'update']);
-//        Route::delete('{objectGroup}', ['uses' => 'ObjectGroupController@delete', 'as' => 'delete']);
-//
-//        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ObjectGroupController@piggyBanks', 'as' => 'piggy_banks']);
-//    }
-//);
+
 
 
 
