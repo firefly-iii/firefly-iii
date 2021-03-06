@@ -431,7 +431,19 @@ Route::group(
     }
 );
 
+// Transaction Links API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLink', 'prefix' => 'transaction_links',
+     'as'        => 'api.v1.transaction_links.',],
+    static function () {
 
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{journalLink}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{journalLink}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{journalLink}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+    }
+);
 
 
 
@@ -565,21 +577,7 @@ Route::group(
 //        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
 //    }
 //);
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
-//     'as'        => 'api.v1.transaction_links.',],
-//    static function () {
-//
-//        // Transaction Links API routes:
-//        Route::get('', ['uses' => 'TransactionLinkController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'TransactionLinkController@store', 'as' => 'store']);
-//        Route::get('{journalLink}', ['uses' => 'TransactionLinkController@show', 'as' => 'show']);
-//        Route::put('{journalLink}', ['uses' => 'TransactionLinkController@update', 'as' => 'update']);
-//        Route::delete('{journalLink}', ['uses' => 'TransactionLinkController@delete', 'as' => 'delete']);
-//    }
-//);
+
 
 //
 //

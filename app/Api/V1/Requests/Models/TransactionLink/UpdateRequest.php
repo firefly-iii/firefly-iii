@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\TransactionLink;
 
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -32,13 +32,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * Class TransactionLinkRequest
+ * Class UpdateRequest
  */
-class TransactionLinkRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
-
 
     /**
      * Get all data from the request.
@@ -64,10 +62,10 @@ class TransactionLinkRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'link_type_id'   => 'exists:link_types,id|required_without:link_type_name',
-            'link_type_name' => 'exists:link_types,name|required_without:link_type_id',
-            'inward_id'      => 'required|belongsToUser:transaction_journals,id|different:outward_id',
-            'outward_id'     => 'required|belongsToUser:transaction_journals,id|different:inward_id',
+            'link_type_id'   => 'exists:link_types,id',
+            'link_type_name' => 'exists:link_types,name',
+            'inward_id'      => 'belongsToUser:transaction_journals,id|different:outward_id',
+            'outward_id'     => 'belongsToUser:transaction_journals,id|different:inward_id',
             'notes'          => 'between:0,65000',
         ];
     }

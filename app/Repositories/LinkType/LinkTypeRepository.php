@@ -328,9 +328,9 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
-        $journalLink->source_id      = $data['inward']->id;
-        $journalLink->destination_id = $data['outward']->id;
-        $journalLink->link_type_id   = $data['link_type_id'];
+        $journalLink->source_id      = $data['inward'] ? $data['inward']->id : $journalLink->source_id;
+        $journalLink->destination_id = $data['outward'] ? $data['outward']->id : $journalLink->destination_id;
+        $journalLink->link_type_id   = $data['link_type_id'] ? $data['link_type_id'] : $journalLink->link_type_id;
         $journalLink->save();
         $this->setNoteText($journalLink, $data['notes']);
 
