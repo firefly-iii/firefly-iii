@@ -23,7 +23,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\AvailableBudget\Request;
+use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
