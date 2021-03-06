@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetLimitStoreRequest.php
+ * BudgetLimitUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,18 +21,18 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class BudgetLimitStoreRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class BudgetLimitStoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -43,8 +43,7 @@ class BudgetLimitStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'budget_id'     => $this->integer('budget_id'),
+return [
             'start'         => $this->date('start'),
             'end'           => $this->date('end'),
             'amount'        => $this->string('amount'),
@@ -61,10 +60,9 @@ class BudgetLimitStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
-            'start'         => 'required|before:end|date',
-            'end'           => 'required|after:start|date',
-            'amount'        => 'required|gt:0',
+            'start'         => 'before:end|date',
+            'end'           => 'after:start|date',
+            'amount'        => 'gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];

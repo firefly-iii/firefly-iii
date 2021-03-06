@@ -19,14 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Budget;
+namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Budget\StoreRequest;
+use FireflyIII\Api\V1\Requests\Models\BudgetLimit\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -35,11 +37,11 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
 
 
     /**
-     * StoreController constructor.
+     * BudgetLimitController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -48,16 +50,19 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $user */
+                $user               = auth()->user();
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+                $this->blRepository->setUser($user);
 
                 return $next($request);
             }
         );
     }
 
+
     /**
-     * Store a budget.
+     * Store a newly created resource in storage.
      *
      * @param StoreRequest $request
      *
@@ -65,16 +70,22 @@ class StoreController extends Controller
      * @throws FireflyException
      *
      */
-    public function store(StoreRequest $request): JsonResponse
+    public function store(StoreRequest $request, Budget $budget): JsonResponse
     {
-        $budget  = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
+        $data               = $request->getAll();
+        $data['start_date'] = $data['start'];
+        $data['end_date']   = $data['end'];
+        $data['budget_id']  = $budget->id;
 
-        /** @var BudgetTransformer $transformer */
-        $transformer = app(BudgetTransformer::class);
+        $budgetLimit = $this->blRepository->store($data);
+        $manager     = $this->getManager();
+
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

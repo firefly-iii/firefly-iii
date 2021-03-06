@@ -89,14 +89,14 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                        => (int)$budget->id,
+            'id'                        => (string)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
             'updated_at'                => $budget->updated_at->toAtomString(),
             'active'                    => $budget->active,
             'name'                      => $budget->name,
             'auto_budget_type'          => $abType,
             'auto_budget_period'        => $abPeriod,
-            'auto_budget_currency_id'   => $abCurrencyId,
+            'auto_budget_currency_id'   => (string)$abCurrencyId,
             'auto_budget_currency_code' => $abCurrencyCode,
             'auto_budget_amount'        => $abAmount,
             'spent'                     => $spent,

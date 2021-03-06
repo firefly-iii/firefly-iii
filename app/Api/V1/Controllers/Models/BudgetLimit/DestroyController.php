@@ -1,6 +1,6 @@
 <?php
 /*
- * StoreController.php
+ * DestroyController.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,27 +19,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Budget;
+namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Budget\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use League\Fractal\Resource\Item;
 
 /**
- * Class StoreController
+ * Class DestroyController
  */
-class StoreController extends Controller
+class DestroyController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
 
 
     /**
-     * StoreController constructor.
+     * BudgetLimitController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -48,8 +48,10 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $user */
+                $user               = auth()->user();
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+                $this->blRepository->setUser($user);
 
                 return $next($request);
             }
@@ -57,25 +59,21 @@ class StoreController extends Controller
     }
 
     /**
-     * Store a budget.
+     * Remove the specified resource from storage.
      *
-     * @param StoreRequest $request
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
-     * @throws FireflyException
-     *
+     * @codeCoverageIgnore
      */
-    public function store(StoreRequest $request): JsonResponse
+    public function destroy(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        $budget  = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
+        if ($budget->id !== $budgetLimit->budget_id) {
+            throw new FireflyException('20028: The budget limit does not belong to the budget.');
+        }
+        $this->blRepository->destroyBudgetLimit($budgetLimit);
 
-        /** @var BudgetTransformer $transformer */
-        $transformer = app(BudgetTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($budget, $transformer, 'budgets');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+        return response()->json([], 204);
     }
 }

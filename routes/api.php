@@ -213,6 +213,33 @@ Route::group(
 
 
 
+// Budget and Budget Limit API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models', 'prefix' => 'budgets',
+     'as'        => 'api.v1.budgets.',],
+    static function () {
+        Route::get('', ['uses' => 'Budget\ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'Budget\StoreController@store', 'as' => 'store']);
+        Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
+        Route::put('{budget}', ['uses' => 'Budget\UpdateController@update', 'as' => 'update']);
+        Route::delete('{budget}', ['uses' => 'Budget\DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{budget}/transactions', ['uses' => 'Budget\ListController@transactions', 'as' => 'transactions']);
+        Route::get('{budget}/attachments', ['uses' => 'Budget\ListController@attachments', 'as' => 'attachments']);
+
+        // limits:
+        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\ShowController@index', 'as' => 'limits.index']);
+        Route::post('{budget}/limits', ['uses' => 'BudgetLimit\StoreController@store', 'as' => 'limits.store']);
+        Route::get('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\ShowController@show', 'as' => 'limits.show']);
+        Route::put('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\UpdateController@update', 'as' => 'limits.update']);
+        Route::delete('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\DestroyController@destroy', 'as' => 'limits.delete']);
+        Route::get('{budget}/limits/{budgetLimit}/transactions', ['uses' => 'BudgetLimit\ListController@transactions', 'as' => 'limits.transactions']);
+
+    }
+);
+
+
+
 
 
 
@@ -263,17 +290,17 @@ Route::group(
 
 // ABOUT FIREFLY III
 // TODO VERIFY API DOCS
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'about',
-        'as'        => 'api.v1.about.'],
-    static function () {
-
-        // Accounts API routes:
-        Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
-        Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
-    }
-);
+//Route::group(
+//    [
+//        'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'about',
+//        'as'        => 'api.v1.about.'],
+//    static function () {
+//
+//        // Accounts API routes:
+//        Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
+//        Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
+//    }
+//);
 
 
 // DYNAMIC CONFIGURATION (CHANGEABLE)
@@ -346,42 +373,7 @@ Route::group(
     }
 );
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits',
-     'as'        => 'api.v1.budget_limits.',],
-    static function () {
 
-        // Budget Limit API routes:
-        Route::get('', ['uses' => 'BudgetLimitController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'BudgetLimitController@store', 'as' => 'store']);
-        Route::get('{budgetLimit}', ['uses' => 'BudgetLimitController@show', 'as' => 'show']);
-        Route::put('{budgetLimit}', ['uses' => 'BudgetLimitController@update', 'as' => 'update']);
-        Route::delete('{budgetLimit}', ['uses' => 'BudgetLimitController@delete', 'as' => 'delete']);
-
-        Route::get('{budgetLimit}/transactions', ['uses' => 'BudgetLimitController@transactions', 'as' => 'transactions']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets',
-     'as'        => 'api.v1.budgets.',],
-    static function () {
-
-        // Budget API routes:
-        Route::get('', ['uses' => 'Models\Budget\ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'Models\Budget\StoreController@store', 'as' => 'store']);
-        Route::get('{budget}', ['uses' => 'Models\Budget\ShowController@show', 'as' => 'show']);
-        Route::put('{budget}', ['uses' => 'Models\Budget\UpdateController@update', 'as' => 'update']);
-        Route::delete('{budget}', ['uses' => 'Models\Budget\DestroyController@destroy', 'as' => 'delete']);
-        Route::post('{budget}/limits', ['uses' => 'BudgetLimitController@store', 'as' => 'store_budget_limit']);
-
-        Route::get('{budget}/transactions', ['uses' => 'Models\Budget\ListController@transactions', 'as' => 'transactions']);
-        Route::get('{budget}/attachments', ['uses' => 'Models\Budget\ListController@attachments', 'as' => 'attachments']);
-        Route::get('{budget}/limits', ['uses' => 'Models\Budget\ListController@budgetLimits', 'as' => 'budget_limits']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(

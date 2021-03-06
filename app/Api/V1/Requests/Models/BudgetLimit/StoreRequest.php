@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetLimitUpdateRequest.php
+ * BudgetLimitStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,18 +21,18 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class BudgetLimitUpdateRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class BudgetLimitUpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -43,20 +43,13 @@ class BudgetLimitUpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $data = [
-            'budget_id'     => $this->integer('budget_id'),
+        return [
             'start'         => $this->date('start'),
             'end'           => $this->date('end'),
             'amount'        => $this->string('amount'),
             'currency_id'   => $this->integer('currency_id'),
             'currency_code' => $this->string('currency_code'),
         ];
-        // if request has a budget already, drop the rule.
-        $budget = $this->route()->parameter('budget');
-        if (null !== $budget) {
-            $data['budget_id'] = $budget->id;
-        }
-        return $data;
     }
 
     /**
@@ -66,21 +59,13 @@ class BudgetLimitUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
+        return [
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
             'amount'        => 'required|gt:0',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];
-        // if request has a budget already, drop the rule.
-        $budget = $this->route()->parameter('budget');
-        if (null !== $budget) {
-            unset($rules['budget_id']);
-        }
-
-        return $rules;
     }
 
 }

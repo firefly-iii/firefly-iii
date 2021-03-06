@@ -19,14 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Budget;
+namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Budget\UpdateRequest;
+use FireflyIII\Api\V1\Requests\Models\BudgetLimit\UpdateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -35,10 +39,11 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+
 
     /**
-     * UpdateController constructor.
+     * BudgetLimitController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -47,8 +52,10 @@ class UpdateController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $user */
+                $user               = auth()->user();
+                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+                $this->blRepository->setUser($user);
 
                 return $next($request);
             }
@@ -56,24 +63,30 @@ class UpdateController extends Controller
     }
 
     /**
-     * Update a budget.
+     * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
      * @param Budget        $budget
+     * @param BudgetLimit   $budgetLimit
      *
      * @return JsonResponse
      */
-    public function update(UpdateRequest $request, Budget $budget): JsonResponse
+    public function update(UpdateRequest $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        $data    = $request->getAll();
-        $budget  = $this->repository->update($budget, $data);
-        $manager = $this->getManager();
 
-        /** @var BudgetTransformer $transformer */
-        $transformer = app(BudgetTransformer::class);
+        if ($budget->id !== $budgetLimit->budget_id) {
+            throw new FireflyException('20028: The budget limit does not belong to the budget.');
+        }
+        $data              = $request->getAll();
+        $data['budget_id'] = $budget->id;
+        $budgetLimit       = $this->blRepository->update($budgetLimit, $data);
+        $manager           = $this->getManager();
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 

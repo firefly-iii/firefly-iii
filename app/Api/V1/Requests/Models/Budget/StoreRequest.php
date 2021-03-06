@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -31,11 +31,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * Class BudgetStoreRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class BudgetStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ValidatesAutoBudgetRequest, ChecksLogin;
 
