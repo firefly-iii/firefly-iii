@@ -138,7 +138,7 @@ class ShowController extends Controller
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function showByJournal(TransactionJournal $transactionJournal): JsonResponse
+    public function showJournal(TransactionJournal $transactionJournal): JsonResponse
     {
         return $this->show($transactionJournal->transactionGroup);
     }

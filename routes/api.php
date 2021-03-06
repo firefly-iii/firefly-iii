@@ -374,8 +374,34 @@ Route::group(
         Route::get('{tagOrId}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
     }
 );
+// Transaction API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transactions',
+     'as'        => 'api.v1.transactions.',],
+    static function () {
 
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{transactionGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{transactionGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{transactionGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
+        Route::get('{transactionGroup}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+
+    }
+);
+
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transaction-journals',
+     'as'        => 'api.v1.transaction-journals.',],
+    static function () {
+        Route::get('{tj}', ['uses' => 'ShowController@showJournal', 'as' => 'show']);
+        Route::delete('{transactionGroup}/{tj}', ['uses' => 'DestroyController@destroyJournal', 'as' => 'delete']);
+
+        Route::get('{tj}/links', ['uses' => 'ListController@transactionLinks', 'as' => 'transaction_links']);
+    }
+);
 
 
 
@@ -634,24 +660,7 @@ Route::group(
 //    }
 //);
 //
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions',
-//     'as'        => 'api.v1.transactions.',],
-//    static function () {
-//
-//        // Transaction API routes:
-//        Route::get('', ['uses' => 'Models\Transaction\ShowController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'Models\Transaction\StoreController@store', 'as' => 'store']);
-//        Route::get('{transactionGroup}', ['uses' => 'Models\Transaction\ShowController@show', 'as' => 'show']);
-//        Route::get('{transactionGroup}/attachments', ['uses' => 'Models\Transaction\ListController@attachments', 'as' => 'attachments']);
-//        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'Models\Transaction\ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-//        Route::get('{tj}/links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
-//        Route::put('{transactionGroup}', ['uses' => 'Models\Transaction\UpdateController@update', 'as' => 'update']);
-//        Route::delete('{transactionGroup}/{tj}', ['uses' => 'Models\Transaction\DestroyController@destroyJournal', 'as' => 'delete-journal']);
-//        Route::delete('{transactionGroup}', ['uses' => 'Models\Transaction\DestroyController@destroy', 'as' => 'delete']);
-//    }
-//);
+
 //
 //// special group for transaction journals
 //// TODO VERIFY API DOCS
