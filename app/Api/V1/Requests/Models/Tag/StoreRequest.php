@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Tag;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -30,14 +30,13 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class TagStoreRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class TagStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin, AppendsLocationData;
-
 
     /**
      * Get all data from the request.

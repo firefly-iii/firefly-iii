@@ -359,6 +359,21 @@ Route::group(
     }
 );
 
+// Tag API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Tag', 'prefix' => 'tags',
+     'as'        => 'api.v1.tags.',],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{tagOrId}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{tagOrId}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{tagOrId}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{tagOrId}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+        Route::get('{tagOrId}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+    }
+);
 
 
 
@@ -607,22 +622,7 @@ Route::group(
 //    }
 //);
 //
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags',
-//     'as'        => 'api.v1.tags.',],
-//    static function () {
-//        // Tag API routes:
-//        Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'TagController@store', 'as' => 'store']);
-//        Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
-//        Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
-//        Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
-//
-//        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'transactions']);
-//        Route::get('{tagOrId}/attachments', ['uses' => 'TagController@attachments', 'as' => 'attachments']);
-//    }
-//);
+
 //
 //// TODO VERIFY API DOCS
 //Route::group(

@@ -1,7 +1,7 @@
 <?php
-/**
- * TagController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ListController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,18 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\TagStoreRequest;
-use FireflyIII\Api\V1\Requests\TagUpdateRequest;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
-use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -38,17 +35,14 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 
 /**
- * Class TagController
+ * Class ListController
  */
-class TagController extends Controller
+class ListController extends Controller
 {
     use TransactionFilter;
-
-    /** @var TagRepositoryInterface The tag repository */
-    private $repository;
+    private TagRepositoryInterface $repository;
 
 
     /**
@@ -72,51 +66,6 @@ class TagController extends Controller
         );
     }
 
-    /**
-     * Delete the resource.
-     *
-     * @param Tag $tag
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function delete(Tag $tag): JsonResponse
-    {
-        $this->repository->destroy($tag);
-
-        return response()->json([], 204);
-    }
-
-    /**
-     * List all of them.
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function index(): JsonResponse
-    {
-        $manager = $this->getManager();
-        // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // get list of budgets. Count it and split it.
-        $collection = $this->repository->get();
-        $count      = $collection->count();
-        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.tags.index') . $this->buildParams());
-
-        /** @var TagTransformer $transformer */
-        $transformer = app(TagTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new FractalCollection($rules, $transformer, 'tags');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
 
     /**
@@ -148,46 +97,7 @@ class TagController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * List single resource.
-     *
-     * @param Tag $tag
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(Tag $tag): JsonResponse
-    {
-        $manager = $this->getManager();
-        /** @var TagTransformer $transformer */
-        $transformer = app(TagTransformer::class);
-        $transformer->setParameters($this->parameters);
 
-        $resource = new Item($tag, $transformer, 'tags');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
-
-    /**
-     * Store new object.
-     *
-     * @param TagStoreRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function store(TagStoreRequest $request): JsonResponse
-    {
-        $rule    = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
-        /** @var TagTransformer $transformer */
-        $transformer = app(TagTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($rule, $transformer, 'tags');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * Show all transactions.
@@ -229,7 +139,7 @@ class TagController extends Controller
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -240,27 +150,5 @@ class TagController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update a rule.
-     *
-     * @param TagUpdateRequest $request
-     * @param Tag              $tag
-     *
-     * @return JsonResponse
-     */
-    public function update(TagUpdateRequest $request, Tag $tag): JsonResponse
-    {
-        $rule    = $this->repository->update($tag, $request->getAll());
-        $manager = $this->getManager();
-        /** @var TagTransformer $transformer */
-        $transformer = app(TagTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($rule, $transformer, 'tags');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

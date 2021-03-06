@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Tag;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -31,11 +31,11 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class TagUpdateRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class TagUpdateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin, AppendsLocationData;
 
