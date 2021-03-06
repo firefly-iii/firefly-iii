@@ -19,14 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
+namespace FireflyIII\Api\V1\Controllers\Models\Category;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\PiggyBank\UpdateRequest;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\Api\V1\Requests\Models\Category\UpdateRequest;
+use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Transformers\CategoryTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -35,10 +36,10 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-    private PiggyBankRepositoryInterface $repository;
+    private CategoryRepositoryInterface $repository;
 
     /**
-     * Constructor.
+     * CategoryController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -47,9 +48,12 @@ class UpdateController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(PiggyBankRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $admin */
+                $admin = auth()->user();
 
+                /** @var CategoryRepositoryInterface repository */
+                $this->repository = app(CategoryRepositoryInterface::class);
+                $this->repository->setUser($admin);
 
                 return $next($request);
             }
@@ -57,28 +61,24 @@ class UpdateController extends Controller
     }
 
     /**
-     * Update piggy bank.
+     * Update the category.
      *
      * @param UpdateRequest $request
-     * @param PiggyBank        $piggyBank
+     * @param Category              $category
      *
      * @return JsonResponse
      */
-    public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
+    public function update(UpdateRequest $request, Category $category): JsonResponse
     {
-        $data      = $request->getAll();
-        $piggyBank = $this->repository->update($piggyBank, $data);
+        $data     = $request->getAll();
+        $category = $this->repository->update($category, $data);
+        $manager  = $this->getManager();
 
-        if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
-            $this->repository->setCurrentAmount($piggyBank, $data['current_amount']);
-        }
-
-        $manager = $this->getManager();
-        /** @var PiggyBankTransformer $transformer */
-        $transformer = app(PiggyBankTransformer::class);
+        /** @var CategoryTransformer $transformer */
+        $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 

@@ -36,12 +36,9 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyRepos;
+    private AccountRepositoryInterface $accountRepos;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
      * PiggyBankTransformer constructor.
@@ -105,13 +102,13 @@ class PiggyBankTransformer extends AbstractTransformer
         $targetAmount = 1 === bccomp('0.01', (string) $targetAmount) ? '0.01' : $targetAmount;
         $percentage   = (int) (0 !== bccomp('0', $currentAmountStr) ? $currentAmountStr / $targetAmount * 100 : 0);
         return [
-            'id'                      => (int) $piggyBank->id,
+            'id'                      => (string) $piggyBank->id,
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
-            'account_id'              => (int) $piggyBank->account_id,
+            'account_id'              => (string) $piggyBank->account_id,
             'account_name'            => $piggyBank->account->name,
             'name'                    => $piggyBank->name,
-            'currency_id'             => (int) $currency->id,
+            'currency_id'             => (string) $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int) $currency->decimal_places,

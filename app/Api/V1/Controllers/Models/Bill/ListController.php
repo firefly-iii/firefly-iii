@@ -1,8 +1,7 @@
 <?php
-
-/**
- * BillController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ListController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,19 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\BillUpdateRequest;
-use FireflyIII\Api\V1\Requests\BillStoreRequest;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
-use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -41,12 +36,11 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 
 /**
- * Class BillController.
+ * Class ListController
  */
-class BillController extends Controller
+class ListController extends Controller
 {
     use TransactionFilter;
 
@@ -106,45 +100,7 @@ class BillController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function delete(Bill $bill): JsonResponse
-    {
-        $this->repository->destroy($bill);
 
-        return response()->json([], 204);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function index(): JsonResponse
-    {
-        $bills     = $this->repository->getBills();
-        $manager   = $this->getManager();
-        $pageSize  = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $count     = $bills->count();
-        $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
-
-        /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new FractalCollection($bills, $transformer, 'bills');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * List all of them.
@@ -182,47 +138,7 @@ class BillController extends Controller
 
     }
 
-    /**
-     * Show the specified bill.
-     *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(Bill $bill): JsonResponse
-    {
-        $manager = $this->getManager();
-        /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
-        $transformer->setParameters($this->parameters);
 
-        $resource = new Item($bill, $transformer, 'bills');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Store a bill.
-     *
-     * @param BillStoreRequest $request
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     */
-    public function store(BillStoreRequest $request): JsonResponse
-    {
-        $bill    = $this->repository->store($request->getAll());
-        $manager = $this->getManager();
-
-        /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($bill, $transformer, 'bills');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * Show all transactions.
@@ -282,27 +198,4 @@ class BillController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Update a bill.
-     *
-     * @param BillUpdateRequest $request
-     * @param Bill        $bill
-     *
-     * @return JsonResponse
-     */
-    public function update(BillUpdateRequest $request, Bill $bill): JsonResponse
-    {
-        $data    = $request->getAll();
-        $bill    = $this->repository->update($bill, $data);
-        $manager = $this->getManager();
-
-        /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($bill, $transformer, 'bills');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
 }

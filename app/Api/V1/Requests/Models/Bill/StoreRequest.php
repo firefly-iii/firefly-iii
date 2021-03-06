@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -31,11 +31,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
- * Class BillStoreRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class BillStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 

@@ -197,6 +197,25 @@ Route::group(
         Route::delete('{attachment}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
     }
 );
+
+// Bills API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Bill', 'prefix' => 'bills',
+     'as'        => 'api.v1.bills.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{bill}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{bill}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{bill}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{bill}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+        Route::get('{bill}/rules', ['uses' => 'ListController@rules', 'as' => 'rules']);
+        Route::get('{bill}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+    }
+);
+
 // Available Budget API routes:
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\AvailableBudget', 'prefix' => 'available_budgets',
@@ -210,8 +229,6 @@ Route::group(
         Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
     }
 );
-
-
 
 // Budget and Budget Limit API routes:
 Route::group(
@@ -237,6 +254,42 @@ Route::group(
 
     }
 );
+// Category API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Category', 'prefix' => 'categories',
+     'as'        => 'api.v1.categories.',],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{category}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{category}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{category}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{category}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+        Route::get('{category}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+    }
+);
+
+// Piggy Bank API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank', 'prefix' => 'piggy_banks',
+     'as'        => 'api.v1.piggy_banks.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{piggyBank}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{piggyBank}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{piggyBank}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{piggyBank}/events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'events']);
+        Route::get('{piggyBank}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+    }
+);
+
+
+
+
 
 
 
@@ -304,122 +357,87 @@ Route::group(
 
 
 // DYNAMIC CONFIGURATION (CHANGEABLE)
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/dynamic',
-     'as'        => 'api.v1.configuration.dynamic.',],
-    static function () {
-
-        // Configuration API routes:
-        Route::get('', ['uses' => 'DynamicConfigController@index', 'as' => 'index']);
-        Route::get('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@show', 'as' => 'show']);
-        Route::post('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@update', 'as' => 'update']);
-    }
-);
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/dynamic',
+//     'as'        => 'api.v1.configuration.dynamic.',],
+//    static function () {
+//
+//        // Configuration API routes:
+//        Route::get('', ['uses' => 'DynamicConfigController@index', 'as' => 'index']);
+//        Route::get('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@show', 'as' => 'show']);
+//        Route::post('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@update', 'as' => 'update']);
+//    }
+//);
 
 // STATIC CONFIGURATION (NOT CHANGEABLE)
 // TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
-     'as'        => 'api.v1.configuration.static.',],
-    static function () {
-
-        // Configuration API routes:
-        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
-        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
-    }
-);
-
-
-
-
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
-     'as'        => 'api.v1.object-groups.',],
-    static function () {
-
-        // Accounts API routes:
-        Route::get('', ['uses' => 'ObjectGroupController@index', 'as' => 'index']);
-        Route::get('{objectGroup}', ['uses' => 'ObjectGroupController@show', 'as' => 'show']);
-        Route::put('{objectGroup}', ['uses' => 'ObjectGroupController@update', 'as' => 'update']);
-        Route::delete('{objectGroup}', ['uses' => 'ObjectGroupController@delete', 'as' => 'delete']);
-
-        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ObjectGroupController@piggyBanks', 'as' => 'piggy_banks']);
-    }
-);
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
+//     'as'        => 'api.v1.configuration.static.',],
+//    static function () {
+//
+//        // Configuration API routes:
+//        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
+//        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
+//    }
+//);
 
 
 
 
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills',
-     'as'        => 'api.v1.bills.',],
-    static function () {
-
-        // Bills API routes:
-        Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
-        Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
-        Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
-        Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
-
-        Route::get('{bill}/attachments', ['uses' => 'BillController@attachments', 'as' => 'attachments']);
-        Route::get('{bill}/rules', ['uses' => 'BillController@rules', 'as' => 'rules']);
-        Route::get('{bill}/transactions', ['uses' => 'BillController@transactions', 'as' => 'transactions']);
-    }
-);
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'groups',
+//     'as'        => 'api.v1.object-groups.',],
+//    static function () {
+//
+//        // Accounts API routes:
+//        Route::get('', ['uses' => 'ObjectGroupController@index', 'as' => 'index']);
+//        Route::get('{objectGroup}', ['uses' => 'ObjectGroupController@show', 'as' => 'show']);
+//        Route::put('{objectGroup}', ['uses' => 'ObjectGroupController@update', 'as' => 'update']);
+//        Route::delete('{objectGroup}', ['uses' => 'ObjectGroupController@delete', 'as' => 'delete']);
+//
+//        Route::get('{objectGroup}/piggy_banks', ['uses' => 'ObjectGroupController@piggyBanks', 'as' => 'piggy_banks']);
+//    }
+//);
 
 
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'categories',
-     'as'        => 'api.v1.categories.',],
-    static function () {
-
-        // Category API routes:
-        Route::get('', ['uses' => 'CategoryController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'CategoryController@store', 'as' => 'store']);
-        Route::get('{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
-        Route::put('{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
-        Route::delete('{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
-
-        Route::get('{category}/transactions', ['uses' => 'CategoryController@transactions', 'as' => 'transactions']);
-        Route::get('{category}/attachments', ['uses' => 'CategoryController@attachments', 'as' => 'attachments']);
-    }
-);
 
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',
-     'as'        => 'api.v1.cer.',],
-    static function () {
 
-        // Currency Exchange Rate API routes:
-        Route::get('', ['uses' => 'CurrencyExchangeRateController@index', 'as' => 'index']);
-    }
-);
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
-     'as'        => 'api.v1.link_types.',],
-    static function () {
 
-        // Link Type API routes:
-        Route::get('', ['uses' => 'LinkTypeController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'LinkTypeController@store', 'as' => 'store']);
-        Route::get('{linkType}', ['uses' => 'LinkTypeController@show', 'as' => 'show']);
-        Route::put('{linkType}', ['uses' => 'LinkTypeController@update', 'as' => 'update']);
-        Route::delete('{linkType}', ['uses' => 'LinkTypeController@delete', 'as' => 'delete']);
-        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
-    }
-);
+//
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',
+//     'as'        => 'api.v1.cer.',],
+//    static function () {
+//
+//        // Currency Exchange Rate API routes:
+//        Route::get('', ['uses' => 'CurrencyExchangeRateController@index', 'as' => 'index']);
+//    }
+//);
+
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
+//     'as'        => 'api.v1.link_types.',],
+//    static function () {
+//
+//        // Link Type API routes:
+//        Route::get('', ['uses' => 'LinkTypeController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'LinkTypeController@store', 'as' => 'store']);
+//        Route::get('{linkType}', ['uses' => 'LinkTypeController@show', 'as' => 'show']);
+//        Route::put('{linkType}', ['uses' => 'LinkTypeController@update', 'as' => 'update']);
+//        Route::delete('{linkType}', ['uses' => 'LinkTypeController@delete', 'as' => 'delete']);
+//        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
+//    }
+//);
 
 // TODO VERIFY API DOCS
 Route::group(
@@ -436,23 +454,7 @@ Route::group(
     }
 );
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\PiggyBank', 'prefix' => 'piggy_banks',
-     'as'        => 'api.v1.piggy_banks.',],
-    static function () {
 
-        // Piggy Bank API routes:
-        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        Route::get('{piggyBank}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::put('{piggyBank}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        Route::delete('{piggyBank}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
-
-        Route::get('{piggyBank}/events', ['uses' => 'ListController@piggyBankEvents', 'as' => 'events']);
-        Route::get('{piggyBank}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(

@@ -1,7 +1,7 @@
 <?php
-/**
- * CategoryController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ListController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,19 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Category;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\CategoryStoreRequest;
-use FireflyIII\Api\V1\Requests\CategoryUpdateRequest;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
-use FireflyIII\Transformers\CategoryTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -39,16 +35,15 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 
 /**
- * Class CategoryController.
+ * Class ListController
  */
-class CategoryController extends Controller
+class ListController extends Controller
 {
     use TransactionFilter;
-    private CategoryRepositoryInterface $repository;
 
+    private CategoryRepositoryInterface $repository;
 
     /**
      * CategoryController constructor.
@@ -72,6 +67,7 @@ class CategoryController extends Controller
         );
     }
 
+
     /**
      * @param Category $category
      *
@@ -81,7 +77,7 @@ class CategoryController extends Controller
     public function attachments(Category $category): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($category);
 
         $count       = $collection->count();
@@ -101,97 +97,6 @@ class CategoryController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Category $category
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function delete(Category $category): JsonResponse
-    {
-        $this->repository->destroy($category);
-
-        return response()->json([], 204);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function index(): JsonResponse
-    {
-        $manager = $this->getManager();
-
-        // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // get list of budgets. Count it and split it.
-        $collection = $this->repository->getCategories();
-        $count      = $collection->count();
-        $categories = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
-
-        /** @var CategoryTransformer $transformer */
-        $transformer = app(CategoryTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-
-        $resource = new FractalCollection($categories, $transformer, 'categories');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-
-    /**
-     * Show the category.
-     *
-     * @param Category $category
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(Category $category): JsonResponse
-    {
-        $manager = $this->getManager();
-
-        /** @var CategoryTransformer $transformer */
-        $transformer = app(CategoryTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($category, $transformer, 'categories');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Store new category.
-     *
-     * @param CategoryStoreRequest $request
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     */
-    public function store(CategoryStoreRequest $request): JsonResponse
-    {
-        $category = $this->repository->store($request->getAll());
-        $manager  = $this->getManager();
-
-        /** @var CategoryTransformer $transformer */
-        $transformer = app(CategoryTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($category, $transformer, 'categories');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * Show all transactions.
@@ -205,7 +110,7 @@ class CategoryController extends Controller
      */
     public function transactions(Request $request, Category $category): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -247,30 +152,6 @@ class CategoryController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update the category.
-     *
-     * @param CategoryUpdateRequest $request
-     * @param Category        $category
-     *
-     * @return JsonResponse
-     */
-    public function update(CategoryUpdateRequest $request, Category $category): JsonResponse
-    {
-        $data     = $request->getAll();
-        $category = $this->repository->update($category, $data);
-        $manager  = $this->getManager();
-
-        /** @var CategoryTransformer $transformer */
-        $transformer = app(CategoryTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($category, $transformer, 'categories');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 
 }

@@ -81,7 +81,7 @@ class BillTransformer extends AbstractTransformer
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
             'updated_at'              => $bill->updated_at->toAtomString(),
-            'currency_id'             => (int) $bill->transaction_currency_id,
+            'currency_id'             => (string) $bill->transaction_currency_id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int) $currency->decimal_places,
@@ -97,7 +97,7 @@ class BillTransformer extends AbstractTransformer
             'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
             'paid_dates'              => $paidData['paid_dates'],
-            'object_group_id'         => (string) $objectGroupId,
+            'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,
             'links'                   => [

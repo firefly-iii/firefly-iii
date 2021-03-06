@@ -1,6 +1,6 @@
 <?php
 /**
- * CategoryStoreRequest.php
+ * PiggyBankStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,19 +21,18 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
-use FireflyIII\Rules\ZeroOrMore;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class CategoryRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class CategoryStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -45,8 +44,15 @@ class CategoryStoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'name'  => $this->string('name'),
-            'notes' => $this->nlString('notes'),
+            'name'               => $this->string('name'),
+            'account_id'         => $this->integer('account_id'),
+            'targetamount'       => $this->string('target_amount'),
+            'current_amount'     => $this->string('current_amount'),
+            'startdate'          => $this->date('start_date'),
+            'targetdate'         => $this->date('target_date'),
+            'notes'              => $this->nlString('notes'),
+            'object_group_id'    => $this->integer('object_group_id'),
+            'object_group_title' => $this->string('object_group_title'),
         ];
     }
 
@@ -58,7 +64,16 @@ class CategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|between:1,100|uniqueObjectForUser:categories,name',
+            'name'               => 'required|between:1,255|uniquePiggyBankForUser',
+            'current_amount'     => ['numeric', 'gte:0', 'lte:target_amount'],
+            'account_id'         => 'required|numeric|belongsToUser:accounts,id',
+            'object_group_id'    => 'numeric|belongsToUser:object_groups,id',
+            'object_group_title' => 'between:1,255',
+            'target_amount'      => ['numeric', 'gte:0', 'lte:target_amount', 'required'],
+            'start_date'         => 'date|nullable',
+            'target_date'        => 'date|nullable|after:start_date',
+            'notes'              => 'max:65000',
         ];
     }
+
 }
