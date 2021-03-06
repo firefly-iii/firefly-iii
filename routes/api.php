@@ -322,6 +322,26 @@ Route::group(
     }
 );
 
+// Rules API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Rule', 'prefix' => 'rules',
+     'as'        => 'api.v1.rules.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{rule}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{rule}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        // TODO verify if accounts works.
+        Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
+        // TODO give results back.
+        Route::post('{rule}/trigger', ['uses' => 'TriggerController@triggerRule', 'as' => 'trigger']);
+
+        // TODO rule transactions, rule bills?
+    }
+);
 
 
 
@@ -493,24 +513,7 @@ Route::group(
 
 
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rules',
-     'as'        => 'api.v1.rules.',],
-    static function () {
 
-        // Rules API routes:
-        Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'RuleController@store', 'as' => 'store']);
-        Route::get('{rule}', ['uses' => 'RuleController@show', 'as' => 'show']);
-        Route::put('{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
-        Route::delete('{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
-        Route::get('{rule}/test', ['uses' => 'RuleController@testRule', 'as' => 'test']);
-        Route::post('{rule}/trigger', ['uses' => 'RuleController@triggerRule', 'as' => 'trigger']);
-        Route::post('{rule}/up', ['uses' => 'RuleController@moveUp', 'as' => 'up']);
-        Route::post('{rule}/down', ['uses' => 'RuleController@moveDown', 'as' => 'down']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(

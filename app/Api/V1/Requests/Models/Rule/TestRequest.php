@@ -1,7 +1,7 @@
 <?php
 
 /**
- * RuleTriggerRequest.php
+ * RuleTestRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
 
 use Carbon\Carbon;
@@ -31,24 +31,34 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class RuleTriggerRequest
+ * Class TestRequest
  */
-class RuleTriggerRequest extends FormRequest
+class TestRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
 
 
     /**
      * @return array
      */
-    public function getTriggerParameters(): array
+    public function getTestParameters(): array
     {
         return [
+            'page'     => $this->getPage(),
             'start'    => $this->getDate('start'),
             'end'      => $this->getDate('end'),
             'accounts' => $this->getAccounts(),
+
         ];
+    }
+
+    /**
+     * @return int
+     */
+    private function getPage(): int
+    {
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+
     }
 
     /**
@@ -62,11 +72,11 @@ class RuleTriggerRequest extends FormRequest
     }
 
     /**
-     * @return string
+     * @return array
      */
-    private function getAccounts(): string
+    private function getAccounts(): array
     {
-        return (string) $this->query('accounts');
+        return $this->get('accounts');
     }
 
     /**
@@ -78,7 +88,7 @@ class RuleTriggerRequest extends FormRequest
             'start'      => 'date',
             'end'        => 'date|after:start',
             'accounts'   => '',
-            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * RuleStoreRequest.php
+ * RuleUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -33,13 +33,11 @@ use function is_array;
 
 
 /**
- * Class RuleStoreRequest
+ * Class UpdateRequest
  */
-class RuleStoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
-
-
 
     /**
      * Get all data from the request.
@@ -48,9 +46,9 @@ class RuleStoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $strict         = true;
-        $active         = true;
-        $stopProcessing = false;
+        $strict         = null;
+        $active         = null;
+        $stopProcessing = null;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }
@@ -62,11 +60,11 @@ class RuleStoreRequest extends FormRequest
         }
 
         return [
-            'title'            => $this->string('title'),
-            'description'      => $this->string('description'),
-            'rule_group_id'    => $this->integer('rule_group_id'),
-            'rule_group_title' => $this->string('rule_group_title'),
-            'trigger'          => $this->string('trigger'),
+            'title'            => $this->nullableString('title'),
+            'description'      => $this->nullableString('description'),
+            'rule_group_id'    => $this->nullableInteger('rule_group_id'),
+            'rule_group_title' => $this->nullableString('rule_group_title'),
+            'trigger'          => $this->nullableString('trigger'),
             'strict'           => $strict,
             'stop_processing'  => $stopProcessing,
             'active'           => $active,
@@ -76,10 +74,13 @@ class RuleStoreRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    private function getRuleTriggers(): array
+    private function getRuleTriggers(): ?array
     {
+        if (!$this->has('triggers')) {
+            return null;
+        }
         $triggers = $this->get('triggers');
         $return   = [];
         if (is_array($triggers)) {
@@ -97,10 +98,13 @@ class RuleStoreRequest extends FormRequest
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    private function getRuleActions(): array
+    private function getRuleActions(): ?array
     {
+        if (!$this->has('actions')) {
+            return null;
+        }
         $actions = $this->get('actions');
         $return  = [];
         if (is_array($actions)) {
@@ -126,17 +130,18 @@ class RuleStoreRequest extends FormRequest
     {
         $validTriggers = $this->getTriggers();
         $validActions  = array_keys(config('firefly.rule-actions'));
+        $rule          = $this->route()->parameter('rule');
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         return [
-            'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
+            'title'                      => sprintf('between:1,100|uniqueObjectForUser:rules,title,%d', $rule->id),
             'description'                => 'between:1,5000|nullable',
-            'rule_group_id'              => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
-            'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
-            'trigger'                    => 'required|in:store-journal,update-journal',
+            'rule_group_id'              => 'belongsToUser:rule_groups',
+            'rule_group_title'           => 'nullable|between:1,255|belongsToUser:rule_groups,title',
+            'trigger'                    => 'in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
             'triggers.*.stop_processing' => [new IsBoolean],
@@ -176,9 +181,9 @@ class RuleStoreRequest extends FormRequest
     protected function atLeastOneTrigger(Validator $validator): void
     {
         $data     = $validator->getData();
-        $triggers = $data['triggers'] ?? [];
+        $triggers = $data['triggers'] ?? null;
         // need at least one trigger
-        if (0 === count($triggers)) {
+        if (is_array($triggers) && 0 === count($triggers)) {
             $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
         }
     }
@@ -191,9 +196,9 @@ class RuleStoreRequest extends FormRequest
     protected function atLeastOneAction(Validator $validator): void
     {
         $data    = $validator->getData();
-        $actions = $data['actions'] ?? [];
-        // need at least one trigger
-        if (0 === count($actions)) {
+        $actions = $data['actions'] ?? null;
+        // need at least one action
+        if (is_array($actions) && 0 === count($actions)) {
             $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
         }
     }
