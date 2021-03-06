@@ -334,14 +334,32 @@ Route::group(
         Route::put('{rule}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
-        // TODO verify if accounts works.
         Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
         // TODO give results back.
         Route::post('{rule}/trigger', ['uses' => 'TriggerController@triggerRule', 'as' => 'trigger']);
-
         // TODO rule transactions, rule bills?
     }
 );
+
+// Rules API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\RuleGroup', 'prefix' => 'rule_groups',
+     'as'        => 'api.v1.rule_groups.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{ruleGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{ruleGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{ruleGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+        Route::get('{ruleGroup}/test', ['uses' => 'TriggerController@testGroup', 'as' => 'test']);
+        Route::post('{ruleGroup}/trigger', ['uses' => 'TriggerController@triggerGroup', 'as' => 'trigger']);
+
+        Route::get('{ruleGroup}/rules', ['uses' => 'ListController@rules', 'as' => 'rules']);
+    }
+);
+
+
 
 
 
@@ -514,170 +532,150 @@ Route::group(
 
 
 
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'rule_groups',
-     'as'        => 'api.v1.rule_groups.',],
-    static function () {
-
-        // Rules API routes:
-        Route::get('', ['uses' => 'RuleGroupController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'RuleGroupController@store', 'as' => 'store']);
-        Route::get('{ruleGroup}', ['uses' => 'RuleGroupController@show', 'as' => 'show']);
-        Route::put('{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
-        Route::delete('{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
-        Route::get('{ruleGroup}/test', ['uses' => 'RuleGroupController@testGroup', 'as' => 'test']);
-        Route::get('{ruleGroup}/rules', ['uses' => 'RuleGroupController@rules', 'as' => 'rules']);
-        Route::post('{ruleGroup}/trigger', ['uses' => 'RuleGroupController@triggerGroup', 'as' => 'trigger']);
-
-        Route::post('{ruleGroup}/up', ['uses' => 'RuleGroupController@moveUp', 'as' => 'up']);
-        Route::post('{ruleGroup}/down', ['uses' => 'RuleGroupController@moveDown', 'as' => 'down']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
-     'as'        => 'api.v1.search.',],
-    static function () {
-
-        // Attachment API routes:
-        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
-        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
-     'as'        => 'api.v1.webhooks.',],
-    static function () {
-
-        // Webhook API routes:
-        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-
-        // create new one.
-        Route::post('', ['uses' => 'CreateController@store', 'as' => 'store']);
-
-        // update
-        Route::put('{webhook}', ['uses' => 'EditController@update', 'as' => 'update']);
-        Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
-    }
-);
-
-
-// destroy data route.
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
-     'as'        => 'api.v1.data.',],
-    static function () {
-
-        // Overview API routes:
-        Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
-    }
-);
-
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
-     'as'        => 'api.v1.currencies.',],
-    static function () {
-
-        // Transaction currency API routes:
-        Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
-        Route::get('default', ['uses' => 'CurrencyController@showDefault', 'as' => 'show.default']);
-        Route::get('{currency_code}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
-        Route::put('{currency_code}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
-        Route::delete('{currency_code}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-
-        Route::post('{currency_code}/enable', ['uses' => 'CurrencyController@enable', 'as' => 'enable']);
-        Route::post('{currency_code}/disable', ['uses' => 'CurrencyController@disable', 'as' => 'disable']);
-        Route::post('{currency_code}/default', ['uses' => 'CurrencyController@makeDefault', 'as' => 'default']);
-
-        Route::get('{currency_code}/accounts', ['uses' => 'CurrencyController@accounts', 'as' => 'accounts']);
-        Route::get('{currency_code}/available_budgets', ['uses' => 'CurrencyController@availableBudgets', 'as' => 'available_budgets']);
-        Route::get('{currency_code}/bills', ['uses' => 'CurrencyController@bills', 'as' => 'bills']);
-        Route::get('{currency_code}/budget_limits', ['uses' => 'CurrencyController@budgetLimits', 'as' => 'budget_limits']);
-        Route::get('{currency_code}/cer', ['uses' => 'CurrencyController@cer', 'as' => 'cer']);
-        Route::get('{currency_code}/recurrences', ['uses' => 'CurrencyController@recurrences', 'as' => 'recurrences']);
-        Route::get('{currency_code}/rules', ['uses' => 'CurrencyController@rules', 'as' => 'rules']);
-        Route::get('{currency_code}/transactions', ['uses' => 'CurrencyController@transactions', 'as' => 'transactions']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags',
-     'as'        => 'api.v1.tags.',],
-    static function () {
-        // Tag API routes:
-        Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'TagController@store', 'as' => 'store']);
-        Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
-        Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
-        Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
-
-        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'transactions']);
-        Route::get('{tagOrId}/attachments', ['uses' => 'TagController@attachments', 'as' => 'attachments']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud',
-     'as'        => 'api.v1.tag-cloud.',],
-    static function () {
-        // Tag cloud API routes (to prevent collisions)
-        Route::get('', ['uses' => 'TagController@cloud', 'as' => 'cloud']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions',
-     'as'        => 'api.v1.transactions.',],
-    static function () {
-
-        // Transaction API routes:
-        Route::get('', ['uses' => 'Models\Transaction\ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'Models\Transaction\StoreController@store', 'as' => 'store']);
-        Route::get('{transactionGroup}', ['uses' => 'Models\Transaction\ShowController@show', 'as' => 'show']);
-        Route::get('{transactionGroup}/attachments', ['uses' => 'Models\Transaction\ListController@attachments', 'as' => 'attachments']);
-        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'Models\Transaction\ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-        Route::get('{tj}/links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
-        Route::put('{transactionGroup}', ['uses' => 'Models\Transaction\UpdateController@update', 'as' => 'update']);
-        Route::delete('{transactionGroup}/{tj}', ['uses' => 'Models\Transaction\DestroyController@destroyJournal', 'as' => 'delete-journal']);
-        Route::delete('{transactionGroup}', ['uses' => 'Models\Transaction\DestroyController@destroy', 'as' => 'delete']);
-    }
-);
-
-// special group for transaction journals
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transaction-journals',
-     'as'        => 'api.v1.journals.',],
-    static function () {
-
-        // Transaction API routes:
-        Route::get('{tj}', ['uses' => 'ShowController@showByJournal', 'as' => 'showByJournal']);
-    }
-);
-
-// TODO VERIFY API DOCS
-Route::group(
-    ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',
-     'as'         => 'api.v1.users.',],
-    static function () {
-
-        // Users API routes:
-        Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
-        Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
-        Route::put('{user}', ['uses' => 'UserController@update', 'as' => 'update']);
-        Route::delete('{user}', ['uses' => 'UserController@delete', 'as' => 'delete']);
-    }
-);
+//
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
+//     'as'        => 'api.v1.search.',],
+//    static function () {
+//
+//        // Attachment API routes:
+//        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
+//        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
+//    }
+//);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
+//     'as'        => 'api.v1.webhooks.',],
+//    static function () {
+//
+//        // Webhook API routes:
+//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+//
+//        // create new one.
+//        Route::post('', ['uses' => 'CreateController@store', 'as' => 'store']);
+//
+//        // update
+//        Route::put('{webhook}', ['uses' => 'EditController@update', 'as' => 'update']);
+//        Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+//    }
+//);
+//
+//
+//// destroy data route.
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
+//     'as'        => 'api.v1.data.',],
+//    static function () {
+//
+//        // Overview API routes:
+//        Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
+//    }
+//);
+//
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
+//     'as'        => 'api.v1.currencies.',],
+//    static function () {
+//
+//        // Transaction currency API routes:
+//        Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
+//        Route::get('default', ['uses' => 'CurrencyController@showDefault', 'as' => 'show.default']);
+//        Route::get('{currency_code}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
+//        Route::put('{currency_code}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
+//        Route::delete('{currency_code}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+//
+//        Route::post('{currency_code}/enable', ['uses' => 'CurrencyController@enable', 'as' => 'enable']);
+//        Route::post('{currency_code}/disable', ['uses' => 'CurrencyController@disable', 'as' => 'disable']);
+//        Route::post('{currency_code}/default', ['uses' => 'CurrencyController@makeDefault', 'as' => 'default']);
+//
+//        Route::get('{currency_code}/accounts', ['uses' => 'CurrencyController@accounts', 'as' => 'accounts']);
+//        Route::get('{currency_code}/available_budgets', ['uses' => 'CurrencyController@availableBudgets', 'as' => 'available_budgets']);
+//        Route::get('{currency_code}/bills', ['uses' => 'CurrencyController@bills', 'as' => 'bills']);
+//        Route::get('{currency_code}/budget_limits', ['uses' => 'CurrencyController@budgetLimits', 'as' => 'budget_limits']);
+//        Route::get('{currency_code}/cer', ['uses' => 'CurrencyController@cer', 'as' => 'cer']);
+//        Route::get('{currency_code}/recurrences', ['uses' => 'CurrencyController@recurrences', 'as' => 'recurrences']);
+//        Route::get('{currency_code}/rules', ['uses' => 'CurrencyController@rules', 'as' => 'rules']);
+//        Route::get('{currency_code}/transactions', ['uses' => 'CurrencyController@transactions', 'as' => 'transactions']);
+//    }
+//);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags',
+//     'as'        => 'api.v1.tags.',],
+//    static function () {
+//        // Tag API routes:
+//        Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'TagController@store', 'as' => 'store']);
+//        Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
+//        Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
+//        Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
+//
+//        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'transactions']);
+//        Route::get('{tagOrId}/attachments', ['uses' => 'TagController@attachments', 'as' => 'attachments']);
+//    }
+//);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud',
+//     'as'        => 'api.v1.tag-cloud.',],
+//    static function () {
+//        // Tag cloud API routes (to prevent collisions)
+//        Route::get('', ['uses' => 'TagController@cloud', 'as' => 'cloud']);
+//    }
+//);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions',
+//     'as'        => 'api.v1.transactions.',],
+//    static function () {
+//
+//        // Transaction API routes:
+//        Route::get('', ['uses' => 'Models\Transaction\ShowController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'Models\Transaction\StoreController@store', 'as' => 'store']);
+//        Route::get('{transactionGroup}', ['uses' => 'Models\Transaction\ShowController@show', 'as' => 'show']);
+//        Route::get('{transactionGroup}/attachments', ['uses' => 'Models\Transaction\ListController@attachments', 'as' => 'attachments']);
+//        Route::get('{transactionGroup}/piggy_bank_events', ['uses' => 'Models\Transaction\ListController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+//        Route::get('{tj}/links', ['uses' => 'Models\Transaction\ListController@transactionLinks', 'as' => 'transaction_links']);
+//        Route::put('{transactionGroup}', ['uses' => 'Models\Transaction\UpdateController@update', 'as' => 'update']);
+//        Route::delete('{transactionGroup}/{tj}', ['uses' => 'Models\Transaction\DestroyController@destroyJournal', 'as' => 'delete-journal']);
+//        Route::delete('{transactionGroup}', ['uses' => 'Models\Transaction\DestroyController@destroy', 'as' => 'delete']);
+//    }
+//);
+//
+//// special group for transaction journals
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transaction-journals',
+//     'as'        => 'api.v1.journals.',],
+//    static function () {
+//
+//        // Transaction API routes:
+//        Route::get('{tj}', ['uses' => 'ShowController@showByJournal', 'as' => 'showByJournal']);
+//    }
+//);
+//
+//// TODO VERIFY API DOCS
+//Route::group(
+//    ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',
+//     'as'         => 'api.v1.users.',],
+//    static function () {
+//
+//        // Users API routes:
+//        Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
+//        Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
+//        Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
+//        Route::put('{user}', ['uses' => 'UserController@update', 'as' => 'update']);
+//        Route::delete('{user}', ['uses' => 'UserController@delete', 'as' => 'delete']);
+//    }
+//);

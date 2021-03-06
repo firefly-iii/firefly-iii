@@ -1,6 +1,6 @@
 <?php
 /**
- * RuleGroupStoreRequest.php
+ * RuleGroupUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,9 +21,8 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\RuleGroup;
 
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -32,9 +31,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * @codeCoverageIgnore
- * Class RuleGroupStoreRequest
+ * Class UpdateRequest
  */
-class RuleGroupStoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -65,8 +64,9 @@ class RuleGroupStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $ruleGroup = $this->route()->parameter('ruleGroup');
         return [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
+            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
             'description' => 'between:1,5000|nullable',
             'active'      => [new IsBoolean],
         ];

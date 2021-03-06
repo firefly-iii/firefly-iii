@@ -1,7 +1,6 @@
 <?php
-
 /**
- * RuleGroupTestRequest.php
+ * RuleGroupStoreRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,65 +21,54 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\RuleGroup;
 
-
-use Carbon\Carbon;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Collection;
+
 
 /**
- * Class RuleGroupTestRequest
+ * @codeCoverageIgnore
+ * Class StoreRequest
  */
-class RuleGroupTestRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
-
-
     /**
+     * Get all data from the request.
+     *
      * @return array
      */
-    public function getTestParameters(): array
+    public function getAll(): array
     {
+        $active = true;
+
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         return [
-            'start'    => $this->getDate('start'),
-            'end'      => $this->getDate('end'),
-            'accounts' => $this->getAccounts(),
+            'title'       => $this->string('title'),
+            'description' => $this->string('description'),
+            'active'      => $active,
         ];
     }
 
     /**
-     * @param string $field
+     * The rules that the incoming request must be matched against.
      *
-     * @return Carbon|null
-     */
-    private function getDate(string $field): ?Carbon
-    {
-        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getAccounts(): string
-    {
-        return (string) $this->query('accounts');
-    }
-
-    /**
      * @return array
      */
     public function rules(): array
     {
         return [
-            'start'      => 'date',
-            'end'        => 'date|after:start',
-            'accounts'   => '',
-            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
+            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
+            'description' => 'between:1,5000|nullable',
+            'active'      => [new IsBoolean],
         ];
     }
-
 }

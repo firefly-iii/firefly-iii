@@ -1,6 +1,7 @@
 <?php
+
 /**
- * RuleGroupUpdateRequest.php
+ * RuleGroupTriggerRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,54 +22,62 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\RuleGroup;
 
-use FireflyIII\Rules\IsBoolean;
+
+use Carbon\Carbon;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-
 /**
- * @codeCoverageIgnore
- * Class RuleGroupUpdateRequest
+ * Class TriggerRequest
  */
-class RuleGroupUpdateRequest extends FormRequest
+class TriggerRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
+
+
     /**
-     * Get all data from the request.
-     *
      * @return array
      */
-    public function getAll(): array
+    public function getTriggerParameters(): array
     {
-        $active = true;
-
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-
         return [
-            'title'       => $this->string('title'),
-            'description' => $this->string('description'),
-            'active'      => $active,
+            'start'    => $this->getDate('start'),
+            'end'      => $this->getDate('end'),
+            'accounts' => $this->getAccounts(),
         ];
     }
 
     /**
-     * The rules that the incoming request must be matched against.
+     * @param string $field
      *
+     * @return Carbon|null
+     */
+    private function getDate(string $field): ?Carbon
+    {
+        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
+    }
+
+    /**
+     * @return array
+     */
+    private function getAccounts(): array
+    {
+        return $this->get('accounts');
+    }
+
+    /**
      * @return array
      */
     public function rules(): array
     {
-        $ruleGroup = $this->route()->parameter('ruleGroup');
         return [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
-            'description' => 'between:1,5000|nullable',
-            'active'      => [new IsBoolean],
+            'start' => 'date',
+            'end'   => 'date|after:start',
         ];
     }
+
 }
