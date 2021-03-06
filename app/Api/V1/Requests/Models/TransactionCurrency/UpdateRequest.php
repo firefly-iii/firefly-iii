@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -30,11 +30,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
- * Class CurrencyUpdateRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class CurrencyUpdateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -73,9 +73,9 @@ class CurrencyUpdateRequest extends FormRequest
     {
         $currency        = $this->route()->parameter('currency_code');
         return [
-            'name'           => sprintf('required|between:1,255|unique:transaction_currencies,name,%d', $currency->id),
-            'code'           => sprintf('required|between:3,3|unique:transaction_currencies,code,%d', $currency->id),
-            'symbol'         => sprintf('required|between:1,8|unique:transaction_currencies,symbol,%d', $currency->id),
+            'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
+            'code'           => sprintf('between:3,3|unique:transaction_currencies,code,%d', $currency->id),
+            'symbol'         => sprintf('between:1,8|unique:transaction_currencies,symbol,%d', $currency->id),
             'decimal_places' => 'between:0,20|numeric|min:0|max:20',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],

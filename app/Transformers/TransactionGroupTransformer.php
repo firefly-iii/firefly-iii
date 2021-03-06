@@ -78,7 +78,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'id'           => (int)$first['transaction_group_id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (int)$data['user_id'],
+            'user'         => (string)$data['user_id'],
             'group_title'  => $data['title'],
             'transactions' => $this->transformTransactions($data),
             'links'        => [

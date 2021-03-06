@@ -28,6 +28,7 @@ use Log;
 
 /**
  * Class CurrencyUpdateService
+ *
  * @codeCoverageIgnore
  */
 class CurrencyUpdateService
@@ -50,6 +51,9 @@ class CurrencyUpdateService
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
+        $data['code']             = '' === (string)$data['code'] ? $currency->code : $data['code'];
+        $data['symbol']           = '' === (string)$data['symbol'] ? $currency->code : $data['symbol'];
+        $data['name']             = '' === (string)$data['name'] ? $currency->code : $data['name'];
         $currency->code           = $data['code'];
         $currency->symbol         = $data['symbol'];
         $currency->name           = $data['name'];

@@ -403,6 +403,33 @@ Route::group(
     }
 );
 
+// Transaction currency API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionCurrency', 'prefix' => 'currencies',
+     'as'        => 'api.v1.currencies.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('default', ['uses' => 'ShowController@showDefault', 'as' => 'show.default']);
+        Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{currency_code}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::post('{currency_code}/enable', ['uses' => 'UpdateController@enable', 'as' => 'enable']);
+        Route::post('{currency_code}/disable', ['uses' => 'UpdateController@disable', 'as' => 'disable']);
+        Route::post('{currency_code}/default', ['uses' => 'UpdateController@makeDefault', 'as' => 'default']);
+
+        Route::get('{currency_code}/accounts', ['uses' => 'ListController@accounts', 'as' => 'accounts']);
+        Route::get('{currency_code}/available_budgets', ['uses' => 'ListController@availableBudgets', 'as' => 'available_budgets']);
+        Route::get('{currency_code}/bills', ['uses' => 'ListController@bills', 'as' => 'bills']);
+        Route::get('{currency_code}/budget_limits', ['uses' => 'ListController@budgetLimits', 'as' => 'budget_limits']);
+        Route::get('{currency_code}/cer', ['uses' => 'ListController@cer', 'as' => 'cer']);
+        Route::get('{currency_code}/recurrences', ['uses' => 'ListController@recurrences', 'as' => 'recurrences']);
+        Route::get('{currency_code}/rules', ['uses' => 'ListController@rules', 'as' => 'rules']);
+        Route::get('{currency_code}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+    }
+);
 
 
 
@@ -619,35 +646,7 @@ Route::group(
 //);
 //
 //
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'currencies',
-//     'as'        => 'api.v1.currencies.',],
-//    static function () {
-//
-//        // Transaction currency API routes:
-//        Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
-//        Route::get('default', ['uses' => 'CurrencyController@showDefault', 'as' => 'show.default']);
-//        Route::get('{currency_code}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
-//        Route::put('{currency_code}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
-//        Route::delete('{currency_code}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-//
-//        Route::post('{currency_code}/enable', ['uses' => 'CurrencyController@enable', 'as' => 'enable']);
-//        Route::post('{currency_code}/disable', ['uses' => 'CurrencyController@disable', 'as' => 'disable']);
-//        Route::post('{currency_code}/default', ['uses' => 'CurrencyController@makeDefault', 'as' => 'default']);
-//
-//        Route::get('{currency_code}/accounts', ['uses' => 'CurrencyController@accounts', 'as' => 'accounts']);
-//        Route::get('{currency_code}/available_budgets', ['uses' => 'CurrencyController@availableBudgets', 'as' => 'available_budgets']);
-//        Route::get('{currency_code}/bills', ['uses' => 'CurrencyController@bills', 'as' => 'bills']);
-//        Route::get('{currency_code}/budget_limits', ['uses' => 'CurrencyController@budgetLimits', 'as' => 'budget_limits']);
-//        Route::get('{currency_code}/cer', ['uses' => 'CurrencyController@cer', 'as' => 'cer']);
-//        Route::get('{currency_code}/recurrences', ['uses' => 'CurrencyController@recurrences', 'as' => 'recurrences']);
-//        Route::get('{currency_code}/rules', ['uses' => 'CurrencyController@rules', 'as' => 'rules']);
-//        Route::get('{currency_code}/transactions', ['uses' => 'CurrencyController@transactions', 'as' => 'transactions']);
-//    }
-//);
-//
+
 
 //
 //// TODO VERIFY API DOCS

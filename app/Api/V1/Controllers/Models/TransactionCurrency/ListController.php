@@ -1,31 +1,10 @@
 <?php
-/**
- * CurrencyController.php
- * Copyright (c) 2019 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 
-declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
-use FireflyIII\Api\V1\Requests\CurrencyUpdateRequest;
-use FireflyIII\Api\V1\Requests\CurrencyStoreRequest;
-use FireflyIII\Exceptions\FireflyException;
+
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -48,8 +27,6 @@ use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\BudgetLimitTransformer;
-use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
-use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -59,18 +36,16 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 
 /**
- * Class CurrencyController.
+ * Class ListController
  */
-class CurrencyController extends Controller
+class ListController extends Controller
 {
     use AccountFilter, TransactionFilter;
 
     private CurrencyRepositoryInterface $repository;
     private UserRepositoryInterface     $userRepository;
-
 
     /**
      * CurrencyRepository constructor.
@@ -257,183 +232,6 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Show a list of known exchange rates
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function cer(TransactionCurrency $currency): JsonResponse
-    {
-        // create some objects:
-        $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = $this->repository->getExchangeRates($currency);
-
-
-        $count         = $collection->count();
-        $exchangeRates = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator     = new LengthAwarePaginator($exchangeRates, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.cer', [$currency->code]) . $this->buildParams());
-
-        /** @var CurrencyExchangeRateTransformer $transformer */
-        $transformer = app(CurrencyExchangeRateTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new FractalCollection($exchangeRates, $transformer, 'currency_exchange_rates');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     * @codeCoverageIgnore
-     */
-    public function delete(TransactionCurrency $currency): JsonResponse
-    {
-        /** @var User $admin */
-        $admin = auth()->user();
-
-        if (!$this->userRepository->hasRole($admin, 'owner')) {
-            // access denied:
-            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
-        }
-        if ($this->repository->currencyInUse($currency)) {
-            throw new FireflyException('200006: Currency in use.'); // @codeCoverageIgnore
-        }
-        if ($this->repository->isFallbackCurrency($currency)) {
-            throw new FireflyException('200026: Currency is fallback.'); // @codeCoverageIgnore
-        }
-
-        $this->repository->destroy($currency);
-
-        return response()->json([], 204);
-    }
-
-    /**
-     * Disable a currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function disable(TransactionCurrency $currency): JsonResponse
-    {
-        // must be unused.
-        if ($this->repository->currencyInUse($currency)) {
-            return response()->json([], 409);
-        }
-        $this->repository->disable($currency);
-        $manager = $this->getManager();
-
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
-
-    /**
-     * Enable a currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function enable(TransactionCurrency $currency): JsonResponse
-    {
-        $this->repository->enable($currency);
-        $manager = $this->getManager();
-
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function index(): JsonResponse
-    {
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = $this->repository->getAll();
-        $count      = $collection->count();
-        // slice them:
-        $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
-
-
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new FractalCollection($currencies, $transformer, 'currencies');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Make the currency a default currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function makeDefault(TransactionCurrency $currency): JsonResponse
-    {
-        $this->repository->enable($currency);
-
-        app('preferences')->set('currencyPreference', $currency->code);
-        app('preferences')->mark();
-
-        $manager = $this->getManager();
-
-        $this->parameters->set('defaultCurrency', $currency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
-
-    /**
      * List all recurring transactions.
      *
      * @param TransactionCurrency $currency
@@ -535,78 +333,6 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Show a currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(TransactionCurrency $currency): JsonResponse
-    {
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Show a currency.
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function showDefault(): JsonResponse
-    {
-        $manager  = $this->getManager();
-        $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $currency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Store new currency.
-     *
-     * @param CurrencyStoreRequest $request
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     */
-    public function store(CurrencyStoreRequest $request): JsonResponse
-    {
-        $currency = $this->repository->store($request->getAll());
-        if (true === $request->boolean('default')) {
-            app('preferences')->set('currencyPreference', $currency->code);
-            app('preferences')->mark();
-        }
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
      * Show all transactions.
      *
      * @param Request             $request
@@ -660,38 +386,5 @@ class CurrencyController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update a currency.
-     *
-     * @param CurrencyUpdateRequest     $request
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     */
-    public function update(CurrencyUpdateRequest $request, TransactionCurrency $currency): JsonResponse
-    {
-        $data     = $request->getAll();
-        $currency = $this->repository->update($currency, $data);
-
-        if (true === $request->boolean('default')) {
-            app('preferences')->set('currencyPreference', $currency->code);
-            app('preferences')->mark();
-        }
-
-        $manager = $this->getManager();
-
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
     }
 }

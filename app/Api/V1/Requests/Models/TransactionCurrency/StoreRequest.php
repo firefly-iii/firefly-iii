@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -30,11 +30,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
- * Class CurrencyStoreRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class CurrencyStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 

@@ -93,7 +93,7 @@ class AccountTransformer extends AbstractTransformer
             $zoomLevel = $location->zoom_level;
         }
         return [
-            'id'                      => (int) $account->id,
+            'id'                      => (string) $account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
@@ -183,7 +183,7 @@ class AccountTransformer extends AbstractTransformer
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        $currencyId     = (int) $currency->id;
+        $currencyId     = (string) $currency->id;
         $currencyCode   = $currency->code;
         $decimalPlaces  = $currency->decimal_places;
         $currencySymbol = $currency->symbol;
