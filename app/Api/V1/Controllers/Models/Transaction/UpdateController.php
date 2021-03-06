@@ -23,7 +23,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
+use FireflyIII\Api\V1\Requests\Models\Transaction\UpdateRequest;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
@@ -67,12 +67,12 @@ class UpdateController extends Controller
     /**
      * Update a transaction.
      *
-     * @param TransactionUpdateRequest $request
+     * @param UpdateRequest $request
      * @param TransactionGroup         $transactionGroup
      *
      * @return JsonResponse
      */
-    public function update(TransactionUpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
+    public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
         Log::debug('Now in update routine.');
         $data             = $request->getAll();

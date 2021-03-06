@@ -23,7 +23,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\TransactionStoreRequest;
+use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -74,12 +74,12 @@ class StoreController extends Controller
     /**
      * Store a new transaction.
      *
-     * @param TransactionStoreRequest $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException|ValidationException
      */
-    public function store(TransactionStoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
         Log::debug('Now in API StoreController::store()');
         $data         = $request->getAll();

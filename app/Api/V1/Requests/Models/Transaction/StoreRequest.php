@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -39,9 +39,9 @@ use Illuminate\Validation\Validator;
 use Log;
 
 /**
- * Class TransactionStoreRequest
+ * Class StoreRequest
  */
-class TransactionStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use TransactionValidation, GroupValidation, CurrencyValidation, ConvertsDataTypes, ChecksLogin, AppendsLocationData;
 

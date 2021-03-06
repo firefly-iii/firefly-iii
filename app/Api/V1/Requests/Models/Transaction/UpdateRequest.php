@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
@@ -37,9 +37,9 @@ use Illuminate\Validation\Validator;
 use Log;
 
 /**
- * Class TransactionUpdateRequest
+ * Class UpdateRequest
  */
-class TransactionUpdateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use TransactionValidation, GroupValidation, ConvertsDataTypes, ChecksLogin;
 

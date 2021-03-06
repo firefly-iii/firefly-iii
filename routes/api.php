@@ -397,7 +397,7 @@ Route::group(
      'as'        => 'api.v1.transaction-journals.',],
     static function () {
         Route::get('{tj}', ['uses' => 'ShowController@showJournal', 'as' => 'show']);
-        Route::delete('{transactionGroup}/{tj}', ['uses' => 'DestroyController@destroyJournal', 'as' => 'delete']);
+        Route::delete('{tj}', ['uses' => 'DestroyController@destroyJournal', 'as' => 'delete']);
 
         Route::get('{tj}/links', ['uses' => 'ListController@transactionLinks', 'as' => 'transaction_links']);
     }

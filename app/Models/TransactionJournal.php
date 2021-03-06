@@ -113,6 +113,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[] $locations
+ * @property-read int|null $locations_count
  */
 class TransactionJournal extends Model
 {
