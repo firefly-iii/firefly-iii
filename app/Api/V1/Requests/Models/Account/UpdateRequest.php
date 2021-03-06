@@ -1,8 +1,8 @@
 <?php
 
-/**
- * AccountStoreRequest.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * AccountUpdateRequest.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
@@ -34,21 +34,21 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class AccountStoreRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class AccountStoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, AppendsLocationData, ChecksLogin;
 
     /**
      * @return array
      */
-    public function getAllAccountData(): array
+    public function getUpdateData(): array
     {
-        $active          = true;
-        $includeNetWorth = true;
+        $active          = null;
+        $includeNetWorth = null;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }
@@ -56,34 +56,34 @@ class AccountStoreRequest extends FormRequest
             $includeNetWorth = $this->boolean('include_net_worth');
         }
         $data = [
-            'name'                    => $this->string('name'),
+            'name'                    => $this->nullableString('name'),
             'active'                  => $active,
             'include_net_worth'       => $includeNetWorth,
-            'account_type'            => $this->string('type'),
+            'account_type'            => $this->nullableString('type'),
             'account_type_id'         => null,
-            'currency_id'             => $this->integer('currency_id'),
+            'currency_id'             => $this->nullableInteger('currency_id'),
             'order'                   => $this->integer('order'),
-            'currency_code'           => $this->string('currency_code'),
-            'virtual_balance'         => $this->string('virtual_balance'),
-            'iban'                    => $this->string('iban'),
-            'BIC'                     => $this->string('bic'),
-            'account_number'          => $this->string('account_number'),
-            'account_role'            => $this->string('account_role'),
-            'opening_balance'         => $this->string('opening_balance'),
+            'currency_code'           => $this->nullableString('currency_code'),
+            'virtual_balance'         => $this->nullableString('virtual_balance'),
+            'iban'                    => $this->nullableString('iban'),
+            'BIC'                     => $this->nullableString('bic'),
+            'account_number'          => $this->nullableString('account_number'),
+            'account_role'            => $this->nullableString('account_role'),
+            'opening_balance'         => $this->nullableString('opening_balance'),
             'opening_balance_date'    => $this->date('opening_balance_date'),
-            'cc_type'                 => $this->string('credit_card_type'),
-            'cc_monthly_payment_date' => $this->string('monthly_payment_date'),
-            'notes'                   => $this->nlString('notes'),
-            'interest'                => $this->string('interest'),
-            'interest_period'         => $this->string('interest_period'),
+            'cc_type'                 => $this->nullableString('credit_card_type'),
+            'cc_monthly_payment_date' => $this->nullableString('monthly_payment_date'),
+            'notes'                   => $this->nullableNlString('notes'),
+            'interest'                => $this->nullableString('interest'),
+            'interest_period'         => $this->nullableString('interest_period'),
         ];
-        // append Location information.
+
         $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type']) {
-            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
+            $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');
             $data['opening_balance_date'] = $this->date('liability_start_date');
-            $data['account_type']         = $this->string('liability_type');
+            $data['account_type']         = $this->nullableString('liability_type');
             $data['account_type_id']      = null;
         }
 
@@ -97,16 +97,17 @@ class AccountStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $account        = $this->route()->parameter('account');
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
-        $type           = $this->string('type');
-        $rules          = [
-            'name'                 => 'required|min:1|uniqueAccountForUser',
-            'type'                 => 'required|' . sprintf('in:%s', $types),
-            'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
+
+        $rules = [
+            'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
+            'type'                 => sprintf('in:%s', $types),
+            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->nullableString('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],
+            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->nullableString('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',

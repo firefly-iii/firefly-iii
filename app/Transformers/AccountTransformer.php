@@ -63,7 +63,7 @@ class AccountTransformer extends AbstractTransformer
         $fullType      = $account->accountType->type;
         $accountType   = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
         $liabilityType = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
-        $liabilityType = '' === $liabilityType ? null : $liabilityType;
+        $liabilityType = '' === $liabilityType ? null : strtolower($liabilityType);
 
         // get account role (will only work if the type is asset.
         $accountRole = $this->getAccountRole($account, $accountType);

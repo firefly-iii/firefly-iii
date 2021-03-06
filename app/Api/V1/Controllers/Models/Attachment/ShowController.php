@@ -1,7 +1,7 @@
 <?php
-/**
- * AttachmentController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ShowController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,40 +19,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Attachment;
 
-namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Middleware\ApiDemoUser;
-use FireflyIII\Api\V1\Requests\AttachmentStoreRequest;
-use FireflyIII\Api\V1\Requests\AttachmentUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
-use Log;
-use function strlen;
 
 /**
- * Class AttachmentController.
+ * Class ShowController
  */
-class AttachmentController extends Controller
+class ShowController extends Controller
 {
-    /** @var AttachmentRepositoryInterface The attachment repository */
-    private $repository;
+    private AttachmentRepositoryInterface $repository;
 
 
     /**
-     * AccountController constructor.
+     * ShowController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -71,22 +64,6 @@ class AttachmentController extends Controller
                 return $next($request);
             }
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Attachment $attachment
-     *
-     * @return JsonResponse
-     */
-    public function delete(Attachment $attachment): JsonResponse
-    {
-        $this->repository->destroy($attachment);
-
-        return response()->json([], 204);
     }
 
     /**
@@ -144,7 +121,7 @@ class AttachmentController extends Controller
         // types to get, page size:
         $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of accounts. Count it and split it.
+        // get list of attachments. Count it and split it.
         $collection  = $this->repository->get();
         $count       = $collection->count();
         $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -162,6 +139,8 @@ class AttachmentController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -181,76 +160,4 @@ class AttachmentController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param AttachmentStoreRequest $request
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     */
-    public function store(AttachmentStoreRequest $request): JsonResponse
-    {
-        $data       = $request->getAll();
-        $attachment = $this->repository->store($data);
-        $manager    = $this->getManager();
-
-        /** @var AttachmentTransformer $transformer */
-        $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($attachment, $transformer, 'attachments');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param AttachmentUpdateRequest $request
-     * @param Attachment              $attachment
-     *
-     * @return JsonResponse
-     */
-    public function update(AttachmentUpdateRequest $request, Attachment $attachment): JsonResponse
-    {
-        $data = $request->getAll();
-        $this->repository->update($attachment, $data);
-        $manager = $this->getManager();
-
-        /** @var AttachmentTransformer $transformer */
-        $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($attachment, $transformer, 'attachments');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Upload an attachment.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Request    $request
-     * @param Attachment $attachment
-     *
-     * @return JsonResponse
-     */
-    public function upload(Request $request, Attachment $attachment): JsonResponse
-    {
-        /** @var AttachmentHelperInterface $helper */
-        $helper = app(AttachmentHelperInterface::class);
-        $body   = $request->getContent();
-        if ('' === $body) {
-            Log::error('Body of attachment is empty.');
-
-            return response()->json([], 422);
-        }
-        $helper->saveAttachmentFromApi($attachment, $body);
-
-        return response()->json([], 204);
-    }
-
 }

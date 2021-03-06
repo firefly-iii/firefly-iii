@@ -145,6 +145,8 @@ Route::group(
 
 
 // Insight in transfers
+// TODO
+
 
 
 /**
@@ -158,6 +160,81 @@ Route::group(
         Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
+
+/**
+ * MODELS
+ */
+// Accounts API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Account', 'prefix' => 'accounts',
+     'as'        => 'api.v1.accounts.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{account}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+
+        Route::get('{account}/piggy_banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{account}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+        Route::get('{account}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+    }
+);
+
+// Attachment API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Attachment', 'prefix' => 'attachments',
+     'as'        => 'api.v1.attachments.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{attachment}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get('{attachment}/download', ['uses' => 'ShowController@download', 'as' => 'download']);
+        Route::post('{attachment}/upload', ['uses' => 'StoreController@upload', 'as' => 'upload']);
+        Route::put('{attachment}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{attachment}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+    }
+);
+// Available Budget API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\AvailableBudget', 'prefix' => 'available_budgets',
+     'as'        => 'api.v1.available_budgets.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{availableBudget}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{availableBudget}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+    }
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * DATA CONTROLLERS
@@ -227,24 +304,7 @@ Route::group(
 );
 
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'accounts',
-     'as'        => 'api.v1.accounts.',],
-    static function () {
 
-        // Accounts API routes:
-        Route::get('', ['uses' => 'Models\Account\ShowController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'Models\Account\StoreController@store', 'as' => 'store']);
-        Route::get('{account}', ['uses' => 'Models\Account\ShowController@show', 'as' => 'show']);
-        Route::put('{account}', ['uses' => 'Models\Account\UpdateController@update', 'as' => 'update']);
-        Route::delete('{account}', ['uses' => 'Models\Account\DestroyController@destroy', 'as' => 'delete']);
-
-        Route::get('{account}/piggy_banks', ['uses' => 'Models\Account\ListController@piggyBanks', 'as' => 'piggy_banks']);
-        Route::get('{account}/transactions', ['uses' => 'Models\Account\ListController@transactions', 'as' => 'transactions']);
-        Route::get('{account}/attachments', ['uses' => 'Models\Account\ListController@attachments', 'as' => 'attachments']);
-    }
-);
 
 
 // TODO VERIFY API DOCS
@@ -263,37 +323,9 @@ Route::group(
     }
 );
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'attachments',
-     'as'        => 'api.v1.attachments.',],
-    static function () {
 
-        // Attachment API routes:
-        Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'AttachmentController@store', 'as' => 'store']);
-        Route::get('{attachment}', ['uses' => 'AttachmentController@show', 'as' => 'show']);
-        Route::get('{attachment}/download', ['uses' => 'AttachmentController@download', 'as' => 'download']);
-        Route::post('{attachment}/upload', ['uses' => 'AttachmentController@upload', 'as' => 'upload']);
-        Route::put('{attachment}', ['uses' => 'AttachmentController@update', 'as' => 'update']);
-        Route::delete('{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
-    }
-);
 
-// TODO VERIFY API DOCS
-Route::group(
-    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'available_budgets',
-     'as'        => 'api.v1.available_budgets.',],
-    static function () {
 
-        // Available Budget API routes:
-        Route::get('', ['uses' => 'AvailableBudgetController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'AvailableBudgetController@store', 'as' => 'store']);
-        Route::get('{availableBudget}', ['uses' => 'AvailableBudgetController@show', 'as' => 'show']);
-        Route::put('{availableBudget}', ['uses' => 'AvailableBudgetController@update', 'as' => 'update']);
-        Route::delete('{availableBudget}', ['uses' => 'AvailableBudgetController@delete', 'as' => 'delete']);
-    }
-);
 
 // TODO VERIFY API DOCS
 Route::group(

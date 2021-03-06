@@ -1,7 +1,7 @@
 <?php
-/**
- * AvailableBudgetController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ShowController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,14 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
 
-namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
-use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
@@ -37,9 +34,9 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
 /**
- * Class AvailableBudgetController.
+ * Class ShowController
  */
-class AvailableBudgetController extends Controller
+class ShowController extends Controller
 {
     private AvailableBudgetRepositoryInterface $abRepository;
 
@@ -61,22 +58,6 @@ class AvailableBudgetController extends Controller
                 return $next($request);
             }
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @codeCoverageIgnore
-     *
-     * @return JsonResponse
-     */
-    public function delete(AvailableBudget $availableBudget): JsonResponse
-    {
-        $this->abRepository->destroyAvailableBudget($availableBudget);
-
-        return response()->json([], 204);
     }
 
     /**
@@ -135,77 +116,4 @@ class AvailableBudgetController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param AvailableBudgetRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function store(AvailableBudgetRequest $request): JsonResponse
-    {
-        $data = $request->getAll();
-        $data['start']->startOfDay();
-        $data['end']->endOfDay();
-
-        /** @var TransactionCurrencyFactory $factory */
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find($data['currency_id'], $data['currency_code']);
-
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrency();
-        }
-        $data['currency'] = $currency;
-        $availableBudget  = $this->abRepository->store($data);
-        $manager          = $this->getManager();
-
-        /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($availableBudget, $transformer, 'available_budgets');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param AvailableBudgetRequest $request
-     * @param AvailableBudget        $availableBudget
-     *
-     * @return JsonResponse
-     */
-    public function update(AvailableBudgetRequest $request, AvailableBudget $availableBudget): JsonResponse
-    {
-        $data = $request->getAll();
-
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrency();
-        }
-        $currency->enabled = true;
-        $currency->save();
-        unset($data['currency_code']);
-        $data['currency_id'] = $currency->id;
-
-
-        $this->abRepository->updateAvailableBudget($availableBudget, $data);
-        $manager = $this->getManager();
-
-        /** @var AvailableBudgetTransformer $transformer */
-        $transformer = app(AvailableBudgetTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($availableBudget, $transformer, 'available_budgets');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-    }
 }

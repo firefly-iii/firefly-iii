@@ -1,7 +1,7 @@
 <?php
-/**
- * AccountController.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * UpdateController.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,15 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Controllers\Models\Attachment;
 
-namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Account\UpdateRequest;
-use FireflyIII\Models\Account;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Api\V1\Middleware\ApiDemoUser;
+use FireflyIII\Api\V1\Requests\Models\Attachment\UpdateRequest;
+use FireflyIII\Models\Attachment;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -36,48 +37,52 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
-
-    private AccountRepositoryInterface $repository;
+    private AttachmentRepositoryInterface $repository;
 
 
     /**
-     * AccountController constructor.
+     * UpdateController constructor.
      *
      * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
+        $this->middleware(ApiDemoUser::class)->except(['delete', 'download', 'show', 'index']);
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                /** @var User $user */
+                $user             = auth()->user();
+                $this->repository = app(AttachmentRepositoryInterface::class);
+                $this->repository->setUser($user);
+
 
                 return $next($request);
             }
         );
     }
 
+
+
     /**
-     * Update account.
+     * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
-     * @param Account              $account
+     * @param Attachment              $attachment
      *
      * @return JsonResponse
      */
-    public function update(UpdateRequest $request, Account $account): JsonResponse
+    public function update(UpdateRequest $request, Attachment $attachment): JsonResponse
     {
-        $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $this->repository->update($account, $data);
+        $data = $request->getAll();
+        $this->repository->update($attachment, $data);
         $manager = $this->getManager();
 
-        /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
+
+        $resource = new Item($attachment, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * AvailableBudgetRequest.php
+ * AttachmentUpdateRequest.php
  * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,22 +21,20 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\Attachment;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class AvailableBudgetRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class AvailableBudgetRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
-
 
     /**
      * Get all data from the request.
@@ -46,11 +44,11 @@ class AvailableBudgetRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'currency_id'   => $this->integer('currency_id'),
-            'currency_code' => $this->string('currency_code'),
-            'amount'        => $this->string('amount'),
-            'start'         => $this->date('start'),
-            'end'           => $this->date('end'),
+            'filename' => $this->string('filename'),
+            'title'    => $this->string('title'),
+            'notes'    => $this->nlString('notes'),
+            'model'    => $this->string('attachable_type'),
+            'model_id' => $this->integer('attachable_id'),
         ];
     }
 
@@ -62,13 +60,9 @@ class AvailableBudgetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'amount'        => 'required|numeric|gt:0',
-            'start'         => 'required|date|before:end',
-            'end'           => 'required|date|after:start',
+            'filename' => 'between:1,255',
+            'title'    => 'between:1,255',
+            'notes'    => 'between:1,65000',
         ];
     }
-
-
 }

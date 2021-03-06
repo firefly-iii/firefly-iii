@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\AccountStoreRequest;
+use FireflyIII\Api\V1\Requests\Models\Account\StoreRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
@@ -61,11 +61,11 @@ class StoreController extends Controller
     /**
      * Store a new instance.
      *
-     * @param AccountStoreRequest $request
+     * @param StoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(AccountStoreRequest $request): JsonResponse
+    public function store(StoreRequest $request): JsonResponse
     {
         $data    = $request->getAllAccountData();
         $account = $this->repository->store($data);

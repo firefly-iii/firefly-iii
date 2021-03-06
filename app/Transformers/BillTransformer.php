@@ -97,7 +97,7 @@ class BillTransformer extends AbstractTransformer
             'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
             'paid_dates'              => $paidData['paid_dates'],
-            'object_group_id'         => $objectGroupId,
+            'object_group_id'         => (string) $objectGroupId,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,
             'links'                   => [
