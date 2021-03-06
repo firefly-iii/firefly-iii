@@ -445,6 +445,20 @@ Route::group(
     }
 );
 
+// Transaction Link Type API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\TransactionLinkType', 'prefix' => 'link_types',
+     'as'        => 'api.v1.link_types.',],
+    static function () {
+
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{linkType}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{linkType}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::delete('{linkType}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+        Route::get('{linkType}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
+    }
+);
 
 
 
@@ -562,21 +576,7 @@ Route::group(
 //    }
 //);
 
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types',
-//     'as'        => 'api.v1.link_types.',],
-//    static function () {
-//
-//        // Link Type API routes:
-//        Route::get('', ['uses' => 'LinkTypeController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'LinkTypeController@store', 'as' => 'store']);
-//        Route::get('{linkType}', ['uses' => 'LinkTypeController@show', 'as' => 'show']);
-//        Route::put('{linkType}', ['uses' => 'LinkTypeController@update', 'as' => 'update']);
-//        Route::delete('{linkType}', ['uses' => 'LinkTypeController@delete', 'as' => 'delete']);
-//        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
-//    }
-//);
+
 
 
 //

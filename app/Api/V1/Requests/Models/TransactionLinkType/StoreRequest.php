@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Models\TransactionLinkType;
 
 use FireflyIII\Models\LinkType;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -30,11 +30,11 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class LinkTypeStoreRequest
+ * Class StoreRequest
  *
  * @codeCoverageIgnore
  */
-class LinkTypeStoreRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
