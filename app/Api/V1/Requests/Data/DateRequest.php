@@ -1,7 +1,8 @@
 <?php
-/**
- * PreferenceRequest.php
- * Copyright (c) 2019 james@firefly-iii.org
+
+/*
+ * DateRequest.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,22 +22,21 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Data;
+
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class PreferenceRequest
+ * Request class for end points that require date parameters.
  *
- * @codeCoverageIgnore
+ * Class DateRequest
  */
-class PreferenceRequest extends FormRequest
+class DateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
-
 
     /**
      * Get all data from the request.
@@ -46,7 +46,8 @@ class PreferenceRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'data' => $this->get('data'),
+            'start' => $this->date('start'),
+            'end'   => $this->date('end'),
         ];
     }
 
@@ -58,8 +59,8 @@ class PreferenceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'data' => 'required|between:1,65000',
+            'start' => 'required|date',
+            'end'   => 'required|date|after:start',
         ];
     }
-
 }
