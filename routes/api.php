@@ -521,6 +521,20 @@ Route::group(
     }
 );
 
+// Preference API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\User', 'prefix' => 'preferences',
+     'as'        => 'api.v1.preferences.',],
+    static function () {
+        Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
+        Route::get('{preference}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
+        Route::put('{preference}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+    }
+);
+
+
+
 
 
 
@@ -604,20 +618,7 @@ Route::group(
 
 
 
-//
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'preferences',
-//     'as'        => 'api.v1.preferences.',],
-//    static function () {
-//
-//        // Preference API routes:
-//        Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
-//        Route::get('date-ranges', ['uses' => 'Preferences\IndexController@dateRanges', 'as' => 'date-ranges']);
-//        Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
-//        Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
-//    }
+
 //);
 
 

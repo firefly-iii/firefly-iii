@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * PreferenceController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -105,25 +105,7 @@ class PreferenceController extends Controller
 
     }
 
-    /**
-     * Return a single preference by name.
-     *
-     * @param Preference $preference
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(Preference $preference): JsonResponse
-    {
-        $manager = $this->getManager();
-        /** @var PreferenceTransformer $transformer */
-        $transformer = app(PreferenceTransformer::class);
-        $transformer->setParameters($this->parameters);
 
-        $resource = new Item($preference, $transformer, 'preferences');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
 
     /**
      * Update a preference.
