@@ -82,6 +82,7 @@ class ShowController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
+        $this->repository->sortAccounts();
         $collection = $this->repository->getAccountsByType($types);
         $count      = $collection->count();
         $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

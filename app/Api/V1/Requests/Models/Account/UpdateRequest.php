@@ -62,7 +62,6 @@ class UpdateRequest extends FormRequest
             'account_type'            => $this->nullableString('type'),
             'account_type_id'         => null,
             'currency_id'             => $this->nullableInteger('currency_id'),
-            'order'                   => $this->integer('order'),
             'currency_code'           => $this->nullableString('currency_code'),
             'virtual_balance'         => $this->nullableString('virtual_balance'),
             'iban'                    => $this->nullableString('iban'),
@@ -77,6 +76,9 @@ class UpdateRequest extends FormRequest
             'interest'                => $this->nullableString('interest'),
             'interest_period'         => $this->nullableString('interest_period'),
         ];
+        if(null !== $this->get('order')) {
+            $data['order'] = $this->integer('order');
+        }
 
         $data = $this->appendLocationData($data, null);
 

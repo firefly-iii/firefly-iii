@@ -74,6 +74,7 @@ class AccountUpdateService
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
         $account    = $this->updateAccount($account, $data);
+        $account    = $this->updateAccountOrder($account, $data);
 
         // find currency, or use default currency instead.
         if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
@@ -106,7 +107,8 @@ class AccountUpdateService
      * @param Account $account
      * @param array   $data
      */
-    private function updateLocation(Account $account, array $data): void {
+    private function updateLocation(Account $account, array $data): void
+    {
         $updateLocation = $data['update_location'] ?? false;
         // location must be updated?
         if (true === $updateLocation) {
@@ -169,7 +171,6 @@ class AccountUpdateService
         $account->name   = $data['name'] ?? $account->name;
         $account->active = $data['active'] ?? $account->active;
         $account->iban   = $data['iban'] ?? $account->iban;
-        $account->order  = $data['order'] ?? $account->order;
 
         // if account type is a liability, the liability type (account type)
         // can be updated to another one.
@@ -202,7 +203,7 @@ class AccountUpdateService
                 $array           = $preference->data;
                 Log::debug('Current list of accounts: ', $array);
                 Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
-                $filtered        = array_filter(
+                $filtered = array_filter(
                     $array, function ($accountId) use ($removeAccountId) {
                     return (int)$accountId !== $removeAccountId;
                 }
@@ -210,9 +211,11 @@ class AccountUpdateService
                 Log::debug('Left with accounts', array_values($filtered));
                 app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
                 app('preferences')->forget($account->user, 'frontpageAccounts');
+
                 return;
             }
             Log::debug("Found no frontpageAccounts preference, do nothing.");
+
             return;
         }
         Log::debug('Account was not marked as inactive, do nothing.');
@@ -240,5 +243,88 @@ class AccountUpdateService
                 $this->deleteOBGroup($account);
             }
         }
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     */
+    private function updateAccountOrder(Account $account, array $data): Account
+    {
+        // skip if no order info
+        if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
+            return $account;
+        }
+        // skip if not of orderable type.
+        $type = $account->accountType->type;
+        if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
+            return $account;
+        }
+        // get account type ID's because a join and an update is hard:
+        $list     = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
+        $oldOrder = (int)$account->order;
+        $newOrder = $data['order'];
+        if (in_array($type, [AccountType::ASSET], true)) {
+            $list = $this->getTypeIds([AccountType::ASSET]);
+        }
+        if ($oldOrder > $newOrder) {
+            // say you move from 9 (old) to 3 (new)
+            // everything that's 3 or higher moves up one spot.
+            // that leaves a gap for nr 3 later on.
+            // 1 2 (!) 4 5 6 7 8 9 10 11 12 13 14
+            $this->user->accounts()
+                       ->whereIn('accounts.account_type_id', $list)
+                       ->where('accounts.order', '>=', $newOrder)
+                       ->update(['accounts.order' => \DB::raw('accounts.order + 1')]);
+
+            // update the account and save it:
+            // nummer 9 (now 10!) will move to nr 3.
+            // a gap appears on spot 10.
+            // 1 2 3 4 5 6 7 8 9 11 12 13 14
+            $account->order = $newOrder;
+            $account->save();
+
+            // everything over 9 (old) drops one spot
+            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+            $this->user->accounts()
+                       ->whereIn('accounts.account_type_id', $list)
+                       ->where('accounts.order', '>', $oldOrder)
+                       ->update(['accounts.order' => \DB::raw('accounts.order - 1')]);
+
+            return $account;
+        }
+
+        if ($oldOrder < $newOrder) {
+            // if it goes from 3 (old) to 9 (new),
+            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+            // everything that is between 3 and 9 (incl) - 1 spot
+            // 1 2 2 3 4 5 6 7 8 10 11 12 13 14
+            $this->user->accounts()
+                       ->whereIn('accounts.account_type_id', $list)
+                       ->where('accounts.order', '>=', $oldOrder)
+                       ->where('accounts.order', '<=', $newOrder)
+                       ->update(['accounts.order' => \DB::raw('accounts.order - 1')]);
+            // then set order to 9
+            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
+            $account->order = $newOrder;
+            $account->save();
+        }
+
+        return $account;
+    }
+
+    private function getTypeIds(array $array): array
+    {
+        $return = [];
+        /** @var string $type */
+        foreach ($array as $type) {
+            /** @var AccountType $type */
+            $type     = AccountType::whereType($type)->first();
+            $return[] = (int)$type->id;
+        }
+
+        return $return;
     }
 }

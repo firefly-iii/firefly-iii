@@ -62,6 +62,11 @@ interface AccountRepositoryInterface
     public function getUsedCurrencies(Account $account): Collection;
 
     /**
+     * Sort accounts (and fix the sort if necessary).
+     */
+    public function sortAccounts(): void;
+
+    /**
      * @param Account $account
      *
      * @return Collection
@@ -80,7 +85,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -98,7 +103,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -106,7 +111,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -172,7 +177,7 @@ interface AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string $field
+     * @param string  $field
      *
      * @return null|string
      */
@@ -265,8 +270,8 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array $types
-     * @param int $limit
+     * @param array  $types
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -274,8 +279,8 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array $types
-     * @param int $limit
+     * @param array  $types
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -295,7 +300,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return Account
      */

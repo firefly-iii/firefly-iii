@@ -37,8 +37,8 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use \Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
@@ -193,7 +193,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
+        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
             return TransactionCurrency::find($currencyId);
         }
@@ -303,15 +303,18 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getMetaValue(Account $account, string $field): ?string
     {
-        $result = $account->accountMeta->filter(function (AccountMeta $meta) use ($field) {
-            return strtolower($meta->name) === strtolower($field);
-        });
+        $result = $account->accountMeta->filter(
+            function (AccountMeta $meta) use ($field) {
+                return strtolower($meta->name) === strtolower($field);
+            }
+        );
         if (0 === $result->count()) {
             return null;
         }
         if (1 === $result->count()) {
-            return (string) $result->first()->data;
+            return (string)$result->first()->data;
         }
+
         return null;
     }
 
@@ -369,7 +372,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return (string) $transaction->amount;
+        return (string)$transaction->amount;
     }
 
     /**
@@ -487,7 +490,7 @@ class AccountRepository implements AccountRepositoryInterface
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
         if (null !== $first) {
-            return TransactionJournal::find((int) $first->id);
+            return TransactionJournal::find((int)$first->id);
         }
 
         return null;
@@ -577,6 +580,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         /** @var AccountUpdateService $service */
         $service = app(AccountUpdateService::class);
+
         return $service->update($account, $data);
     }
 
@@ -641,8 +645,8 @@ class AccountRepository implements AccountRepositoryInterface
         $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
         $currencyIds = [];
         foreach ($info as $entry) {
-            $currencyIds[] = (int) $entry['transaction_currency_id'];
-            $currencyIds[] = (int) $entry['foreign_currency_id'];
+            $currencyIds[] = (int)$entry['transaction_currency_id'];
+            $currencyIds[] = (int)$entry['foreign_currency_id'];
         }
         $currencyIds = array_unique($currencyIds);
 
@@ -682,13 +686,17 @@ class AccountRepository implements AccountRepositoryInterface
             $parts = explode(' ', $query);
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
-                $dbQuery->where(function (EloquentBuilder $q1) use ($search) {
-                    $q1->where('accounts.iban', 'LIKE', $search);
-                    $q1->orWhere(function (EloquentBuilder $q2) use ($search) {
-                        $q2->where('account_meta.name', '=', 'account_number');
-                        $q2->where('account_meta.data', 'LIKE', $search);
-                    });
-                });
+                $dbQuery->where(
+                    function (EloquentBuilder $q1) use ($search) {
+                        $q1->where('accounts.iban', 'LIKE', $search);
+                        $q1->orWhere(
+                            function (EloquentBuilder $q2) use ($search) {
+                                $q2->where('account_meta.name', '=', 'account_number');
+                                $q2->where('account_meta.data', 'LIKE', $search);
+                            }
+                        );
+                    }
+                );
             }
         }
         if (!empty($types)) {
@@ -697,5 +705,52 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sortAccounts(): void
+    {
+        // sort assets
+        $list  = $this->user->accounts()
+                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->where('account_types.type', AccountType::ASSET)
+                            ->orderBy('accounts.order', 'ASC')
+                            ->orderBy('accounts.name', 'ASC')
+                            ->orderBy('accounts.created_at', 'ASC')->get(['accounts.id', 'accounts.order']);
+        $index = 1;
+        /** @var Account $account */
+        foreach ($list as $account) {
+            if ($account->order !== $index) {
+                $account->order = $index;
+                $account->save();
+            }
+            $index++;
+        }
+
+        // sort liabilities
+        $list  = $this->user->accounts()
+                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                            ->whereIn('account_types.type', [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
+                            ->orderBy('accounts.order', 'ASC')
+                            ->orderBy('accounts.name', 'ASC')
+                            ->orderBy('accounts.created_at', 'ASC')->get(['accounts.id', 'accounts.order']);
+        $index = 1;
+        /** @var Account $account */
+        foreach ($list as $account) {
+            if ($account->order !== $index) {
+                $account->order = $index;
+                $account->save();
+            }
+            $index++;
+        }
+
+        // set the rest to zero:
+        $this->user->accounts()
+            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+            ->whereNotIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
+            ->update(['order' => '0']);
+
     }
 }
