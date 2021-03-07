@@ -29,6 +29,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class DynamicConfigKey
 {
+
+    public static array $accepted = [
+        'configuration.is_demo_site',
+        'configuration.permission_update_check',
+        'configuration.single_user_mode',
+        'configuration.last_update_check',
+    ];
     /**
      * @param string $value
      * @param Route  $route
@@ -38,8 +45,7 @@ class DynamicConfigKey
      */
     public static function routeBinder(string $value, Route $route): string
     {
-        $accepted = ['is_demo_site', 'permission_update_check', 'single_user_mode'];
-        if (in_array($value, $accepted, true)) {
+        if (in_array($value, self::$accepted, true)) {
             return $value;
         }
         throw new NotFoundHttpException;

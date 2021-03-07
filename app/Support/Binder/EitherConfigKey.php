@@ -26,16 +26,16 @@ use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class StaticConfigKey
+ * Class EitherConfigKey
  */
-class StaticConfigKey
+class EitherConfigKey
 {
-    public static array $accepted = [
+    public static array $static = [
         'firefly.version',
         'firefly.api_version',
         'firefly.default_location',
         'firefly.account_to_transaction',
-        'firefly.allowed_opposing_types'
+        'firefly.allowed_opposing_types',
     ];
     /**
      * @param string $value
@@ -46,7 +46,7 @@ class StaticConfigKey
      */
     public static function routeBinder(string $value, Route $route): string
     {
-        if (in_array($value, self::$accepted, true)) {
+        if (in_array($value, self::$static, true) || in_array($value, DynamicConfigKey::$accepted, true)) {
             return $value;
         }
         throw new NotFoundHttpException;

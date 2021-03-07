@@ -53,7 +53,7 @@ use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
 use FireflyIII\Support\Binder\DynamicConfigKey;
 use FireflyIII\Support\Binder\JournalList;
-use FireflyIII\Support\Binder\StaticConfigKey;
+use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\TransactionRules\Actions\AddTag;
@@ -403,7 +403,7 @@ return [
         'cliToken'         => CLIToken::class,
         'tagOrId'          => TagOrId::class,
         'dynamicConfigKey' => DynamicConfigKey::class,
-        'staticConfigKey'  => StaticConfigKey::class,
+        'eitherConfigKey'  => EitherConfigKey::class,
 
     ],
     'rule-actions'                 => [

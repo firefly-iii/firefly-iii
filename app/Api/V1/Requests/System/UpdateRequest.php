@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\System;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -30,11 +30,11 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class ConfigurationRequest
+ * Class UpdateRequest
  *
  * @codeCoverageIgnore
  */
-class ConfigurationRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -47,14 +47,15 @@ class ConfigurationRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $name = $this->route()->parameter('configName');
+        $name = $this->route()->parameter('dynamicConfigKey');
         switch ($name) {
             default:
                 break;
-            case 'is_demo_site':
-            case 'single_user_mode':
+            case 'configuration.is_demo_site':
+            case 'configuration.single_user_mode':
                 return ['value' => $this->boolean('value')];
-            case 'permission_update_check':
+            case 'configuration.permission_update_check':
+            case 'configuration.last_update_check':
                 return ['value' => $this->integer('value')];
         }
 
@@ -72,11 +73,13 @@ class ConfigurationRequest extends FormRequest
         switch ($name) {
             default:
                 break;
-            case 'is_demo_site':
-            case 'single_user_mode':
+            case 'configuration.is_demo_site':
+            case 'configuration.single_user_mode':
                 return ['value' => ['required', new IsBoolean]];
-            case 'permission_update_check':
+            case 'configuration.permission_update_check':
                 return ['value' => 'required|numeric|between:-1,1'];
+            case 'configuration.last_update_check':
+                return ['value' => 'required|numeric|min:464272080'];
         }
 
         return ['value' => 'required']; // @codeCoverageIgnore

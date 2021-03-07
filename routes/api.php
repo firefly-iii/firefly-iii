@@ -488,7 +488,29 @@ Route::group(
     }
 );
 
+// Dynamic configuration API routes
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration',
+     'as'        => 'api.v1.configuration.',],
+    static function () {
+        Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
+        Route::get('{eitherConfigKey}', ['uses' => 'ConfigurationController@show', 'as' => 'show']);
+        Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
+    }
+);
 
+// STATIC CONFIGURATION (NOT CHANGEABLE)
+// TODO VERIFY API DOCS
+//Route::group(
+//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
+//     'as'        => 'api.v1.configuration.static.',],
+//    static function () {
+//
+//        // Configuration API routes:
+//        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
+//        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
+//    }
+//);
 
 
 
@@ -539,32 +561,7 @@ Route::group(
 
 
 
-// DYNAMIC CONFIGURATION (CHANGEABLE)
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/dynamic',
-//     'as'        => 'api.v1.configuration.dynamic.',],
-//    static function () {
-//
-//        // Configuration API routes:
-//        Route::get('', ['uses' => 'DynamicConfigController@index', 'as' => 'index']);
-//        Route::get('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@show', 'as' => 'show']);
-//        Route::post('{dynamicConfigKey}', ['uses' => 'DynamicConfigController@update', 'as' => 'update']);
-//    }
-//);
 
-// STATIC CONFIGURATION (NOT CHANGEABLE)
-// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
-//     'as'        => 'api.v1.configuration.static.',],
-//    static function () {
-//
-//        // Configuration API routes:
-//        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
-//        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
-//    }
-//);
 
 
 
