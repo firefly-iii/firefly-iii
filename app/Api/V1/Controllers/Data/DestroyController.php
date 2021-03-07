@@ -1,7 +1,7 @@
 <?php
-/**
+/*
  * DestroyController.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Data;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\DataDestroyRequest;
+use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -52,9 +52,12 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     /**
+     * @param DestroyRequest $request
+     *
      * @return JsonResponse
+     * @throws FireflyException
      */
-    public function destroy(DataDestroyRequest $request): JsonResponse
+    public function destroy(DestroyRequest $request): JsonResponse
     {
         $objects = $request->getObjects();
 

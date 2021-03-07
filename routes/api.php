@@ -67,7 +67,7 @@ Route::group(
 /**
  * DATA ROUTES
  */
-// EXPORT
+// Export data API routes
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
      'as'        => 'api.v1.data.export.',],
@@ -81,6 +81,14 @@ Route::group(
         Route::get('rules', ['uses' => 'ExportController@rules', 'as' => 'rules']);
         Route::get('tags', ['uses' => 'ExportController@tags', 'as' => 'tags']);
         Route::get('transactions', ['uses' => 'ExportController@transactions', 'as' => 'transactions']);
+    }
+);
+// Destroy data API route
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data', 'prefix' => 'data/destroy',
+     'as'        => 'api.v1.data.',],
+    static function () {
+        Route::delete('', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
 
@@ -488,7 +496,7 @@ Route::group(
     }
 );
 
-// Dynamic configuration API routes
+// Configuration API routes
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration',
      'as'        => 'api.v1.configuration.',],
@@ -499,18 +507,21 @@ Route::group(
     }
 );
 
-// STATIC CONFIGURATION (NOT CHANGEABLE)
-// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration/static',
-//     'as'        => 'api.v1.configuration.static.',],
-//    static function () {
-//
-//        // Configuration API routes:
-//        Route::get('', ['uses' => 'StaticConfigController@index', 'as' => 'index']);
-//        Route::get('{staticConfigKey}', ['uses' => 'StaticConfigController@show', 'as' => 'show']);
-//    }
-//);
+// Users API routes:
+Route::group(
+    ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',
+     'as'         => 'api.v1.users.',],
+    static function () {
+
+        Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
+        Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
+        Route::put('{user}', ['uses' => 'UserController@update', 'as' => 'update']);
+        Route::delete('{user}', ['uses' => 'UserController@destroy', 'as' => 'delete']);
+    }
+);
+
+
 
 
 
@@ -633,19 +644,7 @@ Route::group(
 //);
 //
 //
-//// destroy data route.
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'data',
-//     'as'        => 'api.v1.data.',],
-//    static function () {
-//
-//        // Overview API routes:
-//        Route::delete('destroy', ['uses' => 'Data\DestroyController@destroy', 'as' => 'destroy']);
-//    }
-//);
-//
-//
+
 
 
 //
@@ -673,17 +672,3 @@ Route::group(
 //    }
 //);
 //
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'users',
-//     'as'         => 'api.v1.users.',],
-//    static function () {
-//
-//        // Users API routes:
-//        Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
-//        Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
-//        Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
-//        Route::put('{user}', ['uses' => 'UserController@update', 'as' => 'update']);
-//        Route::delete('{user}', ['uses' => 'UserController@delete', 'as' => 'delete']);
-//    }
-//);

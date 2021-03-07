@@ -1,8 +1,7 @@
 <?php
-
 /**
- * UserStoreRequest.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * DataDestroyRequest.php
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,49 +21,27 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\Data;
 
-use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
-
 /**
- * Class UserStoreRequest
+ * Class DestroyRequest
  */
-class UserStoreRequest extends FormRequest
+class DestroyRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
     /**
-     * Logged in + owner
-     *
-     * @return bool
-     */
-    public function authorize(): bool
-    {
-        return auth()->check() && auth()->user()->hasRole('owner');
-    }
-
-    /**
      * Get all data from the request.
      *
-     * @return array
+     * @return string
      */
-    public function getAll(): array
+    public function getObjects(): string
     {
-        $blocked = false;
-        if (null !== $this->get('blocked')) {
-            $blocked = $this->boolean('blocked');
-        }
-
-        return [
-            'email'        => $this->string('email'),
-            'blocked'      => $blocked,
-            'blocked_code' => $this->string('blocked_code'),
-            'role'         => $this->string('role'),
-        ];
+        return $this->get('objects') ?? '';
     }
 
     /**
@@ -74,12 +51,11 @@ class UserStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $valid = 'budgets,bills,piggy_banks,rules,recurring,categories,tags,object_groups' .
+                 ',accounts,asset_accounts,expense_accounts,revenue_accounts,liabilities,transactions,withdrawals,deposits,transfers';
+
         return [
-            'email'        => 'required|email|unique:users,email',
-            'blocked'      => [new IsBoolean],
-            'blocked_code' => 'in:email_changed',
-            'role'         => 'in:owner,demo',
+            'objects' => sprintf('required|min:1|string|in:%s', $valid),
         ];
     }
-
 }

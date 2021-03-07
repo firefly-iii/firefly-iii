@@ -1,8 +1,8 @@
 <?php
 
-/**
- * UserUpdateRequest.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * UserStoreRequest.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Requests;
+namespace FireflyIII\Api\V1\Requests\System;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -31,9 +31,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 
 /**
- * Class UserUpdateRequest
+ * Class UserStoreRequest
  */
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
@@ -74,13 +74,11 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $user = $this->route()->parameter('user');
-
         return [
-            'email'        => sprintf('email|unique:users,email,%d', $user->id),
+            'email'        => 'required|email|unique:users,email',
             'blocked'      => [new IsBoolean],
             'blocked_code' => 'in:email_changed',
-            'role'         => 'in:owner,demo,',
+            'role'         => 'in:owner,demo',
         ];
     }
 

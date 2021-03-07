@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * UserController.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,10 +22,11 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V1\Controllers;
+namespace FireflyIII\Api\V1\Controllers\System;
 
-use FireflyIII\Api\V1\Requests\UserStoreRequest;
-use FireflyIII\Api\V1\Requests\UserUpdateRequest;
+use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\System\UserStoreRequest;
+use FireflyIII\Api\V1\Requests\System\UserUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
@@ -72,10 +73,14 @@ class UserController extends Controller
      * @throws FireflyException
      * @codeCoverageIgnore
      */
-    public function delete(User $user): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
         /** @var User $admin */
         $admin = auth()->user();
+        if($admin->id === $user->id) {
+            return response()->json([], 500);
+        }
+
         if ($admin->id !== $user->id && $this->repository->hasRole($admin, 'owner')) {
             $this->repository->destroy($user);
 
