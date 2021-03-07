@@ -1,8 +1,8 @@
 <?php
 
-/**
+/*
  * AccountController.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -32,6 +32,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use JsonException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use Log;
@@ -62,6 +63,7 @@ class AccountController extends Controller
      * @param Request $request
      *
      * @return JsonResponse|Response
+     * @throws JsonException
      */
     public function search(Request $request)
     {
@@ -74,7 +76,6 @@ class AccountController extends Controller
             return response(null, 422);
         }
         $types = $this->mapAccountTypes($type);
-        Log::debug(sprintf('Going to search for "%s" in types', $query), $types);
 
         /** @var AccountSearch $search */
         $search = app(AccountSearch::class);
@@ -85,7 +86,6 @@ class AccountController extends Controller
 
         $accounts = $search->search();
 
-        Log::debug(sprintf('Found %d accounts', $accounts->count()));
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

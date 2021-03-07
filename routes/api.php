@@ -460,6 +460,36 @@ Route::group(
     }
 );
 
+/**
+ * SEARCH ENDPOINTS
+ */
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
+     'as'        => 'api.v1.search.',],
+    static function () {
+
+        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
+        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
+    }
+);
+
+/**
+ * SYSTEM END POINTS
+ */
+// About Firefly III API routes:
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'about',
+        'as'        => 'api.v1.about.'],
+    static function () {
+
+        Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
+        Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
+    }
+);
+
+
+
 
 
 
@@ -507,19 +537,6 @@ Route::group(
 
 // TODO get rid of underscores.
 
-// ABOUT FIREFLY III
-// TODO VERIFY API DOCS
-//Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'about',
-//        'as'        => 'api.v1.about.'],
-//    static function () {
-//
-//        // Accounts API routes:
-//        Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
-//        Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
-//    }
-//);
 
 
 // DYNAMIC CONFIGURATION (CHANGEABLE)
@@ -598,19 +615,7 @@ Route::group(
 
 
 
-//
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Search', 'prefix' => 'search',
-//     'as'        => 'api.v1.search.',],
-//    static function () {
-//
-//        // Attachment API routes:
-//        Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
-//        Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
-//    }
-//);
+
 //
 //// TODO VERIFY API DOCS
 //Route::group(
