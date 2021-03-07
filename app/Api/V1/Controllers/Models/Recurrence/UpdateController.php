@@ -23,7 +23,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\RecurrenceUpdateRequest;
+use FireflyIII\Api\V1\Requests\Models\Recurrence\UpdateRequest;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
@@ -65,12 +65,12 @@ class UpdateController extends Controller
     /**
      * Update single recurrence.
      *
-     * @param RecurrenceUpdateRequest $request
+     * @param UpdateRequest $request
      * @param Recurrence              $recurrence
      *
      * @return JsonResponse
      */
-    public function update(RecurrenceUpdateRequest $request, Recurrence $recurrence): JsonResponse
+    public function update(UpdateRequest $request, Recurrence $recurrence): JsonResponse
     {
         $data     = $request->getAll();
         $category = $this->repository->update($recurrence, $data);
