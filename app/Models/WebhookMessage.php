@@ -44,9 +44,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\WebhookMessage
@@ -92,6 +94,31 @@ class WebhookMessage extends Model
             'message' => 'json',
             'logs' => 'json',
         ];
+
+    /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
+     * @param string $value
+     *
+     * @return WebhookMessage
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder(string $value): WebhookMessage
+    {
+        if (auth()->check()) {
+            $messageId = (int)$value;
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var WebhookMessage $message */
+            $message = self::find($messageId);
+            if (null !== $message) {
+                if($message->webhook->user_id === $user->id) {
+                    return $message;
+                }
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @codeCoverageIgnore

@@ -128,11 +128,11 @@ class Webhook extends Model
     public static function routeBinder(string $value): Webhook
     {
         if (auth()->check()) {
-            $budgetId = (int)$value;
+            $webhookId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Webhook $webhook */
-            $webhook = $user->webhooks()->find($budgetId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }

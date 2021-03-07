@@ -507,6 +507,8 @@ Route::group(
     }
 );
 
+
+
 // Users API routes:
 Route::group(
     ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',
@@ -521,6 +523,10 @@ Route::group(
     }
 );
 
+/**
+ * USER
+ */
+
 // Preference API routes:
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\User', 'prefix' => 'preferences',
@@ -530,6 +536,30 @@ Route::group(
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
         Route::get('{preference}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+    }
+);
+
+// Webhook API routes:
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
+     'as'        => 'api.v1.webhooks.',],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{webhook}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{webhook}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::post('{webhook}/submit', ['uses' => 'SubmitController@submit', 'as' => 'submit']);
+        Route::delete('{webhook}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+
+        // webhook messages
+        Route::get('{webhook}/messages', ['uses' => 'MessageController@index', 'as' => 'messages.index']);
+        Route::get('{webhook}/messages/{webhookMessage}', ['uses' => 'MessageController@show', 'as' => 'messages.show']);
+        Route::delete('{webhook}/messages/{webhookMessage}', ['uses' => 'DestroyController@destroyMessage', 'as' => 'messages.destroy']);
+
+        // webhook message attempts
+        Route::get('{webhook}/messages/{webhookMessage}/attempts', ['uses' => 'AttemptController@index', 'as' => 'attempts.index']);
+        Route::get('{webhook}/messages/{webhookMessage}/attempts/{webhookAttempt}', ['uses' => 'AttemptController@show', 'as' => 'attempts.show']);
+        Route::delete('{webhook}/messages/{webhookMessage}/attempts/{webhookAttempt}', ['uses' => 'DestroyController@destroyAttempt', 'as' => 'attempts.destroy']);
     }
 );
 
@@ -624,27 +654,6 @@ Route::group(
 
 
 
-
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Webhook', 'prefix' => 'webhooks',
-//     'as'        => 'api.v1.webhooks.',],
-//    static function () {
-//
-//        // Webhook API routes:
-//        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//
-//        // create new one.
-//        Route::post('', ['uses' => 'CreateController@store', 'as' => 'store']);
-//
-//        // update
-//        Route::put('{webhook}', ['uses' => 'EditController@update', 'as' => 'update']);
-//        Route::delete('{webhook}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
-//    }
-//);
-//
-//
 
 
 

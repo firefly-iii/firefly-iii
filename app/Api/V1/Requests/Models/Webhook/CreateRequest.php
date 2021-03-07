@@ -1,7 +1,7 @@
 <?php
 
 /*
- * UpdateRequest.php
+ * CreateRequest.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 /*
- * UpdateRequest.php
+ * CreateRequest.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -41,7 +41,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Requests\Webhook;
+namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -49,9 +49,9 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class UpdateRequest
+ * Class CreateRequest
  */
-class UpdateRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
     use ChecksLogin, ConvertsDataTypes;
 
@@ -78,7 +78,6 @@ class UpdateRequest extends FormRequest
         $return['trigger']  = $triggers[$return['trigger']] ?? 0;
         $return['response'] = $responses[$return['response']] ?? 0;
         $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
-        $return['secret']   = null !== $this->get('secret');
 
         return $return;
     }
@@ -93,15 +92,14 @@ class UpdateRequest extends FormRequest
         $triggers   = implode(',', array_values(config('firefly.webhooks.triggers')));
         $responses  = implode(',', array_values(config('firefly.webhooks.responses')));
         $deliveries = implode(',', array_values(config('firefly.webhooks.deliveries')));
-        $webhook    = $this->route()->parameter('webhook');
 
         return [
-            'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
+            'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'starts_with:https://', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'      => ['required', 'url', 'starts_with:https://', 'uniqueWebhook'],
         ];
     }
 }

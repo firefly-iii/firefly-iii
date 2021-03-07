@@ -44,6 +44,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Webhook;
 
 use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Models\WebhookMessage;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Str;
@@ -102,7 +104,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
         $webhook->url      = $data['url'] ?? $webhook->url;
 
-        if (array_key_exists('secret', $data) && null !== $data['secret']) {
+        if(true === $data['secret']) {
             $secret          = $random = Str::random(24);
             $webhook->secret = $secret;
         }
@@ -118,5 +120,53 @@ class WebhookRepository implements WebhookRepositoryInterface
     public function destroy(Webhook $webhook): void
     {
         $webhook->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyMessage(WebhookMessage $message): void
+    {
+        $message->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAttempt(WebhookAttempt $attempt): void
+    {
+        $attempt->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getReadyMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+            ->where('webhook_messages.sent', 0)
+            ->where('webhook_messages.errored', 0)
+            ->get(['webhook_messages.*'])
+            ->filter(
+                function (WebhookMessage $message) {
+                    return $message->webhookAttempts()->count() <= 2;
+                }
+            )->splice(0, 3);
+    }
+    /**
+     * @inheritDoc
+     */
+    public function getMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+                       ->get(['webhook_messages.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttempts(WebhookMessage $webhookMessage): Collection
+    {
+        return $webhookMessage->webhookAttempts;
     }
 }

@@ -45,6 +45,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Binder\BudgetList;
 use FireflyIII\Support\Binder\CategoryList;
@@ -380,6 +382,8 @@ return [
         'transactionGroup' => TransactionGroup::class,
         'user'             => User::class,
         'webhook'          => Webhook::class,
+        'webhookMessage'   => WebhookMessage::class,
+        'webhookAttempt'   => WebhookAttempt::class,
 
         // strings
         'currency_code'    => CurrencyCode::class,

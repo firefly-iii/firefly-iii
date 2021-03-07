@@ -44,8 +44,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class WebhookAttempt
@@ -74,6 +77,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class WebhookAttempt extends Model
 {
+    use SoftDeletes;
     /**
      * @codeCoverageIgnore
      * @return BelongsTo
@@ -81,5 +85,30 @@ class WebhookAttempt extends Model
     public function webhookMessage(): BelongsTo
     {
         return $this->belongsTo(WebhookMessage::class);
+    }
+
+    /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
+     * @param string $value
+     *
+     * @return WebhookAttempt
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder(string $value): WebhookAttempt
+    {
+        if (auth()->check()) {
+            $attemptId = (int)$value;
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var WebhookAttempt $attempt */
+            $attempt = self::find($attemptId);
+            if (null !== $attempt) {
+                if($attempt->webhookMessage->webhook->user_id === $user->id) {
+                    return $attempt;
+                }
+            }
+        }
+        throw new NotFoundHttpException;
     }
 }

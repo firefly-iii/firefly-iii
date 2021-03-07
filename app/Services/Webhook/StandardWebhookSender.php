@@ -123,10 +123,19 @@ class StandardWebhookSender implements WebhookSenderInterface
         } catch (ClientException | Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            //$logs[]           = sprintf('%s: %s', date('Y-m-d H:i:s'), $e->getMessage());
+
+            $logs = sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString());
+
             $this->message->errored = true;
             $this->message->sent    = false;
             $this->message->save();
+
+            $attempt = new WebhookAttempt;
+            $attempt->webhookMessage()->associate($this->message);
+            $attempt->status_code = $e->getResponse() ? $e->getResponse()->getStatusCode() : 0;
+            $attempt->logs        = $logs;
+            $attempt->save();
+
             return;
         }
         $this->message->save();
