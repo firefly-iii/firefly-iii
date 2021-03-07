@@ -61,13 +61,13 @@ class WebhookEventHandler
         // kick off the job!
         $messages = WebhookMessage
             ::where('webhook_messages.sent', 0)
-            ->where('webhook_messages.errored', 0)
+            //->where('webhook_messages.errored', 0)
             ->get(['webhook_messages.*'])
             ->filter(
                 function (WebhookMessage $message) {
                     return $message->webhookAttempts()->count() <= 2;
                 }
-            )->splice(0, 3);
+            )->splice(0, 5);
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
         foreach ($messages as $message) {
             SendWebhookMessage::dispatch($message)->afterResponse();

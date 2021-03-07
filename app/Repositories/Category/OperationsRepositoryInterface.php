@@ -89,4 +89,16 @@ interface OperationsRepositoryInterface
      * @return array
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+
+    /**
+     * Sum of transfers in period for a set of categories, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
+     *
+     * @return array
+     */
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
 }

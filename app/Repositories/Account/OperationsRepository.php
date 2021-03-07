@@ -311,4 +311,70 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         return $array;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
+    {
+        $start->startOfDay();
+        $end->endOfDay();
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER]);
+
+        if (null !== $accounts) {
+            $collector->setAccounts($accounts);
+        }
+        if (null !== $currency) {
+            $collector->setCurrency($currency);
+        }
+        $journals = $collector->getExtractedJournals();
+
+        // same but for foreign currencies:
+        if (null !== $currency) {
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
+                      ->setForeignCurrency($currency);
+
+            if (null !== $accounts) {
+                $collector->setAccounts($accounts);
+            }
+            $result = $collector->getExtractedJournals();
+
+            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
+            $journals = $result + $journals;
+        }
+        $array = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+
+            // also do foreign amount:
+            $foreignId = (int)$journal['foreign_currency_id'];
+            if (0 !== $foreignId) {
+                $array[$foreignId]        = $array[$foreignId] ?? [
+                        'sum'                     => '0',
+                        'currency_id'             => $foreignId,
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                    ];
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->positive($journal['foreign_amount']));
+            }
+        }
+        return $array;
+    }
 }

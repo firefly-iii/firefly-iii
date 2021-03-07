@@ -114,15 +114,10 @@ Route::group(
         Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
 
-
-        // TODO per budget limit?
-        // TODO per object group?
-        // TODO per recurrence?
-        // TODO per object group
-        // TODO transfers voor piggies
-        // TODO transfers per piggy?
-        // TODO currency?
-        // TODO net worth?
+        // TODO Per object group, maybe in the future.
+        // TODO Per recurrence, all transactions created under it.
+        // TODO Per currency, or as a filter?
+        // TODO Show user net worth?
     }
 );
 // insight in income
@@ -140,21 +135,29 @@ Route::group(
         Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
 
-        // TODO per budget limit?
-        // TODO per object group?
-        // TODO per recurrence?
-        // TODO per object group
-        // TODO transfers voor piggies
-        // TODO transfers per piggy?
-        // TODO currency?
-        // TODO net worth?
+        // TODO Per object group, maybe in the future.
+        // TODO Per recurrence, all transactions created under it.
+        // TODO Per currency, or as a filter?
+        // TODO Show user net worth?
     }
 );
 
-
 // Insight in transfers
-// TODO
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Transfer', 'prefix' => 'insight/transfer',
+     'as'        => 'api.v1.insight.income.',],
+    static function () {
+        // Insight in expenses per account:
+        Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
+        Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
+        Route::get('no-category', ['uses' => 'CategoryController@noCategory', 'as' => 'no-category']);
+        Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
+        Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
+        Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
 
+        // TODO Transfers for piggies
+    }
+);
 
 
 /**
@@ -508,7 +511,6 @@ Route::group(
 );
 
 
-
 // Users API routes:
 Route::group(
     ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',
@@ -559,126 +561,9 @@ Route::group(
         // webhook message attempts
         Route::get('{webhook}/messages/{webhookMessage}/attempts', ['uses' => 'AttemptController@index', 'as' => 'attempts.index']);
         Route::get('{webhook}/messages/{webhookMessage}/attempts/{webhookAttempt}', ['uses' => 'AttemptController@show', 'as' => 'attempts.show']);
-        Route::delete('{webhook}/messages/{webhookMessage}/attempts/{webhookAttempt}', ['uses' => 'DestroyController@destroyAttempt', 'as' => 'attempts.destroy']);
+        Route::delete(
+            '{webhook}/messages/{webhookMessage}/attempts/{webhookAttempt}', ['uses' => 'DestroyController@destroyAttempt', 'as' => 'attempts.destroy']
+        );
     }
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * DATA CONTROLLERS
- *
- */
-
-//// EXPORT
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Export', 'prefix' => 'data/export',
-//     'as'        => 'api.v1.data.export.',],
-//    static function () {
-//        Route::get('transactions', ['uses' => 'TransactionController@export', 'as' => 'transactions']);
-//    }
-//);
-
-/**
- * INSIGHT CONTROLLERS
- */
-
-
-/**
- * System and configuration controllers
- */
-
-// TODO get rid of underscores.
-
-
-
-
-
-
-
-
-
-//// TODO VERIFY API DOCS
-
-
-
-
-
-
-
-
-
-//
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'cer',
-//     'as'        => 'api.v1.cer.',],
-//    static function () {
-//
-//        // Currency Exchange Rate API routes:
-//        Route::get('', ['uses' => 'CurrencyExchangeRateController@index', 'as' => 'index']);
-//    }
-//);
-
-
-
-
-
-//);
-
-
-
-
-
-
-
-//
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud',
-//     'as'        => 'api.v1.tag-cloud.',],
-//    static function () {
-//        // Tag cloud API routes (to prevent collisions)
-//        Route::get('', ['uses' => 'TagController@cloud', 'as' => 'cloud']);
-//    }
-//);
-//
-
-//
-//// special group for transaction journals
-//// TODO VERIFY API DOCS
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\Transaction', 'prefix' => 'transaction-journals',
-//     'as'        => 'api.v1.journals.',],
-//    static function () {
-//
-//        // Transaction API routes:
-//        Route::get('{tj}', ['uses' => 'ShowController@showByJournal', 'as' => 'showByJournal']);
-//    }
-//);
-//

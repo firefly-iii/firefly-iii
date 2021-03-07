@@ -104,7 +104,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
         $webhook->url      = $data['url'] ?? $webhook->url;
 
-        if(true === $data['secret']) {
+        if (true === $data['secret']) {
             $secret          = $random = Str::random(24);
             $webhook->secret = $secret;
         }
@@ -144,21 +144,23 @@ class WebhookRepository implements WebhookRepositoryInterface
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-            ->where('webhook_messages.sent', 0)
-            ->where('webhook_messages.errored', 0)
-            ->get(['webhook_messages.*'])
-            ->filter(
-                function (WebhookMessage $message) {
-                    return $message->webhookAttempts()->count() <= 2;
-                }
-            )->splice(0, 3);
+                       ->where('webhook_messages.sent', 0)
+                       ->where('webhook_messages.errored', 0)
+                       ->get(['webhook_messages.*'])
+                       ->filter(
+                           function (WebhookMessage $message) {
+                               return $message->webhookAttempts()->count() <= 2;
+                           }
+                       )->splice(0, 3);
     }
+
     /**
      * @inheritDoc
      */
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
+                       ->orderBy('created_at', 'DESC')
                        ->get(['webhook_messages.*']);
     }
 
@@ -167,6 +169,6 @@ class WebhookRepository implements WebhookRepositoryInterface
      */
     public function getAttempts(WebhookMessage $webhookMessage): Collection
     {
-        return $webhookMessage->webhookAttempts;
+        return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
     }
 }

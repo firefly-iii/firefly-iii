@@ -247,7 +247,7 @@ class GenericRequest extends FormRequest
         if (is_array($array)) {
             foreach ($array as $billId) {
                 $billId = (int)$billId;
-                $bill   = $repository->findNull($billId);
+                $bill   = $repository->find($billId);
                 if (null !== $billId) {
                     $this->bills->push($bill);
                 }
