@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -35,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Log;
 use Validator;
@@ -45,6 +47,8 @@ use Validator;
  */
 trait AccountServiceTrait
 {
+    protected AccountRepositoryInterface $accountRepository;
+
     /**
      * @param null|string $iban
      *
@@ -83,6 +87,14 @@ trait AccountServiceTrait
 
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
+        }
+
+        // the account role may not be set in the data but we may have it already:
+        if (!array_key_exists('account_role', $data)) {
+            $data['account_role'] = null;
+        }
+        if (null === $data['account_role']) {
+            $data['account_role'] = $this->accountRepository->getMetaValue($account, 'account_role');
         }
         if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields; // @codeCoverageIgnore
@@ -171,8 +183,8 @@ trait AccountServiceTrait
      */
     public function isEmptyOBData(array $data): bool
     {
-        if (!array_key_exists('opening_balance', $data) &&
-            !array_key_exists('opening_balance_date', $data)
+        if (!array_key_exists('opening_balance', $data)
+            && !array_key_exists('opening_balance_date', $data)
         ) {
             // not set, so false.
             return false;
@@ -180,8 +192,7 @@ trait AccountServiceTrait
         // if isset, but is empty:
         if (
             (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
-            ||
-            (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
+            || (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
         ) {
             return true;
         }
@@ -266,6 +277,7 @@ trait AccountServiceTrait
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $group;

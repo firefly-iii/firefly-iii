@@ -76,12 +76,6 @@ class AccountTransformer extends AbstractTransformer
         [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
         $openingBalance  = number_format((float) $openingBalance, $decimalPlaces, '.', '');
-        $liabilityAmount = null;
-        $liabilityStart  = null;
-        if (null !== $liabilityType) {
-            $liabilityAmount = $openingBalance;
-            $liabilityStart  = $openingBalanceDate;
-        }
         $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
         $longitude       = null;
         $latitude        = null;
@@ -117,8 +111,6 @@ class AccountTransformer extends AbstractTransformer
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,
-            'liability_amount'        => $liabilityAmount,
-            'liability_start_date'    => $liabilityStart,
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
             'include_net_worth'       => $includeNetWorth,

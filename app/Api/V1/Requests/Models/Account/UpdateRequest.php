@@ -68,6 +68,7 @@ class UpdateRequest extends FormRequest
             'BIC'                     => $this->nullableString('bic'),
             'account_number'          => $this->nullableString('account_number'),
             'account_role'            => $this->nullableString('account_role'),
+            'liability_type'          => $this->nullableString('liability_type'),
             'opening_balance'         => $this->nullableString('opening_balance'),
             'opening_balance_date'    => $this->date('opening_balance_date'),
             'cc_type'                 => $this->nullableString('credit_card_type'),
@@ -76,7 +77,7 @@ class UpdateRequest extends FormRequest
             'interest'                => $this->nullableString('interest'),
             'interest_period'         => $this->nullableString('interest_period'),
         ];
-        if(null !== $this->get('order')) {
+        if (null !== $this->get('order')) {
             $data['order'] = $this->integer('order');
         }
 
@@ -122,8 +123,6 @@ class UpdateRequest extends FormRequest
             'credit_card_type'     => sprintf('in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
-            'liability_amount'     => 'required_if:type,liability|min:0|numeric',
-            'liability_start_date' => 'required_if:type,liability|date',
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',

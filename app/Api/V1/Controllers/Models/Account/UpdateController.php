@@ -63,7 +63,7 @@ class UpdateController extends Controller
      * Update account.
      *
      * @param UpdateRequest $request
-     * @param Account              $account
+     * @param Account       $account
      *
      * @return JsonResponse
      */
@@ -71,8 +71,9 @@ class UpdateController extends Controller
     {
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $this->repository->update($account, $data);
-        $manager = $this->getManager();
+        $account      = $this->repository->update($account, $data);
+        $manager      = $this->getManager();
+        $account->refresh();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

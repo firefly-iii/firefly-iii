@@ -34,6 +34,7 @@ use Log;
 
 /**
  * Class AccountUpdateService
+ * TODO this is a mess.
  */
 class AccountUpdateService
 {
@@ -147,17 +148,25 @@ class AccountUpdateService
     }
 
     /**
-     * @param int $accountTypeId
+     * @param string $type
      *
      * @return bool
      */
-    private function isLiabilityTypeId(int $accountTypeId): bool
+    private function isLiabilityType(string $type): bool
     {
-        if (0 === $accountTypeId) {
+        if ('' === $type) {
             return false;
         }
 
-        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('id', $accountTypeId)->count();
+        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('type', ucfirst($type))->count();
+    }
+
+    /**
+     * @param string $type
+     */
+    private function getAccountType(string $type): AccountType
+    {
+        return AccountType::whereType($type)->first();
     }
 
     /**
@@ -173,10 +182,11 @@ class AccountUpdateService
         $account->active = $data['active'] ?? $account->active;
         $account->iban   = $data['iban'] ?? $account->iban;
 
-        // if account type is a liability, the liability type (account type)
-        // can be updated to another one.
-        if ($this->isLiability($account) && $this->isLiabilityTypeId((int)($data['account_type_id'] ?? 0))) {
-            $account->account_type_id = (int)$data['account_type_id'];
+        // liability stuff:
+        $liabilityType = $data['liability_type'] ?? '';
+        if ($this->isLiability($account) && $this->isLiabilityType($liabilityType)) {
+            $type                     = $this->getAccountType($liabilityType);
+            $account->account_type_id = $type->id;
         }
 
         // update virtual balance (could be set to zero if empty string).
