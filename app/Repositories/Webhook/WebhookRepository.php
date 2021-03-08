@@ -102,6 +102,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->trigger  = $data['trigger'] ?? $webhook->trigger;
         $webhook->response = $data['response'] ?? $webhook->response;
         $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
+        $webhook->title    = $data['title'] ?? $webhook->title;
         $webhook->url      = $data['url'] ?? $webhook->url;
 
         if (true === $data['secret']) {

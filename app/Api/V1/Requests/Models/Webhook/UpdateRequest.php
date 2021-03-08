@@ -74,11 +74,20 @@ class UpdateRequest extends FormRequest
         ];
 
         // this is the way.
-        $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? 0;
-        $return['response'] = $responses[$return['response']] ?? 0;
-        $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
-        $return['secret']   = null !== $this->get('secret');
+        $return = $this->getAllData($fields);
+        if (array_key_exists('trigger', $return)) {
+            $return['trigger'] = $triggers[$return['trigger']] ?? 0;
+        }
+        if (array_key_exists('response', $return)) {
+            $return['response'] = $responses[$return['response']] ?? 0;
+        }
+        if (array_key_exists('delivery', $return)) {
+            $return['delivery'] = $deliveries[$return['delivery']] ?? 0;
+        }
+        $return['secret'] = null !== $this->get('secret');
+        if (null !== $this->get('title')) {
+            $return['title'] = $this->string('title');
+        }
 
         return $return;
     }
@@ -98,10 +107,10 @@ class UpdateRequest extends FormRequest
         return [
             'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
             'active'   => [new IsBoolean],
-            'trigger'  => sprintf('required|in:%s', $triggers),
-            'response' => sprintf('required|in:%s', $responses),
-            'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'starts_with:https://', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'trigger'  => sprintf('in:%s', $triggers),
+            'response' => sprintf('in:%s', $responses),
+            'delivery' => sprintf('in:%s', $deliveries),
+            'url'      => ['url', 'starts_with:https://', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }

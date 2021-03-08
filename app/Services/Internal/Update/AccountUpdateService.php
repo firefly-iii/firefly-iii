@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
@@ -263,54 +264,30 @@ class AccountUpdateService
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $list     = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
         $oldOrder = (int)$account->order;
         $newOrder = $data['order'];
+        $list     = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
         if (in_array($type, [AccountType::ASSET], true)) {
             $list = $this->getTypeIds([AccountType::ASSET]);
         }
-        if ($oldOrder > $newOrder) {
-            // say you move from 9 (old) to 3 (new)
-            // everything that's 3 or higher moves up one spot.
-            // that leaves a gap for nr 3 later on.
-            // 1 2 (!) 4 5 6 7 8 9 10 11 12 13 14
-            $this->user->accounts()
-                       ->whereIn('accounts.account_type_id', $list)
-                       ->where('accounts.order', '>=', $newOrder)
-                       ->update(['accounts.order' => \DB::raw('accounts.order + 1')]);
 
-            // update the account and save it:
-            // nummer 9 (now 10!) will move to nr 3.
-            // a gap appears on spot 10.
-            // 1 2 3 4 5 6 7 8 9 11 12 13 14
+        if ($newOrder > $oldOrder) {
+            $this->user->accounts()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                       ->where('accounts.id', '!=', $account->id)
+                       ->whereIn('accounts.account_type_id', $list)
+                       ->update(['order' => DB::raw('accounts.order-1')]);
             $account->order = $newOrder;
             $account->save();
-
-            // everything over 9 (old) drops one spot
-            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
-            $this->user->accounts()
-                       ->whereIn('accounts.account_type_id', $list)
-                       ->where('accounts.order', '>', $oldOrder)
-                       ->update(['accounts.order' => \DB::raw('accounts.order - 1')]);
 
             return $account;
         }
 
-        if ($oldOrder < $newOrder) {
-            // if it goes from 3 (old) to 9 (new),
-            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
-            // everything that is between 3 and 9 (incl) - 1 spot
-            // 1 2 2 3 4 5 6 7 8 10 11 12 13 14
-            $this->user->accounts()
-                       ->whereIn('accounts.account_type_id', $list)
-                       ->where('accounts.order', '>=', $oldOrder)
-                       ->where('accounts.order', '<=', $newOrder)
-                       ->update(['accounts.order' => \DB::raw('accounts.order - 1')]);
-            // then set order to 9
-            // 1 2 3 4 5 6 7 8 9 10 11 12 13 14
-            $account->order = $newOrder;
-            $account->save();
-        }
+        $this->user->accounts()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                   ->where('accounts.id', '!=', $account->id)
+                   ->whereIn('accounts.account_type_id', $list)
+                   ->update(['order' => DB::raw('accounts.order+1')]);
+        $account->order = $newOrder;
+        $account->save();
 
         return $account;
     }

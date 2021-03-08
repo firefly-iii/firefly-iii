@@ -71,6 +71,7 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
+        $this->repository->correctOrder();
         $bills     = $this->repository->getBills();
         $manager   = $this->getManager();
         $pageSize  = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;

@@ -634,17 +634,33 @@ class FireflyValidator extends Validator
     public function validateUniqueExistingWebhook($value, $parameters, $something): bool
     {
         $existingId = (int)($something[0] ?? 0);
-
+        $trigger  = 0;
+        $response = 0;
+        $delivery = 0;
+        $triggers   = array_flip(config('firefly.webhooks.triggers'));
+        $responses  = array_flip(config('firefly.webhooks.responses'));
+        $deliveries = array_flip(config('firefly.webhooks.deliveries'));
         if (auth()->check()) {
-            // possible values
-            $triggers   = array_flip(config('firefly.webhooks.triggers'));
-            $responses  = array_flip(config('firefly.webhooks.responses'));
-            $deliveries = array_flip(config('firefly.webhooks.deliveries'));
+            // get existing webhook value:
+            if(0!== $existingId) {
+                /** @var Webhook $webhook */
+                $webhook = auth()->user()->webhooks()->find($existingId);
+                if(null === $webhook) {
+                    return false;
+                }
+                // set triggers etc.
+                $trigger  = $triggers[$webhook->trigger] ?? 0;
+                $response = $responses[$webhook->response] ?? 0;
+                $delivery = $deliveries[$webhook->delivery] ?? 0;
+            }
+            if(0=== $existingId) {
+                $trigger  = $triggers[$this->data['trigger']] ?? 0;
+                $response = $responses[$this->data['response']] ?? 0;
+                $delivery = $deliveries[$this->data['delivery']] ?? 0;
+            }
 
-            // integers
-            $trigger  = $triggers[$this->data['trigger']] ?? 0;
-            $response = $responses[$this->data['response']] ?? 0;
-            $delivery = $deliveries[$this->data['delivery']] ?? 0;
+
+
             $url      = $this->data['url'];
             $userId   = auth()->user()->id;
 
