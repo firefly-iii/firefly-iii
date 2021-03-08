@@ -111,7 +111,7 @@ class AccountTransformer extends AbstractTransformer
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,
-            'interest'                => $interest,
+            'interest'                => (float) $interest,
             'interest_period'         => $interestPeriod,
             'include_net_worth'       => $includeNetWorth,
             'longitude'               => $longitude,
