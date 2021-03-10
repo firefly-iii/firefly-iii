@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
@@ -234,7 +233,15 @@ trait AccountServiceTrait
             return null;
             // @codeCoverageIgnoreEnd
         }
-        $amount     = app('steam')->positive($amount);
+        $amount = app('steam')->positive($amount);
+        if (!array_key_exists('currency_id', $data)) {
+            $currency = $this->accountRepository->getAccountCurrency($account);
+            if (null === $currency) {
+                $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            }
+            $data['currency_id'] = $currency->id;
+        }
+
         $submission = [
             'group_title'  => null,
             'user'         => $account->user_id,
@@ -354,6 +361,16 @@ trait AccountServiceTrait
         if (null === $obGroup) {
             return $this->createOBGroup($account, $data);
         }
+
+        // $data['currency_id'] is empty so creating a new journal may break.
+        if (!array_key_exists('currency_id', $data)) {
+            $currency = $this->accountRepository->getAccountCurrency($account);
+            if (null === $currency) {
+                $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            }
+            $data['currency_id'] = $currency->id;
+        }
+
         /** @var TransactionJournal $journal */
         $journal                          = $obGroup->transactionJournals()->first();
         $journal->date                    = $data['opening_balance_date'] ?? $journal->date;

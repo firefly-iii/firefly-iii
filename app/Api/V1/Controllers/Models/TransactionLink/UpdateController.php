@@ -56,15 +56,9 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
-        $manager         = $this->getManager();
-        $data            = $request->getAll();
-        $data['inward']  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
-        $data['outward'] = $this->journalRepository->findNull($data['outward_id'] ?? 0);
-        if (null === $data['inward'] || null === $data['outward']) {
-            throw new FireflyException('200024: Source or destination does not exist.');
-        }
-        $data['direction'] = 'inward';
-        $journalLink       = $this->repository->updateLink($journalLink, $data);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $journalLink = $this->repository->updateLink($journalLink, $data);
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);

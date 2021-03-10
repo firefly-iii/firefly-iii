@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionLink;
 
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -50,7 +51,7 @@ class UpdateRequest extends FormRequest
             'link_type_name' => $this->string('link_type_name'),
             'inward_id'      => $this->integer('inward_id'),
             'outward_id'     => $this->integer('outward_id'),
-            'notes'          => $this->nlString('notes'),
+            'notes'          => $this->nullableNlString('notes'),
         ];
     }
 
@@ -81,7 +82,7 @@ class UpdateRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
-                $this->validateExistingLink($validator);
+                $this->validateUpdate($validator);
             }
         );
     }
@@ -89,42 +90,41 @@ class UpdateRequest extends FormRequest
     /**
      * @param Validator $validator
      */
-    private function validateExistingLink(Validator $validator): void
+    private function validateUpdate(Validator $validator): void
     {
-        /** @var User $user */
-        $user = auth()->user();
+        /** @var TransactionJournalLink $existing */
+        $existing = $this->route()->parameter('journalLink');
+        $data      = $validator->getData();
         /** @var LinkTypeRepositoryInterface $repository */
         $repository = app(LinkTypeRepositoryInterface::class);
-        $repository->setUser($user);
+        $repository->setUser(auth()->user());
 
         /** @var JournalRepositoryInterface $journalRepos */
         $journalRepos = app(JournalRepositoryInterface::class);
-        $journalRepos->setUser($user);
+        $journalRepos->setUser(auth()->user());
 
-        $data      = $validator->getData();
-        $inwardId  = (int) ($data['inward_id'] ?? 0);
-        $outwardId = (int) ($data['outward_id'] ?? 0);
-        $inward    = $journalRepos->findNull($inwardId);
-        $outward   = $journalRepos->findNull($outwardId);
+        $inwardId  = $data['inward_id'] ?? $existing->source_id;
+        $outwardId = $data['outward_id'] ?? $existing->destination_id;
+        $inward    = $journalRepos->findNull((int)$inwardId);
+        $outward   = $journalRepos->findNull((int)$outwardId);
+        if($inward->id === $outward->id) {
+            $validator->errors()->add('inward_id', 'Inward ID must be different from outward ID.');
+            $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
+        }
 
         if (null === $inward) {
-            $validator->errors()->add('inward_id', 'Invalid inward ID.');
-
+            $validator->errors()->add('inward_id', 'This is not a valid inward journal.');
+        }
+        if(null === $outward) {
+            $validator->errors()->add('inward_id', 'This is not a valid outward journal.');
+        }
+        $inDB =$repository->findSpecificLink($existing->linkType, $inward, $outward);
+        if(null === $inDB) {
             return;
         }
-        if (null === $outward) {
-            $validator->errors()->add('outward_id', 'Invalid outward ID.');
-
-            return;
-        }
-
-        if ($repository->findLink($inward, $outward)) {
-            // only if not updating:
-            $link = $this->route()->parameter('journalLink');
-            if (null === $link) {
-                $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
-                $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
-            }
+        if($inDB->id !== $existing->id) {
+            $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
+            $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
         }
     }
 }

@@ -35,13 +35,5 @@ use FireflyIII\User;
  */
 trait AccountValidatorProperties
 {
-    public bool                        $createMode;
-    public string                      $destError;
-    public Account                     $destination;
-    public Account                     $source;
-    public string                      $sourceError;
-    private AccountRepositoryInterface $accountRepository;
-    private array                      $combinations;
-    private string                     $transactionType;
-    private User                       $user;
+
 }

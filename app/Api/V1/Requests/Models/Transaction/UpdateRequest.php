@@ -50,9 +50,6 @@ class UpdateRequest extends FormRequest
     private array $stringFields;
     private array $textareaFields;
 
-
-
-
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
      *
@@ -125,12 +122,13 @@ class UpdateRequest extends FormRequest
         $this->arrayFields = [
             'tags',
         ];
-
-
-        $data = [
-            'transactions' => $this->getTransactionData(),
-            'apply_rules'  => $this->boolean('apply_rules', true),
-        ];
+        $data              = [];
+        if ($this->has('transactions')) {
+            $data['transactions'] = $this->getTransactionData();
+        }
+        if ($this->has('apply_rules')) {
+            $data['apply_rules'] = $this->boolean('apply_rules', true);
+        }
         if ($this->has('group_title')) {
             $data['group_title'] = $this->string('group_title');
         }
@@ -147,19 +145,24 @@ class UpdateRequest extends FormRequest
     {
         Log::debug('Now in getTransactionData()');
         $return = [];
+
+        if (!is_countable($this->get('transactions'))) {
+            return $return;
+        }
+
         /**
          * @var int   $index
          * @var array $transaction
          */
         foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
-            $current  = [];
-            $current  = $this->getIntegerData($current, $transaction);
-            $current  = $this->getStringData($current, $transaction);
-            $current  = $this->getNlStringData($current, $transaction);
-            $current  = $this->getDateData($current, $transaction);
-            $current  = $this->getBooleanData($current, $transaction);
-            $current  = $this->getArrayData($current, $transaction);
+            $current = [];
+            $current = $this->getIntegerData($current, $transaction);
+            $current = $this->getStringData($current, $transaction);
+            $current = $this->getNlStringData($current, $transaction);
+            $current = $this->getDateData($current, $transaction);
+            $current = $this->getBooleanData($current, $transaction);
+            $current = $this->getArrayData($current, $transaction);
             $return[] = $current;
         }
 
@@ -177,7 +180,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->integerFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -194,7 +197,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->stringFromValue((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -211,7 +214,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->nlStringFromValue((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -229,8 +232,8 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             Log::debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                Log::debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+                Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
             }
         }
 
@@ -247,7 +250,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->booleanFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
+                $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
             }
         }
 
@@ -362,21 +365,18 @@ class UpdateRequest extends FormRequest
         $transactionGroup = $this->route()->parameter('transactionGroup');
         $validator->after(
             function (Validator $validator) use ($transactionGroup) {
-                // must submit at least one transaction.
-                $this->validateOneTransaction($validator);
-
                 // if more than one, verify that there are journal ID's present.
                 $this->validateJournalIds($validator, $transactionGroup);
 
                 // all transaction types must be equal:
-                $this->validateTransactionTypesForUpdate($validator);
+                $this->validateTransactionTypesForUpdate($validator, $transactionGroup);
 
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
-                $this->validateAccountInformationUpdate($validator);
+                $this->validateAccountInformationUpdate($validator, $transactionGroup);
 
             }
         );

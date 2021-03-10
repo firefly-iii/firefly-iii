@@ -63,9 +63,9 @@ class UpdateRequest extends FormRequest
     {
         $linkType         = $this->route()->parameter('linkType');
         return [
-            'name'    => ['required', Rule::unique('link_types', 'name')->ignore($linkType->id), 'min:1'],
-            'outward' => ['required', 'different:inward', Rule::unique('link_types', 'outward')->ignore($linkType->id), 'min:1'],
-            'inward'  => ['required', 'different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1'],
+            'name'    => [Rule::unique('link_types', 'name')->ignore($linkType->id), 'min:1'],
+            'outward' => ['different:inward', Rule::unique('link_types', 'outward')->ignore($linkType->id), 'min:1'],
+            'inward'  => ['different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1'],
         ];
     }
 }

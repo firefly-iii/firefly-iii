@@ -480,19 +480,19 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (int)$row['user_id'],
+            'user'                   => (string)$row['user_id'],
             'transaction_journal_id' => (int)$row['transaction_journal_id'],
             'type'                   => strtolower($type),
             'date'                   => $row['date']->toAtomString(),
             'order'                  => $row['order'],
 
-            'currency_id'             => (int)$row['currency_id'],
+            'currency_id'             => (string)$row['currency_id'],
             'currency_code'           => $row['currency_code'],
             'currency_name'           => $row['currency_name'],
             'currency_symbol'         => $row['currency_symbol'],
             'currency_decimal_places' => (int)$row['currency_decimal_places'],
 
-            'foreign_currency_id'             => $this->integerFromArray($transaction, 'foreign_currency_id'),
+            'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $row['foreign_currency_code'],
             'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
             'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
@@ -502,23 +502,23 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'description' => $row['description'],
 
-            'source_id'   => (int)$row['source_account_id'],
+            'source_id'   => (string)$row['source_account_id'],
             'source_name' => $row['source_account_name'],
             'source_iban' => $row['source_account_iban'],
             'source_type' => $row['source_account_type'],
 
-            'destination_id'   => (int)$row['destination_account_id'],
+            'destination_id'   => (string)$row['destination_account_id'],
             'destination_name' => $row['destination_account_name'],
             'destination_iban' => $row['destination_account_iban'],
             'destination_type' => $row['destination_account_type'],
 
-            'budget_id'   => $this->integerFromArray($transaction, 'budget_id'),
+            'budget_id'   => $this->stringFromArray($transaction, 'budget_id', null),
             'budget_name' => $row['budget_name'],
 
-            'category_id'   => $this->integerFromArray($transaction, 'category_id'),
+            'category_id'   => $this->stringFromArray($transaction, 'category_id', null),
             'category_name' => $row['category_name'],
 
-            'bill_id'   => $this->integerFromArray($transaction, 'bill_id'),
+            'bill_id'   => $this->stringFromArray($transaction, 'bill_id', null),
             'bill_name' => $row['bill_name'],
 
             'reconciled' => $row['reconciled'],
@@ -528,7 +528,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'internal_reference' => $metaFieldData['internal_reference'],
             'external_id'        => $metaFieldData['external_id'],
             'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_id'),
+            'recurrence_id'      => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
             'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
             'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
             'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
@@ -568,10 +568,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function stringFromArray(array $array, string $key, ?string $default): ?string
     {
         if (array_key_exists($key, $array)) {
-            return $array[$key];
+            return (string) $array[$key];
         }
         if (null !== $default) {
-            return $default;
+            return (string) $default;
         }
 
         return null;

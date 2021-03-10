@@ -56,6 +56,13 @@ class GroupUpdateService
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
         }
+
+        if (0 === count($transactions)) {
+            Log::debug('No transactions submitted, do nothing.');
+
+            return $transactionGroup;
+        }
+
         if (1 === count($transactions) && 1 === $transactionGroup->transactionJournals()->count()) {
             /** @var TransactionJournal $first */
             $first = $transactionGroup->transactionJournals()->first();

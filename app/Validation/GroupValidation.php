@@ -57,6 +57,7 @@ trait GroupValidation
 
         if (count($transactions) < 2) {
             // no need for validation.
+            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
             return;
         }
         // check each array:
@@ -104,12 +105,15 @@ trait GroupValidation
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function validateJournalid(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void
+    private function validateJournalId(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void
     {
         $journalId = $transaction['transaction_journal_id'] ?? null;
+        Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
+
         $journalId = null === $journalId ? null : (int) $journalId;
         $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
         if (null === $journalId || (null !== $journalId && 0 !== $journalId && 0 === $count)) {
+            Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
         }
     }

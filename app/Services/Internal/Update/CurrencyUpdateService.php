@@ -51,14 +51,26 @@ class CurrencyUpdateService
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
-        $data['code']             = '' === (string)$data['code'] ? $currency->code : $data['code'];
-        $data['symbol']           = '' === (string)$data['symbol'] ? $currency->code : $data['symbol'];
-        $data['name']             = '' === (string)$data['name'] ? $currency->code : $data['name'];
-        $currency->code           = $data['code'];
-        $currency->symbol         = $data['symbol'];
-        $currency->name           = $data['name'];
-        $currency->enabled        = $data['enabled'];
-        $currency->decimal_places = $data['decimal_places'];
+        if (array_key_exists('code', $data) && '' !== (string)$data['code']) {
+            $currency->code = $data['code'];
+        }
+
+        if (array_key_exists('symbol', $data) && '' !== (string)$data['symbol']) {
+            $currency->symbol = $data['symbol'];
+        }
+
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
+            $currency->name = $data['name'];
+        }
+
+        if (array_key_exists('enabled', $data) && is_bool($data['enabled'])) {
+            $currency->enabled = $data['enabled'];
+        }
+
+        if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
+            $currency->decimal_places = $data['decimal_places'];
+        }
+
         $currency->save();
 
         return $currency;

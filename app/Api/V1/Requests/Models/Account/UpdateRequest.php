@@ -61,8 +61,6 @@ class UpdateRequest extends FormRequest
             'include_net_worth'       => $includeNetWorth,
             'account_type'            => $this->nullableString('type'),
             'account_type_id'         => null,
-            'currency_id'             => $this->nullableInteger('currency_id'),
-            'currency_code'           => $this->nullableString('currency_code'),
             'virtual_balance'         => $this->nullableString('virtual_balance'),
             'iban'                    => $this->nullableString('iban'),
             'BIC'                     => $this->nullableString('bic'),
@@ -79,6 +77,12 @@ class UpdateRequest extends FormRequest
         ];
         if (null !== $this->get('order')) {
             $data['order'] = $this->integer('order');
+        }
+        if (null !== $this->get('currency_id')) {
+            $data['currency_id'] = $this->nullableInteger('currency_id');
+        }
+        if (null !== $this->get('currency_code')) {
+            $data['currency_code'] = $this->nullableString('currency_code');
         }
 
         $data = $this->appendLocationData($data, null);

@@ -54,28 +54,17 @@ class JournalUpdateService
 {
     use JournalServiceTrait;
 
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepository;
-    /** @var array The data to update the journal with. */
-    private $data;
-    /** @var Account The destination account. */
-    private $destinationAccount;
-    /** @var Transaction */
-    private $destinationTransaction;
-    /** @var array All meta values that are dates. */
-    private $metaDate;
-    /** @var array All meta values that are strings. */
-    private $metaString;
-    /** @var Account Source account of the journal */
-    private $sourceAccount;
-    /** @var Transaction Source transaction of the journal. */
-    private $sourceTransaction;
-    /** @var TransactionGroup The parent group. */
-    private $transactionGroup;
-    /** @var TransactionJournal The journal to update. */
-    private $transactionJournal;
+    private BillRepositoryInterface     $billRepository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private array                       $data;
+    private ?Account                    $destinationAccount;
+    private ?Transaction                $destinationTransaction;
+    private array                       $metaDate;
+    private array                       $metaString;
+    private ?Account                    $sourceAccount;
+    private ?Transaction                $sourceTransaction;
+    private TransactionGroup            $transactionGroup;
+    private TransactionJournal          $transactionJournal;
 
     /**
      * JournalUpdateService constructor.
@@ -112,6 +101,10 @@ class JournalUpdateService
         $this->budgetRepository->setUser($transactionGroup->user);
         $this->tagFactory->setUser($transactionGroup->user);
         $this->accountRepository->setUser($transactionGroup->user);
+        $this->destinationAccount     = null;
+        $this->destinationTransaction = null;
+        $this->sourceAccount          = null;
+        $this->sourceTransaction      = null;
     }
 
     /**
@@ -130,7 +123,7 @@ class JournalUpdateService
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
-            Log::info('-- account info is valid, now update.');
+            Log::info('Account info is valid, now update.');
             // update accounts:
             $this->updateAccounts();
 
@@ -202,7 +195,7 @@ class JournalUpdateService
     private function getOriginalDestinationAccount(): Account
     {
         if (null === $this->destinationAccount) {
-            $destination              = $this->getSourceTransaction();
+            $destination              = $this->getDestinationTransaction();
             $this->destinationAccount = $destination->account;
         }
 
@@ -338,6 +331,7 @@ class JournalUpdateService
         $destName = $this->data['destination_name'] ?? null;
 
         if (!$this->hasFields(['destination_id', 'destination_name'])) {
+            Log::debug('No destination info submitted, grab the original data.');
             $destination = $this->getOriginalDestinationAccount();
             $destId      = $destination->id;
             $destName    = $destination->name;

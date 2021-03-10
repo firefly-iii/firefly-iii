@@ -74,7 +74,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
-        Log::debug('Now in update routine.');
+        Log::debug('Now in update routine for transaction group!');
         $data             = $request->getAll();
         $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = $this->getManager();

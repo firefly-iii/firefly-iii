@@ -118,7 +118,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         ];
         $client  = new Client;
         try {
-            $res                 = $client->request('POST', $this->message->webhook->url . 'x', $options);
+            $res                 = $client->request('POST', $this->message->webhook->url, $options);
             $this->message->sent = true;
         } catch (ClientException | Exception $e) {
             Log::error($e->getMessage());

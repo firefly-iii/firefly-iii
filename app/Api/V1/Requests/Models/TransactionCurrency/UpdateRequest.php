@@ -45,23 +45,22 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $enabled = true;
-        $default = false;
-        if (null !== $this->get('enabled')) {
-            $enabled = $this->boolean('enabled');
-        }
-        if (null !== $this->get('default')) {
-            $default = $this->boolean('default');
-        }
-
-        return [
-            'name'           => $this->string('name'),
-            'code'           => $this->string('code'),
-            'symbol'         => $this->string('symbol'),
-            'decimal_places' => $this->integer('decimal_places'),
-            'default'        => $default,
-            'enabled'        => $enabled,
+        // return nothing that isn't explicitely in the array:
+        // this is the way
+        $fields = [
+            'name'           => ['name', 'string'],
+            'code'           => ['code', 'string'],
+            'symbol'         => ['symbol', 'string'],
+            'decimal_places' => ['decimal_places', 'integer'],
+            'default'        => ['default', 'boolean'],
+            'enabled'        => ['enabled', 'boolean'],
         ];
+
+        // this is the way.
+        $return = $this->getAllData($fields);
+
+        return $return;
+
     }
 
     /**
@@ -71,7 +70,8 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $currency        = $this->route()->parameter('currency_code');
+        $currency = $this->route()->parameter('currency_code');
+
         return [
             'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
             'code'           => sprintf('between:3,3|unique:transaction_currencies,code,%d', $currency->id),

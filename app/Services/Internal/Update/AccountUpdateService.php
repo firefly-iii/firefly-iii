@@ -79,9 +79,9 @@ class AccountUpdateService
         $account    = $this->updateAccountOrder($account, $data);
 
         // find currency, or use default currency instead.
-        if (isset($data['currency_id']) && (null !== $data['currency_id'] || null !== $data['currency_code'])) {
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
-            unset($data['currency_code']);
+            unset($data['currency_code'], $data['currency_id']);
             $data['currency_id'] = $currency->id;
         }
 
