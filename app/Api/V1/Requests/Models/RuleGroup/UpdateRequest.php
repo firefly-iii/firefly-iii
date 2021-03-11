@@ -44,17 +44,15 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $active = true;
-
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-
-        return [
-            'title'       => $this->string('title'),
-            'description' => $this->string('description'),
-            'active'      => $active,
+        // This is the way.
+        $fields = [
+            'title'       => ['title', 'string'],
+            'description' => ['description', 'nlString'],
+            'active'      => ['active', 'boolean'],
+            'order'       => ['order', 'integer'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
@@ -65,8 +63,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $ruleGroup = $this->route()->parameter('ruleGroup');
+
         return [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
+            'title'       => 'between:1,100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
             'description' => 'between:1,5000|nullable',
             'active'      => [new IsBoolean],
         ];

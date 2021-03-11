@@ -31,6 +31,29 @@ use Illuminate\Support\Collection;
  */
 interface RuleGroupRepositoryInterface
 {
+
+    /**
+     * Make sure rule group order is correct in DB.
+     */
+    public function correctRuleGroupOrder(): void;
+
+    /**
+     *
+     * @param RuleGroup $ruleGroup
+     * @param int       $oldOrder
+     * @param int       $newOrder
+     *
+     * @return RuleGroup
+     */
+    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup;
+
+    /**
+     * Get highest possible order for a rule group.
+     *
+     * @return int
+     */
+    public function maxOrder(): int;
+
     /**
      * Delete everything.
      */

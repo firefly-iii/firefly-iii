@@ -87,8 +87,6 @@ trait AppendsLocationData
         $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
         $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
-        $hasLocationKey  = $this->getLocationKey($prefix, 'has_location');
-        $hasLocation     = $this->boolean($hasLocationKey) || true === ($data['has_location'] ?? false);
         $isValidPOST     = $this->isValidPost($prefix);
         $isValidPUT      = $this->isValidPUT($prefix);
         $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
@@ -202,10 +200,11 @@ trait AppendsLocationData
         return (
                    null === $this->get($longitudeKey)
                    && null === $this->get($latitudeKey)
-                   && null === $this->has($zoomLevelKey))
-               && (('PUT' === $this->method() && $this->routeIs('*.update'))
+                   && null === $this->get($zoomLevelKey))
+               && ('PUT' === $this->method()
                    || ('POST' === $this->method() && $this->routeIs('*.update'))
                );
+
     }
 
 }

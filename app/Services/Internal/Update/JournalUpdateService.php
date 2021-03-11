@@ -139,12 +139,14 @@ class JournalUpdateService
         $this->updateField('date');
         $this->updateField('order');
 
+
         $this->transactionJournal->save();
         $this->transactionJournal->refresh();
 
         $this->updateCategory();
         $this->updateBudget();
         $this->updateTags();
+        $this->updateReconciled();
         $this->updateNotes();
         $this->updateMeta();
         $this->updateCurrency();
@@ -749,5 +751,15 @@ class JournalUpdateService
             return;
         }
         Log::debug('No type field present.');
+    }
+
+    /**
+     *
+     */
+    private function updateReconciled(): void
+    {
+        if (array_key_exists('reconciled', $this->data) && is_bool($this->data['reconciled'])) {
+            $this->transactionJournal->transactions()->update(['reconciled' => $this->data['reconciled']]);
+        }
     }
 }

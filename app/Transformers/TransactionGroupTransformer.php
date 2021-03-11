@@ -538,7 +538,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'sepa_cc'       => $metaFieldData['sepa_cc'],
             'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
             'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_ddb'],
+            'sepa_db'       => $metaFieldData['sepa_db'],
             'sepa_country'  => $metaFieldData['sepa_country'],
             'sepa_ep'       => $metaFieldData['sepa_ep'],
             'sepa_ci'       => $metaFieldData['sepa_ci'],

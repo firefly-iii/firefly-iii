@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
+use DB;
 
 /**
  * Class RuleGroupRepository.
@@ -357,11 +358,25 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup
     {
         // update the account:
-        $ruleGroup->title       = $data['title'];
-        $ruleGroup->description = $data['description'];
-        $ruleGroup->active      = $data['active'];
+        if (array_key_exists('title', $data)) {
+            $ruleGroup->title = $data['title'];
+        }
+        if (array_key_exists('description', $data)) {
+            $ruleGroup->description = $data['description'];
+        }
+        if (array_key_exists('active', $data)) {
+            $ruleGroup->active = $data['active'];
+        }
+        // order
+        if (array_key_exists('order', $data) && $ruleGroup->order !== $data['order']) {
+            $this->correctRuleGroupOrder();
+            $max = $this->maxOrder();
+            // TODO also for bills and accounts:
+            $data['order'] = $data['order'] > $max ? $max : $data['order'];
+            $ruleGroup = $this->updateOrder($ruleGroup, $ruleGroup->order, $data['order']);
+        }
+
         $ruleGroup->save();
-        $this->resetRuleGroupOrder();
 
         return $ruleGroup;
     }
@@ -401,6 +416,59 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $search->orderBy('rule_groups.order', 'ASC')
                ->orderBy('rule_groups.title', 'ASC');
 
-        return $search->take($limit)->get(['id','title','description']);
+        return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function correctRuleGroupOrder(): void
+    {
+        $set   = $this->user
+            ->ruleGroups()
+            ->orderBy('order', 'ASC')
+            ->orderBy('active', 'DESC')
+            ->orderBy('title', 'ASC')
+            ->get(['rule_groups.id']);
+        $index = 1;
+        /** @var RuleGroup $ruleGroup */
+        foreach ($set as $ruleGroup) {
+            if ($ruleGroup->order !== $index) {
+                $ruleGroup->order = $index;
+                $ruleGroup->save();
+            }
+            $index++;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup
+    {
+        if ($newOrder > $oldOrder) {
+            $this->user->ruleGroups()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                       ->where('rule_groups.id', '!=', $ruleGroup->id)
+                       ->update(['order' => DB::raw('rule_groups.order-1')]);
+            $ruleGroup->order = $newOrder;
+            $ruleGroup->save();
+        }
+        if ($newOrder < $oldOrder) {
+            $this->user->ruleGroups()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                       ->where('rule_groups.id', '!=', $ruleGroup->id)
+                       ->update(['order' => DB::raw('rule_groups.order+1')]);
+            $ruleGroup->order = $newOrder;
+            $ruleGroup->save();
+        }
+
+        return $ruleGroup;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function maxOrder(): int
+    {
+        return (int)$this->user->ruleGroups()->max('order');
     }
 }
