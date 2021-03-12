@@ -121,7 +121,7 @@ class UpdateRequest extends FormRequest
             }
 
             if(array_key_exists('moment', $repetition)) {
-                $current['moment'] = $repetition['moment'];
+                $current['moment'] = (string)$repetition['moment'];
             }
 
             if(array_key_exists('skip', $repetition)) {
@@ -195,9 +195,9 @@ class UpdateRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
-                //$this->validateOneRecurrenceTransaction($validator);
-                //$this->validateOneRepetitionUpdate($validator);
-                //$this->validateRecurrenceRepetition($validator);
+                $this->validateOneRecurrenceTransaction($validator);
+                $this->validateOneRepetitionUpdate($validator);
+                $this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
                 $this->validateForeignCurrencyInformation($validator);
                 $this->valUpdateAccountInfo($validator);

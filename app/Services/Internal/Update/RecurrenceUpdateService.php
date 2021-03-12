@@ -100,6 +100,8 @@ class RecurrenceUpdateService
             // update each repetition or throw error yay
             $this->updateRepetitions($recurrence, $data['repetitions'] ?? []);
         }
+        // update all transactions:
+
 
 //        // update all transactions (and associated meta-data)
 //        if (array_key_exists('transactions', $data)) {
@@ -169,7 +171,8 @@ class RecurrenceUpdateService
                     'type'    => 'repetition_type',
                     'moment'  => 'repetition_moment',
                     'skip'    => 'repetition_skip',
-                    'weekend' => 'weekend',];
+                    'weekend' => 'weekend',
+                    ];
                 foreach ($fields as $field => $column) {
                     if (array_key_exists($field, $current)) {
                         $match->$column = $current[$field];
