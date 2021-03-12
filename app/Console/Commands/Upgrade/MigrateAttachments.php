@@ -72,7 +72,7 @@ class MigrateAttachments extends Command
         foreach ($attachments as $att) {
 
             // move description:
-            $attDescription = (string) $att->description;
+            $attDescription = (string)$att->description;
             if ('' !== $attDescription) {
 
                 // find or create note:
@@ -112,7 +112,7 @@ class MigrateAttachments extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false; // @codeCoverageIgnore

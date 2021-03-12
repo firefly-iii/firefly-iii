@@ -79,7 +79,7 @@ class AppendBudgetLimitPeriods extends Command
 
         $this->theresNoLimit();
 
-         $this->markAsExecuted();
+        $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Fixed budget limits in %s seconds.', $end));
@@ -98,6 +98,44 @@ class AppendBudgetLimitPeriods extends Command
         }
 
         return false; // @codeCoverageIgnore
+    }
+
+    /**
+     *
+     */
+    private function theresNoLimit(): void
+    {
+        $limits = BudgetLimit::whereNull('period')->get();
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $this->fixLimit($limit);
+        }
+    }
+
+    /**
+     * @param BudgetLimit $limit
+     */
+    private function fixLimit(BudgetLimit $limit)
+    {
+        $period = $this->getLimitPeriod($limit);
+
+        if (null === $period) {
+            $message = sprintf(
+                'Could not guesstimate budget limit #%d (%s - %s) period.', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d')
+            );
+            $this->warn($message);
+            Log::warning($message);
+
+            return;
+        }
+        $limit->period = $period;
+        $limit->save();
+
+        $msg = sprintf(
+            'Budget limit #%d (%s - %s) period is "%s".', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d'), $period
+        );
+        Log::debug($msg);
+
     }
 
     /**
@@ -159,38 +197,5 @@ class AppendBudgetLimitPeriods extends Command
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
-     *
-     */
-    private function theresNoLimit(): void
-    {
-        $limits = BudgetLimit::whereNull('period')->get();
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $this->fixLimit($limit);
-        }
-    }
-
-    /**
-     * @param BudgetLimit $limit
-     */
-    private function fixLimit(BudgetLimit $limit)
-    {
-        $period = $this->getLimitPeriod($limit);
-
-        if (null === $period) {
-            $message = sprintf('Could not guesstimate budget limit #%d (%s - %s) period.', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d'));
-            $this->warn($message);
-            Log::warning($message);
-            return;
-        }
-        $limit->period = $period;
-        $limit->save();
-
-        $msg = sprintf('Budget limit #%d (%s - %s) period is "%s".', $limit->id, $limit->start_date->format('Y-m-d'), $limit->end_date->format('Y-m-d'), $period);
-        Log::debug($msg);
-
     }
 }

@@ -112,122 +112,19 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
      *
-     * @return Transaction|null
+     * @codeCoverageIgnore
      */
-    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
+    private function stupidLaravel(): void
     {
-        $set = $journal->transactions->filter(
-            static function (Transaction $subject) use ($transaction) {
-                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;
-                $identifier = $transaction->identifier === $subject->identifier;
-                Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
-                Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
-
-                return $amount && $identifier;
-            }
-        );
-
-        return $set->first();
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    private function getDestinationTransactions(TransactionJournal $journal): Collection
-    {
-        return $journal->transactions->filter(
-            static function (Transaction $transaction) {
-                return $transaction->amount > 0;
-            }
-        );
-    }
-
-    /**
-     * @param Transaction $left
-     * @param Transaction $right
-     *
-     * @return int|null
-     */
-    private function getTransactionBudget(Transaction $left, Transaction $right): ?int
-    {
-        Log::debug('Now in getTransactionBudget()');
-
-        // try to get a budget ID from the left transaction:
-        /** @var Budget $budget */
-        $budget = $left->budgets()->first();
-        if (null !== $budget) {
-            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
-
-            return (int) $budget->id;
-        }
-
-        // try to get a budget ID from the right transaction:
-        /** @var Budget $budget */
-        $budget = $right->budgets()->first();
-        if (null !== $budget) {
-            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
-
-            return (int) $budget->id;
-        }
-        Log::debug('Neither left or right have a budget, return NULL');
-
-        // if all fails, return NULL.
-        return null;
-    }
-
-    /**
-     * @param Transaction $left
-     * @param Transaction $right
-     *
-     * @return int|null
-     */
-    private function getTransactionCategory(Transaction $left, Transaction $right): ?int
-    {
-        Log::debug('Now in getTransactionCategory()');
-
-        // try to get a category ID from the left transaction:
-        /** @var Category $category */
-        $category = $left->categories()->first();
-        if (null !== $category) {
-            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
-
-            return (int) $category->id;
-        }
-
-        // try to get a category ID from the left transaction:
-        /** @var Category $category */
-        $category = $right->categories()->first();
-        if (null !== $category) {
-            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
-
-            return (int) $category->id;
-        }
-        Log::debug('Neither left or right have a category, return NULL');
-
-        // if all fails, return NULL.
-        return null;
-    }
-
-    /**
-     * @param array $array
-     */
-    private function giveGroup(array $array): void
-    {
-        $groupId = DB::table('transaction_groups')->insertGetId(
-            [
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'title'      => null,
-                'user_id'    => $array['user_id'],
-            ]
-        );
-        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
-        $this->count++;
+        $this->count             = 0;
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->service           = app(JournalDestroyService::class);
+        $this->groupFactory      = app(TransactionGroupFactory::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 
     /**
@@ -237,30 +134,10 @@ class MigrateToGroups extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false; // @codeCoverageIgnore
-    }
-
-    /**
-     * Gives all journals without a group a group.
-     */
-    private function makeGroupsFromAll(): void
-    {
-        $orphanedJournals = $this->cliRepository->getJournalsWithoutGroup();
-        $total            = count($orphanedJournals);
-        if ($total > 0) {
-            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
-            $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $total));
-            /** @var array $journal */
-            foreach ($orphanedJournals as $array) {
-                $this->giveGroup($array);
-            }
-        }
-        if (0 === $total) {
-            $this->info('No need to convert transaction journals.');
-        }
     }
 
     /**
@@ -428,26 +305,149 @@ class MigrateToGroups extends Command
     }
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    private function getDestinationTransactions(TransactionJournal $journal): Collection
+    {
+        return $journal->transactions->filter(
+            static function (Transaction $transaction) {
+                return $transaction->amount > 0;
+            }
+        );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Transaction        $transaction
+     *
+     * @return Transaction|null
+     */
+    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
+    {
+        $set = $journal->transactions->filter(
+            static function (Transaction $subject) use ($transaction) {
+                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;
+                $identifier = $transaction->identifier === $subject->identifier;
+                Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
+                Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
+
+                return $amount && $identifier;
+            }
+        );
+
+        return $set->first();
+    }
+
+    /**
+     * @param Transaction $left
+     * @param Transaction $right
+     *
+     * @return int|null
+     */
+    private function getTransactionBudget(Transaction $left, Transaction $right): ?int
+    {
+        Log::debug('Now in getTransactionBudget()');
+
+        // try to get a budget ID from the left transaction:
+        /** @var Budget $budget */
+        $budget = $left->budgets()->first();
+        if (null !== $budget) {
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
+
+            return (int)$budget->id;
+        }
+
+        // try to get a budget ID from the right transaction:
+        /** @var Budget $budget */
+        $budget = $right->budgets()->first();
+        if (null !== $budget) {
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
+
+            return (int)$budget->id;
+        }
+        Log::debug('Neither left or right have a budget, return NULL');
+
+        // if all fails, return NULL.
+        return null;
+    }
+
+    /**
+     * @param Transaction $left
+     * @param Transaction $right
+     *
+     * @return int|null
+     */
+    private function getTransactionCategory(Transaction $left, Transaction $right): ?int
+    {
+        Log::debug('Now in getTransactionCategory()');
+
+        // try to get a category ID from the left transaction:
+        /** @var Category $category */
+        $category = $left->categories()->first();
+        if (null !== $category) {
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
+
+            return (int)$category->id;
+        }
+
+        // try to get a category ID from the left transaction:
+        /** @var Category $category */
+        $category = $right->categories()->first();
+        if (null !== $category) {
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
+
+            return (int)$category->id;
+        }
+        Log::debug('Neither left or right have a category, return NULL');
+
+        // if all fails, return NULL.
+        return null;
+    }
+
+    /**
+     * Gives all journals without a group a group.
+     */
+    private function makeGroupsFromAll(): void
+    {
+        $orphanedJournals = $this->cliRepository->getJournalsWithoutGroup();
+        $total            = count($orphanedJournals);
+        if ($total > 0) {
+            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
+            $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $total));
+            /** @var array $journal */
+            foreach ($orphanedJournals as $array) {
+                $this->giveGroup($array);
+            }
+        }
+        if (0 === $total) {
+            $this->info('No need to convert transaction journals.');
+        }
+    }
+
+    /**
+     * @param array $array
+     */
+    private function giveGroup(array $array): void
+    {
+        $groupId = DB::table('transaction_groups')->insertGetId(
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'title'      => null,
+                'user_id'    => $array['user_id'],
+            ]
+        );
+        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        $this->count++;
+    }
+
+    /**
      *
      */
     private function markAsMigrated(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-     * @codeCoverageIgnore
-     */
-    private function stupidLaravel(): void
-    {
-        $this->count             = 0;
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->service           = app(JournalDestroyService::class);
-        $this->groupFactory      = app(TransactionGroupFactory::class);
-        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 }

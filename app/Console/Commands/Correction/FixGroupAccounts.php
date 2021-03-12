@@ -62,12 +62,12 @@ class FixGroupAccounts extends Command
             ::groupBy('transaction_group_id')
             ->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
         foreach ($res as $journal) {
-            if ((int) $journal->the_count > 1) {
-                $groups[] = (int) $journal->transaction_group_id;
+            if ((int)$journal->the_count > 1) {
+                $groups[] = (int)$journal->transaction_group_id;
             }
         }
         $handler = new UpdatedGroupEventHandler;
-        foreach($groups as $groupId) {
+        foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
             $event = new UpdatedTransactionGroup($group);
             $handler->unifyAccounts($event);

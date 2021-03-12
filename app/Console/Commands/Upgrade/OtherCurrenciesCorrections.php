@@ -95,68 +95,20 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * @param Account $account
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
      *
-     * @return TransactionCurrency|null
+     * @codeCoverageIgnore
      */
-    private function getCurrency(Account $account): ?TransactionCurrency
+    private function stupidLaravel(): void
     {
-        $accountId = $account->id;
-        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null; // @codeCoverageIgnore
-        }
-        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
-        }
-        $currency = $this->accountRepos->getAccountCurrency($account);
-        if (null === $currency) {
-            // @codeCoverageIgnoreStart
-            $this->accountCurrencies[$accountId] = 0;
-
-            return null;
-            // @codeCoverageIgnoreEnd
-        }
-        $this->accountCurrencies[$accountId] = $currency;
-
-        return $currency;
-    }
-
-    /**
-     * Gets the transaction that determines the transaction that "leads" and will determine
-     * the currency to be used by all transactions, and the journal itself.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
-    private function getLeadTransaction(TransactionJournal $journal): ?Transaction
-    {
-        /** @var Transaction $lead */
-        $lead = null;
-        switch ($journal->transactionType->type) {
-            default:
-                break;
-            case TransactionType::WITHDRAWAL:
-                $lead = $journal->transactions()->where('amount', '<', 0)->first();
-                break;
-            case TransactionType::DEPOSIT:
-                $lead = $journal->transactions()->where('amount', '>', 0)->first();
-                break;
-            case TransactionType::OPENING_BALANCE:
-                // whichever isn't an initial balance account:
-                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
-                )->where('account_types.type', '!=', AccountType::INITIAL_BALANCE)->first(['transactions.*']);
-                break;
-            case TransactionType::RECONCILIATION:
-                // whichever isn't the reconciliation account:
-                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
-                )->where('account_types.type', '!=', AccountType::RECONCILIATION)->first(['transactions.*']);
-                break;
-        }
-
-        return $lead;
+        $this->count             = 0;
+        $this->accountCurrencies = [];
+        $this->accountRepos      = app(AccountRepositoryInterface::class);
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
+        $this->journalRepos      = app(JournalRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
 
     /**
@@ -173,28 +125,21 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     *
+     * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
+     * the accounts they are linked to.
+     * Both source and destination must match the respective currency preference of the related asset account.
+     * So FF3 must verify all transactions.
      */
-    private function markAsExecuted(): void
+    private function updateOtherJournalsCurrencies(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
+        $set = $this->cliRepos->getAllJournals(
+            [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,]
+        );
 
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     *
-     * @codeCoverageIgnore
-     */
-    private function stupidLaravel(): void
-    {
-        $this->count             = 0;
-        $this->accountCurrencies = [];
-        $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->journalRepos      = app(JournalRepositoryInterface::class);
-        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            $this->updateJournalCurrency($journal);
+        }
     }
 
     /**
@@ -256,20 +201,75 @@ class OtherCurrenciesCorrections extends Command
     }
 
     /**
-     * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
-     * the accounts they are linked to.
-     * Both source and destination must match the respective currency preference of the related asset account.
-     * So FF3 must verify all transactions.
+     * Gets the transaction that determines the transaction that "leads" and will determine
+     * the currency to be used by all transactions, and the journal itself.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction|null
      */
-    private function updateOtherJournalsCurrencies(): void
+    private function getLeadTransaction(TransactionJournal $journal): ?Transaction
     {
-        $set = $this->cliRepos->getAllJournals(
-            [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,]
-        );
-
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $this->updateJournalCurrency($journal);
+        /** @var Transaction $lead */
+        $lead = null;
+        switch ($journal->transactionType->type) {
+            default:
+                break;
+            case TransactionType::WITHDRAWAL:
+                $lead = $journal->transactions()->where('amount', '<', 0)->first();
+                break;
+            case TransactionType::DEPOSIT:
+                $lead = $journal->transactions()->where('amount', '>', 0)->first();
+                break;
+            case TransactionType::OPENING_BALANCE:
+                // whichever isn't an initial balance account:
+                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
+                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                )->where('account_types.type', '!=', AccountType::INITIAL_BALANCE)->first(['transactions.*']);
+                break;
+            case TransactionType::RECONCILIATION:
+                // whichever isn't the reconciliation account:
+                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
+                    'account_types', 'accounts.account_type_id', '=', 'account_types.id'
+                )->where('account_types.type', '!=', AccountType::RECONCILIATION)->first(['transactions.*']);
+                break;
         }
+
+        return $lead;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    private function getCurrency(Account $account): ?TransactionCurrency
+    {
+        $accountId = $account->id;
+        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
+            return null; // @codeCoverageIgnore
+        }
+        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
+            return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
+        }
+        $currency = $this->accountRepos->getAccountCurrency($account);
+        if (null === $currency) {
+            // @codeCoverageIgnoreStart
+            $this->accountCurrencies[$accountId] = 0;
+
+            return null;
+            // @codeCoverageIgnoreEnd
+        }
+        $this->accountCurrencies[$accountId] = $currency;
+
+        return $currency;
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

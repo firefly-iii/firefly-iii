@@ -74,6 +74,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereWebhookMessageId($value)
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder|WebhookAttempt onlyTrashed()
+ * @method static \Illuminate\Database\Query\Builder|WebhookAttempt withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|WebhookAttempt withoutTrashed()
  */
 class WebhookAttempt extends Model
 {

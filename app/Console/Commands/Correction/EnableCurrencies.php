@@ -64,35 +64,39 @@ class EnableCurrencies extends Command
         /** @var Collection $meta */
         $meta = AccountMeta::where('name', 'currency_id')->groupBy('data')->get(['data']);
         foreach ($meta as $entry) {
-            $found[] = (int) $entry->data;
+            $found[] = (int)$entry->data;
         }
 
         // get all from journals:
         /** @var Collection $journals */
         $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
-            $found[] = (int) $entry->transaction_currency_id;
+            $found[] = (int)$entry->transaction_currency_id;
         }
 
         // get all from transactions
         /** @var Collection $transactions */
-        $transactions = Transaction::groupBy('transaction_currency_id', 'foreign_currency_id')->get(['transaction_currency_id','foreign_currency_id']);
+        $transactions = Transaction::groupBy('transaction_currency_id', 'foreign_currency_id')->get(['transaction_currency_id', 'foreign_currency_id']);
         foreach ($transactions as $entry) {
-            $found[] = (int) $entry->transaction_currency_id;
-            $found[] = (int) $entry->foreign_currency_id;
+            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = (int)$entry->foreign_currency_id;
         }
 
         // get all from budget limits
         /** @var Collection $limits */
         $limits = BudgetLimit::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($limits as $entry) {
-            $found[] = (int) $entry->transaction_currency_id;
+            $found[] = (int)$entry->transaction_currency_id;
         }
 
         $found   = array_values(array_unique($found));
-        $found   = array_values(array_filter($found, function (int $currencyId) {
-            return $currencyId !== 0;
-        }));
+        $found   = array_values(
+            array_filter(
+                $found, function (int $currencyId) {
+                return $currencyId !== 0;
+            }
+            )
+        );
         $message = sprintf('%d different currencies are currently in use.', count($found));
         $this->info($message);
         Log::debug($message, $found);

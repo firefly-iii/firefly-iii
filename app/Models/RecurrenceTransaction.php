@@ -74,6 +74,8 @@ use Illuminate\Support\Collection;
  * @method static Builder|RecurrenceTransaction withTrashed()
  * @method static Builder|RecurrenceTransaction withoutTrashed()
  * @mixin Eloquent
+ * @property int|null $transaction_type_id
+ * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
  */
 class RecurrenceTransaction extends Model
 {

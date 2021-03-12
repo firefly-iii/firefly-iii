@@ -62,6 +62,38 @@ class DeleteEmptyJournals extends Command
         return 0;
     }
 
+    /**
+     * Delete transactions and their journals if they have an uneven number of transactions.
+     */
+    private function deleteUnevenJournals(): void
+    {
+        $set   = Transaction
+            ::whereNull('deleted_at')
+            ->groupBy('transactions.transaction_journal_id')
+            ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
+        $total = 0;
+        foreach ($set as $row) {
+            $count = (int)$row->the_count;
+            if (1 === $count % 2) {
+                // uneven number, delete journal and transactions:
+                try {
+                    TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                    // @codeCoverageIgnoreStart
+                } catch (Exception $e) {
+                    Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
+                }
+                // @codeCoverageIgnoreEnd
+
+                Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
+                $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
+                $total++;
+            }
+        }
+        if (0 === $total) {
+            $this->info('No uneven transaction journals.');
+        }
+    }
+
     private function deleteEmptyJournals(): void
     {
         $start = microtime(true);
@@ -88,38 +120,6 @@ class DeleteEmptyJournals extends Command
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified empty journals in %s seconds', $end));
-    }
-
-    /**
-     * Delete transactions and their journals if they have an uneven number of transactions.
-     */
-    private function deleteUnevenJournals(): void
-    {
-        $set   = Transaction
-            ::whereNull('deleted_at')
-            ->groupBy('transactions.transaction_journal_id')
-            ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
-        $total = 0;
-        foreach ($set as $row) {
-            $count = (int) $row->the_count;
-            if (1 === $count % 2) {
-                // uneven number, delete journal and transactions:
-                try {
-                    TransactionJournal::find((int) $row->transaction_journal_id)->delete();
-                    // @codeCoverageIgnoreStart
-                } catch (Exception $e) {
-                    Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
-                }
-                // @codeCoverageIgnoreEnd
-
-                Transaction::where('transaction_journal_id', (int) $row->transaction_journal_id)->delete();
-                $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
-                $total++;
-            }
-        }
-        if (0 === $total) {
-            $this->info('No uneven transaction journals.');
-        }
     }
 
 }

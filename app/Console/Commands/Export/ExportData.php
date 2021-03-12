@@ -147,108 +147,16 @@ class ExportData extends Command
     }
 
     /**
-     * @param array $options
-     * @param array $data
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
      *
-     * @throws FireflyException
+     * @codeCoverageIgnore
      */
-    private function exportData(array $options, array $data): void
+    private function stupidLaravel(): void
     {
-        $date = date('Y_m_d');
-        foreach ($data as $key => $content) {
-            $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
-            if (false === $options['force'] && file_exists($file)) {
-                throw new FireflyException(sprintf('File "%s" exists already. Use --force to overwrite.', $file));
-            }
-            if (true === $options['force'] && file_exists($file)) {
-                $this->warn(sprintf('File "%s" exists already but will be replaced.', $file));
-            }
-            // continue to write to file.
-            file_put_contents($file, $content);
-            $this->info(sprintf('Wrote %s-export to file "%s".', $key, $file));
-        }
-    }
-
-    /**
-     * @return Collection
-     * @throws FireflyException
-     */
-    private function getAccountsParameter(): Collection
-    {
-        $final       = new Collection;
-        $accounts    = new Collection;
-        $accountList = $this->option('accounts');
-        $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
-            $accountIds = explode(',', $accountList);
-            $accounts   = $this->accountRepository->getAccountsById($accountIds);
-        }
-        if (null === $accountList) {
-            $accounts = $this->accountRepository->getAccountsByType($types);
-        }
-        // filter accounts,
-        /** @var AccountType $account */
-        foreach ($accounts as $account) {
-            if (in_array($account->accountType->type, $types, true)) {
-                $final->push($account);
-            }
-        }
-        if (0 === $final->count()) {
-            throw new FireflyException('Ended up with zero valid accounts to export from.');
-        }
-
-        return $final;
-    }
-
-    /**
-     * @param string $field
-     *
-     * @return Carbon
-     * @throws Exception
-     */
-    private function getDateParameter(string $field): Carbon
-    {
-        $date = Carbon::now()->subYear();
-        $error = false;
-        if (null !== $this->option($field)) {
-            try {
-                $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
-            } catch (InvalidArgumentException $e) {
-                Log::error($e->getMessage());
-                $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
-                $error = true;
-            }
-        }
-        if (false === $error && 'start' === $field) {
-            $journal = $this->journalRepository->firstNull();
-            $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
-            $date->startOfDay();
-        }
-        if (false === $error && 'end' === $field) {
-            $date = today(config('app.timezone'));
-            $date->endOfDay();
-        }
-
-        // fallback
-        return $date;
-    }
-
-    /**
-     * @return string
-     * @throws FireflyException
-     *
-     */
-    private function getExportDirectory(): string
-    {
-        $directory = (string)$this->option('export_directory');
-        if (null === $directory) {
-            $directory = './';
-        }
-        if (!is_writable($directory)) {
-            throw new FireflyException(sprintf('Directory "%s" isn\'t writeable.', $directory));
-        }
-
-        return $directory;
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -283,16 +191,108 @@ class ExportData extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
+     * @param string $field
      *
-     * @codeCoverageIgnore
+     * @return Carbon
+     * @throws Exception
      */
-    private function stupidLaravel(): void
+    private function getDateParameter(string $field): Carbon
     {
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $date  = Carbon::now()->subYear();
+        $error = false;
+        if (null !== $this->option($field)) {
+            try {
+                $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
+            } catch (InvalidArgumentException $e) {
+                Log::error($e->getMessage());
+                $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
+                $error = true;
+            }
+        }
+        if (false === $error && 'start' === $field) {
+            $journal = $this->journalRepository->firstNull();
+            $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
+            $date->startOfDay();
+        }
+        if (false === $error && 'end' === $field) {
+            $date = today(config('app.timezone'));
+            $date->endOfDay();
+        }
+
+        // fallback
+        return $date;
+    }
+
+    /**
+     * @return Collection
+     * @throws FireflyException
+     */
+    private function getAccountsParameter(): Collection
+    {
+        $final       = new Collection;
+        $accounts    = new Collection;
+        $accountList = $this->option('accounts');
+        $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        if (null !== $accountList && '' !== (string)$accountList) {
+            $accountIds = explode(',', $accountList);
+            $accounts   = $this->accountRepository->getAccountsById($accountIds);
+        }
+        if (null === $accountList) {
+            $accounts = $this->accountRepository->getAccountsByType($types);
+        }
+        // filter accounts,
+        /** @var AccountType $account */
+        foreach ($accounts as $account) {
+            if (in_array($account->accountType->type, $types, true)) {
+                $final->push($account);
+            }
+        }
+        if (0 === $final->count()) {
+            throw new FireflyException('Ended up with zero valid accounts to export from.');
+        }
+
+        return $final;
+    }
+
+    /**
+     * @return string
+     * @throws FireflyException
+     *
+     */
+    private function getExportDirectory(): string
+    {
+        $directory = (string)$this->option('export_directory');
+        if (null === $directory) {
+            $directory = './';
+        }
+        if (!is_writable($directory)) {
+            throw new FireflyException(sprintf('Directory "%s" isn\'t writeable.', $directory));
+        }
+
+        return $directory;
+    }
+
+    /**
+     * @param array $options
+     * @param array $data
+     *
+     * @throws FireflyException
+     */
+    private function exportData(array $options, array $data): void
+    {
+        $date = date('Y_m_d');
+        foreach ($data as $key => $content) {
+            $file = sprintf('%s%s_%s.csv', $options['directory'], $date, $key);
+            if (false === $options['force'] && file_exists($file)) {
+                throw new FireflyException(sprintf('File "%s" exists already. Use --force to overwrite.', $file));
+            }
+            if (true === $options['force'] && file_exists($file)) {
+                $this->warn(sprintf('File "%s" exists already but will be replaced.', $file));
+            }
+            // continue to write to file.
+            file_put_contents($file, $content);
+            $this->info(sprintf('Wrote %s-export to file "%s".', $key, $file));
+        }
     }
 
 
