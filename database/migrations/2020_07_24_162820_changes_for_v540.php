@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV540
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV540 extends Migration
@@ -85,8 +86,10 @@ class ChangesForV540 extends Migration
 
 
         // make column nullable:
-        Schema::table('oauth_clients', function (Blueprint $table) {
+        Schema::table(
+            'oauth_clients', function (Blueprint $table) {
             $table->string('secret', 100)->nullable()->change();
-        });
+        }
+        );
     }
 }

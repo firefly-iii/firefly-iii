@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV470.
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV470 extends Migration

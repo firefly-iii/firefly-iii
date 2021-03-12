@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class FixLdapConfiguration.
+ *
  * @codeCoverageIgnore
  */
 class FixLdapConfiguration extends Migration
@@ -40,8 +41,8 @@ class FixLdapConfiguration extends Migration
     {
         Schema::table(
             'users', static function (Blueprint $table) {
-                $table->dropColumn(['objectguid']);
-            }
+            $table->dropColumn(['objectguid']);
+        }
         );
     }
 
@@ -59,8 +60,8 @@ class FixLdapConfiguration extends Migration
          */
         Schema::table(
             'users', static function (Blueprint $table) {
-                $table->uuid('objectguid')->nullable()->after('id');
-            }
+            $table->uuid('objectguid')->nullable()->after('id');
+        }
         );
     }
 }
