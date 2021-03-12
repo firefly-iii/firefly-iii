@@ -42,6 +42,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     private User $user;
 
     /**
+     * Delete all available budgets.
+     */
+    public function destroyAll(): void
+    {
+        $this->user->availableBudgets()->delete();
+    }
+
+    /**
      * @param AvailableBudget $availableBudget
      */
     public function destroyAvailableBudget(AvailableBudget $availableBudget): void
@@ -172,6 +180,18 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget
+    {
+        return $this->user
+            ->availableBudgets()
+            ->where('transaction_currency_id', $currency->id)
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->first();
+    }
+
+    /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
      * @param Carbon              $end
@@ -215,13 +235,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     public function store(array $data): ?AvailableBudget
     {
         $start = $data['start'];
-        if($start instanceof Carbon) {
+        if ($start instanceof Carbon) {
             $start = $data['start']->startOfDay();
         }
         $end = $data['end'];
-        if($end instanceof Carbon) {
+        if ($end instanceof Carbon) {
             $end = $data['end']->endOfDay();
         }
+
         return AvailableBudget::create(
             [
                 'user_id'                 => $this->user->id,
@@ -271,11 +292,11 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         $start = $data['start'];
-        if($start instanceof Carbon) {
+        if ($start instanceof Carbon) {
             $start = $data['start']->startOfDay();
         }
         $end = $data['end'];
-        if($end instanceof Carbon) {
+        if ($end instanceof Carbon) {
             $end = $data['end']->endOfDay();
         }
 
@@ -287,25 +308,5 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
         return $availableBudget;
 
-    }
-
-    /**
-     * Delete all available budgets.
-     */
-    public function destroyAll(): void
-    {
-        $this->user->availableBudgets()->delete();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget
-    {
-        return $this->user
-            ->availableBudgets()
-            ->where('transaction_currency_id', $currency->id)
-            ->where('start_date', $start->format('Y-m-d'))
-            ->where('end_date', $end->format('Y-m-d'))->first();
     }
 }

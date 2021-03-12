@@ -37,11 +37,6 @@ interface BudgetLimitRepositoryInterface
 {
 
     /**
-     * Destroy all budget limits.
-     */
-    public function destroyAll(): void;
-
-    /**
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.
      *
@@ -53,6 +48,11 @@ interface BudgetLimitRepositoryInterface
      * @return string
      */
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
+
+    /**
+     * Destroy all budget limits.
+     */
+    public function destroyAll(): void;
 
     /**
      * Destroy a budget limit.

@@ -42,6 +42,49 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function deleteAll(): void
+    {
+        $all = $this->get();
+        /** @var ObjectGroup $group */
+        foreach ($all as $group) {
+            $group->piggyBanks()->sync([]);
+            $group->bills()->sync([]);
+            $group->delete();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteEmpty(): void
+    {
+        $all = $this->get();
+        /** @var ObjectGroup $group */
+        foreach ($all as $group) {
+            $count = DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
+            if (0 === $count) {
+                $group->delete();
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroy(ObjectGroup $objectGroup): void
+    {
+        $list = $objectGroup->piggyBanks;
+        /** @var PiggyBank $piggy */
+        foreach ($list as $piggy) {
+            $piggy->objectGroups()->sync([]);
+            $piggy->save();
+        }
+        $objectGroup->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function get(): Collection
     {
         return $this->user->objectGroups()
@@ -50,8 +93,24 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getBills(ObjectGroup $objectGroup): Collection
+    {
+        return $objectGroup->bills;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPiggyBanks(ObjectGroup $objectGroup): Collection
+    {
+        return $objectGroup->piggyBanks;
+    }
+
+    /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -74,16 +133,15 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function deleteEmpty(): void
+    public function setOrder(ObjectGroup $objectGroup, int $order): ObjectGroup
     {
-        $all = $this->get();
-        /** @var ObjectGroup $group */
-        foreach ($all as $group) {
-            $count = DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
-            if (0 === $count) {
-                $group->delete();
-            }
-        }
+        $order              = 0 === $order ? 1 : $order;
+        $objectGroup->order = $order;
+        $objectGroup->save();
+
+        Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $order));
+
+        return $objectGroup;
     }
 
     /**
@@ -105,20 +163,6 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function setOrder(ObjectGroup $objectGroup, int $order): ObjectGroup
-    {
-        $order              = 0 === $order ? 1 : $order;
-        $objectGroup->order = $order;
-        $objectGroup->save();
-
-        Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $order));
-
-        return $objectGroup;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
         $objectGroup->title = $data['title'];
@@ -134,54 +178,10 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function destroy(ObjectGroup $objectGroup): void
-    {
-        $list = $objectGroup->piggyBanks;
-        /** @var PiggyBank $piggy */
-        foreach($list as $piggy) {
-            $piggy->objectGroups()->sync([]);
-            $piggy->save();
-        }
-        $objectGroup->delete();
-    }
-
-    /**
      * @param User $user
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getPiggyBanks(ObjectGroup $objectGroup): Collection
-    {
-        return $objectGroup->piggyBanks;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBills(ObjectGroup $objectGroup): Collection
-    {
-        return $objectGroup->bills;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function deleteAll(): void
-    {
-        $all = $this->get();
-        /** @var ObjectGroup $group */
-        foreach ($all as $group) {
-            $group->piggyBanks()->sync([]);
-            $group->bills()->sync([]);
-            $group->delete();
-        }
     }
 }

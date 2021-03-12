@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
@@ -110,7 +109,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'source_account_id'        => $journal['source_account_id'],
                 'budget_name'              => $journal['budget_name'],
                 'source_account_name'      => $journal['source_account_name'],
-                'destination_account_id' => $journal['destination_account_id'],
+                'destination_account_id'   => $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],

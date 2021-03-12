@@ -49,7 +49,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param Attachment $attachment
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Attachment $attachment): bool
     {
@@ -111,7 +111,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             try {
                 $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                    $unencryptedContent = $encryptedContent;
+                $unencryptedContent = $encryptedContent;
             }
         }
 

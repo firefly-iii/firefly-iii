@@ -57,7 +57,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param LinkType $moveTo
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(LinkType $linkType, LinkType $moveTo = null): bool
     {
@@ -73,7 +73,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
@@ -309,14 +309,14 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function update(LinkType $linkType, array $data): LinkType
     {
-        if(array_key_exists('name', $data) && '' !== (string)$data['name']) {
-            $linkType->name    = $data['name'];
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
+            $linkType->name = $data['name'];
         }
-        if(array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
-            $linkType->inward    = $data['inward'];
+        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
+            $linkType->inward = $data['inward'];
         }
-        if(array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
-            $linkType->outward    = $data['outward'];
+        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
+            $linkType->outward = $data['outward'];
         }
         $linkType->save();
 
@@ -338,7 +338,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $journalLink->save();
         if (array_key_exists('link_type_name', $data)) {
             $linkType = LinkType::whereName($data['link_type_name'])->first();
-            if(null !== $linkType) {
+            if (null !== $linkType) {
                 $journalLink->link_type_id = $linkType->id;
                 $journalLink->save();
             }
@@ -362,7 +362,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournalLink $link
      * @param string                 $text
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function setNoteText(TransactionJournalLink $link, string $text): void
     {

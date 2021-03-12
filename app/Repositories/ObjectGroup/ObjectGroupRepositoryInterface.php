@@ -33,33 +33,24 @@ use Illuminate\Support\Collection;
 interface ObjectGroupRepositoryInterface
 {
     /**
-     * @return Collection
-     */
-    public function get(): Collection;
-
-    /**
-     * @param string $query
-     * @param int $limit
-     *
-     * @return Collection
-     */
-    public function search(string $query, int $limit): Collection;
-
-    /**
-     * Delete empty ones.
-     */
-    public function deleteEmpty(): void;
-    /**
      * Delete all.
      */
     public function deleteAll(): void;
 
     /**
+     * Delete empty ones.
+     */
+    public function deleteEmpty(): void;
+
+    /**
      * @param ObjectGroup $objectGroup
-     *
+     */
+    public function destroy(ObjectGroup $objectGroup): void;
+
+    /**
      * @return Collection
      */
-    public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
+    public function get(): Collection;
 
     /**
      * @param ObjectGroup $objectGroup
@@ -69,9 +60,19 @@ interface ObjectGroupRepositoryInterface
     public function getBills(ObjectGroup $objectGroup): Collection;
 
     /**
-     * Sort
+     * @param ObjectGroup $objectGroup
+     *
+     * @return Collection
      */
-    public function sort(): void;
+    public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function search(string $query, int $limit): Collection;
 
     /**
      * @param ObjectGroup $objectGroup
@@ -82,16 +83,16 @@ interface ObjectGroupRepositoryInterface
     public function setOrder(ObjectGroup $objectGroup, int $index): ObjectGroup;
 
     /**
+     * Sort
+     */
+    public function sort(): void;
+
+    /**
      * @param ObjectGroup $objectGroup
      * @param array       $data
      *
      * @return ObjectGroup
      */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup;
-
-    /**
-     * @param ObjectGroup $objectGroup
-     */
-    public function destroy(ObjectGroup $objectGroup): void;
 
 }

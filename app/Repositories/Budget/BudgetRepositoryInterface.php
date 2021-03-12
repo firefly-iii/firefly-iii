@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Models\AutoBudget;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -34,36 +34,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-    /**
-     * Destroy all budgets.
-     */
-    public function destroyAll(): void;
-
-    /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getAttachments(Budget $budget): Collection;
-
-    /**
-     * @param Budget $budget
-     *
-     * @return AutoBudget|null
-     */
-    public function getAutoBudget(Budget $budget): ?AutoBudget;
-
-    /**
-     * @param Budget $budget
-     */
-    public function destroyAutoBudget(Budget $budget): void;
-
-    /**
-     * @return int
-     */
-    public function getMaxOrder(): int;
-
-
     /**
      * @return bool
      */
@@ -75,6 +45,16 @@ interface BudgetRepositoryInterface
      * @return bool
      */
     public function destroy(Budget $budget): bool;
+
+    /**
+     * Destroy all budgets.
+     */
+    public function destroyAll(): void;
+
+    /**
+     * @param Budget $budget
+     */
+    public function destroyAutoBudget(Budget $budget): void;
 
     /**
      * @param int|null    $budgetId
@@ -118,6 +98,20 @@ interface BudgetRepositoryInterface
     public function getActiveBudgets(): Collection;
 
     /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getAttachments(Budget $budget): Collection;
+
+    /**
+     * @param Budget $budget
+     *
+     * @return AutoBudget|null
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget;
+
+    /**
      * @return Collection
      */
     public function getBudgets(): Collection;
@@ -137,8 +131,14 @@ interface BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection;
 
     /**
+     * @return int
+     */
+    public function getMaxOrder(): int;
+
+    /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return Collection
      */
     public function searchBudget(string $query, int $limit): Collection;

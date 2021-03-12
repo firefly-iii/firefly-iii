@@ -22,13 +22,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
+use DB;
+use Exception;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Log;
-use DB;
 
 /**
  * Class RuleGroupRepository.
@@ -36,6 +37,28 @@ use DB;
 class RuleGroupRepository implements RuleGroupRepositoryInterface
 {
     private User $user;
+
+    /**
+     * @inheritDoc
+     */
+    public function correctRuleGroupOrder(): void
+    {
+        $set   = $this->user
+            ->ruleGroups()
+            ->orderBy('order', 'ASC')
+            ->orderBy('active', 'DESC')
+            ->orderBy('title', 'ASC')
+            ->get(['rule_groups.id']);
+        $index = 1;
+        /** @var RuleGroup $ruleGroup */
+        foreach ($set as $ruleGroup) {
+            if ($ruleGroup->order !== $index) {
+                $ruleGroup->order = $index;
+                $ruleGroup->save();
+            }
+            $index++;
+        }
+    }
 
     /**
      * @return int
@@ -50,7 +73,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      * @param RuleGroup|null $moveTo
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
@@ -76,52 +99,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function resetRuleGroupOrder(): bool
+    public function destroyAll(): void
     {
-        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $this->user
-            ->ruleGroups()
-            ->orderBy('order', 'ASC')->get();
-        $count = 1;
-        /** @var RuleGroup $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-
-            // also update rules in group.
-            $this->resetRulesInGroupOrder($entry);
-
-            ++$count;
+        $groups = $this->get();
+        /** @var RuleGroup $group */
+        foreach ($groups as $group) {
+            $group->rules()->delete();
+            $group->delete();
         }
-
-        return true;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
-    {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get();
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            ++$count;
-        }
-
-        return true;
     }
 
     /**
@@ -137,6 +124,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         }
 
         return $group;
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return RuleGroup|null
+     */
+    public function findByTitle(string $title): ?RuleGroup
+    {
+        return $this->user->ruleGroups()->where('title', $title)->first();
     }
 
     /**
@@ -195,6 +192,16 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->where('rule_triggers.trigger_value', 'update-journal')
                      ->where('rules.active', 1)
                      ->get(['rules.*']);
+    }
+
+    /**
+     * @return int
+     */
+    public function getHighestOrderRuleGroup(): int
+    {
+        $entry = $this->user->ruleGroups()->max('order');
+
+        return (int)$entry;
     }
 
     /**
@@ -262,6 +269,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function maxOrder(): int
+    {
+        return (int)$this->user->ruleGroups()->max('order');
+    }
+
+    /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
@@ -308,6 +323,70 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
+     * @return bool
+     */
+    public function resetRuleGroupOrder(): bool
+    {
+        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $this->user
+            ->ruleGroups()
+            ->orderBy('order', 'ASC')->get();
+        $count = 1;
+        /** @var RuleGroup $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+
+            // also update rules in group.
+            $this->resetRulesInGroupOrder($entry);
+
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return bool
+     */
+    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
+    {
+        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
+
+        $set   = $ruleGroup->rules()
+                           ->orderBy('order', 'ASC')
+                           ->orderBy('updated_at', 'DESC')
+                           ->get();
+        $count = 1;
+        /** @var Rule $entry */
+        foreach ($set as $entry) {
+            $entry->order = $count;
+            $entry->save();
+            ++$count;
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchRuleGroup(string $query, int $limit): Collection
+    {
+        $search = $this->user->ruleGroups();
+        if ('' !== $query) {
+            $search->where('rule_groups.title', 'LIKE', sprintf('%%%s%%', $query));
+        }
+        $search->orderBy('rule_groups.order', 'ASC')
+               ->orderBy('rule_groups.title', 'ASC');
+
+        return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -340,16 +419,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @return int
-     */
-    public function getHighestOrderRuleGroup(): int
-    {
-        $entry = $this->user->ruleGroups()->max('order');
-
-        return (int)$entry;
-    }
-
-    /**
      * @param RuleGroup $ruleGroup
      * @param array     $data
      *
@@ -373,72 +442,12 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             $max = $this->maxOrder();
             // TODO also for bills and accounts:
             $data['order'] = $data['order'] > $max ? $max : $data['order'];
-            $ruleGroup = $this->updateOrder($ruleGroup, $ruleGroup->order, $data['order']);
+            $ruleGroup     = $this->updateOrder($ruleGroup, $ruleGroup->order, $data['order']);
         }
 
         $ruleGroup->save();
 
         return $ruleGroup;
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return RuleGroup|null
-     */
-    public function findByTitle(string $title): ?RuleGroup
-    {
-        return $this->user->ruleGroups()->where('title', $title)->first();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroyAll(): void
-    {
-        $groups = $this->get();
-        /** @var RuleGroup $group */
-        foreach ($groups as $group) {
-            $group->rules()->delete();
-            $group->delete();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function searchRuleGroup(string $query, int $limit): Collection
-    {
-        $search = $this->user->ruleGroups();
-        if ('' !== $query) {
-            $search->where('rule_groups.title', 'LIKE', sprintf('%%%s%%', $query));
-        }
-        $search->orderBy('rule_groups.order', 'ASC')
-               ->orderBy('rule_groups.title', 'ASC');
-
-        return $search->take($limit)->get(['id', 'title', 'description']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function correctRuleGroupOrder(): void
-    {
-        $set   = $this->user
-            ->ruleGroups()
-            ->orderBy('order', 'ASC')
-            ->orderBy('active', 'DESC')
-            ->orderBy('title', 'ASC')
-            ->get(['rule_groups.id']);
-        $index = 1;
-        /** @var RuleGroup $ruleGroup */
-        foreach ($set as $ruleGroup) {
-            if ($ruleGroup->order !== $index) {
-                $ruleGroup->order = $index;
-                $ruleGroup->save();
-            }
-            $index++;
-        }
     }
 
     /**
@@ -462,13 +471,5 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         }
 
         return $ruleGroup;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function maxOrder(): int
-    {
-        return (int)$this->user->ruleGroups()->max('order');
     }
 }

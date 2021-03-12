@@ -88,8 +88,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                        );
                 }
             )
-
-
             ->where('budget_limits.transaction_currency_id', $currency->id)
             ->whereNull('budgets.deleted_at')
             ->where('budgets.user_id', $this->user->id);
@@ -105,6 +103,18 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Destroy all budget limits.
+     */
+    public function destroyAll(): void
+    {
+        $budgets = $this->user->budgets()->get();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $budget->budgetlimits()->delete();
+        }
     }
 
     /**
@@ -168,8 +178,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }
+
             return $query->get(['budget_limits.*']);
         }
+
         // neither are NULL:
         return BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                           ->with(['budget'])
@@ -244,6 +256,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                 // start date must be after $start.
                 $query->where('start_date', '>=', $start->format('Y-m-d 00:00:00'));
             }
+
             return $query->get(['budget_limits.*']);
         }
 
@@ -307,7 +320,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $currency->save();
 
         // find the budget:
-        $budget = $this->user->budgets()->find((int) $data['budget_id']);
+        $budget = $this->user->budgets()->find((int)$data['budget_id']);
         if (null === $budget) {
             throw new FireflyException('200004: Budget does not exist.'); // @codeCoverageIgnore
         }
@@ -344,7 +357,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
      */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
-        $budgetLimit->amount     = array_key_exists('amount',$data) ? $data['amount'] : $budgetLimit->amount;
+        $budgetLimit->amount     = array_key_exists('amount', $data) ? $data['amount'] : $budgetLimit->amount;
         $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->budget_id;
         $budgetLimit->start_date = array_key_exists('start_date', $data) ? $data['start_date']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
         $budgetLimit->end_date   = array_key_exists('end_date', $data) ? $data['end_date']->format('Y-m-d 23:59:59') : $budgetLimit->end_date;
@@ -353,13 +366,13 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $currency = null;
 
         // update if relevant:
-        if(array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             /** @var TransactionCurrencyFactory $factory */
             $factory  = app(TransactionCurrencyFactory::class);
             $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
         }
         // catch unexpected null:
-        if(null === $currency) {
+        if (null === $currency) {
             $currency = $budgetLimit->transactionCurrency ?? app('amount')->getDefaultCurrencyByUser($this->user);
         }
         $currency->enabled = true;
@@ -440,17 +453,5 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
 
         return $limit;
-    }
-
-    /**
-     * Destroy all budget limits.
-     */
-    public function destroyAll(): void
-    {
-        $budgets = $this->user->budgets()->get();
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            $budget->budgetlimits()->delete();
-        }
     }
 }

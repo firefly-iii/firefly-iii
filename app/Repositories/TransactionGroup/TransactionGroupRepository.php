@@ -178,6 +178,17 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getLocation(int $journalId): ?Location
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->locations()->first();
+    }
+
+    /**
      * Return object with all found meta field things as Carbon objects.
      *
      * @param int   $journalId
@@ -266,7 +277,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ->get(['piggy_bank_events.*']);
         /** @var PiggyBankEvent $row */
         foreach ($data as $row) {
-            if(null === $row->piggyBank) {
+            if (null === $row->piggyBank) {
                 continue;
             }
             // get currency preference.
@@ -292,6 +303,17 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTagObjects(int $journalId): Collection
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->tags()->get();
     }
 
     /**
@@ -337,7 +359,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         } catch (DuplicateTransactionException $e) {
             Log::warning('Group repository caught group factory with a duplicate exception!');
             throw new DuplicateTransactionException($e->getMessage());
-        } catch(FireflyException $e) {
+        } catch (FireflyException $e) {
             Log::warning('Group repository caught group factory with an exception!');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -397,9 +419,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     private function expandTransaction(Transaction $transaction): array
     {
-        $array = $transaction->toArray();
-        $array['account'] = $transaction->account->toArray();
-        $array['budgets'] = [];
+        $array               = $transaction->toArray();
+        $array['account']    = $transaction->account->toArray();
+        $array['budgets']    = [];
         $array['categories'] = [];
 
         foreach ($transaction->categories as $category) {
@@ -461,27 +483,5 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTagObjects(int $journalId): Collection
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-
-        return $journal->tags()->get();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLocation(int $journalId): ?Location
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-
-        return $journal->locations()->first();
     }
 }

@@ -35,43 +35,16 @@ interface CategoryRepositoryInterface
 {
 
     /**
-     * Remove notes.
-     *
-     * @param Category $category
-     */
-    public function removeNotes(Category $category): void;
-
-    /**
-     * @param Category $category
-     * @param string   $notes
-     */
-    public function updateNotes(Category $category, string $notes): void;
-
-    /**
-     * @param Category $category
-     *
-     * @return string|null
-     */
-    public function getNoteText(Category $category): ?string;
-
-    /**
-     * Delete all categories.
-     */
-    public function destroyAll(): void;
-
-    /**
-     * @param Category $category
-     *
-     * @return Collection
-     */
-    public function getAttachments(Category $category): Collection;
-
-    /**
      * @param Category $category
      *
      * @return bool
      */
     public function destroy(Category $category): bool;
+
+    /**
+     * Delete all categories.
+     */
+    public function destroyAll(): void;
 
     /**
      * Find a category.
@@ -107,6 +80,13 @@ interface CategoryRepositoryInterface
     public function firstUseDate(Category $category): ?Carbon;
 
     /**
+     * @param Category $category
+     *
+     * @return Collection
+     */
+    public function getAttachments(Category $category): Collection;
+
+    /**
      * Get all categories with ID's.
      *
      * @param array $categoryIds
@@ -123,6 +103,13 @@ interface CategoryRepositoryInterface
     public function getCategories(): Collection;
 
     /**
+     * @param Category $category
+     *
+     * @return string|null
+     */
+    public function getNoteText(Category $category): ?string;
+
+    /**
      * Return most recent transaction(journal) date or null when never used before.
      *
      * @param Category   $category
@@ -133,8 +120,15 @@ interface CategoryRepositoryInterface
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
+     * Remove notes.
+     *
+     * @param Category $category
+     */
+    public function removeNotes(Category $category): void;
+
+    /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -147,8 +141,9 @@ interface CategoryRepositoryInterface
 
     /**
      * @param array $data
-     * @throws FireflyException
+     *
      * @return Category
+     * @throws FireflyException
      */
     public function store(array $data): Category;
 
@@ -159,4 +154,10 @@ interface CategoryRepositoryInterface
      * @return Category
      */
     public function update(Category $category, array $data): Category;
+
+    /**
+     * @param Category $category
+     * @param string   $notes
+     */
+    public function updateNotes(Category $category, string $notes): void;
 }

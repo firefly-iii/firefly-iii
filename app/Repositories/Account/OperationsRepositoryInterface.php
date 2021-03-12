@@ -38,8 +38,8 @@ interface OperationsRepositoryInterface
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      * @param Collection $accounts
      *
      * @return array
@@ -75,7 +75,8 @@ interface OperationsRepositoryInterface
      *
      * @return array
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null): array;
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
+    ): array;
 
     /**
      * Sum of income journals in period for a set of accounts, grouped per currency. Amounts are always positive.
@@ -88,7 +89,8 @@ interface OperationsRepositoryInterface
      *
      * @return array
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null): array;
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
+    ): array;
 
     /**
      * Sum of transfers in period for a set of accounts, grouped per currency. Amounts are always positive.

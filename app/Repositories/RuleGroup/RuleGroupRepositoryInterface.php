@@ -38,36 +38,6 @@ interface RuleGroupRepositoryInterface
     public function correctRuleGroupOrder(): void;
 
     /**
-     *
-     * @param RuleGroup $ruleGroup
-     * @param int       $oldOrder
-     * @param int       $newOrder
-     *
-     * @return RuleGroup
-     */
-    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup;
-
-    /**
-     * Get highest possible order for a rule group.
-     *
-     * @return int
-     */
-    public function maxOrder(): int;
-
-    /**
-     * Delete everything.
-     */
-    public function destroyAll(): void;
-
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function searchRuleGroup(string $query, int $limit): Collection;
-
-    /**
      * @return int
      */
     public function count(): int;
@@ -79,6 +49,11 @@ interface RuleGroupRepositoryInterface
      * @return bool
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool;
+
+    /**
+     * Delete everything.
+     */
+    public function destroyAll(): void;
 
     /**
      * @param int $ruleGroupId
@@ -147,6 +122,13 @@ interface RuleGroupRepositoryInterface
     public function getRules(RuleGroup $group): Collection;
 
     /**
+     * Get highest possible order for a rule group.
+     *
+     * @return int
+     */
+    public function maxOrder(): int;
+
+    /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
@@ -173,6 +155,14 @@ interface RuleGroupRepositoryInterface
     public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
 
     /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRuleGroup(string $query, int $limit): Collection;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
@@ -191,4 +181,14 @@ interface RuleGroupRepositoryInterface
      * @return RuleGroup
      */
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
+
+    /**
+     *
+     * @param RuleGroup $ruleGroup
+     * @param int       $oldOrder
+     * @param int       $newOrder
+     *
+     * @return RuleGroup
+     */
+    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup;
 }

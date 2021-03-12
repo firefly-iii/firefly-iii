@@ -69,17 +69,6 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @inheritDoc
-     */
-    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
-    {
-        $piggyBank->objectGroups()->sync([]);
-
-        return $piggyBank;
-    }
-
-
-    /**
      * @param PiggyBankRepetition $repetition
      * @param string              $amount
      *
@@ -188,7 +177,7 @@ trait ModifiesPiggyBanks
      * @param PiggyBank $piggyBank
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(PiggyBank $piggyBank): bool
     {
@@ -220,6 +209,16 @@ trait ModifiesPiggyBanks
     }
 
     /**
+     * @inheritDoc
+     */
+    public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank
+    {
+        $piggyBank->objectGroups()->sync([]);
+
+        return $piggyBank;
+    }
+
+    /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -246,6 +245,20 @@ trait ModifiesPiggyBanks
     }
 
     /**
+     * @inheritDoc
+     */
+    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank
+    {
+        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+        if (null !== $objectGroup) {
+            $piggyBank->objectGroups()->sync([$objectGroup->id]);
+        }
+
+        return $piggyBank;
+
+    }
+
+    /**
      * set id of piggy bank.
      *
      * @param PiggyBank $piggyBank
@@ -260,22 +273,6 @@ trait ModifiesPiggyBanks
 
         return true;
     }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function setObjectGroup(PiggyBank $piggyBank, string $objectGroupTitle): PiggyBank
-    {
-        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-        if (null !== $objectGroup) {
-            $piggyBank->objectGroups()->sync([$objectGroup->id]);
-        }
-
-        return $piggyBank;
-
-    }
-
 
     /**
      * @param array $data
@@ -324,32 +321,6 @@ trait ModifiesPiggyBanks
                 $piggyBank->save();
             }
         }
-
-        return $piggyBank;
-    }
-
-    /**
-     * @param PiggyBank $piggyBank
-     * @param array     $data
-     *
-     * @return PiggyBank
-     */
-    private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank
-    {
-        if (array_key_exists('name', $data) && '' !== $data['name']) {
-            $piggyBank->name = $data['name'];
-        }
-        if (array_key_exists('account_id', $data) && 0 !== $data['account_id']) {
-            $piggyBank->account_id = (int)$data['account_id'];
-        }
-        if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
-            $piggyBank->targetamount = $data['targetamount'];
-        }
-        if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
-            $piggyBank->targetdate = $data['targetdate'];
-        }
-        $piggyBank->startdate = $data['startdate'] ?? $piggyBank->startdate;
-        $piggyBank->save();
 
         return $piggyBank;
     }
@@ -448,6 +419,32 @@ trait ModifiesPiggyBanks
         $dbNote->save();
 
         return true;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param array     $data
+     *
+     * @return PiggyBank
+     */
+    private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank
+    {
+        if (array_key_exists('name', $data) && '' !== $data['name']) {
+            $piggyBank->name = $data['name'];
+        }
+        if (array_key_exists('account_id', $data) && 0 !== $data['account_id']) {
+            $piggyBank->account_id = (int)$data['account_id'];
+        }
+        if (array_key_exists('targetamount', $data) && '' !== $data['targetamount']) {
+            $piggyBank->targetamount = $data['targetamount'];
+        }
+        if (array_key_exists('targetdate', $data) && '' !== $data['targetdate']) {
+            $piggyBank->targetdate = $data['targetdate'];
+        }
+        $piggyBank->startdate = $data['startdate'] ?? $piggyBank->startdate;
+        $piggyBank->save();
+
+        return $piggyBank;
     }
 
     /**

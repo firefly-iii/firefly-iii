@@ -91,6 +91,33 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Destroy all budgets.
+     */
+    public function destroyAll(): void
+    {
+        $budgets = $this->getBudgets();
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
+            $budget->delete();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAutoBudget(Budget $budget): void
+    {
+        /** @var AutoBudget $autoBudget */
+        foreach ($budget->autoBudgets()->get() as $autoBudget) {
+            $autoBudget->delete();
+        }
+    }
+
+    /**
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
@@ -177,6 +204,35 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getAttachments(Budget $budget): Collection
+    {
+        $set = $budget->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAutoBudget(Budget $budget): ?AutoBudget
+    {
+        return $budget->autoBudgets()->first();
+    }
+
+    /**
      * @return Collection
      */
     public function getBudgets(): Collection
@@ -205,6 +261,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $this->user->budgets()
                           ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')->where('active', 0)->get();
+    }
+
+    public function getMaxOrder(): int
+    {
+        return (int)$this->user->budgets()->max('order');
     }
 
     /**
@@ -384,27 +445,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $oldName
      * @param string $newName
      */
-    private function updateRuleActions(string $oldName, string $newName): void
-    {
-        $types   = ['set_budget',];
-        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                             ->where('rules.user_id', $this->user->id)
-                             ->whereIn('rule_actions.action_type', $types)
-                             ->where('rule_actions.action_value', $oldName)
-                             ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            $action->action_value = $newName;
-            $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
-        }
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRuleTriggers(string $oldName, string $newName): void
     {
         $types    = ['budget_is',];
@@ -423,63 +463,23 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Destroy all budgets.
+     * @param string $oldName
+     * @param string $newName
      */
-    public function destroyAll(): void
+    private function updateRuleActions(string $oldName, string $newName): void
     {
-        $budgets = $this->getBudgets();
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
-            RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
-            $budget->delete();
+        $types   = ['set_budget',];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+                             ->where('rules.user_id', $this->user->id)
+                             ->whereIn('rule_actions.action_type', $types)
+                             ->where('rule_actions.action_value', $oldName)
+                             ->get(['rule_actions.*']);
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            $action->action_value = $newName;
+            $action->save();
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAutoBudget(Budget $budget): ?AutoBudget
-    {
-        return $budget->autoBudgets()->first();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroyAutoBudget(Budget $budget): void
-    {
-        /** @var AutoBudget $autoBudget */
-        foreach ($budget->autoBudgets()->get() as $autoBudget) {
-            $autoBudget->delete();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAttachments(Budget $budget): Collection
-    {
-        $set = $budget->attachments()->get();
-
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
-            }
-        );
-    }
-
-    public function getMaxOrder(): int
-    {
-        return (int)$this->user->budgets()->max('order');
     }
 }

@@ -278,6 +278,27 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getAttachments(Account $account): Collection
+    {
+        $set = $account->attachments()->get();
+
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
+    }
+
+    /**
      * @return Account
      *
      * @throws FireflyException
@@ -291,6 +312,38 @@ class AccountRepository implements AccountRepositoryInterface
         $factory->setUser($this->user);
 
         return $factory->findOrCreate('Cash account', $type->type);
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getInactiveAccountsByType(array $types): Collection
+    {
+        /** @var Collection $result */
+        $query = $this->user->accounts()->with(
+            ['accountmeta' => function (HasMany $query) {
+                $query->where('name', 'account_role');
+            }]
+        );
+        if (!empty($types)) {
+            $query->accountTypeIn($types);
+        }
+        $query->where('active', 0);
+        $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLocation(Account $account): ?Location
+    {
+        return $account->locations()->first();
     }
 
     /**
@@ -464,6 +517,22 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getUsedCurrencies(Account $account): Collection
+    {
+        $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
+        $currencyIds = [];
+        foreach ($info as $entry) {
+            $currencyIds[] = (int)$entry['transaction_currency_id'];
+            $currencyIds[] = (int)$entry['foreign_currency_id'];
+        }
+        $currencyIds = array_unique($currencyIds);
+
+        return TransactionCurrency::whereIn('id', $currencyIds)->get();
+    }
+
+    /**
      * @param Account $account
      *
      * @return bool
@@ -515,6 +584,22 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function resetAccountOrder(array $types): void
+    {
+        $list = $this->getAccountsByType($types);
+        /**
+         * @var int     $index
+         * @var Account $account
+         */
+        foreach ($list as $index => $account) {
+            $account->order = $index + 1;
+            $account->save();
+        }
+    }
+
+    /**
      * @param string $query
      * @param array  $types
      * @param int    $limit
@@ -544,129 +629,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['accounts.*']);
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    public function store(array $data): Account
-    {
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->create($data);
-    }
-
-    /**
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    public function update(Account $account, array $data): Account
-    {
-        /** @var AccountUpdateService $service */
-        $service = app(AccountUpdateService::class);
-
-        return $service->update($account, $data);
-    }
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function getInactiveAccountsByType(array $types): Collection
-    {
-        /** @var Collection $result */
-        $query = $this->user->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'account_role');
-            }]
-        );
-        if (!empty($types)) {
-            $query->accountTypeIn($types);
-        }
-        $query->where('active', 0);
-        $query->orderBy('accounts.account_type_id', 'ASC');
-        $query->orderBy('accounts.order', 'ASC');
-        $query->orderBy('accounts.name', 'ASC');
-
-        return $query->get(['accounts.*']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLocation(Account $account): ?Location
-    {
-        return $account->locations()->first();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAttachments(Account $account): Collection
-    {
-        $set = $account->attachments()->get();
-
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
-            }
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getUsedCurrencies(Account $account): Collection
-    {
-        $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
-        $currencyIds = [];
-        foreach ($info as $entry) {
-            $currencyIds[] = (int)$entry['transaction_currency_id'];
-            $currencyIds[] = (int)$entry['foreign_currency_id'];
-        }
-        $currencyIds = array_unique($currencyIds);
-
-        return TransactionCurrency::whereIn('id', $currencyIds)->get();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function resetAccountOrder(array $types): void
-    {
-        $list = $this->getAccountsByType($types);
-        /**
-         * @var int     $index
-         * @var Account $account
-         */
-        foreach ($list as $index => $account) {
-            $account->order = $index + 1;
-            $account->save();
-        }
     }
 
     /**
@@ -705,6 +667,14 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['accounts.*']);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -748,9 +718,39 @@ class AccountRepository implements AccountRepositoryInterface
 
         // set the rest to zero:
         $this->user->accounts()
-            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-            ->whereNotIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
-            ->update(['order' => '0']);
+                   ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
+                   ->whereNotIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
+                   ->update(['order' => '0']);
 
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    public function store(array $data): Account
+    {
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->create($data);
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    public function update(Account $account, array $data): Account
+    {
+        /** @var AccountUpdateService $service */
+        $service = app(AccountUpdateService::class);
+
+        return $service->update($account, $data);
     }
 }

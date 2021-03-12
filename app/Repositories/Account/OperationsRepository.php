@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
@@ -163,8 +161,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null): array
-    {
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $expense = null, ?TransactionCurrency $currency = null
+    ): array {
         $start->startOfDay();
         $end->endOfDay();
 
@@ -178,7 +176,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts) {
             $collector->setSourceAccounts($accounts);
         }
-        if(null !== $expense) {
+        if (null !== $expense) {
             $collector->setDestinationAccounts($expense);
         }
         if (null !== $currency) {
@@ -233,15 +231,17 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
             }
         }
+
         return $array;
     }
 
     /**
      * // TODO same as income but copied.
+     *
      * @inheritDoc
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null): array
-    {
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
+    ): array {
         $start->startOfDay();
         $end->endOfDay();
 
@@ -255,7 +255,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts) {
             $collector->setDestinationAccounts($accounts);
         }
-        if(null !== $revenue) {
+        if (null !== $revenue) {
             $collector->setSourceAccounts($revenue);
         }
         if (null !== $currency) {
@@ -273,7 +273,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             if (null !== $accounts) {
                 $collector->setDestinationAccounts($accounts);
             }
-            if(null !== $revenue) {
+            if (null !== $revenue) {
                 $collector->setSourceAccounts($revenue);
             }
             $result = $collector->getExtractedJournals();
@@ -309,6 +309,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->positive($journal['foreign_amount']));
             }
         }
+
         return $array;
     }
 
@@ -375,6 +376,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->positive($journal['foreign_amount']));
             }
         }
+
         return $array;
     }
 }

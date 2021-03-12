@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use DB;
+use Exception;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
@@ -55,7 +56,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Tag $tag
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Tag $tag): bool
     {
@@ -137,6 +138,26 @@ class TagRepository implements TagRepositoryInterface
     public function get(): Collection
     {
         return $this->user->tags()->orderBy('tag', 'ASC')->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttachments(Tag $tag): Collection
+    {
+        $set = $tag->attachments()->get();
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $set->each(
+            static function (Attachment $attachment) use ($disk) {
+                $notes                   = $attachment->notes()->first();
+                $attachment->file_exists = $disk->exists($attachment->fileName());
+                $attachment->notes       = $notes ? $notes->text : '';
+
+                return $attachment;
+            }
+        );
     }
 
     /**
@@ -479,7 +500,7 @@ class TagRepository implements TagRepositoryInterface
                 $location->save();
             }
         }
-        if(true === $deleteLocation) {
+        if (true === $deleteLocation) {
             $tag->locations()->delete();
         }
 
@@ -534,25 +555,5 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('Minimum is %s.', $min));
 
         return $min;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAttachments(Tag $tag): Collection
-    {
-        $set = $tag->attachments()->get();
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
-            }
-        );
     }
 }

@@ -68,6 +68,64 @@ class WebhookRepository implements WebhookRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function destroy(Webhook $webhook): void
+    {
+        $webhook->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAttempt(WebhookAttempt $attempt): void
+    {
+        $attempt->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyMessage(WebhookMessage $message): void
+    {
+        $message->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttempts(WebhookMessage $webhookMessage): Collection
+    {
+        return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+                       ->orderBy('created_at', 'DESC')
+                       ->get(['webhook_messages.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getReadyMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+                       ->where('webhook_messages.sent', 0)
+                       ->where('webhook_messages.errored', 0)
+                       ->get(['webhook_messages.*'])
+                       ->filter(
+                           function (WebhookMessage $message) {
+                               return $message->webhookAttempts()->count() <= 2;
+                           }
+                       )->splice(0, 3);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setUser(User $user): void
     {
         $this->user = $user;
@@ -113,63 +171,5 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->save();
 
         return $webhook;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroy(Webhook $webhook): void
-    {
-        $webhook->delete();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroyMessage(WebhookMessage $message): void
-    {
-        $message->delete();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroyAttempt(WebhookAttempt $attempt): void
-    {
-        $attempt->delete();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getReadyMessages(Webhook $webhook): Collection
-    {
-        return $webhook->webhookMessages()
-                       ->where('webhook_messages.sent', 0)
-                       ->where('webhook_messages.errored', 0)
-                       ->get(['webhook_messages.*'])
-                       ->filter(
-                           function (WebhookMessage $message) {
-                               return $message->webhookAttempts()->count() <= 2;
-                           }
-                       )->splice(0, 3);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMessages(Webhook $webhook): Collection
-    {
-        return $webhook->webhookMessages()
-                       ->orderBy('created_at', 'DESC')
-                       ->get(['webhook_messages.*']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAttempts(WebhookMessage $webhookMessage): Collection
-    {
-        return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
     }
 }

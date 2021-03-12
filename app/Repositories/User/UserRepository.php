@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use Exception;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
@@ -77,7 +78,7 @@ class UserRepository implements UserRepositoryInterface
      * @param string $newEmail
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      * @see updateEmail
      *
      */
@@ -157,7 +158,7 @@ class UserRepository implements UserRepositoryInterface
      * @param User $user
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(User $user): bool
     {
