@@ -138,6 +138,69 @@ class BillUpdateService
 
     /**
      * @param Bill  $bill
+     * @param array $data
+     *
+     * @return Bill
+     */
+    private function updateBillProperties(Bill $bill, array $data): Bill
+    {
+
+        if (isset($data['name']) && '' !== (string)$data['name']) {
+            $bill->name = $data['name'];
+        }
+
+        if (isset($data['amount_min']) && '' !== (string)$data['amount_min']) {
+            $bill->amount_min = $data['amount_min'];
+        }
+        if (isset($data['amount_max']) && '' !== (string)$data['amount_max']) {
+            $bill->amount_max = $data['amount_max'];
+        }
+        if (isset($data['date']) && '' !== (string)$data['date']) {
+            $bill->date = $data['date'];
+        }
+        if (isset($data['repeat_freq']) && '' !== (string)$data['repeat_freq']) {
+            $bill->repeat_freq = $data['repeat_freq'];
+        }
+        if (isset($data['skip']) && '' !== (string)$data['skip']) {
+            $bill->skip = $data['skip'];
+        }
+        if (isset($data['active']) && is_bool($data['active'])) {
+            $bill->active = $data['active'];
+        }
+
+        $bill->match     = 'EMPTY';
+        $bill->automatch = true;
+        $bill->save();
+
+        return $bill;
+    }
+
+    /**
+     * @param Bill $bill
+     * @param int  $oldOrder
+     * @param int  $newOrder
+     */
+    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->update(['order' => DB::raw('bills.order-1')]);
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+        if ($newOrder < $oldOrder) {
+            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+                       ->where('bills.id', '!=', $bill->id)
+                       ->update(['order' => DB::raw('bills.order+1')]);
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+
+    }
+
+    /**
+     * @param Bill  $bill
      * @param array $oldData
      * @param array $newData
      */
@@ -195,7 +258,6 @@ class BillUpdateService
         }
     }
 
-
     /**
      * @param Rule   $rule
      * @param string $key
@@ -205,68 +267,5 @@ class BillUpdateService
     private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
     {
         return $rule->ruleTriggers()->where('trigger_type', $key)->first();
-    }
-
-    /**
-     * @param Bill $bill
-     * @param int  $oldOrder
-     * @param int  $newOrder
-     */
-    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
-    {
-        if ($newOrder > $oldOrder) {
-            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->update(['order' => DB::raw('bills.order-1')]);
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-        if ($newOrder < $oldOrder) {
-            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->update(['order' => DB::raw('bills.order+1')]);
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-
-    }
-
-    /**
-     * @param Bill  $bill
-     * @param array $data
-     *
-     * @return Bill
-     */
-    private function updateBillProperties(Bill $bill, array $data): Bill
-    {
-
-        if (isset($data['name']) && '' !== (string)$data['name']) {
-            $bill->name = $data['name'];
-        }
-
-        if (isset($data['amount_min']) && '' !== (string)$data['amount_min']) {
-            $bill->amount_min = $data['amount_min'];
-        }
-        if (isset($data['amount_max']) && '' !== (string)$data['amount_max']) {
-            $bill->amount_max = $data['amount_max'];
-        }
-        if (isset($data['date']) && '' !== (string)$data['date']) {
-            $bill->date = $data['date'];
-        }
-        if (isset($data['repeat_freq']) && '' !== (string)$data['repeat_freq']) {
-            $bill->repeat_freq = $data['repeat_freq'];
-        }
-        if (isset($data['skip']) && '' !== (string)$data['skip']) {
-            $bill->skip = $data['skip'];
-        }
-        if (isset($data['active']) && is_bool($data['active'])) {
-            $bill->active = $data['active'];
-        }
-
-        $bill->match     = 'EMPTY';
-        $bill->automatch = true;
-        $bill->save();
-
-        return $bill;
     }
 }

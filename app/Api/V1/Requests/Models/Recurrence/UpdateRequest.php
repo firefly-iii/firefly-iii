@@ -43,7 +43,6 @@ class UpdateRequest extends FormRequest
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 
 
-
     /**
      * Get all data from the request.
      *
@@ -51,46 +50,46 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $active     = null;
-        $applyRules = null;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
+        // this is the way:
+        $fields       = [
+            'title'             => ['title', 'string'],
+            'description'       => ['description', 'string'],
+            'first_date'        => ['first_date', 'date'],
+            'repeat_until'      => ['repeat_until', 'date'],
+            'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
+            'apply_rules'       => ['apply_rules', 'boolean'],
+            'active'            => ['active', 'boolean'],
+            'notes'             => ['notes', 'string'],
+        ];
+        $reps         = $this->getRepetitionData();
+        $transactions = $this->getTransactionData();
+        $return       = [
+            'recurrence' => $this->getAllData($fields),
+        ];
+        if (null !== $reps) {
+            $return['repetitions'] = $reps;
         }
-        if (null !== $this->get('apply_rules')) {
-            $applyRules = $this->boolean('apply_rules');
+        if (null !== $transactions) {
+            $return['transactions'] = $transactions;
         }
 
-        return [
-            'recurrence'   => [
-                'type'              => $this->nullableString('type'),
-                'title'             => $this->nullableString('title'),
-                'description'       => $this->nullableString('description'),
-                'first_date'        => $this->date('first_date'),
-                'notes'             => $this->nullableNlString('notes'),
-                'repeat_until'      => $this->date('repeat_until'),
-                'nr_of_repetitions' => $this->nullableInteger('nr_of_repetitions'),
-                'apply_rules'       => $applyRules,
-                'active'            => $active,
-            ],
-            'transactions' => $this->getTransactionData(),
-            'repetitions'  => $this->getRepetitionData(),
-        ];
+        return $return;
     }
 
     /**
      * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
      * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
      *
-     * @return array
+     * @return array|null
      */
-    private function getTransactionData(): array
+    private function getTransactionData(): ?array
     {
         $return = [];
         // transaction data:
         /** @var array $transactions */
         $transactions = $this->get('transactions');
         if (null === $transactions) {
-            return [];
+            return null;
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
@@ -103,25 +102,36 @@ class UpdateRequest extends FormRequest
     /**
      * Returns the repetition data as it is found in the submitted data.
      *
-     * @return array
+     * @return array|null
      */
-    private function getRepetitionData(): array
+    private function getRepetitionData(): ?array
     {
         $return = [];
         // repetition data:
         /** @var array $repetitions */
         $repetitions = $this->get('repetitions');
         if (null === $repetitions) {
-            return [];
+            return null;
         }
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $return[] = [
-                'type'    => $repetition['type'],
-                'moment'  => $repetition['moment'],
-                'skip'    => (int) $repetition['skip'],
-                'weekend' => (int) $repetition['weekend'],
-            ];
+            $current = [];
+            if(array_key_exists('type', $repetition)) {
+                $current['type'] = $repetition['type'];
+            }
+
+            if(array_key_exists('moment', $repetition)) {
+                $current['moment'] = $repetition['moment'];
+            }
+
+            if(array_key_exists('skip', $repetition)) {
+                $current['skip'] = (int)$repetition['skip'];
+            }
+
+            if(array_key_exists('weekend', $repetition)) {
+                $current['weekend'] = (int) $repetition['weekend'];
+            }
+            $return[] = $current;
         }
 
         return $return;
@@ -138,7 +148,6 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'type'                  => 'in:withdrawal,transfer,deposit',
             'title'                 => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
             'description'           => 'between:1,65000',
             'first_date'            => 'date',
@@ -148,11 +157,11 @@ class UpdateRequest extends FormRequest
             'nr_of_repetitions'     => 'numeric|between:1,31',
             'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'  => 'between:0,10',
-            'repetitions.*.skip'    => 'required|numeric|between:0,31',
-            'repetitions.*.weekend' => 'required|numeric|min:1|max:4',
+            'repetitions.*.skip'    => 'numeric|between:0,31',
+            'repetitions.*.weekend' => 'numeric|min:1|max:4',
 
-            'transactions.*.description'           => 'required|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|gt:0',
+            'transactions.*.description'           => 'between:1,255',
+            'transactions.*.amount'                => 'numeric|gt:0',
             'transactions.*.foreign_amount'        => 'numeric|gt:0',
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
@@ -186,9 +195,9 @@ class UpdateRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
-                $this->validateOneRecurrenceTransaction($validator);
-                $this->validateOneRepetitionUpdate($validator);
-                $this->validateRecurrenceRepetition($validator);
+                //$this->validateOneRecurrenceTransaction($validator);
+                //$this->validateOneRepetitionUpdate($validator);
+                //$this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
                 $this->validateForeignCurrencyInformation($validator);
                 $this->valUpdateAccountInfo($validator);

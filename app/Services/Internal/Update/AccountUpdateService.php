@@ -108,31 +108,31 @@ class AccountUpdateService
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @return Account
      */
-    private function updateLocation(Account $account, array $data): void
+    private function updateAccount(Account $account, array $data): Account
     {
-        $updateLocation = $data['update_location'] ?? false;
-        // location must be updated?
-        if (true === $updateLocation) {
-            // if all set to NULL, delete
-            if (null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
-                $account->locations()->delete();
-            }
+        // update the account itself:
+        $account->name   = $data['name'] ?? $account->name;
+        $account->active = $data['active'] ?? $account->active;
+        $account->iban   = $data['iban'] ?? $account->iban;
 
-            // otherwise, update or create.
-            if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->accountRepository->getLocation($account);
-                if (null === $location) {
-                    $location = new Location;
-                    $location->locatable()->associate($account);
-                }
-
-                $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
-                $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
-                $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
-                $location->save();
-            }
+        // liability stuff:
+        $liabilityType = $data['liability_type'] ?? '';
+        if ($this->isLiability($account) && $this->isLiabilityType($liabilityType)) {
+            $type                     = $this->getAccountType($liabilityType);
+            $account->account_type_id = $type->id;
         }
+
+        // update virtual balance (could be set to zero if empty string).
+        if (null !== $data['virtual_balance']) {
+            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
+        }
+
+        $account->save();
+
+        return $account;
     }
 
     /**
@@ -167,93 +167,6 @@ class AccountUpdateService
     private function getAccountType(string $type): AccountType
     {
         return AccountType::whereType($type)->first();
-    }
-
-    /**
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return Account
-     */
-    private function updateAccount(Account $account, array $data): Account
-    {
-        // update the account itself:
-        $account->name   = $data['name'] ?? $account->name;
-        $account->active = $data['active'] ?? $account->active;
-        $account->iban   = $data['iban'] ?? $account->iban;
-
-        // liability stuff:
-        $liabilityType = $data['liability_type'] ?? '';
-        if ($this->isLiability($account) && $this->isLiabilityType($liabilityType)) {
-            $type                     = $this->getAccountType($liabilityType);
-            $account->account_type_id = $type->id;
-        }
-
-        // update virtual balance (could be set to zero if empty string).
-        if (null !== $data['virtual_balance']) {
-            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
-        }
-
-        $account->save();
-
-        return $account;
-    }
-
-    /**
-     * @param Account $account
-     * @param array   $data
-     */
-    private function updatePreferences(Account $account, array $data): void
-    {
-        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
-        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
-            Log::debug('Account was marked as inactive.');
-            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
-            if (null !== $preference) {
-                $removeAccountId = (int)$account->id;
-                $array           = $preference->data;
-                Log::debug('Current list of accounts: ', $array);
-                Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
-                $filtered = array_filter(
-                    $array, function ($accountId) use ($removeAccountId) {
-                    return (int)$accountId !== $removeAccountId;
-                }
-                );
-                Log::debug('Left with accounts', array_values($filtered));
-                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
-                app('preferences')->forget($account->user, 'frontpageAccounts');
-
-                return;
-            }
-            Log::debug("Found no frontpageAccounts preference, do nothing.");
-
-            return;
-        }
-        Log::debug('Account was not marked as inactive, do nothing.');
-    }
-
-    /**
-     * @param Account $account
-     * @param array   $data
-     */
-    private function updateOpeningBalance(Account $account, array $data): void
-    {
-
-        // has valid initial balance (IB) data?
-        $type = $account->accountType;
-        // if it can have a virtual balance, it can also have an opening balance.
-
-        if (in_array($type->type, $this->canHaveVirtual, true)) {
-
-            // check if is submitted as empty, that makes it valid:
-            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
-                $this->updateOBGroup($account, $data);
-            }
-
-            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
-                $this->deleteOBGroup($account);
-            }
-        }
     }
 
     /**
@@ -313,5 +226,92 @@ class AccountUpdateService
         }
 
         return $return;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updateLocation(Account $account, array $data): void
+    {
+        $updateLocation = $data['update_location'] ?? false;
+        // location must be updated?
+        if (true === $updateLocation) {
+            // if all set to NULL, delete
+            if (null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level']) {
+                $account->locations()->delete();
+            }
+
+            // otherwise, update or create.
+            if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
+                $location = $this->accountRepository->getLocation($account);
+                if (null === $location) {
+                    $location = new Location;
+                    $location->locatable()->associate($account);
+                }
+
+                $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
+                $location->save();
+            }
+        }
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updateOpeningBalance(Account $account, array $data): void
+    {
+
+        // has valid initial balance (IB) data?
+        $type = $account->accountType;
+        // if it can have a virtual balance, it can also have an opening balance.
+
+        if (in_array($type->type, $this->canHaveVirtual, true)) {
+
+            // check if is submitted as empty, that makes it valid:
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
+                $this->updateOBGroup($account, $data);
+            }
+
+            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
+                $this->deleteOBGroup($account);
+            }
+        }
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    private function updatePreferences(Account $account, array $data): void
+    {
+        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
+        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
+            Log::debug('Account was marked as inactive.');
+            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+            if (null !== $preference) {
+                $removeAccountId = (int)$account->id;
+                $array           = $preference->data;
+                Log::debug('Current list of accounts: ', $array);
+                Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
+                $filtered = array_filter(
+                    $array, function ($accountId) use ($removeAccountId) {
+                    return (int)$accountId !== $removeAccountId;
+                }
+                );
+                Log::debug('Left with accounts', array_values($filtered));
+                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
+                app('preferences')->forget($account->user, 'frontpageAccounts');
+
+                return;
+            }
+            Log::debug("Found no frontpageAccounts preference, do nothing.");
+
+            return;
+        }
+        Log::debug('Account was not marked as inactive, do nothing.');
     }
 }

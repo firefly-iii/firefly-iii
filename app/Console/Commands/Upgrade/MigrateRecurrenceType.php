@@ -42,7 +42,7 @@ class MigrateRecurrenceType extends Command
 
         $this->migrateTypes();
 
-        //$this->markAsExecuted();
+        $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Update recurring transaction types in %s seconds.', $end));

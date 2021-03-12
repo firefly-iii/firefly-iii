@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use Log;
-use Exception;
 
 /**
  * Class CategoryUpdateService
@@ -52,6 +52,14 @@ class CategoryUpdateService
         if (auth()->check()) {
             $this->user = auth()->user();
         }
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -79,27 +87,6 @@ class CategoryUpdateService
      * @param string $oldName
      * @param string $newName
      */
-    private function updateRuleActions(string $oldName, string $newName): void
-    {
-        $types   = ['set_category',];
-        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                             ->where('rules.user_id', $this->user->id)
-                             ->whereIn('rule_actions.action_type', $types)
-                             ->where('rule_actions.action_value', $oldName)
-                             ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            $action->action_value = $newName;
-            $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
-        }
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRuleTriggers(string $oldName, string $newName): void
     {
         $types    = ['category_is',];
@@ -118,11 +105,24 @@ class CategoryUpdateService
     }
 
     /**
-     * @param mixed $user
+     * @param string $oldName
+     * @param string $newName
      */
-    public function setUser($user): void
+    private function updateRuleActions(string $oldName, string $newName): void
     {
-        $this->user = $user;
+        $types   = ['set_category',];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+                             ->where('rules.user_id', $this->user->id)
+                             ->whereIn('rule_actions.action_type', $types)
+                             ->where('rule_actions.action_value', $oldName)
+                             ->get(['rule_actions.*']);
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            $action->action_value = $newName;
+            $action->save();
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
     }
 
     /**
@@ -145,7 +145,7 @@ class CategoryUpdateService
      * @param Category $category
      * @param array    $data
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateNotes(Category $category, array $data): void
     {

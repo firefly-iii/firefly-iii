@@ -154,7 +154,10 @@ trait RecurrenceValidation
          * @var array $repetition
          */
         foreach ($repetitions as $index => $repetition) {
-            if(null === $repetition['moment']) {
+            if (!array_key_exists('moment', $repetition)) {
+                continue;
+            }
+            if (null === $repetition['moment']) {
                 $repetition['moment'] = '';
             }
             $repetition['moment'] = $repetition['moment'] ?? 'invalid';

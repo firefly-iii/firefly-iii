@@ -570,7 +570,6 @@ class RecurringRepository implements RecurringRepositoryInterface
     {
         /** @var RecurrenceUpdateService $service */
         $service = app(RecurrenceUpdateService::class);
-
         return $service->update($recurrence, $data);
     }
 

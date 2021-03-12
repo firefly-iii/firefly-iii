@@ -97,37 +97,6 @@ class GroupUpdateService
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     * @param array            $data
-     *
-     * @throws FireflyException
-     */
-    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
-    {
-
-        $submission = [
-            'transactions' => [
-                $data,
-            ],
-        ];
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser($transactionGroup->user);
-        try {
-            $collection = $factory->create($submission);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()));
-        }
-        $collection->each(
-            function (TransactionJournal $journal) use ($transactionGroup) {
-                $transactionGroup->transactionJournals()->save($journal);
-            }
-        );
-    }
-
-    /**
      * Update single journal.
      *
      * @param TransactionGroup   $transactionGroup
@@ -189,6 +158,37 @@ class GroupUpdateService
         }
 
         return $updated;
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     * @param array            $data
+     *
+     * @throws FireflyException
+     */
+    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
+    {
+
+        $submission = [
+            'transactions' => [
+                $data,
+            ],
+        ];
+        /** @var TransactionJournalFactory $factory */
+        $factory = app(TransactionJournalFactory::class);
+        $factory->setUser($transactionGroup->user);
+        try {
+            $collection = $factory->create($submission);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()));
+        }
+        $collection->each(
+            function (TransactionJournal $journal) use ($transactionGroup) {
+                $transactionGroup->transactionJournals()->save($journal);
+            }
+        );
     }
 
 }
