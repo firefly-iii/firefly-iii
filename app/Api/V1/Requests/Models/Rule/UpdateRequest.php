@@ -46,31 +46,27 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $strict         = null;
-        $active         = null;
-        $stopProcessing = null;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
+        $fields = [
+            'title'           => ['title', 'string'],
+            'description'     => ['description', 'nlString'],
+            'rule_group_id'   => ['rule_group_id', 'integer'],
+            'trigger'         => ['trigger', 'string'],
+            'strict'          => ['strict', 'boolean'],
+            'stop_processing' => ['stop_processing', 'boolean'],
+            'active'          => ['active', 'boolean'],
+        ];
+
+        $return   = $this->getAllData($fields);
+        $triggers = $this->getRuleTriggers();
+        $actions  = $this->getRuleActions();
+        if(null !== $triggers) {
+            $return['triggers'] = $triggers;
         }
-        if (null !== $this->get('strict')) {
-            $strict = $this->boolean('strict');
-        }
-        if (null !== $this->get('stop_processing')) {
-            $stopProcessing = $this->boolean('stop_processing');
+        if(null !== $actions) {
+            $return['actions'] = $actions;
         }
 
-        return [
-            'title'            => $this->nullableString('title'),
-            'description'      => $this->nullableString('description'),
-            'rule_group_id'    => $this->nullableInteger('rule_group_id'),
-            'rule_group_title' => $this->nullableString('rule_group_title'),
-            'trigger'          => $this->nullableString('trigger'),
-            'strict'           => $strict,
-            'stop_processing'  => $stopProcessing,
-            'active'           => $active,
-            'triggers'         => $this->getRuleTriggers(),
-            'actions'          => $this->getRuleActions(),
-        ];
+        return $return;
     }
 
     /**
@@ -85,11 +81,13 @@ class UpdateRequest extends FormRequest
         $return   = [];
         if (is_array($triggers)) {
             foreach ($triggers as $trigger) {
+                $active = array_key_exists('active', $trigger) ? $trigger['active'] : true;
+                $stopProcessing= array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
+                    'active'          => $active,
+                    'stop_processing' => $stopProcessing,
                 ];
             }
         }
@@ -112,8 +110,8 @@ class UpdateRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -184,7 +182,7 @@ class UpdateRequest extends FormRequest
         $triggers = $data['triggers'] ?? null;
         // need at least one trigger
         if (is_array($triggers) && 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -199,7 +197,7 @@ class UpdateRequest extends FormRequest
         $actions = $data['actions'] ?? null;
         // need at least one action
         if (is_array($actions) && 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 }

@@ -61,10 +61,10 @@ class RuleTransformer extends AbstractTransformer
         $this->ruleRepository->setUser($rule->user);
 
         return [
-            'id'              => (int)$rule->id,
+            'id'              => (string)$rule->id,
             'created_at'      => $rule->created_at->toAtomString(),
             'updated_at'      => $rule->updated_at->toAtomString(),
-            'rule_group_id'   => (string)$rule->rule_group_id,
+            'rule_group_id'   => (string) $rule->rule_group_id,
             'title'           => $rule->title,
             'description'     => $rule->description,
             'order'           => (int)$rule->order,

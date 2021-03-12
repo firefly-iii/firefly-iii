@@ -30,7 +30,6 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class RuleRepository.
@@ -110,7 +109,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function getHighestOrderInRuleGroup(RuleGroup $ruleGroup): int
     {
-        return (int) $ruleGroup->rules()->max('order');
+        return (int)$ruleGroup->rules()->max('order');
     }
 
     /**
@@ -319,7 +318,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction = new RuleAction;
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
-        $ruleAction->active          = true;
+        $ruleAction->active          = $values['active'];
         $ruleAction->stop_processing = $values['stop_processing'];
         $ruleAction->action_type     = $values['action'];
         $ruleAction->action_value    = $values['value'] ?? '';
@@ -339,7 +338,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
-        $ruleTrigger->active          = true;
+        $ruleTrigger->active          = $values['active'];
         $ruleTrigger->stop_processing = $values['stop_processing'];
         $ruleTrigger->trigger_type    = $values['action'];
         $ruleTrigger->trigger_value   = $values['value'] ?? '';
@@ -357,24 +356,37 @@ class RuleRepository implements RuleRepositoryInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
-
-        $rule->rule_group_id   = $data['rule_group_id'] ?? $rule->rule_group_id;
-        $rule->active          = $data['active'] ?? $rule->active;
-        $rule->stop_processing = $data['stop_processing'] ?? $rule->stop_processing;
-        $rule->title           = $data['title'] ?? $rule->title;
-        $rule->strict          = $data['strict'] ?? $rule->strict;
-        $rule->description     = $data['description'] ?? $rule->description;
+        $fields = [
+            'title',
+            'description',
+            'strict',
+            'rule_group_id',
+            'active',
+            'stop_processing',
+        ];
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $data)) {
+                $rule->$field = $data[$field];
+            }
+        }
         $rule->save();
-
-        if (null !== $data['triggers']) {
+        // update the triggers:
+        if (array_key_exists('trigger', $data) && 'update-journal' === $data['trigger']) {
+            $this->setRuleTrigger('update-journal', $rule);
+        }
+        if (array_key_exists('trigger', $data) && 'store-journal' === $data['trigger']) {
+            $this->setRuleTrigger('store-journal', $rule);
+        }
+        if (array_key_exists('triggers', $data)) {
             // delete triggers:
-            $rule->ruleTriggers()->delete();
+            $rule->ruleTriggers()->where('trigger_type', '!=', 'user_action')->delete();
 
             // recreate triggers:
             $this->storeTriggers($rule, $data);
         }
-        if (null !== $data['actions']) {
-            // delete actions:
+
+        if (array_key_exists('actions', $data)) {
+            // delete triggers:
             $rule->ruleActions()->delete();
 
             // recreate actions:
@@ -382,6 +394,30 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return $rule;
+    }
+
+    /**
+     * @param string $moment
+     * @param Rule   $rule
+     */
+    private function setRuleTrigger(string $moment, Rule $rule): void
+    {
+        /** @var RuleTrigger $trigger */
+        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        if (null !== $trigger) {
+            $trigger->trigger_value = $moment;
+            $trigger->save();
+
+            return;
+        }
+        $trigger                  = new RuleTrigger;
+        $trigger->order           = 0;
+        $trigger->trigger_type    = 'user_action';
+        $trigger->trigger_value   = $moment;
+        $trigger->rule_id         = $rule->id;
+        $trigger->active          = true;
+        $trigger->stop_processing = false;
+        $trigger->save();
     }
 
     /**
@@ -396,16 +432,18 @@ class RuleRepository implements RuleRepositoryInterface
         foreach ($data['actions'] as $action) {
             $value          = $action['value'] ?? '';
             $stopProcessing = $action['stop_processing'] ?? false;
-
-            $actionValues = [
+            $active         = $action['active'] ?? true;
+            $actionValues   = [
                 'action'          => $action['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
+                'active'          => $active,
             ];
             app('telemetry')->feature('rules.actions.uses_action', $action['type']);
 
             $this->storeAction($rule, $actionValues);
+            ++$order;
         }
 
         return true;
@@ -419,26 +457,18 @@ class RuleRepository implements RuleRepositoryInterface
      */
     private function storeTriggers(Rule $rule, array $data): bool
     {
-        $order          = 1;
-        $stopProcessing = false;
-
-        $triggerValues = [
-            'action'          => 'user_action',
-            'value'           => $data['trigger'],
-            'stop_processing' => $stopProcessing,
-            'order'           => $order,
-        ];
-
-        $this->storeTrigger($rule, $triggerValues);
+        $order = 1;
         foreach ($data['triggers'] as $trigger) {
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop_processing'] ?? false;
+            $active         = $trigger['active'] ?? true;
 
             $triggerValues = [
                 'action'          => $trigger['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
+                'active'          => $active,
             ];
             app('telemetry')->feature('rules.triggers.uses_trigger', $trigger['type']);
 
@@ -455,7 +485,7 @@ class RuleRepository implements RuleRepositoryInterface
     public function duplicate(Rule $rule): Rule
     {
         $newRule        = $rule->replicate();
-        $newRule->title = (string) trans('firefly.rule_copy_of', ['title' => $rule->title]);
+        $newRule->title = (string)trans('firefly.rule_copy_of', ['title' => $rule->title]);
         $newRule->save();
 
         // replicate all triggers
@@ -514,6 +544,7 @@ class RuleRepository implements RuleRepositoryInterface
                 }
             }
         }
+
         return $filtered;
     }
 
@@ -540,6 +571,7 @@ class RuleRepository implements RuleRepositoryInterface
                 }
             }
         }
+
         return $filtered;
     }
 
@@ -562,6 +594,7 @@ class RuleRepository implements RuleRepositoryInterface
                 $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
             }
         }
+
         return implode(' ', $params);
 
     }
@@ -578,6 +611,6 @@ class RuleRepository implements RuleRepositoryInterface
         $search->orderBy('rules.order', 'ASC')
                ->orderBy('rules.title', 'ASC');
 
-        return $search->take($limit)->get(['id','title','description']);
+        return $search->take($limit)->get(['id', 'title', 'description']);
     }
 }

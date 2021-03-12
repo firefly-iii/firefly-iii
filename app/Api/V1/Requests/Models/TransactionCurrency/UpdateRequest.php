@@ -46,7 +46,6 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // return nothing that isn't explicitely in the array:
-        // this is the way
         $fields = [
             'name'           => ['name', 'string'],
             'code'           => ['code', 'string'],
@@ -56,7 +55,6 @@ class UpdateRequest extends FormRequest
             'enabled'        => ['enabled', 'boolean'],
         ];
 
-        // this is the way.
         $return = $this->getAllData($fields);
 
         return $return;
