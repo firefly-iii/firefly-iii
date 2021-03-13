@@ -211,8 +211,8 @@ class IndexController extends Controller
             'monthly'   => '12',
             'weekly'    => '52.17',
         ];
-        $yearAmount = bcmul($avg, $multiplies[$bill['repeat_freq']]);
-        Log::debug(sprintf('Amount per year is %s (%s * %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']]));
+        $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], ''.($bill['skip'] + 1)));       
+        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], ''.($bill['skip'] + 1)));
 
         // per period:
         $division  = [
