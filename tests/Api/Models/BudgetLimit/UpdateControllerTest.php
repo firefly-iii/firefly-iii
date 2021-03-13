@@ -58,7 +58,6 @@ class UpdateControllerTest extends TestCase
             'updated_at',
         ];
         $route  = route('api.v1.budgets.limits.update', [$submission['id'], $submission['bl_id']]);
-
         $this->updateAndCompare($route, $submission, $ignore);
     }
 
@@ -100,11 +99,43 @@ class UpdateControllerTest extends TestCase
         $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
 
         $set = [
-            'name' => [
+            'currency_id'   => [
                 'id'           => 1,
                 'bl_id'        => 1,
                 'fields'       => [
-                    'amount' => ['test_value' => number_format($faker->randomFloat(2,10,100), 2)],
+                    'currency_id' => ['test_value' => (string)$rand],
+                ],
+                'extra_ignore' => ['currency_code','currency_name','currency_symbol'],
+            ],
+            'currency_code' => [
+                'id'           => 1,
+                'bl_id'        => 1,
+                'fields'       => [
+                    'currency_code' => ['test_value' => $currencies[$rand]],
+                ],
+                'extra_ignore' => ['currency_id','currency_name','currency_symbol'],
+            ],
+            'start'         => [
+                'id'           => 1,
+                'bl_id'        => 1,
+                'fields'       => [
+                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
+                ],
+                'extra_ignore' => [],
+            ],
+            'end'           => [
+                'id'           => 1,
+                'bl_id'        => 1,
+                'fields'       => [
+                    'end' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
+                ],
+                'extra_ignore' => [],
+            ],
+            'amount'        => [
+                'id'           => 1,
+                'bl_id'        => 1,
+                'fields'       => [
+                    'amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
                 ],
                 'extra_ignore' => [],
             ],

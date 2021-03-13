@@ -359,8 +359,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     {
         $budgetLimit->amount     = array_key_exists('amount', $data) ? $data['amount'] : $budgetLimit->amount;
         $budgetLimit->budget_id  = array_key_exists('budget_id', $data) ? $data['budget_id'] : $budgetLimit->budget_id;
-        $budgetLimit->start_date = array_key_exists('start_date', $data) ? $data['start_date']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
-        $budgetLimit->end_date   = array_key_exists('end_date', $data) ? $data['end_date']->format('Y-m-d 23:59:59') : $budgetLimit->end_date;
+        $budgetLimit->start_date = array_key_exists('start', $data) ? $data['start']->format('Y-m-d 00:00:00') : $budgetLimit->start_date;
+        $budgetLimit->end_date   = array_key_exists('end', $data) ? $data['end']->format('Y-m-d 23:59:59') : $budgetLimit->end_date;
 
         // if no currency has been provided, use the user's default currency:
         $currency = null;
@@ -380,8 +380,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         $budgetLimit->transaction_currency_id = $currency->id;
         $budgetLimit->save();
-
-        Log::debug(sprintf('Updated budget limit with ID #%d and amount %s', $budgetLimit->id, $data['amount']));
 
         return $budgetLimit;
     }

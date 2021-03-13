@@ -104,7 +104,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
-        if ($budget->id !== $budgetLimit->budget_id) {
+        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         // continue!
