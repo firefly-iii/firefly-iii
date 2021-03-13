@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Api\Models\Attachment;
+namespace Tests\Api\Models\BudgetLimit;
 
 
 use Faker\Factory;
@@ -51,8 +51,8 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * @ data Provider storeDataProvider
-     * @dataProvider emptyDataProvider
+     * @dataProvider storeDataProvider
+     * @ data Provider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -60,7 +60,7 @@ class StoreControllerTest extends TestCase
             $this->markTestSkipped('Empty data provider');
         }
         // run account store with a minimal data set:
-        $route = 'api.v1.attachments.store';
+        $route = 'api.v1.budgets.limits.store';
         $this->storeAndCompare($route, $submission);
     }
 
@@ -73,7 +73,6 @@ class StoreControllerTest extends TestCase
 
     }
 
-
     /**
      * @return array
      */
@@ -81,11 +80,21 @@ class StoreControllerTest extends TestCase
     {
         $minimalSets  = $this->minimalSets();
         $optionalSets = $this->optionalSets();
-        $regenConfig  = [];
+        $regenConfig  = [
+            'start' => function () {
+                $faker = Factory::create();
+
+                return $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d');
+            },
+            'end'   => function () {
+                $faker = Factory::create();
+
+                return $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d');
+            },
+        ];
 
         return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
     }
-
 
     /**
      * @return array
@@ -93,46 +102,62 @@ class StoreControllerTest extends TestCase
     private function minimalSets(): array
     {
         $faker = Factory::create();
-        $types = [
-            'Account',
-            'Budget',
-            'Bill',
-            'TransactionJournal',
-            'PiggyBank',
-            'Tag',
-        ];
-        $type  = $types[rand(0, count($types) - 1)];
 
         return [
-            'default_file' => [
-                'parameters' => [],
+            'default_bl' => [
+                'parameters' => [1],
                 'fields'     => [
-                    'filename'        => join(' ', $faker->words(3)),
-                    'attachable_type' => $type,
-                    'attachable_id'   => '1',
+                    'start'  => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
+                    'end'    => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
+                    'amount' => number_format($faker->randomFloat(2, 10, 100), 2),
                 ],
             ],
         ];
     }
+
 
     /**
      * @return \array[][]
      */
     private function optionalSets(): array
     {
-        $faker = Factory::create();
+        $faker      = Factory::create();
+        $currencies = [
+            1 => 'EUR',
+            2 => 'HUF',
+            3 => 'GBP',
+            4 => 'UAH',
+        ];
+        $rand       = rand(1, 4);
 
         return [
-            'title' => [
+            'currency_id'   => [
                 'fields' => [
-                    'title' => join(' ', $faker->words(3)),
+                    'currency_id' => $rand,
                 ],
             ],
-            'notes' => [
+            'currency_code' => [
                 'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
+                    'currency_code' => $currencies[$rand],
                 ],
             ],
+            'start'         => [
+                'fields' => [
+                    'start' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
+                ],
+            ],
+            'end'           => [
+                'fields' => [
+                    'end' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
+                ],
+            ],
+            'amount'        => [
+                'fields' => [
+                    'amount' => number_format($faker->randomFloat(2, 10, 100), 2),
+                ],
+            ],
+
         ];
     }
+
 }

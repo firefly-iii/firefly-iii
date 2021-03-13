@@ -35,29 +35,9 @@
     </include>
   </coverage>
   <testsuites>
-    <testsuite name="ApiAccount">
-      <directory suffix="Test.php">./tests/Api/Models/Account</directory>
+    <testsuite name="Api">
+      <directory suffix="Test.php">./tests/Api/Models</directory>
     </testsuite>
-    <testsuite name="ApiAttachment">
-      <directory suffix="Test.php">./tests/Api/Models/Attachment</directory>
-    </testsuite>
-    <testsuite name="ApiAb">
-      <directory suffix="Test.php">./tests/Api/Models/AvailableBudget</directory>
-    </testsuite>
-    <testsuite name="ApiBill">
-      <directory suffix="Test.php">./tests/Api/Models/Bill</directory>
-    </testsuite>
-
-    <!--
-        <testsuite name="Api">
-            <directory suffix="Test.php">./tests/Api</directory>
-        </testsuite>
-
-
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
-    </testsuite>
-    -->
   </testsuites>
   <php>
     <env name="APP_ENV" value="testing"/>

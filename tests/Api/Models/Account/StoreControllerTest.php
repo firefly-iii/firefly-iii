@@ -50,9 +50,9 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * @ data Provider storeDataProvider
+     * @dataProvider storeDataProvider
      *
-     * @dataProvider emptyDataProvider
+     * @ data Provider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -193,6 +193,7 @@ class StoreControllerTest extends TestCase
 
         return [
             'asset'     => [
+                'parameters' => [],
                 'fields' => [
                     'name'         => $faker->name . join(' ', $faker->words(2)),
                     'type'         => 'asset',
@@ -200,12 +201,14 @@ class StoreControllerTest extends TestCase
                 ],
             ],
             'expense'   => [
+                'parameters' => [],
                 'fields' => [
                     'name' => $faker->name,
                     'type' => 'expense',
                 ],
             ],
             'liability' => [
+                'parameters' => [],
                 'fields' => [
                     'name'                 => $faker->name,
                     'type'                 => 'liabilities',

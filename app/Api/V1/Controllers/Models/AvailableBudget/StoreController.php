@@ -73,14 +73,18 @@ class StoreController extends Controller
 
         // currency is not mandatory:
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $factory  = app(TransactionCurrencyFactory::class);
-            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+            $factory             = app(TransactionCurrencyFactory::class);
+            $currency            = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
             $data['currency_id'] = $currency->id;
             unset($data['currency_code']);
         }
+        if (!array_key_exists('currency_id', $data)) {
+            $currency            = app('amount')->getDefaultCurrencyByUser(auth()->user());
+            $data['currency_id'] = $currency->id;
+        }
 
-        $availableBudget  = $this->abRepository->store($data);
-        $manager          = $this->getManager();
+        $availableBudget = $this->abRepository->store($data);
+        $manager         = $this->getManager();
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);

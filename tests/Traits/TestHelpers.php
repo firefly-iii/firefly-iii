@@ -48,12 +48,11 @@ trait TestHelpers
                 $body[$field] = $value;
             }
             // minimal set is part of all submissions:
-            $submissions[] = [$body];
+            $submissions[] = [['fields' => $body, 'parameters' => $set['parameters'] ?? []]];
 
             // then loop and add fields:
             $optionalSets = $startOptionalSets;
             $keys         = array_keys($optionalSets);
-            $submissions  = [];
             for ($i = 1; $i <= count($keys); $i++) {
                 $combinations = $this->combinationsOf($i, $keys);
                 // expand body with N extra fields:
@@ -67,12 +66,11 @@ trait TestHelpers
                     }
 
                     $second        = $this->regenerateValues($second, $regenConfig);
-                    $submissions[] = [$second];
+                    $submissions[] = [['fields' => $second, 'parameters' => $set['parameters'] ?? []]];
                 }
             }
             unset($second);
         }
-
         return $submissions;
     }
 
@@ -195,70 +193,24 @@ trait TestHelpers
                 continue;
             }
 
-
-            //            if (!compareResult($uValue, $currentProperties[$uKey]) && !in_array($uKey, $fieldsToUpdate)) {
-            //                if (!is_array($currentProperties[$uKey]) && !is_array($uValue)) {
-            //                    $log->warning(
-            //                        sprintf('Field %s is updated from <code>%s</code> to <code>%s</code> but shouldnt be.', $uKey, $currentProperties[$uKey], $uValue)
-            //                    );
-            //                } else {
-            //                    $log->warning(
-            //                        sprintf('Field %s is updated from <code>(array)</code> to <code>(array)</code> but shouldnt be.', $uKey)
-            //                    );
-            //                }
-            //                $log->debug(json_encode($currentProperties));
-            //                $log->debug(json_encode($updatedAttributes));
-            //            }
-            //
-            //            if (in_array($uKey, $fieldsToUpdate) && compareResult($uValue, $testBody[$uKey])) {
-            //                $log->debug(sprintf('Field %s is updated and this is OK.', $uKey));
-            //            }
-            //            if (in_array($uKey, $fieldsToUpdate) && !compareResult($uValue, $testBody[$uKey])) {
-            //                if (!is_array($uValue) && !is_array($testBody[$uKey])) {
-            //                    $log->warning(sprintf('Field "%s" is different: %s but must be %s!', $uKey, var_export($uValue, true), var_export($testBody[$uKey], true)));
-            //                    $log->debug(json_encode($currentProperties));
-            //                    $log->debug(json_encode($updatedAttributes));
-            //                } else {
-            //                    $log->warning(sprintf('Field "%s" is different!', $uKey));
-            //                    $log->debug(json_encode(filterArray($currentProperties)));
-            //                    $log->debug(json_encode(filterArray($updatedAttributes)));
-            //                }
-            //
-            //            }
         }
-
-
-        //        // OLD
-        //
-        //
-        //        $updatedResponseBody = json_decode($updateResponse->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        //        $updatedAttributes   = $updatedResponseBody['data']['attributes'];
-        //        if (array_key_exists('key', $endpoint) && array_key_exists('level', $endpoint)) {
-        //            $key               = $endpoint['key'];
-        //            $level             = $endpoint['level'];
-        //            $updatedAttributes = $updatedResponseBody['data']['attributes'][$key][$level];
-        //        }
-        //
-        //        // END OLD
-        //
-        //        var_dump($submissionJson);
-        //        exit;
     }
 
     /**
      * @param string $route
-     * @param array  $submission
+     * @param array  $content
      */
-    protected function storeAndCompare(string $route, array $submission, ?array $ignore = null): void
+    protected function storeAndCompare(string $route, array $content, ?array $ignore = null): void
     {
-        $ignore = $ignore ?? [];
+        $ignore     = $ignore ?? [];
+        $submission = $content['fields'];
+        $parameters = $content['parameters'];
         // submit!
-        $response     = $this->post(route($route), $submission, ['Accept' => 'application/json']);
+        $response     = $this->post(route($route, $parameters), $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
         $status       = $response->getStatusCode();
         $this->assertEquals($status, 200, sprintf("Submission: %s\nResponse: %s", json_encode($submission), $responseBody));
-
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 

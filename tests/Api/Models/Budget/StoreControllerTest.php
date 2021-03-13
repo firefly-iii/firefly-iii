@@ -98,11 +98,8 @@ class StoreControllerTest extends TestCase
     private function minimalSets(): array
     {
         $faker       = Factory::create();
-        $repeatFreqs = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq  = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-
         return [
-            'default_bill' => [
+            'default_budget' => [
                 'fields' => [
                     'name' => join(',', $faker->words(5)),
                 ],
