@@ -120,7 +120,7 @@ export default {
       this.expenses = [];
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
-      axios.get('./api/v1/insight/expense/date/basic?start=' + startStr + '&end=' + endStr)
+      axios.get('./api/v1/insight/expense/expense?start=' + startStr + '&end=' + endStr)
           .then(response => {
             // do something with response.
             this.parseExpenses(response.data);

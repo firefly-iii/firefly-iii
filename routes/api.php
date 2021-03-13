@@ -263,6 +263,17 @@ Route::group(
         Route::delete('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\DestroyController@destroy', 'as' => 'limits.delete']);
         Route::get('{budget}/limits/{budgetLimit}/transactions', ['uses' => 'BudgetLimit\ListController@transactions', 'as' => 'limits.transactions']);
 
+
+    }
+);
+
+// separate route for budget limits without referring to the budget.
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Models\BudgetLimit', 'prefix' => 'budget-limits',
+     'as'        => 'api.v1.budget-limits.',],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@indexAll', 'as' => 'index']);
+
     }
 );
 

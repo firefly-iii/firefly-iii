@@ -120,7 +120,7 @@ export default {
       this.error = false;
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
-      axios.get('./api/v1/insight/income/date/basic?start=' + startStr + '&end=' + endStr)
+      axios.get('./api/v1/insight/income/revenue?start=' + startStr + '&end=' + endStr)
           .then(response => {
             // do something with response.
             this.parseIncome(response.data);

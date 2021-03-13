@@ -22,6 +22,7 @@
 namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -119,5 +120,34 @@ class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
+
+    /**
+     * Display a listing of the budget limits for this budget..
+     *
+     * @param DateRequest $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function indexAll(DateRequest $request): JsonResponse
+    {
+        $manager = $this->getManager();
+        $manager->parseIncludes('budget');
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
+        $count        = $collection->count();
+        $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.budget-limits.index') . $this->buildParams());
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
 
 }

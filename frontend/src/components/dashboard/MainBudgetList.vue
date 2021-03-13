@@ -173,7 +173,7 @@ export default {
         getBudgetLimits() {
           let startStr = this.start.toISOString().split('T')[0];
           let endStr = this.end.toISOString().split('T')[0];
-          axios.get('./api/v1/budgets/limits?start=' + startStr + '&end=' + endStr)
+          axios.get('./api/v1/budget-limits?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgetLimits(response.data);
                       this.loading = false;
