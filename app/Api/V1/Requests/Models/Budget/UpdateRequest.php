@@ -46,21 +46,19 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $active = true;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-
-        return [
-            'name'                      => $this->string('name'),
-            'active'                    => $active,
-            'order'                     => 0,
-            'auto_budget_type'          => $this->string('auto_budget_type'),
-            'transaction_currency_id'   => $this->integer('auto_budget_currency_id'),
-            'transaction_currency_code' => $this->string('auto_budget_currency_code'),
-            'auto_budget_amount'        => $this->string('auto_budget_amount'),
-            'auto_budget_period'        => $this->string('auto_budget_period'),
+        // this is the way:
+        $fields = [
+            'name'               => ['name', 'string'],
+            'active'             => ['active', 'boolean'],
+            'order'              => ['order', 'integer'],
+            'currency_id'        => ['auto_budget_currency_id', 'integer'],
+            'currency_code'      => ['auto_budget_currency_code', 'string'],
+            'auto_budget_type'   => ['auto_budget_type', 'string'],
+            'auto_budget_amount' => ['auto_budget_amount', 'string'],
+            'auto_budget_period' => ['auto_budget_period', 'string'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
@@ -73,7 +71,7 @@ class UpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         return [
-            'name'                      => sprintf('required|between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
+            'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean],
             'auto_budget_type'          => 'in:reset,rollover,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',

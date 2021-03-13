@@ -81,13 +81,12 @@ class BudgetTransformer extends AbstractTransformer
         ];
 
         if (null !== $autoBudget) {
-            $abCurrencyId   = (int)$autoBudget->transactionCurrency->id;
+            $abCurrencyId   = (string)$autoBudget->transactionCurrency->id;
             $abCurrencyCode = $autoBudget->transactionCurrency->code;
             $abType         = $types[$autoBudget->auto_budget_type];
             $abAmount       = number_format((float)$autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
             $abPeriod       = $autoBudget->period;
         }
-
         return [
             'id'                        => (string)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),
@@ -96,7 +95,7 @@ class BudgetTransformer extends AbstractTransformer
             'name'                      => $budget->name,
             'auto_budget_type'          => $abType,
             'auto_budget_period'        => $abPeriod,
-            'auto_budget_currency_id'   => (string)$abCurrencyId,
+            'auto_budget_currency_id'   => $abCurrencyId,
             'auto_budget_currency_code' => $abCurrencyCode,
             'auto_budget_amount'        => $abAmount,
             'spent'                     => $spent,

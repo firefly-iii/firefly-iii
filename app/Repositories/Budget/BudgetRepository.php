@@ -320,6 +320,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                     'user_id' => $this->user->id,
                     'name'    => $data['name'],
                     'order'   => $order + 1,
+                    'active'  => array_key_exists('active', $data) ? $data['active'] : true,
                 ]
             );
         } catch (QueryException $e) {
@@ -327,25 +328,27 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.');
         }
-
-        // try to create associated auto budget:
-        $type = $data['auto_budget_type'] ?? 0;
-        if (0 === $type || '' === $type || 'none' === $type) {
+        if (!array_key_exists('auto_budget_type', $data)) {
             return $newBudget;
         }
+        $type = $data['auto_budget_type'];
+        if ('none' === $type) {
+            return $newBudget;
+        }
+
         if ('reset' === $type) {
             $type = AutoBudget::AUTO_BUDGET_RESET;
         }
         if ('rollover' === $type) {
             $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
         }
-        $repos        = app(CurrencyRepositoryInterface::class);
-        $currencyId   = (int)($data['transaction_currency_id'] ?? 0);
-        $currencyCode = (string)($data['transaction_currency_code'] ?? '');
 
-        $currency = $repos->findNull($currencyId);
-        if (null === $currency) {
-            $currency = $repos->findByCodeNull($currencyCode);
+        $repos = app(CurrencyRepositoryInterface::class);
+        if (array_key_exists('currency_id', $data)) {
+            $currency = $repos->findNull((int)$data['currency_id']);
+        }
+        if (array_key_exists('currency_code', $data)) {
+            $currency = $repos->findByCode((string)$data['currency_code']);
         }
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
@@ -387,56 +390,68 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
-        $oldName        = $budget->name;
-        $budget->name   = $data['name'];
-        $budget->active = $data['active'];
+        $oldName = $budget->name;
+        if (array_key_exists('name', $data)) {
+            $budget->name = $data['name'];
+        }
+        if (array_key_exists('active', $data)) {
+            $budget->active = $data['active'];
+        }
         $budget->save();
 
         // update or create auto-budget:
-        $autoBudgetType = $data['auto_budget_type'] ?? 0;
-        if ('reset' === $autoBudgetType) {
-            $autoBudgetType = AutoBudget::AUTO_BUDGET_RESET;
-        }
-        if ('rollover' === $autoBudgetType) {
-            $autoBudgetType = AutoBudget::AUTO_BUDGET_ROLLOVER;
-        }
-        if ('none' === $autoBudgetType) {
-            $autoBudgetType = 0;
-        }
-        if (0 !== $autoBudgetType) {
-            $autoBudget = $this->getAutoBudget($budget);
-            if (null === $autoBudget) {
-                $autoBudget = new AutoBudget;
-                $autoBudget->budget()->associate($budget);
-            }
+        $autoBudget = $this->getAutoBudget($budget);
 
+        // get currency:
+        $currency = null;
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $repos        = app(CurrencyRepositoryInterface::class);
-            $currencyId   = (int)($data['transaction_currency_id'] ?? 0);
-            $currencyCode = (string)($data['transaction_currency_code'] ?? '');
-
-            $currency = $repos->findNull($currencyId);
+            $currencyId   = (int)($data['currency_id'] ?? 0);
+            $currencyCode = (string)($data['currency_code'] ?? '');
+            $currency     = $repos->findNull($currencyId);
             if (null === $currency) {
                 $currency = $repos->findByCodeNull($currencyCode);
             }
-            if (null === $currency) {
-                $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-            }
+        }
+        if (null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
 
+        if (null === $autoBudget
+            && array_key_exists('auto_budget_type', $data)
+            && array_key_exists('auto_budget_amount', $data)
+        ) {
+            // only create if all are here:
+            $autoBudget                          = new AutoBudget;
+            $autoBudget->budget_id               = $budget->id;
             $autoBudget->transaction_currency_id = $currency->id;
-            $autoBudget->auto_budget_type        = $autoBudgetType;
-            $autoBudget->amount                  = $data['auto_budget_amount'] ?? '0';
-            $autoBudget->period                  = $data['auto_budget_period'] ?? 'monthly';
+        }
+
+        // update existing type
+        if (array_key_exists('auto_budget_type', $data)) {
+            $autoBudgetType = $data['auto_budget_type'];
+            if ('reset' === $autoBudgetType) {
+                $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_RESET;
+            }
+            if ('rollover' === $autoBudgetType) {
+                $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_ROLLOVER;
+            }
+            if ('none' === $autoBudgetType && null !== $autoBudget->id) {
+                $autoBudget->delete();
+
+                return $budget;
+            }
+        }
+        if (array_key_exists('auto_budget_amount', $data)) {
+            $autoBudget->amount = $data['auto_budget_amount'];
+        }
+        if (array_key_exists('auto_budget_period', $data)) {
+            $autoBudget->period = $data['auto_budget_period'];
+        }
+        if (null !== $autoBudget) {
             $autoBudget->save();
         }
-        if (0 === $autoBudgetType) {
-            $autoBudget = $this->getAutoBudget($budget);
-            if (null !== $autoBudget) {
-                $this->destroyAutoBudget($budget);
-            }
-        }
-        $this->updateRuleTriggers($oldName, $data['name']);
-        $this->updateRuleActions($oldName, $data['name']);
-        app('preferences')->mark();
+
 
         return $budget;
     }
