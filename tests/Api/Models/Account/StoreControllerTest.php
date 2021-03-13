@@ -61,7 +61,7 @@ class StoreControllerTest extends TestCase
         }
         // run account store with a minimal data set:
         $route = 'api.v1.accounts.store';
-        $this->submitAndCompare($route, $submission);
+        $this->storeAndCompare($route, $submission);
     }
 
     /**
@@ -106,79 +106,81 @@ class StoreControllerTest extends TestCase
      */
     private function optionalSets(): array
     {
-        $faker      = Factory::create();
-        $currencies = [
+        $faker = Factory::create();
+        $currencies      = [
             1 => 'EUR',
             2 => 'HUF',
             3 => 'GBP',
             4 => 'UAH',
         ];
-        $rand       = rand(1, 4);
+        $rand            = rand(1, 4);
+        // rand
+
 
         return [
-            'active' => [
+            'active'            => [
                 'fields' => [
                     'active' => $faker->boolean,
                 ],
             ],
-            //            'iban'              => [
-            //                'fields' => [
-            //                    'iban' => $faker->iban(),
-            //                ],
-            //            ],
-            //            'bic'               => [
-            //                'fields' => [
-            //                    'bic' => $faker->swiftBicNumber,
-            //                ],
-            //            ],
-            //            'account_number'    => [
-            //                'fields' => [
-            //                    'account_number' => $faker->iban(),
-            //                ],
-            //            ],
-            //            'ob'                => [
-            //                'fields' => [
-            //                    'opening_balance'      => $this->getRandomAmount(),
-            //                    'opening_balance_date' => $this->getRandomDateString(),
-            //                ],
-            //            ],
-            //            'virtual_balance'   => [
-            //                'fields' => [
-            //                    'virtual_balance' => $this->getRandomAmount(),
-            //                ],
-            //            ],
-            //            'currency_id'       => [
-            //                'fields' => [
-            //                    'currency_id' => $rand,
-            //                ],
-            //            ],
-            //            'currency_code'     => [
-            //                'fields' => [
-            //                    'currency_code' => $currencies[$rand],
-            //                ],
-            //            ],
-            //            'order'             => [
-            //                'fields' => [
-            //                    'order' => $faker->numberBetween(1, 5),
-            //                ],
-            //            ],
-            //            'include_net_worth' => [
-            //                'fields' => [
-            //                    'include_net_worth' => $faker->boolean,
-            //                ],
-            //            ],
-            //            'notes'             => [
-            //                'fields' => [
-            //                    'notes' => join(' ', $faker->words(5)),
-            //                ],
-            //            ],
-            //            'location'          => [
-            //                'fields' => [
-            //                    'latitude'   => $faker->latitude,
-            //                    'longitude'  => $faker->longitude,
-            //                    'zoom_level' => $faker->numberBetween(1, 10),
-            //                ],
-            //            ],
+            'iban'              => [
+                'fields' => [
+                    'iban' => $faker->iban(),
+                ],
+            ],
+            'bic'               => [
+                'fields' => [
+                    'bic' => $faker->swiftBicNumber,
+                ],
+            ],
+            'account_number'    => [
+                'fields' => [
+                    'account_number' => $faker->iban(),
+                ],
+            ],
+            'ob'                => [
+                'fields' => [
+                    'opening_balance'      => $this->getRandomAmount(),
+                    'opening_balance_date' => $this->getRandomDateString(),
+                ],
+            ],
+            'virtual_balance'   => [
+                'fields' => [
+                    'virtual_balance' => $this->getRandomAmount(),
+                ],
+            ],
+            'currency_id'       => [
+                'fields' => [
+                    'currency_id' => $rand,
+                ],
+            ],
+            'currency_code'     => [
+                'fields' => [
+                    'currency_code' => $currencies[$rand],
+                ],
+            ],
+            'order'             => [
+                'fields' => [
+                    'order' => $faker->numberBetween(1, 5),
+                ],
+            ],
+            'include_net_worth' => [
+                'fields' => [
+                    'include_net_worth' => $faker->boolean,
+                ],
+            ],
+            'notes'             => [
+                'fields' => [
+                    'notes' => join(' ', $faker->words(5)),
+                ],
+            ],
+            'location'          => [
+                'fields' => [
+                    'latitude'   => $faker->latitude,
+                    'longitude'  => $faker->longitude,
+                    'zoom_level' => $faker->numberBetween(1, 10),
+                ],
+            ],
         ];
     }
 

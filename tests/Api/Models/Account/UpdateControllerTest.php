@@ -92,7 +92,7 @@ class UpdateControllerTest extends TestCase
         $accountRoles = ['defaultAsset', 'sharedAsset', 'savingAsset'];
         $accountRole  = $accountRoles[rand(0, count($accountRoles) - 1)];
 
-        $liabilityRoles = ['loan', 'debt', 'asset'];
+        $liabilityRoles = ['loan', 'debt', 'mortgage'];
         $liabilityRole  = $liabilityRoles[rand(0, count($liabilityRoles) - 1)];
 
         $interestPeriods = ['daily', 'monthly', 'yearly'];
@@ -179,7 +179,7 @@ class UpdateControllerTest extends TestCase
             'notes'             => [
                 'id'           => 1,
                 'fields'       => [
-                    'notes' => ['test_value' => $faker->randomAscii],
+                    'notes' => ['test_value' => join(' ', $faker->words(3))],
                 ],
                 'extra_ignore' => [],
             ],

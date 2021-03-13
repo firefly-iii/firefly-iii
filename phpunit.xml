@@ -35,8 +35,17 @@
     </include>
   </coverage>
   <testsuites>
-    <testsuite name="Api">
+    <testsuite name="ApiAccount">
       <directory suffix="Test.php">./tests/Api/Models/Account</directory>
+    </testsuite>
+    <testsuite name="ApiAttachment">
+      <directory suffix="Test.php">./tests/Api/Models/Attachment</directory>
+    </testsuite>
+    <testsuite name="ApiAb">
+      <directory suffix="Test.php">./tests/Api/Models/AvailableBudget</directory>
+    </testsuite>
+    <testsuite name="ApiBill">
+      <directory suffix="Test.php">./tests/Api/Models/Bill</directory>
     </testsuite>
 
     <!--

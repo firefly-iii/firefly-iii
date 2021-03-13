@@ -72,20 +72,15 @@ class UpdateController extends Controller
     {
         $data = $request->getAll();
 
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrency();
+        // find and validate currency ID
+        if(array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            $factory = app(TransactionCurrencyFactory::class);
+            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null) ?? app('amount')->getDefaultCurrency();
+            $currency->enabled = true;
+            $currency->save();
+            unset($data['currency_code']);
+            $data['currency_id'] = $currency->id;
         }
-        $currency->enabled = true;
-        $currency->save();
-        unset($data['currency_code']);
-        $data['currency_id'] = $currency->id;
-
 
         $this->abRepository->updateAvailableBudget($availableBudget, $data);
         $manager = $this->getManager();

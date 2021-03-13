@@ -57,6 +57,7 @@ class StoreController extends Controller
             }
         );
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -70,14 +71,14 @@ class StoreController extends Controller
         $data['start']->startOfDay();
         $data['end']->endOfDay();
 
-        /** @var TransactionCurrencyFactory $factory */
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find($data['currency_id'], $data['currency_code']);
-
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrency();
+        // currency is not mandatory:
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            $factory  = app(TransactionCurrencyFactory::class);
+            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+            $data['currency_id'] = $currency->id;
+            unset($data['currency_code']);
         }
-        $data['currency'] = $currency;
+
         $availableBudget  = $this->abRepository->store($data);
         $manager          = $this->getManager();
 

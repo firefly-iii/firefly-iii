@@ -135,7 +135,9 @@ trait TestHelpers
 
         $response       = $this->put($route, $submissionArray, ['Accept' => 'application/json']);
         $responseString = $response->content();
-        $response->assertStatus(200);
+        $status         = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Submission: %s\nResponse: %s", json_encode($submissionArray), $responseString));
+        //$response->assertStatus(200);
         $responseArray      = json_decode($responseString, true, 512, JSON_THROW_ON_ERROR);
         $responseAttributes = $responseArray['data']['attributes'] ?? [];
 
@@ -171,7 +173,7 @@ trait TestHelpers
                 // original has this key too:
                 if (array_key_exists($rKey, $originalAttributes)) {
                     // but we can ignore it!
-                    if(in_array($rKey, $submission['extra_ignore'])) {
+                    if (in_array($rKey, $submission['extra_ignore'])) {
                         continue;
                     }
                     // but it is different?
@@ -185,7 +187,6 @@ trait TestHelpers
                             json_encode($submissionArray),
                             $responseString
                         );
-
 
 
                         $this->assertTrue(false, $message);
@@ -248,18 +249,27 @@ trait TestHelpers
      * @param string $route
      * @param array  $submission
      */
-    protected function submitAndCompare(string $route, array $submission): void
+    protected function storeAndCompare(string $route, array $submission, ?array $ignore = null): void
     {
+        $ignore = $ignore ?? [];
         // submit!
         $response     = $this->post(route($route), $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
-        $message      = sprintf('Status code is %d and body is %s', $response->getStatusCode(), $responseBody);
-        $this->assertEquals($response->getStatusCode(), 200, $message);
+        $status       = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Submission: %s\nResponse: %s", json_encode($submission), $responseBody));
+
+
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 
         // compare results:
         foreach ($responseJson['data']['attributes'] as $returnName => $returnValue) {
+            if (in_array($returnName, $ignore)) {
+                Log::debug(sprintf('Ignore value of "%s".', $returnName));
+                continue;
+            }
+
+
             if (array_key_exists($returnName, $submission)) {
                 // TODO still based on account routine:
                 if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {

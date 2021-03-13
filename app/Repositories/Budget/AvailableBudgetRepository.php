@@ -25,7 +25,6 @@ namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -246,7 +245,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return AvailableBudget::create(
             [
                 'user_id'                 => $this->user->id,
-                'transaction_currency_id' => $data['currency']->id,
+                'transaction_currency_id' => $data['currency_id'],
                 'amount'                  => $data['amount'],
                 'start_date'              => $start,
                 'end_date'                => $end,
@@ -276,35 +275,34 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      * @param array           $data
      *
      * @return AvailableBudget
-     * @throws FireflyException
      */
     public function updateAvailableBudget(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
-        $existing = $this->user->availableBudgets()
-                               ->where('transaction_currency_id', $data['currency_id'])
-                               ->where('start_date', $data['start']->format('Y-m-d'))
-                               ->where('end_date', $data['end']->format('Y-m-d'))
-                               ->where('id', '!=', $availableBudget->id)
-                               ->first();
-
-        if (null !== $existing) {
-            throw new FireflyException(sprintf('An entry already exists for these parameters: available budget object with ID #%d', $existing->id));
+        if (array_key_exists('start', $data)) {
+            $start = $data['start'];
+            if ($start instanceof Carbon) {
+                $start                       = $data['start']->startOfDay();
+                $availableBudget->start_date = $start;
+                $availableBudget->save();
+            }
         }
 
-        $start = $data['start'];
-        if ($start instanceof Carbon) {
-            $start = $data['start']->startOfDay();
+        if (array_key_exists('end', $data)) {
+            $end = $data['end'];
+            if ($end instanceof Carbon) {
+                $end                       = $data['end']->endOfDay();
+                $availableBudget->end_date = $end;
+                $availableBudget->save();
+            }
         }
-        $end = $data['end'];
-        if ($end instanceof Carbon) {
-            $end = $data['end']->endOfDay();
+        if (array_key_exists('currency_id', $data)) {
+            $availableBudget->transaction_currency_id = $data['currency_id'];
+            $availableBudget->save();
         }
-
-        $availableBudget->transaction_currency_id = $data['currency_id'];
-        $availableBudget->start_date              = $start;
-        $availableBudget->end_date                = $end;
-        $availableBudget->amount                  = $data['amount'];
-        $availableBudget->save();
+        if (array_key_exists('amount', $data)) {
+            $availableBudget->amount = $data['amount'];
+            $availableBudget->save();
+        }
 
         return $availableBudget;
 

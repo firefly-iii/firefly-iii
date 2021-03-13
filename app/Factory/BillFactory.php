@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
@@ -50,15 +49,14 @@ class BillFactory
      */
     public function create(array $data): ?Bill
     {
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+        Log::debug(sprintf('Now in %s', __METHOD__), $data);
+        $factory  = app(TransactionCurrencyFactory::class);
+        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
+                    app('amount')->getDefaultCurrencyByUser($this->user);
 
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        }
         try {
+            $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
+            $active = array_key_exists('active', $data) ? $data['active'] : 0;
             /** @var Bill $bill */
             $bill = Bill::create(
                 [
@@ -70,9 +68,9 @@ class BillFactory
                     'amount_max'              => $data['amount_max'],
                     'date'                    => $data['date'],
                     'repeat_freq'             => $data['repeat_freq'],
-                    'skip'                    => $data['skip'],
+                    'skip'                    => $skip,
                     'automatch'               => true,
-                    'active'                  => $data['active'] ?? true,
+                    'active'                  => $active,
                 ]
             );
         } catch (QueryException $e) {
@@ -84,8 +82,7 @@ class BillFactory
         if (array_key_exists('notes', $data)) {
             $this->updateNote($bill, (string)$data['notes']);
         }
-
-        $objectGroupTitle = $data['object_group'] ?? '';
+        $objectGroupTitle = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if (null !== $objectGroup) {
