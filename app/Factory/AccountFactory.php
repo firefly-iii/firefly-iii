@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\Services\Internal\Support\LocationServiceTrait;
+use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Log;
 
@@ -42,12 +43,12 @@ class AccountFactory
 {
     use AccountServiceTrait, LocationServiceTrait;
 
-    protected AccountRepositoryInterface      $accountRepository;
-    protected array                           $validAssetFields;
-    protected array                           $validCCFields;
-    protected array                           $validFields;
-    private array                             $canHaveVirtual;
-    private User                              $user;
+    protected AccountRepositoryInterface $accountRepository;
+    protected array                      $validAssetFields;
+    protected array                      $validCCFields;
+    protected array                      $validFields;
+    private array                        $canHaveVirtual;
+    private User                         $user;
 
     /**
      * AccountFactory constructor.
@@ -73,9 +74,10 @@ class AccountFactory
     public function create(array $data): Account
     {
         $type = $this->getAccountType($data['account_type_id'] ?? null, $data['account_type'] ?? null);
-
         if (null === $type) {
-            throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'] ?? null, $data['account_type'] ?? null));
+            throw new FireflyException(
+                sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $data['account_type_id'] ?? null, $data['account_type'] ?? null)
+            );
         }
 
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
@@ -85,8 +87,13 @@ class AccountFactory
         $return = $this->find($data['name'], $type->type);
 
         if (null === $return) {
+            $this->accountRepository->resetAccountOrder();
+
             // create it:
-            $databaseData = ['user_id' => $this->user->id, 'account_type_id' => $type->id, 'name' => $data['name'], 'order' => $data['order'] ?? 0, 'virtual_balance' => $data['virtual_balance'] ?? null, 'active' => true === $data['active'], 'iban' => $data['iban'],];
+            $databaseData = ['user_id'         => $this->user->id,
+                             'account_type_id' => $type->id,
+                             'name' => $data['name'], 'order' => 0,
+                             'virtual_balance' => $data['virtual_balance'] ?? null, 'active' => true === $data['active'], 'iban' => $data['iban'],];
 
             $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code']);
@@ -118,6 +125,15 @@ class AccountFactory
 
             // store location
             $this->storeNewLocation($return, $data);
+
+            // set new order:
+            if (array_key_exists('order', $data)) {
+                $maxOrder = $this->accountRepository->maxOrder([$type->type]);
+                $order  = $data['order'] > $maxOrder ? $maxOrder+1 : $data['order'];
+                $update = new AccountUpdateService;
+                $update->setUser($return->user);
+                $return = $update->updateAccountOrder($return,['order' => $order]);
+            }
         }
 
         return $return;
@@ -152,7 +168,10 @@ class AccountFactory
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
-            $return = $this->create(['user_id' => $this->user->id, 'name' => $accountName, 'account_type_id' => $type->id, 'account_type' => null, 'virtual_balance' => '0', 'iban' => null, 'active' => true,]);
+            $return = $this->create(
+                ['user_id' => $this->user->id, 'name' => $accountName, 'account_type_id' => $type->id, 'account_type' => null, 'virtual_balance' => '0',
+                 'iban'    => null, 'active' => true,]
+            );
         }
 
         return $return;

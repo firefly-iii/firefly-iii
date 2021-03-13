@@ -83,7 +83,6 @@ trait AccountServiceTrait
     public function updateMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
-
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }

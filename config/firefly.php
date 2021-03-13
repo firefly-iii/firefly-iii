@@ -54,8 +54,8 @@ use FireflyIII\Support\Binder\CLIToken;
 use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
 use FireflyIII\Support\Binder\DynamicConfigKey;
-use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\EitherConfigKey;
+use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\TransactionRules\Actions\AddTag;
@@ -258,6 +258,9 @@ return [
         'initial'     => [AccountType::INITIAL_BALANCE],
         'import'      => [AccountType::IMPORT],
         'reconcile'   => [AccountType::RECONCILIATION],
+        'loan'        => [AccountType::LOAN],
+        'debt'        => [AccountType::DEBT],
+        'mortgage'    => [AccountType::MORTGAGE],
         'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
         'liability'   => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
     ],

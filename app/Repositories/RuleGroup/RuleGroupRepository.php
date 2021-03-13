@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\RuleGroup;
 
-use DB;
 use Exception;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -458,14 +457,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         if ($newOrder > $oldOrder) {
             $this->user->ruleGroups()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
                        ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->update(['order' => DB::raw('rule_groups.order-1')]);
+                       ->decrement('rule_groups.order', 1);
             $ruleGroup->order = $newOrder;
             $ruleGroup->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->ruleGroups()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
                        ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->update(['order' => DB::raw('rule_groups.order+1')]);
+                       ->increment('rule_groups.order', 1);
             $ruleGroup->order = $newOrder;
             $ruleGroup->save();
         }

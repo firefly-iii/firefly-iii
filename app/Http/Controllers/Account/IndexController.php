@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         if (1 === random_int(0, 20)) {
             Log::debug('Will reset order.');
-            $this->repository->resetAccountOrder($types);
+            $this->repository->resetAccountOrder();
         }
 
         $collection    = $this->repository->getActiveAccountsByType($types);

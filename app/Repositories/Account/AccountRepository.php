@@ -586,16 +586,25 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function resetAccountOrder(array $types): void
+    public function resetAccountOrder(): void
     {
-        $list = $this->getAccountsByType($types);
-        /**
-         * @var int     $index
-         * @var Account $account
-         */
-        foreach ($list as $index => $account) {
-            $account->order = $index + 1;
-            $account->save();
+        $sets = [
+            [AccountType::DEFAULT, AccountType::ASSET],
+            [AccountType::EXPENSE, AccountType::BENEFICIARY],
+            [AccountType::REVENUE],
+            [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
+        ];
+        foreach ($sets as $set) {
+            $list  = $this->getAccountsByType($set);
+            $index = 1;
+            foreach ($list as $account) {
+                if ($index !== $account->order) {
+                    $account->order = $index;
+                    $account->save();
+                }
+                $index++;
+            }
         }
     }
 
@@ -752,5 +761,13 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function maxOrder(array $types): int
+    {
+        return (int)$this->getAccountsByType($types)->max('order');
     }
 }

@@ -48,6 +48,13 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
+     * @param array $types
+     *
+     * @return int
+     */
+    public function maxOrder(array $types): int;
+
+    /**
      * Moved here from account CRUD.
      *
      * @param Account      $account
@@ -256,10 +263,8 @@ interface AccountRepositoryInterface
 
     /**
      * Reset order types of the mentioned accounts.
-     *
-     * @param array $types
      */
-    public function resetAccountOrder(array $types): void;
+    public function resetAccountOrder(): void;
 
     /**
      * @param string $query

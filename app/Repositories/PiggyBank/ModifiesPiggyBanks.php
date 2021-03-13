@@ -461,7 +461,8 @@ trait ModifiesPiggyBanks
             $user = $this->user;
             $user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
                  ->where('piggy_banks.id', '!=', $piggyBank->id)
-                 ->update(['piggy_banks.order' => DB::raw('piggy_banks.order-1')]);
+                ->decrement('piggybanks.order',1);
+
             $piggyBank->order = $newOrder;
             $piggyBank->save();
         }
@@ -474,7 +475,8 @@ trait ModifiesPiggyBanks
             $user = $this->user;
             $user->piggyBanks()->where('piggy_banks.order', '>=', $newOrder)->where('piggy_banks.order', '<', $oldOrder)
                  ->where('piggy_banks.id', '!=', $piggyBank->id)
-                 ->update(['piggy_banks.order' => DB::raw('piggy_banks.order+1')]);
+                ->increment('piggybanks.order',1);
+
             $piggyBank->order = $newOrder;
             $piggyBank->save();
         }

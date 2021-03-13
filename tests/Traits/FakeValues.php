@@ -1,8 +1,7 @@
 <?php
-
-/**
- * TestCase.php
- * Copyright (c) 2020 james@firefly-iii.org
+/*
+ * FakeValues.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,34 +18,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\Traits;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\Traits\CollectsValues;
 
-/**
- * Class TestCase
- */
-abstract class TestCase extends BaseTestCase
+trait FakeValues
 {
-    use CreatesApplication, CollectsValues;
-
-    /**
-     * @return array
-     */
-    public function dateRangeProvider(): array
-    {
-        return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
-        ];
-    }
+//    /**
+//     * @return string
+//     */
+//    protected function fakeName(): string {
+//        return '';
+//    }
 
 }

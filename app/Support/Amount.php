@@ -223,10 +223,6 @@ class Amount
      */
     public function getAllCurrencies(): Collection
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
@@ -235,10 +231,6 @@ class Amount
      */
     public function getCurrencies(): Collection
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-
         return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
     }
 
@@ -247,9 +239,6 @@ class Amount
      */
     public function getCurrencyCode(): string
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
@@ -273,9 +262,6 @@ class Amount
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
         /** @var User $user */
         $user = auth()->user();
 
@@ -287,10 +273,6 @@ class Amount
      */
     public function getSystemCurrency(): TransactionCurrency
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-        }
-
             return TransactionCurrency::where('code', 'EUR')->first();
     }
 

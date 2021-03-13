@@ -91,7 +91,7 @@ class AccountTransformer extends AbstractTransformer
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
-            'order'                   => $account->order,
+            'order'                   => (int) $account->order,
             'name'                    => $account->name,
             'type'                    => strtolower($accountType),
             'account_role'            => $accountRole,

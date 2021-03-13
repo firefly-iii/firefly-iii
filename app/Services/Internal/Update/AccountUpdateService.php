@@ -52,15 +52,20 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         // TODO move to configuration.
         $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->validAssetFields  = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
         $this->validCCFields     = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
         $this->validFields       = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -73,6 +78,7 @@ class AccountUpdateService
      */
     public function update(Account $account, array $data): Account
     {
+        Log::debug(sprintf('Now in %s',__METHOD__));
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
         $account    = $this->updateAccount($account, $data);
@@ -126,7 +132,7 @@ class AccountUpdateService
         }
 
         // update virtual balance (could be set to zero if empty string).
-        if (null !== $data['virtual_balance']) {
+        if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {
             $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
         }
 
@@ -175,7 +181,7 @@ class AccountUpdateService
      *
      * @return Account
      */
-    private function updateAccountOrder(Account $account, array $data): Account
+    public function updateAccountOrder(Account $account, array $data): Account
     {
         // skip if no order info
         if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
@@ -195,20 +201,20 @@ class AccountUpdateService
         }
 
         if ($newOrder > $oldOrder) {
-            $this->user->accounts()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+            $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
                        ->where('accounts.id', '!=', $account->id)
                        ->whereIn('accounts.account_type_id', $list)
-                       ->update(['order' => DB::raw('accounts.order-1')]);
+                ->decrement('order', 1);
             $account->order = $newOrder;
             $account->save();
 
             return $account;
         }
 
-        $this->user->accounts()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
+        $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
                    ->where('accounts.id', '!=', $account->id)
                    ->whereIn('accounts.account_type_id', $list)
-                   ->update(['order' => DB::raw('accounts.order+1')]);
+                   ->increment('order',1);
         $account->order = $newOrder;
         $account->save();
 
