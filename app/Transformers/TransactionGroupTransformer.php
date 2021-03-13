@@ -154,7 +154,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $bill) {
             return $array;
         }
-        $array['id']   = (int)$bill->id;
+        $array['id']   = (string)$bill->id;
         $array['name'] = $bill->name;
 
         return $array;
@@ -567,9 +567,13 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function stringFromArray(array $array, string $key, ?string $default): ?string
     {
-        if (array_key_exists($key, $array)) {
+        if (array_key_exists($key, $array) && null === $array[$key]) {
+            return null;
+        }
+        if (array_key_exists($key, $array) && null !== $array[$key]) {
             return (string) $array[$key];
         }
+
         if (null !== $default) {
             return (string) $default;
         }
