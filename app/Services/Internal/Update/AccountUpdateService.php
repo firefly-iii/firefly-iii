@@ -172,7 +172,7 @@ class AccountUpdateService
      */
     private function getAccountType(string $type): AccountType
     {
-        return AccountType::whereType($type)->first();
+        return AccountType::whereType(ucfirst($type))->first();
     }
 
     /**

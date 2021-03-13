@@ -84,7 +84,7 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
-            $zoomLevel = $location->zoom_level;
+            $zoomLevel = (int) $location->zoom_level;
         }
         return [
             'id'                      => (string) $account->id,

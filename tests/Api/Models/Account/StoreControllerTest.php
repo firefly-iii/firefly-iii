@@ -50,13 +50,27 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * @dataProvider storeAccountDataProvider
+     * X data Provider storeAccountDataProvider
+     *
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
         // run account store with a minimal data set:
         $route = 'api.v1.accounts.store';
         $this->submitAndCompare($route, $submission);
+    }
+
+    /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
     }
 
     /**
@@ -102,69 +116,69 @@ class StoreControllerTest extends TestCase
         $rand       = rand(1, 4);
 
         return [
-            'active'            => [
+            'active' => [
                 'fields' => [
                     'active' => $faker->boolean,
                 ],
             ],
-//            'iban'              => [
-//                'fields' => [
-//                    'iban' => $faker->iban(),
-//                ],
-//            ],
-//            'bic'               => [
-//                'fields' => [
-//                    'bic' => $faker->swiftBicNumber,
-//                ],
-//            ],
-//            'account_number'    => [
-//                'fields' => [
-//                    'account_number' => $faker->iban(),
-//                ],
-//            ],
-//            'ob'                => [
-//                'fields' => [
-//                    'opening_balance'      => $this->getRandomAmount(),
-//                    'opening_balance_date' => $this->getRandomDateString(),
-//                ],
-//            ],
-//            'virtual_balance'   => [
-//                'fields' => [
-//                    'virtual_balance' => $this->getRandomAmount(),
-//                ],
-//            ],
-//            'currency_id'       => [
-//                'fields' => [
-//                    'currency_id' => $rand,
-//                ],
-//            ],
-//            'currency_code'     => [
-//                'fields' => [
-//                    'currency_code' => $currencies[$rand],
-//                ],
-//            ],
-//            'order'             => [
-//                'fields' => [
-//                    'order' => $faker->numberBetween(1, 5),
-//                ],
-//            ],
-//            'include_net_worth' => [
-//                'fields' => [
-//                    'include_net_worth' => $faker->boolean,
-//                ],
-//            ],
-//            'notes'             => [
-//                'fields' => [
-//                    'notes' => join(' ', $faker->words(5)),
-//                ],
-//            ],
-//            'location'          => [
-//                'fields' => [
-//                    'latitude'   => $faker->latitude,
-//                    'longitude'  => $faker->longitude,
-//                    'zoom_level' => $faker->numberBetween(1, 10),
-//                ],
-//            ],
+            //            'iban'              => [
+            //                'fields' => [
+            //                    'iban' => $faker->iban(),
+            //                ],
+            //            ],
+            //            'bic'               => [
+            //                'fields' => [
+            //                    'bic' => $faker->swiftBicNumber,
+            //                ],
+            //            ],
+            //            'account_number'    => [
+            //                'fields' => [
+            //                    'account_number' => $faker->iban(),
+            //                ],
+            //            ],
+            //            'ob'                => [
+            //                'fields' => [
+            //                    'opening_balance'      => $this->getRandomAmount(),
+            //                    'opening_balance_date' => $this->getRandomDateString(),
+            //                ],
+            //            ],
+            //            'virtual_balance'   => [
+            //                'fields' => [
+            //                    'virtual_balance' => $this->getRandomAmount(),
+            //                ],
+            //            ],
+            //            'currency_id'       => [
+            //                'fields' => [
+            //                    'currency_id' => $rand,
+            //                ],
+            //            ],
+            //            'currency_code'     => [
+            //                'fields' => [
+            //                    'currency_code' => $currencies[$rand],
+            //                ],
+            //            ],
+            //            'order'             => [
+            //                'fields' => [
+            //                    'order' => $faker->numberBetween(1, 5),
+            //                ],
+            //            ],
+            //            'include_net_worth' => [
+            //                'fields' => [
+            //                    'include_net_worth' => $faker->boolean,
+            //                ],
+            //            ],
+            //            'notes'             => [
+            //                'fields' => [
+            //                    'notes' => join(' ', $faker->words(5)),
+            //                ],
+            //            ],
+            //            'location'          => [
+            //                'fields' => [
+            //                    'latitude'   => $faker->latitude,
+            //                    'longitude'  => $faker->longitude,
+            //                    'zoom_level' => $faker->numberBetween(1, 10),
+            //                ],
+            //            ],
         ];
     }
 
