@@ -48,11 +48,11 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * @param array $types
+     * @param string $type
      *
      * @return int
      */
-    public function maxOrder(array $types): int;
+    public function maxOrder(string $type): int;
 
     /**
      * Moved here from account CRUD.

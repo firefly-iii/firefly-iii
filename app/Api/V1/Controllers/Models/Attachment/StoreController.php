@@ -34,6 +34,7 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use League\Fractal\Resource\Item;
+use Log;
 
 /**
  * Class StoreController
@@ -77,6 +78,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $data       = $request->getAll();
         $attachment = $this->repository->store($data);
         $manager    = $this->getManager();

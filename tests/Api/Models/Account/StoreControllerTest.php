@@ -50,9 +50,9 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * X data Provider storeAccountDataProvider
+     * @dataProvider storeDataProvider
      *
-     * @dataProvider emptyDataProvider
+     * @ data Provider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -76,7 +76,7 @@ class StoreControllerTest extends TestCase
     /**
      * @return array
      */
-    public function storeAccountDataProvider(): array
+    public function storeDataProvider(): array
     {
         $minimalSets  = $this->minimalSets();
         $optionalSets = $this->optionalSets();
@@ -226,27 +226,4 @@ class StoreControllerTest extends TestCase
             ],
         ];
     }
-
-    /**
-     * @param string $area
-     * @param string $left
-     * @param string $right
-     *
-     * @return bool
-     */
-    private function ignoreCombination(string $area, string $left, string $right): bool
-    {
-        Log::debug(sprintf('Must ignore %s: %s vs %s?', $area, $left, $right));
-        if ('store-account' === $area) {
-            if ('expense' === $left && in_array($right, ['virtual_balance', 'opening_balance', 'opening_balance_date'])) {
-                Log::debug('Yes');
-
-                return true;
-            }
-        }
-        Log::debug('NO');
-
-        return false;
-    }
-
 }

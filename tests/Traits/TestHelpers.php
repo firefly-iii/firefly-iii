@@ -120,10 +120,9 @@ trait TestHelpers
         // get original values:
         $response = $this->get($route, ['Accept' => 'application/json']);
         $response->assertStatus(200);
-        $originalString = $response->content();
-        $originalArray  = json_decode($originalString, true, 512, JSON_THROW_ON_ERROR);
-
-
+        $originalString     = $response->content();
+        $originalArray      = json_decode($originalString, true, 512, JSON_THROW_ON_ERROR);
+        $originalAttributes = $originalArray['data']['attributes'];
         // submit whatever is in submission:
         // loop the fields we will update in Firefly III:
         $submissionArray = [];
@@ -131,12 +130,17 @@ trait TestHelpers
         foreach ($fieldsToUpdate as $currentFieldName) {
             $submissionArray[$currentFieldName] = $submission['fields'][$currentFieldName]['test_value'];
         }
-        $response = $this->put($route, $submissionArray, ['Accept' => 'application/json']);
+
+        Log::debug(sprintf('Will PUT %s to %s', json_encode($submissionArray), $route));
+
+        $response       = $this->put($route, $submissionArray, ['Accept' => 'application/json']);
         $responseString = $response->content();
         $response->assertStatus(200);
-        $responseArray  = json_decode($responseString, true, 512, JSON_THROW_ON_ERROR);
-
+        $responseArray      = json_decode($responseString, true, 512, JSON_THROW_ON_ERROR);
         $responseAttributes = $responseArray['data']['attributes'] ?? [];
+
+        Log::debug(sprintf('Before: %s', json_encode($originalAttributes)));
+        Log::debug(sprintf('AFTER : %s', json_encode($responseAttributes)));
 
         // loop it and compare:
         foreach ($responseAttributes as $rKey => $rValue) {
@@ -165,10 +169,25 @@ trait TestHelpers
             // field in response was not in body, but should be the same:
             if (!array_key_exists($rKey, $submissionArray)) {
                 // original has this key too:
-                if (array_key_exists($rKey, $originalArray)) {
+                if (array_key_exists($rKey, $originalAttributes)) {
+                    // but we can ignore it!
+                    if(in_array($rKey, $submission['extra_ignore'])) {
+                        continue;
+                    }
                     // but it is different?
-                    if ($originalArray[$rKey] !== $rValue) {
-                        $message = 'Some other value not correct!';
+                    if ($originalAttributes[$rKey] !== $rValue) {
+                        $message = sprintf(
+                            "Untouched field '%s' should still be %s but changed to %s\nOriginal: %s\nSubmission: %s\nResult: %s",
+                            $rKey,
+                            var_export($originalAttributes[$rKey], true),
+                            var_export($rValue, true),
+                            $originalString,
+                            json_encode($submissionArray),
+                            $responseString
+                        );
+
+
+
                         $this->assertTrue(false, $message);
                     }
                 }
@@ -242,7 +261,8 @@ trait TestHelpers
         // compare results:
         foreach ($responseJson['data']['attributes'] as $returnName => $returnValue) {
             if (array_key_exists($returnName, $submission)) {
-                if ($this->ignoreCombination('store-account', $submission['type'], $returnName)) {
+                // TODO still based on account routine:
+                if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {
                     continue;
                 }
 
@@ -254,5 +274,26 @@ trait TestHelpers
 
             }
         }
+    }
+
+    /**
+     * Some specials:
+     *
+     * @param string $area
+     * @param string $left
+     * @param string $right
+     *
+     * @return bool
+     */
+    protected function ignoreCombination(string $area, string $left, string $right): bool
+    {
+        if ('api.v1.attachments.store' === $area) {
+            if ('expense' === $left
+                && in_array($right, ['virtual_balance', 'opening_balance', 'opening_balance_date'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

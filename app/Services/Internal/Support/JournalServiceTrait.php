@@ -109,6 +109,7 @@ trait JournalServiceTrait
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
+
         return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
     }
 
@@ -182,7 +183,7 @@ trait JournalServiceTrait
      */
     protected function storeNotes(TransactionJournal $journal, ?string $notes): void
     {
-        $notes = (string) $notes;
+        $notes = (string)$notes;
         $note  = $journal->notes()->first();
         if ('' !== $notes) {
             if (null === $note) {
@@ -222,11 +223,12 @@ trait JournalServiceTrait
         $set = [];
         if (!is_array($tags)) {
             Log::debug('Tags is not an array, break.');
+
             return;
         }
         Log::debug('Start of loop.');
         foreach ($tags as $string) {
-            $string = (string) $string;
+            $string = (string)$string;
             Log::debug(sprintf('Now at tag "%s"', $string));
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);
@@ -363,7 +365,7 @@ trait JournalServiceTrait
                 throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
             }
             // fix name of account if only IBAN is given:
-            if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
+            if ('' === (string)$data['name'] && '' !== (string)$data['iban']) {
                 Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
                 $data['name'] = $data['iban'];
             }
@@ -379,6 +381,7 @@ trait JournalServiceTrait
                     'active'          => true,
                     'iban'            => $data['iban'],
                     'currency_id'     => $data['currency_id'] ?? null,
+                    'order'           => $this->accountRepository->maxOrder($preferredType),
                 ]
             );
             // store BIC

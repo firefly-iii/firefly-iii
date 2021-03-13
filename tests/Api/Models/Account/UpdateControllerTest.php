@@ -49,7 +49,7 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @dataProvider updateSetDataProvider
+     * @dataProvider updateDataProvider
      */
     public function testUpdate(array $submission): void
     {
@@ -69,7 +69,7 @@ class UpdateControllerTest extends TestCase
     /**
      * @return array
      */
-    public function updateSetDataProvider(): array
+    public function updateDataProvider(): array
     {
         $submissions = [];
         $all         = $this->updateDataSet();
@@ -160,14 +160,14 @@ class UpdateControllerTest extends TestCase
                 'fields'       => [
                     'currency_id' => ['test_value' => (string)$faker->numberBetween(1, 10)],
                 ],
-                'extra_ignore' => [],
+                'extra_ignore' => ['currency_code'],
             ],
             'currency_code'     => [
                 'id'           => 1,
                 'fields'       => [
                     'currency_code' => ['test_value' => $currencyCode],
                 ],
-                'extra_ignore' => [],
+                'extra_ignore' => ['currency_id'],
             ],
             'account_role'      => [
                 'id'           => 1,

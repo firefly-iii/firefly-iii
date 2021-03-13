@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
+use Log;
 
 /**
  * Class UpdateController
@@ -69,6 +70,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Account $account): JsonResponse
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $account      = $this->repository->update($account, $data);

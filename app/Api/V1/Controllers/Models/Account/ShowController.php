@@ -110,6 +110,9 @@ class ShowController extends Controller
      */
     public function show(Account $account): JsonResponse
     {
+        // get list of accounts. Count it and split it.
+        $this->repository->sortAccounts();
+        $account->refresh();
         $manager = $this->getManager();
 
         /** @var AccountTransformer $transformer */

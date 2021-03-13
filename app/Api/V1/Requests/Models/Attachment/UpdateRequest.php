@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Attachment;
 
+use FireflyIII\Rules\IsValidAttachmentModel;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,13 +44,15 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'filename' => $this->string('filename'),
-            'title'    => $this->string('title'),
-            'notes'    => $this->nlString('notes'),
-            'model'    => $this->string('attachable_type'),
-            'model_id' => $this->integer('attachable_id'),
+        $fields = [
+            'filename'        => ['filename', 'string'],
+            'title'           => ['title', 'string'],
+            'notes'           => ['notes', 'nlString'],
+            'attachable_type' => ['attachable_type', 'string'],
+            'attachable_id'   => ['attachable_id', 'integer'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
@@ -59,10 +62,23 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $models = config('firefly.valid_attachment_models');
+        $models = array_map(
+
+            static function (string $className) {
+                return str_replace('FireflyIII\\Models\\', '', $className);
+            }, $models
+        );
+        $models = implode(',', $models);
+        $model  = $this->string('attachable_type');
+
+
         return [
-            'filename' => 'between:1,255',
-            'title'    => 'between:1,255',
-            'notes'    => 'between:1,65000',
+            'filename'        => 'between:1,255',
+            'title'           => 'between:1,255',
+            'notes'           => 'between:1,65000',
+            'attachable_type' => sprintf('in:%s', $models),
+            'attachable_id'   => ['numeric', new IsValidAttachmentModel($model)],
         ];
     }
 }

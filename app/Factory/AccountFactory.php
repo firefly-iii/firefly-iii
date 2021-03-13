@@ -92,7 +92,8 @@ class AccountFactory
             // create it:
             $databaseData = ['user_id'         => $this->user->id,
                              'account_type_id' => $type->id,
-                             'name' => $data['name'], 'order' => 0,
+                             'name'            => $data['name'],
+                             'order'           => 25000,
                              'virtual_balance' => $data['virtual_balance'] ?? null, 'active' => true === $data['active'], 'iban' => $data['iban'],];
 
             $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
@@ -126,14 +127,24 @@ class AccountFactory
             // store location
             $this->storeNewLocation($return, $data);
 
+            // update order to be correct:
+
             // set new order:
-            if (array_key_exists('order', $data)) {
-                $maxOrder = $this->accountRepository->maxOrder([$type->type]);
-                $order  = $data['order'] > $maxOrder ? $maxOrder+1 : $data['order'];
-                $update = new AccountUpdateService;
-                $update->setUser($return->user);
-                $return = $update->updateAccountOrder($return,['order' => $order]);
+            $maxOrder = $this->accountRepository->maxOrder($type->type);
+            $order    = null;
+            if (!array_key_exists('order', $data)) {
+                // take maxOrder + 1
+                $order = $maxOrder + 1;
             }
+            if (array_key_exists('order', $data)) {
+                // limit order
+                $order = (int)($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
+                $order = 0 === $order ? $maxOrder + 1 : $order;
+            }
+            $updateService = app(AccountUpdateService::class);
+            $updateService->setUser($return->user);
+            Log::debug(sprintf('Will set order to %d', $order));
+            $return = $updateService->update($return, ['order' => $order]);
         }
 
         return $return;

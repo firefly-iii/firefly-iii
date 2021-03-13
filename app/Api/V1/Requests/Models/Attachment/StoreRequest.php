@@ -45,11 +45,11 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'filename' => $this->string('filename'),
-            'title'    => $this->string('title'),
-            'notes'    => $this->nlString('notes'),
-            'model'    => $this->string('attachable_type'),
-            'model_id' => $this->integer('attachable_id'),
+            'filename'        => $this->string('filename'),
+            'title'           => $this->string('title'),
+            'notes'           => $this->nlString('notes'),
+            'attachable_type' => $this->string('attachable_type'),
+            'attachable_id'   => $this->integer('attachable_id'),
         ];
     }
 

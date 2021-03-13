@@ -596,10 +596,12 @@ class AccountRepository implements AccountRepositoryInterface
             [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
         ];
         foreach ($sets as $set) {
+            Log::debug('Now in resetAccountOrder', $set);
             $list  = $this->getAccountsByType($set);
             $index = 1;
             foreach ($list as $account) {
-                if ($index !== $account->order) {
+                if ($index !== (int)$account->order) {
+                    Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
                 }
@@ -766,8 +768,27 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function maxOrder(array $types): int
+    public function maxOrder(string $type): int
     {
-        return (int)$this->getAccountsByType($types)->max('order');
+        $sets = [
+            AccountType::ASSET    => [AccountType::DEFAULT, AccountType::ASSET],
+            AccountType::EXPENSE  => [AccountType::EXPENSE, AccountType::BENEFICIARY],
+            AccountType::REVENUE  => [AccountType::REVENUE],
+            AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+        ];
+        if (array_key_exists(ucfirst($type), $sets)) {
+            $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
+            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
+
+            return $order;
+        }
+        $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
+
+        $order = (int)$this->getAccountsByType($specials)->max('order');
+        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
+
+        return $order;
     }
 }
