@@ -23,12 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use DB;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
@@ -55,25 +53,21 @@ class BillUpdateService
     public function update(Bill $bill, array $data): Bill
     {
         $this->user = $bill->user;
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
 
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($bill->user);
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            $factory  = app(TransactionCurrencyFactory::class);
+            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null) ?? app('amount')->getDefaultCurrencyByUser($bill->user);
+
+            // enable the currency if it isn't.
+            $currency->enabled = true;
+            $currency->save();
+            $bill->transaction_currency_id = $currency->id;
+            $bill->save();
         }
-
-        // enable the currency if it isn't.
-        $currency->enabled = true;
-        $currency->save();
-
-        // new values
-        $data['transaction_currency_name'] = $currency->name;
-        $bill                              = $this->updateBillProperties($bill, $data);
-        $bill->transaction_currency_id     = $currency->id;
+        // update bill properties:
+        $bill = $this->updateBillProperties($bill, $data);
         $bill->save();
+        $bill->refresh();
         // old values
         $oldData = [
             'name'                      => $bill->name,
@@ -84,53 +78,60 @@ class BillUpdateService
 
 
         // update note:
-        if (isset($data['notes'])) {
+        if (array_key_exists('notes', $data)) {
             $this->updateNote($bill, (string)$data['notes']);
         }
 
         // update order.
-        // update the order of the piggy bank:
-        $oldOrder = (int)$bill->order;
-        $newOrder = (int)($data['order'] ?? $oldOrder);
-        if ($oldOrder !== $newOrder) {
-            $this->updateOrder($bill, $oldOrder, $newOrder);
+        if (array_key_exists('order', $data)) {
+            // update the order of the piggy bank:
+            $oldOrder = (int)$bill->order;
+            $newOrder = (int)($data['order'] ?? $oldOrder);
+            if ($oldOrder !== $newOrder) {
+                $this->updateOrder($bill, $oldOrder, $newOrder);
+            }
         }
 
         // update rule actions.
-        $this->updateBillActions($bill, $oldData['name'], $data['name']);
-        $this->updateBillTriggers($bill, $oldData, $data);
+        if (array_key_exists('name', $data)) {
+            $this->updateBillActions($bill, $oldData['name'], $data['name']);
+            $this->updateBillTriggers($bill, $oldData, $data);
+        }
 
         // update using name:
-        $objectGroupTitle = $data['object_group'] ?? '';
-        if ('' !== $objectGroupTitle) {
-            $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-            if (null !== $objectGroup) {
-                $bill->objectGroups()->sync([$objectGroup->id]);
+        if (array_key_exists('object_group_title', $data)) {
+            $objectGroupTitle = $data['object_group_title'] ?? '';
+            if ('' !== $objectGroupTitle) {
+                $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+                if (null !== $objectGroup) {
+                    $bill->objectGroups()->sync([$objectGroup->id]);
+                    $bill->save();
+                }
+
+                return $bill;
+            }
+            // remove if name is empty. Should be overruled by ID.
+            if ('' === $objectGroupTitle) {
+                $bill->objectGroups()->sync([]);
                 $bill->save();
             }
-
-            return $bill;
         }
-        // remove if name is empty. Should be overruled by ID.
-        if ('' === $objectGroupTitle) {
-            $bill->objectGroups()->sync([]);
-            $bill->save();
-        }
+        if (array_key_exists('object_group_id', $data)) {
+            // try also with ID:
+            $objectGroupId = (int)($data['object_group_id'] ?? 0);
+            if (0 !== $objectGroupId) {
+                $objectGroup = $this->findObjectGroupById($objectGroupId);
+                if (null !== $objectGroup) {
+                    $bill->objectGroups()->sync([$objectGroup->id]);
+                    $bill->save();
+                }
 
-        // try also with ID:
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
-        if (0 !== $objectGroupId) {
-            $objectGroup = $this->findObjectGroupById($objectGroupId);
-            if (null !== $objectGroup) {
-                $bill->objectGroups()->sync([$objectGroup->id]);
+                return $bill;
+            }
+            if (0 === $objectGroupId) {
+                $bill->objectGroups()->sync([]);
                 $bill->save();
             }
-
-            return $bill;
-        }
-        if (0 === $objectGroupId) {
-            $bill->objectGroups()->sync([]);
-            $bill->save();
         }
 
         return $bill;
@@ -144,7 +145,6 @@ class BillUpdateService
      */
     private function updateBillProperties(Bill $bill, array $data): Bill
     {
-
         if (isset($data['name']) && '' !== (string)$data['name']) {
             $bill->name = $data['name'];
         }
@@ -161,10 +161,10 @@ class BillUpdateService
         if (isset($data['repeat_freq']) && '' !== (string)$data['repeat_freq']) {
             $bill->repeat_freq = $data['repeat_freq'];
         }
-        if (isset($data['skip']) && '' !== (string)$data['skip']) {
+        if (array_key_exists('skip', $data)) {
             $bill->skip = $data['skip'];
         }
-        if (isset($data['active']) && is_bool($data['active'])) {
+        if (array_key_exists('active', $data)) {
             $bill->active = $data['active'];
         }
 
@@ -185,14 +185,14 @@ class BillUpdateService
         if ($newOrder > $oldOrder) {
             $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
                        ->where('bills.id', '!=', $bill->id)
-                ->decrement('bills.order',1);
+                       ->decrement('bills.order', 1);
             $bill->order = $newOrder;
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
                        ->where('bills.id', '!=', $bill->id)
-                ->increment('bills.order',1);
+                       ->increment('bills.order', 1);
             $bill->order = $newOrder;
             $bill->save();
         }

@@ -46,24 +46,23 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $active = true;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-
-        return [
-            'name'          => $this->string('name'),
-            'amount_min'    => $this->string('amount_min'),
-            'amount_max'    => $this->string('amount_max'),
-            'currency_id'   => $this->integer('currency_id'),
-            'currency_code' => $this->string('currency_code'),
-            'date'          => $this->date('date'),
-            'repeat_freq'   => $this->string('repeat_freq'),
-            'skip'          => $this->integer('skip'),
-            'active'        => $active,
-            'order'         => $this->integer('order'),
-            'notes'         => $this->nlString('notes'),
+        $fields = [
+            'name'               => ['name', 'string'],
+            'amount_min'         => ['amount_min', 'string'],
+            'amount_max'         => ['amount_max', 'string'],
+            'currency_id'        => ['currency_id', 'integer'],
+            'currency_code'      => ['currency_code', 'string'],
+            'date'               => ['date', 'date'],
+            'repeat_freq'        => ['repeat_freq', 'string'],
+            'skip'               => ['skip', 'integer'],
+            'active'             => ['active', 'boolean'],
+            'order'              => ['order', 'integer'],
+            'notes'              => ['notes', 'nlString'],
+            'object_group_id'    => ['object_group_id', 'integer'],
+            'object_group_title' => ['object_group_title', 'string'],
         ];
+
+        return $this->getAllData($fields);
     }
 
     /**
@@ -73,7 +72,8 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $bill          = $this->route()->parameter('bill');
+        $bill = $this->route()->parameter('bill');
+
         return [
             'name'          => sprintf('between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'    => 'numeric|gt:0',
@@ -100,10 +100,12 @@ class UpdateRequest extends FormRequest
         $validator->after(
             static function (Validator $validator) {
                 $data = $validator->getData();
-                $min  = (float) ($data['amount_min'] ?? 0);
-                $max  = (float) ($data['amount_max'] ?? 0);
-                if ($min > $max) {
-                    $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
+                if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
+                    $min = (float)($data['amount_min'] ?? 0);
+                    $max = (float)($data['amount_max'] ?? 0);
+                    if ($min > $max) {
+                        $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
+                    }
                 }
             }
         );

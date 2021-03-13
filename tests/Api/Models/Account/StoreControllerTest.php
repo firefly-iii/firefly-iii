@@ -50,9 +50,9 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * @dataProvider storeDataProvider
+     * @ data Provider storeDataProvider
      *
-     * @ data Provider emptyDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
