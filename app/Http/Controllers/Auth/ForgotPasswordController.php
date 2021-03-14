@@ -77,7 +77,7 @@ class ForgotPasswordController extends Controller
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
             Log::error($message);
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
         // @codeCoverageIgnoreEnd
 
@@ -118,7 +118,7 @@ class ForgotPasswordController extends Controller
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         // is allowed to?
@@ -130,6 +130,6 @@ class ForgotPasswordController extends Controller
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
+        return prefixView('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
     }
 }

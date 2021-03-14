@@ -19,18 +19,18 @@
   -->
 
 <template>
-  <div>
+  <div v-if="showField">
     <div class="form-group">
       <div class="text-xs d-none d-lg-block d-xl-block">
         {{ $t('firefly.journal_links') }}
       </div>
       <div class="row">
         <div class="col">
-          <p v-if="value.length === 0">
-            <button data-toggle="modal" data-target="#linkModal" class="btn btn-default btn-xs"><i class="fas fa-plus"></i> Add transaction link</button>
+          <p v-if="links.length === 0">
+            <button class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
-          <ul class="list-group" v-if="value.length > 0">
-            <li class="list-group-item" v-for="transaction in value">
+          <ul v-if="links.length > 0" class="list-group">
+            <li v-for="(transaction, index) in links" class="list-group-item" v-bind:key="index">
               <em>{{ getTextForLinkType(transaction.link_type_id) }}</em>
               <a :href='"./transaction/show/" + transaction.transaction_group_id'>{{ transaction.description }}</a>
 
@@ -59,24 +59,23 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <a href="#" class="btn btn-xs btn-default"><i class="far fa-edit"></i></a>
-                <a href="#" class="btn btn-xs btn-danger"><i class="far fa-trash-alt"></i></a>
+                <button class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><i class="far fa-trash-alt"></i></button>
               </div>
             </li>
           </ul>
-          <div class="form-text" v-if="value.length > 0">
-            <button data-toggle="modal" data-target="#linkModal" class="btn btn-default"><i class="fas fa-plus"></i></button>
+          <div v-if="links.length > 0" class="form-text">
+            <button class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
           </div>
         </div>
       </div>
     </div>
     <!-- modal -->
-    <div class="modal" tabindex="-1" id="linkModal">
+    <div id="linkModal" class="modal" tabindex="-1" ref="linkModal">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Transaction thing dialog.</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button aria-label="Close" class="close" data-dismiss="modal" type="button">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -94,10 +93,10 @@
                 <div class="col">
                   <form v-on:submit.prevent="search">
                     <div class="input-group">
-                      <input autocomplete="off" maxlength="255" type="text" name="search" v-model="query" id="query"
-                             class="form-control" placeholder="Search query">
+                      <input id="query" v-model="query" autocomplete="off" class="form-control" maxlength="255" name="search"
+                             placeholder="Search query" type="text">
                       <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i> Search</button>
+                        <button class="btn btn-default" type="submit"><i class="fas fa-search"></i> Search</button>
                       </div>
                     </div>
                   </form>
@@ -107,28 +106,28 @@
                 <div class="col">
                   <span v-if="searching"><i class="fas fa-spinner fa-spin"></i></span>
                   <h4 v-if="searchResults.length > 0">Search results</h4>
-                  <table class="table table-sm" v-if="searchResults.length > 0">
+                  <table v-if="searchResults.length > 0" class="table table-sm">
                     <thead>
                     <tr>
-                      <th style="width:33%" colspan="2">Include?</th>
+                      <th colspan="2" style="width:33%">Include?</th>
                       <th>Transaction</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="result in searchResults">
                       <td>
-                        <input type="checkbox" class="form-control"
+                        <input v-model="result.selected" class="form-control"
+                               type="checkbox"
                                @change="selectTransaction($event)"
-                               v-model="result.selected"
                         />
                       </td>
                       <td>
                         <select
-                            @change="selectLinkType($event)"
-                            class="form-control"
                             v-model="result.link_type_id"
+                            class="form-control"
+                            @change="selectLinkType($event)"
                         >
-                          <option v-for="linkType in linkTypes" :value="linkType.id + '-' + linkType.direction" :label="linkType.type">{{
+                          <option v-for="linkType in linkTypes" :label="linkType.type" :value="linkType.id + '-' + linkType.direction">{{
                               linkType.type
                             }}
                           </option>
@@ -175,7 +174,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
           </div>
         </div>
       </div>
@@ -184,8 +183,10 @@
 </template>
 
 <script>
+const lodashClonedeep = require('lodash.clonedeep');
+// TODO error handling
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionLinks",
   data() {
     return {
@@ -194,27 +195,53 @@ export default {
       locale: 'en-US',
       linkTypes: [],
       query: '',
-      searching: false
+      searching: false,
+      links: this.value,
+      availableFields: this.customFields,
+      emitEvent: true
     }
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
+    this.emitEvent = false;
+    this.links = lodashClonedeep(this.value);
     this.getLinkTypes();
+
+  },
+  computed: {
+    showField: function () {
+      if ('links' in this.availableFields) {
+        return this.availableFields.links;
+      }
+      return false;
+    }
   },
   watch: {
     value: function (value) {
-      console.log('Selected transactions is now:');
-      console.log(value);
+      if (null !== value) {
+        this.emitEvent = false;
+        this.links = lodashClonedeep(value);
+      }
+    },
+    links: function (value) {
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {index: this.index, field: 'links', value: lodashClonedeep(value)});
+      }
+      this.emitEvent = true;
+    },
+    customFields: function (value) {
+      this.availableFields = value;
     }
   },
   methods: {
+    removeLink: function (index) {
+      this.links.splice(index, 1);
+    },
     getTextForLinkType: function (linkTypeId) {
       let parts = linkTypeId.split('-');
       for (let i in this.linkTypes) {
         if (this.linkTypes.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = this.linkTypes[i];
-          console.log(parts);
-          console.log(current);
           if (parts[0] === current.id && parts[1] === current.direction) {
             return current.type;
           }
@@ -245,27 +272,27 @@ export default {
       }
     },
     updateSelected(journalId, linkTypeId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (parseInt(current.transaction_journal_id) === journalId) {
-            this.value[i].link_type_id = linkTypeId;
+            this.links[i].link_type_id = linkTypeId;
           }
         }
       }
     },
     addToSelected(journal) {
-      const result = this.value.find(({transaction_journal_id}) => transaction_journal_id === journal.transaction_journal_id);
+      let result = this.links.find(({transaction_journal_id}) => transaction_journal_id === journal.transaction_journal_id);
       if (typeof result === 'undefined') {
-        this.value.push(journal);
+        this.links.push(journal);
       }
     },
     removeFromSelected(journal) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journal.transaction_journal_id) {
-            this.value.splice(parseInt(i), 1);
+            this.links.splice(parseInt(i), 1);
           }
         }
       }
@@ -277,6 +304,9 @@ export default {
                   this.parseLinkTypes(response.data);
                 }
           );
+    },
+    resetModal: function() {
+      this.search();
     },
     parseLinkTypes: function (data) {
       for (let i in data.data) {
@@ -302,6 +332,10 @@ export default {
       }
     },
     search: function () {
+      if('' === this.query) {
+        this.searchResults = [];
+        return;
+      }
       this.searching = true;
       this.searchResults = [];
       let url = './api/v1/search/transactions?limit=10&query=' + this.query;
@@ -329,9 +363,9 @@ export default {
       this.searching = false;
     },
     getJournalLinkType: function (journalId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journalId) {
             return current.link_type_id;
           }
@@ -340,9 +374,9 @@ export default {
       return '1-inward';
     },
     isJournalSelected: function (journalId) {
-      for (let i in this.value) {
-        if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.value[i];
+      for (let i in this.links) {
+        if (this.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.links[i];
           if (current.transaction_journal_id === journalId) {
             return true;
           }

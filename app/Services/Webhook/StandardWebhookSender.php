@@ -1,4 +1,25 @@
 <?php
+
+/*
+ * StandardWebhookSender.php
+ * Copyright (c) 2021 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 /*
  * StandardWebhookSender.php
@@ -102,10 +123,19 @@ class StandardWebhookSender implements WebhookSenderInterface
         } catch (ClientException | Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            //$logs[]           = sprintf('%s: %s', date('Y-m-d H:i:s'), $e->getMessage());
+
+            $logs = sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString());
+
             $this->message->errored = true;
             $this->message->sent    = false;
             $this->message->save();
+
+            $attempt = new WebhookAttempt;
+            $attempt->webhookMessage()->associate($this->message);
+            $attempt->status_code = $e->getResponse() ? $e->getResponse()->getStatusCode() : 0;
+            $attempt->logs        = $logs;
+            $attempt->save();
+
             return;
         }
         $this->message->save();

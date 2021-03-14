@@ -20,21 +20,21 @@
 
 <template>
   <div>
-    <div class="form-group" v-for="(enabled, name) in enabledDates">
-      <div class="text-xs d-none d-lg-block d-xl-block" v-if="enabled">
+    <div v-for="(enabled, name) in availableFields" class="form-group">
+      <div v-if="enabled && isDateField(name)" class="text-xs d-none d-lg-block d-xl-block">
         {{ $t('form.' + name) }}
       </div>
-      <div class="input-group" v-if="enabled">
+      <div v-if="enabled && isDateField(name)" class="input-group">
         <input
-            class="form-control"
-            type="date"
             :ref="name"
-            :title="$t('form.' + name)"
-            :value="getFieldValue(name)"
-            @change="setFieldValue($event, name)"
-            autocomplete="off"
             :name="name + '[]'"
             :placeholder="$t('form.' + name)"
+            :title="$t('form.' + name)"
+            :value="getFieldValue(name)"
+            autocomplete="off"
+            class="form-control"
+            type="date"
+            @change="setFieldValue($event, name)"
             v-on:submit.prevent
         >
       </div>
@@ -43,33 +43,67 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 export default {
   name: "TransactionCustomDates",
-  props: ['enabledDates', 'index'],
+  props: [
+    'index',
+    'errors',
+    'customFields',
+    'interestDate',
+    'bookDate',
+    'processDate',
+    'dueDate',
+    'paymentDate',
+    'invoiceDate'
+  ],
+  data() {
+    return {
+      dateFields: ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'],
+      availableFields: this.customFields,
+      dates: {
+        interest_date: this.interestDate,
+        book_date: this.bookDate,
+        process_date: this.processDate,
+        due_date: this.dueDate,
+        payment_date: this.paymentDate,
+        invoice_date: this.invoiceDate,
+      }
+      ,
+    }
+  },
+  watch: {
+    customFields: function (value) {
+      this.availableFields = value;
+    },
+    interestDate: function (value) {
+      this.dates.interest_date = value;
+    },
+    bookDate: function (value) {
+      this.dates.book_date = value;
+    },
+    processDate: function (value) {
+      this.dates.process_date = value;
+    },
+    dueDate: function (value) {
+      this.dates.due_date = value;
+    },
+    paymentDate: function (value) {
+      this.dates.payment_date = value;
+    },
+    invoiceDate: function (value) {
+      this.dates.invoice_date = value;
+    },
+  },
   methods: {
-    ...mapGetters(
-        [
-            'transactions'
-        ]
-    ),
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
+    isDateField: function (name) {
+      return this.dateFields.includes(name)
+    },
     getFieldValue(field) {
-      return this.transactions()[parseInt(this.index)][field] ?? '';
+      return this.dates[field] ?? '';
     },
     setFieldValue(event, field) {
-      this.updateField({index: this.index, field: field, value: event.target.value});
-    }
+      this.$emit('set-field', {field: field, index: this.index, value: event.target.value});
+    },
   }
 }
 </script>
-
-<style scoped>
-
-</style>

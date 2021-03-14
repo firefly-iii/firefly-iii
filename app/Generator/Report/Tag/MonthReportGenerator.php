@@ -75,7 +75,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            $result = view(
+            $result = prefixView(
                 'reports.tag.month',
                 compact('accountIds', 'reportType', 'tagIds')
             )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();

@@ -62,9 +62,6 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
-                if ('testing' === config('app.env')) {
-                    Log::warning('Twig TransactionGroup::journalGetMetaDate should NOT be called in the TEST environment!');
-                }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)
@@ -87,9 +84,6 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
-                if ('testing' === config('app.env')) {
-                    Log::warning('Twig TransactionGroup::journalGetMetaField should NOT be called in the TEST environment!');
-                }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)

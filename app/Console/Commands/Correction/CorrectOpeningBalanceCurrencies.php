@@ -89,6 +89,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         }
 
         Log::debug(sprintf('Done with %s', __METHOD__));
+
         return 0;
     }
 
@@ -133,6 +134,7 @@ class CorrectOpeningBalanceCurrencies extends Command
             $account = $transaction->account()->first();
             if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
                 Log::debug(sprintf('Account of transaction #%d is opposite of IB account (%s).', $transaction->id, $account->accountType()->first()->type));
+
                 return $account;
             }
         }
@@ -143,6 +145,7 @@ class CorrectOpeningBalanceCurrencies extends Command
 
     /**
      * @param Account $account
+     *
      * @return TransactionCurrency
      * @throws JsonException
      */
@@ -156,15 +159,16 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param TransactionJournal  $journal
+     * @param TransactionJournal $journal
      * @param TransactionCurrency $currency
+     *
      * @return int
      */
     private function setCurrency(TransactionJournal $journal, TransactionCurrency $currency): int
     {
         Log::debug('Now in setCurrency');
         $count = 0;
-        if ((int) $journal->transaction_currency_id !== (int) $currency->id) {
+        if ((int)$journal->transaction_currency_id !== (int)$currency->id) {
             Log::debug(sprintf('Currency ID of journal #%d was #%d, now set to #%d', $journal->id, $journal->transaction_currency_id, $currency->id));
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
@@ -173,8 +177,10 @@ class CorrectOpeningBalanceCurrencies extends Command
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            if ((int) $transaction->transaction_currency_id !== (int) $currency->id) {
-                Log::debug(sprintf('Currency ID of transaction #%d was #%d, now set to #%d', $transaction->id, $transaction->transaction_currency_id, $currency->id));
+            if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
+                Log::debug(
+                    sprintf('Currency ID of transaction #%d was #%d, now set to #%d', $transaction->id, $transaction->transaction_currency_id, $currency->id)
+                );
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
                 $count = 1;

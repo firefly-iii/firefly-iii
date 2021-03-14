@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Auf einigen Seiten in Firefly III sind hinter dieser Schaltfläche erweiterte Optionen zu finden. Diese Seite enthält hier nichts Außergewöhnliches, aber schauen Sie sich die anderen an!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Autorisierungsanfrage',
     'authorization_request_intro'                         => '<strong>:client</strong> bittet um Erlaubnis, auf Ihre Finanzverwaltung zuzugreifen. Möchten Sie <strong>:client</strong> erlauben auf diese Datensätze zuzugreifen?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_selection_intro'                          => 'Regeln wie „:title” werden im Normalfall nur auf neue oder aktualisierte Buchungen angewandt. Sie können die Regel aber auch auf eine Auswahl Ihrer bestehenden Buchungen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'include_transactions_from_accounts'                  => 'Buchungen von diesem Konto einbeziehen',
-    'applied_rule_selection'                              => 'Regel ":title" wurde auf Ihre Auswahl angewendet.',
+    'applied_rule_selection'                              => '{0} In Ihrer Auswahl wurden keine Buchungen durch die Regel „:title” geändert.|[1] In Ihrer Auswahl wurde eine Buchung durch die Regel „:title” geändert.|[2,*] In Ihrer Auswahl wurden :count Buchungen durch die Regel „:title” geändert.',
     'execute'                                             => 'Ausführen',
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_group_selection_intro'                    => 'Regelgruppen wie „:title” werden in der Regel nur auf neue oder aktualisierte Buchungen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optionale Felder für Buchungen',
     'pref_optional_fields_transaction_help'     => 'Wenn Sie eine Buchung anlegen sind standardmäßig nicht alle vorhandenen Felder aktiviert. Hier können Sie alle Felder aktivieren, die Sie gerne nutzen möchten. Alle Felder die deaktiviert sind, aber bereits ausgefüllt sind, werden unabhängig von ihren Einstellungen sichtbar sein.',
     'optional_tj_date_fields'                   => 'Datumsfelder',
-    'optional_tj_business_fields'               => 'Fachliche Felder',
+    'optional_tj_other_fields'                  => 'Andere Felder',
     'optional_tj_attachment_fields'             => 'Anlage Felder',
     'pref_optional_tj_interest_date'            => 'Zinstermin',
     'pref_optional_tj_book_date'                => 'Buchungstermin',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interner Verweis',
     'pref_optional_tj_notes'                    => 'Notizen',
     'pref_optional_tj_attachments'              => 'Anhänge',
-    'pref_optional_tj_external_uri'             => 'Externe URI',
+    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_location'                 => 'Herkunft',
+    'pref_optional_tj_links'                    => 'Buchungsverknüpfungen',
     'optional_field_meta_dates'                 => 'Daten',
     'optional_field_meta_business'              => 'Geschäftlich',
     'optional_field_attachments'                => 'Anhänge',
     'optional_field_meta_data'                  => 'Optionale Metadaten',
-    'external_uri'                              => 'Externe URI',
+    'external_uri'                              => 'Externe URL',
 
     // profile:
     'delete_stuff_header'                       => 'Daten löschen',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Verwenden Sie diese Angaben, um einen Anhaltspunkt darüber zu erhalten, wie hoch Ihr komplettes Budget sein könnte.',
     'suggested'                                 => 'Vorgeschlagen',
     'average_between'                           => 'Durchschnitt zwischen :start und :end',
-    'over_budget_warn'                          => '<i class="fa fa fa-money"></i>Normalerweise kalkulieren Sie etwa :amount pro Tag. Diesmal ist es :over_amount pro Tag. Möchten Sie fortfahren?',
     'transferred_in'                            => 'Übertragen (eingehend)',
     'transferred_away'                          => 'Übertragen (ausgehend)',
     'auto_budget_none'                          => 'Kein Auto-Budget',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'Inaktive Regeln',
     'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die mit dieser Rechnung zusammenhängende Regel zu ändern. Wenn Sie diese Regel jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.|Firefly III wird versuchen, die :count mit dieser Rechnung zusammenhängenden Regeln ebenfalls zu bearbeiten. Wenn Sie diese Regeln jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
     'bill_expected_date'                        => 'Voraussichtlich :date',
+    'bill_paid_on'                              => 'Bezahlt am {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Sie haben :count inaktives (archiviertes) Konto, das Sie auf dieser separaten Seite sehen können.|Sie haben :count inaktive (archivierte) Konten, die Sie auf dieser separaten Seite anzeigen können.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Buchung #{ID} ("{title}")</a> wurde gespeichert.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Buchung #{ID}</a> wurde gespeichert.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Buchung#{ID}</a> wurde aktualisiert.',
+    'first_split_decides'                       => 'Die erste Aufteilung bestimmt den Wert dieses Feldes',
+    'first_split_overrules_source'              => 'Die erste Aufteilung könnte das Quellkonto überschreiben',
+    'first_split_overrules_destination'         => 'Die erste Aufteilung könnte das Zielkonto überschreiben',
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Pro Tag',
     'left_to_spend_per_day'                     => 'Verbleibend zum Ausgeben je Tag',
     'bills_paid'                                => 'Rechnungen bezahlt',
+    'custom_period'                             => 'Benutzerdefinierter Zeitraum',
+    'reset_to_current'                          => 'Auf aktuellen Zeitraum zurücksetzen',
+    'select_period'                             => 'Zeitraum auswählen',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Währung',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatisierungen',
     'others'                                    => 'Weitere',
     'classification'                            => 'Klassifizierung',
+    'store_transaction'                         => 'Buchung speichern',
 
     // reports:
     'report_default'                            => 'Standardfinanzbericht zwischen :start und :end',

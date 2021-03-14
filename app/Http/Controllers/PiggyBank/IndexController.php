@@ -78,7 +78,7 @@ class IndexController extends Controller
     public function index(Request $request)
     {
         $this->cleanupObjectGroups();
-        $this->piggyRepos->correctOrder();
+        $this->piggyRepos->resetOrder();
         $collection = $this->piggyRepos->getPiggyBanks();
         $accounts   = [];
         /** @var Carbon $end */
@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         ksort($piggyBanks);
 
-        return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
+        return prefixView('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
     /**

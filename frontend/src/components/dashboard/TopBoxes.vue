@@ -25,9 +25,11 @@
         <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">{{ $t("firefly.balance") }}</span>
+          <span v-if="!loading && !error" class="info-box-text">{{ $t("firefly.balance") }}</span>
+          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
+          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <!-- balance in preferred currency -->
-          <span class="info-box-number" v-for="balance in prefCurrencyBalances" :title="balance.sub_title">{{ balance.value_parsed }}</span>
+          <span v-for="balance in prefCurrencyBalances" :title="balance.sub_title" class="info-box-number">{{ balance.value_parsed }}</span>
 
           <div class="progress bg-info">
             <div class="progress-bar" style="width: 0"></div>
@@ -48,10 +50,11 @@
         <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
-
+          <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
+          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
+          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <!-- bills unpaid, in preferred currency. -->
-          <span class="info-box-number" v-for="balance in prefBillsUnpaid">{{ balance.value_parsed }}</span>
+          <span v-for="balance in prefBillsUnpaid" class="info-box-number">{{ balance.value_parsed }}</span>
 
           <div class="progress bg-teal">
             <div class="progress-bar" style="width: 0"></div>
@@ -72,10 +75,11 @@
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
-
+          <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
+          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
+          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <!-- left to spend in preferred currency -->
-          <span class="info-box-number" v-for="left in prefLeftToSpend" :title="left.sub_title">{{ left.value_parsed }}</span>
+          <span v-for="left in prefLeftToSpend" :title="left.sub_title" class="info-box-number">{{ left.value_parsed }}</span>
 
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
@@ -97,8 +101,10 @@
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
         <div class="info-box-content">
-          <span class="info-box-text"><span>{{ $t('firefly.net_worth') }}</span></span>
-          <span class="info-box-number" v-for="nw in prefNetWorth" :title="nw.sub_title">{{ nw.value_parsed }}</span>
+          <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.net_worth') }}</span>
+          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
+          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
+          <span v-for="nw in prefNetWorth" :title="nw.sub_title" class="info-box-number">{{ nw.value_parsed }}</span>
 
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
@@ -117,6 +123,9 @@
 </template>
 
 <script>
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 export default {
   name: "TopBoxes",
   props: {},
@@ -128,9 +137,19 @@ export default {
       billsUnpaid: [],
       leftToSpend: [],
       netWorth: [],
+      loading: true,
+      error: false,
+      ready: false
     }
   },
   computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    },
 
     // contains only balances with preferred currency.
     prefCurrencyBalances: function () {
@@ -170,8 +189,25 @@ export default {
       return this.$store.getters.currencyId;
     }
   },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.prepareComponent();
+      }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.prepareComponent();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.prepareComponent();
+      }
+    },
+  },
   created() {
-    this.prepareComponent();
+    this.ready = true;
   },
   methods: {
     filterOnCurrency(array) {
@@ -205,11 +241,24 @@ export default {
      * Prepare the component.
      */
     prepareComponent() {
-      axios.get('./api/v1/summary/basic?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+      this.error = false;
+      this.loading = true;
+      this.summary = [];
+      this.balances = [];
+      this.billsPaid = [];
+      this.billsUnpaid = [];
+      this.leftToSpend = [];
+      this.netWorth = [];
+      let startStr = this.start.toISOString().split('T')[0];
+      let endStr = this.end.toISOString().split('T')[0];
+      axios.get('./api/v1/summary/basic?start=' + startStr + '&end=' + endStr)
           .then(response => {
             this.summary = response.data;
             this.buildComponent();
-          });
+            this.loading = false
+          }).catch(error => {
+        this.error = true
+      });
     },
     buildComponent() {
       this.getBalanceEntries();

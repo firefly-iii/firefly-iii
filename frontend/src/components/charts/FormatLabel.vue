@@ -18,56 +18,56 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 <script>
-    export default {
-        name: "FormatLabel",
-        methods: {
-            /**
-             * Takes a string phrase and breaks it into separate phrases no bigger than 'maxwidth', breaks are made at complete words.
-             * https://stackoverflow.com/questions/21409717/chart-js-and-long-labels
-             *
-             * @param str
-             * @param maxwidth
-             * @returns {Array}
-             */
-            formatLabel(str, maxwidth) {
-                var sections = [];
-                str = String(str);
-                var words = str.split(" ");
-                var temp = "";
+export default {
+  name: "FormatLabel",
+  methods: {
+    /**
+     * Takes a string phrase and breaks it into separate phrases no bigger than 'maxwidth', breaks are made at complete words.
+     * https://stackoverflow.com/questions/21409717/chart-js-and-long-labels
+     *
+     * @param str
+     * @param maxwidth
+     * @returns {Array}
+     */
+    formatLabel(str, maxwidth) {
+      var sections = [];
+      str = String(str);
+      var words = str.split(" ");
+      var temp = "";
 
-                words.forEach(function (item, index) {
-                    if (temp.length > 0) {
-                        var concat = temp + ' ' + item;
+      words.forEach(function (item, index) {
+        if (temp.length > 0) {
+          var concat = temp + ' ' + item;
 
-                        if (concat.length > maxwidth) {
-                            sections.push(temp);
-                            temp = "";
-                        } else {
-                            if (index === (words.length - 1)) {
-                                sections.push(concat);
-                                return;
-                            } else {
-                                temp = concat;
-                                return;
-                            }
-                        }
-                    }
-
-                    if (index === (words.length - 1)) {
-                        sections.push(item);
-                        return;
-                    }
-
-                    if (item.length < maxwidth) {
-                        temp = item;
-                    } else {
-                        sections.push(item);
-                    }
-
-                });
-
-                return sections;
-            },
+          if (concat.length > maxwidth) {
+            sections.push(temp);
+            temp = "";
+          } else {
+            if (index === (words.length - 1)) {
+              sections.push(concat);
+              return;
+            } else {
+              temp = concat;
+              return;
+            }
+          }
         }
-    }
+
+        if (index === (words.length - 1)) {
+          sections.push(item);
+          return;
+        }
+
+        if (item.length < maxwidth) {
+          temp = item;
+        } else {
+          sections.push(item);
+        }
+
+      });
+
+      return sections;
+    },
+  }
+}
 </script>

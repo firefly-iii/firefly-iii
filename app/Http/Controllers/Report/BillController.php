@@ -60,7 +60,7 @@ class BillController extends Controller
 
 
         try {
-            $result = view('reports.partials.bills', compact('report'))->render();
+            $result = prefixView('reports.partials.bills', compact('report'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));

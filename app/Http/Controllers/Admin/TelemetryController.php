@@ -106,7 +106,7 @@ class TelemetryController extends Controller
 
         $count   = $this->repository->count();
 
-        return view('admin.telemetry.index', compact('version', 'enabled', 'count'));
+        return prefixView('admin.telemetry.index', compact('version', 'enabled', 'count'));
     }
 
     /**
@@ -120,6 +120,6 @@ class TelemetryController extends Controller
         $size    = 100;
         $records = $this->repository->paginated($size);
 
-        return view('admin.telemetry.view', compact('records', 'format'));
+        return prefixView('admin.telemetry.view', compact('records', 'format'));
     }
 }

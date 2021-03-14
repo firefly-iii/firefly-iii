@@ -18,5 +18,7 @@
     "/public/js/register.js": "/public/js/register.js",
     "/public/js/register.js.map": "/public/js/register.js.map",
     "/public/js/transactions/create.js": "/public/js/transactions/create.js",
-    "/public/js/transactions/create.js.map": "/public/js/transactions/create.js.map"
+    "/public/js/transactions/create.js.map": "/public/js/transactions/create.js.map",
+    "/public/js/transactions/edit.js": "/public/js/transactions/edit.js",
+    "/public/js/transactions/edit.js.map": "/public/js/transactions/edit.js.map"
 }

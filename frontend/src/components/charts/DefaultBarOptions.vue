@@ -24,91 +24,91 @@
 
 
 <script>
-    import FormatLabel from "../charts/FormatLabel";
+import FormatLabel from "../charts/FormatLabel";
 
-    export default {
-        name: "DefaultBarOptions",
-        data() {
-            return {}
+export default {
+  name: "DefaultBarOptions",
+  data() {
+    return {}
+  },
+  methods: {
+    getDefaultOptions() {
+      return {
+        type: 'bar',
+        layout: {
+          padding: {
+            left: 50,
+            right: 50,
+            top: 0,
+            bottom: 0
+          },
         },
-        methods: {
-            getDefaultOptions() {
-                return {
-                    type: 'bar',
-                    layout: {
-                        padding: {
-                            left: 50,
-                            right: 50,
-                            top: 0,
-                            bottom: 0
-                        },
-                    },
-                    stacked: true,
-                    elements: {
-                        line: {
-                            cubicInterpolationMode: 'monotone'
-                        }
-                    },
-                    legend: {
-                        display: false,
-                    },
-                    animation: {
-                        duration: 0,
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        xAxes: [
-                            {
-                                stacked: true,
-                                gridLines: {
-                                    display: false
-                                },
-                                ticks: {
-                                    // break ticks when too long.
-                                    callback: function (value, index, values) {
-                                        return FormatLabel.methods.formatLabel(value, 20);
-                                        //return value;
-                                    }
-                                }
-                            }
-                        ],
-                        yAxes: [{
-                            stacked: false,
-                            display: true,
-                            drawOnChartArea: false,
-                            offset: true,
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (tickValue) {
-                                    "use strict";
-                                    let currencyCode = this.chart.data.datasets[0] ? this.chart.data.datasets[0].currency_code : 'EUR';
-                                    return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
-                                },
-
-                            }
-                        }]
-                    },
-                    tooltips: {
-                        mode: 'label',
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                "use strict";
-                                let currencyCode = data.datasets[tooltipItem.datasetIndex] ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
-                                let nrString = new Intl.NumberFormat(localStorage.locale, {
-                                    style: 'currency',
-                                    currency: currencyCode
-                                }).format(tooltipItem.yLabel);
-
-                                return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
-                            }
-                        }
-                    }
-                };
+        stacked: true,
+        elements: {
+          line: {
+            cubicInterpolationMode: 'monotone'
+          }
+        },
+        legend: {
+          display: false,
+        },
+        animation: {
+          duration: 0,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                // break ticks when too long.
+                callback: function (value, index, values) {
+                  return FormatLabel.methods.formatLabel(value, 20);
+                  //return value;
+                }
+              }
             }
+          ],
+          yAxes: [{
+            stacked: false,
+            display: true,
+            drawOnChartArea: false,
+            offset: true,
+            beginAtZero: true,
+            ticks: {
+              callback: function (tickValue) {
+                "use strict";
+                let currencyCode = this.chart.data.datasets[0] ? this.chart.data.datasets[0].currency_code : 'EUR';
+                return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
+              },
 
+            }
+          }]
+        },
+        tooltips: {
+          mode: 'label',
+          callbacks: {
+            label: function (tooltipItem, data) {
+              "use strict";
+              let currencyCode = data.datasets[tooltipItem.datasetIndex] ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
+              let nrString = new Intl.NumberFormat(localStorage.locale, {
+                style: 'currency',
+                currency: currencyCode
+              }).format(tooltipItem.yLabel);
+
+              return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
+            }
+          }
         }
+      };
     }
+
+  }
+}
 </script>
 
 <style scoped>

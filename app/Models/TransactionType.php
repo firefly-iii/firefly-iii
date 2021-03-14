@@ -57,39 +57,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TransactionType extends Model
 {
     use SoftDeletes;
-
-    /**
-     *
-     */
     public const WITHDRAWAL = 'Withdrawal';
-    /**
-     *
-     */
     public const DEPOSIT = 'Deposit';
-    /**
-     *
-     */
     public const TRANSFER = 'Transfer';
-    /**
-     *
-     */
     public const OPENING_BALANCE = 'Opening balance';
-    /**
-     *
-     */
     public const RECONCILIATION = 'Reconciliation';
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    public const INVALID = 'Invalid';
+    /** @var string[] */
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+    /** @var string[]  */
     protected $fillable = ['type'];
 
     /**

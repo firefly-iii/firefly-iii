@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType, start, end) }}
@@ -81,7 +81,7 @@
                         <a href="{{ route('transactions.create', [objectType]) }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'create_new_transaction'|_ }}</a>
                     </div>
                     {# actual list #}
-                    {% include 'list.groups' %}
+                    {% include 'v1.list.groups' %}
                 </div>
                 <div class="box-footer">
                     {# links for other views #}
@@ -103,7 +103,7 @@
         {# boxes with info #}
         {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                {% include 'v1.list.periods' %}
             </div>
         {% endif %}
 

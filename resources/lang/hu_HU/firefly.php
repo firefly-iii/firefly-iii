@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version engedély kérelem',
     'authorization_request_intro'                         => '<strong>:client</strong> hozzáférést kért az Ön pénzügyi adminisztrációjához. Szeretne hozzáférést ezekhez adatokhoz <strong>:client</strong> részére?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => '":title" szabály alkalmazása a tranzakciók egy csoportján',
     'apply_rule_selection_intro'                          => 'Az olyan szabályok mint a ":title" normális esetben csak az új vagy a frissített tranzakciókon lesznek alkalmazva, de meg lehet mondani a Firefly III-nak, hogy futtassa le a már létező tranzakciókon. Ez hasznos lehet, ha egy szabály frissítve lett és a módosításokat az összes tranzakción alkalmazni kell.',
     'include_transactions_from_accounts'                  => 'Beleértve a tranzakciókat ezekből a számlákból',
-    'applied_rule_selection'                              => '":title" szabály alkalmazva a kiválasztásra.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Végrehajtás',
     'apply_rule_group_selection'                          => '":title" szabálycsoport alkalmazása a tranzakciók egy csoportján',
     'apply_rule_group_selection_intro'                    => 'Az olyan szabálycsoportok mint a ":title" normális esetben csak az új vagy a frissített tranzakciókon lesznek alkalmazva, de meg lehet mondani a Firefly III-nak, hogy futtassa le a csoportban lévő összes szabályt a már létező tranzakciókon. Ez hasznos lehet, ha egy szabálycsoport frissítve lett és a módosításokat az összes tranzakción alkalmazni kell.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Tranzakciók választható mezői',
     'pref_optional_fields_transaction_help'     => 'Alapértelmezés szerint új tranzakció létrehozásakor nem minden mező engedélyezett (hogy elkerüljük a túlzsúfoltságot). Ezeket a mezőket lent lehet engedélyezni ha valamelyikre szükség van. Természetesen azok a letiltott mezők amelyek már ki vannak töltve, a beállítástól függetlenül láthatóak lesznek.',
     'optional_tj_date_fields'                   => 'Dátummezők',
-    'optional_tj_business_fields'               => 'Üzleti mezők',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Melléklet mezők',
     'pref_optional_tj_interest_date'            => 'Kamatfizetési időpont',
     'pref_optional_tj_book_date'                => 'Könyvelés dátuma',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Belső hivatkozás',
     'pref_optional_tj_notes'                    => 'Megjegyzések',
     'pref_optional_tj_attachments'              => 'Mellékletek',
-    'pref_optional_tj_external_uri'             => 'Külső hivatkozás',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Dátumok',
     'optional_field_meta_business'              => 'Üzleti',
     'optional_field_attachments'                => 'Mellékletek',
     'optional_field_meta_data'                  => 'Opcionális metaadat',
-    'external_uri'                              => 'Külső hivatkozás',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Adatok törlése',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Ezeket az összeget felhasználva lehet megtudni, hogy mekkorának kéne lennie a teljes költségkeretnek.',
     'suggested'                                 => 'Javasolt',
     'average_between'                           => 'Átlag :start és :end között',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>A költségkeret általában napi :amount körül van. Jelenleg napi :over_amount. Biztos?',
     'transferred_in'                            => 'Átvezetett (be)',
     'transferred_away'                          => '(Máshova) átvezetett',
     'auto_budget_none'                          => 'Nincs auto-költségkeret',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'inaktív szabály',
     'bill_edit_rules'                           => 'A Firefly III megpróbálja szerkeszteni a a számlához kapcsolódó szabályt is. Ha ön már szerkesztette a szabályt, a Firefly III nem fogja módosítani.|A Firefly III megpróbálja szerkeszteni a a számlához kapcsolódó :count szabályt is. Ha ön már szerkesztette a szabályt, a Firefly III nem fogja módosítani.',
     'bill_expected_date'                        => 'Várható dátum :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> mentve.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> mentve.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Üdvözöli a Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Naponta',
     'left_to_spend_per_day'                     => 'Naponta elkölthető',
     'bills_paid'                                => 'Befizetett számlák',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Pénznem',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatizálás',
     'others'                                    => 'Egyebek',
     'classification'                            => 'Besorolás',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Alapértelmezett pénzügyi jelentés :start és :end között',

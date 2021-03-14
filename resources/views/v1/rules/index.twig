@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
 {% endblock %}
@@ -179,7 +179,7 @@
         </div>
     {% endfor %}
 
-    {% include '/rules/partials/test-trigger-modal' %}
+    {% include 'v1.rules.partials.test-trigger-modal' %}
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">

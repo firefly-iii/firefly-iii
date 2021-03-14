@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
@@ -135,12 +134,12 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_id'             => $currency['id'],
+                'currency_id'             => (string)$currency['id'],
                 'currency_code'           => $code,
                 'currency_name'           => $currency['name'],
                 'currency_symbol'         => $currency['symbol'],
                 'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => number_format((float)$spent,$currency['decimal_places'], '.',''),
+                'amount'                  => number_format((float)$spent, $currency['decimal_places'], '.', ''),
             ];
         }
 

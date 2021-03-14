@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => 'The :attribute may only contain letters.',
     'alpha_dash'                     => 'The :attribute may only contain letters, numbers, and dashes.',
     'alpha_num'                      => 'The :attribute may only contain letters and numbers.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

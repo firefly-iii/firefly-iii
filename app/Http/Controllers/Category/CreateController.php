@@ -79,7 +79,7 @@ class CreateController extends Controller
         $request->session()->forget('categories.create.fromStore');
         $subTitle = (string) trans('firefly.create_new_category');
 
-        return view('categories.create', compact('subTitle'));
+        return prefixView('categories.create', compact('subTitle'));
     }
 
 

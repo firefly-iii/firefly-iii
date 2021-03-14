@@ -139,7 +139,7 @@ class AccountForm
 
         unset($options['class']);
         try {
-            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+            $html = prefixView('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';

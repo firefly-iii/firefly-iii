@@ -48,39 +48,16 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * Reset order types of the mentioned accounts.
+     * @param string $type
      *
-     * @param array $types
+     * @return int
      */
-    public function resetAccountOrder(array $types): void;
-
-    /**
-     * @param Account $account
-     *
-     * @return Collection
-     */
-    public function getUsedCurrencies(Account $account): Collection;
-
-    /**
-     * @param Account $account
-     *
-     * @return Collection
-     */
-    public function getAttachments(Account $account): Collection;
-
-    /**
-     * Get account location, if any.
-     *
-     * @param Account $account
-     *
-     * @return Location|null
-     */
-    public function getLocation(Account $account): ?Location;
+    public function maxOrder(string $type): int;
 
     /**
      * Moved here from account CRUD.
      *
-     * @param Account $account
+     * @param Account      $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -98,7 +75,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -106,7 +83,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array $types
+     * @param array  $types
      *
      * @return Account|null
      */
@@ -157,11 +134,11 @@ interface AccountRepositoryInterface
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
-     * @param array $types
+     * @param Account $account
      *
      * @return Collection
      */
-    public function getInactiveAccountsByType(array $types): Collection;
+    public function getAttachments(Account $account): Collection;
 
     /**
      * @return Account
@@ -169,10 +146,26 @@ interface AccountRepositoryInterface
     public function getCashAccount(): Account;
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getInactiveAccountsByType(array $types): Collection;
+
+    /**
+     * Get account location, if any.
+     *
+     * @param Account $account
+     *
+     * @return Location|null
+     */
+    public function getLocation(Account $account): ?Location;
+
+    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string $field
+     * @param string  $field
      *
      * @return null|string
      */
@@ -236,6 +229,12 @@ interface AccountRepositoryInterface
      */
     public function getReconciliation(Account $account): ?Account;
 
+    /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
+    public function getUsedCurrencies(Account $account): Collection;
 
     /**
      * @param Account $account
@@ -243,7 +242,6 @@ interface AccountRepositoryInterface
      * @return bool
      */
     public function isLiability(Account $account): bool;
-
 
     /**
      * Returns the date of the very first transaction in this account.
@@ -264,9 +262,14 @@ interface AccountRepositoryInterface
     public function oldestJournalDate(Account $account): ?Carbon;
 
     /**
+     * Reset order types of the mentioned accounts.
+     */
+    public function resetAccountOrder(): void;
+
+    /**
      * @param string $query
-     * @param array $types
-     * @param int $limit
+     * @param array  $types
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -274,8 +277,8 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array $types
-     * @param int $limit
+     * @param array  $types
+     * @param int    $limit
      *
      * @return Collection
      */
@@ -295,7 +298,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return Account
      */

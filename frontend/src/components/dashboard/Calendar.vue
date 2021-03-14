@@ -30,43 +30,41 @@
     </div>
     <date-picker
         v-model="range"
-        mode="date"
-        rows="2"
+        :rows="2"
         is-range
+        mode="date"
     >
       <template v-slot="{ inputValue, inputEvents, isDragging, togglePopover }">
         <div class="row">
           <div class="col">
             <div class="btn-group btn-group-sm d-flex">
               <button
-                  class="btn btn-secondary btn-sm"
-                  @click="togglePopover({ placement: 'auto-start', positionFixed:true })"
+                  :title="$t('firefly.custom_period')" class="btn btn-secondary btn-sm"
+                  @click="togglePopover({ placement: 'auto-start', positionFixed: true })"
               ><i class="fas fa-calendar-alt"></i></button>
-              <button
-                  class="btn btn-secondary"
+              <button :title="$t('firefly.reset_to_current')"
+                      class="btn btn-secondary"
+                      @click="resetDate"
               ><i class="fas fa-history"></i></button>
-
-
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                      aria-expanded="false">
+              <button id="dropdownMenuButton" :title="$t('firefly.select_period')" aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+                      data-toggle="dropdown"
+                      type="button">
                 <i class="fas fa-list"></i>
               </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">(prev period)</a>
-                <a class="dropdown-item" href="#">(next period)</a>
-                <a class="dropdown-item" href="#">(this week?)</a>
+              <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
+                <a v-for="period in periods" class="dropdown-item" href="#" @click="customDate(period.start, period.end)">{{ period.title }}</a>
               </div>
 
             </div>
-            <input type="hidden"
+            <input v-on="inputEvents.start"
                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
                    :value="inputValue.start"
-                   v-on="inputEvents.start"
+                   type="hidden"
             />
-            <input type="hidden"
+            <input v-on="inputEvents.end"
                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
                    :value="inputValue.end"
-                   v-on="inputEvents.end"
+                   type="hidden"
             />
           </div>
         </div>
@@ -76,28 +74,109 @@
 </template>
 
 <script>
+
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
 export default {
   name: "Calendar",
   created() {
-    // this.locale = localStorage.locale ?? 'en-US';
-    // this.$store.commit('increment');
-    // console.log(this.$store.state.count);
-    // get dates for current period (history button):
-    // get dates for optional periods (dropdown) + descriptions.
+    this.ready = true;
+    this.locale = localStorage.locale ?? 'en-US';
   },
   data() {
     return {
       locale: 'en-US',
+      ready: false,
       range: {
-        start: new Date(window.sessionStart),
-        end: new Date(window.sessionEnd),
+        start: null,
+        end: null,
       },
       defaultRange: {
-        start: new Date(window.sessionStart),
-        end: new Date(window.sessionEnd),
+        start: null,
+        end: null,
       },
+      periods: []
     };
   },
+  methods: {
+    ...mapMutations(
+        [
+          'setEnd',
+          'setStart',
+        ],
+    ),
+    resetDate: function () {
+      //console.log('Reset date to');
+      //console.log(this.defaultStart);
+      //console.log(this.defaultEnd);
+      this.range.start = this.defaultStart;
+      this.range.end = this.defaultEnd;
+      this.setStart(this.defaultStart);
+      this.setEnd(this.defaultEnd);
+    },
+    customDate: function (startStr, endStr) {
+      let start = new Date(startStr);
+      let end = new Date(endStr);
+      this.setStart(start);
+      this.setEnd(end);
+      this.range.start = start;
+      this.range.end = end;
+      return false;
+    }
+  },
+  computed: {
+    ...mapGetters([
+                    'viewRange',
+                    'start',
+                    'end',
+                    'defaultStart',
+                    'defaultEnd'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    },
+  },
+  watch: {
+    datesReady: function (value) {
+      if (false === value) {
+        return;
+      }
+      this.range.start = new Date(this.start);
+      this.range.end = new Date(this.end);
+      this.periods = [];
+      // create periods.
+      // last 7 days
+      let today = new Date;
+      let end = new Date;
+      end.setDate(end.getDate() - 7);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_seven_days')
+          }
+      );
+
+      // last 30 days:
+      end.setDate(end.getDate() - 23);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_thirty_days')
+          }
+      );
+      // last 30 days
+      // everything
+    },
+    range: function (value) {
+      //console.log('User updated range');
+      this.setStart(value.start);
+      this.setEnd(value.end);
+    }
+  }
 }
 </script>
 

@@ -100,7 +100,8 @@
     "pragmarx/google2fa": "^8.0",
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
-    "rcrowe/twigbridge": "^0.12.1"
+    "rcrowe/twigbridge": "^0.12.1",
+    "spatie/data-transfer-object": "^2.8"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.3",
@@ -108,9 +109,8 @@
     "ergebnis/phpstan-rules": "^0.15.0",
     "filp/whoops": "2.*",
     "fakerphp/faker": "1.*",
-    "johnkary/phpunit-speedtrap": "^3.1",
     "mockery/mockery": "1.*",
-    "nunomaduro/larastan": "^0.6.2",
+    "nunomaduro/larastan": "^0.7.0",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.2",
@@ -125,6 +125,7 @@
   "autoload": {
     "psr-4": {
       "FireflyIII\\": "app/",
+      "Domain\\": "domain/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
     }
@@ -170,6 +171,7 @@
       "@php artisan firefly-iii:rename-account-meta",
       "@php artisan firefly-iii:migrate-recurrence-meta",
       "@php artisan firefly-iii:migrate-tag-locations",
+      "@php artisan firefly-iii:migrate-recurrence-type",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",

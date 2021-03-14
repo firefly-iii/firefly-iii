@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -25,7 +25,7 @@
                 <div style="padding:8px;">
                     <a class="btn btn-success" href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_category'|_ }}</a>
                 </div>
-                {% include 'list/categories' %}
+                {% include 'v1.list/categories' %}
             </div>
             <div class="box-footer">
                 <a class="btn btn-success" href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'new_category'|_ }}</a>
@@ -35,7 +35,7 @@
     </div>
 </div>
 {% else %}
-        {% include 'partials.empty' with {objectType: 'default', type: 'categories',route: route('categories.create')} %}
+        {% include 'v1.partials.empty' with {objectType: 'default', type: 'categories',route: route('categories.create')} %}
     {% endif %}
 {% endblock %}
 

@@ -40,23 +40,6 @@ interface RuleRepositoryInterface
     public function count(): int;
 
     /**
-     * Return search query for rule.
-     *
-     * @param Rule $rule
-     * @return string
-     */
-    public function getSearchQuery(Rule $rule): string;
-
-    /**
-     * @param Rule      $rule
-     * @param RuleGroup $ruleGroup
-     * @param int       $order
-     *
-     * @return Rule
-     */
-    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
-
-    /**
      * @param Rule $rule
      *
      * @return bool
@@ -83,20 +66,6 @@ interface RuleRepositoryInterface
      * @return Collection
      */
     public function getAll(): Collection;
-
-    /**
-     * Get all the users rules that trigger on storage.
-     *
-     * @return Collection
-     */
-    public function getStoreRules(): Collection;
-
-    /**
-     * Get all the users rules that trigger on update.
-     *
-     * @return Collection
-     */
-    public function getUpdateRules(): Collection;
 
     /**
      * @return RuleGroup
@@ -132,11 +101,43 @@ interface RuleRepositoryInterface
     public function getRuleTriggers(Rule $rule): Collection;
 
     /**
+     * Return search query for rule.
+     *
+     * @param Rule $rule
+     *
+     * @return string
+     */
+    public function getSearchQuery(Rule $rule): string;
+
+    /**
+     * Get all the users rules that trigger on storage.
+     *
+     * @return Collection
+     */
+    public function getStoreRules(): Collection;
+
+    /**
+     * Get all the users rules that trigger on update.
+     *
+     * @return Collection
+     */
+    public function getUpdateRules(): Collection;
+
+    /**
      * @param Rule $rule
      *
      * @return bool
      */
     public function moveDown(Rule $rule): bool;
+
+    /**
+     * @param Rule      $rule
+     * @param RuleGroup $ruleGroup
+     * @param int       $order
+     *
+     * @return Rule
+     */
+    public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
 
     /**
      * @param Rule $rule
@@ -166,7 +167,15 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRule(string $query, int $limit): Collection;
 
     /**
      * @param User $user
@@ -179,6 +188,19 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function store(array $data): Rule;
+
+    /**
+     * @param Rule $rule
+     * @param int  $newOrder
+     */
+    public function setOrder(Rule $rule, int $newOrder): void;
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function maxOrder(RuleGroup $ruleGroup): int;
 
     /**
      * @param Rule  $rule

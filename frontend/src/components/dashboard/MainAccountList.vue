@@ -19,17 +19,54 @@
   -->
 
 <template>
-  <div class="row">
-    <div v-bind:class="{ 'col-lg-12': 1 === accounts.length, 'col-lg-6': 2 === accounts.length, 'col-lg-4': accounts.length > 2 }"
-         v-for="account in accounts">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title"><a :href="account.uri">{{ account.title }}</a></h3>
+  <div>
+    <!-- row if loading -->
+    <div v-if="loading && !error" class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </div>
         </div>
-        <div class="card-body table-responsive p-0">
-          <transaction-list-large :transactions="account.transactions" v-if="1===accounts.length" :account_id="account.id"/>
-          <transaction-list-medium :transactions="account.transactions" v-if="2===accounts.length" :account_id="account.id"/>
-          <transaction-list-small :transactions="account.transactions" v-if="accounts.length > 2" :account_id="account.id"/>
+      </div>
+    </div>
+
+    <!-- row if error -->
+    <div v-if="error" class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+              <i class="fas fa-exclamation-triangle text-danger"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- row if normal -->
+    <div v-if="!loading && !error" class="row">
+      <div
+          v-for="account in accounts"
+          v-bind:class="{ 'col-lg-12': 1 === accounts.length, 'col-lg-6': 2 === accounts.length, 'col-lg-4': accounts.length > 2 }">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><a :href="account.url">{{ account.title }}</a></h3>
+            <div class="card-tools">
+            <span :class="parseFloat(account.current_balance) < 0 ? 'text-danger' : 'text-success'">
+            {{ Intl.NumberFormat(locale, {style: 'currency', currency: account.currency_code}).format(parseFloat(account.current_balance)) }}
+              </span>
+            </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <div>
+              <transaction-list-large v-if="1===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <transaction-list-medium v-if="2===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <transaction-list-small v-if="accounts.length > 2" :account_id="account.id" :transactions="account.transactions"/>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -37,53 +74,101 @@
 </template>
 
 <script>
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
 export default {
   name: "MainAccountList",
   data() {
     return {
+      loading: true,
+      error: false,
+      ready: false,
       accounts: [],
+      locale: 'en-US'
     }
   },
   created() {
-    axios.get('./api/v1/preferences/frontpageAccounts')
-        .then(response => {
-                this.loadAccounts(response);
-              }
-        );
+    this.locale = localStorage.locale ?? 'en-US';
+    this.ready = true;
   },
-  methods:
-      {
-        loadAccounts(response) {
-          let accountIds = response.data.data.attributes.data;
-          for (let key in accountIds) {
-            if (accountIds.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-              this.accounts.push({
-                                   id: accountIds[key],
-                                   title: '',
-                                   uri: '',
-                                   transactions: []
-                                 });
-              this.loadSingleAccount(key, accountIds[key]);
-            }
-          }
-        },
-        loadSingleAccount(key, accountId) {
-          axios.get('./api/v1/accounts/' + accountId)
-              .then(response => {
-                      this.accounts[key].title = response.data.data.attributes.name;
-                      this.accounts[key].uri = './accounts/show/' + response.data.data.id;
-                      this.loadTransactions(key, accountId);
-                    }
-              );
-        },
-        loadTransactions(key, accountId) {
-          axios.get('./api/v1/accounts/' + accountId + '/transactions?page=1&limit=10')
-              .then(response => {
-                      this.accounts[key].transactions = response.data.data;
-                    }
-              );
-        },
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.initialiseList();
       }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.initialiseList();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.initialiseList();
+      }
+    },
+  },
+  methods: {
+    initialiseList: function () {
+      this.loading = true;
+      this.accounts = [];
+      axios.get('./api/v1/preferences/frontpageAccounts')
+          .then(response => {
+                  this.loadAccounts(response);
+                }
+          );
+    },
+    loadAccounts(response) {
+      let accountIds = response.data.data.attributes.data;
+      for (let key in accountIds) {
+        if (accountIds.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+          this.accounts.push({
+                               id: accountIds[key],
+                               title: '',
+                               url: '',
+                               current_balance: '',
+                               currency_code: 'EUR',
+                               transactions: []
+                             });
+          this.loadSingleAccount(key, accountIds[key]);
+        }
+      }
+    },
+    loadSingleAccount(key, accountId) {
+      axios.get('./api/v1/accounts/' + accountId)
+          .then(response => {
+                  this.accounts[key].title = response.data.data.attributes.name;
+                  this.accounts[key].url = './accounts/show/' + response.data.data.id;
+                  this.accounts[key].current_balance = response.data.data.attributes.current_balance;
+                  this.accounts[key].currency_code = response.data.data.attributes.currency_code;
+
+                  this.loadTransactions(key, accountId);
+                }
+          );
+    },
+    loadTransactions(key, accountId) {
+      let startStr = this.start.toISOString().split('T')[0];
+      let endStr = this.end.toISOString().split('T')[0];
+      axios.get('./api/v1/accounts/' + accountId + '/transactions?page=1&limit=10&start=' + startStr + '&end=' + endStr)
+          .then(response => {
+                  this.accounts[key].transactions = response.data.data;
+                  this.loading = false;
+                  this.error = false;
+                }
+          );
+    },
+  }
 }
 </script>
 

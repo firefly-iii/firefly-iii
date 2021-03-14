@@ -67,17 +67,6 @@ interface AvailableBudgetRepositoryInterface
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
 
     /**
-     * Get by transaction currency and date. Should always result in one entry or NULL.
-     *
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param TransactionCurrency $currency
-     *
-     * @return null|AvailableBudget
-     */
-    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
-
-    /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
      * @param Carbon              $end
@@ -114,6 +103,17 @@ interface AvailableBudgetRepositoryInterface
      *
      */
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
+
+    /**
+     * Get by transaction currency and date. Should always result in one entry or NULL.
+     *
+     * @param Carbon              $start
+     * @param Carbon              $end
+     * @param TransactionCurrency $currency
+     *
+     * @return null|AvailableBudget
+     */
+    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
     /**
      * @param TransactionCurrency $currency

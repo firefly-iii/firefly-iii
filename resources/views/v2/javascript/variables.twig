@@ -1,5 +1,2 @@
-var sessionStart = '{{ start }}';
-var sessionEnd = '{{ end }}';
-
 var allowedOpposingTypes = {{ config('firefly.allowed_opposing_types')|json_encode|raw }};
 var accountToTransaction = {{ config('firefly.account_to_transaction')|json_encode|raw }};

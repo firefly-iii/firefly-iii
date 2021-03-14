@@ -138,7 +138,7 @@ class ReconcileController extends Controller
         $reconSum = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
-            $view = view(
+            $view = prefixView(
                 'accounts.reconcile.overview',
                 compact(
                     'account',
@@ -212,7 +212,7 @@ class ReconcileController extends Controller
         $journals = $this->processTransactions($account, $array);
 
         try {
-            $html = view(
+            $html = prefixView(
                 'accounts.reconcile.transactions',
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();

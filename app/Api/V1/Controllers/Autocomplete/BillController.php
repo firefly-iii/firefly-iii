@@ -69,7 +69,7 @@ class BillController extends Controller
         $filtered = $result->map(
             static function (Bill $item) {
                 return [
-                    'id'   => $item->id,
+                    'id'   => (string)$item->id,
                     'name' => $item->name,
                 ];
             }

@@ -48,9 +48,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                  ->where('transaction_journals.user_id', $this->user->id)
-                                  ->where('transactions.id', $transactionId)
-                                  ->first(['transactions.*']);
+                          ->where('transaction_journals.user_id', $this->user->id)
+                          ->where('transactions.id', $transactionId)
+                          ->first(['transactions.*']);
     }
 
     /**
@@ -79,6 +79,16 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getJournalLinks(TransactionJournal $journal): Collection
+    {
+        $collection = $journal->destJournalLinks()->get();
+
+        return $journal->sourceJournalLinks()->get()->merge($collection);
+    }
+
+    /**
      * Get all piggy bank events for a journal.
      *
      * @param TransactionJournal $journal
@@ -104,15 +114,5 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getJournalLinks(TransactionJournal $journal): Collection
-    {
-        $collection = $journal->destJournalLinks()->get();
-
-        return $journal->sourceJournalLinks()->get()->merge($collection);
     }
 }

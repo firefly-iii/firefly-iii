@@ -265,6 +265,9 @@ trait ConvertsDataTypes
         if (null === $value) {
             return false;
         }
+        if ('' === $value) {
+            return false;
+        }
         if ('true' === $value) {
             return true;
         }

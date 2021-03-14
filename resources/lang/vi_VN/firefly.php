@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v: phiên bản Yêu cầu ủy quyền',
     'authorization_request_intro'                         => '<strong>:client</strong> đang yêu cầu sự cho phép truy cập quản trị tài chính của bạn. Bạn có muốn ủy quyền <strong>:client</strong> để truy cập những hồ sơ này?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Áp dụng quy tắc ":title" cho giao dịch bạn lựa chọn',
     'apply_rule_selection_intro'                          => 'Quy tắc như ":title" thường chỉ được áp dụng cho các giao dịch mới hoặc được cập nhật, nhưng bạn có thể yêu cầu Firefly III chạy nó trên một lựa chọn các giao dịch hiện tại của bạn. Điều này có thể hữu ích khi bạn đã cập nhật quy tắc và bạn cần thay đổi để áp dụng cho tất cả các giao dịch khác của mình.',
     'include_transactions_from_accounts'                  => 'Bao gồm các giao dịch từ các tài khoản này',
-    'applied_rule_selection'                              => 'Quy tắc ":title" đã được áp dụng cho lựa chọn của bạn.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Hoàn thành',
     'apply_rule_group_selection'                          => 'Áp dụng nhóm quy tắc ":title" để lựa chọn các giao dịch của bạn',
     'apply_rule_group_selection_intro'                    => 'Các nhóm quy tắc như ":title" thường chỉ được áp dụng cho các giao dịch mới hoặc được cập nhật, nhưng bạn có thể yêu cầu Firefly III chạy tất cả các quy tắc trong nhóm này trên một lựa chọn các giao dịch hiện tại của bạn. Điều này có thể hữu ích khi bạn đã cập nhật một nhóm quy tắc và bạn cần thay đổi để áp dụng cho tất cả các giao dịch khác của mình.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Các trường tùy chọn cho giao dịch',
     'pref_optional_fields_transaction_help'     => 'Theo mặc định, không phải tất cả các trường đều được bật khi tạo giao dịch mới (vì sự lộn xộn). Dưới đây, bạn có thể kích hoạt các trường này nếu bạn nghĩ rằng chúng có thể hữu ích cho bạn. Tất nhiên, bất kỳ trường nào bị vô hiệu hóa, nhưng đã được điền vào, sẽ hiển thị bất kể cài đặt.',
     'optional_tj_date_fields'                   => 'Trường ngày',
-    'optional_tj_business_fields'               => 'Lĩnh vực kinh doanh',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Trường đính kèm',
     'pref_optional_tj_interest_date'            => 'Ngày lãi',
     'pref_optional_tj_book_date'                => 'Ngày đặt sách',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Tài liệu tham khảo nội bộ',
     'pref_optional_tj_notes'                    => 'Ghi chú',
     'pref_optional_tj_attachments'              => 'Tài liệu đính kèm',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Ngày',
     'optional_field_meta_business'              => 'Kinh doanh',
     'optional_field_attachments'                => 'Tài liệu đính kèm',
     'optional_field_meta_data'                  => 'Dữ liệu meta tùy chọn',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Sử dụng những số tiền này để có được một dấu hiệu về tổng ngân sách của bạn có thể là bao nhiêu.',
     'suggested'                                 => 'Đề xuất',
     'average_between'                           => 'Trung bình giữa :start và :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Thông thường bạn ngân sách về: số tiền mỗi ngày. Lần này là: over_amount mỗi ngày. Bạn có chắc không?',
     'transferred_in'                            => 'Đã chuyển (vào)',
     'transferred_away'                          => 'Đã chuyển (ra)',
     'auto_budget_none'                          => ' Không có ngân sách tự động',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'quy tắc không hoạt động',
     'bill_edit_rules'                           => 'Firefly III cũng sẽ cố gắng chỉnh sửa quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì. | Firefly III cũng sẽ cố gắng chỉnh sửa :count các quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa các quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì.',
     'bill_expected_date'                        => 'Ngày đáo hạn :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Bạn có :count tài khoản không hoạt động (được lưu trữ) mà bạn có thể xem trên trang này. Bạn có :count tài khoản không hoạt động (đã lưu trữ) mà bạn có thể xem trên trang này.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Giao dịch #{ID} ("{title}")</a> đã được lưu trữ.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}"> Giao dịch #{ID}</a> đã được lưu trữ.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Giao dịch#{ID}</a> đã được cập nhật.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Chào mừng đến với Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Mỗi ngày',
     'left_to_spend_per_day'                     => 'Còn lại để chi tiêu mỗi ngày',
     'bills_paid'                                => 'Hóa đơn thanh toán',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Tiền tệ',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Tự động',
     'others'                                    => 'Khác',
     'classification'                            => 'Phân loại',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Báo cáo tài chính mặc định giữa: start và: end',

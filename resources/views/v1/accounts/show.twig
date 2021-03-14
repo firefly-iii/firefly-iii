@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, start, end) }}
@@ -41,7 +41,7 @@
                         </h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@
                         {% set showReconcile = false %}
                     {% endif %}
 
-                    {% include 'list.groups' %}
+                    {% include 'v1.list.groups' %}
                     <p>
                         <i class="fa fa-calendar"></i>
                         {% if periods|length > 0 %}
@@ -160,7 +160,7 @@
         </div>
         {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                {% include 'v1.list.periods' %}
             </div>
         {% endif %}
     </div>

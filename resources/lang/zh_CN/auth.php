@@ -24,5 +24,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => '用户名或密码错误。',
-    'throttle' => '登录失败次数太多，请 :seconds 秒后再试。',
+    'throttle' => '登录失败次数过多，请 :seconds 秒后再试。',
 ];

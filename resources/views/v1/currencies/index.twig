@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -21,7 +21,7 @@
                     </p>
                     {% if currencies|length > 0 %}
                         <div style="padding-left:8px;">
-                            {{ currencies.links('pagination.bootstrap-4')|raw }}
+                            {{ currencies.links('v1.pagination.bootstrap-4')|raw }}
                         </div>
                         <table class="table table-hover">
                             <thead>
@@ -87,7 +87,7 @@
                             </tbody>
                         </table>
                         <div style="padding-left:8px;">
-                            {{ currencies.links('pagination.bootstrap-4')|raw }}
+                            {{ currencies.links('v1.pagination.bootstrap-4')|raw }}
                         </div>
                     {% endif %}
                 </div>

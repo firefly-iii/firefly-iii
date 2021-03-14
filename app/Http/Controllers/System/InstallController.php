@@ -83,6 +83,7 @@ class InstallController extends Controller
             'firefly-iii:rename-account-meta'          => [],
             'firefly-iii:migrate-recurrence-meta'      => [],
             'firefly-iii:migrate-tag-locations'        => [],
+            'firefly-iii:migrate-recurrence-type'      => [],
 
             // verify commands
             'firefly-iii:fix-piggies'                  => [],
@@ -120,12 +121,12 @@ class InstallController extends Controller
     public function index()
     {
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
 
         // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
+        app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
 
-        return view('install.index');
+        return prefixView('install.index');
     }
 
     /**
@@ -156,7 +157,7 @@ class InstallController extends Controller
      */
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int) $request->get('index');
+        $requestIndex = (int)$request->get('index');
         $response     = [
             'hasNextCommand' => false,
             'done'           => true,
@@ -183,6 +184,7 @@ class InstallController extends Controller
             if (false === $result) {
                 $response['errorMessage'] = $this->lastError;
                 $response['error']        = true;
+
                 return response()->json($response);
             }
             $index++;
@@ -197,6 +199,7 @@ class InstallController extends Controller
     /**
      * @param string $command
      * @param array  $args
+     *
      * @return bool
      */
     private function executeCommand(string $command, array $args): bool
@@ -215,15 +218,17 @@ class InstallController extends Controller
             Log::error($e->getTraceAsString());
             if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
                 $this->lastError = self::BASEDIR_ERROR;
+
                 return false;
             }
             $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
+
             return false;
         }
         // clear cache as well.
         Cache::clear();
         Preferences::mark();
-        
+
         return true;
     }
 }

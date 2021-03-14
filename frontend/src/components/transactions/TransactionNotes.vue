@@ -20,35 +20,53 @@
 
 <template>
 
-  <div class="form-group">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.notes') }}
     </div>
     <div class="input-group">
-      <textarea v-model="value" class="form-control" :placeholder="$t('firefly.notes')"></textarea>
+      <textarea
+          v-model="notes"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
+          :placeholder="$t('firefly.notes')"
+      ></textarea>
     </div>
   </div>
 
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionNotes",
-  methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
+  data() {
+    return {
+      notes: this.value,
+      availableFields: this.customFields,
+      emitEvent: true
+    }
+  },
+  computed: {
+    showField: function () {
+      if ('notes' in this.availableFields) {
+        return this.availableFields.notes;
+      }
+      return false;
+    }
   },
   watch: {
     value: function (value) {
-      this.updateField({field: 'notes', index: this.index, value: value});
+      this.emitEvent = false;
+      this.notes = value;
+    },
+    customFields: function (value) {
+      this.availableFields = value;
+    },
+    notes: function (value) {
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'notes', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
   }
 }

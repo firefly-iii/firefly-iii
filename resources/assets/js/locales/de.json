@@ -30,7 +30,7 @@
         "category": "Kategorie",
         "attachments": "Anh\u00e4nge",
         "notes": "Notizen",
-        "external_uri": "Externe URI",
+        "external_uri": "Externe URL",
         "update_transaction": "Buchung aktualisieren",
         "after_update_create_another": "Nach dem Aktualisieren hierher zur\u00fcckkehren, um weiter zu bearbeiten.",
         "store_as_new": "Als neue Buchung speichern statt zu aktualisieren.",

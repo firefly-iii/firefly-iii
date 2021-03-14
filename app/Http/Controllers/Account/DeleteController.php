@@ -88,7 +88,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
 
-        return view('accounts.delete', compact('account', 'subTitle', 'accountList', 'objectType'));
+        return prefixView('accounts.delete', compact('account', 'subTitle', 'accountList', 'objectType'));
     }
 
     /**

@@ -27,6 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV479.
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV479 extends Migration
@@ -40,8 +41,8 @@ class ChangesForV479 extends Migration
     {
         Schema::table(
             'transaction_currencies', static function (Blueprint $table) {
-                $table->dropColumn(['enabled']);
-            }
+            $table->dropColumn(['enabled']);
+        }
         );
     }
 

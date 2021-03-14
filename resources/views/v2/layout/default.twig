@@ -10,10 +10,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     {# favicons #}
-    {% include('partials.layout.favicons') %}
+    {% include('v2.partials.layout.favicons') %}
 
     <title>
-        {% if subTitle %}
+        {% if subTitle|default(false) %}
             {{ subTitle }} »
         {% endif %}
         {% if title != "Firefly III" %}
@@ -31,22 +31,24 @@
 <div class="wrapper">
 
     <!-- Navbar -->
-    {% include('partials.layout.navbar') %}
+    {% include('v2.partials.layout.navbar') %}
 
     <!-- Main Sidebar Container -->
-    {% include('partials.layout.sidebar') %}
+    {% include('v2.partials.layout.sidebar') %}
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
+                <!-- flashes -->
+                {% include('v2.partials.layout.flashes') %}
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">{% if mainTitleIcon %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
+                        <h1 class="m-0 text-dark">{% if mainTitleIcon|default(false) %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
                             {{ title }} <small class="text-muted">
-                                {% if subTitleIcon %}<i class="fa fas {{ subTitleIcon }}"></i>{% endif %}
-                                {{ subTitle }}</small></h1>
+                                {% if subTitleIcon|default(false) %}<i class="fa fas {{ subTitleIcon }}"></i>{% endif %}
+                                {{ subTitle|default('') }}</small></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         {% block breadcrumbs %}{% endblock %}
@@ -65,7 +67,7 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    {% include('partials.layout.footer') %}
+    {% include('v2.partials.layout.footer') %}
 
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">

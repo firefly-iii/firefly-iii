@@ -69,7 +69,7 @@ class BudgetController extends Controller
         $filtered = $result->map(
             static function (Budget $item) {
                 return [
-                    'id'   => $item->id,
+                    'id'   => (string)$item->id,
                     'name' => $item->name,
                 ];
             }

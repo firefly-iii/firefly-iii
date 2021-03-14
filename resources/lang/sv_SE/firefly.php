@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Vissa sidor i Firefly III har avancerade alternativ gömda bakom den här knappen. Den här sidan har inget tjusigt här, men kolla in de andra!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Auktorisationsbegäran',
     'authorization_request_intro'                         => '<strong>:client</strong> begär tillstånd för åtkomst till din ekonomi administration. Vill du tillåta <strong>:client</strong> åtkomst till dessa poster?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Tillämpa regel ":title" till ditt val av transaktioner',
     'apply_rule_selection_intro'                          => 'Regler som ":title" används normalt bara för nya eller uppdaterade transaktioner, men du kan få Firefly III att köra det på ett utval av nuvarande transaktioner. Detta kan vara användbart när du har uppdaterat en regel ändringen behöver göras på alla dina transaktioner.',
     'include_transactions_from_accounts'                  => 'Inkludera transaktioner från dessa konton',
-    'applied_rule_selection'                              => 'Regel ":title" har tillämpats på ditt val.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Utför',
     'apply_rule_group_selection'                          => 'Tillämpa regel grupp ":title" till dit val av transaktioner',
     'apply_rule_group_selection_intro'                    => 'Regelgrupper som ":title" används normalt bara för nya eller uppdaterade transaktioner, men du kan få Firefly III att köra alla regler i gruppen på ett utval av nuvarande transaktioner. Detta är användbart när du har uppdaterat en grupp med regler och dessa förändringar behöver göras på alla dina andra transaktioner.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Alternativa fält för transaktioner',
     'pref_optional_fields_transaction_help'     => 'Per default är inte alla fält aktiverade vid skapande av en ny transaktion (underlätta röran). Nedanför går det att aktivera dessa fält om de är användbara för dig. Självklar, ett fält som är ifyllt men inaktiverat, visas oavsett denna inställning.',
     'optional_tj_date_fields'                   => 'Datumfält',
-    'optional_tj_business_fields'               => 'Affärsområden',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Bilagefält',
     'pref_optional_tj_interest_date'            => 'Räntedatum',
     'pref_optional_tj_book_date'                => 'Bokföringsdatum',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Intern referens',
     'pref_optional_tj_notes'                    => 'Anteckningar',
     'pref_optional_tj_attachments'              => 'Bilagor',
-    'pref_optional_tj_external_uri'             => 'Extern URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Datum',
     'optional_field_meta_business'              => 'Affärsverksamhet',
     'optional_field_attachments'                => 'Bilagor',
     'optional_field_meta_data'                  => 'Valfri metadata',
-    'external_uri'                              => 'Extern URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Ta bort data',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Använd dessa summor för en indikering av vad din totala budget kan bli.',
     'suggested'                                 => 'Föreslagen',
     'average_between'                           => 'Genomsnitt mellan :start och :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>Vanligen budgeterar du :amount per dag. Nu är det :over_amount per dag. Är du säker?',
     'transferred_in'                            => 'Överfört (in)',
     'transferred_away'                          => 'Överfört (bort)',
     'auto_budget_none'                          => 'Ingen auto-budget',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'inaktiv regel',
     'bill_edit_rules'                           => 'Firefly III kommer också att försöka redigera regeln relaterad till denna räkning. Om du själv har redigerat denna regel kommer Firefly III inte att ändra någonting.|Firefly III kommer att försöka redigera :count regler som är relaterade till denna räkning. Om du själv har redigerat dessa regler kommer dock Firefly III inte att ändra någonting.',
     'bill_expected_date'                        => 'Förväntat :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Du har :count inaktiva (arkiverat) konto, som du kan se på denna separata sida.|Du har :count inaktiva (arkiverade) konton, som du kan se på denna separata sida.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaktion #{ID} ("{title}")</a> sparades.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaktion #{ID}</a> sparades.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaktion #{ID}</a> uppdaterades.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Välkommen till Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Kvar att spendera per dag',
     'bills_paid'                                => 'Notor betalda',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Andra',
     'classification'                            => 'Klassificering',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Standard ekonomisk rapport mellan :start och :end',

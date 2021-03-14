@@ -26,43 +26,38 @@
     <div class="input-group">
       <select
           ref="bill"
+          v-model="bill"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :title="$t('firefly.bill')"
-          v-model="value"
           autocomplete="off"
-          class="form-control"
           name="bill_id[]"
           v-on:submit.prevent
       >
-        <option v-for="bill in this.billList" :value="bill.id" :label="bill.name">{{ bill.name }}</option>
+        <option v-for="bill in this.billList" :label="bill.name" :value="bill.id">{{ bill.name }}</option>
 
       </select>
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
 <script>
-
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['value', 'index'],
+  props: ['value', 'index', 'errors'],
   name: "TransactionBill",
   data() {
     return {
-      billList: []
+      billList: [],
+      bill: this.value,
+      emitEvent: true
     }
   },
   created() {
     this.collectData();
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     collectData() {
       this.billList.push(
           {
@@ -94,18 +89,17 @@ export default {
     },
   },
   watch: {
-    value: function(value) {
-      this.updateField({field: 'bill_id', index: this.index, value: value});
+    value: function (value) {
+      this.emitEvent = false;
+      this.bill = value;
+    },
+    bill: function (value) {
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'bill_id', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
   },
-  computed: {
-    ...mapGetters(
-        [
-                    'transactionType',
-                    'transactions',
-                  ]
-    )
-  }
 }
 </script>
 

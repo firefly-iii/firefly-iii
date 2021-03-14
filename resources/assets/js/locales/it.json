@@ -30,7 +30,7 @@
         "category": "Categoria",
         "attachments": "Allegati",
         "notes": "Note",
-        "external_uri": "URI esterno",
+        "external_uri": "URL esterno",
         "update_transaction": "Aggiorna transazione",
         "after_update_create_another": "Dopo l'aggiornamento, torna qui per continuare la modifica.",
         "store_as_new": "Salva come nuova transazione invece di aggiornarla.",

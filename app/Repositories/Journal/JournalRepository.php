@@ -37,7 +37,6 @@ use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class JournalRepository.
@@ -48,24 +47,6 @@ class JournalRepository implements JournalRepositoryInterface
 
     /** @var User */
     private $user;
-
-    /**
-     * Search in journal descriptions.
-     *
-     * @param string $search
-     * @param int $limit
-     * @return Collection
-     */
-    public function searchJournalDescriptions(string $search, int $limit): Collection
-    {
-        $query = $this->user->transactionJournals()
-                            ->orderBy('date', 'DESC');
-        if ('' !== $query) {
-            $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
-        }
-
-        return $query->take($limit)->get();
-    }
 
     /**
      * @param TransactionGroup $transactionGroup
@@ -87,6 +68,18 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         $service->destroy($journal);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByType(array $types): Collection
+    {
+        return $this->user
+            ->transactionJournals()
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereIn('transaction_types.type', $types)
+            ->get(['transaction_journals.*']);
     }
 
     /**
@@ -119,10 +112,24 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions()->with('account')->where('amount', '>', 0)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no destination transaction.', $journal->id));
+        }
+
+        return $transaction->account;
+    }
+
+    /**
      * Return a list of all destination accounts related to journal.
      *
      * @param TransactionJournal $journal
-     * @param bool $useCache
+     * @param bool               $useCache
      *
      * @return Collection
      */
@@ -150,7 +157,7 @@ class JournalRepository implements JournalRepositoryInterface
      * Return a list of all source accounts related to journal.
      *
      * @param TransactionJournal $journal
-     * @param bool $useCache
+     * @param bool               $useCache
      *
      * @return Collection
      */
@@ -199,6 +206,21 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @return TransactionJournal|null
+     */
+    public function getLast(): ?TransactionJournal
+    {
+        /** @var TransactionJournal $entry */
+        $entry  = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
+        $result = null;
+        if (null !== $entry) {
+            $result = $entry;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param TransactionJournalLink $link
      *
      * @return string
@@ -212,107 +234,6 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return '';
-    }
-
-
-
-
-
-
-
-
-
-    /**
-     * @param int $transactionId
-     */
-    public function reconcileById(int $journalId): void
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-        if (null !== $journal) {
-            $journal->transactions()->update(['reconciled' => true]);
-        }
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * Update budget for a journal.
-     *
-     * @param TransactionJournal $journal
-     * @param int $budgetId
-     *
-     * @return TransactionJournal
-     */
-    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-
-        $service->setTransactionJournal($journal);
-        $service->setData(
-            [
-                'budget_id' => $budgetId,
-            ]
-        );
-        $service->update();
-        $journal->refresh();
-
-        return $journal;
-    }
-
-    /**
-     * Update category for a journal.
-     *
-     * @param TransactionJournal $journal
-     * @param string $category
-     *
-     * @return TransactionJournal
-     */
-    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $service->setTransactionJournal($journal);
-        $service->setData(
-            [
-                'category_name' => $category,
-            ]
-        );
-        $service->update();
-        $journal->refresh();
-
-        return $journal;
-    }
-
-    /**
-     * Update tag(s) for a journal.
-     *
-     * @param TransactionJournal $journal
-     * @param array $tags
-     *
-     * @return TransactionJournal
-     */
-    public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $service->setTransactionJournal($journal);
-        $service->setData(
-            [
-                'tags' => $tags,
-            ]
-        );
-        $service->update();
-        $journal->refresh();
-
-        return $journal;
     }
 
     /**
@@ -359,43 +280,114 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @inheritDoc
+     * @param int $transactionId
      */
-    public function getDestinationAccount(TransactionJournal $journal): Account
+    public function reconcileById(int $journalId): void
     {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions()->with('account')->where('amount', '>', 0)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no destination transaction.', $journal->id));
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+        if (null !== $journal) {
+            $journal->transactions()->update(['reconciled' => true]);
         }
-
-        return $transaction->account;
     }
 
     /**
-     * @return TransactionJournal|null
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @param int    $limit
+     *
+     * @return Collection
      */
-    public function getLast(): ?TransactionJournal
+    public function searchJournalDescriptions(string $search, int $limit): Collection
     {
-        /** @var TransactionJournal $entry */
-        $entry  = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
-        $result = null;
-        if (null !== $entry) {
-            $result = $entry;
+        $query = $this->user->transactionJournals()
+                            ->orderBy('date', 'DESC');
+        if ('' !== $query) {
+            $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
         }
 
-        return $result;
+        return $query->take($limit)->get();
     }
 
     /**
-     * @inheritDoc
+     * @param User $user
      */
-    public function findByType(array $types): Collection
+    public function setUser(User $user): void
     {
-        return $this->user
-            ->transactionJournals()
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereIn('transaction_types.type', $types)
-            ->get(['transaction_journals.*']);
+        $this->user = $user;
+    }
+
+    /**
+     * Update budget for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param int                $budgetId
+     *
+     * @return TransactionJournal
+     */
+    public function updateBudget(TransactionJournal $journal, int $budgetId): TransactionJournal
+    {
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'budget_id' => $budgetId,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
+    }
+
+    /**
+     * Update category for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param string             $category
+     *
+     * @return TransactionJournal
+     */
+    public function updateCategory(TransactionJournal $journal, string $category): TransactionJournal
+    {
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'category_name' => $category,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
+    }
+
+    /**
+     * Update tag(s) for a journal.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     *
+     * @return TransactionJournal
+     */
+    public function updateTags(TransactionJournal $journal, array $tags): TransactionJournal
+    {
+        /** @var JournalUpdateService $service */
+        $service = app(JournalUpdateService::class);
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'tags' => $tags,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
     }
 }

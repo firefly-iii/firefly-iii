@@ -40,25 +40,16 @@ use Illuminate\Support\Collection;
 interface RecurringRepositoryInterface
 {
     /**
-     * Destroy all recurring transactions.
-     */
-    public function destroyAll(): void;
-
-    /**
-     * Calculate how many transactions are to be expected from this recurrence.
-     *
-     * @param Recurrence $recurrence
-     * @param RecurrenceRepetition $repetition
-     * @return int
-     */
-    public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int;
-
-    /**
      * Destroy a recurring transaction.
      *
      * @param Recurrence $recurrence
      */
     public function destroy(Recurrence $recurrence): void;
+
+    /**
+     * Destroy all recurring transactions.
+     */
+    public function destroyAll(): void;
 
     /**
      * Returns all of the user's recurring transactions.
@@ -134,6 +125,7 @@ interface RecurringRepositoryInterface
 
     /**
      * @param RecurrenceTransaction $transaction
+     *
      * @return int|null
      */
     public function getPiggyBank(RecurrenceTransaction $transaction): ?int;
@@ -171,8 +163,8 @@ interface RecurringRepositoryInterface
      * @param Carbon               $date
      * @param int                  $count
      *
-     * @throws FireflyException
      * @return array
+     * @throws FireflyException
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array;
 
@@ -184,13 +176,13 @@ interface RecurringRepositoryInterface
      *
      * @param RecurrenceRepetition $repetition
      * @param Carbon               $date
-     * @param Carbon $afterDate
+     * @param Carbon               $afterDate
      * @param int                  $count
      *
-     * @throws FireflyException
      * @return array
+     * @throws FireflyException
      */
-    public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date,Carbon $afterDate, int $count): array;
+    public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array;
 
     /**
      * Parse the repetition in a string that is user readable.
@@ -200,6 +192,14 @@ interface RecurringRepositoryInterface
      * @return string
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRecurrence(string $query, int $limit): Collection;
 
     /**
      * Set user for in repository.
@@ -212,10 +212,21 @@ interface RecurringRepositoryInterface
      * Store a new recurring transaction.
      *
      * @param array $data
-     * @throws FireflyException
+     *
      * @return Recurrence
+     * @throws FireflyException
      */
     public function store(array $data): Recurrence;
+
+    /**
+     * Calculate how many transactions are to be expected from this recurrence.
+     *
+     * @param Recurrence           $recurrence
+     * @param RecurrenceRepetition $repetition
+     *
+     * @return int
+     */
+    public function totalTransactions(Recurrence $recurrence, RecurrenceRepetition $repetition): int;
 
     /**
      * Update a recurring transaction.

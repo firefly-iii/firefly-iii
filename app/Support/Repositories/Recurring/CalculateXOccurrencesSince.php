@@ -79,15 +79,18 @@ trait CalculateXOccurrencesSince
      */
     protected function getXMonthlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s(%s, %s, %d)', __METHOD__, $date->format('Y-m-d'), $afterDate->format('Y-m-d'), $count));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;
         $attempts   = 0;
         $dayOfMonth = (int)$moment;
+        $dayOfMonth = 0 === $dayOfMonth ? 1 : $dayOfMonth;
         if ($mutator->day > $dayOfMonth) {
+            Log::debug(sprintf('%d is after %d, add a month. Mutator is now', $mutator->day, $dayOfMonth));
             // day has passed already, add a month.
             $mutator->addMonth();
+            Log::debug(sprintf('%s', $mutator->format('Y-m-d')));
         }
 
         while ($total < $count) {
@@ -98,7 +101,8 @@ trait CalculateXOccurrencesSince
                 $total++;
             }
             $attempts++;
-            $mutator->endOfMonth()->addDay();
+            $mutator = $mutator->endOfMonth()->addDay();
+            Log::debug(sprintf('Mutator is now %s', $mutator->format('Y-m-d')));
         }
 
         return $return;
@@ -213,7 +217,9 @@ trait CalculateXOccurrencesSince
         $date       = new Carbon($moment);
         $date->year = $mutator->year;
         if ($mutator > $date) {
-            Log::debug(sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'),));
+            Log::debug(
+                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'),)
+            );
             $date->addYear();
             Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
         }

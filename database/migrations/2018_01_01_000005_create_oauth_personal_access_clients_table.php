@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateOauthPersonalAccessClientsTable.
+ *
  * @codeCoverageIgnore
  */
 class CreateOauthPersonalAccessClientsTable extends Migration
@@ -48,10 +49,10 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     {
         Schema::create(
             'oauth_personal_access_clients', static function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('client_id')->index();
-                $table->timestamps();
-            }
+            $table->increments('id');
+            $table->integer('client_id')->index();
+            $table->timestamps();
+        }
         );
     }
 }

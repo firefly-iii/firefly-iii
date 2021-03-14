@@ -79,7 +79,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                         'due_date', 'payment_date', 'invoice_date',
         ];
         try {
-            $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
+            $result = prefixView('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render();
         } catch (Throwable $e) {

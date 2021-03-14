@@ -25,6 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class CreateUsersTable.
+ *
  * @codeCoverageIgnore
  */
 class CreateUsersTable extends Migration

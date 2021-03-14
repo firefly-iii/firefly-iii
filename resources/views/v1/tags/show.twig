@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, tag, start, end) }}
@@ -213,7 +213,7 @@
                         </h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             </div>
@@ -251,7 +251,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    {% include 'list.groups' with {showBudget:true, showCategory: true} %}
+                    {% include 'v1.list.groups' with {showBudget:true, showCategory: true} %}
 
                     {% if periods|length > 0 %}
                         <p>
@@ -273,7 +273,7 @@
         </div>
         {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                {% include 'v1.list.periods' %}
             </div>
         {% endif %}
     </div>

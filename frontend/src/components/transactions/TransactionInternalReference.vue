@@ -19,47 +19,56 @@
   -->
 
 <template>
-  <div class="form-group">
+  <div v-if="showField" class="form-group">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.internal_reference') }}
     </div>
     <div class="input-group">
       <input
-          type="text"
-          name="internal_reference[]"
-          v-model="value"
+          v-model="reference"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :placeholder="$t('firefly.internal_reference')"
-          class="form-control"/>
+          name="internal_reference[]"
+          type="text"
+      />
       <div class="input-group-append">
-        <button type="button" class="btn btn-outline-secondary"><i class="far fa-trash-alt"></i></button>
+        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><i class="far fa-trash-alt"></i></button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionInternalReference",
-  methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
+  data() {
+    return {
+      reference: this.value,
+      availableFields: this.customFields,
+      emitEvent: true
+    }
   },
+  computed: {
+    showField: function () {
+      if ('internal_reference' in this.availableFields) {
+        return this.availableFields.internal_reference;
+      }
+      return false;
+    }
+  },
+  methods: {},
   watch: {
+    customFields: function (value) {
+      this.availableFields = value;
+    },
     value: function (value) {
-      this.updateField({field: 'internal_reference', index: this.index, value: value});
+      this.emitEvent = false;
+      this.reference = value;
+    },
+    reference: function (value) {
+      this.$emit('set-field', {field: 'internal_reference', index: this.index, value: value});
     }
   }
 }
 </script>
-
-<style scoped>
-
-</style>

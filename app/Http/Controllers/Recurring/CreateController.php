@@ -158,7 +158,7 @@ class CreateController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
+        return prefixView(
             'recurring.create',
             compact('tomorrow', 'oldRepetitionType', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
         );
@@ -206,7 +206,7 @@ class CreateController extends Controller
         ];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
+        return prefixView(
             'recurring.create',
             compact('tomorrow', 'oldRepetitionType', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
         );

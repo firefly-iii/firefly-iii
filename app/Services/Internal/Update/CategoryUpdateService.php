@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use Log;
-use Exception;
 
 /**
  * Class CategoryUpdateService
@@ -46,12 +46,17 @@ class CategoryUpdateService
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         if (auth()->check()) {
             $this->user = auth()->user();
         }
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -63,16 +68,39 @@ class CategoryUpdateService
     public function update(Category $category, array $data): Category
     {
         $oldName        = $category->name;
-        $category->name = $data['name'];
-        $category->save();
+        if(array_key_exists('name', $data)) {
+            $category->name = $data['name'];
+            $category->save();
+            // update triggers and actions
+            $this->updateRuleTriggers($oldName, $data['name']);
+            $this->updateRuleActions($oldName, $data['name']);
+            $this->updateRecurrences($oldName, $data['name']);
+        }
 
-        // update triggers and actions
-        $this->updateRuleTriggers($oldName, $data['name']);
-        $this->updateRuleActions($oldName, $data['name']);
-        $this->updateRecurrences($oldName, $data['name']);
         $this->updateNotes($category, $data);
 
         return $category;
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRuleTriggers(string $oldName, string $newName): void
+    {
+        $types    = ['category_is',];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_triggers.trigger_type', $types)
+                               ->where('rule_triggers.trigger_value', $oldName)
+                               ->get(['rule_triggers.*']);
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $newName;
+            $trigger->save();
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+        }
     }
 
     /**
@@ -100,35 +128,6 @@ class CategoryUpdateService
      * @param string $oldName
      * @param string $newName
      */
-    private function updateRuleTriggers(string $oldName, string $newName): void
-    {
-        $types    = ['category_is',];
-        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_triggers.trigger_type', $types)
-                               ->where('rule_triggers.trigger_value', $oldName)
-                               ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $trigger->trigger_value = $newName;
-            $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
-        }
-    }
-
-    /**
-     * @param mixed $user
-     */
-    public function setUser($user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRecurrences(string $oldName, string $newName): void
     {
         RecurrenceTransactionMeta
@@ -145,7 +144,7 @@ class CategoryUpdateService
      * @param Category $category
      * @param array    $data
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateNotes(Category $category, array $data): void
     {

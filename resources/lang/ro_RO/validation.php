@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute trebuie să fie mai mic decât 10,000,000',
     'active_url'                     => ':attribute nu este o adresă URL validă.',
     'after'                          => ':attribute trebuie să fie o dată ulterioară :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute poate conține numai litere.',
     'alpha_dash'                     => ':attribute poate conține numai litere, numere și liniuțe.',
     'alpha_num'                      => ':attribute poate conține numai litere și numere.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
     'withdrawal_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
     'withdrawal_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'deposit_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',

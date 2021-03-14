@@ -84,20 +84,19 @@ class BudgetLimitTransformer extends AbstractTransformer
         $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
 
         return [
-            'id'                      => (int)$budgetLimit->id,
+            'id'                      => (string) $budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->format('Y-m-d'),
             'end'                     => $budgetLimit->end_date->format('Y-m-d'),
-            'budget_id'               => (int)$budgetLimit->budget_id,
-            'currency_id'             => $currencyId,
+            'budget_id'               => (string)$budgetLimit->budget_id,
+            'currency_id'             => (string) $currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
-            'currency_decimal_places' => $currencyName,
+            'currency_decimal_places' => $currencyDecimalPlaces,
             'currency_symbol'         => $currencySymbol,
             'amount'                  => $amount,
             'period'                  => $budgetLimit->period,
-            'auto_budget'             => $budgetLimit->auto_budget,
             'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
             'links'                   => [
                 [

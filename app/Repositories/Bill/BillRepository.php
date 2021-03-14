@@ -54,6 +54,22 @@ class BillRepository implements BillRepositoryInterface
     private User $user;
 
     /**
+     * Correct order of piggies in case of issues.
+     */
+    public function correctOrder(): void
+    {
+        $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
+        $current = 1;
+        foreach ($set as $bill) {
+            if ((int)$bill->order !== $current) {
+                $bill->order = $current;
+                $bill->save();
+            }
+            $current++;
+        }
+    }
+
+    /**
      * @param Bill $bill
      *
      * @return bool
@@ -67,6 +83,14 @@ class BillRepository implements BillRepositoryInterface
         $service->destroy($bill);
 
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAll(): void
+    {
+        $this->user->bills()->delete();
     }
 
     /**
@@ -439,7 +463,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        Log::debug('Now in getPaidDatesInRange()');
+        //Log::debug('Now in getPaidDatesInRange()');
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
@@ -463,24 +487,21 @@ class BillRepository implements BillRepositoryInterface
     {
         $set          = new Collection;
         $currentStart = clone $start;
-        Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
             Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
-                Log::debug(
-                    sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
-                );
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
             $currentStart = clone $nextExpectedMatch;
         }
@@ -489,7 +510,8 @@ class BillRepository implements BillRepositoryInterface
                 return $date->format('Y-m-d');
             }
         );
-        Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
+
+        //Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
 
         return $set;
     }
@@ -617,7 +639,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill   $bill
      * @param Carbon $date
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -637,8 +659,8 @@ class BillRepository implements BillRepositoryInterface
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
 
-        Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
-        Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
+        //Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
 
         $cache->store($start);
 
@@ -692,6 +714,16 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function removeObjectGroup(Bill $bill): Bill
+    {
+        $bill->objectGroups()->sync([]);
+
+        return $bill;
+    }
+
+    /**
      * @param string $query
      * @param int    $limit
      *
@@ -702,6 +734,28 @@ class BillRepository implements BillRepositoryInterface
         $query = sprintf('%%%s%%', $query);
 
         return $this->user->bills()->where('name', 'LIKE', $query)->take($limit)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill
+    {
+        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
+        if (null !== $objectGroup) {
+            $bill->objectGroups()->sync([$objectGroup->id]);
+        }
+
+        return $bill;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(Bill $bill, int $order): void
+    {
+        $bill->order = $order;
+        $bill->save();
     }
 
     /**
@@ -728,6 +782,14 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * @param Bill $bill
+     */
+    public function unlinkAll(Bill $bill): void
+    {
+        $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
+    }
+
+    /**
      * @param Bill  $bill
      * @param array $data
      *
@@ -739,69 +801,5 @@ class BillRepository implements BillRepositoryInterface
         $service = app(BillUpdateService::class);
 
         return $service->update($bill, $data);
-    }
-
-    /**
-     * @param Bill $bill
-     */
-    public function unlinkAll(Bill $bill): void
-    {
-        $this->user->transactionJournals()->where('bill_id', $bill->id)->update(['bill_id' => null]);
-    }
-
-    /**
-     * Correct order of piggies in case of issues.
-     */
-    public function correctOrder(): void
-    {
-        $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
-        $current = 1;
-        foreach ($set as $bill) {
-            if ((int)$bill->order !== $current) {
-                $bill->order = $current;
-                $bill->save();
-            }
-            $current++;
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill
-    {
-        $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
-        if (null !== $objectGroup) {
-            $bill->objectGroups()->sync([$objectGroup->id]);
-        }
-
-        return $bill;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function removeObjectGroup(Bill $bill): Bill
-    {
-        $bill->objectGroups()->sync([]);
-
-        return $bill;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setOrder(Bill $bill, int $order): void
-    {
-        $bill->order = $order;
-        $bill->save();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroyAll(): void
-    {
-        $this->user->bills()->delete();
     }
 }

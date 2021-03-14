@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -32,7 +32,7 @@
 
                         <!-- list of recurring here -->
                         <div style="padding-left:8px;">
-                            {{ paginator.links('pagination.bootstrap-4')|raw }}
+                            {{ paginator.links('v1.pagination.bootstrap-4')|raw }}
                         </div>
                         <table class="table table-responsive  table-hover sortable">
                             <thead>
@@ -140,7 +140,7 @@
                             </tbody>
                         </table>
                         <div style="padding-left:8px;">
-                            {{ paginator.links('pagination.bootstrap-4')|raw }}
+                            {{ paginator.links('v1.pagination.bootstrap-4')|raw }}
                         </div>
                     </div>
                     <div class="box-footer">
@@ -155,7 +155,7 @@
 
 
     {% if total == 0 and page == 1 %}
-        {% include 'partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
+        {% include 'v1.partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
     {% endif %}
 {% endblock %}
 

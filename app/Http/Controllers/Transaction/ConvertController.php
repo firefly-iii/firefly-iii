@@ -124,7 +124,7 @@ class ConvertController extends Controller
             return redirect(route('transactions.show', [$group->id]));
         }
 
-        return view(
+        return prefixView(
             'transactions.convert',
             compact(
                 'sourceType',

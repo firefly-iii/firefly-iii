@@ -78,9 +78,9 @@ new Vue({
             beforeCreate() {
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
+                this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });
-
 new Vue({
             i18n,
             store,

@@ -34,12 +34,9 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
  */
 class PiggyBankEventTransformer extends AbstractTransformer
 {
-    /** @var CurrencyRepositoryInterface */
-    private $currencyRepos;
-    /** @var PiggyBankRepositoryInterface */
-    private $piggyRepos;
-    /** @var AccountRepositoryInterface */
-    private $repository;
+    private CurrencyRepositoryInterface  $currencyRepos;
+    private PiggyBankRepositoryInterface $piggyRepos;
+    private AccountRepositoryInterface   $repository;
 
     /**
      * PiggyBankEventTransformer constructor.
@@ -76,21 +73,22 @@ class PiggyBankEventTransformer extends AbstractTransformer
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;
         $groupId   = null;
-        if (0 !== (int) $journalId) {
-            $groupId   = (int) $event->transactionJournal->transaction_group_id;
-            $journalId = (int) $journalId;
+        if (0 !== (int)$journalId) {
+            $groupId   = (int)$event->transactionJournal->transaction_group_id;
+            $journalId = (int)$journalId;
         }
+
         return [
-            'id'                      => (int) $event->id,
+            'id'                      => (string)$event->id,
             'created_at'              => $event->created_at->toAtomString(),
             'updated_at'              => $event->updated_at->toAtomString(),
-            'amount'                  => number_format((float) $event->amount, $currency->decimal_places, '.', ''),
-            'currency_id'             => (int) $currency->id,
+            'amount'                  => number_format((float)$event->amount, $currency->decimal_places, '.', ''),
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int) $currency->decimal_places,
-            'transaction_journal_id'  => $journalId,
-            'transaction_group_id'    => $groupId,
+            'currency_decimal_places' => (int)$currency->decimal_places,
+            'transaction_journal_id'  => $journalId ? (string)$journalId : null,
+            'transaction_group_id'    => $groupId ? (string)$groupId: null,
             'links'                   => [
                 [
                     'rel' => 'self',

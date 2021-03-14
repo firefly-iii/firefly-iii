@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute 必須小於 10,000,000。',
     'active_url'                     => ':attribute 不是有效的 URL。',
     'after'                          => ':attribute 必須是一個在 :date 之後的日期。',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute 只能包含字母。',
     'alpha_dash'                     => ':attribute 只能包含字母、數字和破折號。',
     'alpha_num'                      => ':attribute 只能包含數字和字母。',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',
     'withdrawal_dest_need_data'   => '需要有效的目標帳戶 ID 及/或有效的目標帳戶名稱才能繼續。',
     'withdrawal_dest_bad_data'    => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的目標帳戶。',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '需要有效的來源帳戶 ID 及/或有效的來源帳戶名稱才能繼續。',
     'deposit_source_bad_data'  => '搜尋 ID ":id" 或名稱 ":name" 都找不到有效的來源帳戶。',

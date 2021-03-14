@@ -151,10 +151,6 @@ class Preferences
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
-        $fullName = sprintf('preference%s%s', $user->id, $name);
-        if (Cache::has($fullName)) {
-            return Cache::get($fullName);
-        }
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
@@ -166,7 +162,6 @@ class Preferences
         }
 
         if (null !== $preference) {
-            Cache::forever($fullName, $preference);
 
             return $preference;
         }
@@ -185,32 +180,11 @@ class Preferences
      * @param null|string $default
      *
      * @return \FireflyIII\Models\Preference|null
+     * TODO remove me
      */
     public function getFreshForUser(User $user, string $name, $default = null): ?Preference
     {
-        $fullName = sprintf('preference%s%s', $user->id, $name);
-        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
-        if (null !== $preference && null === $preference->data) {
-            try {
-                $preference->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()));
-            }
-            $preference = null;
-        }
-
-        if (null !== $preference) {
-            Cache::forever($fullName, $preference);
-
-            return $preference;
-        }
-        // no preference found and default is null:
-        if (null === $default) {
-            // return NULL
-            return null;
-        }
-
-        return $this->setForUser($user, $name, $default);
+        return $this->getForUser($user, $name, $default);
     }
 
     /**

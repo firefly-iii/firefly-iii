@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Μερικές σελίδες στο Firefly III έχουν κρυμμένες επιλογές για προχωρημένους πίσω από αυτό το κουμπί. Αυτή η σελίδα δεν έχει τίποτα ουσιαστικό εδώ, αλλά ελέγξτε τις υπόλοιπες!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Αίτημα Εξουσιοδότησης Firefly III v:version',
     'authorization_request_intro'                         => 'Ο <strong>:client</strong> αιτείται άδεια πρόσβασης στην οικονομική σας διαχείριση. Θέλετε να εξουσιοδοτήσετε τον <strong>:client</strong> ώστε να έχει πρόσβαση σε αυτές τις εγγραφές;',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Εφαρμογή του κανόνα ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_selection_intro'                          => 'Κανόνες όπως ":title" εφαρμόζονται συνήθως σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly ΙΙΙ να τους εκτελέσει σε μια επιλογή υπαρχόντων συναλλαγών. Αυτό μπορεί να είναι χρήσιμο όταν έχετε ενημερώσει έναν κανόνα και χρειάζεστε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',
     'include_transactions_from_accounts'                  => 'Συμπερίληψη συναλλαγών από αυτούς τους λογαριασμούς',
-    'applied_rule_selection'                              => 'Ο κανόνας ":title" έχει εφαρμοστεί στην επιλογή σας.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Εκτέλεση',
     'apply_rule_group_selection'                          => 'Εφαρμογή ομάδας κανόνων ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_group_selection_intro'                    => 'Ομάδες κανόνων όπως ":title" συνήθως εφαρμόζονται σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly III να εκτελέσει όλους τους κανόνες σε αυτή την ομάδα σε μία επιλογή των υπαρχόντων συναλλαγών σας. Αυτό μπορεί να είναι χρήσιμο εάν ενημερώσατε μια ομάδα κανόνων και θέλετε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Προαιρετικά πεδία για συναλλαγές',
     'pref_optional_fields_transaction_help'     => 'Από προεπιλογή δεν μπορούν να ενεργοποιηθούν όλα τα πεδία όταν δημιουργείται μία νέα συναλλαγή (εξαιτίας της σύγχυσης). Παρακάτω, μπορείτε να ενεργοποιήσετε αυτά τα πεδία εάν νομίζετε ότι θα σας φανούν χρήσιμα. Φυσικά, όποιο πεδίο απενεργοποιείται, αλλά είναι ήδη συμπληρωμένο, θα συνεχίζει να εμφανίζεται ασχέτως της ρύθμισης.',
     'optional_tj_date_fields'                   => 'Πεδία ημερομηνίας',
-    'optional_tj_business_fields'               => 'Πεδία εταιρίας',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Πεδία συνημμένου',
     'pref_optional_tj_interest_date'            => 'Ημερομηνία τοκισμού',
     'pref_optional_tj_book_date'                => 'Ημερομηνία εγγραφής',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Εσωτερική αναφορά',
     'pref_optional_tj_notes'                    => 'Σημειώσεις',
     'pref_optional_tj_attachments'              => 'Συνημμένα',
-    'pref_optional_tj_external_uri'             => 'Εξωτερικό URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Ημερομηνίες',
     'optional_field_meta_business'              => 'Επιχείρηση',
     'optional_field_attachments'                => 'Συνημμένα',
     'optional_field_meta_data'                  => 'Προαιρετικά μετα-δεδομένα',
-    'external_uri'                              => 'Εξωτερικό URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Διαγραφή δεδομένων',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Χρησιμοποιήστε αυτά τα ποσά για μια ένδειξη του συνολικού προϋπολογισμού σας.',
     'suggested'                                 => 'Πρόταση',
     'average_between'                           => 'Μέσος όρος μεταξύ :start και :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Συνήθως έχετε προϋπολογισμό περίπου :amount ανά ημέρα. Αυτή τη φορά είναι :over_amount ανά ημέρα. Είστε σίγουροι;',
     'transferred_in'                            => 'Μεταφέρθηκαν (εντός)',
     'transferred_away'                          => 'Μεταφέρθηκαν (εκτός)',
     'auto_budget_none'                          => 'Χωρίς αυτόματο προϋπολογισμό',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'ανενεργός κανόνας',
     'bill_edit_rules'                           => 'Το Firefly III θα προσπαθήσει επίσης να επεξεργαστεί τον κανόνα που σχετίζεται με αυτόν τον λογαριασμό. Εάν όμως έχετε επεξεργαστεί ο ίδιος αυτόν τον κανόνα, το Firefly III δεν θα αλλάξει τίποτα.|Το Firefly III θα προσπαθήσει επίσης να επεξεργαστεί τους :count κανόνες που σχετίζονται με αυτόν τον λογαριασμό. Ωστόσο, εάν έχετε επεξεργαστεί αυτούς τους κανόνες μόνοι σας, το Firefly III δεν θα αλλάξει τίποτα.',
     'bill_expected_date'                        => 'Αναμένεται :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Έχετε :count ανενεργό λογαριασμό (σε αρχειοθέτηση), τον οποίο μπορείτε να δείτε σε αυτή τη ξεχωριστή σελίδα.|Έχετε :count ανενεργούς λογαριασμούς (σε αρχειοθέτηση), τους οποίους μπορείτε να δείτε σε αυτή τη ξεχωριστή σελίδα.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Η συναλλαγή #{ID} ("{title}")</a> έχει αποθηκευτεί.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Η συναλλαγή #{ID}</a> έχει αποθηκευτεί.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Η συναλλαγή #{ID}</a> έχει ενημερωθεί.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Καλωσήρθατε στο Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Ανά ημέρα',
     'left_to_spend_per_day'                     => 'Διαθέσιμα προϋπολογισμών ανά ημέρα',
     'bills_paid'                                => 'Πληρωμένα πάγια έξοδα',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Νόμισμα',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Αυτοματοποίηση',
     'others'                                    => 'Λοιπά',
     'classification'                            => 'Ταξινόμηση',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Προεπιλεγμένη οικονομική αναφορά μεταξύ :start και :end',

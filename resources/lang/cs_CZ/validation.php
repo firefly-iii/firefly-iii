@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute musí být menší než 10.000.000',
     'active_url'                     => ':attribute není platná adresa URL.',
     'after'                          => ':attribute nemůže být dříve než :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute může obsahovat pouze písmena.',
     'alpha_dash'                     => ':attribute může obsahovat pouze písmena, čísla a pomlčky.',
     'alpha_num'                      => ':attribute může obsahovat pouze písmena a čísla.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
     'withdrawal_dest_need_data'   => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'withdrawal_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'deposit_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',

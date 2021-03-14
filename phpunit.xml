@@ -34,32 +34,10 @@
       <directory suffix=".php">./app</directory>
     </include>
   </coverage>
-  <listeners>
-    <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
-      <arguments>
-        <array>
-          <element key="slowThreshold">
-            <integer>1000</integer>
-          </element>
-        </array>
-      </arguments>
-    </listener>
-  </listeners>
   <testsuites>
-    <testsuite name="Feature">
-      <directory suffix="Test.php">./tests/Feature</directory>
+    <testsuite name="Api">
+      <directory suffix="Test.php">./tests/Api/Models</directory>
     </testsuite>
-
-    <!--
-        <testsuite name="Api">
-            <directory suffix="Test.php">./tests/Api</directory>
-        </testsuite>
-
-
-    <testsuite name="Unit">
-      <directory suffix="Test.php">./tests/Unit</directory>
-    </testsuite>
-    -->
   </testsuites>
   <php>
     <env name="APP_ENV" value="testing"/>

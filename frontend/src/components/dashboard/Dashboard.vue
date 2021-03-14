@@ -62,8 +62,5 @@
 <script>
 export default {
   name: "Dashboard",
-  created() {},
-  computed: {},
-  methods: {}
 }
 </script>

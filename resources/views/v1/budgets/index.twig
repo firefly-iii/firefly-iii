@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -203,7 +203,7 @@
         </div>
     {% endif %}
     {% if budgets|length == 0 and inactive.count() == 0 %}
-        {% include 'partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
+        {% include 'v1.partials.empty' with {objectType: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
     {% else %}

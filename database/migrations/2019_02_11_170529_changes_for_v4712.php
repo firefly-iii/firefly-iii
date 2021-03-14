@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV4712.
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV4712 extends Migration
@@ -59,8 +60,8 @@ class ChangesForV4712 extends Migration
          */
         Schema::table(
             'transaction_journals', static function (Blueprint $table) {
-                $table->dateTime('date')->change();
-            }
+            $table->dateTime('date')->change();
+        }
         );
     }
 }

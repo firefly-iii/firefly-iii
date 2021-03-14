@@ -7,12 +7,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 5.5.0 (API 1.5.0) 2021-xx-xx
 
 ### Added
-- [Webhooks](https://docs.firefly-iii.org/firefly-iii/pages-and-features/webhooks/)
-- [Issue 3717](https://github.com/firefly-iii/firefly-iii/issues/3717) Allow exporting in the CSV all the optional metadata
-- Can search for transactions using `id:123`.
+- [Issue 3717](https://github.com/firefly-iii/firefly-iii/issues/3717) Also export all optional metadata in the CSV files.
+- [Issue 4007](https://github.com/firefly-iii/firefly-iii/issues/4007) Whe updating transactions using a rule, the message will return the number of changed transactions.
+- [Issue 4334](https://github.com/firefly-iii/firefly-iii/issues/4334) Added the Portuguese language.
+- [Issue 4338](https://github.com/firefly-iii/firefly-iii/issues/4338) The recurring transactions calendar was off by one day.
+- [Issue 4339](https://github.com/firefly-iii/firefly-iii/issues/4339) When deleting recurring transactions you would be redirected to the deleted recurring transaction.
+- [Issue 4340](https://github.com/firefly-iii/firefly-iii/issues/4340) When running rules, any date related actions and triggers will pick up the correct date.
+- [Issue 4406](https://github.com/firefly-iii/firefly-iii/issues/4406) SQL errors when submitting large amounts to the budget overview.
+- [Issue 4412](https://github.com/firefly-iii/firefly-iii/issues/4412) During the cron job a NULL pointer could pop up.
+- [Issue 4488](https://github.com/firefly-iii/firefly-iii/issues/4488) The Japanese Yen was corrected to zero decimals.
+- [Issue 4503](https://github.com/firefly-iii/firefly-iii/issues/4503) When bills skip a moment the amounts would be off.
+- Firefly III now supports [webhooks](https://docs.firefly-iii.org/firefly-iii/pages-and-features/webhooks/).
+- The search now also supports searching for transactions using `id:123`.
 
 ### Changed
-- OAuth is visible for LDAP users.
+- OAuth settings are visible for LDAP users.
+- If you set `FIREFLY_III_LAYOUT=v2`, Firefly III will show you the new layout on pages where it's available.
+
+### Deprecated
+- The current layout will no longer receive fixes and changes.
 
 ### Fixed
 - [Issue 4045](https://github.com/firefly-iii/firefly-iii/issues/4045) Error message for "Amount Missing" doesn't have a look up value
@@ -37,15 +50,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PHP configs that have "MB" as size indicator would be parsed badly.
 
 ### API
+
+*Lots of API changes, make sure you read [the documentation](https://api-docs.firefly-iii.org/).*
+
 - [Issue 4050](https://github.com/firefly-iii/firefly-iii/issues/4050) Updated Transaction Search API to set limit from user preferences
 - [Issue 4113](https://github.com/firefly-iii/firefly-iii/issues/4113) Piggy Bank API Deletes Some Piggy Metadata
 - [Issue 4122](https://github.com/firefly-iii/firefly-iii/issues/4122) Remove reconciliation accounts from autocomplete
 - [Issue 4195](https://github.com/firefly-iii/firefly-iii/issues/4195) User endpoint broken
 - [Issue 4199](https://github.com/firefly-iii/firefly-iii/issues/4199) Unable to update tags using API
-- API endpoint for budget limits applicable to a date range now has budget info.
-- Add period and auto generated to budget limit
-- Add spent to budget limit.
-
+- [Issue 4394](https://github.com/firefly-iii/firefly-iii/issues/4394) Storing budgets works again.
+- [Issue 4426](https://github.com/firefly-iii/firefly-iii/issues/4426) Storing accounts would lead to bad capitalization in liability type.
+- [Issue 4435](https://github.com/firefly-iii/firefly-iii/issues/4435) Storing piggy banks with object group information would fail.
 
 ## 5.4.6 (API 1.4.0) - 2020-10-07
 

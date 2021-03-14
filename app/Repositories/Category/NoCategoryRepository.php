@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
@@ -37,8 +36,7 @@ use Log;
  */
 class NoCategoryRepository implements NoCategoryRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -207,6 +205,37 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+        }
+
+        return $array;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->withoutCategory();
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

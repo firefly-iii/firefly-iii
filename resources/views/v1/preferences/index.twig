@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName) }}
@@ -107,10 +107,12 @@
                                         {{ ExpandedForm.checkbox('tj[payment_date]','1', tjOptionalFields.payment_date,{ 'label' : 'pref_optional_tj_payment_date'|_ }) }}
                                         {{ ExpandedForm.checkbox('tj[invoice_date]','1', tjOptionalFields.invoice_date,{ 'label' : 'pref_optional_tj_invoice_date'|_ }) }}
 
-                                        <h4>{{ 'optional_tj_business_fields'|_ }}</h4>
+                                        <h4>{{ 'optional_tj_other_fields'|_ }}</h4>
                                         {{ ExpandedForm.checkbox('tj[internal_reference]','1', tjOptionalFields.internal_reference,{ 'label' : 'pref_optional_tj_internal_reference'|_ }) }}
                                         {{ ExpandedForm.checkbox('tj[external_uri]','1', tjOptionalFields.external_uri,{ 'label' : 'pref_optional_tj_external_uri'|_ }) }}
                                         {{ ExpandedForm.checkbox('tj[notes]','1', tjOptionalFields.notes,{ 'label' : 'pref_optional_tj_notes'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[location]','1', tjOptionalFields.location,{ 'label' : 'pref_optional_tj_location'|_ }) }}
+                                        {{ ExpandedForm.checkbox('tj[links]','1', tjOptionalFields.links,{ 'label' : 'pref_optional_tj_links'|_ }) }}
 
                                         <h4>{{ 'optional_tj_attachment_fields'|_ }}</h4>
                                         {{ ExpandedForm.checkbox('tj[attachments]','1', tjOptionalFields.attachments,{ 'label' : 'pref_optional_tj_attachments'|_ }) }}

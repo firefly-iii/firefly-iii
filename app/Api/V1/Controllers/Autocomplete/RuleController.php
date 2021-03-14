@@ -25,11 +25,56 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class RuleController
  */
 class RuleController extends Controller
 {
+    private RuleRepositoryInterface $repository;
+
+
+    /**
+     * RuleController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(RuleRepositoryInterface::class);
+                $this->repository->setUser(auth()->user());
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param AutocompleteRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function rules(AutocompleteRequest $request): JsonResponse
+    {
+        $data     = $request->getData();
+        $rules   = $this->repository->searchRule($data['query'], $data['limit']);
+        $response = [];
+
+        /** @var Rule $rule */
+        foreach ($rules as $rule) {
+            $response[] = [
+                'id'          => (string)$rule->id,
+                'name'        => $rule->title,
+                'description' => $rule->description,
+            ];
+        }
+
+        return response()->json($response);
+    }
 
 }

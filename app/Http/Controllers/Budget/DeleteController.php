@@ -77,7 +77,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');
 
-        return view('budgets.delete', compact('budget', 'subTitle'));
+        return prefixView('budgets.delete', compact('budget', 'subTitle'));
     }
 
     /**

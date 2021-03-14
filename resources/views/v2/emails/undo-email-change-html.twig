@@ -1,4 +1,4 @@
-{% include 'emails.header-html' %}
+{% include 'v2.emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.email_change_body_to_old')|raw }}
 </p>
@@ -14,4 +14,4 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{trans('email.email_change_undo_link')}} <a href="{{ uri }}">{{ uri }}</a>
 </p>
-{% include 'emails.footer-html' %}
+{% include 'v2.emails.footer-html' %}

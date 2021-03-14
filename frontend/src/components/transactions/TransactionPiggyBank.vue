@@ -26,43 +26,39 @@
     <div class="input-group">
       <select
           ref="piggy_bank_id"
+          v-model="piggy_bank_id"
+          :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :title="$t('firefly.piggy_bank')"
-          v-model="value"
           autocomplete="off"
-          class="form-control"
           name="piggy_bank_id[]"
           v-on:submit.prevent
       >
-        <option v-for="piggy in this.piggyList" :value="piggy.id" :label="piggy.name_with_balance">{{ piggy.name_with_balance }}</option>
+        <option v-for="piggy in this.piggyList" :label="piggy.name_with_balance" :value="piggy.id">{{ piggy.name_with_balance }}</option>
 
       </select>
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors'],
   name: "TransactionPiggyBank",
   data() {
     return {
-      piggyList: []
+      piggyList: [],
+      piggy_bank_id: this.value,
+      emitEvent: true
     }
   },
   created() {
     this.collectData();
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     collectData() {
       this.piggyList.push(
           {
@@ -95,14 +91,15 @@ export default {
   },
   watch: {
     value: function (value) {
-      this.updateField({field: 'piggy_bank_id', index: this.index, value: value});
+      this.emitEvent = false;
+      this.piggy_bank_id = value;
+    },
+    piggy_bank_id: function (value) {
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'piggy_bank_id', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
-  },
-  computed: {
-    ...mapGetters([
-                    'transactionType',
-                    'transactions',
-                  ])
   }
 }
 </script>

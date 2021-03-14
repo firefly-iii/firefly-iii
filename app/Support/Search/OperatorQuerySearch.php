@@ -1,4 +1,25 @@
 <?php
+
+/*
+ * OperatorQuerySearch.php
+ * Copyright (c) 2021 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 /*
  * OperatorQuerySearch.php
@@ -79,6 +100,7 @@ class OperatorQuerySearch implements SearchInterface
     private Collection                         $modifiers; // obsolete
     private Collection                         $operators;
     private string                             $originalQuery;
+    private Carbon                             $date;
 
     /**
      * OperatorQuerySearch constructor.
@@ -94,6 +116,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->words              = [];
         $this->limit              = 25;
         $this->originalQuery      = '';
+        $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -121,6 +144,14 @@ class OperatorQuerySearch implements SearchInterface
     public function getOperators(): Collection
     {
         return $this->operators;
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
     }
 
     /**
@@ -234,7 +265,7 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
                 // loop all notes in subquery:
-                foreach($searchNode->getNodes() as $subNode) {
+                foreach ($searchNode->getNodes() as $subNode) {
                     $this->handleSearchNode($subNode); // lets hope its not too recursive!
                 }
                 break;
@@ -810,7 +841,7 @@ class OperatorQuerySearch implements SearchInterface
     {
         $parser = new ParseDateString;
         if ($parser->isDateRange($value)) {
-            return $parser->parseRange($value, today(config('app.timezone')));
+            return $parser->parseRange($value, $this->date);
         }
         $date = $parser->parseDate($value);
 

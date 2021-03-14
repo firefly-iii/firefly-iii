@@ -86,7 +86,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle', 'defaultCurrency'));
+        return prefixView('bills.create', compact('periods', 'subTitle', 'defaultCurrency'));
     }
 
     /**

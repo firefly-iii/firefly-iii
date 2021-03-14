@@ -25,6 +25,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class CreateMainTables.
+ *
  * @codeCoverageIgnore
  */
 class CreateMainTables extends Migration
@@ -117,6 +118,44 @@ class CreateMainTables extends Migration
                     $table->string('name');
                     $table->text('data');
                     $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                }
+            );
+        }
+    }
+
+    private function createPiggyBanksTable(): void
+    {
+        if (!Schema::hasTable('piggy_banks')) {
+            Schema::create(
+                'piggy_banks',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('account_id', false, true);
+                    $table->string('name', 1024);
+                    $table->decimal('targetamount', 22, 12);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(0);
+                    $table->boolean('encrypted')->default(1);
+                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                }
+            );
+        }
+
+        if (!Schema::hasTable('piggy_bank_repetitions')) {
+            Schema::create(
+                'piggy_bank_repetitions',
+                static function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('piggy_bank_id', false, true);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->decimal('currentamount', 22, 12);
+                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
                 }
             );
         }
@@ -278,44 +317,6 @@ class CreateMainTables extends Migration
                     $table->string('status', 45);
                     $table->text('configuration')->nullable();
                     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                }
-            );
-        }
-    }
-
-    private function createPiggyBanksTable(): void
-    {
-        if (!Schema::hasTable('piggy_banks')) {
-            Schema::create(
-                'piggy_banks',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('account_id', false, true);
-                    $table->string('name', 1024);
-                    $table->decimal('targetamount', 22, 12);
-                    $table->date('startdate')->nullable();
-                    $table->date('targetdate')->nullable();
-                    $table->integer('order', false, true)->default(0);
-                    $table->boolean('active')->default(0);
-                    $table->boolean('encrypted')->default(1);
-                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-                }
-            );
-        }
-
-        if (!Schema::hasTable('piggy_bank_repetitions')) {
-            Schema::create(
-                'piggy_bank_repetitions',
-                static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->integer('piggy_bank_id', false, true);
-                    $table->date('startdate')->nullable();
-                    $table->date('targetdate')->nullable();
-                    $table->decimal('currentamount', 22, 12);
-                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
                 }
             );
         }

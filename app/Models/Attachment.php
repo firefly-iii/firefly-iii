@@ -52,7 +52,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int $size
  * @property bool $uploaded
  * @property-read Model|\Eloquent $attachable
- * @property-read Collection|\FireflyIII\Models\Note[] $notes
+ * @property Collection|\FireflyIII\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()

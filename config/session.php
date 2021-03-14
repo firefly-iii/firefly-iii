@@ -36,5 +36,5 @@ return [
     'domain'          => env('COOKIE_DOMAIN', null),
     'secure'          => env('COOKIE_SECURE', null),
     'http_only'       => true,
-    'same_site'       => null,
+    'same_site'       => env('COOKIE_SAMESITE','lax'),
 ];

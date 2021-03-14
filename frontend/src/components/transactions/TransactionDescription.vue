@@ -20,50 +20,46 @@
 
 <template>
   <div class="form-group">
-    <div class="text-xs d-none d-lg-block d-xl-block">
-      {{ $t('firefly.description') }}
-    </div>
     <vue-typeahead-bootstrap
-        inputName="description[]"
-        v-model="value"
+        v-model="description"
         :data="descriptions"
+        :inputClass="errors.length > 0 ? 'is-invalid' : ''"
+        :minMatchingChars="3"
         :placeholder="$t('firefly.description')"
+        :serializer="item => item.description"
         :showOnFocus=true
         autofocus
-        :minMatchingChars="3"
-        :serializer="item => item.description"
+        inputName="description[]"
         @input="lookupDescription"
     >
       <template slot="append">
         <div class="input-group-append">
-          <button v-on:click="clearDescription" class="btn btn-outline-secondary" type="button"><i class="far fa-trash-alt"></i></button>
+          <button class="btn btn-outline-secondary" tabindex="-1" type="button" v-on:click="clearDescription"><i class="far fa-trash-alt"></i></button>
         </div>
       </template>
     </vue-typeahead-bootstrap>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
-
 </template>
 
 <script>
 
-
-import {createNamespacedHelpers} from "vuex";
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import {debounce} from "lodash";
 
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
-
 export default {
-  props: ['index', 'value'],
+  props: ['index', 'value', 'errors'],
   components: {VueTypeaheadBootstrap},
   name: "TransactionDescription",
   data() {
     return {
       descriptions: [],
-      initialSet: []
+      initialSet: [],
+      description: this.value,
     }
   },
-
   created() {
     axios.get(this.getACURL(''))
         .then(response => {
@@ -73,13 +69,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     clearDescription: function () {
-      this.value = '';
+      this.description = '';
     },
     getACURL: function (query) {
       // update autocomplete URL:
@@ -95,16 +86,11 @@ export default {
   },
   watch: {
     value: function (value) {
-      this.updateField({field: 'description', index: this.index, value: value});
+      this.description = value;
+    },
+    description: function (value) {
+      this.$emit('set-field', {field: 'description', index: this.index, value: value});
     }
   },
-  computed: {
-    ...mapGetters(
-        [
-          'transactionType',
-          'transactions',
-        ]
-    )
-  }
 }
 </script>

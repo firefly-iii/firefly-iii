@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Valtuutus Pyyntö',
     'authorization_request_intro'                         => '<strong>:client</strong> pyytää valtuutustasi nähdäkseen sinun taloushallintosi. Haluatko antaa hänelle pääsyn näihin tietoihin?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aja sääntö ":title" valitsemillesi tapahtumille',
     'apply_rule_selection_intro'                          => 'Säännöt kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan sen myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun päivität sääntöä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',
     'include_transactions_from_accounts'                  => 'Sisällytä tapahtumat näiltä tileiltä',
-    'applied_rule_selection'                              => 'Sääntö ":title" on ajettu valituille tapahtumille.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Suorita',
     'apply_rule_group_selection'                          => 'Aja sääntöryhmä ":title" valituille tapahtumille',
     'apply_rule_group_selection_intro'                    => 'Sääntöryhmät kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan kaikki ryhmän säännöt myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun olet päivittänyt ryhmän sääntöjä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Tapahtumien valinnaiset kentät',
     'pref_optional_fields_transaction_help'     => 'Yksinkertaisuuden nimissä kaikki kentät eivät alkuun ole näkyvissä luodessasi uusia tapahtumia. Alla voit ottaa käyttöön sinulle hyödyllisiä kenttiä. Asetuksesta huolimatta kaikki kentät joissa jo on sisältöä näytetään - tietenkin.',
     'optional_tj_date_fields'                   => 'Päivämääräkentät',
-    'optional_tj_business_fields'               => 'Yrityskäytön kentät',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Liitekentät',
     'pref_optional_tj_interest_date'            => 'Korkopäivä',
     'pref_optional_tj_book_date'                => 'Kirjauspäivä',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Sisäinen viite',
     'pref_optional_tj_notes'                    => 'Muistiinpanot',
     'pref_optional_tj_attachments'              => 'Liitteet',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Päivämäärät',
     'optional_field_meta_business'              => 'Yritys',
     'optional_field_attachments'                => 'Liitteet',
     'optional_field_meta_data'                  => 'Valinnainen metatieto',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Käytä näitä arvoja arvioidaksesi kokonaisbudjettiasi.',
     'suggested'                                 => 'Ehdotus',
     'average_between'                           => 'Keskiarvo välillä :start ja :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Yleensä budjetoit summan :amount päivälle. Tällä kerralla budjetoit :over_amount päivälle. Oletko varma?',
     'transferred_in'                            => 'Siirretty (sisään)',
     'transferred_away'                          => 'Siirretty (ulos)',
     'auto_budget_none'                          => 'Ei automaattibudjettia',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'käytöstä poistettu sääntö',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Tervetuloa Firefly III:een!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Päivässä',
     'left_to_spend_per_day'                     => 'Käytettävissä per päivä',
     'bills_paid'                                => 'Maksetut laskut',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuutta',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automaatio',
     'others'                                    => 'Muut',
     'classification'                            => 'Luokitus',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Talousraportti välillä :start ja :end',

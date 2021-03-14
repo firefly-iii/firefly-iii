@@ -87,7 +87,7 @@ class IndexController extends Controller
         $categories = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $categories->setPath(route('categories.index'));
 
-        return view('categories.index', compact('categories'));
+        return prefixView('categories.index', compact('categories'));
     }
 
 }

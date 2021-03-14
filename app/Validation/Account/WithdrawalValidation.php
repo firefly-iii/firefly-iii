@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use Log;
 
 /**
@@ -98,6 +99,40 @@ trait WithdrawalValidation
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
+            $this->sourceError = (string) trans('validation.withdrawal_source_need_data');
+            Log::warning('Not a valid source. Need more data.');
+
+            return false;
+        }
+
+        // otherwise try to find the account:
+        $search = $this->findExistingAccount($validTypes, (int) $accountId, (string) $accountName);
+        if (null === $search) {
+            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            Log::warning('Not a valid source. Cant find it.', $validTypes);
+
+            return false;
+        }
+        $this->source = $search;
+        Log::debug('Valid source account!');
+
+        return true;
+    }
+
+    /**
+     * @param int|null    $accountId
+     * @param string|null $accountName
+     *
+     * @return bool
+     */
+    protected function validateGenericSource(?int $accountId, ?string $accountName): bool
+    {
+        Log::debug(sprintf('Now in validateGenericSource(%d, "%s")', $accountId, $accountName));
+        // source can be any of the following types.
+        $validTypes = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
+            // if both values are NULL we return TRUE
+            // because we assume the user doesnt want to submit / change anything.
             $this->sourceError = (string) trans('validation.withdrawal_source_need_data');
             Log::warning('Not a valid source. Need more data.');
 

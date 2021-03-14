@@ -102,6 +102,7 @@ class ApplyRules extends Command
         $result = $this->verifyInput();
         if (false === $result) {
             app('telemetry')->feature('system.command.errored', $this->signature);
+
             return 1;
         }
 
@@ -121,6 +122,7 @@ class ApplyRules extends Command
             $this->warn('    --all_rules');
 
             app('telemetry')->feature('system.command.errored', $this->signature);
+
             return 1;
         }
 
@@ -132,7 +134,7 @@ class ApplyRules extends Command
 
         // add the accounts as filter:
         $filterAccountList = [];
-        foreach($this->accounts as $account) {
+        foreach ($this->accounts as $account) {
             $filterAccountList[] = $account->id;
         }
         $list = implode(',', $filterAccountList);
@@ -155,49 +157,6 @@ class ApplyRules extends Command
         $this->line(sprintf('Done in %s seconds!', $end));
 
         return 0;
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getRulesToApply(): Collection
-    {
-        $rulesToApply = new Collection;
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if (true === $test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $rulesToApply->push($rule);
-                }
-            }
-        }
-
-        return $rulesToApply;
-    }
-
-    /**
-     */
-    private function grabAllRules(): void
-    {
-        $this->groups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    /**
-     * @param Rule      $rule
-     * @param RuleGroup $group
-     *
-     * @return bool
-     */
-    private function includeRule(Rule $rule, RuleGroup $group): bool
-    {
-        return in_array($group->id, $this->ruleGroupSelection, true)
-               || in_array($rule->id, $this->ruleSelection, true)
-               || $this->allRules;
     }
 
     /**
@@ -271,7 +230,7 @@ class ApplyRules extends Command
 
 
         foreach ($accountList as $accountId) {
-            $accountId = (int) $accountId;
+            $accountId = (int)$accountId;
             $account   = $accountRepository->findNull($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
@@ -287,42 +246,6 @@ class ApplyRules extends Command
 
         return true;
 
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function verifyInputDates(): void
-    {
-        // parse start date.
-        $inputStart   = Carbon::now()->startOfMonth();
-        $startString = $this->option('start_date');
-        if (null === $startString) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->getUser());
-            $first = $repository->firstNull();
-            if (null !== $first) {
-                $inputStart = $first->date;
-            }
-        }
-        if (null !== $startString && '' !== $startString) {
-            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
-        }
-
-        // parse end date
-        $inputEnd   = Carbon::now();
-        $endString = $this->option('end_date');
-        if (null !== $endString && '' !== $endString) {
-            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
-        }
-
-        if ($inputStart > $inputEnd) {
-            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
-        }
-
-        $this->startDate = $inputStart;
-        $this->endDate   = $inputEnd;
     }
 
     /**
@@ -343,7 +266,7 @@ class ApplyRules extends Command
         }
         // @codeCoverageIgnoreEnd
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroup = $this->ruleGroupRepository->find((int) $ruleGroupId);
+            $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
             if ($ruleGroup->active) {
                 $this->ruleGroupSelection[] = $ruleGroup->id;
             }
@@ -376,12 +299,91 @@ class ApplyRules extends Command
         // @codeCoverageIgnoreEnd
 
         foreach ($ruleList as $ruleId) {
-            $rule = $this->ruleRepository->find((int) $ruleId);
+            $rule = $this->ruleRepository->find((int)$ruleId);
             if (null !== $rule && $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
         }
 
         return true;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function verifyInputDates(): void
+    {
+        // parse start date.
+        $inputStart  = Carbon::now()->startOfMonth();
+        $startString = $this->option('start_date');
+        if (null === $startString) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->getUser());
+            $first = $repository->firstNull();
+            if (null !== $first) {
+                $inputStart = $first->date;
+            }
+        }
+        if (null !== $startString && '' !== $startString) {
+            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
+        }
+
+        // parse end date
+        $inputEnd  = Carbon::now();
+        $endString = $this->option('end_date');
+        if (null !== $endString && '' !== $endString) {
+            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
+        }
+
+        if ($inputStart > $inputEnd) {
+            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
+        }
+
+        $this->startDate = $inputStart;
+        $this->endDate   = $inputEnd;
+    }
+
+    /**
+     */
+    private function grabAllRules(): void
+    {
+        $this->groups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getRulesToApply(): Collection
+    {
+        $rulesToApply = new Collection;
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if (true === $test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply->push($rule);
+                }
+            }
+        }
+
+        return $rulesToApply;
+    }
+
+    /**
+     * @param Rule      $rule
+     * @param RuleGroup $group
+     *
+     * @return bool
+     */
+    private function includeRule(Rule $rule, RuleGroup $group): bool
+    {
+        return in_array($group->id, $this->ruleGroupSelection, true)
+               || in_array($rule->id, $this->ruleSelection, true)
+               || $this->allRules;
     }
 }

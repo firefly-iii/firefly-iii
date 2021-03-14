@@ -1,4 +1,25 @@
 <?php
+
+/*
+ * WebhookRepository.php
+ * Copyright (c) 2021 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 /*
  * WebhookRepository.php
@@ -23,6 +44,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Webhook;
 
 use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Models\WebhookMessage;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Str;
@@ -40,6 +63,64 @@ class WebhookRepository implements WebhookRepositoryInterface
     public function all(): Collection
     {
         return $this->user->webhooks()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroy(Webhook $webhook): void
+    {
+        $webhook->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyAttempt(WebhookAttempt $attempt): void
+    {
+        $attempt->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroyMessage(WebhookMessage $message): void
+    {
+        $message->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttempts(WebhookMessage $webhookMessage): Collection
+    {
+        return $webhookMessage->webhookAttempts()->orderBy('created_at', 'DESC')->get(['webhook_attempts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+                       ->orderBy('created_at', 'DESC')
+                       ->get(['webhook_messages.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getReadyMessages(Webhook $webhook): Collection
+    {
+        return $webhook->webhookMessages()
+                       ->where('webhook_messages.sent', 0)
+                       ->where('webhook_messages.errored', 0)
+                       ->get(['webhook_messages.*'])
+                       ->filter(
+                           function (WebhookMessage $message) {
+                               return $message->webhookAttempts()->count() <= 2;
+                           }
+                       )->splice(0, 3);
     }
 
     /**
@@ -79,9 +160,10 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->trigger  = $data['trigger'] ?? $webhook->trigger;
         $webhook->response = $data['response'] ?? $webhook->response;
         $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
+        $webhook->title    = $data['title'] ?? $webhook->title;
         $webhook->url      = $data['url'] ?? $webhook->url;
 
-        if (array_key_exists('secret', $data) && null !== $data['secret']) {
+        if (true === $data['secret']) {
             $secret          = $random = Str::random(24);
             $webhook->secret = $secret;
         }
@@ -89,13 +171,5 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->save();
 
         return $webhook;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function destroy(Webhook $webhook): void
-    {
-        $webhook->delete();
     }
 }

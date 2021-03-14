@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute трябва да е по-малко от 10 000 000',
     'active_url'                     => ':attribute не е валиден URL адрес.',
     'after'                          => ':attribute трябва да бъде дата след :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute може да съдържа единствено букви.',
     'alpha_dash'                     => ':attribute може да съдържа само букви, числа и тирета.',
     'alpha_num'                      => ':attribute може да съдържа само букви и числа.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',
     'withdrawal_dest_need_data'   => 'Трябва да използвате валидно ID на приходната сметка и / или валидно име на приходната сметка, за да продължите.',
     'withdrawal_dest_bad_data'    => 'Не може да се намери валидна приходна сметка при търсене на ID ":id" или име ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Трябва да използвате валидно ID на разходната сметка и / или валидно име на разходната сметка, за да продължите.',
     'deposit_source_bad_data'  => 'Не може да се намери валидна разходна сметка при търсене на ID ":id" или име ":name".',

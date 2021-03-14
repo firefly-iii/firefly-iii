@@ -50,6 +50,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use League\Csv\Writer;
 
 /**
@@ -57,35 +58,24 @@ use League\Csv\Writer;
  */
 class ExportDataGenerator
 {
-    /** @var Carbon */
-    private $end;
-    /** @var bool */
-    private $exportTransactions;
-    /** @var Carbon */
-    private $start;
-    /** @var bool */
-    private $exportAccounts;
-    /** @var bool */
-    private $exportBudgets;
-    /** @var bool */
-    private $exportCategories;
-    /** @var bool */
-    private $exportTags;
-    /** @var bool */
-    private $exportRecurring;
-    /** @var bool */
-    private $exportRules;
-    /** @var bool */
-    private $exportBills;
-    /** @var bool */
-    private $exportPiggies;
-
-    /** @var User */
-    private $user;
+    private Carbon     $end;
+    private bool       $exportTransactions;
+    private Carbon     $start;
+    private bool       $exportAccounts;
+    private bool       $exportBudgets;
+    private bool       $exportCategories;
+    private bool       $exportTags;
+    private bool       $exportRecurring;
+    private bool       $exportRules;
+    private bool       $exportBills;
+    private bool       $exportPiggies;
+    private User       $user;
+    private Collection $accounts;
 
     public function __construct()
     {
-        $this->start = today(config('app.timezone'));
+        $this->accounts = new Collection;
+        $this->start    = today(config('app.timezone'));
         $this->start->subYear();
         $this->end                = today(config('app.timezone'));
         $this->exportTransactions = false;
@@ -105,6 +95,14 @@ class ExportDataGenerator
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param Collection $accounts
+     */
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
     }
 
     /**
@@ -506,7 +504,7 @@ class ExportDataGenerator
                 $currency ? $currency->code : null,
                 $piggy->targetamount,
                 $repetition ? $repetition->currentamount : null,
-                $piggy->startdate->format('Y-m-d'),
+                $piggy->startdate ? $piggy->startdate->format('Y-m-d') : null,
                 $piggy->targetdate ? $piggy->targetdate->format('Y-m-d') : null,
                 $piggy->order,
                 $piggy->active,
@@ -670,6 +668,10 @@ class ExportDataGenerator
         $collector->setUser($this->user);
         $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()
                   ->withBudgetInformation()->withTagInformation()->withNotes();
+        if(0 !== $this->accounts->count()) {
+            $collector->setAccounts($this->accounts);
+        }
+
         $journals = $collector->getExtractedJournals();
 
         // get repository for meta data:

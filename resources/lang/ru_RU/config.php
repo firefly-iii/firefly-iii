@@ -39,7 +39,7 @@ return [
     'month_and_day_js'        => 'Do MMMM YYYY',
     'date_time_js'            => 'Do MMMM YYYY, @ HH:mm:ss',
     'specific_day_js'         => 'D MMMM YYYY',
-    'week_in_year_js'         => '[Неделя] w, YYYY',
+    'week_in_year_js'         => '[Week] w, YYYY',
     'year_js'                 => 'YYYY',
     'half_year_js'            => 'Q YYYY',
     'dow_1'                   => 'Понедельник',

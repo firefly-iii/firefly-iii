@@ -23,15 +23,15 @@
 declare(strict_types=1);
 
 return [
-    'no_demo_text'           => '对不起， <abbr title=":route">此页面</abbr> 没有额外的示范解释文本。',
-    'see_help_icon'          => '然而，右上角的 <i class="fa fa-question-circle"></i>-图标可能会告诉您更多。',
-    'index'                  => '欢迎来到 <strong>Firefly III</strong>！您可在此页快速概览您的财务状况。如需更多信息， 请前往帐户 &rarr; <a href=":asset">资产帐户</a> 亦或是 <a href=":budgets">预算</a> 以及 <a href=":reports">报表</a> 页面。您也可以继续浏览此页。',
-    'accounts-index'         => '资产帐户是您的个人银行帐户。支出帐户是您花费金钱的帐户，如商家或其他友人。收入帐户是您获得收入的地方，如您的工作、政府或其他收入源。债务是您的借贷，如信用卡帐单或学生贷款。在此页面您可以编辑或删除这些项目。',
-    'budgets-index'          => '此页面显示您的预算概览。上方横条显示可用预算额，它可随时透过点选右方的总额进行客製化。您已花费的额度则显示在下方横条，而以下则是每条预算的支出以及您已编列的预算。',
-    'reports-index-start'    => 'Firefly III 支持数种不同的报表形式，您可以点选右上方的 <i class="fa fa-question-circle"></i>-图示获得更多资讯。',
-    'reports-index-examples' => '请确认您以检阅过以下范例：<a href=":one">月财务概览</a>、<a href=":two">年度财务概览</a> 以及 <a href=":three">预算概览</a>。',
-    'currencies-index'       => 'Firefly III 支持多种货币，即便预设为欧元，亦可设成美金或其他货币。如您所见，系统已包含了一小部分的货币种类，但您也可自行新增其他货币。修改预设货币并不会改变既有交易的货币种类，且 Firefly III 支持同时使用不同货币。',
-    'transactions-index'     => '这些支出、储蓄与转帐并非蓄意虚构，而是自动产生的。',
-    'piggy-banks-index'      => '如您所见，目前有3个小猪扑满。使用 + 号与 - 号按钮可改变每个小猪扑满的总额，而点选小猪扑满的名称则可管理该扑满。',
-    'profile-index'          => '请谨记本展示网站每四小时会自动重新启用，您的访问凭证可能随时被撤销，这是自动发生而非错误。',
+    'no_demo_text'           => '很抱歉，<abbr title=":route">此页面</abbr>没有额外的演示解释文本。',
+    'see_help_icon'          => '不过，右上角的<i class="fa fa-question-circle"></i>-图标可能会告诉您更多信息。',
+    'index'                  => '欢迎来到 <strong>Firefly III</strong>！您可在此页快速概览您的财务状况。如需更多信息， 请前往账户 &rarr; <a href=":asset">资产账户</a>，或者<a href=":budgets">预算</a>及<a href=":reports">报表</a>页面。您也可以继续浏览当前页面。',
+    'accounts-index'         => '资产账户是您的个人银行帐户。支出帐户是记录您支出资金的地方，例如商店或朋友。收入账户是记录您获得收入的地方，例如您的工作、政府或其他收入来源。债务是您的负债或者贷款，例如信用卡账单或学生贷款。您可以在此页面编辑或删除这些项目。',
+    'budgets-index'          => '此页面显示您的预算概览。上方横条显示可用预算金额，可以点击右侧金额为任意周期进行自定义。下方横条显示您实际支出的金额。最下方是每笔预算的实际支出及上限。',
+    'reports-index-start'    => 'Firefly III 支持多种不同类型的报表，您可以点击右上方的<i class="fa fa-question-circle"></i>-图标获取更多信息。',
+    'reports-index-examples' => '请您务必看看这些示例：<a href=":one">月度财务概览</a>、<a href=":two">年度财务概览</a>，以及<a href=":three">预算概览</a>。',
+    'currencies-index'       => 'Firefly III 支持多种货币。默认货币为欧元，您可将其设为美元或其他货币。如您所见，系统已包含了一小部分的货币种类，但您也可自行新增其他货币。修改默认货币并不会改变已有交易的货币，不过，Firefly III 支持同时使用不同货币。',
+    'transactions-index'     => '这些支出、收入与转账不是凭空出现的，而是自动生成的。',
+    'piggy-banks-index'      => '如您所见，目前有3个存钱罐。使用 + 号与 - 号按钮可改变每个存钱罐的金额，点击存钱罐名称可进行管理。',
+    'profile-index'          => '请注意，此演示站点每四小时重置一次，您的操作可能随时被删除。此为完全自动过程，而不是站点出现问题。',
 ];

@@ -28,6 +28,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UpdatedTransactionLink
+ * TODO unused
  */
 class UpdatedTransactionLink extends Event
 {

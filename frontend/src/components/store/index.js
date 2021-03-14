@@ -21,6 +21,8 @@
 import Vue from 'vue'
 import Vuex, {createLogger} from 'vuex'
 import transactions_create from './modules/transactions/create';
+import transactions_edit from './modules/transactions/edit';
+import dashboard_index from './modules/dashboard/index';
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
@@ -31,7 +33,14 @@ export default new Vuex.Store(
             transactions: {
                 namespaced: true,
                 modules: {
-                    create: transactions_create
+                    create: transactions_create,
+                    edit: transactions_edit
+                }
+            },
+            dashboard: {
+                namespaced: true,
+                modules: {
+                    index: dashboard_index
                 }
             }
         },
@@ -43,7 +52,7 @@ export default new Vuex.Store(
         },
         mutations: {
             setCurrencyPreference(state, payload) {
-                console.log('setCurrencyPreference', payload);
+                //console.log('setCurrencyPreference', payload);
                 state.currencyPreference = payload.payload;
             },
             initialiseStore(state) {
@@ -77,9 +86,9 @@ export default new Vuex.Store(
         actions: {
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
-                    console.log('set from local storage.');
-                    console.log(localStorage.currencyPreference);
-                    console.log({payload: JSON.parse(localStorage.currencyPreference)});
+                    //console.log('set from local storage.');
+                    //console.log(localStorage.currencyPreference);
+                    //console.log({payload: JSON.parse(localStorage.currencyPreference)});
                     context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;
                 }
@@ -93,8 +102,8 @@ export default new Vuex.Store(
                             decimal_places: parseInt(response.data.data.attributes.decimal_places),
                         };
                         localStorage.currencyPreference = JSON.stringify(currencyResponse);
-                        console.log('getCurrencyPreference from server')
-                        console.log(JSON.stringify(currencyResponse));
+                        //console.log('getCurrencyPreference from server')
+                        //console.log(JSON.stringify(currencyResponse));
                         context.commit('setCurrencyPreference', {payload: currencyResponse});
                     }).catch(err => {
                     // console.log('Got error response.');

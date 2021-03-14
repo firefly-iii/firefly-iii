@@ -27,6 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class ChangesForV477.
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV477 extends Migration
@@ -42,12 +43,12 @@ class ChangesForV477 extends Migration
             'budget_limits', static function (Blueprint $table) {
 
             // cannot drop foreign keys in SQLite:
-                if ('sqlite' !== config('database.default')) {
-                    $table->dropForeign('budget_limits_transaction_currency_id_foreign');
-                }
-
-                $table->dropColumn(['transaction_currency_id']);
+            if ('sqlite' !== config('database.default')) {
+                $table->dropForeign('budget_limits_transaction_currency_id_foreign');
             }
+
+            $table->dropColumn(['transaction_currency_id']);
+        }
         );
     }
 

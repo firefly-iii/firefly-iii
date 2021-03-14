@@ -33,26 +33,36 @@ use Illuminate\Support\Collection;
 interface ObjectGroupRepositoryInterface
 {
     /**
-     * @return Collection
+     * Delete all.
      */
-    public function get(): Collection;
+    public function deleteAll(): void;
 
     /**
-     * @param string $query
-     * @param int $limit
-     *
-     * @return Collection
+     * Delete all.
      */
-    public function search(string $query, int $limit): Collection;
+    public function resetOrder(): void;
 
     /**
      * Delete empty ones.
      */
     public function deleteEmpty(): void;
+
     /**
-     * Delete all.
+     * @param ObjectGroup $objectGroup
      */
-    public function deleteAll(): void;
+    public function destroy(ObjectGroup $objectGroup): void;
+
+    /**
+     * @return Collection
+     */
+    public function get(): Collection;
+
+    /**
+     * @param ObjectGroup $objectGroup
+     *
+     * @return Collection
+     */
+    public function getBills(ObjectGroup $objectGroup): Collection;
 
     /**
      * @param ObjectGroup $objectGroup
@@ -62,17 +72,20 @@ interface ObjectGroupRepositoryInterface
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
 
     /**
-     * Sort
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
      */
-    public function sort(): void;
+    public function search(string $query, int $limit): Collection;
 
     /**
      * @param ObjectGroup $objectGroup
-     * @param int         $index
+     * @param int         $newOrder
      *
      * @return ObjectGroup
      */
-    public function setOrder(ObjectGroup $objectGroup, int $index): ObjectGroup;
+    public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
 
     /**
      * @param ObjectGroup $objectGroup
@@ -81,10 +94,5 @@ interface ObjectGroupRepositoryInterface
      * @return ObjectGroup
      */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup;
-
-    /**
-     * @param ObjectGroup $objectGroup
-     */
-    public function destroy(ObjectGroup $objectGroup): void;
 
 }

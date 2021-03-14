@@ -85,7 +85,7 @@ class ResetPasswordController extends Controller
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         $rules = [
@@ -130,7 +130,7 @@ class ResetPasswordController extends Controller
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
-            return view('error', compact('message'));
+            return prefixView('error', compact('message'));
         }
 
         // is allowed to register?
@@ -143,7 +143,7 @@ class ResetPasswordController extends Controller
         }
 
         /** @noinspection PhpUndefinedFieldInspection */
-        return view('auth.passwords.reset')->with(
+        return prefixView('auth.passwords.reset')->with(
             ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration, 'pageTitle' => $pageTitle]
         );
     }

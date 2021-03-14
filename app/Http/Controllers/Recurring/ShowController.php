@@ -96,6 +96,6 @@ class ShowController extends Controller
 
         $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups','today'));
+        return prefixView('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups','today'));
     }
 }

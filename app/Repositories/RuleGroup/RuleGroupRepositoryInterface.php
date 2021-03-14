@@ -31,10 +31,11 @@ use Illuminate\Support\Collection;
  */
 interface RuleGroupRepositoryInterface
 {
+
     /**
-     * Delete everything.
+     * Make sure rule group order is correct in DB.
      */
-    public function destroyAll(): void;
+    public function correctRuleGroupOrder(): void;
 
     /**
      * @return int
@@ -48,6 +49,11 @@ interface RuleGroupRepositoryInterface
      * @return bool
      */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool;
+
+    /**
+     * Delete everything.
+     */
+    public function destroyAll(): void;
 
     /**
      * @param int $ruleGroupId
@@ -102,9 +108,11 @@ interface RuleGroupRepositoryInterface
     public function getHighestOrderRuleGroup(): int;
 
     /**
+     * @param string|null $filter
+     *
      * @return Collection
      */
-    public function getRuleGroupsWithRules(): Collection;
+    public function getRuleGroupsWithRules(?string $filter): Collection;
 
     /**
      * @param RuleGroup $group
@@ -112,6 +120,13 @@ interface RuleGroupRepositoryInterface
      * @return Collection
      */
     public function getRules(RuleGroup $group): Collection;
+
+    /**
+     * Get highest possible order for a rule group.
+     *
+     * @return int
+     */
+    public function maxOrder(): int;
 
     /**
      * @param RuleGroup $ruleGroup
@@ -130,14 +145,28 @@ interface RuleGroupRepositoryInterface
     /**
      * @return bool
      */
-    public function resetRuleGroupOrder(): bool;
+    public function resetOrder(): bool;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @param int       $newOrder
+     */
+    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
+
+    /**
+     * @param string $query
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchRuleGroup(string $query, int $limit): Collection;
 
     /**
      * @param User $user
@@ -153,7 +182,7 @@ interface RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array $data
+     * @param array     $data
      *
      * @return RuleGroup
      */

@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Unele pagini din Firefly III au opțiuni avansate ascunse în spatele acestui buton. Această pagină nu are nimic extravagant aici, dar verifică celelalte!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'v: Solicitare de autorizare',
     'authorization_request_intro'                         => '<strong> :client </ strong> solicită permisiunea de a accesa administrația financiară. Doriți să autorizați <strong> :client </ strong> pentru a accesa aceste înregistrări?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplicați regula ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_selection_intro'                          => 'Reguli de genul ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, dar puteți să-i spuneți aplicației să o ruleze pe o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat o regulă și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',
     'include_transactions_from_accounts'                  => 'Includeți tranzacții din aceste conturi',
-    'applied_rule_selection'                              => 'Regula ":title" a fost aplicată selecției dvs..',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Execută',
     'apply_rule_group_selection'                          => 'Aplicați grupul de reguli ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_group_selection_intro'                    => 'Grupul de reguli precum ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, însă puteți spune aplicației că rulează toate regulile din acest grup cu privire la o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat un grup de reguli și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Câmpuri opționale pentru tranzacții',
     'pref_optional_fields_transaction_help'     => 'În mod prestabilit, toate câmpurile nu sunt activate atunci când creați o nouă tranzacție (din cauza aglomerării). Mai jos, puteți activa aceste câmpuri dacă credeți că acestea ar putea fi utile pentru dvs. Desigur, orice câmp care este dezactivat, dar deja completat, va fi vizibil indiferent de setare.',
     'optional_tj_date_fields'                   => 'Câmpurile de date',
-    'optional_tj_business_fields'               => 'Domenii de activitate',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Câmpuri de atașament',
     'pref_optional_tj_interest_date'            => 'Data de interes',
     'pref_optional_tj_book_date'                => 'Data revervării',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referință internă',
     'pref_optional_tj_notes'                    => 'Notițe',
     'pref_optional_tj_attachments'              => 'Ataşamente',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Date',
     'optional_field_meta_business'              => 'Afaceri',
     'optional_field_attachments'                => 'Ataşamente',
     'optional_field_meta_data'                  => 'Meta date opționale',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilizați aceste sume pentru a obține o indicație cu privire la bugetul dvs. total.',
     'suggested'                                 => 'Sugerat',
     'average_between'                           => 'Media între :start și :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> În mod normal bugetați aproximativ :amount pe zi. Acum este :over_amount pe zi. Sunteți sigur?',
     'transferred_in'                            => 'Transferat (în)',
     'transferred_away'                          => 'Transferat (departe)',
     'auto_budget_none'                          => 'Fără auto-buget',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'regulă inactivă',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Tranzacția #{ID} ("{title}")</a> a fost stocată.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Tranzacția #{ID}</a> a fost stocată.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Tranzacția #{ID}</a> a fost actualizată.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Bine ați venit!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Pe zi',
     'left_to_spend_per_day'                     => 'Rămas de cheltui pe zi',
     'bills_paid'                                => 'Facturile plătite',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Monedă',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatizare',
     'others'                                    => 'Altele',
     'classification'                            => 'Clasificare',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Raportul financiar prestabilit între :start și :end',

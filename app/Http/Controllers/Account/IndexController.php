@@ -113,7 +113,7 @@ class IndexController extends Controller
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
-        return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
+        return prefixView('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
 
     }
 
@@ -136,7 +136,7 @@ class IndexController extends Controller
 
         if (1 === random_int(0, 20)) {
             Log::debug('Will reset order.');
-            $this->repository->resetAccountOrder($types);
+            $this->repository->resetAccountOrder();
         }
 
         $collection    = $this->repository->getActiveAccountsByType($types);
@@ -182,7 +182,7 @@ class IndexController extends Controller
         Log::debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));
         Log::debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
 
-        return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
+        return prefixView('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
 
 

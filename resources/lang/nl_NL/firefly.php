@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Sommige pagina\'s in Firefly III hebben geavanceerde opties verborgen achter deze knop. Voor deze pagina geldt dat niet, maar check zeker de andere pagina\'s!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version autorisatieverzoek',
     'authorization_request_intro'                         => '<strong>:client</strong> vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Pas regel ":title" toe op een selectie van je transacties',
     'apply_rule_selection_intro'                          => 'Regels zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je een regels hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'include_transactions_from_accounts'                  => 'Gebruik transacties van deze rekeningen',
-    'applied_rule_selection'                              => 'Regel ":title" is toegepast op je selectie.',
+    'applied_rule_selection'                              => '{0} Er zijn geen transacties in je selectie veranderd door regel ":title".|[1] Eén transactie in je selectie is veranderd door regel ":title".|[2,*] :count transacties in je selectie zijn veranderd door regel ":title".',
     'execute'                                             => 'Uitvoeren',
     'apply_rule_group_selection'                          => 'Pas regelgroep ":title" toe op een selectie van je transacties',
     'apply_rule_group_selection_intro'                    => 'Regelgroepen zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je regels in de groep hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Optionele velden voor transacties',
     'pref_optional_fields_transaction_help'     => 'Standaard staan niet alle velden aan (vanwege het overzicht). Hier kan je zulke extra velden alsnog aanzetten, als je denkt dat ze handig zijn. Als je een veld uitzet, maar deze heeft wel degelijk een waarde, dan is-ie altijd zichtbaar, wat je ook doet.',
     'optional_tj_date_fields'                   => 'Datumvelden',
-    'optional_tj_business_fields'               => 'Zakelijke velden',
+    'optional_tj_other_fields'                  => 'Overige velden',
     'optional_tj_attachment_fields'             => 'Bijlagen',
     'pref_optional_tj_interest_date'            => 'Rentedatum',
     'pref_optional_tj_book_date'                => 'Boekdatum',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Interne verwijzing',
     'pref_optional_tj_notes'                    => 'Notities',
     'pref_optional_tj_attachments'              => 'Bijlagen',
-    'pref_optional_tj_external_uri'             => 'Externe URI',
+    'pref_optional_tj_external_uri'             => 'Externe URL',
+    'pref_optional_tj_location'                 => 'Locatie',
+    'pref_optional_tj_links'                    => 'Transactiekoppelingen',
     'optional_field_meta_dates'                 => 'Data',
     'optional_field_meta_business'              => 'Zakelijk',
     'optional_field_attachments'                => 'Bijlagen',
     'optional_field_meta_data'                  => 'Optionele meta-gegevens',
-    'external_uri'                              => 'Externe URI',
+    'external_uri'                              => 'Externe URL',
 
     // profile:
     'delete_stuff_header'                       => 'Verwijder gegevens',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
     'suggested'                                 => 'Gesuggereerd',
     'average_between'                           => 'Gemiddelde tussen :start en :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag. Zeker weten?',
     'transferred_in'                            => 'Overgeboekt (inkomend)',
     'transferred_away'                          => 'Overgeboekt (uitgaand)',
     'auto_budget_none'                          => 'Geen auto-budget',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'inactieve regel',
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
     'bill_expected_date'                        => 'Verwacht :date',
+    'bill_paid_on'                              => 'Betaald op {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transactie #{ID} ("{title}")</a> is opgeslagen.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is opgeslagen.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transactie #{ID}</a> is geüpdatet.',
+    'first_split_decides'                       => 'De eerste split bepaalt wat hier staat',
+    'first_split_overrules_source'              => 'De eerste split kan de bronrekening overschrijven',
+    'first_split_overrules_destination'         => 'De eerste split kan de doelrekening overschrijven',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Per dag',
     'left_to_spend_per_day'                     => 'Te besteden per dag',
     'bills_paid'                                => 'Betaalde contracten',
+    'custom_period'                             => 'Aangepaste periode',
+    'reset_to_current'                          => 'Reset naar huidige periode',
+    'select_period'                             => 'Selecteer een periode',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Valuta',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatisering',
     'others'                                    => 'Overige',
     'classification'                            => 'Indeling',
+    'store_transaction'                         => 'Transactie opslaan',
 
     // reports:
     'report_default'                            => 'Standaard financieel rapport (:start tot :end)',

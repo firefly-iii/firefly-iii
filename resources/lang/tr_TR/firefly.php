@@ -226,6 +226,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v: version Yetkilendirme İsteği',
     'authorization_request_intro'                         => '<strong>:client</strong> finansal yönetiminize erişmek için izin istiyor. Bu kayıtlara erişmek için  <strong>:client</strong> \'yi yetkilendirmek ister misiniz?',
@@ -421,7 +424,7 @@ return [
     'apply_rule_selection'                                => 'İşleminizin bir bölümüne ":title" kuralını uygulayın',
     'apply_rule_selection_intro'                          => '":title" gibi kurallar normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kuralı değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
     'include_transactions_from_accounts'                  => 'Bu hesaplardan gelen işlemleri dahil et',
-    'applied_rule_selection'                              => 'Seçtiğiniz ":title" kuralı uygulandı.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Çalıştır',
     'apply_rule_group_selection'                          => 'İşlemlerinizin bir bölümüne ":title" kural grubunu uygulayın',
     'apply_rule_group_selection_intro'                    => '":title" gibi kural grupları normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kural grubunu değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
@@ -676,7 +679,7 @@ return [
     'pref_optional_fields_transaction'          => 'İşlemler için bağlı alanlar',
     'pref_optional_fields_transaction_help'     => 'Yeni bir işlem oluşturulurken (dağınıklık nedeniyle) varsayılan olarak tüm alanlar ektinleştirilmez. Aşağıdan, eğer işinize yarayacağını düşünüyorsanız bu alanları ektinleştirebilirsiniz. Tabii ki, devre dışı bırakılmış ama zaten doldurulmuş alanlar ayarlar ne olursa olsun görünecektir.',
     'optional_tj_date_fields'                   => 'Tarih alanları',
-    'optional_tj_business_fields'               => 'İş alanları',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Ek alanları',
     'pref_optional_tj_interest_date'            => 'Faiz tarihi',
     'pref_optional_tj_book_date'                => 'Kitap tarihi',
@@ -687,12 +690,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Dahili referans',
     'pref_optional_tj_notes'                    => 'Notlar',
     'pref_optional_tj_attachments'              => 'Ekler',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tarih',
     'optional_field_meta_business'              => 'İş',
     'optional_field_attachments'                => 'Ekler',
     'optional_field_meta_data'                  => 'İsteğe bağlı meta veriler',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -971,7 +976,6 @@ return [
     'available_amount_indication'               => 'Toplam bütçenizin ne olabileceğinin bir göstergesi olarak bu tutarı kullanın.',
     'suggested'                                 => 'Önerilen',
     'average_between'                           => ':start ve :end arasında Averaj',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1020,6 +1024,7 @@ return [
     'list_inactive_rule'                        => 'Etkin Olmayan Kurallar',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1232,6 +1237,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Firefly III\'e hoşgeldiniz!',
@@ -1270,6 +1278,9 @@ return [
     'per_day'                                   => 'Hergün',
     'left_to_spend_per_day'                     => 'Günlük harcama için bırakıldı',
     'bills_paid'                                => 'Ödenen Faturalar',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Para birimi',
@@ -1338,6 +1349,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => ':start ve :end arasında varsayılan finans raporu',

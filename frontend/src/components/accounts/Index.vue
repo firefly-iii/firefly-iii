@@ -26,10 +26,10 @@
           <h3 class="card-title">Title thing</h3>
           <div class="card-tools">
             <div class="input-group input-group-sm" style="width: 150px;">
-              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+              <input class="form-control float-right" name="table_search" placeholder="Search" type="text">
 
               <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
+                <button class="btn btn-default" type="submit">
                   <i class="fas fa-search"></i>
                 </button>
               </div>
@@ -43,7 +43,7 @@
             <tr>
               <th scope="col">&nbsp;</th>
               <th scope="col">{{ $t('list.name') }}</th>
-              <th scope="col" v-if="'asset' === $props.accountTypes">{{ $t('list.role') }}</th>
+              <th v-if="'asset' === $props.accountTypes" scope="col">{{ $t('list.role') }}</th>
               <th scope="col">{{ $t('list.iban') }}</th>
               <th scope="col" style="text-align: right;">{{ $t('list.currentBalance') }}</th>
               <th scope="col">{{ $t('list.balanceDiff') }}</th>

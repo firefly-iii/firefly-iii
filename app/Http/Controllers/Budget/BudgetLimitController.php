@@ -103,7 +103,7 @@ class BudgetLimitController extends Controller
             }
         );
 
-        return view('budgets.budget-limits.create', compact('start', 'end', 'currencies', 'budget'));
+        return prefixView('budgets.budget-limits.create', compact('start', 'end', 'currencies', 'budget'));
     }
 
     /**

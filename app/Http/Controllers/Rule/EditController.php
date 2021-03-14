@@ -136,7 +136,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
+        return prefixView('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
     }
 
     /**
@@ -187,7 +187,7 @@ class EditController extends Controller
         $index = 0;
         foreach ($submittedOperators as $operator) {
             try {
-                $renderedEntries[] = view(
+                $renderedEntries[] = prefixView(
                     'rules.partials.trigger',
                     [
                         'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),

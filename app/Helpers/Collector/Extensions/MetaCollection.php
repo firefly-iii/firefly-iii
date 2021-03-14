@@ -370,6 +370,18 @@ trait MetaCollection
     }
 
     /**
+     * Limit results to a transactions without a bill.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBill(): GroupCollectorInterface
+    {
+        $this->query->whereNull('transaction_journals.bill_id');
+
+        return $this;
+    }
+
+    /**
      * Limit results to a transactions without a budget..
      *
      * @return GroupCollectorInterface

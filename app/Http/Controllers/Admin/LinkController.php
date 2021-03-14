@@ -80,7 +80,7 @@ class LinkController extends Controller
             $this->rememberPreviousUri('link-types.create.uri');
         }
 
-        return view('admin.link.create', compact('subTitle', 'subTitleIcon'));
+        return prefixView('admin.link.create', compact('subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -116,7 +116,7 @@ class LinkController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('link-types.delete.uri');
 
-        return view('admin.link.delete', compact('linkType', 'subTitle', 'moveTo', 'count'));
+        return prefixView('admin.link.delete', compact('linkType', 'subTitle', 'moveTo', 'count'));
     }
 
     /**
@@ -166,7 +166,7 @@ class LinkController extends Controller
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 
-        return view('admin.link.edit', compact('subTitle', 'subTitleIcon', 'linkType'));
+        return prefixView('admin.link.edit', compact('subTitle', 'subTitleIcon', 'linkType'));
     }
 
     /**
@@ -187,7 +187,7 @@ class LinkController extends Controller
             }
         );
 
-        return view('admin.link.index', compact('subTitle', 'subTitleIcon', 'linkTypes'));
+        return prefixView('admin.link.index', compact('subTitle', 'subTitleIcon', 'linkTypes'));
     }
 
     /**
@@ -205,7 +205,7 @@ class LinkController extends Controller
 
         Log::channel('audit')->info(sprintf('User viewing link type #%d', $linkType->id));
 
-        return view('admin.link.show', compact('subTitle', 'subTitleIcon', 'linkType', 'links'));
+        return prefixView('admin.link.show', compact('subTitle', 'subTitleIcon', 'linkType', 'links'));
     }
 
     /**

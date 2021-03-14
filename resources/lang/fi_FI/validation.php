@@ -60,6 +60,7 @@ return [
     'less'                           => 'Määritteen :attribute täytyy olla pienempi kuin 10,000,000',
     'active_url'                     => ':attribute ei ole verkko-osoite.',
     'after'                          => 'Määritteen :attribute täytyy olla :date jälkeen oleva päivämäärä.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute saa sisältää ainoastaan kirjaimia.',
     'alpha_dash'                     => ':attribute saa sisältää ainoastaan kirjaimia, numeroita ja viivoja.',
     'alpha_num'                      => ':attribute saa sisältää ainoastaan kirjaimia ja numeroita.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
     'withdrawal_dest_need_data'   => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
     'withdrawal_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
     'deposit_source_bad_data'  => 'Nostolle kelvollista lähdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',

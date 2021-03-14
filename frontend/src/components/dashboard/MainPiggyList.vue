@@ -23,7 +23,21 @@
     <div class="card-header">
       <h3 class="card-title">{{ $t('firefly.piggy_banks') }}</h3>
     </div>
-    <div class="card-body table-responsive p-0">
+
+    <!-- body if loading -->
+    <div v-if="loading && !error" class="card-body">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+    </div>
+    <!-- body if error -->
+    <div v-if="error" class="card-body">
+      <div class="text-center">
+        <i class="fas fa-exclamation-triangle text-danger"></i>
+      </div>
+    </div>
+    <!-- body if normal -->
+    <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-striped">
         <caption style="display:none;">{{ $t('firefly.piggy_banks') }}</caption>
         <thead>
@@ -34,7 +48,8 @@
         </thead>
         <tbody>
         <tr v-for="piggy in this.piggy_banks">
-          <td>{{ piggy.attributes.name }}
+          <td>
+            <a :href="'./piggy-banks/show/' + piggy.id" :title="piggy.attributes.name">{{ piggy.attributes.name }}</a>
             <small v-if="piggy.attributes.object_group_title" class="text-muted">
               <br/>
               {{ piggy.attributes.object_group_title }}
@@ -43,8 +58,9 @@
           <td>
             <div class="progress-group">
               <div class="progress progress-sm">
-                <div class="progress-bar progress-bar-striped primary" v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}"></div>
-                <div class="progress-bar progress-bar-striped bg-success" v-if="100 === piggy.attributes.pct" :style="{'width': piggy.attributes.pct + '%'}"></div>
+                <div v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}" class="progress-bar progress-bar-striped primary"></div>
+                <div v-if="100 === piggy.attributes.pct" :style="{'width': piggy.attributes.pct + '%'}"
+                     class="progress-bar progress-bar-striped bg-success"></div>
               </div>
             </div>
             <span class="text-success">
@@ -65,7 +81,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a href="./piggy-banks" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_piggies') }}</a>
+      <a class="btn btn-default button-sm" href="./piggy-banks"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_piggies') }}</a>
     </div>
   </div>
 </template>
@@ -73,17 +89,24 @@
 <script>
 export default {
   name: "MainPiggyList",
+  data() {
+    return {
+      piggy_banks: [],
+      loading: true,
+      error: false,
+      locale: 'en-US'
+    }
+  },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     axios.get('./api/v1/piggy_banks')
         .then(response => {
                 this.loadPiggyBanks(response.data.data);
+                this.loading = false;
               }
-        );
-  },
-  computed: {
-    locale() {
-      return this.$store.getters.locale;
-    }
+        ).catch(error => {
+      this.error = true
+    });
   },
   methods: {
     loadPiggyBanks(data) {
@@ -99,11 +122,6 @@ export default {
       this.piggy_banks.sort(function (a, b) {
         return b.attributes.pct - a.attributes.pct;
       });
-    }
-  },
-  data() {
-    return {
-      piggy_banks: []
     }
   }
 }

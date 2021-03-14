@@ -81,8 +81,8 @@ class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($filtered as $journal) {
             $array[] = [
-                'id'                   => $journal->id,
-                'transaction_group_id' => $journal->transaction_group_id,
+                'id'                   => (string)$journal->id,
+                'transaction_group_id' => (string)$journal->transaction_group_id,
                 'name'                 => $journal->description,
                 'description'          => $journal->description,
             ];
@@ -120,8 +120,8 @@ class TransactionController extends Controller
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
             $array[] = [
-                'id'                   => $journal->id,
-                'transaction_group_id' => $journal->transaction_group_id,
+                'id'                   => (string)$journal->id,
+                'transaction_group_id' => (string)$journal->transaction_group_id,
                 'name'                 => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
                 'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
             ];

@@ -61,7 +61,7 @@ class AdminTestMail extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.admin-test-html')->text('emails.admin-test-text')
+        return $this->view('v1.emails.admin-test-html')->text('v1.emails.admin-test-text')
                     ->subject((string) trans('email.admin_test_subject'));
     }
 }

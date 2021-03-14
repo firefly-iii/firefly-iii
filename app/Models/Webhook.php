@@ -1,4 +1,25 @@
 <?php
+
+/*
+ * Webhook.php
+ * Copyright (c) 2021 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 /*
  * Webhook.php
@@ -63,6 +84,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
  * @mixin \Eloquent
+ * @property string $title
+ * @property string $secret
+ * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereTitle($value)
  */
 class Webhook extends Model
 {
@@ -103,11 +128,11 @@ class Webhook extends Model
     public static function routeBinder(string $value): Webhook
     {
         if (auth()->check()) {
-            $budgetId = (int)$value;
+            $webhookId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Webhook $webhook */
-            $webhook = $user->webhooks()->find($budgetId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }

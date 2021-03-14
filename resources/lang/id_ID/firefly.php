@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Authorization Request',
     'authorization_request_intro'                         => '<strong>:client</strong> is requesting permission to access your financial administration. Would you like to authorize <strong>:client</strong> to access these records?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Terapkan aturan ":title" untuk pilihan transaksi Anda',
     'apply_rule_selection_intro'                          => 'Aturan seperti ":title" biasanya hanya diterapkan pada transaksi baru atau yang telah diperbarui, namun Anda bisa memberi tahu Firefly III untuk menjalankannya pada pilihan transaksi Anda yang ada. Ini bisa berguna bila Anda telah memperbarui peraturan dan Anda memerlukan perubahan yang akan diterapkan pada semua transaksi Anda yang lain.',
     'include_transactions_from_accounts'                  => 'Sertakan transaksi dari akun ini',
-    'applied_rule_selection'                              => 'Aturan ":title" telah diterapkan pada pilihan Anda.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Menjalankan',
     'apply_rule_group_selection'                          => 'Terapkan grup aturan ":title" ke pilihan transaksi Anda',
     'apply_rule_group_selection_intro'                    => 'Kelompok aturan seperti ":title" biasanya hanya diterapkan pada transaksi baru atau yang diperbarui, namun Anda dapat memberi tahu Firefly III untuk menjalankan semua aturan dalam grup ini pada pilihan transaksi Anda saat ini. Ini bisa berguna bila Anda telah memperbarui sekumpulan aturan dan Anda memerlukan perubahan yang akan diterapkan pada semua transaksi Anda yang lain.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Bidang opsional untuk transaksi',
     'pref_optional_fields_transaction_help'     => 'Secara default tidak semua bidang diaktifkan saat membuat transaksi baru (karena kekacauan). Di bawah, Anda dapat mengaktifkan bidang ini jika Anda berpikir mereka bisa berguna bagi Anda. Tentu saja, setiap bidang yang dinonaktifkan, tapi sudah diisi, akan terlihat terlepas dari pengaturan.',
     'optional_tj_date_fields'                   => 'Bidang tanggal',
-    'optional_tj_business_fields'               => 'Bidang usaha',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Bidang lampiran',
     'pref_optional_tj_interest_date'            => 'Tanggal bunga',
     'pref_optional_tj_book_date'                => 'Buku tanggal',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referensi internal',
     'pref_optional_tj_notes'                    => 'Catatan',
     'pref_optional_tj_attachments'              => 'Lampiran',
-    'pref_optional_tj_external_uri'             => 'External URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Tanggal',
     'optional_field_meta_business'              => 'Bisnis',
     'optional_field_attachments'                => 'Lampiran',
     'optional_field_meta_data'                  => 'Data meta opsional',
-    'external_uri'                              => 'External URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Delete data',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Gunakan jumlah ini untuk mendapatkan indikasi berapa total anggaran Anda.',
     'suggested'                                 => 'Disarankan',
     'average_between'                           => 'Rata-rata antara :start dan :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
     'transferred_in'                            => 'Transferred (in)',
     'transferred_away'                          => 'Transferred (away)',
     'auto_budget_none'                          => 'No auto-budget',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'inactive rule',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transaction #{ID} ("{title}")</a> has been stored.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been stored.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> has been updated.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Per hari',
     'left_to_spend_per_day'                     => 'Kiri untuk dibelanjakan per hari',
     'bills_paid'                                => 'Tagihan dibayar',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Mata uang',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automation',
     'others'                                    => 'Others',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Laporan keuangan standar antara :start dan :end',

@@ -53,6 +53,6 @@ trait OrganisesObjectGroups
     private function sortObjectGroups(): void
     {
         $repository = app(ObjectGroupRepositoryInterface::class);
-        $repository->sort();
+        $repository->resetOrder();
     }
 }

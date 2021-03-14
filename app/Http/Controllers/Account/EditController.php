@@ -150,7 +150,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
+        return prefixView(
             'accounts.edit',
             compact(
                 'account',

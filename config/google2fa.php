@@ -76,7 +76,7 @@ return [
     /*
      * One Time Password View
      */
-    'view'                 => 'auth.mfa',
+    'view'                 => sprintf('%s.auth.mfa', env('FIREFLY_III_LAYOUT', 'v1')),
 
     /*
      * One Time Password error message

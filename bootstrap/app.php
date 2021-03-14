@@ -21,6 +21,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Contracts\View\Factory as ViewFactory;
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -56,11 +57,49 @@ if (!function_exists('str_is_equal')) {
     /**
      * @param string $left
      * @param string $right
+     *
      * @return bool
      */
     function str_is_equal(string $left, string $right): bool
     {
         return $left === $right;
+    }
+}
+
+if (!function_exists('prefixView')) {
+    /**
+     * Get the evaluated view contents for the given view.
+     *
+     * @param string|null                                   $view
+     * @param \Illuminate\Contracts\Support\Arrayable|array $data
+     * @param array                                         $mergeData
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
+    function prefixView($view = null, $data = [], $mergeData = [])
+    {
+        $factory = app(ViewFactory::class);
+
+        if (func_num_args() === 0) {
+            return $factory;
+        }
+        // original view:
+        $prefixView = $view;
+
+        // try to find the view file first:
+        if(!$factory->exists($prefixView)) {
+            // prepend it with the view in the layout:
+            $layout = env('FIREFLY_III_LAYOUT', 'v1');
+            $prefixView   = sprintf('%s.%s', $layout, $view);
+
+            // try again:
+            if(!$factory->exists($prefixView)) {
+                // if does not exist, force v1 and just continue.
+                $prefixView   = sprintf('%s.%s', 'v1', $view);
+            }
+        }
+
+        return $factory->make($prefixView, $data, $mergeData);
     }
 }
 

@@ -39,7 +39,7 @@
 
             {# has location set? #}
             <input type="hidden" name="{{ name }}_has_location" value="{{ options.locations[name].has_location|default('false') }}"/>
-            {% include 'form/feedback' %}
+            {% include 'v1.form.feedback' %}
         {% endif %}
     </div>
 </div>

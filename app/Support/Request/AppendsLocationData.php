@@ -79,53 +79,47 @@ trait AppendsLocationData
         Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
         $data['store_location']  = false;
         $data['update_location'] = false;
+        $data['remove_location'] = false;
         $data['longitude']       = null;
         $data['latitude']        = null;
         $data['zoom_level']      = null;
 
-        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
-        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
-        $hasLocation    = $this->boolean($hasLocationKey) || true === ($data['has_location'] ?? false);
+        $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
+        $isValidPOST     = $this->isValidPost($prefix);
+        $isValidPUT      = $this->isValidPUT($prefix);
+        $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
 
-        // for a POST (store), all fields must be present and accounted for:
-        if (
-            ('POST' === $this->method() && $this->routeIs('*.store'))
-            && ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-        ) {
-            Log::debug('Method is POST and all fields present.');
-            $data['store_location'] = $this->boolean($hasLocationKey);
-            $data['longitude']      = $this->nullableString($longitudeKey);
-            $data['latitude']       = $this->nullableString($latitudeKey);
-            $data['zoom_level']     = $this->nullableString($zoomLevelKey);
+        // for a POST (store), all fields must be present and not NULL.
+        if ($isValidPOST) {
+            Log::debug('Method is POST and all fields present and not NULL.');
+            $data['store_location'] = true;
+            $data['longitude']      = $this->string($longitudeKey);
+            $data['latitude']       = $this->string($latitudeKey);
+            $data['zoom_level']     = $this->string($zoomLevelKey);
         }
-        if (
-            ($this->has($longitudeKey) && $this->has($latitudeKey) && $this->has($zoomLevelKey))
-            && (
-                ('PUT' === $this->method() && $this->routeIs('*.update'))
-                || ('POST' === $this->method() && $this->routeIs('*.update'))
-            )
-        ) {
-            Log::debug('Method is PUT and all fields present.');
+
+        if ($isValidPUT) {
+            Log::debug('Method is PUT and all fields present and not NULL.');
             $data['update_location'] = true;
-            $data['longitude']       = $this->nullableString($longitudeKey);
-            $data['latitude']        = $this->nullableString($latitudeKey);
-            $data['zoom_level']      = $this->nullableString($zoomLevelKey);
+            $data['longitude']       = $this->string($longitudeKey);
+            $data['latitude']        = $this->string($latitudeKey);
+            $data['zoom_level']      = $this->string($zoomLevelKey);
         }
-        if (false === $hasLocation || null === $data['longitude'] || null === $data['latitude'] || null === $data['zoom_level']) {
-            Log::debug('One of the fields is NULL or hasLocation is false, wont save.');
-            Log::debug(sprintf('Longitude   : %s', var_export($data['longitude'], true)));
-            Log::debug(sprintf('Latitude    : %s', var_export($data['latitude'], true)));
-            Log::debug(sprintf('Zoom level  : %s', var_export($data['zoom_level'], true)));
-            Log::debug(sprintf('Has location: %s', var_export($hasLocation, true)));
-            $data['store_location']  = false;
-            $data['update_location'] = true; // update is always true, but the values are null:
-            $data['longitude']       = null;
-            $data['latitude']        = null;
-            $data['zoom_level']      = null;
+        if ($isValidEmptyPUT) {
+            Log::debug('Method is PUT and all fields present and NULL.');
+            $data['remove_location'] = true;
         }
         Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
+        Log::debug(
+            sprintf(
+                'Returning actions: store: %s, update: %s, delete: %s',
+                var_export($data['store_location'], true),
+                var_export($data['update_location'], true),
+                var_export($data['remove_location'], true),
+            )
+        );
 
         return $data;
     }
@@ -152,6 +146,65 @@ trait AppendsLocationData
         }
 
         return sprintf('%s_%s', $prefix, $key);
+    }
+
+    /**
+     * @param string|null $prefix
+     *
+     * @return bool
+     */
+    private function isValidPOST(?string $prefix): bool
+    {
+        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+
+        return ('POST' === $this->method() && $this->routeIs('*.store'))
+               && (
+                   null !== $this->get($longitudeKey)
+                   && null !== $this->get($latitudeKey)
+                   && null !== $this->get($zoomLevelKey)
+               );
+    }
+
+    /**
+     * @param string|null $prefix
+     *
+     * @return bool
+     */
+    private function isValidPUT(?string $prefix): bool
+    {
+        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+
+        return (
+                   null !== $this->get($longitudeKey)
+                   && null !== $this->get($latitudeKey)
+                   && null !== $this->get($zoomLevelKey))
+               && (('PUT' === $this->method() && $this->routeIs('*.update'))
+                   || ('POST' === $this->method() && $this->routeIs('*.update')));
+    }
+
+    /**
+     * @param string|null $prefix
+     *
+     * @return bool
+     */
+    private function isValidEmptyPUT(?string $prefix): bool
+    {
+        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+
+        return (
+                   null === $this->get($longitudeKey)
+                   && null === $this->get($latitudeKey)
+                   && null === $this->get($zoomLevelKey))
+               && ('PUT' === $this->method()
+                   || ('POST' === $this->method() && $this->routeIs('*.update'))
+               );
+
     }
 
 }

@@ -18,6 +18,7 @@
   - along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
+
 <template>
   <tr>
     <td style="width:25%;">
@@ -34,7 +35,7 @@
 <script>
 export default {
   name: "BudgetRow",
-  mounted() {
+  created() {
     this.locale = localStorage.locale ?? 'en-US';
   },
   data() {

@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Някои страници в Firefly III имат разширени опции, скрити зад този бутон. Тази страница няма нищо интересно тук, но проверете останалите!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version заявка за потвърждение',
     'authorization_request_intro'                         => '<strong>:client</strong> иска разрешение за достъп до вашето финансово управление. Искате ли да упълномощите <strong>:client</strong> за достъп до тези записи?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Приложете правило ":title" към селекция от вашите транзакции',
     'apply_rule_selection_intro'                          => 'Правила като ":title" обикновено се прилагат само за нови или актуализирани транзакции, но можете да кажете на Firefly III да го стартира върху селекция от вашите съществуващи транзакции. Това може да бъде полезно, когато сте актуализирали правило и се нуждаете промените, да се отразят на всички останали транзакции.',
     'include_transactions_from_accounts'                  => 'Включете транзакции от тези сметки',
-    'applied_rule_selection'                              => 'Правило ":title" е приложено към вашия избор.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Изпълни',
     'apply_rule_group_selection'                          => 'Приложете групата правила ":title" към селекция от вашите транзакции',
     'apply_rule_group_selection_intro'                    => 'Групи правила като ":title" обикновено се прилагат само за нови или актуализирани транзакции, но можете да кажете на Firefly III да го стартира върху селекция от вашите съществуващи транзакции. Това може да бъде полезно, когато сте актуализирали група правила и се нуждаете промените, да се отразят на всички останали транзакции.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Незадължителни полета за транзакции',
     'pref_optional_fields_transaction_help'     => 'По подразбиране не всички полета са активирани при създаване на нова транзакция (поради претрупването). По-долу можете да активирате тези полета, ако смятате че биха могли да бъдат полезни за вас. Разбира се, всяко поле, което е деактивирано но вече попълнено, ще бъде видимо независимо от настройката.',
     'optional_tj_date_fields'                   => 'Полета за дати',
-    'optional_tj_business_fields'               => 'Бизнес полета',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Полета за прикачени файлове',
     'pref_optional_tj_interest_date'            => 'Полета за лихви',
     'pref_optional_tj_book_date'                => 'Дата на осчетоводяване',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Вътрешна референция',
     'pref_optional_tj_notes'                    => 'Бележки',
     'pref_optional_tj_attachments'              => 'Прикачени файлове',
-    'pref_optional_tj_external_uri'             => 'Външно URI',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Дати',
     'optional_field_meta_business'              => 'Бизнес',
     'optional_field_attachments'                => 'Прикачени файлове',
     'optional_field_meta_data'                  => 'Незадължителни мета данни',
-    'external_uri'                              => 'Външно URI',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Изтрий данните',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Използвайте тези суми, за да получите насока какъв може да бъде общият ви бюджет.',
     'suggested'                                 => 'Предложен',
     'average_between'                           => 'Средно между :start и :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i>Обикновено бюджетирате около :amount на ден. Този път е :over_amount на ден. Сигурен ли сте?',
     'transferred_in'                            => 'Прехвърлени (към)',
     'transferred_away'                          => 'Прехвърлени (от)',
     'auto_budget_none'                          => 'Няма автоматичен бюджет',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'неактивно правило',
     'bill_edit_rules'                           => 'Firefly III ще се опита да редактира и правилото, свързано с тази сметка. Ако сами сте редактирали това правило, Firefly III няма да промени нищо.|Firefly III също ще се опита да редактира и :count правила, свързани с тази сметка. Ако сами сте редактирали тези правила, Firefly III няма да промени нищо.',
     'bill_expected_date'                        => 'Очаквано :date',
+    'bill_paid_on'                              => 'Paid on {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Имате :count неактивна (архивирана) сметка, която можете да видите на тази отделна страница.|Имате :count неактивни (архивирани) сметки, които можете да видите на тази отделна страница.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Транзакция #{ID}("{title}")</a> беше записана.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> беше записана.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Транзакция #{ID}</a> беше обновена.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Добре дошли в Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'На ден',
     'left_to_spend_per_day'                     => 'Остава за разходи на ден',
     'bills_paid'                                => 'Платени сметки',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Валута',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Автоматизация',
     'others'                                    => 'Други',
     'classification'                            => 'Класификация',
+    'store_transaction'                         => 'Store transaction',
 
     // reports:
     'report_default'                            => 'Финансов отчет по подразбиране между :start и :end',

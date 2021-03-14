@@ -45,13 +45,16 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Binder\BudgetList;
 use FireflyIII\Support\Binder\CategoryList;
 use FireflyIII\Support\Binder\CLIToken;
-use FireflyIII\Support\Binder\ConfigurationName;
 use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
+use FireflyIII\Support\Binder\DynamicConfigKey;
+use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
@@ -96,9 +99,9 @@ return [
         'webhooks'  => false,
     ],
 
-    'version'                      => '5.5.0-beta.1',
+    'version'                      => '5.5.0-beta.2',
     'api_version'                  => '1.5.0',
-    'db_version'                   => 15,
+    'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
@@ -255,6 +258,9 @@ return [
         'initial'     => [AccountType::INITIAL_BALANCE],
         'import'      => [AccountType::IMPORT],
         'reconcile'   => [AccountType::RECONCILIATION],
+        'loan'        => [AccountType::LOAN],
+        'debt'        => [AccountType::DEBT],
+        'mortgage'    => [AccountType::MORTGAGE],
         'liabilities' => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
         'liability'   => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CREDITCARD],
     ],
@@ -308,7 +314,7 @@ return [
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
-        // 'pt_PT' => ['name_locale' => 'Portuguese', 'name_english' => 'Portuguese'],
+        'pt_PT' => ['name_locale' => 'Português', 'name_english' => 'Portuguese'],
         'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         // 'si_LK' => ['name_locale' => 'සිංහල', 'name_english' => 'Sinhala (Sri Lanka)'],
@@ -379,6 +385,8 @@ return [
         'transactionGroup' => TransactionGroup::class,
         'user'             => User::class,
         'webhook'          => Webhook::class,
+        'webhookMessage'   => WebhookMessage::class,
+        'webhookAttempt'   => WebhookAttempt::class,
 
         // strings
         'currency_code'    => CurrencyCode::class,
@@ -401,7 +409,8 @@ return [
         'toCurrencyCode'   => CurrencyCode::class,
         'cliToken'         => CLIToken::class,
         'tagOrId'          => TagOrId::class,
-        'configName'       => ConfigurationName::class,
+        'dynamicConfigKey' => DynamicConfigKey::class,
+        'eitherConfigKey'  => EitherConfigKey::class,
 
     ],
     'rule-actions'                 => [

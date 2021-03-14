@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v2/layout/default' %}
 {% block breadcrumbs %}
     {{ Breadcrumbs.render }}
 {% endblock %}
@@ -15,5 +15,9 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript">
+        // this is a terrible hack.
+        var previousURL = '{{ previousUri }}';
+    </script>
     <script src="v2/js/transactions/create.js" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

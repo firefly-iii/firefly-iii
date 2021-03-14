@@ -62,14 +62,12 @@ class StoredGroupEventHandler
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
-        $ruleRepository = app(RuleRepositoryInterface::class);
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $ruleRepository->setUser($storedGroupEvent->transactionGroup->user);
         $ruleGroupRepository->setUser($storedGroupEvent->transactionGroup->user);
 
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules();
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
 
         // create and fire rule engine.
         $newRuleEngine = app(RuleEngineInterface::class);

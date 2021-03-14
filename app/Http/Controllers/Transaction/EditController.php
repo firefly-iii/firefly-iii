@@ -89,7 +89,7 @@ class EditController extends Controller
         $previousUri     = str_replace($search, '', $previousUri);
 
 
-        return view(
+        return prefixView(
             'transactions.edit',
             compact(
                 'cash', 'allowedSourceDests', 'expectedSourceTypes', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'defaultCurrency',

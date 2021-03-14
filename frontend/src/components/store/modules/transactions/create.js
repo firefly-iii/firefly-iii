@@ -20,15 +20,13 @@
 
 const lodashClonedeep = require('lodash.clonedeep');
 
+import {getDefaultTransaction, getDefaultErrors} from '../../../shared/transactions';
+
 // initial state
 const state = () => ({
         transactionType: 'any',
-        date: new Date,
+        groupTitle: '',
         transactions: [],
-        allowedOpposingTypes: {},
-        accountToTransaction: {},
-        sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
-        destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
         customDateFields: {
             interest_date: false,
             book_date: false,
@@ -37,60 +35,8 @@ const state = () => ({
             payment_date: false,
             invoice_date: false,
         },
-        defaultTransaction: {
-            // basic
-            description: '',
-
-            // accounts:
-            source_account: {
-                id: 0,
-                name: "",
-                name_with_balance: "",
-                type: "",
-                currency_id: 0,
-                currency_name: '',
-                currency_code: '',
-                currency_decimal_places: 2
-            },
-            destination_account: {
-                id: 0,
-                name: "",
-                type: "",
-                currency_id: 0,
-                currency_name: '',
-                currency_code: '',
-                currency_decimal_places: 2
-            },
-
-            // amount:
-            amount: '',
-            currency_id: 0,
-            foreign_amount: '',
-            foreign_currency_id: 0,
-
-            // meta data
-            budget_id: 0,
-            bill_id: 0,
-            piggy_bank_id: 0,
-            tags: [],
-
-            // optional date fields (6x):
-            interest_date: null,
-            book_date: null,
-            process_date: null,
-            due_date: null,
-            payment_date: null,
-            invoice_date: null,
-
-            // optional other fields:
-            internal_reference: null,
-            external_url: null,
-            notes: null,
-
-            // transaction links:
-            links: [],
-            attachments: []
-        },
+        defaultTransaction: getDefaultTransaction(),
+        defaultErrors: getDefaultErrors()
     }
 )
 
@@ -100,11 +46,16 @@ const getters = {
     transactions: state => {
         return state.transactions;
     },
-    date: state => {
-        return state.date;
+    groupTitle: state => {
+        return state.groupTitle;
     },
     transactionType: state => {
         return state.transactionType;
+    },
+    accountToTransaction: state => {
+        // TODO better architecture here, does not need the store.
+        // possible API point!!
+        return state.accountToTransaction;
     },
     defaultTransaction: state => {
         return state.defaultTransaction;
@@ -132,62 +83,35 @@ const getters = {
 }
 
 // actions
-const actions = {
-    calcTransactionType(context) {
-        let source = context.state.transactions[0].source_account;
-        let dest = context.state.transactions[0].destination_account;
-        if (null === source || null === dest) {
-            // console.log('transactionType any');
-            context.commit('setTransactionType', 'any');
-            return;
-        }
-        if ('' === source.type || '' === dest.type) {
-            // console.log('transactionType any');
-            context.commit('setTransactionType', 'any');
-            return;
-        }
-
-        // ok so type is set on both:
-        let expectedDestinationTypes = context.state.accountToTransaction[source.type];
-        if ('undefined' !== typeof expectedDestinationTypes) {
-            let transactionType = expectedDestinationTypes[dest.type];
-            if ('undefined' !== typeof expectedDestinationTypes[dest.type]) {
-                // console.log('Found a type: ' + transactionType);
-                context.commit('setTransactionType', transactionType);
-                return;
-            }
-        }
-        // console.log('Found no type for ' + source.type + ' --> ' + dest.type);
-        if ('Asset account' !== source.type) {
-            console.log('Drop ID from source. TODO');
-
-            // source.id =null
-            // context.commit('updateField', {field: 'source_account',index: })
-            // context.state.transactions[0].source_account.id = null;
-        }
-        if ('Asset account' !== dest.type) {
-            console.log('Drop ID from destination. TODO');
-            //context.state.transactions[0].destination_account.id = null;
-        }
-
-        context.commit('setTransactionType', 'any');
-    }
-}
+const actions = {}
 
 // mutations
 const mutations = {
     addTransaction(state) {
         let newTransaction = lodashClonedeep(state.defaultTransaction);
+        newTransaction.errors = lodashClonedeep(state.defaultErrors);
         state.transactions.push(newTransaction);
     },
-    setDate(state, payload) {
-        state.date = payload.date;
+    resetErrors(state, payload) {
+        //console.log('resetErrors for index ' + payload.index);
+        state.transactions[payload.index].errors = lodashClonedeep(state.defaultErrors);
+    },
+    resetTransactions(state) {
+        state.transactions = [];
+    },
+    setGroupTitle(state, payload) {
+        state.groupTitle = payload.groupTitle;
     },
     setCustomDateFields(state, payload) {
         state.customDateFields = payload;
     },
     deleteTransaction(state, payload) {
         state.transactions.splice(payload.index, 1);
+        // console.log('Deleted transaction ' + payload.index);
+        // console.log(state.transactions);
+        if (0 === state.transactions.length) {
+            // console.log('array is empty!');
+        }
     },
     setTransactionType(state, transactionType) {
         state.transactionType = transactionType;
@@ -200,6 +124,11 @@ const mutations = {
     },
     updateField(state, payload) {
         state.transactions[payload.index][payload.field] = payload.value;
+    },
+    setTransactionError(state, payload) {
+        //console.log('Will set transactions[' + payload.index + '][errors][' + payload.field + '] to ');
+        //console.log(payload.errors);
+        state.transactions[payload.index].errors[payload.field] = payload.errors;
     },
     setDestinationAllowedTypes(state, payload) {
         // console.log('Destination allowed types was changed!');

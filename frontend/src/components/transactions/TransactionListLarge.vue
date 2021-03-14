@@ -19,83 +19,91 @@
   -->
 
 <template>
-    <table class="table table-striped table-sm">
-        <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
-        <thead>
-        <tr>
-            <th scope="col" class="text-left">{{ $t('firefly.description') }}</th>
-            <th scope="col">{{ $t('firefly.opposing_account') }}</th>
-            <th scope="col" class="text-right">{{ $t('firefly.amount') }}</th>
-            <th scope="col">{{ $t('firefly.category') }}</th>
-            <th scope="col">{{ $t('firefly.budget') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="transaction in this.transactions">
-            <td>
-                <a :href="'transactions/show/' + transaction.id " :title="transaction.date">
-                    <span v-if="transaction.attributes.transactions.length > 1">{{ transaction.attributes.group_title }}</span>
-                    <span v-if="1===transaction.attributes.transactions.length">{{ transaction.attributes.transactions[0].description }}</span>
-                </a>
-            </td>
-            <td>
+  <table class="table table-striped table-sm">
+    <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
+    <thead>
+    <tr>
+      <th class="text-left" scope="col">{{ $t('firefly.description') }}</th>
+      <th scope="col">{{ $t('firefly.opposing_account') }}</th>
+      <th class="text-right" scope="col">{{ $t('firefly.amount') }}</th>
+      <th scope="col">{{ $t('firefly.category') }}</th>
+      <th scope="col">{{ $t('firefly.budget') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="transaction in this.transactions">
+      <td>
+        <a :href="'transactions/show/' + transaction.id " :title="transaction.date">
+          <span v-if="transaction.attributes.transactions.length > 1">{{ transaction.attributes.group_title }}</span>
+          <span v-if="1===transaction.attributes.transactions.length">{{ transaction.attributes.transactions[0].description }}</span>
+        </a>
+      </td>
+      <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'accounts/show/' + tr.destination_id" v-if="'withdrawal' === tr.type">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + tr.source_id" v-if="'deposit' === tr.type">{{ tr.source_name }}</a>
-                    <a :href="'accounts/show/' + tr.destination_id" v-if="'transfer' === tr.type && tr.source_id === account_id">{{ tr.destination_name }}</a>
-                    <a :href="'accounts/show/' + tr.source_id" v-if="'transfer' === tr.type && tr.destination_id === account_id">{{ tr.source_name }}</a>
-                    <br />
+                    <a v-if="'withdrawal' === tr.type" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'deposit' === tr.type" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <a v-if="'transfer' === tr.type && tr.source_id === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'transfer' === tr.type && tr.destination_id === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <br/>
                 </span>
-            </td>
-            <td style="text-align:right;">
+      </td>
+      <td style="text-align:right;">
                 <span v-for="tr in transaction.attributes.transactions">
                      <span v-if="'withdrawal' === tr.type" class="text-danger">
-                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1)}}<br>
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
                      </span>
                     <span v-if="'deposit' === tr.type" class="text-success">
-                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount)}}<br>
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                      </span>
                     <span v-if="'transfer' === tr.type && tr.source_id === account_id" class="text-info">
-                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1)}}<br>
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
                     </span>
                     <span v-if="'transfer' === tr.type && tr.destination_id === account_id" class="text-info">
-                        {{ Intl.NumberFormat('en-US', {style: 'currency', currency: tr.currency_code}).format(tr.amount)}}<br>
+                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                     </span>
                 </span>
-            </td>
-            <td>
+      </td>
+      <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'categories/show/' + tr.category_id"  v-if="0!==tr.category_id">{{ tr.category_name }}</a><br />
+                    <a v-if="0!==tr.category_id" :href="'categories/show/' + tr.category_id">{{ tr.category_name }}</a><br/>
                 </span>
-            </td>
-            <td>
+      </td>
+      <td>
                 <span v-for="tr in transaction.attributes.transactions">
-                    <a :href="'budgets/show/' + tr.budget_id" v-if="0!==tr.budget_id">{{ tr.budget_name }}</a><br />
+                    <a v-if="0!==tr.budget_id" :href="'budgets/show/' + tr.budget_id">{{ tr.budget_name }}</a><br/>
                 </span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
-    export default {
-        name: "TransactionListLarge",
-        props: {
-            transactions: {
-                type: Array,
-                default: function () {
-                    return [];
-                }
-            },
-            account_id: {
-                type: Number,
-                default: function () {
-                    return 0;
-                }
-            },
-        }
+export default {
+  name: "TransactionListLarge",
+  data() {
+    return {
+      locale: 'en-US'
     }
+  },
+  created() {
+    this.locale = localStorage.locale ?? 'en-US';
+  },
+  props: {
+    transactions: {
+      type: Array,
+      default: function () {
+        return [];
+      }
+    },
+    account_id: {
+      type: Number,
+      default: function () {
+        return 0;
+      }
+    },
+  }
+}
 </script>
 
 <style scoped>

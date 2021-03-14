@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  *
@@ -110,7 +109,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'source_account_id'        => $journal['source_account_id'],
                 'budget_name'              => $journal['budget_name'],
                 'source_account_name'      => $journal['source_account_name'],
-                'destination_account_id' => $journal['destination_account_id'],
+                'destination_account_id'   => $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
                 'transaction_group_id'     => $journal['transaction_group_id'],
@@ -267,6 +266,49 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
                   ->setTypes([TransactionType::DEPOSIT]);
+
+        if (null !== $accounts && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
+
+        foreach ($journals as $journal) {
+            $currencyId                = (int)$journal['currency_id'];
+            $array[$currencyId]        = $array[$currencyId] ?? [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
+        }
+
+        return $array;
+    }
+
+    /**
+     * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $categories
+     *
+     * @return array
+     */
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)
+                  ->setTypes([TransactionType::TRANSFER]);
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

@@ -74,7 +74,7 @@ class ConfigurationController extends Controller
         $isDemoSite     = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $siteOwner      = config('firefly.site_owner');
 
-        return view(
+        return prefixView(
             'admin.configuration.index',
             compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
         );

@@ -46,16 +46,16 @@ class AttachmentFactory
     public function create(array $data): ?Attachment
     {
         // append if necessary.
-        $model = false === strpos($data['model'], 'FireflyIII') ? sprintf('FireflyIII\\Models\\%s', $data['model']) : $data['model'];
+        $model = false === strpos($data['attachable_type'], 'FireflyIII') ? sprintf('FireflyIII\\Models\\%s', $data['attachable_type']) : $data['attachable_type'];
 
         // get journal instead of transaction.
         if (Transaction::class === $model) {
             /** @var Transaction $transaction */
-            $transaction = $this->user->transactions()->find((int) $data['model_id']);
+            $transaction = $this->user->transactions()->find((int) $data['attachable_id']);
             if (null === $transaction) {
                 throw new FireflyException('Unexpectedly could not find transaction'); // @codeCoverageIgnore
             }
-            $data['model_id'] = $transaction->transaction_journal_id;
+            $data['attachable_id'] = $transaction->transaction_journal_id;
             $model            = TransactionJournal::class;
         }
 
@@ -63,7 +63,7 @@ class AttachmentFactory
         $attachment = Attachment::create(
             [
                 'user_id'         => $this->user->id,
-                'attachable_id'   => $data['model_id'],
+                'attachable_id'   => $data['attachable_id'],
                 'attachable_type' => $model,
                 'md5'             => '',
                 'filename'        => $data['filename'],

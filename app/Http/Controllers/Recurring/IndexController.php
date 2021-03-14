@@ -125,7 +125,7 @@ class IndexController extends Controller
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
+        return prefixView('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
     }
 
 }

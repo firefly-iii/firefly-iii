@@ -1,4 +1,4 @@
-{% extends "./layout/guest" %}
+{% extends "./v1/layout/guest" %}
 
 {% block content %}
 
@@ -48,6 +48,6 @@
         <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
     </div>
 
-    {% include 'partials.password-modal' %}
+    {% include 'v1.partials.password-modal' %}
 
 {% endblock %}

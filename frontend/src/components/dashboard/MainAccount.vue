@@ -24,35 +24,93 @@
       <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
     </div>
     <div class="card-body">
-      <div>
-        <canvas id="mainAccountsChart" style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
+      <div v-if="!loading">
+        <MainAccountChart v-if="!loading && !error" :chart-data="dataCollection" :options="chartOptions"/>
+      </div>
+      <div v-if="loading && !error" class="text-center">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <div v-if="error" class="text-center">
+        <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
     </div>
     <div class="card-footer">
-      <a href="./accounts/asset" class="btn btn-default button-sm"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
+      <a class="btn btn-default button-sm" href="./accounts/asset"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
     </div>
   </div>
 </template>
 
 <script>
+
 import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 
+import {createNamespacedHelpers} from "vuex";
+import MainAccountChart from "./MainAccountChart";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
 export default {
   name: "MainAccount",
+  components: {MainAccountChart},
+  data() {
+    return {
+      loading: true,
+      error: false,
+      ready: false,
+      dataCollection: {},
+      chartOptions: {}
+    }
+  },
   created() {
-    axios.get('./api/v1/chart/account/overview?start=' + window.sessionStart + '&end=' + window.sessionEnd)
-        .then(response => {
-
-          let chartData = DataConverter.methods.convertChart(response.data);
-          chartData = DataConverter.methods.colorizeLineData(chartData);
-          let lineChartCanvas = $('#mainAccountsChart').get(0).getContext('2d');
-          new Chart(lineChartCanvas, {
-            type: 'line',
-            data: chartData,
-            options: DefaultLineOptions.methods.getDefaultOptions()
+    this.ready = true;
+    this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
+  },
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        // console.log(this.chartOptions);
+        this.initialiseChart();
+      }
+    },
+    start: function () {
+      this.initialiseChart();
+    },
+    end: function () {
+      this.initialiseChart();
+    },
+  },
+  methods: {
+    initialiseChart: function () {
+      this.loading = true;
+      this.error = false;
+      let startStr = this.start.toISOString().split('T')[0];
+      let endStr = this.end.toISOString().split('T')[0];
+      let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;
+      // console.log('URL is ' + url);
+      axios.get(url)
+          .then(response => {
+            let chartData = DataConverter.methods.convertChart(response.data);
+            chartData = DataConverter.methods.colorizeLineData(chartData);
+            this.dataCollection = chartData;
+            this.loading = false;
+          })
+          .catch(error => {
+            // console.log('Has error!');
+            // console.log(error);
+            this.error = true;
+            // console.error(error);
           });
-        });
+    }
   },
 }
 </script>

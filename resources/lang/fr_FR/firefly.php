@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Certaines pages de Firefly III ont des options avancées cachées derrière ce bouton. Cette page n\'a rien de bien utile ici, mais regardez les autres !',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version demande d\'autorisation',
     'authorization_request_intro'                         => '<strong>:client</strong> demande l\'autorisation d\'accéder à votre administration financière. Souhaitez-vous autoriser <strong>:client</strong> à accéder à ces enregistrements?',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Appliquer la règle ":title" à une sélection de vos opérations',
     'apply_rule_selection_intro'                          => 'Les règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III de l’exécuter sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour une règle et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
     'include_transactions_from_accounts'                  => 'Inclure les opérations depuis ces comptes',
-    'applied_rule_selection'                              => 'La règle ":title" a été appliquée à votre sélection.',
+    'applied_rule_selection'                              => '{0} Aucune opération dans votre sélection n\'a été modifiée par la règle ":title".|[1] Une opération dans votre sélection a été modifiée par la règle ":title".|[2,*] :count opérations dans votre sélection ont été modifiées par la règle ":title".',
     'execute'                                             => 'Exécuter',
     'apply_rule_group_selection'                          => 'Appliquer le groupe de règles ":title" à une sélection de vos opérations',
     'apply_rule_group_selection_intro'                    => 'Les groupes de règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III d\'exécuter toutes les règles de ce groupe sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour un groupe de règles et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Champs optionnels pour les opérations',
     'pref_optional_fields_transaction_help'     => 'Par défaut, tous les champs ne sont pas disponibles lors de la création d\'une nouvelle opération (pour éviter de surcharger la page). Vous pouvez activer les champs suivants si vous pensez qu\'ils peuvent vous être utiles. Bien sûr, tout champ désactivé mais précédemment rempli restera visible quel que soit son paramétrage.',
     'optional_tj_date_fields'                   => 'Champ date',
-    'optional_tj_business_fields'               => 'Champs professionnels',
+    'optional_tj_other_fields'                  => 'Autres champs',
     'optional_tj_attachment_fields'             => 'Champs de pièces jointes',
     'pref_optional_tj_interest_date'            => 'Date de valeur (intérêts)',
     'pref_optional_tj_book_date'                => 'Date de réservation',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Référence interne',
     'pref_optional_tj_notes'                    => 'Notes',
     'pref_optional_tj_attachments'              => 'Pièces jointes',
-    'pref_optional_tj_external_uri'             => 'URI externe',
+    'pref_optional_tj_external_uri'             => 'URL externe',
+    'pref_optional_tj_location'                 => 'Emplacement',
+    'pref_optional_tj_links'                    => 'Liens d\'opération',
     'optional_field_meta_dates'                 => 'Dates',
     'optional_field_meta_business'              => 'Commerce',
     'optional_field_attachments'                => 'Pièces jointes',
     'optional_field_meta_data'                  => 'Métadonnées facultatives',
-    'external_uri'                              => 'URI externe',
+    'external_uri'                              => 'URL externe',
 
     // profile:
     'delete_stuff_header'                       => 'Suppression de données',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilisez ces montants pour avoir une indication de ce que pourrait être votre budget total.',
     'suggested'                                 => 'Suggéré',
     'average_between'                           => 'Moyenne entre :start et :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Généralement vous budgétez environ :amount par jour. Cette fois, c\'est :over_amount par jour. Êtes-vous sûr ?',
     'transferred_in'                            => 'Transféré (entrant)',
     'transferred_away'                          => 'Transféré (sortant)',
     'auto_budget_none'                          => 'Pas de budget automatique',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'règle inactive',
     'bill_edit_rules'                           => 'Firefly III tentera également de modifier la règle relative à cette facture. Si vous avez modifié cette règle vous-même, Firefly III ne changera rien. Firefly III tentera également de modifier les :count règles relatives à cette facture. Si vous avez modifié ces règles vous-même, Firefly III ne changera rien.',
     'bill_expected_date'                        => 'Prévu :date',
+    'bill_paid_on'                              => 'Payé le {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">L\'opération n°{ID} ("{title}")</a> a été enregistrée.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été enregistrée.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été mise à jour.',
+    'first_split_decides'                       => 'La première ventilation détermine la valeur de ce champ',
+    'first_split_overrules_source'              => 'La première ventilation peut remplacer le compte source',
+    'first_split_overrules_destination'         => 'La première ventilation peut remplacer le compte de destination',
 
     // new user:
     'welcome'                                   => 'Bienvenue sur Firefly III !',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Par jour',
     'left_to_spend_per_day'                     => 'Reste à dépenser par jour',
     'bills_paid'                                => 'Factures payées',
+    'custom_period'                             => 'Période personnalisée',
+    'reset_to_current'                          => 'Réinitialiser à la période en cours',
+    'select_period'                             => 'Sélectionnez une période',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Devise',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatisation',
     'others'                                    => 'Autres',
     'classification'                            => 'Classification',
+    'store_transaction'                         => 'Enregistrer l\'opération',
 
     // reports:
     'report_default'                            => 'Rapport financier par défaut entre le :start et le :end',

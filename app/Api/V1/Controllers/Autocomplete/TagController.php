@@ -71,7 +71,7 @@ class TagController extends Controller
         /** @var Tag $tag */
         foreach ($result as $tag) {
             $array[] = [
-                'id'   => $tag->id,
+                'id'   => (string)$tag->id,
                 'name' => $tag->tag,
                 'tag'  => $tag->tag,
             ];

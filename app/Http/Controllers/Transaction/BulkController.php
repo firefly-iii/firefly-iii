@@ -84,7 +84,7 @@ class BulkController extends Controller
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetList = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
-        return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
+        return prefixView('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }
 
 

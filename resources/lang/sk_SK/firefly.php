@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Niektoré stránky Firefly III majú pod týmto tlačítkom skryté pokročilé nastavenia. Táto stránka síce nič také neobsahuje, ale určite to skúste na iných!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooky',
+
     // API access
     'authorization_request'                               => 'Požiadavka na overenie – Firefly III verzia :version',
     'authorization_request_intro'                         => '<strong>:client</strong> žiada o oprávnenie pre prístup k vašej správe financií. Chcete <strong>:client</strong> autorizovať?',
@@ -277,7 +280,7 @@ return [
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
     'search_for_query'                                    => 'Firefly III vyhľadáva transakcie obsahujúce tieto výrazy: <span class="text-info">:query</span>',
     'search_modifier_date_is'                             => 'Dátum transakcie je ":value"',
-    'search_modifier_id'                                  => 'Transaction ID is ":value"',
+    'search_modifier_id'                                  => 'ID transakcie je ":value"',
     'search_modifier_date_before'                         => 'Dátum transakcie je pred alebo v deň ":value"',
     'search_modifier_date_after'                          => 'Dátum transakcie je po alebo v deň ":value"',
     'search_modifier_created_on'                          => 'Transakcia bola vytvorená ":value"',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Uplatniť pravidlo „:title“ na vybrané transakcie',
     'apply_rule_selection_intro'                          => 'Pravidlá ako „:title“ sa zvyčajne uplatňujú iba na nové alebo aktualizované transakcie, môžete však Firefly III povedať, aby ho spustil pri výbere vašich existujúcich transakcií. To môže byť užitočné, keď ste aktualizovali pravidlo a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
     'include_transactions_from_accounts'                  => 'Zahrnúť transakcie z týchto účtov',
-    'applied_rule_selection'                              => 'Pravidlo „:title“ bolo uplatnené na váš výber.',
+    'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Vykonať',
     'apply_rule_group_selection'                          => 'Uplatniť skupinu pravidiel „:title“ na vybrané transakcie',
     'apply_rule_group_selection_intro'                    => 'Skupiny pravidiel ako „:title“ sa zvyčajne používajú iba na nové alebo aktualizované transakcie, ale môžete Firefly III povedať, aby pri výbere vašich existujúcich transakcií spustil všetky pravidlá v tejto skupine. To môže byť užitočné, keď ste aktualizovali skupinu pravidiel a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Voliteľné údaje pre transakcie',
     'pref_optional_fields_transaction_help'     => 'Pri vytváraní novej transakcie nie sú predvolene povolené všetky polia (kvôli neprehľadnosti). Nižšie môžete tieto polia povoliť, ak si myslíte, že by mohli byť pre vás užitočné. Samozrejme, každé pole, ktoré je zakázané, ale už je vyplnené, bude viditeľné bez ohľadu na nastavenie.',
     'optional_tj_date_fields'                   => 'Políčka pre dátum',
-    'optional_tj_business_fields'               => 'Firemné údaje',
+    'optional_tj_other_fields'                  => 'Iné údaje',
     'optional_tj_attachment_fields'             => 'Políčka pre prílohy',
     'pref_optional_tj_interest_date'            => 'Úrokový dátum',
     'pref_optional_tj_book_date'                => 'Dátum rezervácie',
@@ -687,6 +690,8 @@ return [
     'pref_optional_tj_notes'                    => 'Poznámky',
     'pref_optional_tj_attachments'              => 'Prílohy',
     'pref_optional_tj_external_uri'             => 'Externá URL',
+    'pref_optional_tj_location'                 => 'Poloha',
+    'pref_optional_tj_links'                    => 'Prepojenia transakcie',
     'optional_field_meta_dates'                 => 'Dátumy',
     'optional_field_meta_business'              => 'Spoločnosť',
     'optional_field_attachments'                => 'Prílohy',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Pomocou týchto súm získate informáciu o tom, aký môže byť váš celkový rozpočet.',
     'suggested'                                 => 'Navrhované',
     'average_between'                           => 'Priemer medzi :start a :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Zvyčajne plánujete na deň sumu :amount. Tentokrát je to :over_amount. Ste si istý?',
     'transferred_in'                            => 'Prevedené (k nám)',
     'transferred_away'                          => 'Prevedené (preč)',
     'auto_budget_none'                          => 'Žiadny automatický rozpočet',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'neaktívne pravidlo',
     'bill_edit_rules'                           => 'Firefly III sa pokúsi upraviť aj pravidlo týkajúce sa tohto účtu. Ak ste si však toto pravidlo upravili sami, Firefly III ho nebude meniť.|Firefly III sa pokúsi upraviť aj :count pravidiel súvisiacich s týmto účtom. Ak ste si však tieto pravidlá upravili sami, Firefly III ich nebude meniť.',
     'bill_expected_date'                        => 'Očakávané :date',
+    'bill_paid_on'                              => 'Uhradené {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Máte :count neaktívny (archivovaný) bankový účet, ktorý môžete zobraziť na tejto samostatnej stránke.|Máte :count neaktívnych (archivovaných) bankových účtov, ktoré môžete zobraziť na tejto samostatnej stránke.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">Transakcia #{ID} ("{title}")</a> bola uložená.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">Transakcia #{ID}</a> bola uložená.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transakcia #{ID}</a> bola aktualizovaná.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Vitajte ve Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Za deň',
     'left_to_spend_per_day'                     => 'Zostáva na denné útraty',
     'bills_paid'                                => 'Zaplatené účty',
+    'custom_period'                             => 'Vlastné obdobie',
+    'reset_to_current'                          => 'Obnoviť na aktuálne obdobie',
+    'select_period'                             => 'Vyberte obdobie',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Mena',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatizácia',
     'others'                                    => 'Iné',
     'classification'                            => 'Klasifikácia',
+    'store_transaction'                         => 'Uložiť transakciu',
 
     // reports:
     'report_default'                            => 'Predvolený finančný výkaz v období :start a :end',

@@ -103,7 +103,7 @@ class EditController extends Controller
         }
         session()->forget('piggy-banks.edit.fromUpdate');
 
-        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
+        return prefixView('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
     }
 
 

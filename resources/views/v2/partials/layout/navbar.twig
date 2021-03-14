@@ -40,7 +40,11 @@
                 </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-                    <i class="fas fa-fw fa-external-link-alt mr-2"></i> {{ 'webhooks'|_ }}
+                    <i class="fas fa-fw fa-globe mr-2"></i> {{ 'webhooks'|_ }}
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('export.index') }}" class="dropdown-item">
+                    <i class="fas fa-fw fa-upload mr-2"></i> {{ 'export_data_menu'|_ }}
                 </a>
             </div>
         </li>

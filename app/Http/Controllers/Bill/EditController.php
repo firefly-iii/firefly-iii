@@ -107,7 +107,7 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'defaultCurrency', 'preFilled'));
+        return prefixView('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'defaultCurrency', 'preFilled'));
     }
 
 

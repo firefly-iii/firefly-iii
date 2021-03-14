@@ -34,61 +34,72 @@
           @tags-changed="newTags => this.tags = newTags"
       />
     </div>
+    <span v-if="errors.length > 0">
+      <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
+    </span>
   </div>
 </template>
 
 <script>
-import {createNamespacedHelpers} from "vuex";
 import VueTagsInput from "@johmun/vue-tags-input";
 import axios from "axios";
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
 export default {
   name: "TransactionTags",
   components: {
     VueTagsInput
   },
-  props: ['value', 'index'],
+  props: ['value', 'index', 'errors'],
   data() {
     return {
       autocompleteItems: [],
       debounce: null,
       tags: [],
       currentTag: '',
-      updateTags: true // the idea is that this is always true, except when the tags-function sets the value.
+      updateTags: true, // the idea is that this is always true, except when the tags-function sets the value.
+      tagList: this.value,
+      emitEvent: true
     };
+  },
+  created() {
+    let tags = [];
+    for (let i in this.value) {
+      if (this.value.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+        tags.push({text: this.value[i]});
+      }
+    }
+    this.updateTags = false;
+    this.tags = tags;
   },
   watch: {
     'currentTag': 'initItems',
     value: function (value) {
-      console.log('watch: value');
-      console.log(value);
-      this.updateField({field: 'tags', index: this.index, value: value});
+      this.emitEvent = false;
+      this.tagList = value;
+    },
+    tagList: function (value) {
+      console.log('watch tagList');
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'tags', index: this.index, value: value});
+      }
+      this.emitEvent = true;
       this.updateTags = false;
       this.tags = value;
     },
     tags: function (value) {
       if (this.updateTags) {
-        console.log('watch: tags');
-
         let shortList = [];
         for (let key in value) {
           if (value.hasOwnProperty(key)) {
             shortList.push({text: value[key].text});
           }
         }
-        this.value = shortList;
+        this.tagList = shortList;
       }
       this.updateTags = true;
     }
   },
   methods: {
-    ...mapMutations(
-        [
-          'updateField',
-        ],
-    ),
     initItems() {
       if (this.currentTag.length < 2) {
         return;

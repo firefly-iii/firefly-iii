@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\TransactionGroup;
 
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
@@ -77,6 +78,15 @@ interface TransactionGroupRepositoryInterface
     public function getLinks(TransactionGroup $group): array;
 
     /**
+     * Get the location of a journal or NULL.
+     *
+     * @param int $journalId
+     *
+     * @return Location|null
+     */
+    public function getLocation(int $journalId): ?Location;
+
+    /**
      * Return object with all found meta field things as Carbon objects.
      *
      * @param int   $journalId
@@ -115,15 +125,6 @@ interface TransactionGroupRepositoryInterface
     public function getPiggyEvents(TransactionGroup $group): array;
 
     /**
-     * Get the tags for a journal (by ID).
-     *
-     * @param int $journalId
-     *
-     * @return array
-     */
-    public function getTags(int $journalId): array;
-
-    /**
      * Get the tags for a journal (by ID) as Tag objects.
      *
      * @param int $journalId
@@ -131,6 +132,15 @@ interface TransactionGroupRepositoryInterface
      * @return Collection
      */
     public function getTagObjects(int $journalId): Collection;
+
+    /**
+     * Get the tags for a journal (by ID).
+     *
+     * @param int $journalId
+     *
+     * @return array
+     */
+    public function getTags(int $journalId): array;
 
     /**
      * Set the user.

@@ -28,5 +28,5 @@ return [
     'token'    => 'Questo token di reimpostazione della password non è valido.',
     'sent'     => 'Abbiamo inviato via e-mail il link per la reimpostazione della password!',
     'reset'    => 'La tua password è stata resettata!',
-    'blocked'  => 'Riprova.',
+    'blocked'  => 'Bel tentativo però.',
 ];

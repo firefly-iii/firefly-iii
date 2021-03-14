@@ -47,7 +47,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
     /**
      * @param TransactionType|null $type
-     * @param string|null $typeString
+     * @param string|null          $typeString
      *
      * @return TransactionType
      */
@@ -71,7 +71,8 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
     /**
      * @param string $query
-     * @param int $limit
+     * @param int    $limit
+     *
      * @return Collection
      */
     public function searchTypes(string $query, int $limit): Collection

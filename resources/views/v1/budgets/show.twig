@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, budget, budgetLimit) }}
@@ -47,7 +47,7 @@
                         </h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.groups' %}
+                    {% include 'v1.list.groups' %}
                     {% if budgetLimit %}
                         <p>
                             <i class="fa fa-calendar"></i>

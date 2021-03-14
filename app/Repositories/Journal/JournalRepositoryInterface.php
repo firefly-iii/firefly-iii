@@ -37,28 +37,6 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
-     * @return TransactionJournal|null
-     */
-    public function getLast(): ?TransactionJournal;
-
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
-    public function findByType(array $types): Collection;
-
-    /**
-     * Search in journal descriptions.
-     *
-     * @param string $search
-     * @param int $limit
-     *
-     * @return Collection
-     */
-    public function searchJournalDescriptions(string $search, int $limit): Collection;
-
-    /**
      * Deletes a transaction group.
      *
      * @param TransactionGroup $transactionGroup
@@ -71,6 +49,13 @@ interface JournalRepositoryInterface
      * @param TransactionJournal $journal
      */
     public function destroyJournal(TransactionJournal $journal): void;
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function findByType(array $types): Collection;
 
     /**
      * TODO Refactor to "find".
@@ -90,12 +75,23 @@ interface JournalRepositoryInterface
     public function firstNull(): ?TransactionJournal;
 
     /**
+     * Returns the destination account of the journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    public function getDestinationAccount(TransactionJournal $journal): Account;
+
+    /**
      * TODO this method is no longer well-fitted in 4.8,0. Should be refactored and/or removed.
      * Return a list of all destination accounts related to journal.
      *
      * @param TransactionJournal $journal
-     * @deprecated
+     *
      * @return Collection
+     * @deprecated
      */
     public function getJournalDestinationAccounts(TransactionJournal $journal): Collection;
 
@@ -104,10 +100,44 @@ interface JournalRepositoryInterface
      * Return a list of all source accounts related to journal.
      *
      * @param TransactionJournal $journal
-     * @deprecated
+     *
      * @return Collection
+     * @deprecated
      */
     public function getJournalSourceAccounts(TransactionJournal $journal): Collection;
+
+    /**
+     * Return total amount of journal. Is always positive.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    public function getJournalTotal(TransactionJournal $journal): string;
+
+    /**
+     * @return TransactionJournal|null
+     */
+    public function getLast(): ?TransactionJournal;
+
+    /**
+     * TODO used only in transformer, so only for API use.
+     *
+     * @param TransactionJournalLink $link
+     *
+     * @return string
+     */
+    public function getLinkNoteText(TransactionJournalLink $link): string;
+
+    /**
+     * Return Carbon value of a meta field (or NULL).
+     *
+     * @param int    $journalId
+     * @param string $field
+     *
+     * @return null|Carbon
+     */
+    public function getMetaDateById(int $journalId, string $field): ?Carbon;
 
     /**
      * Returns the source account of the journal.
@@ -120,52 +150,21 @@ interface JournalRepositoryInterface
     public function getSourceAccount(TransactionJournal $journal): Account;
 
     /**
-     * Returns the destination account of the journal.
-     *
-     * @param TransactionJournal $journal
-     * @return Account
-     * @throws FireflyException
-     */
-    public function getDestinationAccount(TransactionJournal $journal): Account;
-
-    /**
-     * Return total amount of journal. Is always positive.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
-    public function getJournalTotal(TransactionJournal $journal): string;
-
-    /**
-     * TODO used only in transformer, so only for API use.
-     * @param TransactionJournalLink $link
-     *
-     * @return string
-     */
-    public function getLinkNoteText(TransactionJournalLink $link): string;
-
-
-    /**
-     * Return Carbon value of a meta field (or NULL).
-     *
-     * @param int $journalId
-     * @param string             $field
-     *
-     * @return null|Carbon
-     */
-    public function getMetaDateById(int $journalId, string $field): ?Carbon;
-
-
-
-
-
-    /**
      * TODO maybe move to account repository?
      *
      * @param int $journalId
      */
     public function reconcileById(int $journalId): void;
+
+    /**
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchJournalDescriptions(string $search, int $limit): Collection;
 
     /**
      * @param User $user
@@ -176,7 +175,7 @@ interface JournalRepositoryInterface
      * Update budget for a journal.
      *
      * @param TransactionJournal $journal
-     * @param int $budgetId
+     * @param int                $budgetId
      *
      * @return TransactionJournal
      */
@@ -186,7 +185,7 @@ interface JournalRepositoryInterface
      * Update category for a journal.
      *
      * @param TransactionJournal $journal
-     * @param string $category
+     * @param string             $category
      *
      * @return TransactionJournal
      */
@@ -196,7 +195,7 @@ interface JournalRepositoryInterface
      * Update tag(s) for a journal.
      *
      * @param TransactionJournal $journal
-     * @param array $tags
+     * @param array              $tags
      *
      * @return TransactionJournal
      */

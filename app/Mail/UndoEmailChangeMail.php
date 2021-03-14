@@ -67,7 +67,7 @@ class UndoEmailChangeMail extends Mailable
      */
     public function build(): self
     {
-        return $this->view('emails.undo-email-change-html')->text('emails.undo-email-change-text')
+        return $this->view('v1.emails.undo-email-change-html')->text('v1.emails.undo-email-change-text')
                     ->subject((string) trans('email.email_change_subject'));
     }
 }

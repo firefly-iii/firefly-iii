@@ -1,4 +1,4 @@
-{% extends "./layout/default" %}
+{% extends './v1/layout/default' %}
 
 {% block breadcrumbs %}
     {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, start, end) }}
@@ -57,7 +57,7 @@
                         </h3>
                     </div>
                     <div class="box-body no-padding">
-                        {% include 'list.attachments' %}
+                        {% include 'v1.list.attachments' %}
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="box-body">
                     {% if periods|length > 0 %}
-                        {% include 'list.groups' %}
+                        {% include 'v1.list.groups' %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.show.all', [category.id]) }}">
@@ -88,7 +88,7 @@
                             </a>
                         </p>
                     {% else %}
-                        {% include 'list.groups'  %}
+                        {% include 'v1.list.groups'  %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.show', [category.id]) }}">
@@ -101,7 +101,7 @@
         </div>
         {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                {% include 'list.periods' %}
+                {% include 'v1.list.periods' %}
             </div>
         {% endif %}
     </div>

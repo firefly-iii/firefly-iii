@@ -62,7 +62,7 @@ class AccountController extends Controller
         $accountTasker = app(AccountTaskerInterface::class);
         $accountReport = $accountTasker->getAccountReport($accounts, $start, $end);
         try {
-            $result = view('reports.partials.accounts', compact('accountReport'))->render();
+            $result = prefixView('reports.partials.accounts', compact('accountReport'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));

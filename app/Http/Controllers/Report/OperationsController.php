@@ -82,7 +82,7 @@ class OperationsController extends Controller
         $report = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type   = 'expense-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = prefixView('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
@@ -117,7 +117,7 @@ class OperationsController extends Controller
         $report = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type   = 'income-entry';
         try {
-            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = prefixView('reports.partials.income-expenses', compact('report', 'type'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
@@ -172,7 +172,7 @@ class OperationsController extends Controller
         }
 
         try {
-            $result = view('reports.partials.operations', compact('sums'))->render();
+            $result = prefixView('reports.partials.operations', compact('sums'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';

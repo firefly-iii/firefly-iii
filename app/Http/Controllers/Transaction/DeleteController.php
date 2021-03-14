@@ -91,7 +91,7 @@ class DeleteController extends Controller
         Log::debug('Will try to remember previous URI');
         $this->rememberPreviousUri('transactions.delete.uri');
 
-        return view('transactions.delete', compact('group', 'journal', 'subTitle', 'objectType', 'previous'));
+        return prefixView('transactions.delete', compact('group', 'journal', 'subTitle', 'objectType', 'previous'));
     }
 
     /**

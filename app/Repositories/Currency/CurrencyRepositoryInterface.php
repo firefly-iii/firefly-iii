@@ -39,13 +39,6 @@ interface CurrencyRepositoryInterface
     /**
      * @param TransactionCurrency $currency
      *
-     * @return bool
-     */
-    public function isFallbackCurrency(TransactionCurrency $currency): bool;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
      * @return int
      */
     public function countJournals(TransactionCurrency $currency): int;
@@ -224,6 +217,13 @@ interface CurrencyRepositoryInterface
     public function getExchangeRates(TransactionCurrency $currency): Collection;
 
     /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function isFallbackCurrency(TransactionCurrency $currency): bool;
+
+    /**
      * @param string $search
      * @param int    $limit
      *
@@ -238,8 +238,9 @@ interface CurrencyRepositoryInterface
 
     /**
      * @param array $data
-     * @throws FireflyException
+     *
      * @return TransactionCurrency
+     * @throws FireflyException
      */
     public function store(array $data): TransactionCurrency;
 

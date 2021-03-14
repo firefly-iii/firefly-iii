@@ -21,42 +21,55 @@
 <template>
   <div>
     <!-- daily budgets (will be the exception, I expect) -->
-    <div class="row">
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.daily.length > 0">
-        <BudgetListGroup :title="$t('firefly.daily_budgets')" :budgetLimits=budgetLimits.daily
+    <div v-if="!loading" class="row">
+      <div v-if="budgetLimits.daily.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.daily :title="$t('firefly.daily_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.weekly.length > 0">
-        <BudgetListGroup :title="$t('firefly.weekly_budgets')" :budgetLimits=budgetLimits.weekly
+      <div v-if="budgetLimits.weekly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.weekly :title="$t('firefly.weekly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.monthly.length > 0">
-        <BudgetListGroup :title="$t('firefly.monthly_budgets')" :budgetLimits=budgetLimits.monthly
+      <div v-if="budgetLimits.monthly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.monthly :title="$t('firefly.monthly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.quarterly.length > 0">
-        <BudgetListGroup :title="$t('firefly.quarterly_budgets')" :budgetLimits=budgetLimits.quarterly
+      <div v-if="budgetLimits.quarterly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.quarterly :title="$t('firefly.quarterly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.half_year.length > 0">
-        <BudgetListGroup :title="$t('firefly.half_year_budgets')" :budgetLimits=budgetLimits.half_year
+      <div v-if="budgetLimits.half_year.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.half_year :title="$t('firefly.half_year_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.yearly.length > 0">
-        <BudgetListGroup :title="$t('firefly.yearly_budgets')" :budgetLimits=budgetLimits.yearly
+      <div v-if="budgetLimits.yearly.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.yearly :title="$t('firefly.yearly_budgets')"
         />
       </div>
-      <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12" v-if="budgetLimits.other.length > 0 || rawBudgets.length > 0">
-        <BudgetListGroup :title="$t('firefly.other_budgets')" :budgetLimits=budgetLimits.other :budgets="rawBudgets"
+      <div v-if="budgetLimits.other.length > 0 || rawBudgets.length > 0" class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <BudgetListGroup :budgetLimits=budgetLimits.other :budgets="rawBudgets" :title="$t('firefly.other_budgets')"
         />
       </div>
     </div>
-
+    <div v-if="loading && !error" class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="text-center">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import BudgetListGroup from "./BudgetListGroup";
+import {createNamespacedHelpers} from "vuex";
+
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
 export default {
   name: "MainBudgetList",
@@ -76,19 +89,59 @@ export default {
       budgets: {},
       rawBudgets: [],
       locale: 'en-US',
+      ready: false,
+      loading: true,
+      error: false
     }
   },
   created() {
+    this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
-    this.collectData();
+  },
+  watch: {
+    datesReady: function (value) {
+      if (true === value) {
+        this.getBudgets();
+      }
+    },
+    start: function () {
+      if (false === this.loading) {
+        this.getBudgets();
+      }
+    },
+    end: function () {
+      if (false === this.loading) {
+        this.getBudgets();
+      }
+    },
+  },
+  computed: {
+    ...mapGetters([
+                    'start',
+                    'end'
+                  ]),
+    'datesReady': function () {
+      return null !== this.start && null !== this.end && this.ready;
+    }
   },
   methods:
       {
-        collectData() {
-          this.getBudgets();
-        },
         getBudgets() {
-          axios.get('./api/v1/budgets?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+          this.budgets = {};
+          this.rawBudgets = [];
+          this.budgetLimits = {
+            daily: [],
+            weekly: [],
+            monthly: [],
+            quarterly: [],
+            half_year: [],
+            yearly: [],
+            other: [],
+          };
+          this.loading = true;
+          let startStr = this.start.toISOString().split('T')[0];
+          let endStr = this.end.toISOString().split('T')[0];
+          axios.get('./api/v1/budgets?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgets(response.data);
                     }
@@ -117,12 +170,13 @@ export default {
           }
           this.getBudgetLimits();
         },
-
-
         getBudgetLimits() {
-          axios.get('./api/v1/budgets/limits?start=' + window.sessionStart + '&end=' + window.sessionEnd)
+          let startStr = this.start.toISOString().split('T')[0];
+          let endStr = this.end.toISOString().split('T')[0];
+          axios.get('./api/v1/budget-limits?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgetLimits(response.data);
+                      this.loading = false;
                     }
               );
         },
@@ -174,53 +228,8 @@ export default {
 
               let period = data.data[key].attributes.period ?? 'other';
               this.budgetLimits[period].push(obj);
-
             }
           }
-
-
-          // // loop budgets (and do what?)
-          // for (let key in data.included) {
-          //   if (data.included.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          //     let obj = {
-          //       name: data.included[key].attributes.name,
-          //       id: data.included[key].id,
-          //     };
-          //     this.budgets[data.included[key].id] = obj;
-          //   }
-          // }
-
-          // loop budget limits:
-          // for (let key in data.data) {
-          //   if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          //     let pctGreen = 0;
-          //     let pctOrange = 0;
-          //     let pctRed = 0;
-          //
-
-          //
-          //     let obj = {
-          //       id: data.data[key].id,
-          //       amount: data.data[key].attributes.amount,
-          //       budget_id: data.data[key].attributes.budget_id,
-          //       currency_id: data.data[key].attributes.currency_id,
-          //       currency_code: data.data[key].attributes.currency_code,
-          //       period: data.data[key].attributes.period,
-          //       start: new Date(data.data[key].attributes.start),
-          //       end: new Date(data.data[key].attributes.end),
-          //       spent: data.data[key].attributes.spent,
-          //       pctGreen: pctGreen,
-          //       pctOrange: pctOrange,
-          //       pctRed: pctRed,
-          //     };
-          //
-          //
-          //
-          //     let period = data.data[key].attributes.period ?? 'other';
-          //     this.budgetLimits[period].push(obj);
-          //   }
-          // }
-
         },
         filterBudgets(budgetId, currencyId) {
           for (let key in this.rawBudgets) {

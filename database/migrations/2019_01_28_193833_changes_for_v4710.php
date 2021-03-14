@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangesForV4710
+ *
  * @codeCoverageIgnore
  */
 class ChangesForV4710 extends Migration
@@ -54,14 +55,14 @@ class ChangesForV4710 extends Migration
         if (!Schema::hasTable('transaction_groups')) {
             Schema::create(
                 'transaction_groups', static function (Blueprint $table) {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('user_id', false, true);
-                    $table->string('title', 1024)->nullable();
+                $table->increments('id');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->integer('user_id', false, true);
+                $table->string('title', 1024)->nullable();
 
-                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                }
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            }
             );
         }
 

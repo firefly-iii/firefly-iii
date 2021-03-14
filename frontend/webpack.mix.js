@@ -22,6 +22,7 @@ const mix = require('laravel-mix');
 require('laravel-mix-bundle-analyzer');
 
 
+
 // production
 mix.webpackConfig({
                       resolve: {
@@ -62,6 +63,7 @@ mix
 
     // transactions.
     .js('src/pages/transactions/create.js', 'public/js/transactions')
+    .js('src/pages/transactions/edit.js', 'public/js/transactions')
     // register page
     .js('src/pages/register.js', 'public/js')
 
@@ -73,6 +75,7 @@ mix
     // move to right dir
     .copy('public/js','../public/v2/js')
     .copy('fonts','../public/fonts')
+    .copy('images','../public/images')
     .copy('public/css','../public/v2/css')
 ;
 

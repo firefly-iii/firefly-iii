@@ -53,17 +53,17 @@ class TelemetryRepository implements TelemetryRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function paginated(int $pageSize): LengthAwarePaginator
+    public function deleteSubmitted(): void
     {
-        return Telemetry::orderBy('created_at', 'DESC')->paginate($pageSize);
+        // created_at is never NULL.
+        Telemetry::whereNotNull('submitted')->delete();
     }
 
     /**
      * @inheritDoc
      */
-    public function deleteSubmitted(): void
+    public function paginated(int $pageSize): LengthAwarePaginator
     {
-        // created_at is never NULL.
-        Telemetry::whereNotNull('submitted')->delete();
+        return Telemetry::orderBy('created_at', 'DESC')->paginate($pageSize);
     }
 }

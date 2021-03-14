@@ -225,6 +225,9 @@ return [
     'advanced_options_explain'                            => 'Algunas páginas de Firefly III tienen opciones avanzadas ocultas detrás de este botón. Esta página no tiene nada elegante, ¡pero echa un vistazo a las demás!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
+    // Webhooks
+    'webhooks'                                            => 'Webhooks',
+
     // API access
     'authorization_request'                               => 'Firefly III v:version Solicitud de autorización',
     'authorization_request_intro'                         => '<strong>:client</strong> está solicitando permiso para acceder a tu administración financiera. ¿Deseas autorizar a <strong>:client</strong> para acceder a estos registros?',
@@ -394,7 +397,7 @@ return [
     'stored_new_rule'                                     => 'Guardar la nueva regla con titulo ":title"',
     'deleted_rule'                                        => 'Regla eliminada con titulo ":title"',
     'store_new_rule'                                      => 'Crear regla',
-    'updated_rule'                                        => 'Regla eliminada con titulo ":title"',
+    'updated_rule'                                        => 'Regla actualizada con titulo ":title"',
     'default_rule_group_name'                             => 'Reglaspredeterminada',
     'default_rule_group_description'                      => 'Todas las reglas que no pertenecen a ningún grupo.',
     'default_rule_name'                                   => 'Su primera regla por defecto',
@@ -420,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplique la regla ":title" a una seleccion de sus transacciones',
     'apply_rule_selection_intro'                          => 'Las reglas como ":title" normalmente sólo se aplican a transacciones nuevas o actualizadas, pero puedes indicarle a Firefly III que las ejecute en una selección de transacciones existentes. Esto puede ser útil si has actualizado una regla y necesitas que los cambios se apliquen a todas tus otras transacciones.',
     'include_transactions_from_accounts'                  => 'Introduzca transacciones desde estas cuentas',
-    'applied_rule_selection'                              => 'Regla ":title" ha sido aplicada a su seleccion.',
+    'applied_rule_selection'                              => '{0} Ninguna transacción en su selección fue cambiada por la regla ":title".|[1] Una transacción en su selección fue cambiada por la regla ":title".|[2,*] :count transacciones en su selección fueron cambiadas por la regla ":title".',
     'execute'                                             => 'Ejecutar',
     'apply_rule_group_selection'                          => 'Aplique la regla de grupo ":title" a una selección de sus transacciones',
     'apply_rule_group_selection_intro'                    => 'Los grupos de reglas como ":title" normalmente sólo se aplican a transacciones nuevas o actualizadas, pero puedes indicarle a Firefly III que ejecute todas las reglas de este grupo en una selección de transacciones existentes. Esto puede ser útil si has actualizado un grupo de reglas y necesitas que los cambios se apliquen a todas tus otras transacciones.',
@@ -638,7 +641,7 @@ return [
     'pref_1Y'                                   => 'Un año',
     'pref_languages'                            => 'Idiomas',
     'pref_locale'                               => 'Configuración del idioma',
-    'pref_languages_help'                       => 'Firefly III apoya varios idiomas. cual usted prefiere?',
+    'pref_languages_help'                       => 'Firefly III soporta varios idiomas. ¿Cuál prefieres?',
     'pref_locale_help'                          => 'Firefly III le permite configurar otros ajustes locales, como cómo se da formato a las monedas, números y fechas. Las entradas en esta lista pueden no ser soportadas por su sistema. Firefly III no tiene los ajustes de fecha correctos para cada local; póngase en contacto conmigo para obtener mejoras.',
     'pref_locale_no_demo'                       => 'Esta característica no funcionará para el usuario demo.',
     'pref_custom_fiscal_year'                   => 'Configuraciónes del año fiscal',
@@ -675,7 +678,7 @@ return [
     'pref_optional_fields_transaction'          => 'Campos opcionales para transacciones',
     'pref_optional_fields_transaction_help'     => 'Por defecto no todos los campos se habilitan al crear una nueva transacción (debido al desorden). abajo usted puede habilitar estos campos si usted piensa que pueden ser útiles. por supuesto, cualquier campo que este desactivado, pero ya completado, sera visible a pesar de la configuración.',
     'optional_tj_date_fields'                   => 'Campos de fecha',
-    'optional_tj_business_fields'               => 'Campos comerciales',
+    'optional_tj_other_fields'                  => 'Other fields',
     'optional_tj_attachment_fields'             => 'Campos de datos adjuntos',
     'pref_optional_tj_interest_date'            => 'Fecha de intereses',
     'pref_optional_tj_book_date'                => 'Fecha del libro de registro',
@@ -686,12 +689,14 @@ return [
     'pref_optional_tj_internal_reference'       => 'Referencia interna',
     'pref_optional_tj_notes'                    => 'Notas',
     'pref_optional_tj_attachments'              => 'Adjuntos',
-    'pref_optional_tj_external_uri'             => 'URI externa',
+    'pref_optional_tj_external_uri'             => 'External URL',
+    'pref_optional_tj_location'                 => 'Location',
+    'pref_optional_tj_links'                    => 'Transaction links',
     'optional_field_meta_dates'                 => 'Fechas',
     'optional_field_meta_business'              => 'Negocios',
     'optional_field_attachments'                => 'Adjuntos',
     'optional_field_meta_data'                  => 'Opcional meta datos',
-    'external_uri'                              => 'URI externa',
+    'external_uri'                              => 'External URL',
 
     // profile:
     'delete_stuff_header'                       => 'Borrar datos',
@@ -970,7 +975,6 @@ return [
     'available_amount_indication'               => 'Utilice estas cantidades para obtener una indicación de lo que podría ser su presupuesto total.',
     'suggested'                                 => 'Sugerido',
     'average_between'                           => 'Promedio entre :start y :end',
-    'over_budget_warn'                          => '<i class="fa fa-money"></i> Generalmente usted presupone :amount por día. Esta vez es :over_amount por día. ¿Está seguro?',
     'transferred_in'                            => 'Transferido (dentro)',
     'transferred_away'                          => 'Transferido (fuera)',
     'auto_budget_none'                          => 'Sin autopresupuesto',
@@ -1019,6 +1023,7 @@ return [
     'list_inactive_rule'                        => 'regla inactiva',
     'bill_edit_rules'                           => 'Firefly III también intentará editar la regla relacionada con esta factura. Sin embargo, si ha editado esta regla usted mismo, Firefly III no cambiará nada.|Firefly III intentará editar también las :count reglas relacionadas con esta factura. Sin embargo, si ha editado estas reglas usted mismo, Firefly III no cambiará nada.',
     'bill_expected_date'                        => 'Se espera :date',
+    'bill_paid_on'                              => 'Pagado el {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Tiene :count cuenta inactiva (archivada), que puedes ver en esta página separada.|Tienes cuentas :count inactivas (archivadas), que puedes ver en esta página separada.',
@@ -1231,6 +1236,9 @@ return [
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">La transacción #{ID} ("{title}")</a> ha sido almacenada.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">La transacción #{ID}</a> ha sido guardada.',
     'transaction_updated_link'                  => '<a href="transactions/show/{ID}">La transacción #{ID}</a> ha sido actualizada.',
+    'first_split_decides'                       => 'The first split determines the value of this field',
+    'first_split_overrules_source'              => 'The first split may overrule the source account',
+    'first_split_overrules_destination'         => 'The first split may overrule the destination account',
 
     // new user:
     'welcome'                                   => 'Bienvenido a Firefly III!',
@@ -1269,6 +1277,9 @@ return [
     'per_day'                                   => 'Por dia',
     'left_to_spend_per_day'                     => 'Disponible para gasto diario',
     'bills_paid'                                => 'Facturas pagadas',
+    'custom_period'                             => 'Custom period',
+    'reset_to_current'                          => 'Reset to current period',
+    'select_period'                             => 'Select a period',
 
     // menu and titles, should be recycled as often as possible:
     'currency'                                  => 'Moneda',
@@ -1337,6 +1348,7 @@ return [
     'automation'                                => 'Automatización',
     'others'                                    => 'Otros',
     'classification'                            => 'Clasificación',
+    'store_transaction'                         => 'Guardar transacción',
 
     // reports:
     'report_default'                            => 'Reporte financiero por defecto entre :start y :end',
@@ -1479,7 +1491,7 @@ return [
     'stored_piggy_bank'                         => 'Crear hucha ":name"',
     'account_status'                            => 'Estado de cuenta',
     'left_for_piggy_banks'                      => 'Apartado para las huchas',
-    'sum_of_piggy_banks'                        => 'Total de huchas',
+    'sum_of_piggy_banks'                        => 'Total de las huchas',
     'saved_so_far'                              => 'Guardado hasta el momento',
     'left_to_save'                              => 'Disponible para ahorro',
     'suggested_amount'                          => 'Cantidad mensual sugerida para ahorrar',
