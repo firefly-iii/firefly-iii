@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute 必须小于 10,000,000',
     'active_url'                     => ':attribute 不是有效的网址',
     'after'                          => ':attribute 必须是一个在 :date 之后的日期',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute 只能包含英文字母',
     'alpha_dash'                     => ':attribute 只能包含英文字母、数字和减号',
     'alpha_num'                      => ':attribute 只能包含英文字母和数字',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',
     'withdrawal_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
     'deposit_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',

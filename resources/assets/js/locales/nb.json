@@ -30,7 +30,7 @@
         "category": "Kategori",
         "attachments": "Vedlegg",
         "notes": "Notater",
-        "external_uri": "External URI",
+        "external_uri": "External URL",
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
         "store_as_new": "Store as a new transaction instead of updating.",

@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute moet minder zijn dan 10.000.000',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',
+    'date_after'                     => 'Einddatum kan niet vóór startdatum vallen.',
     'alpha'                          => ':attribute mag alleen letters bevatten.',
     'alpha_dash'                     => ':attribute mag alleen letters, nummers, onderstreep(_) en strepen(-) bevatten.',
     'alpha_num'                      => ':attribute mag alleen letters en nummers bevatten.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
     'withdrawal_dest_need_data'   => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'withdrawal_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+
+    'generic_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
     'deposit_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'deposit_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',

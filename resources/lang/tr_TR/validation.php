@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute  10.000.000 den daha az olmalıdır',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute sadece harf içerebilir.',
     'alpha_dash'                     => ':attribute sadece harf, sayı ve kısa çizgi içerebilir.',
     'alpha_num'                      => ':attribute sadece harf ve sayı içerebilir.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

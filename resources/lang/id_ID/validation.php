@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute harus kurang dari 10,000,000',
     'active_url'                     => ':attribute bukan URL yang valid.',
     'after'                          => ':attribute harus tanggal setelah :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute hanya boleh berisi huruf.',
     'alpha_dash'                     => ':attribute hanya boleh berisi huruf, angka dan tanda hubung.',
     'alpha_num'                      => ':attribute hanya boleh berisi huruf dan angka.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

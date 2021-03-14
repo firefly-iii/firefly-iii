@@ -60,6 +60,7 @@ return [
     'less'                           => ':thuộc tính phải nhỏ hơn 10,000,000',
     'active_url'                     => 'Thuộc tính: không phải là một URL hợp lệ.',
     'after'                          => 'Thuộc tính: phải là một ngày sau: ngày.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => 'Thuộc tính: chỉ có thể chứa các chữ cái.',
     'alpha_dash'                     => 'Thuộc tính: chỉ có thể chứa chữ cái, số và dấu gạch ngang.',
     'alpha_num'                      => 'Thuộc tính: chỉ có thể chứa các chữ cái và số.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
     'withdrawal_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
     'withdrawal_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
     'deposit_source_bad_data'  => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để continuaCould không tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm IDe ":id" hoặc tên ":name".',

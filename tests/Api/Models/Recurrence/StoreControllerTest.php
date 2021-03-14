@@ -109,7 +109,7 @@ class StoreControllerTest extends TestCase
             ['weekly', (string)$faker->numberBetween(1, 7)],
             ['ndom', (string)$faker->numberBetween(1, 4) . ',' . $faker->numberBetween(1, 7)],
             ['monthly', (string)$faker->numberBetween(1, 31)],
-            ['yearly', $faker->date()],
+            ['yearly', $faker->dateTimeBetween('-1 year','now')->format('Y-m-d')],
         ];
         $set   = [];
 

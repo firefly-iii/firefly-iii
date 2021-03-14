@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute musi być mniejszy od 10 000 000',
     'active_url'                     => ':attribute nie jest prawidłowym adresem URL.',
     'after'                          => ':attribute musi być datą późniejszą od :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute może zawierać tylko litery.',
     'alpha_dash'                     => ':attribute może zawierać litery, cyfry oraz myślniki.',
     'alpha_num'                      => ':attribute może zawierać jedynie litery oraz cyfry.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'withdrawal_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'withdrawal_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'deposit_source_bad_data'  => 'Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',

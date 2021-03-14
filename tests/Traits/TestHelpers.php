@@ -131,13 +131,13 @@ trait TestHelpers
     {
         foreach ($opts as $i => $func) {
             if (array_key_exists($i, $set)) {
-                if(!is_array($set[$i])) {
+                if (!is_array($set[$i])) {
                     $set[$i] = $func();
                 }
-                if(is_array($set[$i])) {
-                    foreach($set[$i] as $ii => $lines) {
-                        foreach($lines as $iii => $value) {
-                            if(isset($opts[$i][$ii][$iii])) {
+                if (is_array($set[$i])) {
+                    foreach ($set[$i] as $ii => $lines) {
+                        foreach ($lines as $iii => $value) {
+                            if (isset($opts[$i][$ii][$iii])) {
                                 $set[$i][$ii][$iii] = $opts[$i][$ii][$iii]();
                             }
                         }
@@ -194,19 +194,26 @@ trait TestHelpers
             }
             // field in response was also in body:
             if (array_key_exists($rKey, $submissionArray)) {
-                if ($submissionArray[$rKey] !== $rValue) {
+                // comparison must be on array:
+                if (is_array($submissionArray[$rKey]) && is_array($rValue)) {
+                    $this->compareArray($originalAttributes, $rKey, $submissionArray[$rKey], $rValue);
+                }
 
-                    $message = sprintf(
-                        "Expected field '%s' to be %s but its %s\nOriginal: %s\nSubmission: %s\nResult: %s",
-                        $rKey,
-                        var_export($submissionArray[$rKey], true),
-                        var_export($rValue, true),
-                        $originalString,
-                        json_encode($submissionArray),
-                        $responseString
-                    );
-                    $this->assertTrue(false, $message);
-                    continue;
+                if (!is_array($submissionArray[$rKey]) && !is_array($rValue)) {
+                    if ($submissionArray[$rKey] !== $rValue) {
+
+                        $message = sprintf(
+                            "Expected field '%s' to be %s but its %s\nOriginal: %s\nSubmission: %s\nResult: %s",
+                            $rKey,
+                            var_export($submissionArray[$rKey], true),
+                            var_export($rValue, true),
+                            $originalString,
+                            json_encode($submissionArray),
+                            $responseString
+                        );
+                        $this->assertTrue(false, $message);
+                        continue;
+                    }
                 }
                 continue;
             }
@@ -282,13 +289,18 @@ trait TestHelpers
     }
 
     /**
-     * @param array $fullOriginal
+     * @param array  $fullOriginal
      * @param string $key
      * @param array  $original
      * @param array  $returned
      */
     protected function compareArray(array $fullOriginal, string $key, array $original, array $returned)
     {
+        // TODO this should be configurable but OK
+        if(in_array($key, ['transactions','repetitions'], true) && 0 === count($original) && 0 !== count($returned)) {
+            // accept this.
+            return;
+        }
         $ignore = ['id', 'created_at', 'updated_at'];
         foreach ($returned as $objectKey => $object) {
             // each object is a transaction, a rule trigger, a rule action, whatever.

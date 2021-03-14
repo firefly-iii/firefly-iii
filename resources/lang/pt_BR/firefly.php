@@ -1463,7 +1463,7 @@ return [
     'left_to_spend'                             => 'Restante para gastar',
     'earned'                                    => 'Ganho',
     'overspent'                                 => 'Gasto excedido',
-    'left'                                      => 'Esquerda',
+    'left'                                      => 'Restante',
     'max-amount'                                => 'Valor Máximo',
     'min-amount'                                => 'Valor mínimo',
     'journal-amount'                            => 'Valor atual da conta',
@@ -1792,7 +1792,7 @@ return [
     'box_budgeted_in_currency'           => 'Orçado (:currency)',
     'box_bill_paid_in_currency'          => 'Contas pagas (:currency)',
     'box_bill_unpaid_in_currency'        => 'Contas não pagas (:currency)',
-    'box_left_to_spend_in_currency'      => 'Valor para gastar (:currency)',
+    'box_left_to_spend_in_currency'      => 'Restante para gastar (:currency)',
     'box_net_worth_in_currency'          => 'Valor líquido (:currency)',
     'box_spend_per_day'                  => 'Restante para gastar por dia: :amount',
 

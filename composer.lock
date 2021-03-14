@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7294670d4c743796b6929563ab61451d",
+    "content-hash": "897bc804b3a43ff012021d9a363d9e53",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3267,16 +3267,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.5",
+            "version": "3.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "7c751ea006577e4c2e83326d90c8b1e8c11b8ede"
+                "reference": "906a5fafabe5e6ba51ef3dc65b2722a677908837"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/7c751ea006577e4c2e83326d90c8b1e8c11b8ede",
-                "reference": "7c751ea006577e4c2e83326d90c8b1e8c11b8ede",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/906a5fafabe5e6ba51ef3dc65b2722a677908837",
+                "reference": "906a5fafabe5e6ba51ef3dc65b2722a677908837",
                 "shasum": ""
             },
             "require": {
@@ -3358,7 +3358,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.5"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.6"
             },
             "funding": [
                 {
@@ -3374,7 +3374,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-12T16:18:16+00:00"
+            "time": "2021-03-10T13:58:31+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -8254,58 +8254,6 @@
             "time": "2020-07-09T08:09:16+00:00"
         },
         {
-            "name": "johnkary/phpunit-speedtrap",
-            "version": "v3.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/johnkary/phpunit-speedtrap.git",
-                "reference": "9ba81d42676da31366c85d3ff8c10a8352d02030"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/9ba81d42676da31366c85d3ff8c10a8352d02030",
-                "reference": "9ba81d42676da31366c85d3ff8c10a8352d02030",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1",
-                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JohnKary\\PHPUnit\\Listener\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "John Kary",
-                    "email": "john@johnkary.net"
-                }
-            ],
-            "description": "Find and report on slow tests in your PHPUnit test suite",
-            "homepage": "https://github.com/johnkary/phpunit-speedtrap",
-            "keywords": [
-                "phpunit",
-                "profile",
-                "slow"
-            ],
-            "support": {
-                "issues": "https://github.com/johnkary/phpunit-speedtrap/issues",
-                "source": "https://github.com/johnkary/phpunit-speedtrap/tree/v3.3.0"
-            },
-            "time": "2020-12-18T16:20:16+00:00"
-        },
-        {
             "name": "justinrainbow/json-schema",
             "version": "5.2.10",
             "source": {
@@ -9751,12 +9699,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "672ed7cb0191a12cf8b12b752c9ef74bb5d21cec"
+                "reference": "43a315341710475e88006a0e55864b348d3d781c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/672ed7cb0191a12cf8b12b752c9ef74bb5d21cec",
-                "reference": "672ed7cb0191a12cf8b12b752c9ef74bb5d21cec",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/43a315341710475e88006a0e55864b348d3d781c",
+                "reference": "43a315341710475e88006a0e55864b348d3d781c",
                 "shasum": ""
             },
             "conflict": {
@@ -9846,6 +9794,7 @@
                 "illuminate/database": "<6.20.14|>=7,<7.30.4|>=8,<8.24",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "illuminate/view": ">=7,<7.1.2",
+                "impresscms/impresscms": "<=1.4.2",
                 "ivankristianto/phpwhois": "<=4.3",
                 "james-heinrich/getid3": "<1.9.9",
                 "joomla/archive": "<1.1.10",
@@ -9921,7 +9870,7 @@
                 "sensiolabs/connect": "<4.2.3",
                 "serluck/phpwhois": "<=4.2.6",
                 "shopware/core": "<=6.3.4",
-                "shopware/platform": "<=6.3.5",
+                "shopware/platform": "<=6.3.5.1",
                 "shopware/shopware": "<5.6.9",
                 "silverstripe/admin": ">=1.0.3,<1.0.4|>=1.1,<1.1.1",
                 "silverstripe/assets": ">=1,<1.4.7|>=1.5,<1.5.2",
@@ -10073,7 +10022,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-11T18:09:51+00:00"
+            "time": "2021-03-13T00:05:05+00:00"
         },
         {
             "name": "sebastian/cli-parser",

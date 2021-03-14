@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute må være mindre enn 10,000,000',
     'active_url'                     => ':attribute er ikke en gyldig URL.',
     'after'                          => ':attribute må være en dato etter :date.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute kan kun inneholde bokstaver.',
     'alpha_dash'                     => ':attribute kan bare inneholde bokstaver, tall og bindestreker.',
     'alpha_num'                      => ':attribute kan bare inneholde bokstaver og tall.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
     'withdrawal_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
     'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',

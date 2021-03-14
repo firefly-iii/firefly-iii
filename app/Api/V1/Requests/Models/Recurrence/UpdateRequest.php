@@ -116,22 +116,25 @@ class UpdateRequest extends FormRequest
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
             $current = [];
-            if(array_key_exists('type', $repetition)) {
+            if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
 
-            if(array_key_exists('moment', $repetition)) {
+            if (array_key_exists('moment', $repetition)) {
                 $current['moment'] = (string)$repetition['moment'];
             }
 
-            if(array_key_exists('skip', $repetition)) {
+            if (array_key_exists('skip', $repetition)) {
                 $current['skip'] = (int)$repetition['skip'];
             }
 
-            if(array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int) $repetition['weekend'];
+            if (array_key_exists('weekend', $repetition)) {
+                $current['weekend'] = (int)$repetition['weekend'];
             }
             $return[] = $current;
+        }
+        if (0 === count($return)) {
+            return null;
         }
 
         return $return;
@@ -196,7 +199,7 @@ class UpdateRequest extends FormRequest
         $validator->after(
             function (Validator $validator) {
                 //$this->validateOneRecurrenceTransaction($validator);
-                $this->validateOneRepetitionUpdate($validator);
+                //$this->validateOneRepetitionUpdate($validator);
                 $this->validateRecurrenceRepetition($validator);
                 $this->validateRepetitionMoment($validator);
                 $this->validateForeignCurrencyInformation($validator);

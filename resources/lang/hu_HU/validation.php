@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute kisebbnek kell lennie 10,000,000-nél',
     'active_url'                     => ':attribute nem egy érvényes URL.',
     'after'                          => ':attribute egy :date utáni dátum kell legyen.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute csak betűket tartalmazhat.',
     'alpha_dash'                     => ':attribute csak számokat, betűket és kötőjeleket tartalmazhat.',
     'alpha_num'                      => ':attribute csak betűket és számokat tartalmazhat.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Nem található érvényes forrásszámla ":id" azonosító vagy ":name" név keresésekor.',
     'withdrawal_dest_need_data'   => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
     'withdrawal_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
     'deposit_source_bad_data'  => 'Nem található érvényes forrásszámla ":id" azonosító vagy ":name" név keresésekor.',

@@ -60,6 +60,7 @@ return [
     'less'                           => ':attribute muss kleiner als 10.000.000 sein',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
+    'date_after'                     => 'End date must be before start date.',
     'alpha'                          => ':attribute darf nur Buchstaben enthalten.',
     'alpha_dash'                     => ':attribute darf nur Buchstaben, Zahlen und Bindestrichen enthalten.',
     'alpha_num'                      => ':attribute darf nur Buchstaben und Zahlen enthalten.',
@@ -181,6 +182,8 @@ return [
     'withdrawal_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
     'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
+
+    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',

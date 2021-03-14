@@ -30,7 +30,7 @@
         "category": "Kategori",
         "attachments": "Bilagor",
         "notes": "Noteringar",
-        "external_uri": "Extern URI",
+        "external_uri": "External URL",
         "update_transaction": "Uppdatera transaktion",
         "after_update_create_another": "Efter uppdaterat, \u00e5terkom hit f\u00f6r att forts\u00e4tta redigera.",
         "store_as_new": "Spara en ny transaktion ist\u00e4llet f\u00f6r att uppdatera.",
