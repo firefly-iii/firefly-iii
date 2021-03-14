@@ -167,7 +167,7 @@ interface RuleRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool;
 
     /**
      * @param string $query

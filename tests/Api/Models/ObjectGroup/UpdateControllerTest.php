@@ -86,19 +86,20 @@ class UpdateControllerTest extends TestCase
         $faker = Factory::create();
         $set   = [
             'title' => [
-                'id'           => 1,
+                'id'           => 3,
                 'fields'       => [
                     'title' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],
             'order' => [
-                'id'           => 1,
+                'id'           => 3,
                 'fields'       => [
                     'order' => ['test_value' => $faker->numberBetween(1, 2)],
                 ],
                 'extra_ignore' => [],
             ],
+
         ];
 
         return $set;

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Api\Models\BudgetLimit;
+namespace Tests\Api\Models\Tag;
 
 
 use Faker\Factory;
@@ -57,7 +57,8 @@ class UpdateControllerTest extends TestCase
             'created_at',
             'updated_at',
         ];
-        $route  = route('api.v1.budgets.limits.update', [$submission['id'], $submission['bl_id']]);
+        $route  = route('api.v1.tags.update', [$submission['id']]);
+
         $this->updateAndCompare($route, $submission, $ignore);
     }
 
@@ -82,64 +83,38 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataSet(): array
     {
-        $faker           = Factory::create();
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $repeatFreqs     = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-        $rand            = rand(1, 4);
-
-        $autoBudgetTypes = ['reset', 'rollover'];
-        $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
-
-        $set = [
-            'currency_id'   => [
+        $faker = Factory::create();
+        $set   = [
+            'tag'         => [
                 'id'           => 1,
-                'bl_id'        => 1,
                 'fields'       => [
-                    'currency_id' => ['test_value' => (string)$rand],
-                ],
-                'extra_ignore' => ['currency_code','currency_name','currency_symbol'],
-            ],
-            'currency_code' => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'currency_code' => ['test_value' => $currencies[$rand]],
-                ],
-                'extra_ignore' => ['currency_id','currency_name','currency_symbol'],
-            ],
-            'start'         => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'end'           => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'end' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'amount'        => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
+                    'tag' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],
-
+            'date'        => [
+                'id'           => 1,
+                'fields'       => [
+                    'date' => ['test_value' => $faker->date()],
+                ],
+                'extra_ignore' => [],
+            ],
+            'description' => [
+                'id'           => 1,
+                'fields'       => [
+                    'description' => ['test_value' => join(' ', $faker->words(5))],
+                ],
+                'extra_ignore' => [],
+            ],
+            'location'    => [
+                'id'           => 1,
+                'fields'       => [
+                    'longitude'  => ['test_value' => $faker->longitude],
+                    'latitude'   => ['test_value' => $faker->latitude],
+                    'zoom_level' => ['test_value' => $faker->numberBetween(1, 6)],
+                ],
+                'extra_ignore' => [],
+            ],
         ];
 
         return $set;

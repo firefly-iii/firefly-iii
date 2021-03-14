@@ -145,14 +145,20 @@ interface RuleGroupRepositoryInterface
     /**
      * @return bool
      */
-    public function resetRuleGroupOrder(): bool;
+    public function resetOrder(): bool;
 
     /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool;
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool;
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @param int       $newOrder
+     */
+    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
 
     /**
      * @param string $query
@@ -181,14 +187,4 @@ interface RuleGroupRepositoryInterface
      * @return RuleGroup
      */
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
-
-    /**
-     *
-     * @param RuleGroup $ruleGroup
-     * @param int       $oldOrder
-     * @param int       $newOrder
-     *
-     * @return RuleGroup
-     */
-    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup;
 }

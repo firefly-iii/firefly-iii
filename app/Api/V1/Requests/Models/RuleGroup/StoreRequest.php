@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\RuleGroup;
 
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -46,15 +45,19 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $active = true;
-
+        $order  = 31337;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
+        }
+        if (null !== $this->get('order')) {
+            $order = $this->integer('order');
         }
 
         return [
             'title'       => $this->string('title'),
             'description' => $this->string('description'),
             'active'      => $active,
+            'order'       => $order,
         ];
     }
 

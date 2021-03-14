@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace Tests\Api\Models\BudgetLimit;
+namespace Tests\Api\Models\TransactionLink;
 
 
 use Faker\Factory;
@@ -57,7 +57,8 @@ class UpdateControllerTest extends TestCase
             'created_at',
             'updated_at',
         ];
-        $route  = route('api.v1.budgets.limits.update', [$submission['id'], $submission['bl_id']]);
+        $route  = route('api.v1.transaction_links.update', [$submission['id']]);
+
         $this->updateAndCompare($route, $submission, $ignore);
     }
 
@@ -82,64 +83,43 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataSet(): array
     {
-        $faker           = Factory::create();
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $repeatFreqs     = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-        $rand            = rand(1, 4);
-
-        $autoBudgetTypes = ['reset', 'rollover'];
-        $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
-
-        $set = [
-            'currency_id'   => [
+        $faker = Factory::create();
+        $set   = [
+            'link_type_id'           => [
                 'id'           => 1,
-                'bl_id'        => 1,
                 'fields'       => [
-                    'currency_id' => ['test_value' => (string)$rand],
+                    'link_type_id' => ['test_value' => (string)$faker->numberBetween(1,3)],
                 ],
-                'extra_ignore' => ['currency_code','currency_name','currency_symbol'],
+                'extra_ignore' => ['link_type_name'],
             ],
-            'currency_code' => [
+            'link_type_name'           => [
                 'id'           => 1,
-                'bl_id'        => 1,
                 'fields'       => [
-                    'currency_code' => ['test_value' => $currencies[$rand]],
+                    'link_type_name' => ['test_value' => 'Refund'],
                 ],
-                'extra_ignore' => ['currency_id','currency_name','currency_symbol'],
+                'extra_ignore' => ['link_type_id'],
             ],
-            'start'         => [
+            'inward_id'         => [
                 'id'           => 1,
-                'bl_id'        => 1,
                 'fields'       => [
-                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'end'           => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'end' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'amount'        => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
+                    'inward_id' => ['test_value' => (string)$faker->numberBetween(11,20)],
                 ],
                 'extra_ignore' => [],
             ],
-
+            'outward_id' => [
+                'id'           => 1,
+                'fields'       => [
+                    'outward_id' => ['test_value' => (string)$faker->numberBetween(11, 30)],
+                ],
+                'extra_ignore' => [],
+            ],
+            'notes'        => [
+                'id'           => 1,
+                'fields'       => [
+                    'notes' => ['test_value' => join(' ', $faker->words(5))],
+                ],
+                'extra_ignore' => [],
+            ],
         ];
 
         return $set;

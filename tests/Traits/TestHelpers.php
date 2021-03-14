@@ -132,6 +132,8 @@ trait TestHelpers
     {
         // get original values:
         $response = $this->get($route, ['Accept' => 'application/json']);
+        $status = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf(sprintf('%s failed with 404.', $route)));
         $response->assertStatus(200);
         $originalString     = $response->content();
         $originalArray      = json_decode($originalString, true, 512, JSON_THROW_ON_ERROR);

@@ -274,7 +274,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         ++$rule->order;
         $rule->save();
-        $this->resetRulesInGroupOrder($rule->ruleGroup);
+        $this->resetRuleOrder($rule->ruleGroup);
 
         return true;
     }
@@ -311,7 +311,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         --$rule->order;
         $rule->save();
-        $this->resetRulesInGroupOrder($rule->ruleGroup);
+        $this->resetRuleOrder($rule->ruleGroup);
 
         return true;
     }
@@ -365,7 +365,7 @@ class RuleRepository implements RuleRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $ruleGroup->rules()->withTrashed()->whereNotNull('deleted_at')->update(['order' => 0]);
 

@@ -107,6 +107,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool
     {
+        Log::debug(sprintf('Now in findLink(%d, %d)', $one->id, $two->id));
         $count         = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->count();
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 

@@ -99,7 +99,7 @@ class UpdateControllerTest extends TestCase
                 'fields'       => [
                     'account_id' => ['test_value' => (string)$faker->numberBetween(1, 3)],
                 ],
-                'extra_ignore' => ['account_name'],
+                'extra_ignore' => ['account_name','currency_id','currency_code'],
             ],
             'target_amount'      => [
                 'id'           => 1,

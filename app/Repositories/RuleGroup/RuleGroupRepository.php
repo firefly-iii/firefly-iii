@@ -89,9 +89,9 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         $ruleGroup->delete();
 
-        $this->resetRuleGroupOrder();
+        $this->resetOrder();
         if (null !== $moveTo) {
-            $this->resetRulesInGroupOrder($moveTo);
+            $this->resetRuleOrder($moveTo);
         }
 
         return true;
@@ -324,21 +324,25 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @return bool
      */
-    public function resetRuleGroupOrder(): bool
+    public function resetOrder(): bool
     {
-        $this->user->ruleGroups()->whereNotNull('deleted_at')->update(['order' => 0]);
+        $this->user->ruleGroups()->whereNotNull('deleted_at');
 
         $set   = $this->user
             ->ruleGroups()
-            ->orderBy('order', 'ASC')->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('title', 'DESC')
+            ->get();
         $count = 1;
         /** @var RuleGroup $entry */
         foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
+            if ($entry->order !== $count) {
+                $entry->order = $count;
+                $entry->save();
+            }
 
             // also update rules in group.
-            $this->resetRulesInGroupOrder($entry);
+            $this->resetRuleOrder($entry);
 
             ++$count;
         }
@@ -351,19 +355,21 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return bool
      */
-    public function resetRulesInGroupOrder(RuleGroup $ruleGroup): bool
+    public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
-        $ruleGroup->rules()->whereNotNull('deleted_at')->update(['order' => 0]);
-
         $set   = $ruleGroup->rules()
                            ->orderBy('order', 'ASC')
+                           ->orderBy('title', 'DESC')
                            ->orderBy('updated_at', 'DESC')
-                           ->get();
+                           ->get(['rules.*']);
         $count = 1;
         /** @var Rule $entry */
         foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
+            if ($entry->order !== $count) {
+                $entry->order = $count;
+                $entry->save();
+            }
+
             ++$count;
         }
 
@@ -400,19 +406,18 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function store(array $data): RuleGroup
     {
-        $order = $this->getHighestOrderRuleGroup();
-
         $newRuleGroup = new RuleGroup(
             [
                 'user_id'     => $this->user->id,
                 'title'       => $data['title'],
                 'description' => $data['description'],
-                'order'       => $order + 1,
+                'order'       => 31337,
                 'active'      => $data['active'],
             ]
         );
         $newRuleGroup->save();
-        $this->resetRuleGroupOrder();
+        $this->resetOrder();
+        $this->setOrder($newRuleGroup, $data['order']);
 
         return $newRuleGroup;
     }
@@ -437,11 +442,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         }
         // order
         if (array_key_exists('order', $data) && $ruleGroup->order !== $data['order']) {
-            $this->correctRuleGroupOrder();
-            $max = $this->maxOrder();
-            // TODO also for bills and accounts:
-            $data['order'] = $data['order'] > $max ? $max : $data['order'];
-            $ruleGroup     = $this->updateOrder($ruleGroup, $ruleGroup->order, $data['order']);
+            $this->resetOrder();
+            $this->setOrder($ruleGroup, (int)$data['order']);
         }
 
         $ruleGroup->save();
@@ -449,26 +451,30 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return $ruleGroup;
     }
 
+
     /**
      * @inheritDoc
      */
-    public function updateOrder(RuleGroup $ruleGroup, int $oldOrder, int $newOrder): RuleGroup
+    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
+        $oldOrder = (int)$ruleGroup->order;
+
         if ($newOrder > $oldOrder) {
-            $this->user->ruleGroups()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
+            $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)
                        ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->decrement('rule_groups.order', 1);
+                       ->decrement('order', 1);
             $ruleGroup->order = $newOrder;
+            Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
-        }
-        if ($newOrder < $oldOrder) {
-            $this->user->ruleGroups()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                       ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->increment('rule_groups.order', 1);
-            $ruleGroup->order = $newOrder;
-            $ruleGroup->save();
+
+            return;
         }
 
-        return $ruleGroup;
+        $this->user->ruleGroups()->where('rule_groups.order', '>=', $newOrder)->where('rule_groups.order', '<', $oldOrder)
+                   ->where('rule_groups.id', '!=', $ruleGroup->id)
+                   ->increment('order', 1);
+        $ruleGroup->order = $newOrder;
+        Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+        $ruleGroup->save();
     }
 }

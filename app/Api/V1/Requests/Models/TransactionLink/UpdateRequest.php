@@ -28,7 +28,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -94,7 +93,7 @@ class UpdateRequest extends FormRequest
     {
         /** @var TransactionJournalLink $existing */
         $existing = $this->route()->parameter('journalLink');
-        $data      = $validator->getData();
+        $data     = $validator->getData();
         /** @var LinkTypeRepositoryInterface $repository */
         $repository = app(LinkTypeRepositoryInterface::class);
         $repository->setUser(auth()->user());
@@ -107,7 +106,13 @@ class UpdateRequest extends FormRequest
         $outwardId = $data['outward_id'] ?? $existing->destination_id;
         $inward    = $journalRepos->findNull((int)$inwardId);
         $outward   = $journalRepos->findNull((int)$outwardId);
-        if($inward->id === $outward->id) {
+        if (null === $inward) {
+            $inward = $existing->source;
+        }
+        if (null === $outward) {
+            $outward = $existing->destination;
+        }
+        if ($inward->id === $outward->id) {
             $validator->errors()->add('inward_id', 'Inward ID must be different from outward ID.');
             $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
         }
@@ -115,14 +120,14 @@ class UpdateRequest extends FormRequest
         if (null === $inward) {
             $validator->errors()->add('inward_id', 'This is not a valid inward journal.');
         }
-        if(null === $outward) {
+        if (null === $outward) {
             $validator->errors()->add('inward_id', 'This is not a valid outward journal.');
         }
-        $inDB =$repository->findSpecificLink($existing->linkType, $inward, $outward);
-        if(null === $inDB) {
+        $inDB = $repository->findSpecificLink($existing->linkType, $inward, $outward);
+        if (null === $inDB) {
             return;
         }
-        if($inDB->id !== $existing->id) {
+        if ($inDB->id !== $existing->id) {
             $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
             $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
         }
