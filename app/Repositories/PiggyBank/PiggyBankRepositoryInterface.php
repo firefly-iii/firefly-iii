@@ -71,7 +71,7 @@ interface PiggyBankRepositoryInterface
     /**
      * Correct order of piggies in case of issues.
      */
-    public function correctOrder(): void;
+    public function resetOrder(): void;
 
     /**
      * Create a new event.
@@ -267,11 +267,11 @@ interface PiggyBankRepositoryInterface
      * Set specific piggy bank to specific order.
      *
      * @param PiggyBank $piggyBank
-     * @param int       $order
+     * @param int       $newOrder
      *
      * @return bool
      */
-    public function setOrder(PiggyBank $piggyBank, int $order): bool;
+    public function setOrder(PiggyBank $piggyBank, int $newOrder): bool;
 
     /**
      * @param User $user

@@ -43,16 +43,11 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $notes = null;
-        $all   = $this->all();
-        if (array_key_exists('notes', $all)) {
-            $notes = $this->nlString('notes');
-        }
-
-        return [
-            'name'  => $this->string('name'),
-            'notes' => $notes,
+        $fields = [
+            'name' => ['name', 'string'],
+            'notes' => ['notes', 'nlString']
         ];
+        return $this->getAllData($fields);
     }
 
     /**
@@ -65,7 +60,7 @@ class UpdateRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         return [
-            'name' => sprintf('required|between:1,100|uniqueObjectForUser:categories,name,%d', $category->id),
+            'name' => sprintf('between:1,100|uniqueObjectForUser:categories,name,%d', $category->id),
         ];
     }
 }

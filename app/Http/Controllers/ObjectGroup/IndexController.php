@@ -65,7 +65,7 @@ class IndexController extends Controller
     public function index()
     {
         $this->repository->deleteEmpty();
-        $this->repository->sort();
+        $this->repository->resetOrder();
         $subTitle     = (string) trans('firefly.object_groups_index');
         $objectGroups = $this->repository->get();
 

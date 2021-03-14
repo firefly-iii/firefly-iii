@@ -45,24 +45,19 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        // if the value isn't present, dont return it at all.
-        // TODO this should be the way to collect fields for all API things.
-        // TODO make sure piggy bank uses 'start_date' etc. until right up to DB update.
-        // TODO can we configure this and return it from config?
-
-        // TODO this is the way.
         $fields = [
-            'name'            => ['name', 'string'],
-            'account_id'      => ['account_id', 'integer'],
-            'targetamount'    => ['target_amount', 'string'],
-            'current_amount'  => ['current_amount', 'string'],
-            'startdate'       => ['start_date', 'date'],
-            'targetdate'      => ['target_date', 'string'],
-            'notes'           => ['notes', 'nlString'],
-            'order'           => ['order', 'integer'],
-            'object_group'    => ['object_group', 'string'],
-            'object_group_id' => ['object_group_id', 'integer'],
+            'name'               => ['name', 'string'],
+            'account_id'         => ['account_id', 'integer'],
+            'targetamount'       => ['target_amount', 'string'],
+            'current_amount'     => ['current_amount', 'string'],
+            'startdate'          => ['start_date', 'date'],
+            'targetdate'         => ['target_date', 'string'],
+            'notes'              => ['notes', 'nlString'],
+            'order'              => ['order', 'integer'],
+            'object_group_title' => ['object_group_title', 'string'],
+            'object_group_id'    => ['object_group_id', 'integer'],
         ];
+
         return $this->getAllData($fields);
     }
 

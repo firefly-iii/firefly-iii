@@ -78,7 +78,7 @@ class ShowController extends Controller
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of accounts. Count it and split it.
+        $this->repository->resetOrder();
         $collection   = $this->repository->get();
         $count        = $collection->count();
         $objectGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -108,6 +108,8 @@ class ShowController extends Controller
     public function show(ObjectGroup $objectGroup): JsonResponse
     {
         $manager = $this->getManager();
+        $this->repository->resetOrder();
+        $objectGroup->refresh();
 
         /** @var ObjectGroupTransformer $transformer */
         $transformer = app(ObjectGroupTransformer::class);

@@ -70,7 +70,7 @@ class UpdateController extends Controller
     {
         $data = $request->getUpdateData();
         $this->repository->update($objectGroup, $data);
-        $this->repository->sort();
+        $this->repository->resetOrder();
         $manager = $this->getManager();
 
         /** @var ObjectGroupTransformer $transformer */

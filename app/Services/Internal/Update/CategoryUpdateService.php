@@ -46,9 +46,6 @@ class CategoryUpdateService
      */
     public function __construct()
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
-        }
         if (auth()->check()) {
             $this->user = auth()->user();
         }
@@ -71,13 +68,15 @@ class CategoryUpdateService
     public function update(Category $category, array $data): Category
     {
         $oldName        = $category->name;
-        $category->name = $data['name'];
-        $category->save();
+        if(array_key_exists('name', $data)) {
+            $category->name = $data['name'];
+            $category->save();
+            // update triggers and actions
+            $this->updateRuleTriggers($oldName, $data['name']);
+            $this->updateRuleActions($oldName, $data['name']);
+            $this->updateRecurrences($oldName, $data['name']);
+        }
 
-        // update triggers and actions
-        $this->updateRuleTriggers($oldName, $data['name']);
-        $this->updateRuleActions($oldName, $data['name']);
-        $this->updateRecurrences($oldName, $data['name']);
         $this->updateNotes($category, $data);
 
         return $category;

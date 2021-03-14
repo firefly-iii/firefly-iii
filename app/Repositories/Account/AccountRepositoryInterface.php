@@ -290,11 +290,6 @@ interface AccountRepositoryInterface
     public function setUser(User $user);
 
     /**
-     * Sort accounts (and fix the sort if necessary).
-     */
-    public function sortAccounts(): void;
-
-    /**
      * @param array $data
      *
      * @return Account

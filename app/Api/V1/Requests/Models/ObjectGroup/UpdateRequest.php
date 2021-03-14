@@ -42,10 +42,11 @@ class UpdateRequest extends FormRequest
      */
     public function getUpdateData(): array
     {
-        return [
-            'title' => $this->string('title'),
-            'order' => $this->integer('order'),
+        $fields = [
+            'title' => ['title', 'string'],
+            'order' =>['order', 'integer']
         ];
+        return $this->getAllData($fields);
     }
 
     /**

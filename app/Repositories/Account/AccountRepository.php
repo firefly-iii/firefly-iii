@@ -245,7 +245,10 @@ class AccountRepository implements AccountRepositoryInterface
         if (!empty($types)) {
             $query->accountTypeIn($types);
         }
-        $query->orderBy('accounts.order', 'ASC');
+        $res = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        if (0 !== count($res)) {
+            $query->orderBy('accounts.order', 'ASC');
+        }
         $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
 
@@ -590,10 +593,10 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $sets = [
             [AccountType::DEFAULT, AccountType::ASSET],
-            [AccountType::EXPENSE, AccountType::BENEFICIARY],
-            [AccountType::REVENUE],
+            //[AccountType::EXPENSE, AccountType::BENEFICIARY],
+            //[AccountType::REVENUE],
             [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
-            [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
+            //[AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
         ];
         foreach ($sets as $set) {
             Log::debug('Now in resetAccountOrder', $set);
@@ -686,53 +689,6 @@ class AccountRepository implements AccountRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sortAccounts(): void
-    {
-        // sort assets
-        $list  = $this->user->accounts()
-                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                            ->where('account_types.type', AccountType::ASSET)
-                            ->orderBy('accounts.order', 'ASC')
-                            ->orderBy('accounts.name', 'ASC')
-                            ->orderBy('accounts.created_at', 'ASC')->get(['accounts.id', 'accounts.order']);
-        $index = 1;
-        /** @var Account $account */
-        foreach ($list as $account) {
-            if ($account->order !== $index) {
-                $account->order = $index;
-                $account->save();
-            }
-            $index++;
-        }
-
-        // sort liabilities
-        $list  = $this->user->accounts()
-                            ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                            ->whereIn('account_types.type', [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
-                            ->orderBy('accounts.order', 'ASC')
-                            ->orderBy('accounts.name', 'ASC')
-                            ->orderBy('accounts.created_at', 'ASC')->get(['accounts.id', 'accounts.order']);
-        $index = 1;
-        /** @var Account $account */
-        foreach ($list as $account) {
-            if ($account->order !== $index) {
-                $account->order = $index;
-                $account->save();
-            }
-            $index++;
-        }
-
-        // set the rest to zero:
-        $this->user->accounts()
-                   ->leftJoin('account_types', 'accounts.account_type_id', 'account_types.id')
-                   ->whereNotIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
-                   ->update(['order' => '0']);
-
     }
 
     /**

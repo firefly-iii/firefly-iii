@@ -38,6 +38,11 @@ interface ObjectGroupRepositoryInterface
     public function deleteAll(): void;
 
     /**
+     * Delete all.
+     */
+    public function resetOrder(): void;
+
+    /**
      * Delete empty ones.
      */
     public function deleteEmpty(): void;
@@ -76,16 +81,11 @@ interface ObjectGroupRepositoryInterface
 
     /**
      * @param ObjectGroup $objectGroup
-     * @param int         $index
+     * @param int         $newOrder
      *
      * @return ObjectGroup
      */
-    public function setOrder(ObjectGroup $objectGroup, int $index): ObjectGroup;
-
-    /**
-     * Sort
-     */
-    public function sort(): void;
+    public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
 
     /**
      * @param ObjectGroup $objectGroup

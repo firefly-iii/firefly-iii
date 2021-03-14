@@ -50,6 +50,7 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      * emptyDataProvider / storeDataProvider
+     *
      * @dataProvider storeDataProvider
      */
     public function testStore(array $submission): void
@@ -82,7 +83,7 @@ class StoreControllerTest extends TestCase
             'name'           => function () {
                 $faker = Factory::create();
 
-                return $faker->name;
+                return $faker->uuid;
             },
             'iban'           => function () {
                 $faker = Factory::create();
@@ -104,15 +105,14 @@ class StoreControllerTest extends TestCase
      */
     private function optionalSets(): array
     {
-        $faker = Factory::create();
-        $currencies      = [
+        $faker      = Factory::create();
+        $currencies = [
             1 => 'EUR',
             2 => 'HUF',
             3 => 'GBP',
             4 => 'UAH',
         ];
-        $rand            = rand(1, 4);
-        // rand
+        $rand       = rand(1, 4);
 
 
         return [
@@ -192,7 +192,7 @@ class StoreControllerTest extends TestCase
         return [
             'asset'     => [
                 'parameters' => [],
-                'fields' => [
+                'fields'     => [
                     'name'         => $faker->uuid,
                     'type'         => 'asset',
                     'account_role' => $this->randomAccountRole(),
@@ -200,14 +200,14 @@ class StoreControllerTest extends TestCase
             ],
             'expense'   => [
                 'parameters' => [],
-                'fields' => [
+                'fields'     => [
                     'name' => $faker->uuid,
                     'type' => 'expense',
                 ],
             ],
             'liability' => [
                 'parameters' => [],
-                'fields' => [
+                'fields'     => [
                     'name'                 => $faker->uuid,
                     'type'                 => 'liabilities',
                     'liability_type'       => $this->randomLiabilityType(),
@@ -215,6 +215,9 @@ class StoreControllerTest extends TestCase
                     'liability_start_date' => $this->getRandomDateString(),
                     'interest'             => $this->getRandomPercentage(),
                     'interest_period'      => $this->getRandomInterestPeriod(),
+                ],
+                'ignore'     => [
+                    'opening_balance', 'opening_balance_date',
                 ],
             ],
             'cc'        => [

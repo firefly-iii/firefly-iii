@@ -42,13 +42,21 @@ trait TestHelpers
     protected function genericDataProvider(array $minimalSets, array $startOptionalSets, array $regenConfig): array
     {
         $submissions = [];
-        foreach ($minimalSets as $set) {
+        /**
+         * @var string $name
+         * @var array  $set
+         */
+        foreach ($minimalSets as $name => $set) {
             $body = [];
             foreach ($set['fields'] as $field => $value) {
                 $body[$field] = $value;
             }
             // minimal set is part of all submissions:
-            $submissions[] = [['fields' => $body, 'parameters' => $set['parameters'] ?? []]];
+            $submissions[] = [[
+                                  'fields'     => $body,
+                                  'parameters' => $set['parameters'] ?? [],
+                                  'ignore'     => $set['ignore'] ?? [],
+                              ]];
 
             // then loop and add fields:
             $optionalSets = $startOptionalSets;
@@ -59,6 +67,7 @@ trait TestHelpers
                 // expand body with N extra fields:
                 foreach ($combinations as $extraFields) {
                     $second = $body;
+                    $ignore = $set['ignore'] ?? []; // unused atm.
                     foreach ($extraFields as $extraField) {
                         // now loop optional sets on $extraField and add whatever the config is:
                         foreach ($optionalSets[$extraField]['fields'] as $newField => $newValue) {
@@ -67,7 +76,11 @@ trait TestHelpers
                     }
 
                     $second        = $this->regenerateValues($second, $regenConfig);
-                    $submissions[] = [['fields' => $second, 'parameters' => $set['parameters'] ?? []]];
+                    $submissions[] = [[
+                                          'fields'     => $second,
+                                          'parameters' => $set['parameters'] ?? [],
+                                          'ignore'     => $ignore,
+                                      ]];
                 }
             }
             unset($second);
@@ -202,11 +215,11 @@ trait TestHelpers
      * @param string $route
      * @param array  $content
      */
-    protected function storeAndCompare(string $route, array $content, ?array $ignore = null): void
+    protected function storeAndCompare(string $route, array $content): void
     {
-        $ignore     = $ignore ?? [];
         $submission = $content['fields'];
         $parameters = $content['parameters'];
+        $ignore     = $content['ignore'];
         // submit!
         $response     = $this->post(route($route, $parameters), $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
@@ -218,13 +231,7 @@ trait TestHelpers
 
         // compare results:
         foreach ($responseJson['data']['attributes'] as $returnName => $returnValue) {
-            if (in_array($returnName, $ignore)) {
-                Log::debug(sprintf('Ignore value of "%s".', $returnName));
-                continue;
-            }
-
-
-            if (array_key_exists($returnName, $submission)) {
+            if (array_key_exists($returnName, $submission) && !in_array($returnName, $ignore, true)) {
                 // TODO still based on account routine:
                 if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {
                     continue;
@@ -251,9 +258,9 @@ trait TestHelpers
      */
     protected function ignoreCombination(string $area, string $left, string $right): bool
     {
-        if ('api.v1.attachments.store' === $area) {
+        if ('api.v1.accounts.store' === $area) {
             if ('expense' === $left
-                && in_array($right, ['virtual_balance', 'opening_balance', 'opening_balance_date'])) {
+                && in_array($right, ['order', 'virtual_balance', 'opening_balance', 'opening_balance_date'])) {
                 return true;
             }
         }

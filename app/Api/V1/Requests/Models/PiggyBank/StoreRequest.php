@@ -43,17 +43,24 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'               => $this->string('name'),
-            'account_id'         => $this->integer('account_id'),
-            'targetamount'       => $this->string('target_amount'),
-            'current_amount'     => $this->string('current_amount'),
-            'startdate'          => $this->date('start_date'),
-            'targetdate'         => $this->date('target_date'),
-            'notes'              => $this->nlString('notes'),
-            'object_group_id'    => $this->integer('object_group_id'),
-            'object_group_title' => $this->string('object_group_title'),
+        $fields = [
+            'order' => ['order', 'integer'],
         ];
+        $data   = $this->getAllData($fields);
+
+
+        $data['name']               = $this->string('name');
+        $data['account_id']         = $this->integer('account_id');
+        $data['targetamount']       = $this->string('target_amount');
+        $data['current_amount']     = $this->string('current_amount');
+        $data['startdate']          = $this->date('start_date');
+        $data['targetdate']         = $this->date('target_date');
+        $data['notes']              = $this->nlString('notes');
+        $data['object_group_id']    = $this->integer('object_group_id');
+        $data['object_group_title'] = $this->string('object_group_title');
+
+        return $data;
+
     }
 
     /**
