@@ -81,11 +81,6 @@ class StoreControllerTest extends TestCase
         $minimalSets  = $this->minimalSets();
         $optionalSets = $this->optionalSets();
         $regenConfig  = [
-            'title'        => function () {
-                $faker = Factory::create();
-
-                return $faker->uuid;
-            },
             'transactions' => [
                 [
                     'description' => function () {
@@ -118,7 +113,6 @@ class StoreControllerTest extends TestCase
             $set[] = [
                 'parameters' => [],
                 'fields'     => [
-                    // not even required but OK.
                     'error_if_duplicate_hash' => $faker->boolean,
                     'transactions'            => [
                         [
@@ -144,24 +138,77 @@ class StoreControllerTest extends TestCase
     private function optionalSets(): array
     {
         $faker = Factory::create();
-
-        return [
-            'title'  => [
+        $set   = [
+            'transactions_currency_id'   => [
                 'fields' => [
-                    'title' => $faker->uuid,
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            'currency_id' => $faker->numberBetween(1, 1),
+                        ],
+                    ],
                 ],
             ],
-            'order'  => [
+            'transactions_currency_code' => [
                 'fields' => [
-                    'order' => $faker->numberBetween(1, 2),
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            'currency_code' => $faker->randomElement(['EUR']),
+                        ],
+                    ],
                 ],
             ],
-            'active' => [
+            // category id
+            'category_id'                => [
                 'fields' => [
-                    'active' => $faker->boolean,
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            'category_id' => '1',
+                        ],
+                    ],
+                ],
+            ],
+            // reconciled
+            'reconciled'                 => [
+                'fields' => [
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            'reconciled' => $faker->boolean,
+                        ],
+                    ],
+                ],
+            ],
+            // tags
+            'tags'                       => [
+                'fields' => [
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            'tags' => ['a', 'b', 'c'],
+                        ],
+                    ],
                 ],
             ],
         ];
+        $extra = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
+                  'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
+        foreach ($extra as $key) {
+            $set[$key] = [
+                'fields' => [
+                    'transactions' => [
+                        // first entry, set field:
+                        [
+                            $key => $faker->uuid,
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $set;
     }
 
 }

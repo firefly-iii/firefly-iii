@@ -267,7 +267,7 @@ trait TestHelpers
                 }
                 // check if is array, if so we need something smart:
                 if (is_array($returnValue) && is_array($submission[$returnName])) {
-                    $this->compareArray($returnName, $submission[$returnName], $returnValue);
+                    $this->compareArray($submission, $returnName, $submission[$returnName], $returnValue);
                 }
                 if (!is_array($returnValue) && !is_array($submission[$returnName])) {
                     $message = sprintf(
@@ -282,11 +282,12 @@ trait TestHelpers
     }
 
     /**
+     * @param array $fullOriginal
      * @param string $key
      * @param array  $original
      * @param array  $returned
      */
-    protected function compareArray(string $key, array $original, array $returned)
+    protected function compareArray(array $fullOriginal, string $key, array $original, array $returned)
     {
         $ignore = ['id', 'created_at', 'updated_at'];
         foreach ($returned as $objectKey => $object) {
@@ -303,8 +304,10 @@ trait TestHelpers
                 }
                 if (array_key_exists($returnKey, $original[$objectKey])) {
                     $message = sprintf(
-                        'Sub: sub-array "%s" returned value %s does not match sent X value %s.',
-                        $key, var_export($returnValue, true), var_export($original[$objectKey][$returnKey], true)
+                        "Sub-array '%s' returned value %s does not match sent value %s.\n%s\n%s",
+                        $key, var_export($returnValue, true), var_export($original[$objectKey][$returnKey], true),
+                        json_encode($fullOriginal),
+                        json_encode($returned),
                     );
                     $this->assertEquals($original[$objectKey][$returnKey], $returnValue, $message);
                 }
