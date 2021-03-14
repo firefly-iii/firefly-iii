@@ -190,6 +190,19 @@ interface RuleRepositoryInterface
     public function store(array $data): Rule;
 
     /**
+     * @param Rule $rule
+     * @param int  $newOrder
+     */
+    public function setOrder(Rule $rule, int $newOrder): void;
+
+    /**
+     * @param RuleGroup $ruleGroup
+     *
+     * @return int
+     */
+    public function maxOrder(RuleGroup $ruleGroup): int;
+
+    /**
      * @param Rule  $rule
      * @param array $values
      *

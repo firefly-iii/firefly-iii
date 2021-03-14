@@ -43,13 +43,13 @@ trait TestHelpers
     {
         $submissions = [];
         /**
-         * @var string $name
+         * @var string $i
          * @var array  $set
          */
-        foreach ($minimalSets as $name => $set) {
+        foreach ($minimalSets as $i => $set) {
             $body = [];
-            foreach ($set['fields'] as $field => $value) {
-                $body[$field] = $value;
+            foreach ($set['fields'] as $ii => $value) {
+                $body[$ii] = $value;
             }
             // minimal set is part of all submissions:
             $submissions[] = [[
@@ -62,16 +62,32 @@ trait TestHelpers
             $optionalSets = $startOptionalSets;
             $keys         = array_keys($optionalSets);
             $count        = count($keys) > self::MAX_ITERATIONS ? self::MAX_ITERATIONS : count($keys);
-            for ($i = 1; $i <= $count; $i++) {
-                $combinations = $this->combinationsOf($i, $keys);
+            for ($iii = 1; $iii <= $count; $iii++) {
+                $combinations = $this->combinationsOf($iii, $keys);
                 // expand body with N extra fields:
-                foreach ($combinations as $extraFields) {
+                foreach ($combinations as $iv => $extraFields) {
                     $second = $body;
                     $ignore = $set['ignore'] ?? []; // unused atm.
-                    foreach ($extraFields as $extraField) {
+                    foreach ($extraFields as $v => $extraField) {
                         // now loop optional sets on $extraField and add whatever the config is:
-                        foreach ($optionalSets[$extraField]['fields'] as $newField => $newValue) {
-                            $second[$newField] = $newValue;
+                        foreach ($optionalSets[$extraField]['fields'] as $vi => $newValue) {
+                            // if the newValue is an array, we must merge it with whatever may
+                            // or may not already be there. Its the optional field for one of the
+                            // (maybe existing?) fields:
+                            if (is_array($newValue) && array_key_exists($vi, $second) && is_array($second[$vi])) {
+                                // loop $second[$vi] and merge it with whatever is in $newValue[$someIndex]
+                                foreach ($second[$vi] as $vii => $iiValue) {
+                                    $second[$vi][$vii] = $iiValue + $newValue[$vii];
+                                }
+                            }
+                            if (!is_array($newValue)) {
+                                $second[$vi] = $newValue;
+                            }
+                        }
+                        if (array_key_exists('remove_fields', $optionalSets[$extraField])) {
+                            foreach ($optionalSets[$extraField]['remove_fields'] as $removed) {
+                                unset($second[$removed]);
+                            }
                         }
                     }
 
@@ -113,9 +129,20 @@ trait TestHelpers
      */
     protected function regenerateValues($set, $opts): array
     {
-        foreach ($opts as $key => $func) {
-            if (array_key_exists($key, $set)) {
-                $set[$key] = $func();
+        foreach ($opts as $i => $func) {
+            if (array_key_exists($i, $set)) {
+                if(!is_array($set[$i])) {
+                    $set[$i] = $func();
+                }
+                if(is_array($set[$i])) {
+                    foreach($set[$i] as $ii => $lines) {
+                        foreach($lines as $iii => $value) {
+                            if(isset($opts[$i][$ii][$iii])) {
+                                $set[$i][$ii][$iii] = $opts[$i][$ii][$iii]();
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -132,7 +159,7 @@ trait TestHelpers
     {
         // get original values:
         $response = $this->get($route, ['Accept' => 'application/json']);
-        $status = $response->getStatusCode();
+        $status   = $response->getStatusCode();
         $this->assertEquals($status, 200, sprintf(sprintf('%s failed with 404.', $route)));
         $response->assertStatus(200);
         $originalString     = $response->content();
@@ -238,13 +265,49 @@ trait TestHelpers
                 if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {
                     continue;
                 }
+                // check if is array, if so we need something smart:
+                if (is_array($returnValue) && is_array($submission[$returnName])) {
+                    $this->compareArray($returnName, $submission[$returnName], $returnValue);
+                }
+                if (!is_array($returnValue) && !is_array($submission[$returnName])) {
+                    $message = sprintf(
+                        "Main: Return value '%s' of key '%s' does not match submitted value '%s'.\n%s\n%s", $returnValue, $returnName, $submission[$returnName],
+                        json_encode($submission), $responseBody
+                    );
+                    $this->assertEquals($returnValue, $submission[$returnName], $message);
+                }
 
-                $message = sprintf(
-                    "Return value '%s' of key '%s' does not match submitted value '%s'.\n%s\n%s", $returnValue, $returnName, $submission[$returnName],
-                    json_encode($submission), $responseBody
-                );
-                $this->assertEquals($returnValue, $submission[$returnName], $message);
+            }
+        }
+    }
 
+    /**
+     * @param string $key
+     * @param array  $original
+     * @param array  $returned
+     */
+    protected function compareArray(string $key, array $original, array $returned)
+    {
+        $ignore = ['id', 'created_at', 'updated_at'];
+        foreach ($returned as $objectKey => $object) {
+            // each object is a transaction, a rule trigger, a rule action, whatever.
+            // assume the original also contains this key:
+            if (!array_key_exists($objectKey, $original)) {
+                $message = sprintf('Sub: Original array "%s" does not have returned key %d.', $key, $objectKey);
+                $this->assertTrue(false, $message);
+            }
+
+            foreach ($object as $returnKey => $returnValue) {
+                if (in_array($returnKey, $ignore, true)) {
+                    continue;
+                }
+                if (array_key_exists($returnKey, $original[$objectKey])) {
+                    $message = sprintf(
+                        'Sub: sub-array "%s" returned value %s does not match sent X value %s.',
+                        $key, var_export($returnValue, true), var_export($original[$objectKey][$returnKey], true)
+                    );
+                    $this->assertEquals($original[$objectKey][$returnKey], $returnValue, $message);
+                }
             }
         }
     }

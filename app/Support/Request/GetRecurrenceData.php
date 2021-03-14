@@ -33,31 +33,58 @@ trait GetRecurrenceData
      *
      * @return array
      */
-    protected function getSingleRecurrenceData(array $transaction): array
+    protected function getSingleTransactionData(array $transaction): array
     {
-        return [
-            'amount'                => $transaction['amount'],
-            'currency_id'           => isset($transaction['currency_id']) ? (int) $transaction['currency_id'] : null,
-            'currency_code'         => $transaction['currency_code'] ?? null,
-            'foreign_amount'        => $transaction['foreign_amount'] ?? null,
-            'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int) $transaction['foreign_currency_id'] : null,
-            'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-            'source_id'             => isset($transaction['source_id']) ? (int) $transaction['source_id'] : null,
-            'source_name'           => isset($transaction['source_name']) ? (string) $transaction['source_name'] : null,
-            'destination_id'        => isset($transaction['destination_id']) ? (int) $transaction['destination_id'] : null,
-            'destination_name'      => isset($transaction['destination_name']) ? (string) $transaction['destination_name'] : null,
-            'description'           => $transaction['description'],
-            'type'                  => $this->string('type'),
+        $return = [];
 
-            // new and updated fields:
-            'piggy_bank_id'         => isset($transaction['piggy_bank_id']) ? (int) $transaction['piggy_bank_id'] : null,
-            'piggy_bank_name'       => $transaction['piggy_bank_name'] ?? null,
-            'tags'                  => $transaction['tags'] ?? [],
-            'budget_id'             => isset($transaction['budget_id']) ? (int) $transaction['budget_id'] : null,
-            'budget_name'           => $transaction['budget_name'] ?? null,
-            'category_id'           => isset($transaction['category_id']) ? (int) $transaction['category_id'] : null,
-            'category_name'         => $transaction['category_name'] ?? null,
-        ];
+        // amount + currency
+        if (array_key_exists('amount', $transaction)) {
+            $return['amount'] = $transaction['amount'];
+        }
+        if (array_key_exists('currency_id', $transaction)) {
+            $return['currency_id'] = (int)$transaction['currency_id'];
+        }
+        if (array_key_exists('currency_code', $transaction)) {
+            $return['currency_code'] = $transaction['currency_code'];
+        }
+
+        // foreign amount + currency
+        if (array_key_exists('foreign_amount', $transaction)) {
+            $return['foreign_amount'] = $transaction['foreign_amount'];
+        }
+        if (array_key_exists('foreign_currency_id', $transaction)) {
+            $return['foreign_currency_id'] = (int)$transaction['foreign_currency_id'];
+        }
+        if (array_key_exists('foreign_currency_code', $transaction)) {
+            $return['foreign_currency_code'] = $transaction['foreign_currency_code'];
+        }
+        // source + dest
+        if (array_key_exists('source_id', $transaction)) {
+            $return['source_id'] = (int)$transaction['source_id'];
+        }
+        if (array_key_exists('destination_id', $transaction)) {
+            $return['destination_id'] = (int)$transaction['destination_id'];
+        }
+        // description
+        if (array_key_exists('description', $transaction)) {
+            $return['description'] = $transaction['description'];
+        }
+
+        if (array_key_exists('piggy_bank_id', $transaction)) {
+            $return['piggy_bank_id'] = (int)$transaction['piggy_bank_id'];
+        }
+
+        if (array_key_exists('tags', $transaction)) {
+            $return['tags'] = $transaction['tags'];
+        }
+        if (array_key_exists('budget_id', $transaction)) {
+            $return['budget_id'] = (int)$transaction['budget_id'];
+        }
+        if (array_key_exists('category_id', $transaction)) {
+            $return['category_id'] = (int)$transaction['category_id'];
+        }
+
+        return $return;
     }
 
 }

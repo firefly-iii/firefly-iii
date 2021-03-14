@@ -28,9 +28,11 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class RuleRepository.
@@ -367,19 +369,9 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
-        $ruleGroup->rules()->withTrashed()->whereNotNull('deleted_at')->update(['order' => 0]);
-
-        $set   = $ruleGroup->rules()
-                           ->orderBy('order', 'ASC')
-                           ->orderBy('updated_at', 'DESC')
-                           ->get();
-        $count = 1;
-        /** @var Rule $entry */
-        foreach ($set as $entry) {
-            $entry->order = $count;
-            $entry->save();
-            ++$count;
-        }
+        $groupRepository = app(RuleGroupRepositoryInterface::class);
+        $groupRepository->setUser($ruleGroup->user);
+        $groupRepository->resetRuleOrder($ruleGroup);
 
         return true;
     }
@@ -407,6 +399,43 @@ class RuleRepository implements RuleRepositoryInterface
         $this->user = $user;
     }
 
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(Rule $rule, int $newOrder): void
+    {
+        $oldOrder = (int)$rule->order;
+        $groupId  = (int)$rule->rule_group_id;
+        $maxOrder = $this->maxOrder($rule->ruleGroup);
+        $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
+        Log::debug(sprintf('New order will be %d', $newOrder));
+
+        if ($newOrder > $oldOrder) {
+            $this->user->rules()
+                       ->where('rules.rule_group_id', $groupId)
+                       ->where('rules.order', '<=', $newOrder)
+                       ->where('rules.order', '>', $oldOrder)
+                       ->where('rules.id', '!=', $rule->id)
+                       ->decrement('rules.order', 1);
+            $rule->order = $newOrder;
+            Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+            $rule->save();
+
+            return;
+        }
+
+        $this->user->rules()
+                   ->where('rules.rule_group_id', $groupId)
+                   ->where('rules.order', '>=', $newOrder)
+                   ->where('rules.order', '<', $oldOrder)
+                   ->where('rules.id', '!=', $rule->id)
+                   ->increment('rules.order', 1);
+        $rule->order = $newOrder;
+        Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+        $rule->save();
+    }
+
     /**
      * @param array $data
      *
@@ -414,31 +443,48 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function store(array $data): Rule
     {
-        /** @var RuleGroup $ruleGroup */
-        $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
-
-        // get max order:
-        $order = $this->getHighestOrderInRuleGroup($ruleGroup);
+        $ruleGroup = null;
+        if (array_key_exists('rule_group_id', $data)) {
+            $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
+        }
+        if (array_key_exists('rule_group_title', $data)) {
+            $ruleGroup = $this->user->ruleGroups()->where('title', $data['rule_group_title'])->first();
+        }
+        if (null === $ruleGroup) {
+            throw new FireflyException('No such rule group.');
+        }
 
         // start by creating a new rule:
         $rule = new Rule;
         $rule->user()->associate($this->user->id);
 
-        $rule->rule_group_id   = $data['rule_group_id'];
-        $rule->order           = ($order + 1);
-        $rule->active          = $data['active'];
-        $rule->strict          = $data['strict'];
-        $rule->stop_processing = $data['stop_processing'];
+        $rule->rule_group_id   = $ruleGroup->id;
+        $rule->order           = 31337;
+        $rule->active          = array_key_exists('active', $data) ? $data['active'] : true;
+        $rule->strict          = array_key_exists('strict', $data) ? $data['strict'] : false;
+        $rule->stop_processing = array_key_exists('stop_processing', $data) ? $data['stop_processing'] : false;
         $rule->title           = $data['title'];
-        $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
-
+        $rule->description     = array_key_exists('stop_processing', $data) ? $data['stop_processing'] : null;
         $rule->save();
+        $rule->refresh();
+
+        // save update trigger:
+        $this->setRuleTrigger($data['trigger'] ?? 'store-journal', $rule);
+
+        // reset order:
+        $this->resetRuleOrder($ruleGroup);
+        Log::debug('Done with resetting.');
+        if (array_key_exists('order', $data)) {
+            Log::debug(sprintf('User has submitted order %d', $data['order']));
+            $this->setOrder($rule, $data['order']);
+        }
 
         // start storing triggers:
         $this->storeTriggers($rule, $data);
 
         // same for actions.
         $this->storeActions($rule, $data);
+        $rule->refresh();
 
         return $rule;
     }
@@ -613,5 +659,13 @@ class RuleRepository implements RuleRepositoryInterface
         $trigger->active          = true;
         $trigger->stop_processing = false;
         $trigger->save();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function maxOrder(RuleGroup $ruleGroup): int
+    {
+        return (int)$ruleGroup->rules()->max('order');
     }
 }

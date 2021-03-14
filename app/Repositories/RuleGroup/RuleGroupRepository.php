@@ -24,7 +24,9 @@ namespace FireflyIII\Repositories\RuleGroup;
 
 use Exception;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
@@ -365,15 +367,63 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $count = 1;
         /** @var Rule $entry */
         foreach ($set as $entry) {
-            if ($entry->order !== $count) {
+            if ((int)$entry->order !== $count) {
+                Log::debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
                 $entry->order = $count;
                 $entry->save();
             }
+            $this->resetRuleActionOrder($entry);
+            $this->resetRuleTriggerOrder($entry);
 
             ++$count;
         }
 
         return true;
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    private function resetRuleActionOrder(Rule $rule): void
+    {
+        $actions = $rule->ruleActions()
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('active', 'DESC')
+                        ->orderBy('action_type', 'ASC')
+                        ->get();
+        $index   = 1;
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            if ((int)$action->order !== $index) {
+                $action->order = $index;
+                $action->save();
+                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
+            }
+            $index++;
+        }
+    }
+
+    /**
+     * @param Rule $rule
+     */
+    private function resetRuleTriggerOrder(Rule $rule): void
+    {
+        $triggers = $rule->ruleTriggers()
+                         ->orderBy('order', 'ASC')
+                         ->orderBy('active', 'DESC')
+                         ->orderBy('trigger_type', 'ASC')
+                         ->get();
+        $index    = 1;
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $order = (int) $trigger->order;
+            if ($order !== $index) {
+                $trigger->order = $index;
+                $trigger->save();
+                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
+            }
+            $index++;
+        }
     }
 
     /**
@@ -412,12 +462,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                 'title'       => $data['title'],
                 'description' => $data['description'],
                 'order'       => 31337,
-                'active'      => $data['active'],
+                'active'      => array_key_exists('active', $data) ? $data['active'] : true,
             ]
         );
         $newRuleGroup->save();
         $this->resetOrder();
-        $this->setOrder($newRuleGroup, $data['order']);
+        if (array_key_exists('order', $data)) {
+            $this->setOrder($newRuleGroup, $data['order']);
+        }
 
         return $newRuleGroup;
     }

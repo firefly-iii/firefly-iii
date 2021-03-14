@@ -40,7 +40,6 @@ class StoreRequest extends FormRequest
     use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
 
 
-
     /**
      * Get all data from the request.
      *
@@ -48,31 +47,23 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $strict         = true;
-        $active         = true;
-        $stopProcessing = false;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-        if (null !== $this->get('strict')) {
-            $strict = $this->boolean('strict');
-        }
-        if (null !== $this->get('stop_processing')) {
-            $stopProcessing = $this->boolean('stop_processing');
-        }
-
-        return [
-            'title'            => $this->string('title'),
-            'description'      => $this->string('description'),
-            'rule_group_id'    => $this->integer('rule_group_id'),
-            'rule_group_title' => $this->string('rule_group_title'),
-            'trigger'          => $this->string('trigger'),
-            'strict'           => $strict,
-            'stop_processing'  => $stopProcessing,
-            'active'           => $active,
-            'triggers'         => $this->getRuleTriggers(),
-            'actions'          => $this->getRuleActions(),
+        $fields = [
+            'title'            => ['title', 'string'],
+            'description'      => ['description', 'string'],
+            'rule_group_id'    => ['rule_group_id', 'integer'],
+            'order'            => ['order', 'integer'],
+            'rule_group_title' => ['rule_group_title', 'string'],
+            'trigger'          => ['trigger', 'string'],
+            'strict'           => ['strict', 'boolean'],
+            'stop_processing'  => ['stop_processing', 'boolean'],
+            'active'           => ['active', 'boolean'],
         ];
+        $data   = $this->getAllData($fields);
+
+        $data['triggers'] = $this->getRuleTriggers();
+        $data['actions']  = $this->getRuleActions();
+
+        return $data;
     }
 
     /**
@@ -87,8 +78,8 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -108,8 +99,8 @@ class StoreRequest extends FormRequest
                 $return[] = [
                     'type'            => $action['type'],
                     'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -134,7 +125,7 @@ class StoreRequest extends FormRequest
         return [
             'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
             'description'                => 'between:1,5000|nullable',
-            'rule_group_id'              => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
+            'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
             'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
@@ -179,7 +170,7 @@ class StoreRequest extends FormRequest
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -194,7 +185,7 @@ class StoreRequest extends FormRequest
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
 }

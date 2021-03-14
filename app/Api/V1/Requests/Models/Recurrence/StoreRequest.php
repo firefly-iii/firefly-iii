@@ -43,7 +43,6 @@ class StoreRequest extends FormRequest
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 
 
-
     /**
      * Get all data from the request.
      *
@@ -51,26 +50,21 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $active     = true;
-        $applyRules = true;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-        if (null !== $this->get('apply_rules')) {
-            $applyRules = $this->boolean('apply_rules');
-        }
+        $fields     = [
+            'type'              => ['type', 'string'],
+            'title'             => ['title', 'string'],
+            'description'       => ['description', 'string'],
+            'first_date'        => ['first_date', 'date'],
+            'repeat_until'      => ['repeat_until', 'date'],
+            'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
+            'apply_rules'       => ['apply_rules', 'boolean'],
+            'active'            => ['active', 'boolean'],
+            'notes'             => ['notes', 'nlString'],
+        ];
+        $recurrence = $this->getAllData($fields);
 
         return [
-            'recurrence'   => [
-                'type'         => $this->string('type'),
-                'title'        => $this->string('title'),
-                'description'  => $this->string('description'),
-                'first_date'   => $this->date('first_date'),
-                'repeat_until' => $this->date('repeat_until'),
-                'repetitions'  => $this->integer('nr_of_repetitions'),
-                'apply_rules'  => $applyRules,
-                'active'       => $active,
-            ],
+            'recurrence'   => $recurrence,
             'transactions' => $this->getTransactionData(),
             'repetitions'  => $this->getRepetitionData(),
         ];
@@ -93,7 +87,7 @@ class StoreRequest extends FormRequest
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $return[] = $this->getSingleRecurrenceData($transaction);
+            $return[] = $this->getSingleTransactionData($transaction);
         }
 
         return $return;
@@ -115,12 +109,21 @@ class StoreRequest extends FormRequest
         }
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $return[] = [
-                'type'    => $repetition['type'],
-                'moment'  => $repetition['moment'],
-                'skip'    => (int) $repetition['skip'],
-                'weekend' => (int) $repetition['weekend'],
-            ];
+            $current = [];
+            if (array_key_exists('type', $repetition)) {
+                $current['type'] = $repetition['type'];
+            }
+            if (array_key_exists('moment', $repetition)) {
+                $current['moment'] = $repetition['moment'];
+            }
+            if (array_key_exists('skip', $repetition)) {
+                $current['skip'] = (int)$repetition['skip'];
+            }
+            if (array_key_exists('weekend', $repetition)) {
+                $current['weekend'] = (int)$repetition['weekend'];
+            }
+
+            $return[] = $current;
         }
 
         return $return;
@@ -142,12 +145,12 @@ class StoreRequest extends FormRequest
             'first_date'                           => 'required|date',
             'apply_rules'                          => [new IsBoolean],
             'active'                               => [new IsBoolean],
-            'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
+            'repeat_until'                         => 'date',
             'nr_of_repetitions'                    => 'numeric|between:1,31',
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
-            'repetitions.*.skip'                   => 'required|numeric|between:0,31',
-            'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
+            'repetitions.*.skip'                   => 'numeric|between:0,31',
+            'repetitions.*.weekend'                => 'numeric|min:1|max:4',
             'transactions.*.description'           => 'required|between:1,255',
             'transactions.*.amount'                => 'required|numeric|gt:0',
             'transactions.*.foreign_amount'        => 'numeric|gt:0',
@@ -184,6 +187,7 @@ class StoreRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator) {
+                $this->validateRecurringConfig($validator);
                 $this->validateOneRecurrenceTransaction($validator);
                 $this->validateOneRepetition($validator);
                 $this->validateRecurrenceRepetition($validator);
