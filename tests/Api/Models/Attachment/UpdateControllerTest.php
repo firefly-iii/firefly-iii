@@ -95,7 +95,7 @@ class UpdateControllerTest extends TestCase
             'title'    => [
                 'id'           => 1,
                 'fields'       => [
-                    'title' => ['test_value' => $faker->text(64)],
+                    'title' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],

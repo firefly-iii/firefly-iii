@@ -52,7 +52,7 @@ class StoreControllerTest extends TestCase
      * @param array $submission
      *
      * emptyDataProvider / storeDataProvider
-     * @dataProvider emptyDataProvider
+     * @dataProvider storeDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -125,7 +125,7 @@ class StoreControllerTest extends TestCase
         return [
             'title' => [
                 'fields' => [
-                    'title' => join(' ', $faker->words(3)),
+                    'title' => $faker->uuid,
                 ],
             ],
             'notes' => [

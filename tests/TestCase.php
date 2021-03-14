@@ -32,6 +32,7 @@ use Tests\Traits\CollectsValues;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, CollectsValues;
+    protected const MAX_ITERATIONS = 2;
 
     /**
      * @return array

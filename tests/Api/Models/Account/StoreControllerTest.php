@@ -50,7 +50,7 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      * emptyDataProvider / storeDataProvider
-     * @dataProvider emptyDataProvider
+     * @dataProvider storeDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -193,7 +193,7 @@ class StoreControllerTest extends TestCase
             'asset'     => [
                 'parameters' => [],
                 'fields' => [
-                    'name'         => $faker->name . join(' ', $faker->words(2)),
+                    'name'         => $faker->uuid,
                     'type'         => 'asset',
                     'account_role' => $this->randomAccountRole(),
                 ],
@@ -201,14 +201,14 @@ class StoreControllerTest extends TestCase
             'expense'   => [
                 'parameters' => [],
                 'fields' => [
-                    'name' => $faker->name,
+                    'name' => $faker->uuid,
                     'type' => 'expense',
                 ],
             ],
             'liability' => [
                 'parameters' => [],
                 'fields' => [
-                    'name'                 => $faker->name,
+                    'name'                 => $faker->uuid,
                     'type'                 => 'liabilities',
                     'liability_type'       => $this->randomLiabilityType(),
                     'liability_amount'     => $this->getRandomAmount(),
@@ -219,7 +219,7 @@ class StoreControllerTest extends TestCase
             ],
             'cc'        => [
                 'fields' => [
-                    'name'                 => $faker->name,
+                    'name'                 => $faker->uuid,
                     'type'                 => 'asset',
                     'account_role'         => 'ccAsset',
                     'credit_card_type'     => 'monthlyFull',

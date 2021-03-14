@@ -103,7 +103,7 @@ class UpdateControllerTest extends TestCase
             'name'                    => [
                 'id'           => 1,
                 'fields'       => [
-                    'name' => ['test_value' => join(' ', $faker->words(4))],
+                    'name' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],

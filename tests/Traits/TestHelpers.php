@@ -53,7 +53,8 @@ trait TestHelpers
             // then loop and add fields:
             $optionalSets = $startOptionalSets;
             $keys         = array_keys($optionalSets);
-            for ($i = 1; $i <= count($keys); $i++) {
+            $count        = count($keys) > self::MAX_ITERATIONS ? self::MAX_ITERATIONS : count($keys);
+            for ($i = 1; $i <= $count; $i++) {
                 $combinations = $this->combinationsOf($i, $keys);
                 // expand body with N extra fields:
                 foreach ($combinations as $extraFields) {
@@ -71,6 +72,7 @@ trait TestHelpers
             }
             unset($second);
         }
+
         return $submissions;
     }
 

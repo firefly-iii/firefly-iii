@@ -52,7 +52,7 @@ class StoreControllerTest extends TestCase
      * @param array $submission
      *
      * emptyDataProvider / storeDataProvider
-     * @dataProvider emptyDataProvider
+     * @dataProvider storeDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -104,7 +104,7 @@ class StoreControllerTest extends TestCase
         return [
             'default_bill' => [
                 'fields' => [
-                    'name'        => join(',', $faker->words(5)),
+                    'name'        => $faker->uuid,
                     'amount_min'  => number_format($faker->randomFloat(2, 10, 50), 2),
                     'amount_max'  => number_format($faker->randomFloat(2, 60, 90), 2),
                     'date'        => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
@@ -146,7 +146,7 @@ class StoreControllerTest extends TestCase
             ],
             'name'               => [
                 'fields' => [
-                    'name' => join(' ', $faker->words(5)),
+                    'name' => $faker->uuid,
                 ],
             ],
             'amount_min'         => [
