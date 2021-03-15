@@ -196,7 +196,7 @@ trait TestHelpers
             if (array_key_exists($rKey, $submissionArray)) {
                 // comparison must be on array:
                 if (is_array($submissionArray[$rKey]) && is_array($rValue)) {
-                    $this->compareArray($originalAttributes, $rKey, $submissionArray[$rKey], $rValue);
+                    $this->compareArray($submissionArray, $rKey, $submissionArray[$rKey], $rValue);
                 }
 
                 if (!is_array($submissionArray[$rKey]) && !is_array($rValue)) {
@@ -261,7 +261,7 @@ trait TestHelpers
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
         $status       = $response->getStatusCode();
-        $this->assertEquals($status, 200, sprintf("Submission: %s\nResponse: %s", json_encode($submission), $responseBody));
+        $this->assertEquals($status, 200, sprintf("Submission:\n%s\nResponse: %s", json_encode($submission), $responseBody));
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 

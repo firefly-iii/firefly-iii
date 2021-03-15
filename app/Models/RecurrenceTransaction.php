@@ -76,6 +76,7 @@ use Illuminate\Support\Collection;
  * @mixin Eloquent
  * @property int|null $transaction_type_id
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
+ * @property-read \FireflyIII\Models\TransactionType|null $transactionType
  */
 class RecurrenceTransaction extends Model
 {
@@ -153,5 +154,13 @@ class RecurrenceTransaction extends Model
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
+    }
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function transactionType(): BelongsTo
+    {
+        return $this->belongsTo(TransactionType::class);
     }
 }

@@ -93,7 +93,7 @@ class UpdateRequest extends FormRequest
         }
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $return[] = $this->getSingleRecurrenceData($transaction);
+            $return[] = $this->getSingleTransactionData($transaction);
         }
 
         return $return;

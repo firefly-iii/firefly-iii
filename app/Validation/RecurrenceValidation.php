@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceTransaction;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
 use Log;
@@ -36,19 +38,22 @@ use Log;
  */
 trait RecurrenceValidation
 {
-    public function validateRecurringConfig(Validator $validator) {
-        $data = $validator->getData();
-        $reps = array_key_exists('nr_of_repetitions', $data) ? (int)$data['nr_of_repetitions'] : null;
+    public function validateRecurringConfig(Validator $validator)
+    {
+        $data        = $validator->getData();
+        $reps        = array_key_exists('nr_of_repetitions', $data) ? (int)$data['nr_of_repetitions'] : null;
         $repeatUntil = array_key_exists('repeat_until', $data) ? new Carbon($data['repeat_until']) : null;
 
-        if(null === $reps && null === $repeatUntil) {
+        if (null === $reps && null === $repeatUntil) {
             $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
+
             return;
         }
-        if($reps > 0 && null !== $repeatUntil) {
+        if ($reps > 0 && null !== $repeatUntil) {
             $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
+
             return;
         }
     }
@@ -65,7 +70,29 @@ trait RecurrenceValidation
         $data = $validator->getData();
 
         $transactionType = $data['type'] ?? 'invalid';
-        $transactions    = $data['transactions'] ?? [];
+
+        // grab model from parameter and try to set the transaction type from it
+        if ('invalid' === $transactionType) {
+            Log::debug('Type is invalid but we will search for it.');
+            /** @var Recurrence $recurrence */
+            $recurrence = $this->route()->parameter('recurrence');
+            if (null !== $recurrence) {
+                Log::debug('There is a recurrence in the route.');
+                // ok so we have a recurrence should be able to extract type somehow.
+                /** @var RecurrenceTransaction $first */
+                $first = $recurrence->recurrenceTransactions()->first();
+                if (null !== $first) {
+                    $transactionType = $first->transactionType ? $first->transactionType->type : 'withdrawal';
+                    Log::debug(sprintf('Determined type to be %s.', $transactionType));
+                }
+                if(null === $first) {
+                    Log::warning('Just going to assume type is a withdrawal.');
+                    $transactionType = 'withdrawal';
+                }
+            }
+        }
+
+        $transactions = $data['transactions'] ?? [];
 
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);

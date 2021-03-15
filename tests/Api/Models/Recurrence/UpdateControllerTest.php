@@ -212,10 +212,10 @@ class UpdateControllerTest extends TestCase
                 // now loop fields, enough to create sets I guess?
                 // TODO maybe do some permutation stuff here?
                 $extraTransaction = [
-                    'currency_id'         => $faker->numberBetween(1, 4),
-                    'foreign_currency_id' => $faker->numberBetween(4, 6),
+                    'currency_id'         => (string)$faker->numberBetween(1, 4),
+                    'foreign_currency_id' => (string)$faker->numberBetween(4, 6),
                     'source_id'           => $faker->numberBetween(1, 3),
-                    'destination_id'      => $faker->numberBetween(8),
+                    'destination_id'      => $faker->numberBetween(8, 8),
                     'amount'              => number_format($faker->randomFloat(2, 10, 100), 2),
                     'foreign_amount'      => number_format($faker->randomFloat(2, 10, 100), 2),
                     'description'         => $faker->uuid,

@@ -194,7 +194,7 @@ class UserController extends Controller
         Log::debug('Actually here');
         $data = $request->getUserData();
 
-        var_dump($data);
+        //var_dump($data);
 
         // update password
         if (array_key_exists('password', $data) && '' !== $data['password']) {

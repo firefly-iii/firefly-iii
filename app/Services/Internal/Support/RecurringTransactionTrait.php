@@ -111,7 +111,9 @@ trait RecurringTransactionTrait
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {
-        foreach ($transactions as $array) {
+        Log::debug('Now in createTransactions()');
+        foreach ($transactions as $index => $array) {
+            Log::debug(sprintf('Now at transaction #%d', $index));
             $sourceTypes = config(sprintf('firefly.expected_source_types.source.%s', $recurrence->transactionType->type));
             $destTypes   = config(sprintf('firefly.expected_source_types.destination.%s', $recurrence->transactionType->type));
             $source      = $this->findAccount($sourceTypes, $array['source_id'], null);
@@ -125,11 +127,17 @@ trait RecurringTransactionTrait
                 $currency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
             }
 
+            Log::debug(
+                sprintf('Will set the validator type to %s based on the type of the recurrence (#%d).', $recurrence->transactionType->type, $recurrence->id)
+            );
+
             // once the accounts have been determined, we still verify their validity:
             /** @var AccountValidator $validator */
             $validator = app(AccountValidator::class);
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
+
+
             if (!$validator->validateSource($source->id, null, null)) {
                 throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
             }
@@ -335,6 +343,7 @@ trait RecurringTransactionTrait
      */
     protected function deleteTransactions(Recurrence $recurrence): void
     {
+        Log::debug('deleteTransactions()');
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transaction->recurrenceTransactionMeta()->delete();

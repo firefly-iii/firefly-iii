@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -155,7 +156,7 @@ class RecurrenceUpdateService
         }
         // user added or removed repetitions, delete all and recreate:
         if ($originalCount !== count($repetitions)) {
-            Log::debug('Del + recreate');
+            Log::debug('Delete existing repetitions and create new ones.');
             $this->deleteRepetitions($recurrence);
             $this->createRepetitions($recurrence, $repetitions);
 
@@ -232,12 +233,15 @@ class RecurrenceUpdateService
         }
         // user added or removed repetitions, delete all and recreate:
         if ($originalCount !== count($transactions)) {
-            Log::debug('Del + recreate');
+            Log::debug('Delete existing transactions and create new ones.');
             $this->deleteTransactions($recurrence);
             $this->createTransactions($recurrence, $transactions);
 
             return;
         }
+        $currencyFactory = app(TransactionCurrencyFactory::class);
+
+
         // loop all and try to match them:
         if ($originalCount === count($transactions)) {
             Log::debug('Loop and find');
@@ -246,16 +250,36 @@ class RecurrenceUpdateService
                 if (null === $match) {
                     throw new FireflyException('Cannot match recurring transaction to existing transaction. Not sure what to do. Break.');
                 }
-                // TODO find currency
-                // TODO find foreign currency
+                $currency        = null;
+                $foreignCurrency = null;
+                if (array_key_exists('currency_id', $current) || array_key_exists('currency_code', $current)) {
+                    $currency = $currencyFactory->find($current['currency_id'] ?? null, $currency['currency_code'] ?? null);
+                }
+                if (null === $currency) {
+                    unset($current['currency_id'], $currency['currency_code']);
+                }
+                if (null !== $currency) {
+                    $current['currency_id'] = (int)$currency->id;
+                }
+                if (array_key_exists('foreign_currency_id', $current) || array_key_exists('foreign_currency_code', $current)) {
+                    $foreignCurrency = $currencyFactory->find($current['foreign_currency_id'] ?? null, $currency['foreign_currency_code'] ?? null);
+                }
+                if (null === $foreignCurrency) {
+                    unset($current['foreign_currency_id'], $currency['foreign_currency_code']);
+                }
+                if (null !== $foreignCurrency) {
+                    $current['foreign_currency_id'] = (int)$foreignCurrency->id;
+                }
 
                 // update fields
                 $fields = [
-                    'source_id'      => 'source_id',
-                    'destination_id' => 'destination_id',
-                    'amount'         => 'amount',
-                    'foreign_amount' => 'foreign_amount',
-                    'description'    => 'description',
+                    'source_id'           => 'source_id',
+                    'destination_id'      => 'destination_id',
+                    'amount'              => 'amount',
+                    'foreign_amount'      => 'foreign_amount',
+                    'description'         => 'description',
+                    'currency_id'         => 'transaction_currency_id',
+                    'foreign_currency_id' => 'foreign_currency_id',
                 ];
                 foreach ($fields as $field => $column) {
                     if (array_key_exists($field, $current)) {
