@@ -212,29 +212,26 @@ class UpdateControllerTest extends TestCase
                 // now loop fields, enough to create sets I guess?
                 // TODO maybe do some permutation stuff here?
                 $extraTransaction = [
-                    'description'    => $faker->uuid,
-                    'amount'         => number_format($faker->randomFloat(2, 10, 100), 2),
-                    'skip'           => $faker->numberBetween(1, 3),
-                    'weekend'        => $faker->numberBetween(1, 4),
-                    'budget_id'      => $faker->numberBetween(1, 2),
-                    'category_id'    => $faker->numberBetween(1, 2),
-                    'tags'           => ['a', 'c', 'd'],
-                    'source_id'      => 1,
-                    'destination_id' => 8,
+                    'currency_id'         => $faker->numberBetween(1, 4),
+                    'foreign_currency_id' => $faker->numberBetween(4, 6),
+                    'source_id'           => $faker->numberBetween(1, 3),
+                    'destination_id'      => $faker->numberBetween(8),
+                    'amount'              => number_format($faker->randomFloat(2, 10, 100), 2),
+                    'foreign_amount'      => number_format($faker->randomFloat(2, 10, 100), 2),
+                    'description'         => $faker->uuid,
                 ];
 
                 $extraTransactions[] = $extraTransaction;
             }
-            // TODO later maybe
-//            $set[] = [
-//                'id'           => 1,
-//                'fields'       => [
-//                    'transactions' => [
-//                        'test_value' => $extraTransactions,
-//                    ],
-//                ],
-//                'extra_ignore' => [],
-//            ];
+            $set[] = [
+                'id'           => 1,
+                'fields'       => [
+                    'transactions' => [
+                        'test_value' => $extraTransactions,
+                    ],
+                ],
+                'extra_ignore' => [],
+            ];
         }
 
         return $set;

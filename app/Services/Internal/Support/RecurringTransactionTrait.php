@@ -138,7 +138,9 @@ trait RecurringTransactionTrait
             if (!$validator->validateDestination($destination->id, null, null)) {
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
             }
-
+            if(array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
+                unset($array['foreign_amount']);
+            }
             // TODO typeOverrule: the account validator may have another opinion on the transaction type.
             $transaction = new RecurrenceTransaction(
                 [

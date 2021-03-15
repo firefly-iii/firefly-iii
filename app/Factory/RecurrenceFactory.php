@@ -80,6 +80,7 @@ class RecurrenceFactory
         $description = '';
         $applyRules  = true;
         $active      = true;
+        $repeatUntilString = null;
         if (array_key_exists('first_date', $data['recurrence'])) {
             /** @var Carbon $firstDate */
             $firstDate = $data['recurrence']['first_date'];
@@ -102,8 +103,8 @@ class RecurrenceFactory
         if (array_key_exists('active', $data['recurrence'])) {
             $active = $data['recurrence']['active'];
         }
-        if ($repetitions > 0 && null === $repeatUntil) {
-            $repeatUntil = Carbon::create()->addyear();
+        if (null !== $repeatUntil) {
+            $repeatUntilString = $repeatUntil->format('Y-m-d');
         }
 
         $recurrence = new Recurrence(
@@ -113,7 +114,7 @@ class RecurrenceFactory
                 'title'               => $title,
                 'description'         => $description,
                 'first_date'          => $firstDate ? $firstDate->format('Y-m-d') : null,
-                'repeat_until'        => $repetitions > 0 ? null : $repeatUntil->format('Y-m-d'),
+                'repeat_until'        => $repetitions > 0 ? null : $repeatUntilString,
                 'latest_date'         => null,
                 'repetitions'         => $repetitions,
                 'apply_rules'         => $applyRules,
