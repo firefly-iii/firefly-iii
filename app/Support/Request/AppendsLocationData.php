@@ -155,16 +155,39 @@ trait AppendsLocationData
      */
     private function isValidPOST(?string $prefix): bool
     {
-        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+        Log::debug('Now in isValidPOST()');
+        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
+        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
+        // fields must not be null:
+        if (null !== $this->get($longitudeKey) && null !== $this->get($latitudeKey) && null !== $this->get($zoomLevelKey)) {
+            Log::debug('All fields present');
+            // if is POST and route contains API, this is enough:
+            if ('POST' === $this->method() && $this->routeIs('*.store') && $this->routeIs('api.v1.*')) {
+                Log::debug('Is API location');
 
-        return ('POST' === $this->method() && $this->routeIs('*.store'))
-               && (
-                   null !== $this->get($longitudeKey)
-                   && null !== $this->get($latitudeKey)
-                   && null !== $this->get($zoomLevelKey)
-               );
+                return true;
+            }
+            // if is POST and route does not contain API, must also have "store_location" = true
+            if ('POST' === $this->method() && $this->routeIs('*.store') && !$this->routeIs('api.v1.*') && $hasLocationKey) {
+                $hasLocation = $this->boolean($hasLocationKey);
+                if (true === $hasLocation) {
+                    Log::debug('Is form location');
+
+                    return true;
+                }
+                Log::debug('Is not form location');
+
+                return false;
+            }
+            Log::debug('Is not POST API or POST form');
+
+            return false;
+        }
+        Log::debug('Fields not present');
+
+        return false;
     }
 
     /**

@@ -278,52 +278,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveDown(RuleGroup $ruleGroup): bool
-    {
-        $order = $ruleGroup->order;
-
-        // find the rule with order+1 and give it order-1
-        $other = $this->user->ruleGroups()->where('order', $order + 1)->first();
-        if ($other) {
-            --$other->order;
-            $other->save();
-        }
-
-        ++$ruleGroup->order;
-        $ruleGroup->save();
-        $this->resetRuleGroupOrder();
-
-        return true;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveUp(RuleGroup $ruleGroup): bool
-    {
-        $order = $ruleGroup->order;
-
-        // find the rule with order-1 and give it order+1
-        $other = $this->user->ruleGroups()->where('order', $order - 1)->first();
-        if ($other) {
-            ++$other->order;
-            $other->save();
-        }
-
-        --$ruleGroup->order;
-        $ruleGroup->save();
-        $this->resetRuleGroupOrder();
-
-        return true;
-    }
-
-    /**
      * @return bool
      */
     public function resetOrder(): bool

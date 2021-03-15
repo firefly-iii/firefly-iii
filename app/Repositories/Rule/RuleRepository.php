@@ -259,29 +259,6 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveDown(Rule $rule): bool
-    {
-        $order = $rule->order;
-
-        // find the rule with order+1 and give it order-1
-        $other = $rule->ruleGroup->rules()->where('order', $order + 1)->first();
-        if ($other) {
-            --$other->order;
-            $other->save();
-        }
-
-        ++$rule->order;
-        $rule->save();
-        $this->resetRuleOrder($rule->ruleGroup);
-
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
@@ -293,29 +270,6 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->save();
 
         return $rule;
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveUp(Rule $rule): bool
-    {
-        $order = $rule->order;
-
-        // find the rule with order-1 and give it order+1
-        $other = $rule->ruleGroup->rules()->where('order', $order - 1)->first();
-        if ($other) {
-            ++$other->order;
-            $other->save();
-        }
-
-        --$rule->order;
-        $rule->save();
-        $this->resetRuleOrder($rule->ruleGroup);
-
-        return true;
     }
 
     /**

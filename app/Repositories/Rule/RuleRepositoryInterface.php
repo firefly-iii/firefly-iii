@@ -124,13 +124,6 @@ interface RuleRepositoryInterface
     public function getUpdateRules(): Collection;
 
     /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveDown(Rule $rule): bool;
-
-    /**
      * @param Rule      $rule
      * @param RuleGroup $ruleGroup
      * @param int       $order
@@ -138,13 +131,6 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveUp(Rule $rule): bool;
 
     /**
      * @param Rule  $rule

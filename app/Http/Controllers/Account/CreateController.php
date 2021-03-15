@@ -44,11 +44,8 @@ class CreateController extends Controller
 {
     use ModelInformation;
 
-    /** @var AttachmentHelperInterface Helper for attachments. */
-    private $attachments;
-
-    /** @var AccountRepositoryInterface The account repository */
-    private $repository;
+    private AttachmentHelperInterface $attachments;
+    private AccountRepositoryInterface $repository;
 
     /**
      * CreateController constructor.

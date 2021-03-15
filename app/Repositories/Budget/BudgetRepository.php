@@ -335,6 +335,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('none' === $type) {
             return $newBudget;
         }
+        if (0 === $type) {
+            return $newBudget;
+        }
 
         if ('reset' === $type) {
             $type = AutoBudget::AUTO_BUDGET_RESET;
@@ -343,7 +346,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
         }
 
-        $repos = app(CurrencyRepositoryInterface::class);
+        $repos    = app(CurrencyRepositoryInterface::class);
+        $currency = null;
         if (array_key_exists('currency_id', $data)) {
             $currency = $repos->findNull((int)$data['currency_id']);
         }
@@ -420,6 +424,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null === $autoBudget
             && array_key_exists('auto_budget_type', $data)
             && array_key_exists('auto_budget_amount', $data)
+            && 0 !== $data['auto_budget_type']
         ) {
             // only create if all are here:
             $autoBudget                          = new AutoBudget;
@@ -428,7 +433,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // update existing type
-        if (array_key_exists('auto_budget_type', $data)) {
+        if (array_key_exists('auto_budget_type', $data) && 0 !== $data['auto_budget_type']) {
             $autoBudgetType = $data['auto_budget_type'];
             if ('reset' === $autoBudgetType) {
                 $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_RESET;
@@ -442,10 +447,10 @@ class BudgetRepository implements BudgetRepositoryInterface
                 return $budget;
             }
         }
-        if (array_key_exists('auto_budget_amount', $data)) {
+        if (array_key_exists('auto_budget_amount', $data) && null !== $autoBudget) {
             $autoBudget->amount = $data['auto_budget_amount'];
         }
-        if (array_key_exists('auto_budget_period', $data)) {
+        if (array_key_exists('auto_budget_period', $data) && null !== $autoBudget) {
             $autoBudget->period = $data['auto_budget_period'];
         }
         if (null !== $autoBudget) {
