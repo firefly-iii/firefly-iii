@@ -67,8 +67,8 @@ class CategoryUpdateService
      */
     public function update(Category $category, array $data): Category
     {
-        $oldName        = $category->name;
-        if(array_key_exists('name', $data)) {
+        $oldName = $category->name;
+        if (array_key_exists('name', $data)) {
             $category->name = $data['name'];
             $category->save();
             // update triggers and actions

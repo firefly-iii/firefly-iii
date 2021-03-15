@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class CategoryDestroyService
+ *
  * @codeCoverageIgnore
  */
 class CategoryDestroyService

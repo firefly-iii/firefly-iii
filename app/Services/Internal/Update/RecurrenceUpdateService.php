@@ -115,63 +115,6 @@ class RecurrenceUpdateService
     }
 
     /**
-     * TODO this method is way too complex.
-     *
-     * @param Recurrence $recurrence
-     * @param array      $transactions
-     *
-     * @throws FireflyException
-     */
-    private function updateTransactions(Recurrence $recurrence, array $transactions): void
-    {
-        $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (0 === count($transactions)) {
-            // wont drop transactions, rather avoid.
-            return;
-        }
-        // user added or removed repetitions, delete all and recreate:
-        if ($originalCount !== count($transactions)) {
-            Log::debug('Del + recreate');
-            $this->deleteTransactions($recurrence);
-            $this->createTransactions($recurrence, $transactions);
-
-            return;
-        }
-        // loop all and try to match them:
-        if ($originalCount === count($transactions)) {
-            Log::debug('Loop and find');
-            foreach ($transactions as $current) {
-                $match = $this->matchTransaction($recurrence, $current);
-                if (null === $match) {
-                    throw new FireflyException('Cannot match recurring transaction to existing transaction. Not sure what to do. Break.');
-                }
-                // TODO find currency
-                // TODO find foreign currency
-
-                // update fields
-                $fields = [
-                    'source_id'      => 'source_id',
-                    'destination_id' => 'destination_id',
-                    'amount'         => 'amount',
-                    'foreign_amount' => 'foreign_amount',
-                    'description'    => 'description',
-                ];
-                foreach ($fields as $field => $column) {
-                    if (array_key_exists($field, $current)) {
-                        $match->$column = $current[$field];
-                        $match->save();
-                    }
-                }
-                // update meta data
-                // budget_id
-                // category_id
-                // tags
-                // piggy_bank_id
-            }
-        }
-    }
-
-    /**
      * @param Recurrence $recurrence
      * @param string     $text
      */
@@ -270,6 +213,71 @@ class RecurrenceUpdateService
         }
 
         return $query->first();
+    }
+
+    /**
+     * TODO this method is way too complex.
+     *
+     * @param Recurrence $recurrence
+     * @param array      $transactions
+     *
+     * @throws FireflyException
+     */
+    private function updateTransactions(Recurrence $recurrence, array $transactions): void
+    {
+        $originalCount = $recurrence->recurrenceTransactions()->count();
+        if (0 === count($transactions)) {
+            // wont drop transactions, rather avoid.
+            return;
+        }
+        // user added or removed repetitions, delete all and recreate:
+        if ($originalCount !== count($transactions)) {
+            Log::debug('Del + recreate');
+            $this->deleteTransactions($recurrence);
+            $this->createTransactions($recurrence, $transactions);
+
+            return;
+        }
+        // loop all and try to match them:
+        if ($originalCount === count($transactions)) {
+            Log::debug('Loop and find');
+            foreach ($transactions as $current) {
+                $match = $this->matchTransaction($recurrence, $current);
+                if (null === $match) {
+                    throw new FireflyException('Cannot match recurring transaction to existing transaction. Not sure what to do. Break.');
+                }
+                // TODO find currency
+                // TODO find foreign currency
+
+                // update fields
+                $fields = [
+                    'source_id'      => 'source_id',
+                    'destination_id' => 'destination_id',
+                    'amount'         => 'amount',
+                    'foreign_amount' => 'foreign_amount',
+                    'description'    => 'description',
+                ];
+                foreach ($fields as $field => $column) {
+                    if (array_key_exists($field, $current)) {
+                        $match->$column = $current[$field];
+                        $match->save();
+                    }
+                }
+                // update meta data
+                if (array_key_exists('budget_id', $current)) {
+                    $this->setBudget($match, (int)$current['budget_id']);
+                }
+                if (array_key_exists('category_id', $current)) {
+                    $this->setCategory($match, (int)$current['category_id']);
+                }
+                if (array_key_exists('tags', $current)) {
+                    $this->updateTags($match, $current['tags']);
+                }
+                if (array_key_exists('piggy_bank_id', $current)) {
+                    $this->updatePiggyBank($match, (int)$current['piggy_bank_id']);
+                }
+            }
+        }
     }
 
     /**

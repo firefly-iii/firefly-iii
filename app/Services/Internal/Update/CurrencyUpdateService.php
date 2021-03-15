@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\TransactionCurrency;
-use Log;
 
 /**
  * Class CurrencyUpdateService
