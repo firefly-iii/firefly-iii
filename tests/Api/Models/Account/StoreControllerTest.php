@@ -25,6 +25,9 @@ namespace Tests\Api\Models\Account;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\TestConfiguration;
+use Tests\Objects\TestMandatoryField;
+use Tests\Objects\TestMandatoryFieldSet;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 use Tests\Traits\RandomValues;
@@ -55,6 +58,8 @@ class StoreControllerTest extends TestCase
      */
     public function testStore(array $submission): void
     {
+        $this->someTestData();
+        exit;
         if ([] === $submission) {
             $this->markTestSkipped('Empty data provider');
         }
@@ -235,7 +240,67 @@ class StoreControllerTest extends TestCase
 
     public function someTestData(): void
     {
-        $set = [
+        // a basic test config set contains
+        // mandatory fields and X optional fields
+        // the optional fields will be rotated automatically.
+        $config = new TestConfiguration;
+
+        // add a set of mandatory fields:
+        $mandatoryFieldSet        = new TestMandatoryFieldSet();
+        $mandatoryFieldSet->title = 'default_asset_account';
+
+        // name
+        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField->title              = 'name';
+        $mandatoryField->fieldTitle         = 'name';
+        $mandatoryField->fieldPosition      = ''; // root
+        $mandatoryField->fieldType          = 'uuid'; // refers to a generator or something?
+        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
+        $mandatoryField->expectedReturn     = null; // or the callback
+        $mandatoryField->ignorableFields    = [];
+        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+
+        // type
+        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField->title              = 'type';
+        $mandatoryField->fieldTitle         = 'type';
+        $mandatoryField->fieldPosition      = ''; // root
+        $mandatoryField->fieldType          = 'static-asset'; // refers to a generator or something?
+        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
+        $mandatoryField->expectedReturn     = null; // or the callback
+        $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
+        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+
+        // role
+        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField->title              = 'role';
+        $mandatoryField->fieldTitle         = 'account_role';
+        $mandatoryField->fieldPosition      = ''; // root
+        $mandatoryField->fieldType          = 'random-asset-accountRole'; // refers to a generator or something?
+        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
+        $mandatoryField->expectedReturn     = null; // or the callback
+        $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
+        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+
+//        $mandatoryField                     = new TestMandatoryField;
+//        $mandatoryField->title              = 'transaction_type';
+//        $mandatoryField->fieldTitle         = 'type';
+//        $mandatoryField->fieldPosition      = 'transactions/0'; // not root!
+//        $mandatoryField->fieldType          = 'random-transactionType'; // refers to a generator or something?
+//        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
+//        $mandatoryField->expectedReturn     = null; // or the callback
+//        $mandatoryField->ignorableFields    = [];
+//        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+
+        $config->mandatoryFieldSet = $mandatoryFieldSet;
+
+        // generate submissions
+        $arr = $config->generateSubmission();
+        var_dump($arr);
+        exit;
+        // generate expected returns.
+
+        $set                                = [
             // set for withdrawal, copy this for
             // other transaction types etc.
             // make a CLASS!!
