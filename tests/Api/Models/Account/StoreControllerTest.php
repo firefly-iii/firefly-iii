@@ -232,4 +232,56 @@ class StoreControllerTest extends TestCase
             ],
         ];
     }
+
+    public function someTestData(): void
+    {
+        $set = [
+            // set for withdrawal, copy this for
+            // other transaction types etc.
+            // make a CLASS!!
+            'identifier' => [
+                'mandatory_fields' => [
+                    'name_of_set' => [
+                        'fields' => [
+                            'basic_text_field'                      => [
+                                'test_value'            => function () {
+                                    return 'callback';
+                                },
+                                'expected_return_value' => function ($input) {
+                                    // the same?
+                                    return $input;
+
+                                    // a conversion?
+                                    return (string)$input;
+
+                                    // something else entirely?
+                                    return 'something else entirely.';
+                                },
+                                'ignore_other_fields'   => [
+                                    'key_to_ignore',
+                                    'sub_array_like_transactions' => [0 => 'field_to_ignore'],
+                                ],
+                            ],
+                            'another_basic_text_field'              => [
+                                // see above for 'test_value', 'expected_return_value' and 'ignore_other_fields'
+                            ],
+                            'complex_array_field_like_transactions' => [
+                                'transactions' => [
+                                    0 => [
+                                        'field_is_here' => [
+                                            'test_value'            => null, // see above
+                                            'expected_return_value' => null,  // see above
+                                            'ignore_other_fields'   => [], // see above
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                // these will be permutated
+                'optional_fields'  => [],
+            ],
+        ];
+    }
 }
