@@ -25,6 +25,8 @@ namespace Tests\Api\Models\Account;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\Objects\TestMandatoryField;
 use Tests\Objects\TestMandatoryFieldSet;
@@ -246,11 +248,11 @@ class StoreControllerTest extends TestCase
         $config = new TestConfiguration;
 
         // add a set of mandatory fields:
-        $mandatoryFieldSet        = new TestMandatoryFieldSet();
+        $mandatoryFieldSet        = new FieldSet();
         $mandatoryFieldSet->title = 'default_asset_account';
 
         // name
-        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField                     = new Field;
         $mandatoryField->title              = 'name';
         $mandatoryField->fieldTitle         = 'name';
         $mandatoryField->fieldPosition      = ''; // root
@@ -258,10 +260,10 @@ class StoreControllerTest extends TestCase
         $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
         $mandatoryField->expectedReturn     = null; // or the callback
         $mandatoryField->ignorableFields    = [];
-        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+        $mandatoryFieldSet->addField($mandatoryField);
 
         // type
-        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField                     = new Field;
         $mandatoryField->title              = 'type';
         $mandatoryField->fieldTitle         = 'type';
         $mandatoryField->fieldPosition      = ''; // root
@@ -269,10 +271,10 @@ class StoreControllerTest extends TestCase
         $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
         $mandatoryField->expectedReturn     = null; // or the callback
         $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
-        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+        $mandatoryFieldSet->addField($mandatoryField);
 
         // role
-        $mandatoryField                     = new TestMandatoryField;
+        $mandatoryField                     = new Field;
         $mandatoryField->title              = 'role';
         $mandatoryField->fieldTitle         = 'account_role';
         $mandatoryField->fieldPosition      = ''; // root
@@ -280,19 +282,41 @@ class StoreControllerTest extends TestCase
         $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
         $mandatoryField->expectedReturn     = null; // or the callback
         $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
-        $mandatoryFieldSet->addMandatoryField($mandatoryField);
-
-//        $mandatoryField                     = new TestMandatoryField;
-//        $mandatoryField->title              = 'transaction_type';
-//        $mandatoryField->fieldTitle         = 'type';
-//        $mandatoryField->fieldPosition      = 'transactions/0'; // not root!
-//        $mandatoryField->fieldType          = 'random-transactionType'; // refers to a generator or something?
-//        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
-//        $mandatoryField->expectedReturn     = null; // or the callback
-//        $mandatoryField->ignorableFields    = [];
-//        $mandatoryFieldSet->addMandatoryField($mandatoryField);
-
+        $mandatoryFieldSet->addField($mandatoryField);
         $config->mandatoryFieldSet = $mandatoryFieldSet;
+        unset($mandatoryField);
+        //        $mandatoryField                     = new TestMandatoryField;
+        //        $mandatoryField->title              = 'transaction_type';
+        //        $mandatoryField->fieldTitle         = 'type';
+        //        $mandatoryField->fieldPosition      = 'transactions/0'; // not root!
+        //        $mandatoryField->fieldType          = 'random-transactionType'; // refers to a generator or something?
+        //        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
+        //        $mandatoryField->expectedReturn     = null; // or the callback
+        //        $mandatoryField->ignorableFields    = [];
+        //        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+
+        $optionalFieldSet                  = new FieldSet;
+        $optionalField                     = new Field;
+        $optionalField->title              = 'active';
+        $optionalField->fieldTitle         = 'active';
+        $optionalField->fieldPosition      = '';
+        $optionalField->fieldType          = 'boolean'; // refers to a generator or something?
+        $optionalField->expectedReturnType = 'equal'; // or 'callback'
+        $optionalField->expectedReturn     = null; // or the callback
+        $optionalField->ignorableFields    = []; // something like transactions/0/currency_code
+        $optionalFieldSet->addField($optionalField, 'active');
+
+        $optionalField                     = new Field;
+        $optionalField->title              = 'iban';
+        $optionalField->fieldTitle         = 'iban';
+        $optionalField->fieldPosition      = '';
+        $optionalField->fieldType          = 'iban'; // refers to a generator or something?
+        $optionalField->expectedReturnType = 'equal'; // or 'callback'
+        $optionalField->expectedReturn     = null; // or the callback
+        $optionalField->ignorableFields    = []; // something like transactions/0/currency_code
+        $optionalFieldSet->addField($optionalField, 'iban');
+
+        $config->optionalFieldSet = $optionalFieldSet;
 
         // generate submissions
         $arr = $config->generateSubmission();
@@ -300,7 +324,7 @@ class StoreControllerTest extends TestCase
         exit;
         // generate expected returns.
 
-        $set                                = [
+        $set = [
             // set for withdrawal, copy this for
             // other transaction types etc.
             // make a CLASS!!
