@@ -133,22 +133,6 @@ interface RuleRepositoryInterface
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
 
     /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleActions(Rule $rule, array $ids): bool;
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleTriggers(Rule $rule, array $ids): bool;
-
-    /**
      * @param RuleGroup $ruleGroup
      *
      * @return bool

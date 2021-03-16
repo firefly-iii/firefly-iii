@@ -183,6 +183,14 @@ class RecurrenceTransformer extends AbstractTransformer
                         $array['piggy_bank_name'] = $piggy->name;
                     }
                     break;
+                case 'category_id':
+                    $category = $this->factory->findOrCreate((int)$transactionMeta->value, null);
+                    if (null !== $category) {
+                        $array['category_id']   = (string)$category->id;
+                        $array['category_name'] = $category->name;
+                    }
+                    break;
+                    break;
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {

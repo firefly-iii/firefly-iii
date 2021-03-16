@@ -263,57 +263,14 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
     {
-        $rule->order = $order;
         if ($rule->rule_group_id !== $ruleGroup->id) {
             $rule->rule_group_id = $ruleGroup->id;
         }
         $rule->save();
+        $rule->refresh();
+        $this->setOrder($rule, $order);
 
         return $rule;
-    }
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleActions(Rule $rule, array $ids): bool
-    {
-        $order = 1;
-        foreach ($ids as $actionId) {
-            /** @var RuleTrigger $trigger */
-            $action = $rule->ruleActions()->find($actionId);
-            if (null !== $action) {
-                $action->order = $order;
-                $action->save();
-                ++$order;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleTriggers(Rule $rule, array $ids): bool
-    {
-        $order = 1;
-        foreach ($ids as $triggerId) {
-            /** @var RuleTrigger $trigger */
-            $trigger = $rule->ruleTriggers()->find($triggerId);
-            if (null !== $trigger) {
-                $trigger->order = $order;
-                $trigger->save();
-                ++$order;
-            }
-        }
-
-        return true;
     }
 
     /**

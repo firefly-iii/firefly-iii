@@ -274,7 +274,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function maxOrder(): int
     {
-        return (int)$this->user->ruleGroups()->max('order');
+        return (int)$this->user->ruleGroups()->where('active', 1)->max('order');
     }
 
     /**
@@ -282,10 +282,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function resetOrder(): bool
     {
-        $this->user->ruleGroups()->whereNotNull('deleted_at');
-
+        $this->user->ruleGroups()->where('active', false)->update(['order' => 0]);
         $set   = $this->user
             ->ruleGroups()
+            ->where('active', 1)
+            ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')
             ->get();
@@ -315,6 +316,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     {
         $set   = $ruleGroup->rules()
                            ->orderBy('order', 'ASC')
+                           ->where('active', true)
                            ->orderBy('title', 'DESC')
                            ->orderBy('updated_at', 'DESC')
                            ->get(['rules.*']);
@@ -370,7 +372,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $index    = 1;
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
-            $order = (int) $trigger->order;
+            $order = (int)$trigger->order;
             if ($order !== $index) {
                 $trigger->order = $index;
                 $trigger->save();

@@ -76,7 +76,7 @@ class IndexController extends Controller
         $user = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
-        $this->ruleGroupRepos->resetRuleGroupOrder();
+        $this->ruleGroupRepos->resetOrder();
         $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules(null);
 
         return prefixView('rules.index', compact('ruleGroups'));
@@ -95,43 +95,6 @@ class IndexController extends Controller
 
         return redirect($route);
     }
-
-    /**
-     * Stop action for reordering of rule actions.
-     *
-     * @param Request $request
-     * @param Rule    $rule
-     *
-     * @return JsonResponse
-     */
-    public function reorderRuleActions(Request $request, Rule $rule): JsonResponse
-    {
-        $ids = $request->get('actions');
-        if (is_array($ids)) {
-            $this->ruleRepos->reorderRuleActions($rule, $ids);
-        }
-
-        return response()->json('true');
-    }
-
-    /**
-     * Stop action for reordering of rule triggers.
-     *
-     * @param Request $request
-     * @param Rule    $rule
-     *
-     * @return JsonResponse
-     */
-    public function reorderRuleTriggers(Request $request, Rule $rule): JsonResponse
-    {
-        $ids = $request->get('triggers');
-        if (is_array($ids)) {
-            $this->ruleRepos->reorderRuleTriggers($rule, $ids);
-        }
-
-        return response()->json('true');
-    }
-
 
     /**
      * @param Request   $request

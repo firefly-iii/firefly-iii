@@ -100,6 +100,7 @@ trait AppendsLocationData
             $data['zoom_level']     = $this->string($zoomLevelKey);
         }
 
+        // for a PUT (api update) or POST update (UI)
         if ($isValidPUT) {
             Log::debug('Method is PUT and all fields present and not NULL.');
             $data['update_location'] = true;
@@ -164,20 +165,21 @@ trait AppendsLocationData
         if (null !== $this->get($longitudeKey) && null !== $this->get($latitudeKey) && null !== $this->get($zoomLevelKey)) {
             Log::debug('All fields present');
             // if is POST and route contains API, this is enough:
-            if ('POST' === $this->method() && $this->routeIs('*.store') && $this->routeIs('api.v1.*')) {
+            if ('POST' === $this->method() && $this->routeIs('api.v1.*')) {
                 Log::debug('Is API location');
 
                 return true;
             }
-            // if is POST and route does not contain API, must also have "store_location" = true
+            // if is POST and route does not contain API, must also have "has_location" = true
             if ('POST' === $this->method() && $this->routeIs('*.store') && !$this->routeIs('api.v1.*') && $hasLocationKey) {
+                Log::debug('Is POST + store route.');
                 $hasLocation = $this->boolean($hasLocationKey);
                 if (true === $hasLocation) {
-                    Log::debug('Is form location');
+                    Log::debug('Has form form location');
 
                     return true;
                 }
-                Log::debug('Is not form location');
+                Log::debug('Does not have form location');
 
                 return false;
             }
@@ -200,13 +202,38 @@ trait AppendsLocationData
         $longitudeKey = $this->getLocationKey($prefix, 'longitude');
         $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+        $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
+        Log::debug('Now in isValidPUT()');
 
-        return (
-                   null !== $this->get($longitudeKey)
-                   && null !== $this->get($latitudeKey)
-                   && null !== $this->get($zoomLevelKey))
-               && (('PUT' === $this->method() && $this->routeIs('*.update'))
-                   || ('POST' === $this->method() && $this->routeIs('*.update')));
+        // all fields must be set:
+        if( null !== $this->get($longitudeKey) && null !== $this->get($latitudeKey) && null !== $this->get($zoomLevelKey)) {
+            Log::debug('All fields present.');
+            // must be PUT and API route:
+            if ('PUT' === $this->method() && $this->routeIs('api.v1.*')) {
+                Log::debug('Is API location');
+                return true;
+            }
+            // if POST and not API route, must also have "has_location"
+            // if is POST and route does not contain API, must also have "has_location" = true
+            if ('POST' === $this->method() && $this->routeIs('*.update') && !$this->routeIs('api.v1.*') && $hasLocationKey) {
+                Log::debug('Is POST + store route.');
+                $hasLocation = $this->boolean($hasLocationKey);
+                if (true === $hasLocation) {
+                    Log::debug('Has form location data + has_location');
+
+                    return true;
+                }
+                Log::debug('Does not have form location');
+
+                return false;
+            }
+            Log::debug('Is not POST API or POST form');
+
+            return false;
+        }
+        Log::debug('Fields not present');
+
+        return false;
     }
 
     /**

@@ -908,9 +908,6 @@ Route::group(
         Route::post('move-rule/{rule}/{ruleGroup}', ['uses' => 'Rule\IndexController@moveRule', 'as' => 'move-rule']);
 
 
-        Route::post('trigger/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
-        Route::post('action/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleActions', 'as' => 'reorder-actions']);
-
         // select controller
         Route::get('test', ['uses' => 'Rule\SelectController@testTriggers', 'as' => 'test-triggers']);
         Route::get('test-rule/{rule}', ['uses' => 'Rule\SelectController@testTriggersByRule', 'as' => 'test-triggers-rule']);
