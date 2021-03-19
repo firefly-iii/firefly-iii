@@ -38,6 +38,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -45,32 +54,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        // run account store with a minimal data set:
-        $route = 'api.v1.budgets.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
     }
 
     /**
@@ -91,13 +74,13 @@ class StoreControllerTest extends TestCase
         return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
     }
 
-
     /**
      * @return array
      */
     private function minimalSets(): array
     {
-        $faker       = Factory::create();
+        $faker = Factory::create();
+
         return [
             'default_budget' => [
                 'fields' => [
@@ -106,7 +89,6 @@ class StoreControllerTest extends TestCase
             ],
         ];
     }
-
 
     /**
      * @return \array[][]
@@ -130,12 +112,12 @@ class StoreControllerTest extends TestCase
         $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
 
         return [
-            'active'            => [
+            'active'           => [
                 'fields' => [
                     'active' => $faker->boolean,
                 ],
             ],
-            'auto_budget_id'    => [
+            'auto_budget_id'   => [
                 'fields' => [
                     'auto_budget_type'        => $autoBudgetType,
                     'auto_budget_currency_id' => $rand,
@@ -143,16 +125,33 @@ class StoreControllerTest extends TestCase
                     'auto_budget_period'      => $repeatFreq,
                 ],
             ],
-            'auto_budget_code'  => [
+            'auto_budget_code' => [
                 'fields' => [
                     'auto_budget_type'          => $autoBudgetType,
                     'auto_budget_currency_code' => $currencies[$rand],
                     'auto_budget_amount'        => number_format($faker->randomFloat(2, 10, 100), 2),
                     'auto_budget_period'        => $repeatFreq,
                 ],
-            ]
+            ],
 
         ];
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
+        // run account store with a minimal data set:
+        $route = 'api.v1.budgets.store';
+        $this->storeAndCompare($route, $submission);
     }
 
 }

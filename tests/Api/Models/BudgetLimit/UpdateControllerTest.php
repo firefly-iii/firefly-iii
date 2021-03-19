@@ -105,7 +105,7 @@ class UpdateControllerTest extends TestCase
                 'fields'       => [
                     'currency_id' => ['test_value' => (string)$rand],
                 ],
-                'extra_ignore' => ['currency_code','currency_name','currency_symbol'],
+                'extra_ignore' => ['currency_code', 'currency_name', 'currency_symbol'],
             ],
             'currency_code' => [
                 'id'           => 1,
@@ -113,7 +113,7 @@ class UpdateControllerTest extends TestCase
                 'fields'       => [
                     'currency_code' => ['test_value' => $currencies[$rand]],
                 ],
-                'extra_ignore' => ['currency_id','currency_name','currency_symbol'],
+                'extra_ignore' => ['currency_id', 'currency_name', 'currency_symbol'],
             ],
             'start'         => [
                 'id'           => 1,

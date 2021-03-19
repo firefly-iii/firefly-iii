@@ -110,7 +110,7 @@ class UpdateControllerTest extends TestCase
                 'id'           => 1,
                 'fields'       => [
                     'attachable_type' => ['test_value' => 'TransactionJournal'],
-                    'attachable_id' => ['test_value' => (string)2],
+                    'attachable_id'   => ['test_value' => (string)2],
                 ],
                 'extra_ignore' => [],
             ],

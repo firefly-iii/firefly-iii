@@ -22,14 +22,11 @@
 namespace Tests\Api\Models\Account;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
 use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
-use Tests\Objects\TestMandatoryField;
-use Tests\Objects\TestMandatoryFieldSet;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 use Tests\Traits\RandomValues;
@@ -43,6 +40,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -54,323 +60,161 @@ class StoreControllerTest extends TestCase
 
     /**
      * @param array $submission
-     * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider storeDataProvider
+     * newStoreDataProvider / emptyDataProvider
+     *
+     * @dataProvider newStoreDataProvider
      */
     public function testStore(array $submission): void
     {
-        $this->someTestData();
-        exit;
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
         // run account store with a minimal data set:
-        $route = 'api.v1.accounts.store';
-        $this->storeAndCompare($route, $submission);
+        $address = route('api.v1.accounts.store');
+        $this->updatedStoreAndCompare($address, $submission);
     }
 
     /**
      * @return array
      */
-    public function emptyDataProvider(): array
+    public function newStoreDataProvider(): array
     {
-        return [[[]]];
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-    }
+        // default asset account test set:
+        $defaultAssetSet        = new FieldSet();
+        $defaultAssetSet->title = 'default_asset_account';
+        $defaultAssetSet->addField(Field::createBasic('name', 'uuid'));
+        $defaultAssetSet->addField(Field::createBasic('type', 'static-asset'));
+        $defaultAssetSet->addField(Field::createBasic('account_role', 'random-asset-accountRole'));
+        $configuration->addMandatoryFieldSet($defaultAssetSet);
 
-    /**
-     * @return array
-     */
-    public function storeDataProvider(): array
-    {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name'           => function () {
-                $faker = Factory::create();
+        // expense test set:
+        $expenseSet        = new FieldSet();
+        $expenseSet->title = 'expense_account';
+        $expenseSet->addField(Field::createBasic('name', 'uuid'));
 
-                return $faker->uuid;
-            },
-            'iban'           => function () {
-                $faker = Factory::create();
+        // to make sure expense set ignores the opening balance fields:
+        $field                  = new Field;
+        $field->title           = 'type';
+        $field->fieldTitle      = 'type';
+        $field->fieldType       = 'static-expense';
+        $field->ignorableFields = ['opening_balance', 'opening_balance_date', 'virtual_balance', 'order'];
+        $expenseSet->addField($field);
+        $configuration->addMandatoryFieldSet($expenseSet);
 
-                return $faker->iban();
-            },
-            'account_number' => function () {
-                $faker = Factory::create();
+        // liability test set:
+        $fieldSet        = new FieldSet();
+        $fieldSet->title = 'liabilities_account';
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $fieldSet->addField(Field::createBasic('type', 'static-liabilities'));
+        $fieldSet->addField(Field::createBasic('liability_type', 'random-liability-type'));
+        $fieldSet->addField(Field::createBasic('liability_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('interest', 'random-percentage'));
+        $fieldSet->addField(Field::createBasic('interest_period', 'random-interest-period'));
+        $field                  = new Field;
+        $field->fieldTitle      = 'liability_start_date';
+        $field->fieldType       = 'random-past-date';
+        $field->ignorableFields = ['opening_balance', 'opening_balance_date'];
+        $field->title           = 'liability_start_date';
+        $fieldSet->addField($field);
+        $configuration->addMandatoryFieldSet($fieldSet);
 
-                return $faker->iban();
-            },
-        ];
+        // credit card set:
+        $fieldSet        = new FieldSet();
+        $fieldSet->title = 'cc_account';
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $fieldSet->addField(Field::createBasic('type', 'static-asset'));
+        $fieldSet->addField(Field::createBasic('account_role', 'static-ccAsset'));
+        $fieldSet->addField(Field::createBasic('credit_card_type', 'static-monthlyFull'));
+        $fieldSet->addField(Field::createBasic('monthly_payment_date', 'random-past-date'));
+        $configuration->addMandatoryFieldSet($fieldSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        // optional field sets (for all test configs)
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker      = Factory::create();
-        $currencies = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $rand       = rand(1, 4);
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('iban', 'iban'));
+        $configuration->addOptionalFieldSet('iban', $fieldSet);
 
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('bic', 'bic'));
+        $configuration->addOptionalFieldSet('bic', $fieldSet);
 
-        return [
-            'active'            => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-            'iban'              => [
-                'fields' => [
-                    'iban' => $faker->iban(),
-                ],
-            ],
-            'bic'               => [
-                'fields' => [
-                    'bic' => $faker->swiftBicNumber,
-                ],
-            ],
-            'account_number'    => [
-                'fields' => [
-                    'account_number' => $faker->iban(),
-                ],
-            ],
-            'ob'                => [
-                'fields' => [
-                    'opening_balance'      => $this->getRandomAmount(),
-                    'opening_balance_date' => $this->getRandomDateString(),
-                ],
-            ],
-            'virtual_balance'   => [
-                'fields' => [
-                    'virtual_balance' => $this->getRandomAmount(),
-                ],
-            ],
-            'currency_id'       => [
-                'fields' => [
-                    'currency_id' => $rand,
-                ],
-            ],
-            'currency_code'     => [
-                'fields' => [
-                    'currency_code' => $currencies[$rand],
-                ],
-            ],
-            'order'             => [
-                'fields' => [
-                    'order' => $faker->numberBetween(1, 5),
-                ],
-            ],
-            'include_net_worth' => [
-                'fields' => [
-                    'include_net_worth' => $faker->boolean,
-                ],
-            ],
-            'notes'             => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-            'location'          => [
-                'fields' => [
-                    'latitude'   => $faker->latitude,
-                    'longitude'  => $faker->longitude,
-                    'zoom_level' => $faker->numberBetween(1, 10),
-                ],
-            ],
-        ];
-    }
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('account_number', 'account_number'));
+        $configuration->addOptionalFieldSet('account_number', $fieldSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('opening_balance', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('opening_balance_date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('ob', $fieldSet);
 
-        return [
-            'asset'     => [
-                'parameters' => [],
-                'fields'     => [
-                    'name'         => $faker->uuid,
-                    'type'         => 'asset',
-                    'account_role' => $this->randomAccountRole(),
-                ],
-            ],
-            'expense'   => [
-                'parameters' => [],
-                'fields'     => [
-                    'name' => $faker->uuid,
-                    'type' => 'expense',
-                ],
-            ],
-            'liability' => [
-                'parameters' => [],
-                'fields'     => [
-                    'name'                 => $faker->uuid,
-                    'type'                 => 'liabilities',
-                    'liability_type'       => $this->randomLiabilityType(),
-                    'liability_amount'     => $this->getRandomAmount(),
-                    'liability_start_date' => $this->getRandomDateString(),
-                    'interest'             => $this->getRandomPercentage(),
-                    'interest_period'      => $this->getRandomInterestPeriod(),
-                ],
-                'ignore'     => [
-                    'opening_balance', 'opening_balance_date',
-                ],
-            ],
-            'cc'        => [
-                'fields' => [
-                    'name'                 => $faker->uuid,
-                    'type'                 => 'asset',
-                    'account_role'         => 'ccAsset',
-                    'credit_card_type'     => 'monthlyFull',
-                    'monthly_payment_date' => $this->getRandomDateString(),
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
+        $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
 
-                ],
-            ],
-        ];
-    }
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-    public function someTestData(): void
-    {
-        // a basic test config set contains
-        // mandatory fields and X optional fields
-        // the optional fields will be rotated automatically.
-        $config = new TestConfiguration;
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
 
-        // add a set of mandatory fields:
-        $mandatoryFieldSet        = new FieldSet();
-        $mandatoryFieldSet->title = 'default_asset_account';
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('order', 'order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        // name
-        $mandatoryField                     = new Field;
-        $mandatoryField->title              = 'name';
-        $mandatoryField->fieldTitle         = 'name';
-        $mandatoryField->fieldPosition      = ''; // root
-        $mandatoryField->fieldType          = 'uuid'; // refers to a generator or something?
-        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
-        $mandatoryField->expectedReturn     = null; // or the callback
-        $mandatoryField->ignorableFields    = [];
-        $mandatoryFieldSet->addField($mandatoryField);
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('include_net_worth', 'boolean'));
+        $configuration->addOptionalFieldSet('include_net_worth', $fieldSet);
 
-        // type
-        $mandatoryField                     = new Field;
-        $mandatoryField->title              = 'type';
-        $mandatoryField->fieldTitle         = 'type';
-        $mandatoryField->fieldPosition      = ''; // root
-        $mandatoryField->fieldType          = 'static-asset'; // refers to a generator or something?
-        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
-        $mandatoryField->expectedReturn     = null; // or the callback
-        $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
-        $mandatoryFieldSet->addField($mandatoryField);
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        // role
-        $mandatoryField                     = new Field;
-        $mandatoryField->title              = 'role';
-        $mandatoryField->fieldTitle         = 'account_role';
-        $mandatoryField->fieldPosition      = ''; // root
-        $mandatoryField->fieldType          = 'random-asset-accountRole'; // refers to a generator or something?
-        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
-        $mandatoryField->expectedReturn     = null; // or the callback
-        $mandatoryField->ignorableFields    = []; // something like transactions/0/currency_code
-        $mandatoryFieldSet->addField($mandatoryField);
-        $config->mandatoryFieldSet = $mandatoryFieldSet;
-        unset($mandatoryField);
-        //        $mandatoryField                     = new TestMandatoryField;
-        //        $mandatoryField->title              = 'transaction_type';
-        //        $mandatoryField->fieldTitle         = 'type';
-        //        $mandatoryField->fieldPosition      = 'transactions/0'; // not root!
-        //        $mandatoryField->fieldType          = 'random-transactionType'; // refers to a generator or something?
-        //        $mandatoryField->expectedReturnType = 'equal'; // or 'callback'
-        //        $mandatoryField->expectedReturn     = null; // or the callback
-        //        $mandatoryField->ignorableFields    = [];
-        //        $mandatoryFieldSet->addMandatoryField($mandatoryField);
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
+        $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
+        $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $optionalFieldSet                  = new FieldSet;
-        $optionalField                     = new Field;
-        $optionalField->title              = 'active';
-        $optionalField->fieldTitle         = 'active';
-        $optionalField->fieldPosition      = '';
-        $optionalField->fieldType          = 'boolean'; // refers to a generator or something?
-        $optionalField->expectedReturnType = 'equal'; // or 'callback'
-        $optionalField->expectedReturn     = null; // or the callback
-        $optionalField->ignorableFields    = []; // something like transactions/0/currency_code
-        $optionalFieldSet->addField($optionalField, 'active');
-
-        $optionalField                     = new Field;
-        $optionalField->title              = 'iban';
-        $optionalField->fieldTitle         = 'iban';
-        $optionalField->fieldPosition      = '';
-        $optionalField->fieldType          = 'iban'; // refers to a generator or something?
-        $optionalField->expectedReturnType = 'equal'; // or 'callback'
-        $optionalField->expectedReturn     = null; // or the callback
-        $optionalField->ignorableFields    = []; // something like transactions/0/currency_code
-        $optionalFieldSet->addField($optionalField, 'iban');
-
-        $config->optionalFieldSet = $optionalFieldSet;
 
         // generate submissions
-        $arr = $config->generateSubmission();
-        var_dump($arr);
-        exit;
-        // generate expected returns.
+        $array    = $configuration->generateSubmissions();
+        $expected = $configuration->generateExpected($array);
+        $ignored  = $configuration->ignores;
 
-        $set = [
-            // set for withdrawal, copy this for
-            // other transaction types etc.
-            // make a CLASS!!
-            'identifier' => [
-                'mandatory_fields' => [
-                    'name_of_set' => [
-                        'fields' => [
-                            'basic_text_field'                      => [
-                                'test_value'            => function () {
-                                    return 'callback';
-                                },
-                                'expected_return_value' => function ($input) {
-                                    // the same?
-                                    return $input;
+        // now create a combination for each submission and associated data:
+        $final = [];
+        foreach ($array as $index => $submission) {
+            $final[] = [[
+                            'submission' => $submission,
+                            'expected'   => $expected[$index],
+                            'ignore'     => $ignored[$index],
+                        ]];
+        }
 
-                                    // a conversion?
-                                    return (string)$input;
-
-                                    // something else entirely?
-                                    return 'something else entirely.';
-                                },
-                                'ignore_other_fields'   => [
-                                    'key_to_ignore',
-                                    'sub_array_like_transactions' => [0 => 'field_to_ignore'],
-                                ],
-                            ],
-                            'another_basic_text_field'              => [
-                                // see above for 'test_value', 'expected_return_value' and 'ignore_other_fields'
-                            ],
-                            'complex_array_field_like_transactions' => [
-                                'transactions' => [
-                                    0 => [
-                                        'field_is_here' => [
-                                            'test_value'            => null, // see above
-                                            'expected_return_value' => null,  // see above
-                                            'ignore_other_fields'   => [], // see above
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                // these will be permutated
-                'optional_fields'  => [],
-            ],
-        ];
+        return $final;
     }
+
 }

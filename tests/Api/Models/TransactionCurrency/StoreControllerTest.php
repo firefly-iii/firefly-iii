@@ -38,6 +38,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -45,32 +54,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.currencies.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
     }
 
     /**
@@ -81,19 +64,20 @@ class StoreControllerTest extends TestCase
         $minimalSets  = $this->minimalSets();
         $optionalSets = $this->optionalSets();
         $regenConfig  = [
-            'code' => function () {
+            'code'   => function () {
                 $faker = Factory::create();
 
                 return substr($faker->uuid, 0, 3);
             },
-            'name' => function () {
+            'name'   => function () {
                 $faker = Factory::create();
 
                 return $faker->uuid;
             },
             'symbol' => function () {
                 $faker = Factory::create();
-                return $faker->randomAscii.$faker->randomAscii;
+
+                return $faker->randomAscii . $faker->randomAscii;
             },
         ];
 
@@ -113,12 +97,11 @@ class StoreControllerTest extends TestCase
                 'fields'     => [
                     'code'   => substr($faker->uuid, 0, 3),
                     'name'   => $faker->uuid,
-                    'symbol' => $faker->randomAscii.$faker->randomAscii,
+                    'symbol' => $faker->randomAscii . $faker->randomAscii,
                 ],
             ],
         ];
     }
-
 
     /**
      * @return \array[][]
@@ -133,17 +116,33 @@ class StoreControllerTest extends TestCase
                     'enabled' => $faker->boolean,
                 ],
             ],
-            'default' => [
+            'default'        => [
                 'fields' => [
                     'default' => $faker->boolean,
                 ],
             ],
-            'decimal_places'    => [
+            'decimal_places' => [
                 'fields' => [
                     'decimal_places' => $faker->numberBetween(1, 6),
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
+        $route = 'api.v1.currencies.store';
+        $this->storeAndCompare($route, $submission);
     }
 
 }

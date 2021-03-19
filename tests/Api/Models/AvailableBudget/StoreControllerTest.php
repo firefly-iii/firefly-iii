@@ -38,6 +38,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -45,32 +54,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        // run account store with a minimal data set:
-        $route = 'api.v1.available_budgets.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
     }
 
     /**
@@ -84,7 +67,6 @@ class StoreControllerTest extends TestCase
 
         return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
     }
-
 
     /**
      * @return array
@@ -103,7 +85,6 @@ class StoreControllerTest extends TestCase
             ],
         ];
     }
-
 
     /**
      * @return \array[][]
@@ -130,6 +111,23 @@ class StoreControllerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
+        // run account store with a minimal data set:
+        $route = 'api.v1.available_budgets.store';
+        $this->storeAndCompare($route, $submission);
     }
 
 }

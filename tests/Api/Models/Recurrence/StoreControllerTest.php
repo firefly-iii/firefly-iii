@@ -38,6 +38,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -45,32 +54,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.recurrences.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
     }
 
     /**
@@ -109,7 +92,7 @@ class StoreControllerTest extends TestCase
             ['weekly', (string)$faker->numberBetween(1, 7)],
             ['ndom', (string)$faker->numberBetween(1, 4) . ',' . $faker->numberBetween(1, 7)],
             ['monthly', (string)$faker->numberBetween(1, 31)],
-            ['yearly', $faker->dateTimeBetween('-1 year','now')->format('Y-m-d')],
+            ['yearly', $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
         ];
         $set   = [];
 
@@ -144,7 +127,6 @@ class StoreControllerTest extends TestCase
         return $set;
     }
 
-
     /**
      * @return \array[][]
      */
@@ -153,38 +135,38 @@ class StoreControllerTest extends TestCase
         $faker = Factory::create();
 
         return [
-            'description'       => [
+            'description'         => [
                 'fields' => [
                     'description' => $faker->uuid,
                 ],
             ],
-            'nr_of_repetitions' => [
+            'nr_of_repetitions'   => [
                 'fields'        => [
                     'nr_of_repetitions' => $faker->numberBetween(1, 2),
                 ],
                 'remove_fields' => ['repeat_until'],
             ],
-            'apply_rules'       => [
+            'apply_rules'         => [
                 'fields' => [
                     'apply_rules' => $faker->boolean,
                 ],
             ],
-            'active'            => [
+            'active'              => [
                 'fields' => [
                     'active' => $faker->boolean,
                 ],
             ],
-            'notes'             => [
+            'notes'               => [
                 'fields' => [
                     'notes' => $faker->uuid,
                 ],
             ],
-            'repetitions_skip' => [
+            'repetitions_skip'    => [
                 'fields' => [
                     'repetitions' => [
                         // first entry, set field:
                         [
-                            'skip' => $faker->numberBetween(1,3),
+                            'skip' => $faker->numberBetween(1, 3),
                         ],
                     ],
                 ],
@@ -194,12 +176,28 @@ class StoreControllerTest extends TestCase
                     'repetitions' => [
                         // first entry, set field:
                         [
-                            'weekend' => $faker->numberBetween(1,4),
+                            'weekend' => $faker->numberBetween(1, 4),
                         ],
                     ],
                 ],
-            ]
+            ],
         ];
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
+        $route = 'api.v1.recurrences.store';
+        $this->storeAndCompare($route, $submission);
     }
 
 }

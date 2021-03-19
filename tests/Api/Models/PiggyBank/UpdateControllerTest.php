@@ -99,7 +99,7 @@ class UpdateControllerTest extends TestCase
                 'fields'       => [
                     'account_id' => ['test_value' => (string)$faker->numberBetween(1, 3)],
                 ],
-                'extra_ignore' => ['account_name','currency_id','currency_code'],
+                'extra_ignore' => ['account_name', 'currency_id', 'currency_code'],
             ],
             'target_amount'      => [
                 'id'           => 1,
@@ -146,16 +146,16 @@ class UpdateControllerTest extends TestCase
             'object_group_id'    => [
                 'id'           => 1,
                 'fields'       => [
-                    'object_group_id' => ['test_value' => (string) $objectGroupId],
+                    'object_group_id' => ['test_value' => (string)$objectGroupId],
                 ],
-                'extra_ignore' => ['object_group_order','object_group_title'],
+                'extra_ignore' => ['object_group_order', 'object_group_title'],
             ],
             'object_group_title' => [
                 'id'           => 1,
                 'fields'       => [
                     'object_group_title' => ['test_value' => $objectGroupName],
                 ],
-                'extra_ignore' => ['object_group_order','object_group_id'],
+                'extra_ignore' => ['object_group_order', 'object_group_id'],
             ],
         ];
 

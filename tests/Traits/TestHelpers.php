@@ -33,6 +33,21 @@ use Log;
 trait TestHelpers
 {
     /**
+     * @return int
+     */
+    public function randomInt(): int
+    {
+        $result = 4;
+        try {
+            $result = random_int(1, 100000);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not generate random number: %s', $e->getMessage()));
+        }
+
+        return $result;
+    }
+
+    /**
      * @param array $minimalSets
      * @param array $startOptionalSets
      * @param array $regenConfig
@@ -105,22 +120,6 @@ trait TestHelpers
         return $submissions;
     }
 
-
-    /**
-     * @return int
-     */
-    public function randomInt(): int
-    {
-        $result = 4;
-        try {
-            $result = random_int(1, 100000);
-        } catch (Exception $e) {
-            Log::debug(sprintf('Could not generate random number: %s', $e->getMessage()));
-        }
-
-        return $result;
-    }
-
     /**
      * @param $set
      * @param $opts
@@ -147,6 +146,136 @@ trait TestHelpers
         }
 
         return $set;
+    }
+
+    /**
+     * @param string $route
+     * @param array  $content
+     */
+    protected function updatedStoreAndCompare(string $route, array $content): void
+    {
+        $submission = $content['submission'];
+        $expected   = $content['expected'];
+        $ignore     = $content['ignore'];
+
+        // submit body
+        $response     = $this->post($route, $submission, ['Accept' => 'application/json']);
+        $responseBody = $response->content();
+        $responseJson = json_decode($responseBody, true);
+        $status       = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Submission:\n%s\nResponse: %s", json_encode($submission), $responseBody));
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
+        // get return and compare each field
+        $responseAttributes = $responseJson['data']['attributes'];
+        $this->updatedCompareStorageArray($submission, $responseAttributes, $expected, $ignore);
+
+        // ignore fields too!
+    }
+
+    /**
+     * @param array $submission
+     * @param array $response
+     * @param array $expected
+     * @param array $ignore
+     */
+    protected function updatedCompareStorageArray(array $submission, array $response, array $expected, array $ignore): void
+    {
+        foreach ($response as $key => $value) {
+            if (is_array($value) && array_key_exists($key, $expected) && is_array($expected[$key])) {
+                $this->updatedCompareStorageArray($submission, $value, $expected[$key], $ignore[$key] ?? []);
+            }
+            if (isset($expected[$key])) {
+                if (in_array($key, $ignore, true)) {
+                    continue;
+                }
+                if (!in_array($key, $ignore, true)) {
+                    $message = sprintf(
+                        "Field '%s' with value %s is expected to be %s.\nSubmitted:\n%s\nIgnored: %s\nReturned\n%s",
+                        $key,
+                        var_export($value, true),
+                        var_export($expected[$key], true),
+                        json_encode($submission),
+                        json_encode($ignore),
+                        json_encode($response)
+                    );
+
+                    $this->assertEquals($value, $expected[$key], $message);
+                }
+
+                //                if($value !== $expected[$key]) {
+                //                }
+                //                var_dump($key);
+                //                var_dump($value);
+                //                var_dump($expected[$key]);
+                //                exit;
+            }
+
+        }
+
+    }
+
+
+    /**
+     * @param string $route
+     * @param array  $content
+     */
+    protected function storeAndCompare(string $route, array $content): void
+    {
+        $submission = $content['fields'];
+        $parameters = $content['parameters'];
+        $ignore     = $content['ignore'];
+        // submit!
+        $response     = $this->post(route($route, $parameters), $submission, ['Accept' => 'application/json']);
+        $responseBody = $response->content();
+        $responseJson = json_decode($responseBody, true);
+        $status       = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Submission:\n%s\nResponse: %s", json_encode($submission), $responseBody));
+
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
+        // compare results:
+        foreach ($responseJson['data']['attributes'] as $returnName => $returnValue) {
+            if (array_key_exists($returnName, $submission) && !in_array($returnName, $ignore, true)) {
+                // TODO still based on account routine:
+                if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {
+                    continue;
+                }
+                // check if is array, if so we need something smart:
+                if (is_array($returnValue) && is_array($submission[$returnName])) {
+                    $this->compareArray($submission, $returnName, $submission[$returnName], $returnValue);
+                }
+                if (!is_array($returnValue) && !is_array($submission[$returnName])) {
+                    $message = sprintf(
+                        "Main: Return value '%s' of key '%s' does not match submitted value '%s'.\n%s\n%s", $returnValue, $returnName, $submission[$returnName],
+                        json_encode($submission), $responseBody
+                    );
+                    $this->assertEquals($returnValue, $submission[$returnName], $message);
+                }
+
+            }
+        }
+    }
+
+    /**
+     * Some specials:
+     *
+     * @param string $area
+     * @param string $left
+     * @param string $right
+     *
+     * @return bool
+     */
+    protected function ignoreCombination(string $area, string $left, string $right): bool
+    {
+        if ('api.v1.accounts.store' === $area) {
+            if ('expense' === $left
+                && in_array($right, ['order', 'virtual_balance', 'opening_balance', 'opening_balance_date'])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -248,47 +377,6 @@ trait TestHelpers
     }
 
     /**
-     * @param string $route
-     * @param array  $content
-     */
-    protected function storeAndCompare(string $route, array $content): void
-    {
-        $submission = $content['fields'];
-        $parameters = $content['parameters'];
-        $ignore     = $content['ignore'];
-        // submit!
-        $response     = $this->post(route($route, $parameters), $submission, ['Accept' => 'application/json']);
-        $responseBody = $response->content();
-        $responseJson = json_decode($responseBody, true);
-        $status       = $response->getStatusCode();
-        $this->assertEquals($status, 200, sprintf("Submission:\n%s\nResponse: %s", json_encode($submission), $responseBody));
-
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-
-        // compare results:
-        foreach ($responseJson['data']['attributes'] as $returnName => $returnValue) {
-            if (array_key_exists($returnName, $submission) && !in_array($returnName, $ignore, true)) {
-                // TODO still based on account routine:
-                if ($this->ignoreCombination($route, $submission['type'] ?? 'blank', $returnName)) {
-                    continue;
-                }
-                // check if is array, if so we need something smart:
-                if (is_array($returnValue) && is_array($submission[$returnName])) {
-                    $this->compareArray($submission, $returnName, $submission[$returnName], $returnValue);
-                }
-                if (!is_array($returnValue) && !is_array($submission[$returnName])) {
-                    $message = sprintf(
-                        "Main: Return value '%s' of key '%s' does not match submitted value '%s'.\n%s\n%s", $returnValue, $returnName, $submission[$returnName],
-                        json_encode($submission), $responseBody
-                    );
-                    $this->assertEquals($returnValue, $submission[$returnName], $message);
-                }
-
-            }
-        }
-    }
-
-    /**
      * @param array  $fullOriginal
      * @param string $key
      * @param array  $original
@@ -297,7 +385,7 @@ trait TestHelpers
     protected function compareArray(array $fullOriginal, string $key, array $original, array $returned)
     {
         // TODO this should be configurable but OK
-        if(in_array($key, ['transactions','repetitions'], true) && 0 === count($original) && 0 !== count($returned)) {
+        if (in_array($key, ['transactions', 'repetitions'], true) && 0 === count($original) && 0 !== count($returned)) {
             // accept this.
             return;
         }
@@ -325,26 +413,5 @@ trait TestHelpers
                 }
             }
         }
-    }
-
-    /**
-     * Some specials:
-     *
-     * @param string $area
-     * @param string $left
-     * @param string $right
-     *
-     * @return bool
-     */
-    protected function ignoreCombination(string $area, string $left, string $right): bool
-    {
-        if ('api.v1.accounts.store' === $area) {
-            if ('expense' === $left
-                && in_array($right, ['order', 'virtual_balance', 'opening_balance', 'opening_balance_date'])) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

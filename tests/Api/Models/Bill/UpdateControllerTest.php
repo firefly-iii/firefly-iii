@@ -140,21 +140,21 @@ class UpdateControllerTest extends TestCase
                 'extra_ignore' => [],
             ],
 
-            'active'            => [
+            'active'             => [
                 'id'           => 1,
                 'fields'       => [
                     'active' => ['test_value' => $faker->boolean],
                 ],
                 'extra_ignore' => [],
             ],
-            'notes'             => [
+            'notes'              => [
                 'id'           => 1,
                 'fields'       => [
                     'notes' => ['test_value' => join(' ', $faker->words(5))],
                 ],
                 'extra_ignore' => [],
             ],
-            'object_group_id'   => [
+            'object_group_id'    => [
                 'id'           => 1,
                 'fields'       => [
                     'object_group_id' => ['test_value' => (string)$objectGroupId],
@@ -168,14 +168,14 @@ class UpdateControllerTest extends TestCase
                 ],
                 'extra_ignore' => ['object_group_order', 'object_group_id'],
             ],
-            'currency_id'       => [
+            'currency_id'        => [
                 'id'           => 1,
                 'fields'       => [
                     'currency_id' => ['test_value' => (string)$rand],
                 ],
                 'extra_ignore' => ['currency_code', 'currency_symbol'],
             ],
-            'currency_code'     => [
+            'currency_code'      => [
                 'id'           => 1,
                 'fields'       => [
                     'currency_code' => ['test_value' => $currencies[$rand]],

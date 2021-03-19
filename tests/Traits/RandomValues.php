@@ -54,21 +54,12 @@ trait RandomValues
         return array_merge($res1, $res2);
     }
 
-
     /**
      * @return string
      */
-    protected function randomAccountRole(): string
+    protected function getRandomAmount(): string
     {
-        return $this->randomFromArray(['defaultAsset', 'sharedAsset', 'savingAsset']);
-    }
-
-    /**
-     * @return string
-     */
-    protected function randomLiabilityType(): string
-    {
-        return $this->randomFromArray(['loan', 'debt', 'mortgage']);
+        return number_format(rand(1000, 100000) / 100, '2', '.');
     }
 
     /**
@@ -77,14 +68,6 @@ trait RandomValues
     protected function getRandomCurrencyCode(): string
     {
         return $this->randomFromArray(['EUR', 'USD', 'GBP']);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRandomAmount(): string
-    {
-        return number_format(rand(1000, 100000) / 100, '2', '.');
     }
 
     /**
@@ -101,6 +84,14 @@ trait RandomValues
     /**
      * @return string
      */
+    protected function getRandomInterestPeriod(): string
+    {
+        return $this->randomFromArray(['daily', 'monthly', 'yearly']);
+    }
+
+    /**
+     * @return string
+     */
     protected function getRandomPercentage(): string
     {
         return rand(1, 10000) / 100;
@@ -109,9 +100,9 @@ trait RandomValues
     /**
      * @return string
      */
-    protected function getRandomInterestPeriod(): string
+    protected function randomAccountRole(): string
     {
-        return $this->randomFromArray(['daily', 'monthly', 'yearly']);
+        return $this->randomFromArray(['defaultAsset', 'sharedAsset', 'savingAsset']);
     }
 
     /**
@@ -122,5 +113,13 @@ trait RandomValues
     private function randomFromArray(array $array)
     {
         return $array[rand(0, count($array) - 1)];
+    }
+
+    /**
+     * @return string
+     */
+    protected function randomLiabilityType(): string
+    {
+        return $this->randomFromArray(['loan', 'debt', 'mortgage']);
     }
 }

@@ -85,35 +85,35 @@ class UpdateControllerTest extends TestCase
     {
         $faker = Factory::create();
         $set   = [
-            'link_type_id'           => [
+            'link_type_id'   => [
                 'id'           => 1,
                 'fields'       => [
-                    'link_type_id' => ['test_value' => (string)$faker->numberBetween(1,3)],
+                    'link_type_id' => ['test_value' => (string)$faker->numberBetween(1, 3)],
                 ],
                 'extra_ignore' => ['link_type_name'],
             ],
-            'link_type_name'           => [
+            'link_type_name' => [
                 'id'           => 1,
                 'fields'       => [
                     'link_type_name' => ['test_value' => 'Refund'],
                 ],
                 'extra_ignore' => ['link_type_id'],
             ],
-            'inward_id'         => [
+            'inward_id'      => [
                 'id'           => 1,
                 'fields'       => [
-                    'inward_id' => ['test_value' => (string)$faker->numberBetween(11,20)],
+                    'inward_id' => ['test_value' => (string)$faker->numberBetween(11, 20)],
                 ],
                 'extra_ignore' => [],
             ],
-            'outward_id' => [
+            'outward_id'     => [
                 'id'           => 1,
                 'fields'       => [
                     'outward_id' => ['test_value' => (string)$faker->numberBetween(11, 30)],
                 ],
                 'extra_ignore' => [],
             ],
-            'notes'        => [
+            'notes'          => [
                 'id'           => 1,
                 'fields'       => [
                     'notes' => ['test_value' => join(' ', $faker->words(5))],

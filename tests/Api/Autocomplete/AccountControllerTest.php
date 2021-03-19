@@ -22,9 +22,9 @@
 namespace Tests\Api\Autocomplete;
 
 
-use Tests\TestCase;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AccountControllerTest
@@ -42,14 +42,6 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     *
-     */
-    public function testBasic(): void
-    {
-        $this->assertTrue(true);
-    }
-
-    /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\AccountController
      */
     public function testAccounts(): void
@@ -58,6 +50,14 @@ class AccountControllerTest extends TestCase
         $response = $this->get(route('api.v1.autocomplete.accounts'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     *
+     */
+    public function testBasic(): void
+    {
+        $this->assertTrue(true);
     }
 
 }

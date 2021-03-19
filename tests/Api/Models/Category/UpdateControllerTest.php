@@ -83,19 +83,19 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataSet(): array
     {
-        $faker           = Factory::create();
-        $set = [
-            'name'                    => [
+        $faker = Factory::create();
+        $set   = [
+            'name'  => [
                 'id'           => 1,
                 'fields'       => [
                     'name' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],
-            'notes'                    => [
+            'notes' => [
                 'id'           => 1,
                 'fields'       => [
-                    'notes' => ['test_value' => join(' ',$faker->words(5))],
+                    'notes' => ['test_value' => join(' ', $faker->words(5))],
                 ],
                 'extra_ignore' => [],
             ],

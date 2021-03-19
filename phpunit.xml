@@ -36,7 +36,7 @@
   </coverage>
   <testsuites>
     <testsuite name="Api">
-      <directory suffix="Test.php">./tests/Api/Models</directory>
+      <directory suffix="Test.php">./tests/Api/Models/Account</directory>
     </testsuite>
   </testsuites>
   <php>

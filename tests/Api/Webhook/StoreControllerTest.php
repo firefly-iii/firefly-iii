@@ -38,6 +38,15 @@ class StoreControllerTest extends TestCase
     use RandomValues, TestHelpers, CollectsValues;
 
     /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
+
+    /**
      *
      */
     public function setUp(): void
@@ -45,32 +54,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.webhooks.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
     }
 
     /**
@@ -81,12 +64,12 @@ class StoreControllerTest extends TestCase
         $minimalSets  = $this->minimalSets();
         $optionalSets = $this->optionalSets();
         $regenConfig  = [
-            'title'  => function () {
+            'title'    => function () {
                 $faker = Factory::create();
 
                 return $faker->uuid;
             },
-            'url'  => function () {
+            'url'      => function () {
                 $faker = Factory::create();
 
                 return str_replace(['http://'], 'https://', $faker->url);
@@ -138,20 +121,36 @@ class StoreControllerTest extends TestCase
         ];
     }
 
-
     /**
      * @return \array[][]
      */
     private function optionalSets(): array
     {
         $faker = Factory::create();
+
         return [
-            'active'            => [
+            'active' => [
                 'fields' => [
                     'active' => $faker->boolean,
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty data provider');
+        }
+        $route = 'api.v1.webhooks.store';
+        $this->storeAndCompare($route, $submission);
     }
 
 }

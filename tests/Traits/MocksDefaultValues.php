@@ -23,25 +23,22 @@ declare(strict_types=1);
 
 namespace Tests\Traits;
 
-use FireflyIII\Models\Configuration;
-use FireflyConfig;
-
 /**
  * Trait MocksDefaultValues
  */
 trait MocksDefaultValues
 {
-//    public function mockDefaultConfiguration(): void
-//    {
-//
-//        $falseConfig       = new Configuration;
-//        $falseConfig->data = false;
-//
-//        $idConfig = new Configuration;
-//        $idConfig->data = 'abc';
-//
-//        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
-//        FireflyConfig::shouldReceive('get')->withArgs(['installation_id', null])->andReturn($idConfig);
-//    }
+    //    public function mockDefaultConfiguration(): void
+    //    {
+    //
+    //        $falseConfig       = new Configuration;
+    //        $falseConfig->data = false;
+    //
+    //        $idConfig = new Configuration;
+    //        $idConfig->data = 'abc';
+    //
+    //        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
+    //        FireflyConfig::shouldReceive('get')->withArgs(['installation_id', null])->andReturn($idConfig);
+    //    }
 
 }

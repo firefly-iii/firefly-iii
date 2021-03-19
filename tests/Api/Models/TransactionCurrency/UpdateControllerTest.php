@@ -102,7 +102,7 @@ class UpdateControllerTest extends TestCase
             'symbol'         => [
                 'id'           => 'RUB',
                 'fields'       => [
-                    'description' => ['test_value' => $faker->randomAscii.$faker->randomAscii],
+                    'description' => ['test_value' => $faker->randomAscii . $faker->randomAscii],
                 ],
                 'extra_ignore' => [],
             ],

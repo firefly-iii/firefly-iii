@@ -85,24 +85,26 @@ class UpdateControllerTest extends TestCase
     {
         $faker = Factory::create();
         $set   = [
-            'active'    => [
+            'active'   => [
                 'id'           => 1,
                 'fields'       => [
                     'active' => ['test_value' => $faker->boolean],
                 ],
                 'extra_ignore' => [],
             ],
-            'title'  => [
+            'title'    => [
                 'id'           => 1,
                 'fields'       => [
                     'title' => ['test_value' => $faker->uuid],
                 ],
                 'extra_ignore' => [],
             ],
-            'trigger' => [
+            'trigger'  => [
                 'id'           => 1,
                 'fields'       => [
-                    'trigger' => ['test_value' => $faker->randomElement(['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION'])],
+                    'trigger' => ['test_value' => $faker->randomElement(
+                        ['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION']
+                    )],
                 ],
                 'extra_ignore' => [],
             ],
@@ -120,7 +122,7 @@ class UpdateControllerTest extends TestCase
                 ],
                 'extra_ignore' => [],
             ],
-            'url' => [
+            'url'      => [
                 'id'           => 1,
                 'fields'       => [
                     'url' => ['test_value' => str_replace(['http://'], 'https://', $faker->url)],
