@@ -80,12 +80,12 @@ export default {
   },
   created() {
     if (null === this.value || typeof this.value === 'undefined') {
-      axios.get('./api/v1/configuration/static/firefly.default_location').then(response => {
-        this.zoom = parseInt(response.data['firefly.default_location'].zoom_level);
+      axios.get('./api/v1/configuration/firefly.default_location').then(response => {
+        this.zoom = parseInt(response.data.data.value.zoom_level);
         this.center =
             [
-              parseFloat(response.data['firefly.default_location'].latitude),
-              parseFloat(response.data['firefly.default_location'].longitude),
+              parseFloat(response.data.data.value.latitude),
+              parseFloat(response.data.data.value.longitude),
             ]
         ;
       });

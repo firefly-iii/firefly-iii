@@ -69,15 +69,34 @@ import {debounce} from 'lodash';
 export default {
   name: "TransactionAccount",
   components: {VueTypeaheadBootstrap},
-  props: [
-    'index',
-    'direction',
-    'value',
-    'errors',
-    'sourceAllowedTypes',
-    'destinationAllowedTypes',
-    'allowedOpposingTypes'
-  ],
+  props: {
+    index: {
+      type: Number,
+    },
+    direction: {
+      type: String,
+    },
+    value: {
+      type: Object,
+      default: () => ({})
+    },
+    errors: {
+      type: Array,
+      default: () => ([])
+    },
+    sourceAllowedTypes: {
+      type: Array,
+      default: () => ([])
+    },
+    destinationAllowedTypes: {
+      type: Array,
+      default: () => ([])
+    },
+    allowedOpposingTypes: {
+      type: Object,
+      default: () => ({})
+    },
+  },
   data() {
     return {
       query: '',
