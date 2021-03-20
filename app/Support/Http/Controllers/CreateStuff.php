@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib3\Crypt\RSA;
 
 /**
  * Trait CreateStuff
@@ -104,7 +103,14 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-        $keys = RSA::createKey(4096);
+        // switch on PHP version.
+        if (7 === PHP_MAJOR_VERSION) {
+            $rsa  = new \phpseclib\Crypt\RSA;
+            $keys = $rsa->createKey(4096);
+        }
+        if (8 === PHP_MAJOR_VERSION) {
+            $keys = \phpseclib3\Crypt\RSA::createKeys(4096);
+        }
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
