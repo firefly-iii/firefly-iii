@@ -21,7 +21,10 @@
 
 declare(strict_types=1);
 
+
 namespace Tests\Traits;
+
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TestHelpers
@@ -34,6 +37,7 @@ trait TestHelpers
      */
     protected function assertPOST(string $route, array $content): void
     {
+        Log::debug('Now in assertPOST()');
         $submission = $content['submission'];
         $expected   = $content['expected'];
         $ignore     = $content['ignore'];
@@ -61,9 +65,13 @@ trait TestHelpers
      */
     private function comparePOSTArray(array $submission, array $response, array $expected, array $ignore): void
     {
+        Log::debug('Now in comparePOSTArray()');
         foreach ($response as $key => $value) {
+            Log::debug(sprintf('Now working on (sub)response key ["%s"]', $key));
             if (is_array($value) && array_key_exists($key, $expected) && is_array($expected[$key])) {
+                Log::debug(sprintf('(Sub)response key ["%s"] is an array!', $key));
                 $this->comparePOSTArray($submission, $value, $expected[$key], $ignore[$key] ?? []);
+                continue;
             }
             if (isset($expected[$key])) {
                 if (in_array($key, $ignore, true)) {
@@ -94,9 +102,18 @@ trait TestHelpers
      */
     protected function assertPUT(string $route, array $content): void
     {
-        $submission   = $content['submission'];
-        $ignore       = $content['ignore'];
-        $expected     = $content['expected'];
+        $submission = $content['submission'];
+        $ignore     = $content['ignore'];
+        $expected   = $content['expected'];
+
+        // get the original first:
+        $original           = $this->get($route, ['Accept' => 'application/json']);
+        $originalBody       = $original->content();
+        $originalJson       = json_decode($originalBody, true);
+        $originalAttributes = $originalJson['data']['attributes'];
+        $status             = $original->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Response: %s", json_encode($originalBody)));
+
         $response     = $this->put($route, $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
@@ -106,7 +123,7 @@ trait TestHelpers
 
         // get return and compare each field
         $responseAttributes = $responseJson['data']['attributes'];
-        $this->comparePUTArray($route, $submission, $responseAttributes, $expected, $ignore);
+        $this->comparePUTArray($route, $submission, $responseAttributes, $expected, $ignore, $originalAttributes);
     }
 
     /**
@@ -115,13 +132,15 @@ trait TestHelpers
      * @param array  $response
      * @param array  $expected
      * @param array  $ignore
+     * @param array  $original
      */
-    private function comparePUTArray(string $url, array $submission, array $response, array $expected, array $ignore): void
+    private function comparePUTArray(string $url, array $submission, array $response, array $expected, array $ignore, array $original): void
     {
-
+        $extraIgnore = ['created_at', 'updated_at', 'id'];
         foreach ($response as $key => $value) {
             if (is_array($value) && array_key_exists($key, $submission) && is_array($submission[$key])) {
-                $this->comparePUTArray($url, $submission[$key], $value, $expected[$key], $ignore[$key] ?? []);
+                $this->comparePUTArray($url, $submission[$key], $value, $expected[$key], $ignore[$key] ?? [], $original[$key] ?? []);
+                continue;
             }
 
             if (isset($submission[$key])) {
@@ -143,6 +162,28 @@ trait TestHelpers
 
                     $this->assertEquals($value, $expected[$key], $message);
                 }
+            }
+            // if not set, compare to original to see if it's the same:
+            if (
+                !isset($submission[$key])
+                && isset($response[$key])
+                && isset($original[$key])
+                && !in_array($key, $ignore, true)
+                && !in_array($key, $extraIgnore, true)) {
+
+                $message = sprintf(
+                    "Field '%s' was unexpectedly changed from %s to %s.\nSubmitted:  %s\nIgnored:    %s\nExpected:   %s\nReturned:   %s\nURL: %s",
+                    $key,
+                    json_encode($original[$key]),
+                    json_encode($response[$key]),
+                    json_encode($submission),
+                    json_encode($ignore),
+                    json_encode($expected),
+                    json_encode($response),
+                    $url
+                );
+                $this->assertEquals($response[$key], $original[$key], $message);
+                continue;
             }
         }
     }

@@ -25,9 +25,11 @@ namespace Tests\Api\Models\Recurrence;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -53,13 +55,18 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.recurrences.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.recurrences.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
+
     }
 
 
@@ -68,13 +75,117 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
+        // optional fields
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('title', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        return $submissions;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('description', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('first_date', 'random-past-date');
+        $field->ignorableFields = ['repetitions'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('first_date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('apply_rules', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('apply_rules', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-ndom');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-ndom'));
+        $configuration->addOptionalFieldSet('ndom', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-monthly');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-monthly'));
+        $configuration->addOptionalFieldSet('monthly', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-yearly');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'random-past-date'));
+        $configuration->addOptionalFieldSet('yearly', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/skip', 'random-skip');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('skip', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/weekend', 'weekend');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('weekend', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('transactions/0/foreign_amount', 'random-amount'));
+        $field                  = Field::createBasic('transactions/0/foreign_currency_id', 'random-currency-id');
+        $field->ignorableFields = ['transactions/0/foreign_currency_code', 'transactions/0/foreign_currency_symbol'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('foreign1', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/budget_id', 'random-budget-id');
+        $field->ignorableFields = ['transactions/0/budget_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('budget', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/category_id', 'random-category-id');
+        $field->ignorableFields = ['transactions/0/category_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('category', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
+        $configuration->addOptionalFieldSet('tags', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/piggy_bank_id', 'random-piggy-id');
+        $field->ignorableFields = ['transactions/0/piggy_bank_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('piggy', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
 

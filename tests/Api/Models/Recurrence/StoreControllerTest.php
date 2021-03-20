@@ -25,6 +25,9 @@ namespace Tests\Api\Models\Recurrence;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,127 +64,110 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'title' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_withdrawal';
+        $defaultSet->addField(Field::createBasic('type', 'static-withdrawal'));
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('first_date', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repeat_until', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/type', 'static-type-weekly'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/moment', 'static-one'));
+        $defaultSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
+        $defaultSet->addField(Field::createBasic('transactions/0/amount', 'random-amount'));
+        $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-asset-id'));
+        $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-expense-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_withdrawal_2';
+        $defaultSet->addField(Field::createBasic('type', 'static-withdrawal'));
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('first_date', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('nr_of_repetitions', 'random-nr-of-reps'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/type', 'static-type-weekly'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/moment', 'static-one'));
+        $defaultSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
+        $defaultSet->addField(Field::createBasic('transactions/0/amount', 'random-amount'));
+        $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-asset-id'));
+        $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-expense-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-        // three sets:
-        $combis = [
-            ['withdrawal', 1, 8],
-            ['deposit', 9, 1],
-            ['transfer', 1, 2],
-        ];
 
-        $types = [
-            ['daily', ''],
-            ['weekly', (string)$faker->numberBetween(1, 7)],
-            ['ndom', (string)$faker->numberBetween(1, 4) . ',' . $faker->numberBetween(1, 7)],
-            ['monthly', (string)$faker->numberBetween(1, 31)],
-            ['yearly', $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-        ];
-        $set   = [];
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_deposit';
+        $defaultSet->addField(Field::createBasic('type', 'static-deposit'));
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('first_date', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repeat_until', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/type', 'static-type-weekly'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/moment', 'static-one'));
+        $defaultSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
+        $defaultSet->addField(Field::createBasic('transactions/0/amount', 'random-amount'));
+        $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-revenue-id'));
+        $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-asset-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        foreach ($combis as $combi) {
-            foreach ($types as $type) {
-                $set[] = [
-                    'parameters' => [],
-                    'fields'     => [
-                        'type'         => $combi[0],
-                        'title'        => $faker->uuid,
-                        'first_date'   => $faker->date(),
-                        'repeat_until' => $faker->date(),
-                        'repetitions'  => [
-                            [
-                                'type'   => $type[0],
-                                'moment' => $type[1],
-                            ],
-                        ],
-                        'transactions' => [
-                            [
-                                'description'    => $faker->uuid,
-                                'amount'         => number_format($faker->randomFloat(2, 10, 100), 2),
-                                'source_id'      => $combi[1],
-                                'destination_id' => $combi[2],
-                            ],
-                        ],
-                    ],
-                ];
-            }
-        }
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_transfer';
+        $defaultSet->addField(Field::createBasic('type', 'static-transfer'));
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('first_date', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repeat_until', 'random-future-date'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/type', 'static-type-weekly'));
+        $defaultSet->addField(Field::createBasic('repetitions/0/moment', 'static-one'));
+        $defaultSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
+        $defaultSet->addField(Field::createBasic('transactions/0/amount', 'random-amount'));
+        $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-other-asset-id'));
+        $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-asset-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $set;
-    }
+        // add optional set
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('description', 'uuid'));
+        $configuration->addOptionalFieldSet('description', $fieldSet);
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('apply_rules', 'boolean'));
+        $configuration->addOptionalFieldSet('apply_rules', $fieldSet);
 
-        return [
-            'description'         => [
-                'fields' => [
-                    'description' => $faker->uuid,
-                ],
-            ],
-            'nr_of_repetitions'   => [
-                'fields'        => [
-                    'nr_of_repetitions' => $faker->numberBetween(1, 2),
-                ],
-                'remove_fields' => ['repeat_until'],
-            ],
-            'apply_rules'         => [
-                'fields' => [
-                    'apply_rules' => $faker->boolean,
-                ],
-            ],
-            'active'              => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-            'notes'               => [
-                'fields' => [
-                    'notes' => $faker->uuid,
-                ],
-            ],
-            'repetitions_skip'    => [
-                'fields' => [
-                    'repetitions' => [
-                        // first entry, set field:
-                        [
-                            'skip' => $faker->numberBetween(1, 3),
-                        ],
-                    ],
-                ],
-            ],
-            'repetitions_weekend' => [
-                'fields' => [
-                    'repetitions' => [
-                        // first entry, set field:
-                        [
-                            'weekend' => $faker->numberBetween(1, 4),
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('repetitions/0/skip', 'random-skip'));
+        $configuration->addOptionalFieldSet('skip', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/foreign_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('transactions/0/foreign_currency_id', 'random-currency-id'));
+        $configuration->addOptionalFieldSet('foreign1', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/budget_id', 'random-budget-id'));
+        $configuration->addOptionalFieldSet('budget', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/category_id', 'random-category-id'));
+        $configuration->addOptionalFieldSet('category', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
+        $configuration->addOptionalFieldSet('tags', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/piggy_bank_id', 'random-piggy-id'));
+        $configuration->addOptionalFieldSet('piggy', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
     /**
@@ -189,15 +175,21 @@ class StoreControllerTest extends TestCase
      *
      * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider storeDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.recurrences.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.recurrences.store');
+        $this->assertPOST($address, $submission);
+
     }
 
 }

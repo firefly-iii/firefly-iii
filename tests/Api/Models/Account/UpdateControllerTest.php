@@ -84,14 +84,11 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('include_net_worth', 'boolean'));
         $configuration->addOptionalFieldSet('include_net_worth', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
-        $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
-        $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
-
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
-        $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('virtual_balance', 'random-amount');
+        $field->ignorableFields = ['current_balance'];
+        $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
 
         $fieldSet               = new FieldSet;
@@ -99,7 +96,7 @@ class UpdateControllerTest extends TestCase
         $field                  = new Field;
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
-        $field->ignorableFields = ['currency_code'];
+        $field->ignorableFields = ['currency_code', 'currency_symbol', 'current_balance'];
         $field->title           = 'currency_id';
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
@@ -109,7 +106,7 @@ class UpdateControllerTest extends TestCase
         $field                  = new Field;
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
-        $field->ignorableFields = ['currency_id'];
+        $field->ignorableFields = ['currency_id', 'currency_symbol', 'current_balance'];
         $field->title           = 'currency_code';
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);
@@ -131,9 +128,11 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
-        $fieldSet->addField(Field::createBasic('opening_balance', 'random-amount'));
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('opening_balance', 'random-amount');
+        $field->ignorableFields = ['current_balance'];
+        $fieldSet->addField($field);
         $fieldSet->addField(Field::createBasic('opening_balance_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('ob', $fieldSet);
 

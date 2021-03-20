@@ -102,6 +102,16 @@ trait RecurrenceValidation
             $transactionType = $transaction['type'] ?? $transactionType;
             $accountValidator->setTransactionType($transactionType);
 
+            if(
+                !array_key_exists('source_id', $transaction) &&
+                !array_key_exists('destination_id', $transaction) &&
+                !array_key_exists('source_name', $transaction) &&
+                !array_key_exists('destination_name', $transaction)
+            ) {
+                continue;
+            }
+
+
             // validate source account.
             $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
             $sourceName  = $transaction['source_name'] ?? null;

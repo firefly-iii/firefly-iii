@@ -56,13 +56,36 @@ class TestConfiguration
         $ignored    = $this->ignores;
         $expected   = $this->expected;
 
+        // update ignored parameters:
+        $newIgnored = [];
+        foreach ($ignored as $index => $currentIgnored) {
+            $updated = [];
+            foreach ($currentIgnored as $key => $value) {
+                $key       = (int)$key;
+                $positions = explode('/', $value);
+                $count     = count($positions);
+                if (1 === $count) {
+                    $updated[$key] = $value;
+                    continue;
+                }
+                if (3 === $count) {
+                    $root                     = $positions[0];
+                    $count                    = (int)$positions[1];
+                    $final                    = $positions[2];
+                    $updated[$root][$count][] = $final;
+                    continue;
+                }
+            }
+            $newIgnored[$index] = $updated;
+        }
+
         // now create a combination for each submission and associated data:
         $final = [];
         foreach ($array as $index => $submission) {
             $final[] = [[
                             'submission' => $submission,
                             'expected'   => $expected[$index] ?? $submission,
-                            'ignore'     => $ignored[$index] ?? [],
+                            'ignore'     => $newIgnored[$index] ?? [],
                             'parameters' => $parameters[$index] ?? [],
                         ]];
         }
@@ -247,7 +270,7 @@ class TestConfiguration
             $final                          = $positions[2];
             $current[$root]                 = array_key_exists($root, $current) ? $current[$root] : [];
             $current[$root][$count]         = array_key_exists($count, $current[$root]) ? $current[$root][$count] : [];
-            $current[$root][$count][$final] = $this->generateFieldValue($final);
+            $current[$root][$count][$final] = $this->generateFieldValue($field->fieldType);
 
             return $current;
         }
@@ -295,6 +318,8 @@ class TestConfiguration
                 return $faker->randomElement(['half-year', 'weekly', 'monthly', 'yearly']);
             case 'random-past-date':
                 return $faker->dateTimeBetween('-3 years', '-1 years')->format('Y-m-d');
+            case 'random-future-date':
+                return $faker->dateTimeBetween('1 years', '3 years')->format('Y-m-d');
             case 'random-date-two-year':
                 return $faker->dateTimeBetween('-2 years', '-1 years')->format('Y-m-d');
             case 'random-date-one-year':
@@ -332,14 +357,51 @@ class TestConfiguration
                 return number_format($faker->randomFloat(2, 50, 100), 2);
             case 'random-skip':
                 return $faker->numberBetween(0, 4);
+            case 'random-budget-id':
+            case 'random-category-id':
+            case 'random-piggy-id':
             case 'random-og-id':
                 return $faker->numberBetween(1, 2);
+            case 'random-tags':
+                return $faker->randomElements(['a', 'b', 'c', 'd', 'ef', 'gh'], 3);
             case 'random-auto-type':
                 return $faker->randomElement(['rollover', 'reset']);
             case 'random-auto-period':
                 return $faker->randomElement(['weekly', 'monthly', 'yearly']);
             case 'static-auto-none':
                 return 'none';
+            case 'random-piggy-account':
+                return $faker->numberBetween(1, 3);
+            case 'static-withdrawal':
+                return 'withdrawal';
+            case 'static-ndom':
+                return 'ndom';
+            case 'moment-ndom':
+                return sprintf('%d,%d', $faker->numberBetween(1, 4), $faker->numberBetween(1, 7));
+            case 'static-monthly':
+                return 'monthly';
+            case 'moment-monthly':
+                return $faker->numberBetween(1, 28);
+            case 'static-yearly':
+                return 'yearly';
+            case 'static-deposit':
+                return 'deposit';
+            case 'static-transfer':
+                return 'transfer';
+            case 'static-type-weekly':
+                return 'weekly';
+            case 'random-nr-of-reps':
+                return $faker->numberBetween(5, 12);
+            case 'weekend':
+                return $faker->numberBetween(1, 4);
+            case 'random-asset-id':
+                return $faker->randomElement([1, 2, 3]);
+            case 'random-other-asset-id':
+                return $faker->randomElement([4, 5, 6]);
+            case 'random-expense-id':
+                return $faker->randomElement([8, 11, 12]);
+            case 'random-revenue-id':
+                return $faker->randomElement([9, 10]);
         }
     }
 
@@ -439,13 +501,26 @@ class TestConfiguration
         if (count($customFields) > 0) {
             /** @var Field $field */
             foreach ($customFields as $field) {
-                if (null === $field->expectedReturn) {
-                    $this->expected[$index][$field->fieldTitle] = $this->submission[$index][$field->fieldTitle];
+                // fieldTitle indicates the position:
+                $positions = explode('/', $field->fieldTitle);
+                $count     = count($positions);
+                if (1 === $count) {
+                    if (null === $field->expectedReturn) {
+                        $this->expected[$index][$field->fieldTitle] = $this->submission[$index][$field->fieldTitle];
+                    }
+                    if (null !== $field->expectedReturn) {
+                        $this->expected[$index][$field->fieldTitle] = ($field->expectedReturn)($this->submission[$index][$field->fieldTitle]);
+                    }
                 }
-                if (null !== $field->expectedReturn) {
-                    $this->expected[$index][$field->fieldTitle] = ($field->expectedReturn)($this->submission[$index][$field->fieldTitle]);
+                if (3 === $count) {
+                    $root                                          = $positions[0];
+                    $count                                         = (int)$positions[1];
+                    $final                                         = $positions[2];
+                    $this->expected[$index][$root]                 = array_key_exists($root, $this->expected[$index]) ? $this->expected[$index][$root] : [];
+                    $this->expected[$index][$root][$count]         = array_key_exists($count, $this->expected[$index][$root])
+                        ? $this->expected[$index][$root][$count] : [];
+                    $this->expected[$index][$root][$count][$final] = $this->submission[$index][$root][$count][$final];
                 }
-
             }
         }
     }

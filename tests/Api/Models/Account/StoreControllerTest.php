@@ -184,7 +184,7 @@ class StoreControllerTest extends TestCase
      *
      * storeDataProvider / emptyDataProvider
      *
-     * @dataProvider storeDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
