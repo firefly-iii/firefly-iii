@@ -16,6 +16,7 @@ class TestConfiguration
     private array $submission;
     protected const MAX_ITERATIONS = 3;
     public array $ignores;
+    public array $parameters;
 
     /**
      * TestConfiguration constructor.
@@ -26,6 +27,7 @@ class TestConfiguration
         $this->mandatoryFieldSets = [];
         $this->optionalFieldSets  = [];
         $this->ignores            = [];
+        $this->parameters         = [];
     }
 
     /**
@@ -177,7 +179,8 @@ class TestConfiguration
             $result = $this->parseField($result, $field);
             $ignore = array_unique($ignore + $field->ignorableFields);
         }
-        $this->ignores[] = $ignore;
+        $this->ignores[]    = $ignore;
+        $this->parameters[] = $set->parameters ?? [];
 
         return $result;
     }
@@ -227,9 +230,9 @@ class TestConfiguration
                                 // for each field, add the ignores to the current index (+1!) of
                                 // ignores.
                                 if (null !== $field->ignorableFields && count($field->ignorableFields) > 0) {
-                                    $count                 = count($this->submission);
-                                    $currentIgnoreSet      = $this->ignores[$count] ?? [];
-                                    $this->ignores[$count] = array_unique(array_values(array_merge($currentIgnoreSet, $field->ignorableFields)));
+                                    $count            = count($this->submission);
+                                    $currentIgnoreSet = $this->ignores[$count] ?? [];
+                                    //$this->ignores[$count] = array_unique(array_values(array_merge($currentIgnoreSet, $field->ignorableFields)));
                                 }
                             }
                         }
@@ -239,7 +242,85 @@ class TestConfiguration
             }
         }
 
+        // no mandatory sets? Loop the optional sets:
+        if (0 === count($this->mandatoryFieldSets)) {
+            // expand the standard submission with extra sets from the optional field set.
+            $setCount = count($this->optionalFieldSets);
+            //            echo "there are " . $setCount . " optional sets\n";
+            if (0 !== $setCount) {
+                $keys = array_keys($this->optionalFieldSets);
+                //                echo " keys to consider are: " . join(', ', $keys) . "\n";
+                $maxCount = count($keys) > self::MAX_ITERATIONS ? self::MAX_ITERATIONS : count($keys);
+                //                echo " max count is " . $maxCount . "\n";
+                for ($i = 1; $i <= $maxCount; $i++) {
+                    $combinationSets = $this->combinationsOf($i, $keys);
+                    //                    echo " will create " . count($combinationSets) . " extra sets.\n";
+                    foreach ($combinationSets as $ii => $combinationSet) {
+                        //                        echo "  Set " . ($ii + 1) . "/" . count($combinationSets) . " will consist of:\n";
+                        // the custom set is born!
+                        //$custom = $this->toArray($set);
+                        $custom = [];
+                        foreach ($combinationSet as $combination) {
+                            //                            echo "   $combination\n";
+                            // here we start adding stuff to a copy of the standard submission.
+                            /** @var FieldSet $customSet */
+                            $customSet = $this->optionalFieldSets[$combination] ?? false;
+                            //                            echo "   there are " . count(array_keys($customSet->fields)) . " field(s) in this custom set\n";
+                            // loop each field in this custom set and add them, nothing more.
+                            /** @var Field $field */
+                            foreach ($customSet->fields as $field) {
+                                //                                echo "   added field " . $field->fieldTitle . " from custom set " . $combination . "\n";
+                                $custom = $this->parseField($custom, $field);
+                                // for each field, add the ignores to the current index (+1!) of
+                                // ignores.
+                                if (null !== $field->ignorableFields && count($field->ignorableFields) > 0) {
+                                    $count                 = count($this->submission);
+                                    $currentIgnoreSet      = $this->ignores[$count] ?? [];
+                                    $this->ignores[$count] = array_unique(array_values(array_merge($currentIgnoreSet, $field->ignorableFields)));
+                                }
+                            }
+                            $count                    = count($this->submission);
+                            $this->parameters[$count] = $customSet->parameters ?? [];
+                        }
+                        $this->submission[] = $custom;
+                    }
+                }
+            }
+        }
+
         return $this->submission;
+    }
+
+    /**
+     * @param array $submissions
+     *
+     * @return array
+     */
+    public function generateParameters(array $submissions): array
+    {
+        $params = [];
+        $index  = 0;
+        /** @var array $submission */
+        foreach ($submissions as $submission) {
+            // last one defined param
+            $submission = array_reverse($submission);
+            foreach ($submission as $key => $value) {
+                if (array_key_exists($key, $this->optionalFieldSets)) {
+                    /** @var FieldSet $fieldSet */
+                    $fieldSet = $this->optionalFieldSets[$key];
+                    if (null !== $fieldSet->parameters) {
+                        $params[$index] = $fieldSet->parameters;
+                        continue;
+                    }
+                    if (null !== $fieldSet->parameters) {
+                        $params[$index] = [];
+                    }
+                }
+            }
+            $index++;
+        }
+
+        return $params;
     }
 
     /**
@@ -328,6 +409,8 @@ class TestConfiguration
                 return $faker->longitude;
             case 'random-zoom_level':
                 return $faker->numberBetween(1, 12);
+            case 'null':
+                return null;
         }
     }
 

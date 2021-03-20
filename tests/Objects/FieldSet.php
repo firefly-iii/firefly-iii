@@ -10,13 +10,15 @@ class FieldSet
 {
     public ?array $fields;
     public string $title;
+    public ?array $parameters;
 
     /**
      * FieldSet constructor.
      */
     public function __construct()
     {
-        $this->fields = [];
+        $this->fields     = [];
+        $this->parameters = [];
     }
 
     /**

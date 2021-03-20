@@ -61,9 +61,9 @@ class StoreControllerTest extends TestCase
     /**
      * @param array $submission
      *
-     * newStoreDataProvider / emptyDataProvider
+     * storeDataProvider / emptyDataProvider
      *
-     * @dataProvider newStoreDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
@@ -82,7 +82,7 @@ class StoreControllerTest extends TestCase
     /**
      * @return array
      */
-    public function newStoreDataProvider(): array
+    public function storeDataProvider(): array
     {
         // some test configs:
         $configuration = new TestConfiguration;

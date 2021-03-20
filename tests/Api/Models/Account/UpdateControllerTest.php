@@ -22,9 +22,11 @@
 namespace Tests\Api\Models\Account;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 use Tests\Traits\RandomValues;
@@ -49,192 +51,176 @@ class UpdateControllerTest extends TestCase
     }
 
     /**
-     * @dataProvider updateDataProvider
+     * @param array $submission
+     *
+     * newStoreDataProvider / emptyDataProvider
+     *
+     * @dataProvider newUpdateDataProvider
      */
     public function testUpdate(array $submission): void
     {
-        $this->markTestSkipped('Skipped');
-        $ignore = [
-            'created_at',
-            'updated_at',
-            'currency_code',
-            'currency_symbol',
-            'currency_decimal_places',
-            'current_balance',
-        ];
-        $route  = route('api.v1.accounts.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.accounts.update', $submission['parameters']);
+        $this->updatedUpdateAndCompare($route, $submission);
     }
 
     /**
+     * Only create optional sets.
+     *
      * @return array
      */
-    public function updateDataProvider(): array
+    public function newUpdateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
+        $configuration = new TestConfiguration;
+
+        // optional field sets (for all test configs)
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addOptionalFieldSet('name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('iban', 'iban'));
+        $configuration->addOptionalFieldSet('iban', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('bic', 'bic'));
+        $configuration->addOptionalFieldSet('bic', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('account_number', 'iban'));
+        $configuration->addOptionalFieldSet('account_number', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('order', 'order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('include_net_worth', 'boolean'));
+        $configuration->addOptionalFieldSet('include_net_worth', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
+        $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('virtual_balance', 'random-amount'));
+        $configuration->addOptionalFieldSet('virtual_balance', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('account_role', 'random-asset-accountRole'));
+        $configuration->addOptionalFieldSet('account_role', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
+        $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
+        $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('opening_balance', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('opening_balance_date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('ob', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->parameters = [7];
+        $fieldSet->addField(Field::createBasic('account_role', 'static-ccAsset'));
+        $fieldSet->addField(Field::createBasic('credit_card_type', 'static-monthlyFull'));
+        $fieldSet->addField(Field::createBasic('monthly_payment_date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('cc1', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->parameters = [13];
+        $field                  = new Field;
+        $field->fieldTitle      = 'liability_type';
+        $field->fieldType       = 'random-liability-type';
+        $field->ignorableFields = ['account_role'];
+        $field->title           = 'liability_type';
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('account_role', 'null'));
+        $fieldSet->addField(Field::createBasic('credit_card_type', 'null'));
+        $fieldSet->addField(Field::createBasic('monthly_payment_date', 'null'));
+        $configuration->addOptionalFieldSet('liability-1', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->parameters = [13];
+        $fieldSet->addField(Field::createBasic('interest', 'random-percentage'));
+        $field                  = new Field;
+        $field->fieldTitle      = 'interest_period';
+        $field->fieldType       = 'random-interest-period';
+        $field->ignorableFields = ['account_role'];
+        $field->title           = 'interest_period';
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('account_role', 'null'));
+        $fieldSet->addField(Field::createBasic('credit_card_type', 'null'));
+        $fieldSet->addField(Field::createBasic('monthly_payment_date', 'null'));
+        $configuration->addOptionalFieldSet('liability-2', $fieldSet);
+
+        // generate submissions
+        $array      = $configuration->generateSubmissions();
+        $expected   = $configuration->generateExpected($array);
+        $parameters = $configuration->parameters;
+        $ignored    = $configuration->ignores;
+
+        // now create a combination for each submission and associated data:
+        $final = [];
+        foreach ($array as $index => $submission) {
+            $final[] = [[
+                            'submission' => $submission,
+                            'expected'   => $expected[$index],
+                            'ignore'     => $ignored[$index] ?? [],
+                            'parameters' => $parameters[$index],
+                        ]];
         }
 
-        return $submissions;
+        return $final;
     }
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker        = Factory::create();
-        $currencies   = ['EUR', 'GBP', 'USD', 'HUF'];
-        $currencyCode = $currencies[rand(0, count($currencies) - 1)];
-
-        $accountRoles = ['defaultAsset', 'sharedAsset', 'savingAsset'];
-        $accountRole  = $accountRoles[rand(0, count($accountRoles) - 1)];
-
-        $liabilityRoles = ['loan', 'debt', 'mortgage'];
-        $liabilityRole  = $liabilityRoles[rand(0, count($liabilityRoles) - 1)];
-
-        $interestPeriods = ['daily', 'monthly', 'yearly'];
-        $interestPeriod  = $interestPeriods[rand(0, count($interestPeriods) - 1)];
-
-        $set = [
-            'name'              => [
-                'id'           => 1,
-                'fields'       => [
-                    'name' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'active'            => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'iban'              => [
-                'id'           => 1,
-                'fields'       => [
-                    'iban' => ['test_value' => $faker->iban()],
-                ],
-                'extra_ignore' => [],
-            ],
-            'bic'               => [
-                'id'           => 1,
-                'fields'       => [
-                    'bic' => ['test_value' => $faker->swiftBicNumber],
-                ],
-                'extra_ignore' => [],
-            ],
-            'account_number'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'account_number' => ['test_value' => $faker->iban()],
-                ],
-                'extra_ignore' => [],
-            ],
-            'order'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'order' => ['test_value' => $faker->numberBetween(1, 10)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'include_net_worth' => [
-                'id'           => 1,
-                'fields'       => [
-                    'include_net_worth' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'virtual_balance'   => [
-                'id'           => 1,
-                'fields'       => [
-                    'virtual_balance' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'currency_id'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_id' => ['test_value' => (string)$faker->numberBetween(1, 10)],
-                ],
-                'extra_ignore' => ['currency_code'],
-            ],
-            'currency_code'     => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_code' => ['test_value' => $currencyCode],
-                ],
-                'extra_ignore' => ['currency_id'],
-            ],
-            'account_role'      => [
-                'id'           => 1,
-                'fields'       => [
-                    'account_role' => ['test_value' => $accountRole],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => join(' ', $faker->words(3))],
-                ],
-                'extra_ignore' => [],
-            ],
-            'location'          => [
-                'id'           => 1,
-                'fields'       => [
-                    'longitude'  => ['test_value' => $faker->longitude],
-                    'latitude'   => ['test_value' => $faker->latitude],
-                    'zoom_level' => ['test_value' => $faker->numberBetween(1, 10)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'ob'                => [
-                'id'           => 1,
-                'fields'       => [
-                    'opening_balance'      => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                    'opening_balance_date' => ['test_value' => $faker->date('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-            'cc2'               => [
-                'id'           => 7,
-                'fields'       => [
-                    'monthly_payment_date' => ['test_value' => $faker->date('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-            'cc3'               => [
-                'id'           => 7,
-                'fields'       => [
-                    'monthly_payment_date' => ['test_value' => $faker->date('Y-m-d')],
-                    'credit_card_type'     => ['test_value' => 'monthlyFull'],
-                ],
-                'extra_ignore' => [],
-            ],
-            'liabilityA'        => [
-                'id'           => 13,
-                'fields'       => [
-                    'liability_type' => ['test_value' => $liabilityRole],
-                ],
-                'extra_ignore' => [],
-            ],
-            'liabilityB'        => [
-                'id'           => 13,
-                'fields'       => [
-                    'interest'        => ['test_value' => $faker->randomFloat(2, 1, 99)],
-                    'interest_period' => ['test_value' => $interestPeriod],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-
-        return $set;
-    }
-
-
 }

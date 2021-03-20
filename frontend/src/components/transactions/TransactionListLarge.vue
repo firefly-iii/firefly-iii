@@ -42,8 +42,8 @@
                 <span v-for="tr in transaction.attributes.transactions">
                     <a v-if="'withdrawal' === tr.type" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
                     <a v-if="'deposit' === tr.type" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
-                    <a v-if="'transfer' === tr.type && tr.source_id === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
-                    <a v-if="'transfer' === tr.type && tr.destination_id === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <a v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
                     <br/>
                 </span>
       </td>
@@ -55,10 +55,10 @@
                     <span v-if="'deposit' === tr.type" class="text-success">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                      </span>
-                    <span v-if="'transfer' === tr.type && tr.source_id === account_id" class="text-info">
+                    <span v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" class="text-info">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
                     </span>
-                    <span v-if="'transfer' === tr.type && tr.destination_id === account_id" class="text-info">
+                    <span v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" class="text-info">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                     </span>
                 </span>

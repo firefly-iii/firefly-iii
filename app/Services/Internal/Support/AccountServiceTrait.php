@@ -120,7 +120,13 @@ trait AccountServiceTrait
         if (null === $data['account_role']) {
             $data['account_role'] = $this->accountRepository->getMetaValue($account, 'account_role');
         }
-        if ($account->accountType->type === AccountType::ASSET && isset($data['account_role']) && 'ccAsset' === $data['account_role']) {
+
+        // only asset account may have a role:
+        if ($account->accountType->type !== AccountType::ASSET) {
+            $data['account_role'] = '';
+        }
+
+        if ($account->accountType->type === AccountType::ASSET && array_key_exists('account_role', $data) && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields; // @codeCoverageIgnore
         }
         /** @var AccountMetaFactory $factory */

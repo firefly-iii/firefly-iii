@@ -210,7 +210,6 @@ trait TestHelpers
                 //                var_dump($expected[$key]);
                 //                exit;
             }
-
         }
 
     }
@@ -222,10 +221,9 @@ trait TestHelpers
      */
     protected function storeAndCompare(string $route, array $content): void
     {
-        $submission = $content['fields'];
-        $parameters = $content['parameters'];
-        $ignore     = $content['ignore'];
-        // submit!
+        $submission   = $content['fields'];
+        $parameters   = $content['parameters'];
+        $ignore       = $content['ignore'];
         $response     = $this->post(route($route, $parameters), $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
@@ -253,6 +251,62 @@ trait TestHelpers
                     $this->assertEquals($returnValue, $submission[$returnName], $message);
                 }
 
+            }
+        }
+    }
+
+    /**
+     * @param string $route
+     * @param array  $content
+     */
+    protected function updatedUpdateAndCompare(string $route, array $content): void
+    {
+        $submission   = $content['submission'];
+        $ignore       = $content['ignore'];
+        $response     = $this->put($route, $submission, ['Accept' => 'application/json']);
+        $responseBody = $response->content();
+        $responseJson = json_decode($responseBody, true);
+        $status       = $response->getStatusCode();
+        $this->assertEquals($status, 200, sprintf("Submission:\n%s\nResponse: %s", json_encode($submission), $responseBody));
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
+        // get return and compare each field
+        $responseAttributes = $responseJson['data']['attributes'];
+        $this->updatedCompareUpdatedArray($route, $submission, $responseAttributes, $ignore);
+    }
+
+    /**
+     * @param string $url
+     * @param array $submission
+     * @param array $response
+     * @param array $ignore
+     */
+    private function updatedCompareUpdatedArray(string $url, array $submission, array $response, array $ignore): void
+    {
+
+        foreach ($response as $key => $value) {
+            if (is_array($value) && array_key_exists($key, $submission) && is_array($submission[$key])) {
+                $this->updatedCompareUpdatedArray($url, $submission[$key], $value, $ignore[$key] ?? []);
+            }
+
+            if (isset($submission[$key])) {
+                if (in_array($key, $ignore, true)) {
+                    continue;
+                }
+                if (!in_array($key, $ignore, true)) {
+                    $message = sprintf(
+                        "Field '%s' with value %s is expected to be %s.\nSubmitted:\n%s\nIgnored: %s\nReturned\n%s\nURL: %s",
+                        $key,
+                        var_export($value, true),
+                        var_export($submission[$key], true),
+                        json_encode($submission),
+                        json_encode($ignore),
+                        json_encode($response),
+                        $url
+                    );
+
+                    $this->assertEquals($value, $submission[$key], $message);
+                }
             }
         }
     }
