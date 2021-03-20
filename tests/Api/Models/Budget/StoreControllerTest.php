@@ -64,7 +64,6 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        return [[[]]];
         // some test configs:
         $configuration = new TestConfiguration;
 
