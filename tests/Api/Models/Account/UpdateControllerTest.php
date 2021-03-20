@@ -29,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 
@@ -38,39 +37,7 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-    /**
-     * @param array $submission
-     *
-     * newStoreDataProvider / emptyDataProvider
-     *
-     * @dataProvider newUpdateDataProvider
-     */
-    public function testUpdate(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty provider.');
-        }
-        Log::debug('testStoreUpdated()');
-        Log::debug('submission       :', $submission['submission']);
-        Log::debug('expected         :', $submission['expected']);
-        Log::debug('ignore           :', $submission['ignore']);
-        Log::debug('parameters       :', $submission['parameters']);
-
-        $route = route('api.v1.accounts.update', $submission['parameters']);
-        $this->updatedUpdateAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * Only create optional sets.
@@ -157,28 +124,28 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet             = new FieldSet;
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
         $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
         $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet             = new FieldSet;
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('opening_balance', 'random-amount'));
         $fieldSet->addField(Field::createBasic('opening_balance_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('ob', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet             = new FieldSet;
         $fieldSet->parameters = [7];
         $fieldSet->addField(Field::createBasic('account_role', 'static-ccAsset'));
         $fieldSet->addField(Field::createBasic('credit_card_type', 'static-monthlyFull'));
         $fieldSet->addField(Field::createBasic('monthly_payment_date', 'random-past-date'));
         $configuration->addOptionalFieldSet('cc1', $fieldSet);
 
-        $fieldSet = new FieldSet;
-        $fieldSet->parameters = [13];
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [13];
         $field                  = new Field;
         $field->fieldTitle      = 'liability_type';
         $field->fieldType       = 'random-liability-type';
@@ -190,7 +157,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('monthly_payment_date', 'null'));
         $configuration->addOptionalFieldSet('liability-1', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet             = new FieldSet;
         $fieldSet->parameters = [13];
         $fieldSet->addField(Field::createBasic('interest', 'random-percentage'));
         $field                  = new Field;
@@ -222,5 +189,37 @@ class UpdateControllerTest extends TestCase
         }
 
         return $final;
+    }
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
+     * @param array $submission
+     *
+     * newStoreDataProvider / emptyDataProvider
+     *
+     * @dataProvider newUpdateDataProvider
+     */
+    public function testUpdate(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
+
+        $route = route('api.v1.accounts.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 }

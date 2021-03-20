@@ -27,7 +27,7 @@ use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
+
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +35,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array

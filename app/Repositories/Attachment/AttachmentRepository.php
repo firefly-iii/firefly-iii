@@ -179,7 +179,15 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 $attachment->filename = $data['filename'];
             }
         }
+        // update model (move attachment)
+        // should be validated already:
+        if (array_key_exists('attachable_type', $data) && array_key_exists('attachable_id', $data)) {
+            $attachment->attachable_id   = (int)$data['attachable_id'];
+            $attachment->attachable_type = sprintf('FireflyIII\\Models\\%s', $data['attachable_type']);
+        }
+
         $attachment->save();
+        $attachment->refresh();
         if (array_key_exists('notes', $data)) {
             $this->updateNote($attachment, (string)$data['notes']);
         }

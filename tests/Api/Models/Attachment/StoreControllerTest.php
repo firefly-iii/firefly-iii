@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Attachment;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -57,67 +58,6 @@ class StoreControllerTest extends TestCase
     }
 
     /**
-     * @return array
-     */
-    public function storeDataProvider(): array
-    {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [];
-
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
-
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-        $types = [
-            'Account',
-            'Budget',
-            'Bill',
-            'TransactionJournal',
-            'PiggyBank',
-            'Tag',
-        ];
-        $type  = $types[rand(0, count($types) - 1)];
-
-        return [
-            'default_file' => [
-                'parameters' => [],
-                'fields'     => [
-                    'filename'        => join(' ', $faker->words(3)),
-                    'attachable_type' => $type,
-                    'attachable_id'   => '1',
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'title' => [
-                'fields' => [
-                    'title' => $faker->uuid,
-                ],
-            ],
-            'notes' => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-        ];
-    }
-
-    /**
      * @param array $submission
      *
      * emptyDataProvider / storeDataProvider
@@ -127,10 +67,57 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
         // run account store with a minimal data set:
-        $route = 'api.v1.attachments.store';
-        $this->storeAndCompare($route, $submission);
+        $address = route('api.v1.attachments.store');
+        $this->assertPOST($address, $submission);
+    }
+
+    /**
+     * @return array
+     */
+    public function storeDataProvider(): array
+    {
+        // some test configs:
+        $configuration = new TestConfiguration;
+
+        // default asset account test set:
+        $defaultAssetSet        = new FieldSet();
+        $defaultAssetSet->title = 'default_file';
+        $defaultAssetSet->addField(Field::createBasic('filename', 'uuid'));
+        $defaultAssetSet->addField(Field::createBasic('attachable_type', 'random-attachment-type'));
+        $defaultAssetSet->addField(Field::createBasic('attachable_id', 'static-one'));
+        $configuration->addMandatoryFieldSet($defaultAssetSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('title', 'uuid'));
+        $configuration->addOptionalFieldSet('title', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+
+        // generate submissions
+        $array    = $configuration->generateSubmissions();
+        $expected = $configuration->generateExpected($array);
+        $ignored  = $configuration->ignores;
+
+        // now create a combination for each submission and associated data:
+        $final = [];
+        foreach ($array as $index => $submission) {
+            $final[] = [[
+                            'submission' => $submission,
+                            'expected'   => $expected[$index],
+                            'ignore'     => $ignored[$index],
+                        ]];
+        }
+
+        return $final;
     }
 }

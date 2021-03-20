@@ -29,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -37,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -56,27 +55,6 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-    /**
-     * @param array $submission
-     *
-     * storeDataProvider / emptyDataProvider
-     *
-     * @dataProvider emptyDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty provider.');
-        }
-        Log::debug('testStoreUpdated()');
-        Log::debug('submission       :', $submission['submission']);
-        Log::debug('expected         :', $submission['expected']);
-        Log::debug('ignore           :', $submission['ignore']);
-        // run account store with a minimal data set:
-        $address = route('api.v1.accounts.store');
-        $this->updatedStoreAndCompare($address, $submission);
     }
 
     /**
@@ -215,6 +193,27 @@ class StoreControllerTest extends TestCase
         }
 
         return $final;
+    }
+
+    /**
+     * @param array $submission
+     *
+     * storeDataProvider / emptyDataProvider
+     *
+     * @dataProvider emptyDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.accounts.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

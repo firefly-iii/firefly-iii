@@ -376,8 +376,14 @@ class TestConfiguration
                 return 'ccAsset';
             case 'static-monthlyFull':
                 return 'monthlyFull';
+            case 'static-one':
+                return 1;
+            case 'static-journal-type':
+                return 'TransactionJournal';
             case 'random-liability-type':
                 return $faker->randomElement(['loan', 'debt', 'mortgage']);
+            case 'random-journal-id':
+                return $faker->numberBetween(1,25);
             case 'random-amount':
                 return number_format($faker->randomFloat(2, 10, 100), 2);
             case 'random-percentage':
@@ -411,6 +417,8 @@ class TestConfiguration
                 return $faker->numberBetween(1, 12);
             case 'null':
                 return null;
+            case 'random-attachment-type':
+                return $faker->randomElement(['Account', 'Budget', 'Bill', 'TransactionJournal', 'PiggyBank','Tag',]);
         }
     }
 
