@@ -71,6 +71,16 @@ class TestConfiguration
     }
 
     /**
+     * @param string $message
+     */
+    private function debugMsg(string $message): void
+    {
+        if (true === self::SHOW_DEBUG) {
+            echo sprintf("%s\n", $message);
+        }
+    }
+
+    /**
      * @return array
      */
     private function generateSubmissions(): array
@@ -86,31 +96,31 @@ class TestConfiguration
 
             // expand the standard submission with extra sets from the optional field set.
             $setCount = count($this->optionalFieldSets);
-            //echo "Just created a standard set\n";
+            $this->debugMsg('Just created a standard set');
             if (0 !== $setCount) {
                 $keys = array_keys($this->optionalFieldSets);
-                //echo " keys to consider are: " . join(', ', $keys) . "\n";
+                $this->debugMsg(sprintf(' keys to consider are: %s', join(', ', $keys)));
                 $maxCount = count($keys) > self::MAX_ITERATIONS ? self::MAX_ITERATIONS : count($keys);
                 for ($i = 1; $i <= $maxCount; $i++) {
                     $combinationSets = $this->combinationsOf($i, $keys);
-                    //echo " will create " . count($combinationSets) . " extra sets.\n";
+                    $this->debugMsg(sprintf(' will create %d extra sets.', count($combinationSets)));
                     foreach ($combinationSets as $ii => $combinationSet) {
-                        //echo "  Set " . ($ii + 1) . "/" . count($combinationSets) . " will consist of:\n";
+                        $this->debugMsg(sprintf('Set %d/%d will consist of:', ($ii + 1), count($combinationSets)));
                         // the custom set is born!
                         $customFields = [];
                         $custom       = $this->toArray($set);
-                        //                        echo " refreshed!\n";
-                        //                        echo " " . json_encode($custom) . "\n";
+                        $this->debugMsg(' refreshed!');
+                        $this->debugMsg(sprintf(' %s', json_encode($custom)));
                         foreach ($combinationSet as $combination) {
-                            //echo "   $combination\n";
+                            $this->debugMsg(sprintf('   %s', $combination));
                             // here we start adding stuff to a copy of the standard submission.
                             /** @var FieldSet $customSet */
                             $customSet = $this->optionalFieldSets[$combination] ?? false;
-                            //                            echo "   there are " . count(array_keys($customSet->fields)) . " field(s) in this custom set\n";
+                            $this->debugMsg(sprintf('   there are %d field(s) in this custom set', count(array_keys($customSet->fields))));
                             // loop each field in this custom set and add them, nothing more.
                             /** @var Field $field */
                             foreach ($customSet->fields as $field) {
-                                //echo "   added field ".$field->fieldTitle." from custom set ".$combination."\n";
+                                $this->debugMsg(sprintf('   added field %s from custom set %s', $field->fieldTitle, $combination));
                                 $custom         = $this->parseField($custom, $field);
                                 $customFields[] = $field;
                             }
@@ -151,7 +161,7 @@ class TestConfiguration
                             // here we start adding stuff to a copy of the standard submission.
                             /** @var FieldSet $customSet */
                             $customSet = $this->optionalFieldSets[$combination] ?? false;
-                            //                            echo "   there are " . count(array_keys($customSet->fields)) . " field(s) in this custom set\n";
+                            $this->debugMsg(sprintf(sprintf('   there are %d field(s) in this custom set', count(array_keys($customSet->fields)))));
                             // loop each field in this custom set and add them, nothing more.
                             /** @var Field $field */
                             foreach ($customSet->fields as $field) {
@@ -441,201 +451,11 @@ class TestConfiguration
     }
 
     /**
-     * @param array $submissions
-     *
-     * @return array
-     */
-    public function generateIgnores(array $submissions): array
-    {
-        $ignores = [];
-        // loop each submission and find its expected return and create
-        // a return array with the expected values.
-        /** @var array $submission */
-        foreach ($submissions as $index => $submission) {
-            $ignores[$index] = [];
-            // loop each field and use the "name" to find it.
-            /**
-             * @var string $fieldName
-             * @var string $fieldValue
-             */
-            foreach ($submission as $fieldTitle => $fieldValue) {
-                //echo "Now searching for field $fieldTitle on index $index.\n";
-                $fieldObject = $this->findField($fieldTitle);
-                if (null !== $fieldObject) {
-                    if (0 !== count($fieldObject->ignorableFields)) {
-                        /** @var string $ignorableField */
-                        foreach ($fieldObject->ignorableFields as $ignorableField) {
-                            // explode and put in the right position:
-                            $positions = explode('/', $ignorableField);
-                            if (1 === count($positions)) {
-                                $ignores[$index][$ignorableField] = true;
-                            }
-                            if (3 === count($positions)) {
-                                $root                                   = $positions[0];
-                                $index                                  = (int)$positions[1];
-                                $final                                  = $positions[2];
-                                $ignores[$index][$root][$index][$final] = true;
-                            }
-                        }
-                    }
-                }
-                if (null === $fieldObject) {
-                    die('null field object :(');
-                }
-            }
-        }
-
-        return $ignores;
-    }
-
-    /**
-     * @param array $submissions
-     *
-     * @return array
-     */
-    public function generateParameters(array $submissions): array
-    {
-        $params = [];
-        $index  = 0;
-        /** @var array $submission */
-        foreach ($submissions as $submission) {
-            // last one defined param
-            $submission = array_reverse($submission);
-            foreach ($submission as $key => $value) {
-                if (array_key_exists($key, $this->optionalFieldSets)) {
-                    /** @var FieldSet $fieldSet */
-                    $fieldSet = $this->optionalFieldSets[$key];
-                    if (null !== $fieldSet->parameters) {
-                        $params[$index] = $fieldSet->parameters;
-                        continue;
-                    }
-                    if (null !== $fieldSet->parameters) {
-                        $params[$index] = [];
-                    }
-                }
-            }
-            $index++;
-        }
-
-        return $params;
-    }
-
-    /**
      * @param FieldSet $optionalFieldSet
      */
     public function setOptionalFieldSet(FieldSet $optionalFieldSet): void
     {
         $this->optionalFieldSet = $optionalFieldSet;
-    }
-
-    /**
-     * @param string $message
-     */
-    private function debugMsg(string $message): void
-    {
-        if (true === self::SHOW_DEBUG) {
-            echo sprintf("%s\n", $message);
-        }
-    }
-
-    /**
-     * @param array $submissions
-     *
-     * @return array
-     */
-    private function generateExpected(array $submissions): array
-    {
-        $returns = [];
-        // loop each submission and find its expected return and create
-        // a return array with the expected values.
-        /** @var array $submission */
-        foreach ($submissions as $index => $submission) {
-            $returns[$index] = [];
-            // loop each field and use the "name" to find it.
-            /**
-             * @var string $fieldName
-             * @var string $fieldValue
-             */
-            foreach ($submission as $fieldTitle => $fieldValue) {
-                //echo "Now searching for field $fieldTitle on index $index.\n";
-                $fieldObject = $this->findField($fieldTitle);
-                if (null !== $fieldObject) {
-                    if (null === $fieldObject->expectedReturn) {
-                        $returns[$index][$fieldTitle] = $submissions[$index][$fieldTitle];
-                    }
-                    if (null !== $fieldObject->expectedReturn) {
-                        $returns[$index][$fieldTitle] = 'hi there';//($fieldObject->expectedReturn)($submissions[$index][$fieldTitle]);
-                    }
-                }
-                if (null === $fieldObject) {
-                    die('null field object :(');
-                }
-            }
-        }
-
-        return $returns;
-    }
-
-    /**
-     * @param int    $index
-     * @param string $title
-     *
-     * @return Field|null
-     */
-    private function findField(string $title): ?Field
-    {
-        // since there is no index for optional field sets (they use ID)
-        // reverse the set and loop them all:
-        // reason we reverse them is because the last always overrules the first.
-        $reversed = array_reverse($this->optionalFieldSets);
-        foreach ($reversed as $fieldSet) {
-            foreach ($fieldSet->fields as $field) {
-                if ($title === $field->fieldTitle) {
-                    //echo " found field $title in an optional field set.\n";
-
-                    return $field;
-                }
-            }
-        }
-        $reversed = array_reverse($this->mandatoryFieldSets);
-        foreach ($reversed as $fieldSet) {
-            foreach ($fieldSet->fields as $field) {
-                if ($title === $field->fieldTitle) {
-                    //echo " found field $title in a mandatory field set.\n";
-
-                    return $field;
-                }
-            }
-        }
-
-
-        return null;
-    }
-
-    /**
-     * @param array $existing
-     * @param array $config
-     *
-     * @return array
-     */
-    private function parseIgnorableFields(array $existing, array $config): array
-    {
-        foreach ($config as $field) {
-            $parts = explode('/', $field);
-            if (1 === count($parts)) {
-                $existing[$parts[0]] = true;
-            }
-            if (3 === count($parts)) {
-                $root                            = $parts[0];
-                $index                           = (int)$parts[1];
-                $final                           = $parts[2];
-                $existing[$root][$index][$final] = true;
-            }
-            //if ('' !== $field->fieldPosition) {
-            //$positions = explode('/', $field->fieldPosition);
-        }
-
-        return $existing;
     }
 
 }

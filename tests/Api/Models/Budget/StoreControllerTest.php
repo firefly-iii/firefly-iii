@@ -120,7 +120,7 @@ class StoreControllerTest extends TestCase
      *
      * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider emptyDataProvider
+     * @dataProvider storeDataProvider
      */
     public function testStore(array $submission): void
     {

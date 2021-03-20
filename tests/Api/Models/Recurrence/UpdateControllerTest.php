@@ -167,7 +167,6 @@ class UpdateControllerTest extends TestCase
             $extraRepetitions = [];
             // do $i repetitions
             for ($ii = 0; $ii < $i; $ii++) {
-                //echo 'Now at ' . $i . ':' . $ii . ' <br>' . "\n";
                 // now loop fields, enough to create sets I guess?
                 $thisType = $types[$faker->numberBetween(0, 4)];
                 // TODO maybe do some permutation stuff here?
@@ -208,7 +207,6 @@ class UpdateControllerTest extends TestCase
             $extraTransactions = [];
             // do $i repetitions
             for ($ii = 0; $ii < $i; $ii++) {
-                //echo 'Now at ' . $i . ':' . $ii . ' <br>' . "\n";
                 // now loop fields, enough to create sets I guess?
                 // TODO maybe do some permutation stuff here?
                 $extraTransaction = [
