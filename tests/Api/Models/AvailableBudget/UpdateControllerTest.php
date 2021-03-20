@@ -25,6 +25,9 @@ namespace Tests\Api\Models\AvailableBudget;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -49,17 +52,22 @@ class UpdateControllerTest extends TestCase
 
 
     /**
+     * @param array $submission
      * @dataProvider updateDataProvider
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.available_budgets.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.available_budgets.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,13 +76,68 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
+        $configuration = new TestConfiguration;
+
+        // optional field sets (for all test configs)
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount', 'random-amount'));
+        $configuration->addOptionalFieldSet('amount', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $configuration->addOptionalFieldSet('start', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $configuration->addOptionalFieldSet('end', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $configuration->addOptionalFieldSet('both', $fieldSet);
+
+        // generate submissions
+        $array      = $configuration->generateSubmissions();
+        $expected   = $configuration->generateExpected($array);
+        $parameters = $configuration->parameters;
+        $ignored    = $configuration->ignores;
+
+        // now create a combination for each submission and associated data:
+        $final = [];
+        foreach ($array as $index => $submission) {
+            $final[] = [[
+                            'submission' => $submission,
+                            'expected'   => $expected[$index],
+                            'ignore'     => $ignored[$index] ?? [],
+                            'parameters' => $parameters[$index],
+                        ]];
         }
 
-        return $submissions;
+        return $final;
     }
 
 

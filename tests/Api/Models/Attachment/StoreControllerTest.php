@@ -94,6 +94,7 @@ class StoreControllerTest extends TestCase
         $defaultAssetSet->addField(Field::createBasic('attachable_id', 'static-one'));
         $configuration->addMandatoryFieldSet($defaultAssetSet);
 
+        // optional field sets
         $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('title', 'uuid'));
         $configuration->addOptionalFieldSet('title', $fieldSet);

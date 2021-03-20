@@ -25,6 +25,9 @@ namespace Tests\Api\Models\AvailableBudget;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,57 +64,54 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [];
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        // default asset account test set:
+        $defaultAssetSet        = new FieldSet();
+        $defaultAssetSet->title = 'default_file';
+        $defaultAssetSet->addField(Field::createBasic('amount', 'random-amount'));
+        $defaultAssetSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $defaultAssetSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $configuration->addMandatoryFieldSet($defaultAssetSet);
+
+        // optional field sets
+        $fieldSet = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        // generate submissions
+        $array    = $configuration->generateSubmissions();
+        $expected = $configuration->generateExpected($array);
+        $ignored  = $configuration->ignores;
+
+        // now create a combination for each submission and associated data:
+        $final = [];
+        foreach ($array as $index => $submission) {
+            $final[] = [[
+                            'submission' => $submission,
+                            'expected'   => $expected[$index],
+                            'ignore'     => $ignored[$index],
+                        ]];
+        }
+
+        return $final;
     }
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_ab' => [
-                'fields' => [
-                    'amount' => number_format($faker->randomFloat(2, 10, 100), 2),
-                    'start'  => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
-                    'end'    => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $currencies = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $rand       = rand(1, 4);
-
-        return [
-            'currency_by_id'   => [
-                'fields' => [
-                    'currency_id' => $rand,
-                ],
-            ],
-            'currency_by_code' => [
-                'fields' => [
-                    'currency_code' => $currencies[$rand],
-                ],
-            ],
-        ];
-    }
 
     /**
      * @param array $submission
@@ -123,11 +123,16 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
         // run account store with a minimal data set:
-        $route = 'api.v1.available_budgets.store';
-        $this->storeAndCompare($route, $submission);
+        $address = route('api.v1.available_budgets.store');
+        $this->assertPOST($address, $submission);
+
     }
 
 }

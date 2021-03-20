@@ -198,7 +198,6 @@ class TestConfiguration
         foreach ($this->mandatoryFieldSets as $set) {
             $this->submission[] = $this->toArray($set);
 
-
             // expand the standard submission with extra sets from the optional field set.
             $setCount = count($this->optionalFieldSets);
             //echo "Just created a standard set\n";
@@ -212,8 +211,8 @@ class TestConfiguration
                     foreach ($combinationSets as $ii => $combinationSet) {
                         //echo "  Set " . ($ii + 1) . "/" . count($combinationSets) . " will consist of:\n";
                         // the custom set is born!
-
-                        $custom = $this->toArray($set);
+                        $customFields = [];
+                        $custom       = $this->toArray($set);
                         //                        echo " refreshed!\n";
                         //                        echo " " . json_encode($custom) . "\n";
                         foreach ($combinationSet as $combination) {
@@ -226,17 +225,15 @@ class TestConfiguration
                             /** @var Field $field */
                             foreach ($customSet->fields as $field) {
                                 //echo "   added field ".$field->fieldTitle." from custom set ".$combination."\n";
-                                $custom = $this->parseField($custom, $field);
-                                // for each field, add the ignores to the current index (+1!) of
-                                // ignores.
-                                if (null !== $field->ignorableFields && count($field->ignorableFields) > 0) {
-                                    $count            = count($this->submission);
-                                    $currentIgnoreSet = $this->ignores[$count] ?? [];
-                                    //$this->ignores[$count] = array_unique(array_values(array_merge($currentIgnoreSet, $field->ignorableFields)));
-                                }
+                                $custom         = $this->parseField($custom, $field);
+                                $customFields[] = $field;
                             }
                         }
                         $this->submission[] = $custom;
+                        // at this point we can update the ignorable fields because we know the position
+                        // of the submission in the array
+                        $index = count($this->submission) - 1;
+                        $this->updateIgnorables($index, $customFields);
                     }
                 }
             }
@@ -289,6 +286,22 @@ class TestConfiguration
         }
 
         return $this->submission;
+    }
+
+    /**
+     * @param int   $index
+     * @param array $customFields
+     */
+    function updateIgnorables(int $index, array $customFields): void
+    {
+        if (count($customFields) > 0) {
+            /** @var Field $field */
+            foreach ($customFields as $field) {
+                if (0 !== count($field->ignorableFields)) {
+                    $this->ignores[$index] = array_unique(array_values(array_merge($this->ignores[$index], $field->ignorableFields)));
+                }
+            }
+        }
     }
 
     /**
@@ -383,7 +396,7 @@ class TestConfiguration
             case 'random-liability-type':
                 return $faker->randomElement(['loan', 'debt', 'mortgage']);
             case 'random-journal-id':
-                return $faker->numberBetween(1,25);
+                return $faker->numberBetween(1, 25);
             case 'random-amount':
                 return number_format($faker->randomFloat(2, 10, 100), 2);
             case 'random-percentage':
@@ -392,6 +405,10 @@ class TestConfiguration
                 return $faker->randomElement(['daily', 'monthly', 'yearly']);
             case 'random-past-date':
                 return $faker->dateTimeBetween('-3 years', '-1 years')->format('Y-m-d');
+            case 'random-date-two-year':
+                return $faker->dateTimeBetween('-2 years', '-1 years')->format('Y-m-d');
+            case 'random-date-one-year':
+                return $faker->dateTimeBetween('-1 years', 'now')->format('Y-m-d');
             case 'random-asset-accountRole':
                 return $faker->randomElement(['defaultAsset', 'savingAsset']);
             case 'random-transactionType':
@@ -418,7 +435,7 @@ class TestConfiguration
             case 'null':
                 return null;
             case 'random-attachment-type':
-                return $faker->randomElement(['Account', 'Budget', 'Bill', 'TransactionJournal', 'PiggyBank','Tag',]);
+                return $faker->randomElement(['Account', 'Budget', 'Bill', 'TransactionJournal', 'PiggyBank', 'Tag',]);
         }
     }
 

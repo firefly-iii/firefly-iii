@@ -117,48 +117,4 @@ class UpdateControllerTest extends TestCase
 
         return $final;
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'filename' => [
-                'id'           => 1,
-                'fields'       => [
-                    'filename' => ['test_value' => $faker->text(64)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'title'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'title' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => join(' ', $faker->words(5))],
-                ],
-                'extra_ignore' => [],
-            ],
-            'model'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'attachable_type' => ['test_value' => 'TransactionJournal'],
-                    'attachable_id'   => ['test_value' => (string)2],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-
-        return $set;
-    }
-
-
 }
