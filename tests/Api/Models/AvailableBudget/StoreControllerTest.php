@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\AvailableBudget;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -76,7 +74,7 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultAssetSet);
 
         // optional field sets
-        $fieldSet = new FieldSet;
+        $fieldSet               = new FieldSet;
         $field                  = new Field;
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
@@ -85,7 +83,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet = new FieldSet;
+        $fieldSet               = new FieldSet;
         $field                  = new Field;
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
@@ -94,22 +92,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);
 
-        // generate submissions
-        $array    = $configuration->generateSubmissions();
-        $expected = $configuration->generateExpected($array);
-        $ignored  = $configuration->ignores;
-
-        // now create a combination for each submission and associated data:
-        $final = [];
-        foreach ($array as $index => $submission) {
-            $final[] = [[
-                            'submission' => $submission,
-                            'expected'   => $expected[$index],
-                            'ignore'     => $ignored[$index],
-                        ]];
-        }
-
-        return $final;
+        return $configuration->generateAll();
     }
 
 
@@ -132,7 +115,5 @@ class StoreControllerTest extends TestCase
         // run account store with a minimal data set:
         $address = route('api.v1.available_budgets.store');
         $this->assertPOST($address, $submission);
-
     }
-
 }

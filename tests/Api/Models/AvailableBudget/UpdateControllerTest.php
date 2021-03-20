@@ -30,7 +30,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -53,6 +52,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @param array $submission
+     *
      * @dataProvider updateDataProvider
      */
     public function testUpdate(array $submission): void
@@ -79,8 +79,8 @@ class UpdateControllerTest extends TestCase
         $configuration = new TestConfiguration;
 
         // optional field sets (for all test configs)
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
         $field                  = new Field;
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
@@ -89,8 +89,8 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
         $field                  = new Field;
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
@@ -119,25 +119,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
         $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
         $configuration->addOptionalFieldSet('both', $fieldSet);
-
-        // generate submissions
-        $array      = $configuration->generateSubmissions();
-        $expected   = $configuration->generateExpected($array);
-        $parameters = $configuration->parameters;
-        $ignored    = $configuration->ignores;
-
-        // now create a combination for each submission and associated data:
-        $final = [];
-        foreach ($array as $index => $submission) {
-            $final[] = [[
-                            'submission' => $submission,
-                            'expected'   => $expected[$index],
-                            'ignore'     => $ignored[$index] ?? [],
-                            'parameters' => $parameters[$index],
-                        ]];
-        }
-
-        return $final;
+        return $configuration->generateAll();
     }
 
 

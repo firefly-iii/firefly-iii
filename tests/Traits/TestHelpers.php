@@ -96,6 +96,7 @@ trait TestHelpers
     {
         $submission   = $content['submission'];
         $ignore       = $content['ignore'];
+        $expected     = $content['expected'];
         $response     = $this->put($route, $submission, ['Accept' => 'application/json']);
         $responseBody = $response->content();
         $responseJson = json_decode($responseBody, true);
@@ -105,21 +106,22 @@ trait TestHelpers
 
         // get return and compare each field
         $responseAttributes = $responseJson['data']['attributes'];
-        $this->comparePUTArray($route, $submission, $responseAttributes, $ignore);
+        $this->comparePUTArray($route, $submission, $responseAttributes, $expected, $ignore);
     }
 
     /**
      * @param string $url
      * @param array  $submission
      * @param array  $response
+     * @param array  $expected
      * @param array  $ignore
      */
-    private function comparePUTArray(string $url, array $submission, array $response, array $ignore): void
+    private function comparePUTArray(string $url, array $submission, array $response, array $expected, array $ignore): void
     {
 
         foreach ($response as $key => $value) {
             if (is_array($value) && array_key_exists($key, $submission) && is_array($submission[$key])) {
-                $this->comparePUTArray($url, $submission[$key], $value, $ignore[$key] ?? []);
+                $this->comparePUTArray($url, $submission[$key], $value, $expected[$key], $ignore[$key] ?? []);
             }
 
             if (isset($submission[$key])) {
@@ -128,17 +130,18 @@ trait TestHelpers
                 }
                 if (!in_array($key, $ignore, true)) {
                     $message = sprintf(
-                        "Field '%s' with value %s is expected to be %s.\nSubmitted:\n%s\nIgnored: %s\nReturned\n%s\nURL: %s",
+                        "Field '%s' with value %s is expected to be %s.\nSubmitted:  %s\nIgnored:    %s\nExpected:   %s\nReturned:   %s\nURL: %s",
                         $key,
                         var_export($value, true),
-                        var_export($submission[$key], true),
+                        var_export($expected[$key], true),
                         json_encode($submission),
                         json_encode($ignore),
+                        json_encode($expected),
                         json_encode($response),
                         $url
                     );
 
-                    $this->assertEquals($value, $submission[$key], $message);
+                    $this->assertEquals($value, $expected[$key], $message);
                 }
             }
         }

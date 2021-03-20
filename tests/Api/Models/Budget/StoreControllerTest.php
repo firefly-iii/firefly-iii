@@ -25,6 +25,9 @@ namespace Tests\Api\Models\Budget;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,97 +64,76 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name' => function () {
-                $faker = Factory::create();
+        return [[[]]];
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return join(' ', $faker->words(5));
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_budget';
+        $defaultSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        // optional sets:
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+
+        $field                  = new Field;
+        $field->fieldTitle      = 'auto_budget_currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['auto_budget_currency_code'];
+        $field->title           = 'auto_budget_currency_id';
+        $fieldSet->addField($field);
+
+        $fieldSet->addField(Field::createBasic('auto_budget_type', 'random-auto-type'));
+        $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
+        $configuration->addOptionalFieldSet('auto-id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+
+        $field                  = new Field;
+        $field->fieldTitle      = 'auto_budget_currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['auto_budget_currency_id'];
+        $field->title           = 'auto_budget_currency_code';
+        $fieldSet->addField($field);
+
+        $fieldSet->addField(Field::createBasic('auto_budget_type', 'random-auto-type'));
+        $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
+        $configuration->addOptionalFieldSet('auto-code', $fieldSet);
+
+
+
+        return $configuration->generateAll();
     }
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_budget' => [
-                'fields' => [
-                    'name' => $faker->uuid,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker           = Factory::create();
-        $repeatFreqs     = ['weekly', 'monthly', 'yearly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $rand            = rand(1, 4);
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-
-        $autoBudgetTypes = ['reset', 'rollover'];
-        $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
-
-        return [
-            'active'           => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-            'auto_budget_id'   => [
-                'fields' => [
-                    'auto_budget_type'        => $autoBudgetType,
-                    'auto_budget_currency_id' => $rand,
-                    'auto_budget_amount'      => number_format($faker->randomFloat(2, 10, 100), 2),
-                    'auto_budget_period'      => $repeatFreq,
-                ],
-            ],
-            'auto_budget_code' => [
-                'fields' => [
-                    'auto_budget_type'          => $autoBudgetType,
-                    'auto_budget_currency_code' => $currencies[$rand],
-                    'auto_budget_amount'        => number_format($faker->randomFloat(2, 10, 100), 2),
-                    'auto_budget_period'        => $repeatFreq,
-                ],
-            ],
-
-        ];
-    }
 
     /**
      * @param array $submission
      *
      * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider storeDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
         // run account store with a minimal data set:
-        $route = 'api.v1.budgets.store';
-        $this->storeAndCompare($route, $submission);
+        $address = route('api.v1.budgets.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

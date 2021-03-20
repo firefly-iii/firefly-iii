@@ -97,24 +97,6 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('attachable_type', 'static-journal-type'));
         $fieldSet->addField(Field::createBasic('attachable_id', 'random-journal-id'));
         $configuration->addOptionalFieldSet('attachable_type', $fieldSet);
-
-        // generate submissions
-        $array      = $configuration->generateSubmissions();
-        $expected   = $configuration->generateExpected($array);
-        $parameters = $configuration->parameters;
-        $ignored    = $configuration->ignores;
-
-        // now create a combination for each submission and associated data:
-        $final = [];
-        foreach ($array as $index => $submission) {
-            $final[] = [[
-                            'submission' => $submission,
-                            'expected'   => $expected[$index],
-                            'ignore'     => $ignored[$index] ?? [],
-                            'parameters' => $parameters[$index],
-                        ]];
-        }
-
-        return $final;
+        return $configuration->generateAll();
     }
 }

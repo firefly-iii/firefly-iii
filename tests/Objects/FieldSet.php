@@ -9,8 +9,8 @@ namespace Tests\Objects;
 class FieldSet
 {
     public ?array $fields;
-    public string $title;
     public ?array $parameters;
+    public string $title;
 
     /**
      * FieldSet constructor.

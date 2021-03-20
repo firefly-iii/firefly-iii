@@ -394,6 +394,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
+        Log::debug('Now in update()');
+        // TODO update rules
         $oldName = $budget->name;
         if (array_key_exists('name', $data)) {
             $budget->name = $data['name'];
@@ -421,14 +423,19 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
+
         if (null === $autoBudget
             && array_key_exists('auto_budget_type', $data)
             && array_key_exists('auto_budget_amount', $data)
             && 0 !== $data['auto_budget_type']
+            && 'none' !== $data['auto_budget_type']
         ) {
             // only create if all are here:
             $autoBudget                          = new AutoBudget;
             $autoBudget->budget_id               = $budget->id;
+            $autoBudget->transaction_currency_id = $currency->id;
+        }
+        if (null !== $autoBudget && null !== $currency) {
             $autoBudget->transaction_currency_id = $currency->id;
         }
 
@@ -441,7 +448,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             if ('rollover' === $autoBudgetType) {
                 $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_ROLLOVER;
             }
-            if ('none' === $autoBudgetType && null !== $autoBudget->id) {
+            if ('none' === $autoBudgetType && null !== $autoBudget) {
                 $autoBudget->delete();
 
                 return $budget;

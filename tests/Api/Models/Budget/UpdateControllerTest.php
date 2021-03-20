@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Budget;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -53,13 +54,18 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.budgets.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.budgets.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
+
     }
 
 
@@ -68,109 +74,64 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
-    }
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addOptionalFieldSet('name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('order', 'order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'auto_budget_currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['auto_budget_currency_code', 'a'];
+        $field->title           = 'auto_budget_currency_id';
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('auto_budget_type', 'random-auto-type'));
+        $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
+        $configuration->addOptionalFieldSet('auto_budget_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'auto_budget_currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['auto_budget_currency_id', 'b'];
+        $field->title           = 'auto_budget_currency_code';
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('auto_budget_type', 'random-auto-type'));
+        $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
+        $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
+        $configuration->addOptionalFieldSet('auto_budget_code', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'auto_budget_type';
+        $field->fieldType       = 'static-auto-none';
+        $field->ignorableFields = ['auto_budget_currency_code', 'auto_budget_currency_id', 'c','auto_budget_period','auto_budget_amount'];
+        $field->expectedReturn  = function ($value) {
+            return null;
+        };
+        $field->title           = 'auto_budget_type';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('none', $fieldSet);
 
 
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker           = Factory::create();
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $repeatFreqs     = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-        $rand            = rand(1, 4);
-
-        $autoBudgetTypes = ['reset', 'rollover'];
-        $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
-
-        $set = [
-            'name'                    => [
-                'id'           => 1,
-                'fields'       => [
-                    'name' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'active'                  => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'order'                   => [
-                'id'           => 1,
-                'fields'       => [
-                    'order' => ['test_value' => $faker->numberBetween(1, 5)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'auto_budget'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_type'          => ['test_value' => $autoBudgetType],
-                    'auto_budget_currency_id'   => ['test_value' => (string)$rand],
-                    'auto_budget_currency_code' => ['test_value' => $currencies[$rand]],
-                    'auto_budget_amount'        => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                    'auto_budget_period'        => ['test_value' => $repeatFreq],
-                ],
-                'extra_ignore' => [],
-            ],
-            'auto_budget_currency_id' => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_currency_id' => ['test_value' => (string)$rand],
-                ],
-                'extra_ignore' => ['auto_budget_currency_code'],
-            ],
-
-            'auto_budget_currency_code' => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_currency_code' => ['test_value' => $currencies[$rand]],
-                ],
-                'extra_ignore' => ['auto_budget_currency_id'],
-            ],
-            'auto_budget_amount'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'auto_budget_period'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_period' => ['test_value' => $repeatFreq],
-                ],
-                'extra_ignore' => [],
-            ],
-            'auto_budget_reset'         => [
-                'id'           => 1,
-                'fields'       => [
-                    'auto_budget_type' => ['test_value' => 'none'],
-                ],
-                'extra_ignore' => ['auto_budget_type', 'auto_budget_period', 'auto_budget_currency_id', 'auto_budget_currency_code', 'auto_budget_amount'],
-            ],
-        ];
-
-        return $set;
+        return $configuration->generateAll();
     }
 
 

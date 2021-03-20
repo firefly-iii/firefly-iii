@@ -176,23 +176,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-
-        // generate submissions
-        $array    = $configuration->generateSubmissions();
-        $expected = $configuration->generateExpected($array);
-        $ignored  = $configuration->ignores;
-
-        // now create a combination for each submission and associated data:
-        $final = [];
-        foreach ($array as $index => $submission) {
-            $final[] = [[
-                            'submission' => $submission,
-                            'expected'   => $expected[$index],
-                            'ignore'     => $ignored[$index],
-                        ]];
-        }
-
-        return $final;
+        return $configuration->generateAll();
     }
 
     /**

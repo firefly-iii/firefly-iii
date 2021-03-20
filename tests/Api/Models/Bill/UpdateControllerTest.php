@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Bill;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -53,13 +54,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.bills.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.bills.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,125 +73,94 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addOptionalFieldSet('name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount_min', 'random-amount-min'));
+        $configuration->addOptionalFieldSet('amount_min', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount_max', 'random-amount-max'));
+        $configuration->addOptionalFieldSet('amount_max', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('repeat_freq', 'random-bill-repeat-freq'));
+        $configuration->addOptionalFieldSet('repeat_freq', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('skip', 'random-skip'));
+        $configuration->addOptionalFieldSet('skip', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('order', 'order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_id';
+        $field->fieldType       = 'random-og-id';
+        $field->ignorableFields = ['object_group_title', 'object_group_order'];
+        $field->title           = 'object_group_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_title';
+        $field->fieldType       = 'uuid';
+        $field->ignorableFields = ['object_group_id', 'object_group_order'];
+        $field->title           = 'object_group_title';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_title', $fieldSet);
+
+        // optional field sets
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker           = Factory::create();
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $repeatFreqs     = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-        $rand            = rand(1, 4);
-        $set             = [
-            'name'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'name' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'amount_min' => [
-                'id'           => 1,
-                'fields'       => [
-                    'amount_min' => ['test_value' => number_format($faker->randomFloat(2, 10, 50), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'amount_max' => [
-                'id'           => 1,
-                'fields'       => [
-                    'amount_max' => ['test_value' => number_format($faker->randomFloat(2, 60, 90), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'date'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'date' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-
-            'repeat_freq' => [
-                'id'           => 1,
-                'fields'       => [
-                    'repeat_freq' => ['test_value' => $repeatFreq],
-                ],
-                'extra_ignore' => [],
-            ],
-            'skip'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'skip' => ['test_value' => $faker->numberBetween(1, 10)],
-                ],
-                'extra_ignore' => [],
-            ],
-
-            'active'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'              => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => join(' ', $faker->words(5))],
-                ],
-                'extra_ignore' => [],
-            ],
-            'object_group_id'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'object_group_id' => ['test_value' => (string)$objectGroupId],
-                ],
-                'extra_ignore' => ['object_group_order', 'object_group_title'],
-            ],
-            'object_group_title' => [
-                'id'           => 1,
-                'fields'       => [
-                    'object_group_title' => ['test_value' => $objectGroupName],
-                ],
-                'extra_ignore' => ['object_group_order', 'object_group_id'],
-            ],
-            'currency_id'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_id' => ['test_value' => (string)$rand],
-                ],
-                'extra_ignore' => ['currency_code', 'currency_symbol'],
-            ],
-            'currency_code'      => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_code' => ['test_value' => $currencies[$rand]],
-                ],
-                'extra_ignore' => ['currency_id', 'currency_symbol'],
-            ],
-
-        ];
-
-        return $set;
-    }
-
-
 }
