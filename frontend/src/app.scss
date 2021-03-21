@@ -18,6 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+// Firefly III colors (?)
+@import 'scss/variables';
+
+
 // Fonts
 @import '~@fortawesome/fontawesome-free/css/all.css';
 // OverlayScrollbars
@@ -40,8 +44,7 @@
 // ---------------------------------------------------
 @import '~admin-lte/build/scss/variables';
 
-// Firefly III colors (?)
-@import 'scss/variables';
+
 
 @import '~admin-lte/build/scss/mixins';
 @import '~admin-lte/build/scss/parts/core';

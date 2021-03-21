@@ -1,32 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ browserconfig.xml
-  ~ Copyright (c) 2019 james@firefly-iii.org
-  ~
-  ~ This file is part of Firefly III (https://github.com/firefly-iii).
-  ~
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU Affero General Public License as
-  ~ published by the Free Software Foundation, either version 3 of the
-  ~ License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU Affero General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU Affero General Public License
-  ~ along with this program.  If not, see <https://www.gnu.org/licenses/>.
-  -->
-
 <browserconfig>
     <msapplication>
         <tile>
-            <square70x70logo src="/mstile-70x70.png?v=3e8AboOwbd"/>
-            <square150x150logo src="/mstile-150x150.png?v=3e8AboOwbd"/>
-            <square310x310logo src="/mstile-310x310.png?v=3e8AboOwbd"/>
-            <wide310x150logo src="/mstile-310x150.png?v=3e8AboOwbd"/>
-            <TileColor>#2d89ef</TileColor>
+            <square150x150logo src="/mstile-150x150.png"/>
+            <TileColor>#1e6581</TileColor>
         </tile>
     </msapplication>
 </browserconfig>
