@@ -45,7 +45,8 @@
                 {% include('v2.partials.layout.flashes') %}
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">{% if mainTitleIcon|default(false) %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
+                        <h1 class="m-0 text-dark">
+                            {% if mainTitleIcon|default(false) %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
                             {{ title }} <small class="text-muted">
                                 {% if subTitleIcon|default(false) %}<i class="fa fas {{ subTitleIcon }}"></i>{% endif %}
                                 {{ subTitle|default('') }}</small></h1>
