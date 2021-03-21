@@ -25,6 +25,9 @@ namespace Tests\Api\Models\TransactionLinkType;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,57 +64,19 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name'    => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-            'inward'  => function () {
-                $faker = Factory::create();
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('name', 'uuid'));
+        $defaultSet->addField(Field::createBasic('inward', 'uuid'));
+        $defaultSet->addField(Field::createBasic('outward', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-                return $faker->uuid;
-            },
-            'outward' => function () {
-                $faker = Factory::create();
 
-                return $faker->uuid;
-            },
-        ];
-
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
-
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_link_type' => [
-                'parameters' => [],
-                'fields'     => [
-                    'name'    => $faker->uuid,
-                    'inward'  => $faker->uuid,
-                    'outward' => $faker->uuid,
-                ],
-            ],
-
-        ];
-    }
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        return [
-
-        ];
+        return $configuration->generateAll();
     }
 
     /**
@@ -123,11 +88,17 @@ class StoreControllerTest extends TestCase
      */
     public function testStore(array $submission): void
     {
+
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.link_types.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.link_types.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

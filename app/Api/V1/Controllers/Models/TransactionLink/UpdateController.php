@@ -53,6 +53,8 @@ class UpdateController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *
+     * TODO generates query exception when link exists.
      */
     public function update(UpdateRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {

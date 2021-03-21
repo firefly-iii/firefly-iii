@@ -25,6 +25,9 @@ namespace Tests\Api\Models\TransactionCurrency;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -53,13 +56,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.currencies.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.currencies.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,13 +75,43 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addOptionalFieldSet('name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $fieldSet->addField(Field::createBasic('symbol', 'random-new-currency-symbol'));
+        $configuration->addOptionalFieldSet('symbol', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $field                = Field::createBasic('enabled', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('enabled', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $field                = Field::createBasic('default', 'boolean-true');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('default', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $field                = Field::createBasic('decimal_places', 'currency-dp');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('decimal_places', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = ['RMB'];
+        $fieldSet->addField(Field::createBasic('symbol', 'random-new-currency-code'));
+        $configuration->addOptionalFieldSet('code', $fieldSet);
+
+
+        return $configuration->generateAll();
     }
 
 

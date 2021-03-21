@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\TransactionLink;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -53,13 +54,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.transaction_links.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.transaction_links.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,61 +73,44 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
-    }
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+
+        $field                  = Field::createBasic('link_type_id', 'random-link-type-id');
+        $field->ignorableFields = ['link_type_name'];
+
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('link_type_id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+
+        $field                  = Field::createBasic('link_type_name', 'random-link-type-name');
+        $field->ignorableFields = ['link_type_id'];
+
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('link_type_name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('inward_id', 'random-low-journal-id'));
+        $configuration->addOptionalFieldSet('inward_id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('outward_id', 'random-high-journal-id'));
+        $configuration->addOptionalFieldSet('outward_id', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
 
 
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'link_type_id'   => [
-                'id'           => 1,
-                'fields'       => [
-                    'link_type_id' => ['test_value' => (string)$faker->numberBetween(1, 3)],
-                ],
-                'extra_ignore' => ['link_type_name'],
-            ],
-            'link_type_name' => [
-                'id'           => 1,
-                'fields'       => [
-                    'link_type_name' => ['test_value' => 'Refund'],
-                ],
-                'extra_ignore' => ['link_type_id'],
-            ],
-            'inward_id'      => [
-                'id'           => 1,
-                'fields'       => [
-                    'inward_id' => ['test_value' => (string)$faker->numberBetween(11, 20)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'outward_id'     => [
-                'id'           => 1,
-                'fields'       => [
-                    'outward_id' => ['test_value' => (string)$faker->numberBetween(11, 30)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'          => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => join(' ', $faker->words(5))],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
+        return $configuration->generateAll();
 
-        return $set;
     }
 
 

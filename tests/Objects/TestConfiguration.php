@@ -67,7 +67,7 @@ class TestConfiguration
                     $positions = explode('/', $value);
                     $count     = count($positions);
                     if (1 === $count) {
-                        $updated[$key] = $updated[$key] ? $updated[$key] : $value;
+                        $updated[$key] = array_key_exists($key, $updated) ? $updated[$key] : $value;
                         continue;
                     }
                     if (3 === $count) {
@@ -286,6 +286,7 @@ class TestConfiguration
             if (is_array($value) && !array_key_exists($key, $left)) {
                 $this->debugMsg(sprintf('Key %s exists in right only, keep it as it is.', $key));
                 $result[$key] = $right[$key];
+                continue;
             }
             // value is not an array, can be appended to result (ignore the key):
             $this->debugMsg(sprintf('Key %s is a string (%s), just append it and return it later.', $key, $value));
@@ -401,6 +402,14 @@ class TestConfiguration
                 return $faker->randomElement(['loan', 'debt', 'mortgage']);
             case 'random-journal-id':
                 return $faker->numberBetween(1, 25);
+            case 'random-low-journal-id':
+                return $faker->numberBetween(1, 9);
+            case 'random-high-journal-id':
+                return $faker->numberBetween(10, 20);
+            case 'random-link-type-id':
+                return $faker->numberBetween(1, 4);
+            case 'random-link-type-name':
+                return $faker->randomElement(['Related', 'Refund', 'Paid', 'Reimbursement']);
             case 'random-amount':
                 return number_format($faker->randomFloat(2, 10, 100), 2);
             case 'random-percentage':
@@ -423,6 +432,8 @@ class TestConfiguration
                 return $faker->randomElement(['withdrawal', 'deposit', 'transfer']);
             case 'boolean':
                 return $faker->boolean;
+            case 'boolean-true':
+                return true;
             case 'iban':
             case 'account_number':
                 return $faker->iban();
@@ -505,6 +516,12 @@ class TestConfiguration
                 return $faker->randomElement(['set_category', 'add_tag', 'set_description']);
             case 'random-rule-group-title':
                 return $faker->randomElement(['Rule group 1', 'Rule group 2']);
+            case 'random-new-currency-code':
+                return $faker->randomLetter . $faker->randomLetter . $faker->randomLetter;
+            case 'random-new-currency-symbol':
+                return $faker->randomAscii . $faker->randomAscii;
+            case 'currency-dp':
+                return $faker->numberBetween(0, 11);
         }
     }
 
