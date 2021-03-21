@@ -522,6 +522,14 @@ class TestConfiguration
                 return $faker->randomAscii . $faker->randomAscii;
             case 'currency-dp':
                 return $faker->numberBetween(0, 11);
+            case 'secure-url':
+                return str_replace(['http://'], 'https://', $faker->url);
+            case 'webhook-trigger':
+                return $faker->randomElement(['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION']);
+            case 'webhook-response':
+                return $faker->randomElement(['RESPONSE_TRANSACTIONS', 'RESPONSE_ACCOUNTS', 'RESPONSE_NONE']);
+            case 'webhook-delivery':
+                return $faker->randomElement(['DELIVERY_JSON']);
         }
     }
 

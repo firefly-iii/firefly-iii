@@ -122,7 +122,7 @@ class UpdateControllerTest extends TestCase
         $field                  = new Field;
         $field->fieldTitle      = 'auto_budget_type';
         $field->fieldType       = 'static-auto-none';
-        $field->ignorableFields = ['auto_budget_currency_code', 'auto_budget_currency_id', 'c','auto_budget_period','auto_budget_amount'];
+        $field->ignorableFields = ['auto_budget_currency_code', 'auto_budget_currency_id', 'c', 'auto_budget_period', 'auto_budget_amount'];
         $field->expectedReturn  = function ($value) {
             return null;
         };

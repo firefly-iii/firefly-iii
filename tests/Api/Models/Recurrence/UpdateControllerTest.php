@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\Recurrence;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;

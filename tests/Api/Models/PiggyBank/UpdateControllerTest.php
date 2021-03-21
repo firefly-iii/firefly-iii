@@ -83,7 +83,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('account_id', 'random-piggy-account');
-        $field->ignorableFields = ['account_name'];
+        $field->ignorableFields = ['account_name', 'currency_id', 'currency_code'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('account_id', $fieldSet);
 
@@ -97,7 +97,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('current_amount', 'random-amount-min');
-        $field->ignorableFields = ['percentage', 'left_to_save','save_per_month'];
+        $field->ignorableFields = ['percentage', 'left_to_save', 'save_per_month'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('current_amount', $fieldSet);
 

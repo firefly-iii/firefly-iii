@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\Tag;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -74,17 +72,17 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optionals
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('date', 'random-past-date');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('date', 'random-past-date');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('date', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('description', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
         $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
         $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));

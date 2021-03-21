@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\Recurrence;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -126,44 +124,44 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // add optional set
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('description', 'uuid'));
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('apply_rules', 'boolean'));
         $configuration->addOptionalFieldSet('apply_rules', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('repetitions/0/skip', 'random-skip'));
         $configuration->addOptionalFieldSet('skip', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/foreign_amount', 'random-amount'));
         $fieldSet->addField(Field::createBasic('transactions/0/foreign_currency_id', 'random-currency-id'));
         $configuration->addOptionalFieldSet('foreign1', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/budget_id', 'random-budget-id'));
         $configuration->addOptionalFieldSet('budget', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/category_id', 'random-category-id'));
         $configuration->addOptionalFieldSet('category', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
         $configuration->addOptionalFieldSet('tags', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/piggy_bank_id', 'random-piggy-id'));
         $configuration->addOptionalFieldSet('piggy', $fieldSet);
 

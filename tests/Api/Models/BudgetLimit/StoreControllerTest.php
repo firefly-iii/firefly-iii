@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\BudgetLimit;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -76,7 +74,7 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optional tests
-        $fieldSet             = new FieldSet;
+        $fieldSet               = new FieldSet;
         $field                  = new Field;
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
@@ -85,7 +83,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet               = new FieldSet;
         $field                  = new Field;
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
@@ -96,12 +94,16 @@ class StoreControllerTest extends TestCase
 
         $fieldSet             = new FieldSet;
         $fieldSet->parameters = [1];
-        $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $field = Field::createBasic('start', 'random-date-two-year');
+        $field->ignorableFields = ['spent'];
+        $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('start', $fieldSet);
 
         $fieldSet             = new FieldSet;
         $fieldSet->parameters = [1];
-        $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $field = Field::createBasic('end', 'random-date-one-year');
+        $field->ignorableFields = ['spent'];
+        $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('end', $fieldSet);
 
         $fieldSet             = new FieldSet;

@@ -36,8 +36,9 @@
     </coverage>
     <testsuites>
         <testsuite name="Api">
+            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
             <!--
-                 -->
+            <directory suffix="Test.php">./tests/Api</directory>
 
             <directory suffix="Test.php">./tests/Api/Models/Account</directory>
             <directory suffix="Test.php">./tests/Api/Models/Attachment</directory>
@@ -53,9 +54,12 @@
             <directory suffix="Test.php">./tests/Api/Models/RuleGroup</directory>
             <directory suffix="Test.php">./tests/Api/Models/Tag</directory>
             <directory suffix="Test.php">./tests/Api/Models/Transaction</directory>
-            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
             <directory suffix="Test.php">./tests/Api/Models/TransactionLink</directory>
             <directory suffix="Test.php">./tests/Api/Models/TransactionLinkType</directory>
+            <directory suffix="Test.php">./tests/Api/Webhook</directory>
+            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
+                    -->
+
         </testsuite>
     </testsuites>
     <php>

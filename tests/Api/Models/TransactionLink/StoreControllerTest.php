@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\TransactionLink;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -83,7 +81,7 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optionals
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
 

@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\RuleGroup;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -74,18 +72,18 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optionals
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('description', 'uuid');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('order', 'low-order');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('order', 'low-order');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('active', $fieldSet);
 

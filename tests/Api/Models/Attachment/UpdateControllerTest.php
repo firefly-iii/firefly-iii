@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\Attachment;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -97,6 +96,7 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('attachable_type', 'static-journal-type'));
         $fieldSet->addField(Field::createBasic('attachable_id', 'random-journal-id'));
         $configuration->addOptionalFieldSet('attachable_type', $fieldSet);
+
         return $configuration->generateAll();
     }
 }

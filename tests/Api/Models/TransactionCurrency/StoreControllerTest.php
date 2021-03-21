@@ -81,18 +81,18 @@ class StoreControllerTest extends TestCase
         $configuration->addMandatoryFieldSet($defaultSet);
 
         // optionals
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('enabled', 'boolean');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('enabled', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('enabled', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('default', 'boolean');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('default', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('default', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $field                = Field::createBasic('decimal_places', 'currency-dp');
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('decimal_places', 'currency-dp');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('decimal_places', $fieldSet);
 

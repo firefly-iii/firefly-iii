@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\Budget;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,7 +29,6 @@ use Tests\Objects\FieldSet;
 use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -79,7 +77,7 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        $fieldSet             = new FieldSet;
+        $fieldSet = new FieldSet;
 
         $field                  = new Field;
         $field->fieldTitle      = 'auto_budget_currency_id';
@@ -107,7 +105,6 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
         $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
         $configuration->addOptionalFieldSet('auto-code', $fieldSet);
-
 
 
         return $configuration->generateAll();

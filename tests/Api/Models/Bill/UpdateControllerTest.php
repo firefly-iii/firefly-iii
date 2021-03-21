@@ -146,7 +146,7 @@ class UpdateControllerTest extends TestCase
         $field                  = new Field;
         $field->fieldTitle      = 'currency_id';
         $field->fieldType       = 'random-currency-id';
-        $field->ignorableFields = ['currency_code','currency_symbol'];
+        $field->ignorableFields = ['currency_code', 'currency_symbol'];
         $field->title           = 'currency_id';
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_id', $fieldSet);
@@ -156,7 +156,7 @@ class UpdateControllerTest extends TestCase
         $field                  = new Field;
         $field->fieldTitle      = 'currency_code';
         $field->fieldType       = 'random-currency-code';
-        $field->ignorableFields = ['currency_id','currency_symbol'];
+        $field->ignorableFields = ['currency_id', 'currency_symbol'];
         $field->title           = 'currency_code';
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('currency_code', $fieldSet);

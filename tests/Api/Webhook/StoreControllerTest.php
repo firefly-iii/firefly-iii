@@ -22,12 +22,13 @@
 namespace Tests\Api\Webhook;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -61,80 +62,26 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'title'    => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-            'url'      => function () {
-                $faker = Factory::create();
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('url', 'secure-url'));
+        $defaultSet->addField(Field::createBasic('trigger', 'webhook-trigger'));
+        $defaultSet->addField(Field::createBasic('response', 'webhook-response'));
+        $defaultSet->addField(Field::createBasic('delivery', 'webhook-delivery'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-                return str_replace(['http://'], 'https://', $faker->url);
-            },
-            'trigger'  => function () {
-                $faker = Factory::create();
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
 
-                return $faker->randomElement(['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION']);
-            },
-            'response' => function () {
-                $faker = Factory::create();
 
-                return $faker->randomElement(['RESPONSE_TRANSACTIONS', 'RESPONSE_ACCOUNTS', 'RESPONSE_NONE']);
-            },
-            'delivery' => function () {
-                $faker = Factory::create();
-
-                return $faker->randomElement(['DELIVERY_JSON']);
-            },
-        ];
-
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
-
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-        //    - title
-        //    - trigger
-        //    - response
-        //    - delivery
-        //    - url
-
-        return [
-            'default_webhook' => [
-                'parameters' => [],
-                'fields'     => [
-                    'title'    => $faker->uuid,
-                    'trigger'  => $faker->randomElement(['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION']),
-                    'response' => $faker->randomElement(['RESPONSE_TRANSACTIONS', 'RESPONSE_ACCOUNTS', 'RESPONSE_NONE']),
-                    'delivery' => $faker->randomElement(['DELIVERY_JSON']),
-                    'url'      => str_replace(['http://'], 'https://', $faker->url),
-                ],
-            ],
-
-        ];
-    }
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'active' => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-        ];
+        return $configuration->generateAll();
     }
 
     /**
@@ -147,10 +94,15 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.webhooks.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.webhooks.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

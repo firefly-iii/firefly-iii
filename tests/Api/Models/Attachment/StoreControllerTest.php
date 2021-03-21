@@ -58,27 +58,6 @@ class StoreControllerTest extends TestCase
     }
 
     /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider emptyDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty provider.');
-        }
-        Log::debug('testStoreUpdated()');
-        Log::debug('submission       :', $submission['submission']);
-        Log::debug('expected         :', $submission['expected']);
-        Log::debug('ignore           :', $submission['ignore']);
-        // run account store with a minimal data set:
-        $address = route('api.v1.attachments.store');
-        $this->assertPOST($address, $submission);
-    }
-
-    /**
      * @return array
      */
     public function storeDataProvider(): array
@@ -102,6 +81,28 @@ class StoreControllerTest extends TestCase
         $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
         $configuration->addOptionalFieldSet('notes', $fieldSet);
+
         return $configuration->generateAll();
+    }
+
+    /**
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider emptyDataProvider
+     */
+    public function testStore(array $submission): void
+    {
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.attachments.store');
+        $this->assertPOST($address, $submission);
     }
 }

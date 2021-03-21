@@ -22,7 +22,6 @@
 namespace Tests\Api\Models\PiggyBank;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -95,8 +94,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('order', 'order'));
         $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
         $field                  = new Field;
         $field->fieldTitle      = 'object_group_id';
         $field->fieldType       = 'random-og-id';
@@ -105,8 +104,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
 
-        $fieldSet             = new FieldSet;
-        $fieldSet->parameters = [1];
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
         $field                  = new Field;
         $field->fieldTitle      = 'object_group_title';
         $field->fieldType       = 'uuid';
