@@ -25,6 +25,9 @@ namespace Tests\Api\Models\Rule;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,159 +64,65 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'title' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_rule_id';
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('rule_group_id', 'random-rule-group-id'));
+        $defaultSet->addField(Field::createBasic('trigger', 'random-trigger'));
+        $defaultSet->addField(Field::createBasic('triggers/0/type', 'random-trigger-type'));
+        $defaultSet->addField(Field::createBasic('triggers/0/value', 'uuid'));
+        $defaultSet->addField(Field::createBasic('actions/0/type', 'random-action-type'));
+        $defaultSet->addField(Field::createBasic('actions/0/value', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_rule_name';
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $defaultSet->addField(Field::createBasic('rule_group_title', 'random-rule-group-title'));
+        $defaultSet->addField(Field::createBasic('trigger', 'random-trigger'));
+        $defaultSet->addField(Field::createBasic('triggers/0/type', 'random-trigger-type'));
+        $defaultSet->addField(Field::createBasic('triggers/0/value', 'uuid'));
+        $defaultSet->addField(Field::createBasic('actions/0/type', 'random-action-type'));
+        $defaultSet->addField(Field::createBasic('actions/0/value', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-        //    - title
-        //    - rule_group_id
-        //    - trigger
-        //    - triggers
-        //    - actions
-        $set = [
-            'default_by_id'    => [
-                'parameters' => [],
-                'fields'     => [
-                    'title'         => $faker->uuid,
-                    'rule_group_id' => (string)$faker->randomElement([1, 2]),
-                    'trigger'       => $faker->randomElement(['store-journal', 'update-journal']),
-                    'triggers'      => [
-                        [
-                            'type'  => $faker->randomElement(['from_account_starts', 'from_account_is', 'description_ends', 'description_is']),
-                            'value' => $faker->uuid,
-                        ],
-                    ],
-                    'actions'       => [
-                        [
-                            'type'  => $faker->randomElement(['set_category', 'add_tag', 'set_description']),
-                            'value' => $faker->uuid,
-                        ],
-                    ],
-                ],
-            ],
-            'default_by_title' => [
-                'parameters' => [],
-                'fields'     => [
-                    'title'            => $faker->uuid,
-                    'rule_group_title' => sprintf('Rule group %d', $faker->randomElement([1, 2])),
-                    'trigger'          => $faker->randomElement(['store-journal', 'update-journal']),
-                    'triggers'         => [
-                        [
-                            'type'  => $faker->randomElement(['from_account_starts', 'from_account_is', 'description_ends', 'description_is']),
-                            'value' => $faker->uuid,
-                        ],
-                    ],
-                    'actions'          => [
-                        [
-                            'type'  => $faker->randomElement(['set_category', 'add_tag', 'set_description']),
-                            'value' => $faker->uuid,
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        // add optional set
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('order', 'low-order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        // leave it like this for now.
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
 
-        return $set;
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('strict', 'boolean'));
+        $configuration->addOptionalFieldSet('strict', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('stop_processing', 'boolean'));
+        $configuration->addOptionalFieldSet('stop_processing', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('triggers/0/stop_processing', 'boolean'));
+        $configuration->addOptionalFieldSet('stop_processingX', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('triggers/0/active', 'boolean'));
+        $configuration->addOptionalFieldSet('activeX', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('actions/0/active', 'boolean'));
+        $configuration->addOptionalFieldSet('activeXX', $fieldSet);
 
 
-    }
+        return $configuration->generateAll();
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
 
-        return [
-            'order'                   => [
-                'fields' => [
-                    'order' => $faker->numberBetween(1, 2),
-                ],
-            ],
-            'active'                  => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-            'strict'                  => [
-                'fields' => [
-                    'strict' => $faker->boolean,
-                ],
-            ],
-            'stop_processing'         => [
-                'fields' => [
-                    'stop_processing' => $faker->boolean,
-                ],
-            ],
-            'triggers_order'          => [
-                'fields' => [
-                    'triggers' => [
-                        // first entry, set field:
-                        [
-                            'order' => 1,
-                        ],
-                    ],
-                ],
-            ],
-            'triggers_active'         => [
-                'fields' => [
-                    'triggers' => [
-                        // first entry, set field:
-                        [
-                            'active' => false,
-                        ],
-                    ],
-                ],
-            ],
-            'triggers_not_active'     => [
-                'fields' => [
-                    'triggers' => [
-                        // first entry, set field:
-                        [
-                            'active' => true,
-                        ],
-                    ],
-                ],
-            ],
-            'triggers_processing'     => [
-                'fields' => [
-                    'triggers' => [
-                        // first entry, set field:
-                        [
-                            'stop_processing' => true,
-                        ],
-                    ],
-                ],
-            ],
-            'triggers_not_processing' => [
-                'fields' => [
-                    'triggers' => [
-                        // first entry, set field:
-                        [
-                            'stop_processing' => false,
-                        ],
-                    ],
-                ],
-            ],
-        ];
     }
 
     /**
@@ -221,15 +130,20 @@ class StoreControllerTest extends TestCase
      *
      * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider storeDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.rules.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.rules.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

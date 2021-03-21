@@ -25,6 +25,9 @@ namespace Tests\Api\Models\RuleGroup;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -53,13 +56,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.rule_groups.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.rule_groups.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,55 +75,32 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('title', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('title', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('description', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('order', 'low-order');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('order', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+        return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'title'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'title' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'description' => [
-                'id'           => 1,
-                'fields'       => [
-                    'description' => ['test_value' => join(' ', $faker->words(5))],
-                ],
-                'extra_ignore' => [],
-            ],
-            'order'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'order' => ['test_value' => $faker->numberBetween(1, 5)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'active'      => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-
-        return $set;
-    }
-
-
 }

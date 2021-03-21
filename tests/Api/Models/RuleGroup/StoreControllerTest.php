@@ -25,6 +25,9 @@ namespace Tests\Api\Models\RuleGroup;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,60 +64,33 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'title' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('title', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        // optionals
+        $fieldSet             = new FieldSet;
+        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('description', $fieldSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
+        $fieldSet             = new FieldSet;
+        $field                = Field::createBasic('order', 'low-order');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('order', $fieldSet);
 
-        return [
-            'default_group' => [
-                'parameters' => [],
-                'fields'     => [
-                    'title' => $faker->uuid,
-                ],
-            ],
-        ];
-    }
+        $fieldSet             = new FieldSet;
+        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
+        return $configuration->generateAll();
 
-        return [
-            'description' => [
-                'fields' => [
-                    'description' => $faker->uuid,
-                ],
-            ],
-            'order'       => [
-                'fields' => [
-                    'order' => $faker->numberBetween(1, 5),
-                ],
-            ],
-            'active'      => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-        ];
     }
 
     /**
@@ -127,10 +103,15 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.rule_groups.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.rule_groups.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

@@ -50,33 +50,40 @@ class TestConfiguration
     {
         $this->debugMsg('Now in generateAll()');
         // generate submissions
-        $array = $this->generateSubmissions();
-        //$expected   = $this->generateExpected($array);
+        $array      = $this->generateSubmissions();
         $parameters = $this->parameters;
         $ignored    = $this->ignores;
         $expected   = $this->expected;
 
+        $this->debugMsg(sprintf('Now validating %d ignored() values.', count($ignored)));
+
         // update ignored parameters:
         $newIgnored = [];
         foreach ($ignored as $index => $currentIgnored) {
+            $this->debugMsg(sprintf(' Value #%d is %s', $index, json_encode($currentIgnored)));
             $updated = [];
             foreach ($currentIgnored as $key => $value) {
-                $key       = (int)$key;
-                $positions = explode('/', $value);
-                $count     = count($positions);
-                if (1 === $count) {
-                    $updated[$key] = $value;
-                    continue;
+                if (!is_array($value)) {
+                    $positions = explode('/', $value);
+                    $count     = count($positions);
+                    if (1 === $count) {
+                        $updated[$key] = $updated[$key] ? $updated[$key] : $value;
+                        continue;
+                    }
+                    if (3 === $count) {
+                        $root                     = $positions[0];
+                        $count                    = (int)$positions[1];
+                        $final                    = $positions[2];
+                        $updated[$root][$count][] = $final;
+                        continue;
+                    }
                 }
-                if (3 === $count) {
-                    $root                     = $positions[0];
-                    $count                    = (int)$positions[1];
-                    $final                    = $positions[2];
-                    $updated[$root][$count][] = $final;
-                    continue;
+                if (is_array($value)) {
+                    $updated[$key] = $value;
                 }
             }
             $newIgnored[$index] = $updated;
+            $this->debugMsg(sprintf(' Updated value #%d is %s', $index, json_encode($updated)));
         }
 
         // now create a combination for each submission and associated data:
@@ -188,15 +195,38 @@ class TestConfiguration
                             // loop each field in this custom set and add them, nothing more.
                             /** @var Field $field */
                             foreach ($customSet->fields as $field) {
-                                $this->debugMsg(sprintf('     added field %s from custom set %s', $field->fieldTitle, $combination));
+                                $this->debugMsg(sprintf('     added field "%s" from custom set "%s"', $field->fieldTitle, $combination));
                                 $custom   = $this->parseField($custom, $field);
                                 $expected = $this->parseExpected($expected, $field, $custom);
                                 // for each field, add the ignores to the current index (+1!) of
                                 // ignores.
                                 $count = count($this->submission);
                                 if (null !== $field->ignorableFields && count($field->ignorableFields) > 0) {
-                                    $currentIgnoreSet      = $this->ignores[$count] ?? [];
-                                    $this->ignores[$count] = array_values(array_unique(array_values(array_merge($currentIgnoreSet, $field->ignorableFields))));
+                                    $this->debugMsg(sprintf('     This field also has ignore things! %s', json_encode($field->ignorableFields)));
+                                    $currentIgnoreSet = $this->ignores[$count] ?? [];
+                                    $newIgnoreSet     = [];
+                                    foreach ($field->ignorableFields as $ignorableField) {
+                                        $positions = explode('/', $ignorableField);
+                                        $posCount  = count($positions);
+
+                                        if (1 === $posCount) {
+                                            $newIgnoreSet[] = $ignorableField;
+                                        }
+                                        if (3 === $posCount) {
+                                            $root                          = $positions[0];
+                                            $index                         = (int)$positions[1];
+                                            $final                         = $positions[2];
+                                            $newIgnoreSet[$root]           = array_key_exists($root, $newIgnoreSet) ? $newIgnoreSet[$root] : [];
+                                            $newIgnoreSet[$root][$index]   = array_key_exists($index, $newIgnoreSet[$root]) ? $newIgnoreSet[$root][$index] : [];
+                                            $newIgnoreSet[$root][$index][] = $final;
+                                        }
+                                    }
+                                    $this->debugMsg(sprintf('     %s + %s', json_encode($currentIgnoreSet), json_encode($newIgnoreSet)));
+                                    $mergedArray = $this->mergeIgnoreArray($currentIgnoreSet, $newIgnoreSet);
+                                    //$this->ignores[$count] = $currentIgnoreSet + $newIgnoreSet;
+                                    $this->ignores[$count] = $mergedArray;//array_merge_recursive($currentIgnoreSet, $newIgnoreSet);
+
+                                    $this->debugMsg(sprintf('     New set of ignore things (%d) is: %s', $count, json_encode($this->ignores[$count])));
                                 }
                                 $this->expected[$count] = $expected;
                             }
@@ -205,7 +235,7 @@ class TestConfiguration
                         }
                         $count              = count($this->submission);
                         $this->submission[] = $custom;
-                        $this->debugMsg(sprintf('  Created set #%d', $totalCount));
+                        $this->debugMsg(sprintf('  Created set #%d on index %d', $totalCount, $count));
                         $this->debugMsg(sprintf('  Will submit: %s', json_encode($custom)));
                         $this->debugMsg(sprintf('  Will ignore: %s', json_encode($this->ignores[$count] ?? [])));
                         $this->debugMsg(sprintf('  Will expect: %s', json_encode($this->expected[$count] ?? [])));
@@ -216,6 +246,69 @@ class TestConfiguration
         $this->debugMsg('Done!');
 
         return $this->submission;
+    }
+
+    /**
+     * @param $left
+     * @param $right
+     *
+     * @return array
+     */
+    private function mergeIgnoreArray($left, $right): array
+    {
+        // if both empty just return empty:
+        if (0 === count($left) && 0 === count($right)) {
+            $this->debugMsg('Return empty array');
+
+            return [];
+        }
+        // if left is empty return right
+        if (0 === count($left)) {
+            $this->debugMsg('Return right');
+
+            return $right;
+        }
+        // if right is empty return left
+        if (0 === count($right)) {
+            $this->debugMsg('Return left');
+
+            return $left;
+        }
+        $this->debugMsg('Loop right');
+        $result = [];
+        foreach ($right as $key => $value) {
+            $this->debugMsg(sprintf('Now at right key %s with value %s', json_encode($key), json_encode($value)));
+            if (is_array($value) && array_key_exists($key, $left)) {
+                $this->debugMsg(sprintf('Key %s exists in both, go one level deeper.', $key));
+                $result[$key] = $this->mergeIgnoreArray($right[$key], $left[$key]);
+                continue;
+            }
+            if (is_array($value) && !array_key_exists($key, $left)) {
+                $this->debugMsg(sprintf('Key %s exists in right only, keep it as it is.', $key));
+                $result[$key] = $right[$key];
+            }
+            // value is not an array, can be appended to result (ignore the key):
+            $this->debugMsg(sprintf('Key %s is a string (%s), just append it and return it later.', $key, $value));
+            $result[] = $value;
+        }
+        // loop left:
+        $this->debugMsg('Loop left');
+        foreach ($left as $key => $value) {
+            $this->debugMsg(sprintf('Now at left key %s with value %s', json_encode($key), json_encode($value)));
+            if (is_array($value) && array_key_exists($key, $right)) {
+                $this->debugMsg(sprintf('Key %s exists in both, go one level deeper.', $key));
+                $result[$key] = $this->mergeIgnoreArray($left[$key], $right[$key]);
+                continue;
+            }
+            if (is_array($value) && !array_key_exists($key, $right)) {
+                $result[$key] = $left[$key];
+            }
+            // value is not an array, can be appended to result (ignore the key):
+            $result[] = $value;
+        }
+
+        //
+        return $result;
     }
 
     /**
@@ -359,11 +452,13 @@ class TestConfiguration
                 return $faker->numberBetween(0, 4);
             case 'random-budget-id':
             case 'random-category-id':
+            case 'random-rule-group-id':
             case 'random-piggy-id':
+            case 'low-order':
             case 'random-og-id':
                 return $faker->numberBetween(1, 2);
             case 'random-tags':
-                return $faker->randomElements(['a', 'b', 'c', 'd', 'ef', 'gh'], 3);
+                return $faker->randomElements(['a', 'b', 'c', 'd', 'ef', 'gh', 'sasas', '38sksl'], 5);
             case 'random-auto-type':
                 return $faker->randomElement(['rollover', 'reset']);
             case 'random-auto-period':
@@ -402,6 +497,14 @@ class TestConfiguration
                 return $faker->randomElement([8, 11, 12]);
             case 'random-revenue-id':
                 return $faker->randomElement([9, 10]);
+            case 'random-trigger':
+                return $faker->randomElement(['store-journal', 'update-journal']);
+            case 'random-trigger-type':
+                return $faker->randomElement(['from_account_starts', 'from_account_is', 'description_ends', 'description_is']);
+            case 'random-action-type':
+                return $faker->randomElement(['set_category', 'add_tag', 'set_description']);
+            case 'random-rule-group-title':
+                return $faker->randomElement(['Rule group 1', 'Rule group 2']);
         }
     }
 
@@ -414,6 +517,7 @@ class TestConfiguration
      */
     private function parseExpected(array $expected, Field $field, array $result): array
     {
+        $this->debugMsg(sprintf('      Now parsing expected return values for field %s', $field->fieldTitle));
         // fieldTitle indicates the position:
         $positions = explode('/', $field->fieldTitle);
         $count     = count($positions);
@@ -438,12 +542,19 @@ class TestConfiguration
             $expected[$root]                 = array_key_exists($root, $expected) ? $expected[$root] : [];
             $expected[$root][$count]         = array_key_exists($count, $expected[$root]) ? $expected[$root][$count] : [];
             $expected[$root][$count][$final] = null;
+            $this->debugMsg(sprintf('      Field name is split, so will store the expected return in $expected[%s][%d][%s] = (here)', $root, $count, $final));
 
             if (null === $field->expectedReturn) {
-                $expected[$root][$count][$final] = $result[$root][$count][$final] ?? false;
+                $this->debugMsg(sprintf('      Expected return is NULL, so will use the result for this point: %s', json_encode($result)));
+                $expected[$root][$count][$final] = $result[$root][$count][$final];
             }
             if (null !== $field->expectedReturn) {
-                $expected[$root][$count][$final] = ($field->expectedReturn)($result[$root][$count][$final] ?? false);
+                $this->debugMsg(sprintf('      Expected return is not NULL, so will use a callback for this point: %s', json_encode($result)));
+                $this->debugMsg(sprintf('      Root  : %s', json_encode($result[$root])));
+                $this->debugMsg(sprintf('      Count : %s', json_encode($result[$root][$count])));
+                $this->debugMsg(sprintf('      Final : %s', json_encode($result[$root][$count][$final])));
+                $lastValue                       = $result[$root][$count][$final];
+                $expected[$root][$count][$final] = ($field->expectedReturn)($lastValue);
             }
 
             return $expected;
@@ -496,8 +607,9 @@ class TestConfiguration
      * @param int   $index
      * @param array $customFields
      */
-    function updateExpected(int $index, array $customFields): void
+    private function updateExpected(int $index, array $customFields): void
     {
+        $this->debugMsg('Now parsing expected return values for this set.');
         if (count($customFields) > 0) {
             /** @var Field $field */
             foreach ($customFields as $field) {

@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait TestHelpers
 {
+
+
     /**
      * @param string $route
      * @param array  $content
@@ -66,6 +68,10 @@ trait TestHelpers
     private function comparePOSTArray(array $submission, array $response, array $expected, array $ignore): void
     {
         Log::debug('Now in comparePOSTArray()');
+        Log::debug(sprintf('Submission : %s', json_encode($submission)));
+        Log::debug(sprintf('Response   : %s', json_encode($response)));
+        Log::debug(sprintf('Expected   : %s', json_encode($expected)));
+        Log::debug(sprintf('Ignore     :  %s', json_encode($ignore)));
         foreach ($response as $key => $value) {
             Log::debug(sprintf('Now working on (sub)response key ["%s"]', $key));
             if (is_array($value) && array_key_exists($key, $expected) && is_array($expected[$key])) {
@@ -105,6 +111,7 @@ trait TestHelpers
         $submission = $content['submission'];
         $ignore     = $content['ignore'];
         $expected   = $content['expected'];
+        Log::debug('Now in assertPUT()');
 
         // get the original first:
         $original           = $this->get($route, ['Accept' => 'application/json']);
@@ -136,9 +143,18 @@ trait TestHelpers
      */
     private function comparePUTArray(string $url, array $submission, array $response, array $expected, array $ignore, array $original): void
     {
+        Log::debug('Now in comparePUTArray()');
+        Log::debug(sprintf('Submission : %s', json_encode($submission)));
+        Log::debug(sprintf('Response   : %s', json_encode($response)));
+        Log::debug(sprintf('Expected   : %s', json_encode($expected)));
+        Log::debug(sprintf('Ignore     :  %s', json_encode($ignore)));
+        Log::debug(sprintf('Original   :  %s', json_encode($original)));
         $extraIgnore = ['created_at', 'updated_at', 'id'];
         foreach ($response as $key => $value) {
             if (is_array($value) && array_key_exists($key, $submission) && is_array($submission[$key])) {
+                if (in_array($key, $ignore, true)) {
+                    continue;
+                }
                 $this->comparePUTArray($url, $submission[$key], $value, $expected[$key], $ignore[$key] ?? [], $original[$key] ?? []);
                 continue;
             }

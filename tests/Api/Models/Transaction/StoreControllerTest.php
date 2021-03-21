@@ -22,13 +22,14 @@
 namespace Tests\Api\Models\Transaction;
 
 
-use DateTimeInterface;
-use Faker\Factory;
+use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-
 use Tests\Traits\TestHelpers;
 
 /**
@@ -62,152 +63,82 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'transactions' => [
-                [
-                    'description' => function () {
-                        $faker = Factory::create();
 
-                        return $faker->uuid;
-                    },
-                ],
-            ],
-        ];
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object_withdrawal';
+        $defaultSet->addField(Field::createBasic('error_if_duplicate_hash', 'boolean'));
+        $defaultSet->addField(Field::createBasic('transactions/0/type', 'static-withdrawal'));
+        $field                 = Field::createBasic('transactions/0/date', 'random-past-date');
+        $field->expectedReturn = function ($value) {
+            $date = new Carbon($value, 'Europe/Amsterdam');
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
+            return $date->toIso8601String();
+        };
+        $defaultSet->addField($field);
 
-        // 3 sets:
-        $combis = [
-            ['withdrawal', 1, 8],
-            ['deposit', 9, 1],
-            ['transfer', 1, 2],
-        ];
-        $set    = [];
-        foreach ($combis as $combi) {
-            $set[] = [
-                'parameters' => [],
-                'fields'     => [
-                    'error_if_duplicate_hash' => $faker->boolean,
-                    'transactions'            => [
-                        [
-                            'type'           => $combi[0],
-                            'date'           => $faker->dateTime(null, 'Europe/Amsterdam')->format(DateTimeInterface::RFC3339),
-                            'amount'         => number_format($faker->randomFloat(2, 10, 100), 12),
-                            'description'    => $faker->uuid,
-                            'source_id'      => $combi[1],
-                            'destination_id' => $combi[2],
-                        ],
-                    ],
-                ],
-            ];
-        }
+        $field                 = Field::createBasic('transactions/0/amount', 'random-amount');
+        $field->expectedReturn = function ($value) {
+            return number_format((float)$value, 12);
+        };
 
-        return $set;
-    }
+        $defaultSet->addField($field);
+        $defaultSet->addField(Field::createBasic('transactions/0/description', 'uuid'));
+        $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-asset-id'));
+        $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-expense-id'));
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'transactions_currency_id'   => [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            'currency_id' => $faker->numberBetween(1, 1),
-                        ],
-                    ],
-                ],
-            ],
-            'transactions_currency_code' => [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            'currency_code' => $faker->randomElement(['EUR']),
-                        ],
-                    ],
-                ],
-            ],
-            // category id
-            'category_id'                => [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            'category_id' => '1',
-                        ],
-                    ],
-                ],
-            ],
-            // reconciled
-            'reconciled'                 => [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            'reconciled' => $faker->boolean,
-                        ],
-                    ],
-                ],
-            ],
-            // tags
-            'tags'                       => [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            'tags' => ['a', 'b', 'c'],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $extra = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
+        $configuration->addMandatoryFieldSet($defaultSet);
+
+        // optional fields
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/category_id', 'random-category-id'));
+        $configuration->addOptionalFieldSet('category_id', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/reconciled', 'boolean'));
+        $configuration->addOptionalFieldSet('reconciled', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
+        $configuration->addOptionalFieldSet('tags', $fieldSet);
+
+
+        $array = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
                   'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
-        foreach ($extra as $key) {
-            $set[$key] = [
-                'fields' => [
-                    'transactions' => [
-                        // first entry, set field:
-                        [
-                            $key => $faker->uuid,
-                        ],
-                    ],
-                ],
-            ];
+
+        foreach ($array as $value) {
+            $fieldSet = new FieldSet;
+            $fieldSet->addField(Field::createBasic('transactions/0/' . $value, 'uuid'));
+            $configuration->addOptionalFieldSet($value, $fieldSet);
         }
 
-        return $set;
+        return $configuration->generateAll();
     }
+
 
     /**
      * @param array $submission
      *
      * emptyDataProvider / storeDataProvider
      *
-     * @dataProvider storeDataProvider
+     * @dataProvider emptyDataProvider
      */
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.transactions.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.transactions.store');
+        $this->assertPOST($address, $submission);
+
     }
 
 }

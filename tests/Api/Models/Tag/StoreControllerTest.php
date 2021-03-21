@@ -25,6 +25,9 @@ namespace Tests\Api\Models\Tag;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 
@@ -61,62 +64,33 @@ class StoreControllerTest extends TestCase
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'tag' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('tag', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        // optionals
+        $fieldSet             = new FieldSet;
+        $field                = Field::createBasic('date', 'random-past-date');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('date', $fieldSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
+        $fieldSet             = new FieldSet;
+        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('description', $fieldSet);
 
-        return [
-            'default_tag' => [
-                'parameters' => [],
-                'fields'     => [
-                    'tag' => $faker->uuid,
-                ],
-            ],
-        ];
-    }
+        $fieldSet             = new FieldSet;
+        $fieldSet->addField(Field::createBasic('longitude', 'longitude'));
+        $fieldSet->addField(Field::createBasic('latitude', 'latitude'));
+        $fieldSet->addField(Field::createBasic('zoom_level', 'random-zoom_level'));
+        $configuration->addOptionalFieldSet('location', $fieldSet);
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'date'        => [
-                'fields' => [
-                    'date' => $faker->date('Y-m-d'),
-                ],
-            ],
-            'description' => [
-                'fields' => [
-                    'description' => join(' ', $faker->words(4)),
-                ],
-            ],
-            'location'    => [
-                'fields' => [
-                    'longitude'  => $faker->longitude,
-                    'latitude'   => $faker->latitude,
-                    'zoom_level' => $faker->numberBetween(1, 6),
-                ],
-            ],
-        ];
+        return $configuration->generateAll();
     }
 
     /**
@@ -129,10 +103,16 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.tags.store';
-        $this->storeAndCompare($route, $submission);
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.tags.store');
+        $this->assertPOST($address, $submission);
+
     }
 
 }
