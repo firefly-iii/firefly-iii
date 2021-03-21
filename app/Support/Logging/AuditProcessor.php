@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Logging;
 
 /**
  * Class AuditProcessor
+ *
  * @codeCoverageIgnore
  */
 class AuditProcessor
@@ -39,21 +40,24 @@ class AuditProcessor
     {
         if (auth()->check()) {
 
-            $record['message'] = sprintf('AUDIT: %s (%s (%s) -> %s:%s)',
-                                         $record['message'],
-                                         app('request')->ip(),
-                                         auth()->user()->email,
-                                         request()->method(), request()->url()
+            $record['message'] = sprintf(
+                'AUDIT: %s (%s (%s) -> %s:%s)',
+                $record['message'],
+                app('request')->ip(),
+                auth()->user()->email,
+                request()->method(), request()->url()
             );
 
             return $record;
         }
 
-        $record['message'] = sprintf('AUDIT: %s (%s -> %s:%s)',
-                                     $record['message'],
-                                     app('request')->ip(),
-                                     request()->method(), request()->url()
+        $record['message'] = sprintf(
+            'AUDIT: %s (%s -> %s:%s)',
+            $record['message'],
+            app('request')->ip(),
+            request()->method(), request()->url()
         );
+
         return $record;
     }
 }

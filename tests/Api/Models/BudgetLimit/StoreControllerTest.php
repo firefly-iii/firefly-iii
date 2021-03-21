@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\BudgetLimit;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,34 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        // run account store with a minimal data set:
-        $route = 'api.v1.budgets.limits.store';
-        $this->storeAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -74,90 +48,92 @@ class StoreControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
      * @return array
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'start' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d');
-            },
-            'end'   => function () {
-                $faker = Factory::create();
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_budget_limit';
+        $defaultSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $defaultSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $defaultSet->addField(Field::createBasic('amount', 'random-amount'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-                return $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d');
-            },
-        ];
+        // optional tests
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field = Field::createBasic('start', 'random-date-two-year');
+        $field->ignorableFields = ['spent'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('start', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field = Field::createBasic('end', 'random-date-one-year');
+        $field->ignorableFields = ['spent'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('end', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount', 'random-amount'));
+        $configuration->addOptionalFieldSet('amount', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_bl' => [
-                'parameters' => [1],
-                'fields'     => [
-                    'start'  => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
-                    'end'    => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                    'amount' => number_format($faker->randomFloat(2, 10, 100), 2),
-                ],
-            ],
-        ];
-    }
-
 
     /**
-     * @return \array[][]
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider emptyDataProvider
      */
-    private function optionalSets(): array
+    public function testStore(array $submission): void
     {
-        $faker      = Factory::create();
-        $currencies = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $rand       = rand(1, 4);
-
-        return [
-            'currency_id'   => [
-                'fields' => [
-                    'currency_id' => $rand,
-                ],
-            ],
-            'currency_code' => [
-                'fields' => [
-                    'currency_code' => $currencies[$rand],
-                ],
-            ],
-            'start'         => [
-                'fields' => [
-                    'start' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
-                ],
-            ],
-            'end'           => [
-                'fields' => [
-                    'end' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                ],
-            ],
-            'amount'        => [
-                'fields' => [
-                    'amount' => number_format($faker->randomFloat(2, 10, 100), 2),
-                ],
-            ],
-
-        ];
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.budgets.limits.store', [1]);
+        $this->assertPOST($address, $submission);
     }
 
 }

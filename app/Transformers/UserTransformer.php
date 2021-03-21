@@ -26,7 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
-use Log;
 
 /**
  * Class UserTransformer
@@ -46,6 +45,7 @@ class UserTransformer extends AbstractTransformer
     public function transform(User $user): array
     {
         $this->repository = $this->repository ?? app(UserRepositoryInterface::class);
+
         return [
             'id'           => (int)$user->id,
             'created_at'   => $user->created_at->toAtomString(),

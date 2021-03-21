@@ -310,10 +310,10 @@ class BudgetReportGenerator
                 $budgetedPct   = '0';
 
                 if (0 !== bccomp($spent, '0') && 0 !== bccomp($totalSpent, '0')) {
-                    $spentPct = round((float) bcmul(bcdiv($spent, $totalSpent), '100'));
+                    $spentPct = round((float)bcmul(bcdiv($spent, $totalSpent), '100'));
                 }
                 if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
-                    $budgetedPct = round((float) bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
+                    $budgetedPct = round((float)bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
                 }
                 $this->report['sums'][$currencyId]['budgeted']                                 = $this->report['sums'][$currencyId]['budgeted'] ?? '0';
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;

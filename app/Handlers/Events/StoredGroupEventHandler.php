@@ -27,7 +27,6 @@ use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
@@ -85,8 +84,8 @@ class StoredGroupEventHandler
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
         Log::debug(__METHOD__);
-        $group    = $storedGroupEvent->transactionGroup;
-        $user     = $group->user;
+        $group = $storedGroupEvent->transactionGroup;
+        $user  = $group->user;
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);

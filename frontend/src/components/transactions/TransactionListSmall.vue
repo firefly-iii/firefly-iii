@@ -44,10 +44,10 @@
                     <span v-if="'deposit' === tr.type" class="text-success">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                      </span>
-                    <span v-if="'transfer' === tr.type && tr.source_id === account_id" class="text-info">
+                    <span v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" class="text-info">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
                     </span>
-                    <span v-if="'transfer' === tr.type && tr.destination_id === account_id" class="text-info">
+                    <span v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" class="text-info">
                         {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
                     </span>
                 </span>

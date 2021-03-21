@@ -86,6 +86,41 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Get all config values.
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getDynamicConfiguration(): array
+    {
+        $isDemoSite  = app('fireflyconfig')->get('is_demo_site');
+        $updateCheck = app('fireflyconfig')->get('permission_update_check');
+        $lastCheck   = app('fireflyconfig')->get('last_update_check');
+        $singleUser  = app('fireflyconfig')->get('single_user_mode');
+
+        return [
+            'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
+            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
+            'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getStaticConfiguration(): array
+    {
+        $list   = EitherConfigKey::$static;
+        $return = [];
+        foreach ($list as $key) {
+            $return[$key] = config($key);
+        }
+
+        return $return;
+    }
+
+    /**
      * @param string $configKey
      *
      * @return JsonResponse
@@ -118,7 +153,7 @@ class ConfigurationController extends Controller
      * Update the configuration.
      *
      * @param UpdateRequest $request
-     * @param string               $name
+     * @param string        $name
      *
      * @return JsonResponse
      */
@@ -127,8 +162,8 @@ class ConfigurationController extends Controller
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
         }
-        $data = $request->getAll();
-        $shortName = str_replace('configuration.','', $name);
+        $data      = $request->getAll();
+        $shortName = str_replace('configuration.', '', $name);
 
         app('fireflyconfig')->set($shortName, $data['value']);
 
@@ -136,49 +171,12 @@ class ConfigurationController extends Controller
         $newConfig = $this->getDynamicConfiguration();
 
 
-            $data = [
-                'title'    => $name,
-                'value'    => $newConfig[$shortName],
-                'editable' => true,
-            ];
+        $data = [
+            'title'    => $name,
+            'value'    => $newConfig[$shortName],
+            'editable' => true,
+        ];
 
         return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-
-    /**
-     * @return array
-     */
-    private function getStaticConfiguration(): array
-    {
-        $list   = EitherConfigKey::$static;
-        $return = [];
-        foreach ($list as $key) {
-            $return[$key] = config($key);
-        }
-
-        return $return;
-    }
-
-
-    /**
-     * Get all config values.
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function getDynamicConfiguration(): array
-    {
-        $isDemoSite  = app('fireflyconfig')->get('is_demo_site');
-        $updateCheck = app('fireflyconfig')->get('permission_update_check');
-        $lastCheck   = app('fireflyconfig')->get('last_update_check');
-        $singleUser  = app('fireflyconfig')->get('single_user_mode');
-
-        return [
-            'is_demo_site'            => null === $isDemoSite ? null : $isDemoSite->data,
-            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
-            'single_user_mode'        => null === $singleUser ? null : $singleUser->data,
-        ];
     }
 }

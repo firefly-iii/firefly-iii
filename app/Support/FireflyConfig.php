@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class FireflyConfig.
+ *
  * @codeCoverageIgnore
  */
 class FireflyConfig
@@ -67,8 +68,8 @@ class FireflyConfig
      * @param string $name
      * @param null   $default
      *
-     * @throws FireflyException
      * @return Configuration|null
+     * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Configuration
     {
@@ -80,7 +81,7 @@ class FireflyConfig
         try {
             /** @var Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException|Exception $e) {
+        } catch (QueryException | Exception $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
         }
 
@@ -99,7 +100,7 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */
@@ -132,8 +133,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param $value
+     * @param string          $name
+     * @param                 $value
      * @param int|string|true $value
      *
      * @return Configuration
@@ -143,7 +144,7 @@ class FireflyConfig
         /** @var Configuration $config */
         try {
             $config = Configuration::whereName($name)->first();
-        } catch (QueryException|Exception $e) {
+        } catch (QueryException | Exception $e) {
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;

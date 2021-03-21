@@ -37,15 +37,52 @@ class TagFactory
     private User $user;
 
     /**
+     * @param string $tag
+     *
+     * @return Tag|null
+     */
+    public function findOrCreate(string $tag): ?Tag
+    {
+        $tag = trim($tag);
+        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
+
+        /** @var Tag $dbTag */
+        $dbTag = $this->user->tags()->where('tag', $tag)->first();
+        if (null !== $dbTag) {
+            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
+
+            return $dbTag;
+        }
+        $newTag = $this->create(
+            [
+                'tag'         => $tag,
+                'date'        => null,
+                'description' => null,
+                'latitude'    => null,
+                'longitude'   => null,
+                'zoom_level'  => null,
+            ]
+        );
+        if (null === $newTag) {
+            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+
+            return null;
+        }
+        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
+
+        return $newTag;
+    }
+
+    /**
      * @param array $data
      *
      * @return Tag|null
      */
     public function create(array $data): ?Tag
     {
-        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude'];
-        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude'];
+        $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
+        $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];
+        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude'];
         $array     = [
             'user_id'     => $this->user->id,
             'tag'         => trim($data['tag']),
@@ -68,41 +105,6 @@ class TagFactory
         }
 
         return $tag;
-    }
-
-    /**
-     * @param string $tag
-     *
-     * @return Tag|null
-     */
-    public function findOrCreate(string $tag): ?Tag
-    {
-        $tag = trim($tag);
-        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
-
-        /** @var Tag $dbTag */
-        $dbTag = $this->user->tags()->where('tag', $tag)->first();
-        if (null !== $dbTag) {
-            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
-            return $dbTag;
-        }
-        $newTag = $this->create(
-            [
-                'tag'         => $tag,
-                'date'        => null,
-                'description' => null,
-                'latitude'    => null,
-                'longitude'   => null,
-                'zoom_level'  => null,
-            ]
-        );
-        if (null === $newTag) {
-            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
-            return null;
-        }
-        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
-
-        return $newTag;
     }
 
     /**

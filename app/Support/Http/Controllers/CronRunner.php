@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
@@ -34,59 +35,97 @@ use FireflyIII\Support\Cronjobs\TelemetryCronjob;
 trait CronRunner
 {
     /**
-     * @return string
+     * @param bool   $force
+     * @param Carbon $date
+     *
+     * @return array
      */
-    protected function runRecurring(): string
-    {
-        /** @var RecurringCronjob $recurring */
-        $recurring = app(RecurringCronjob::class);
-        try {
-            $result = $recurring->fire();
-        } catch (FireflyException $e) {
-            return $e->getMessage();
-        }
-        if (false === $result) {
-            return 'The recurring transaction cron job did not fire. It was fired less than half a day ago.';
-        }
-
-        return 'The recurring transaction cron job fired successfully.';
-    }
-
-    /**
-     * @return string
-     */
-    protected function runTelemetry(): string {
-        /** @var TelemetryCronjob $telemetry */
-        $telemetry = app(TelemetryCronjob::class);
-        try {
-            $result = $telemetry->fire();
-        } catch (FireflyException $e) {
-            return $e->getMessage();
-        }
-        if (false === $result) {
-            return 'The telemetry cron job did not fire.';
-        }
-
-        return 'The telemetry cron job fired successfully.';
-    }
-
-    /**
-     * @return string
-     */
-    protected function runAutoBudget(): string
+    protected function runAutoBudget(bool $force, Carbon $date): array
     {
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
+        $autoBudget->setForce($force);
+        $autoBudget->setDate($date);
         try {
-            $result = $autoBudget->fire();
+            $autoBudget->fire();
         } catch (FireflyException $e) {
-            return $e->getMessage();
-        }
-        if (false === $result) {
-            return 'The auto budget cron job did not fire.';
+            return [
+                'job_fired'     => false,
+                'job_succeeded' => false,
+                'job_errored'   => true,
+                'message'       => $e->getMessage(),
+            ];
         }
 
-        return 'The auto budget cron job fired successfully.';
+        return [
+            'job_fired'     => $autoBudget->jobFired,
+            'job_succeeded' => $autoBudget->jobSucceeded,
+            'job_errored'   => $autoBudget->jobErrored,
+            'message'       => $autoBudget->message,
+        ];
+    }
+
+    /**
+     * @param bool   $force
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    protected function runRecurring(bool $force, Carbon $date): array
+    {
+        /** @var RecurringCronjob $recurring */
+        $recurring = app(RecurringCronjob::class);
+        $recurring->setForce($force);
+        $recurring->setDate($date);
+        try {
+            $recurring->fire();
+        } catch (FireflyException $e) {
+            return [
+                'job_fired'     => false,
+                'job_succeeded' => false,
+                'job_errored'   => true,
+                'message'       => $e->getMessage(),
+            ];
+        }
+
+        return [
+            'job_fired'     => $recurring->jobFired,
+            'job_succeeded' => $recurring->jobSucceeded,
+            'job_errored'   => $recurring->jobErrored,
+            'message'       => $recurring->message,
+        ];
+
+    }
+
+    /**
+     * @param bool   $force
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    protected function runTelemetry(bool $force, Carbon $date): array
+    {
+        /** @var TelemetryCronjob $telemetry */
+        $telemetry = app(TelemetryCronjob::class);
+        $telemetry->setForce($force);
+        $telemetry->setDate($date);
+        try {
+            $telemetry->fire();
+        } catch (FireflyException $e) {
+            return [
+                'job_fired'     => false,
+                'job_succeeded' => false,
+                'job_errored'   => true,
+                'message'       => $e->getMessage(),
+            ];
+        }
+
+        return [
+            'job_fired'     => $telemetry->jobFired,
+            'job_succeeded' => $telemetry->jobSucceeded,
+            'job_errored'   => $telemetry->jobErrored,
+            'message'       => $telemetry->message,
+        ];
     }
 
 }

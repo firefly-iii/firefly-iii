@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -74,7 +73,7 @@ class ShowController extends Controller
         $this->repository->correctOrder();
         $bills     = $this->repository->getBills();
         $manager   = $this->getManager();
-        $pageSize  = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $count     = $bills->count();
         $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));

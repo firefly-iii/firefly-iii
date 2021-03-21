@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\BudgetLimit;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      *
@@ -53,12 +54,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.budgets.limits.update', [$submission['id'], $submission['bl_id']]);
-        $this->updateAndCompare($route, $submission, $ignore);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
+
+        $route = route('api.v1.budgets.limits.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -67,83 +73,44 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1, 1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code', 'currency_name', 'currency_symbol', 'spent'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1, 1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id', 'currency_name', 'currency_symbol', 'spent'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1, 1];
+        $fieldSet->addField(Field::createBasic('start', 'random-date-two-year'));
+        $configuration->addOptionalFieldSet('start', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1, 1];
+        $fieldSet->addField(Field::createBasic('end', 'random-date-one-year'));
+        $configuration->addOptionalFieldSet('end', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1, 1];
+        $fieldSet->addField(Field::createBasic('amount', 'random-amount'));
+        $configuration->addOptionalFieldSet('amount', $fieldSet);
+
+        return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker           = Factory::create();
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $repeatFreqs     = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-        $rand            = rand(1, 4);
-
-        $autoBudgetTypes = ['reset', 'rollover'];
-        $autoBudgetType  = $autoBudgetTypes[rand(0, count($autoBudgetTypes) - 1)];
-
-        $set = [
-            'currency_id'   => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'currency_id' => ['test_value' => (string)$rand],
-                ],
-                'extra_ignore' => ['currency_code','currency_name','currency_symbol'],
-            ],
-            'currency_code' => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'currency_code' => ['test_value' => $currencies[$rand]],
-                ],
-                'extra_ignore' => ['currency_id','currency_name','currency_symbol'],
-            ],
-            'start'         => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'end'           => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'end' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => ['spent'],
-            ],
-            'amount'        => [
-                'id'           => 1,
-                'bl_id'        => 1,
-                'fields'       => [
-                    'amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-
-        ];
-
-        return $set;
-    }
-
 
 }

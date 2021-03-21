@@ -47,47 +47,32 @@ class UpdateRequest extends FormRequest
      */
     public function getUpdateData(): array
     {
-        $active          = null;
-        $includeNetWorth = null;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-        if (null !== $this->get('include_net_worth')) {
-            $includeNetWorth = $this->boolean('include_net_worth');
-        }
-        $data = [
-            'name'                    => $this->nullableString('name'),
-            'active'                  => $active,
-            'include_net_worth'       => $includeNetWorth,
-            'account_type'            => $this->nullableString('type'),
-            'account_type_id'         => null,
-            'virtual_balance'         => $this->nullableString('virtual_balance'),
-            'iban'                    => $this->nullableString('iban'),
-            'BIC'                     => $this->nullableString('bic'),
-            'account_number'          => $this->nullableString('account_number'),
-            'account_role'            => $this->nullableString('account_role'),
-            'liability_type'          => $this->nullableString('liability_type'),
-            'opening_balance'         => $this->nullableString('opening_balance'),
-            'opening_balance_date'    => $this->date('opening_balance_date'),
-            'cc_type'                 => $this->nullableString('credit_card_type'),
-            'cc_monthly_payment_date' => $this->nullableString('monthly_payment_date'),
-            'notes'                   => $this->nullableNlString('notes'),
-            'interest'                => $this->nullableString('interest'),
-            'interest_period'         => $this->nullableString('interest_period'),
+        $fields = [
+            'name'                    => ['name', 'string'],
+            'active'                  => ['active', 'boolean'],
+            'include_net_worth'       => ['include_net_worth', 'boolean'],
+            'account_type'            => ['type', 'string'],
+            'virtual_balance'         => ['virtual_balance', 'string'],
+            'iban'                    => ['iban', 'string'],
+            'BIC'                     => ['bic', 'string'],
+            'account_number'          => ['account_number', 'string'],
+            'account_role'            => ['account_role', 'string'],
+            'liability_type'          => ['liability_type', 'string'],
+            'opening_balance'         => ['opening_balance', 'string'],
+            'opening_balance_date'    => ['opening_balance_date', 'date'],
+            'cc_type'                 => ['credit_card_type', 'string'],
+            'cc_monthly_payment_date' => ['monthly_payment_date', 'string'],
+            'notes'                   => ['notes', 'nlString'],
+            'interest'                => ['interest', 'string'],
+            'interest_period'         => ['interest_period', 'string'],
+            'order'                   => ['order', 'integer'],
+            'currency_id'             => ['currency_id', 'integer'],
+            'currency_code'           => ['currency_code', 'string'],
         ];
-        if (null !== $this->get('order')) {
-            $data['order'] = $this->integer('order');
-        }
-        if (null !== $this->get('currency_id')) {
-            $data['currency_id'] = $this->nullableInteger('currency_id');
-        }
-        if (null !== $this->get('currency_code')) {
-            $data['currency_code'] = $this->nullableString('currency_code');
-        }
+        $data   = $this->getAllData($fields);
+        $data   = $this->appendLocationData($data, null);
 
-        $data = $this->appendLocationData($data, null);
-
-        if ('liability' === $data['account_type']) {
+        if (array_key_exists('account_type', $data) && 'liability' === $data['account_type']) {
             $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');
             $data['opening_balance_date'] = $this->date('liability_start_date');
             $data['account_type']         = $this->nullableString('liability_type');
@@ -123,9 +108,9 @@ class UpdateRequest extends FormRequest
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
             'active'               => [new IsBoolean],
             'include_net_worth'    => [new IsBoolean],
-            'account_role'         => sprintf('in:%s|required_if:type,asset', $accountRoles),
-            'credit_card_type'     => sprintf('in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
-            'monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
+            'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),
+            'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
+            'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',

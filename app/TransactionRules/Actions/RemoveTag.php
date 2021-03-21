@@ -26,6 +26,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\User;
 use Log;
 use DB;
+
 /**
  * Class RemoveTag.
  */
@@ -57,12 +58,14 @@ class RemoveTag implements ActionInterface
             Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
             DB::table('tag_transaction_journal')
               ->where('transaction_journal_id', $journal['transaction_journal_id'])
-                ->where('tag_id', $tag->id)
+              ->where('tag_id', $tag->id)
               ->delete();
 
             return true;
         }
-        Log::debug(sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id']));
+        Log::debug(
+            sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
+        );
 
         return true;
     }

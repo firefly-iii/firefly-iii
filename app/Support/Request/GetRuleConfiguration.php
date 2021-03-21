@@ -69,6 +69,7 @@ trait GetRuleConfiguration
                 $return[] = $key;
             }
         }
+
         return $return;
     }
 }

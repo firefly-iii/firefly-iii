@@ -39,7 +39,7 @@ class Date implements BinderInterface
      * @param Route  $route
      *
      * @return Carbon
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): Carbon
     {

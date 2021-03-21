@@ -510,6 +510,8 @@ Route::group(
     }
 );
 
+
+
 // Configuration API routes
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration',

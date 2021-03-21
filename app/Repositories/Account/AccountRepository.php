@@ -546,6 +546,33 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function maxOrder(string $type): int
+    {
+        $sets = [
+            AccountType::ASSET    => [AccountType::DEFAULT, AccountType::ASSET],
+            AccountType::EXPENSE  => [AccountType::EXPENSE, AccountType::BENEFICIARY],
+            AccountType::REVENUE  => [AccountType::REVENUE],
+            AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+            AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
+        ];
+        if (array_key_exists(ucfirst($type), $sets)) {
+            $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
+            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
+
+            return $order;
+        }
+        $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
+
+        $order = (int)$this->getAccountsByType($specials)->max('order');
+        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
+
+        return $order;
+    }
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -719,32 +746,5 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function maxOrder(string $type): int
-    {
-        $sets = [
-            AccountType::ASSET    => [AccountType::DEFAULT, AccountType::ASSET],
-            AccountType::EXPENSE  => [AccountType::EXPENSE, AccountType::BENEFICIARY],
-            AccountType::REVENUE  => [AccountType::REVENUE],
-            AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
-            AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
-            AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
-        ];
-        if (array_key_exists(ucfirst($type), $sets)) {
-            $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
-            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
-
-            return $order;
-        }
-        $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
-
-        $order = (int)$this->getAccountsByType($specials)->max('order');
-        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
-
-        return $order;
     }
 }

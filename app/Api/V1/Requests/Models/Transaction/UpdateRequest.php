@@ -156,13 +156,13 @@ class UpdateRequest extends FormRequest
          */
         foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
-            $current = [];
-            $current = $this->getIntegerData($current, $transaction);
-            $current = $this->getStringData($current, $transaction);
-            $current = $this->getNlStringData($current, $transaction);
-            $current = $this->getDateData($current, $transaction);
-            $current = $this->getBooleanData($current, $transaction);
-            $current = $this->getArrayData($current, $transaction);
+            $current  = [];
+            $current  = $this->getIntegerData($current, $transaction);
+            $current  = $this->getStringData($current, $transaction);
+            $current  = $this->getNlStringData($current, $transaction);
+            $current  = $this->getDateData($current, $transaction);
+            $current  = $this->getBooleanData($current, $transaction);
+            $current  = $this->getArrayData($current, $transaction);
             $return[] = $current;
         }
 

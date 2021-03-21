@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use Adldap\Laravel\Middleware\WindowsAuthenticate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use URL;
-use Adldap\Laravel\Middleware\WindowsAuthenticate;
 
 /**
  * @codeCoverageIgnore

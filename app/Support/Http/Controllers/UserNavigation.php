@@ -29,6 +29,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
 use Log;
@@ -39,6 +41,33 @@ use Log;
  */
 trait UserNavigation
 {
+
+    /**
+     * Functionality:.
+     *
+     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
+     *   will be returned.
+     * - If the remembered uri contains "jscript/" the remembered uri will not be returned but instead the index (/) will be returned.
+     *
+     * @param string $identifier
+     *
+     * @return string
+     */
+    protected function getPreviousUri(string $identifier): string
+    {
+        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
+        $uri = (string)session($identifier);
+        Log::debug(sprintf('The URI is %s', $uri));
+
+        if (false !== strpos($uri, 'jscript')) {
+            $uri = $this->redirectUri; // @codeCoverageIgnore
+            Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
+        }
+
+        Log::debug(sprintf('Return direct link %s', $uri));
+
+        return $uri;
+    }
 
     /**
      * Will return false if you cant edit this account type.
@@ -74,37 +103,9 @@ trait UserNavigation
     }
 
     /**
-     * @param TransactionGroup $group
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    protected function redirectGroupToAccount(TransactionGroup $group)
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
-        if (null === $journal) {
-            Log::error(sprintf('No journals in group #%d', $group->id));
-
-            return redirect(route('index'));
-        }
-        // prefer redirect to everything but expense and revenue:
-        $transactions = $journal->transactions;
-        $ignore       = [AccountType::REVENUE, AccountType::EXPENSE, AccountType::RECONCILIATION, AccountType::INITIAL_BALANCE];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $type = $transaction->account->accountType->type;
-            if (!in_array($type, $ignore, true)) {
-                return redirect(route('accounts.edit', [$transaction->account_id]));
-            }
-        }
-
-        return redirect(route('index'));
-    }
-
-    /**
      * @param Account $account
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     protected function redirectAccountToAccount(Account $account)
     {
@@ -136,31 +137,32 @@ trait UserNavigation
         return redirect(route('index'));
     }
 
-
     /**
-     * Functionality:.
+     * @param TransactionGroup $group
      *
-     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
-     *   will be returned.
-     * - If the remembered uri contains "jscript/" the remembered uri will not be returned but instead the index (/) will be returned.
-     *
-     * @param string $identifier
-     *
-     * @return string
+     * @return RedirectResponse|Redirector
      */
-    protected function getPreviousUri(string $identifier): string
+    protected function redirectGroupToAccount(TransactionGroup $group)
     {
-        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $uri = (string)session($identifier);
-        Log::debug(sprintf('The URI is %s', $uri));
+        /** @var TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            Log::error(sprintf('No journals in group #%d', $group->id));
 
-        if (false !== strpos($uri, 'jscript')) {
-            $uri = $this->redirectUri; // @codeCoverageIgnore
-            Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
+            return redirect(route('index'));
+        }
+        // prefer redirect to everything but expense and revenue:
+        $transactions = $journal->transactions;
+        $ignore       = [AccountType::REVENUE, AccountType::EXPENSE, AccountType::RECONCILIATION, AccountType::INITIAL_BALANCE];
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $type = $transaction->account->accountType->type;
+            if (!in_array($type, $ignore, true)) {
+                return redirect(route('accounts.edit', [$transaction->account_id]));
+            }
         }
 
-        Log::debug(sprintf('Return direct link %s', $uri));
-        return $uri;
+        return redirect(route('index'));
     }
 
     /**
@@ -178,6 +180,7 @@ trait UserNavigation
             Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
             session()->put($identifier, $return);
         }
+
         return $return;
     }
 }

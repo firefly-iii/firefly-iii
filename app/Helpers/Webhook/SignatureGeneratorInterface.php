@@ -51,16 +51,16 @@ use FireflyIII\Models\WebhookMessage;
 interface SignatureGeneratorInterface
 {
     /**
-     * Return the version of this signature generator.
-     *
-     * @return int
-     */
-    public function getVersion(): int;
-
-    /**
      * @param WebhookMessage $message
      *
      * @return string
      */
     public function generate(WebhookMessage $message): string;
+
+    /**
+     * Return the version of this signature generator.
+     *
+     * @return int
+     */
+    public function getVersion(): int;
 }

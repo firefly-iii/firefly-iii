@@ -38,7 +38,6 @@ class TriggerRequest extends FormRequest
     use ConvertsDataTypes, ChecksLogin;
 
 
-
     /**
      * @return array
      */

@@ -74,5 +74,4 @@ class DestroyController extends Controller
     }
 
 
-
 }

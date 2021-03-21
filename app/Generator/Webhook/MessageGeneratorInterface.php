@@ -53,19 +53,14 @@ interface MessageGeneratorInterface
 {
 
     /**
-     * @return int
-     */
-    public function getVersion(): int;
-
-    /**
      *
      */
     public function generateMessages(): void;
 
     /**
-     * @param User $user
+     * @return int
      */
-    public function setUser(User $user): void;
+    public function getVersion(): int;
 
     /**
      * @param Collection $objects
@@ -76,4 +71,9 @@ interface MessageGeneratorInterface
      * @param int $trigger
      */
     public function setTrigger(int $trigger): void;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 }

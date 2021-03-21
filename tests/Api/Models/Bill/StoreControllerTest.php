@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Bill;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,34 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        // run account store with a minimal data set:
-        $route = 'api.v1.bills.store';
-        $this->storeAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -74,127 +48,136 @@ class StoreControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
      * @return array
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return join(' ', $faker->words(5));
-            },
-        ];
+        // default asset account test set:
+        $defaultAssetSet        = new FieldSet();
+        $defaultAssetSet->title = 'default_file';
+        $defaultAssetSet->addField(Field::createBasic('name', 'uuid'));
+        $defaultAssetSet->addField(Field::createBasic('amount_min', 'random-amount-min'));
+        $defaultAssetSet->addField(Field::createBasic('amount_max', 'random-amount-max'));
+        $defaultAssetSet->addField(Field::createBasic('date', 'random-past-date'));
+        $defaultAssetSet->addField(Field::createBasic('repeat_freq', 'random-bill-repeat-freq'));
+        $configuration->addMandatoryFieldSet($defaultAssetSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        // optional field sets
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_id';
+        $field->fieldType       = 'random-currency-id';
+        $field->ignorableFields = ['currency_code'];
+        $field->title           = 'currency_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $field                  = new Field;
+        $field->fieldTitle      = 'currency_code';
+        $field->fieldType       = 'random-currency-code';
+        $field->ignorableFields = ['currency_id'];
+        $field->title           = 'currency_code';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('currency_code', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addOptionalFieldSet('name', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount_min', 'random-amount-min'));
+        $configuration->addOptionalFieldSet('amount_min', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('amount_max', 'random-amount-max'));
+        $configuration->addOptionalFieldSet('amount_max', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('repeat_freq', 'random-bill-repeat-freq'));
+        $configuration->addOptionalFieldSet('repeat_freq', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('skip', 'random-skip'));
+        $configuration->addOptionalFieldSet('skip', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('active', 'boolean'));
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_id';
+        $field->fieldType       = 'random-og-id';
+        $field->ignorableFields = ['object_group_title', 'object_group_order'];
+        $field->title           = 'object_group_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_title';
+        $field->fieldType       = 'uuid';
+        $field->ignorableFields = ['object_group_id', 'object_group_order'];
+        $field->title           = 'object_group_title';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_title', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
 
     /**
-     * @return array
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider emptyDataProvider
      */
-    private function minimalSets(): array
+    public function testStore(array $submission): void
     {
-        $faker       = Factory::create();
-        $repeatFreqs = ['yearly', 'weekly', 'monthly'];
-        $repeatFreq  = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-
-        return [
-            'default_bill' => [
-                'fields' => [
-                    'name'        => $faker->uuid,
-                    'amount_min'  => number_format($faker->randomFloat(2, 10, 50), 2),
-                    'amount_max'  => number_format($faker->randomFloat(2, 60, 90), 2),
-                    'date'        => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                    'repeat_freq' => $repeatFreq,
-                ],
-            ],
-        ];
-    }
-
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker           = Factory::create();
-        $repeatFreqs     = ['weekly', 'monthly', 'yearly'];
-        $repeatFreq      = $repeatFreqs[rand(0, count($repeatFreqs) - 1)];
-        $currencies      = [
-            1 => 'EUR',
-            2 => 'HUF',
-            3 => 'GBP',
-            4 => 'UAH',
-        ];
-        $rand            = rand(1, 4);
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-
-        return [
-            'currency_by_id'     => [
-                'fields' => [
-                    'currency_id' => $rand,
-                ],
-            ],
-            'currency_by_code'   => [
-                'fields' => [
-                    'currency_code' => $currencies[$rand],
-                ],
-            ],
-            'name'               => [
-                'fields' => [
-                    'name' => $faker->uuid,
-                ],
-            ],
-            'amount_min'         => [
-                'fields' => [
-                    'amount_min' => number_format($faker->randomFloat(2, 10, 50), 2),
-                ],
-            ],
-            'amount_max'         => [
-                'fields' => [
-                    'amount_max' => number_format($faker->randomFloat(2, 60, 590), 2),
-                ],
-            ],
-            'date'               => [
-                'fields' => [
-                    'date' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
-                ],
-            ],
-            'repeat_freq'        => [
-                'fields' => [
-                    'repeat_freq' => $repeatFreq,
-                ],
-            ],
-            'skip'               => [
-                'fields' => [
-                    'skip' => $faker->numberBetween(0, 5),
-                ],
-            ],
-            'active'             => [
-                'fields' => [
-                    'active' => $faker->boolean,
-                ],
-            ],
-            'notes'              => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-            'object_group_id'    => [
-                'fields' => [
-                    'object_group_id' => $objectGroupId,
-                ],
-            ],
-            'object_group_title' => [
-                'fields' => [
-                    'object_group_title' => $objectGroupName,
-                ],
-            ],
-        ];
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.bills.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

@@ -69,7 +69,7 @@ class TriggerController extends Controller
 
     /**
      * @param TestRequest $request
-     * @param RuleGroup            $group
+     * @param RuleGroup   $group
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -126,7 +126,7 @@ class TriggerController extends Controller
      * Execute the given rule group on a set of existing transactions.
      *
      * @param TriggerRequest $request
-     * @param RuleGroup               $group
+     * @param RuleGroup      $group
      *
      * @return JsonResponse
      * @throws Exception

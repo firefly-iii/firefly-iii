@@ -129,20 +129,6 @@ interface RuleGroupRepositoryInterface
     public function maxOrder(): int;
 
     /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveDown(RuleGroup $ruleGroup): bool;
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
-    public function moveUp(RuleGroup $ruleGroup): bool;
-
-    /**
      * @return bool
      */
     public function resetOrder(): bool;
@@ -155,18 +141,18 @@ interface RuleGroupRepositoryInterface
     public function resetRuleOrder(RuleGroup $ruleGroup): bool;
 
     /**
-     * @param RuleGroup $ruleGroup
-     * @param int       $newOrder
-     */
-    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
-
-    /**
      * @param string $query
      * @param int    $limit
      *
      * @return Collection
      */
     public function searchRuleGroup(string $query, int $limit): Collection;
+
+    /**
+     * @param RuleGroup $ruleGroup
+     * @param int       $newOrder
+     */
+    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
 
     /**
      * @param User $user

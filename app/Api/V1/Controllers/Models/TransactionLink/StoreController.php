@@ -18,7 +18,8 @@ use League\Fractal\Resource\Item;
 class StoreController extends Controller
 {
     use TransactionFilter;
-    private JournalRepositoryInterface $journalRepository;
+
+    private JournalRepositoryInterface  $journalRepository;
     private LinkTypeRepositoryInterface $repository;
 
 

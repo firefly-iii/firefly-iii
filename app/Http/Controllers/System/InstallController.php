@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib\Crypt\RSA;
 
 /**
  * Class InstallController
@@ -134,8 +133,15 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        $rsa  = new RSA();
-        $keys = $rsa->createKey(4096);
+        // switch on PHP version.
+        // switch on PHP version.
+        if (7 === PHP_MAJOR_VERSION) {
+            $rsa  = new \phpseclib\Crypt\RSA;
+            $keys = $rsa->createKey(4096);
+        }
+        if (8 === PHP_MAJOR_VERSION) {
+            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
+        }
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),

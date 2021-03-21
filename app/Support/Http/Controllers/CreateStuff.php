@@ -30,7 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib\Crypt\RSA;
+
 
 /**
  * Trait CreateStuff
@@ -42,7 +42,7 @@ trait CreateStuff
     /**
      * Creates an asset account.
      *
-     * @param NewUserFormRequest $request
+     * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
      *
      * @return bool
@@ -58,7 +58,7 @@ trait CreateStuff
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
-            'account_role'          => 'defaultAsset',
+            'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
             'opening_balance_date' => new Carbon,
             'currency_id'          => $currency->id,
@@ -73,7 +73,7 @@ trait CreateStuff
      * Creates a cash wallet.
      *
      * @param TransactionCurrency $currency
-     * @param string $language
+     * @param string              $language
      *
      * @return bool
      */
@@ -88,7 +88,7 @@ trait CreateStuff
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
-            'account_role'          => 'cashWalletAsset',
+            'account_role'         => 'cashWalletAsset',
             'opening_balance'      => null,
             'opening_balance_date' => null,
             'currency_id'          => $currency->id,
@@ -104,8 +104,14 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-        $rsa  = new RSA();
-        $keys = $rsa->createKey(4096);
+        // switch on PHP version.
+        if (7 === PHP_MAJOR_VERSION) {
+            $rsa  = new \phpseclib\Crypt\RSA;
+            $keys = $rsa->createKey(4096);
+        }
+        if (8 === PHP_MAJOR_VERSION) {
+            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
+        }
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
@@ -125,9 +131,9 @@ trait CreateStuff
     /**
      * Create a savings account.
      *
-     * @param NewUserFormRequest $request
+     * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
-     * @param string $language
+     * @param string              $language
      *
      * @return bool
      */
@@ -157,7 +163,7 @@ trait CreateStuff
      *
      * @param array $data
      *
-     * @return \FireflyIII\User
+     * @return User
      */
     protected function createUser(array $data): User // create object
     {

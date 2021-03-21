@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Category;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,34 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.categories.store';
-        $this->storeAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -74,55 +48,58 @@ class StoreControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
      * @return array
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_cat';
+        $defaultSet->addField(Field::createBasic('name', 'uuid'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
+        // add optional set
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
 
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_cat' => [
-                'parameters' => [1],
-                'fields'     => [
-                    'name' => $faker->uuid,
-                ],
-            ],
-        ];
+        return $configuration->generateAll();
     }
 
 
     /**
-     * @return \array[][]
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider emptyDataProvider
      */
-    private function optionalSets(): array
+    public function testStore(array $submission): void
     {
-        $faker = Factory::create();
-
-        return [
-            'notes' => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-        ];
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.categories.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

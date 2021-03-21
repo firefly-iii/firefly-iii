@@ -66,6 +66,31 @@ class AccountFactory
     }
 
     /**
+     * @param string $accountName
+     * @param string $accountType
+     *
+     * @return Account
+     * @throws FireflyException
+     */
+    public function findOrCreate(string $accountName, string $accountType): Account
+    {
+        Log::debug(sprintf('Searching for "%s" of type "%s"', $accountName, $accountType));
+        /** @var AccountType $type */
+        $type   = AccountType::whereType($accountType)->first();
+        $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
+
+        if (null === $return) {
+            Log::debug('Found nothing. Will create a new one.');
+            $return = $this->create(
+                ['user_id' => $this->user->id, 'name' => $accountName, 'account_type_id' => $type->id, 'account_type' => null, 'virtual_balance' => '0',
+                 'iban'    => null, 'active' => true,]
+            );
+        }
+
+        return $return;
+    }
+
+    /**
      * @param array $data
      *
      * @return Account
@@ -151,52 +176,6 @@ class AccountFactory
     }
 
     /**
-     * @param string $accountName
-     * @param string $accountType
-     *
-     * @return Account|null
-     */
-    public function find(string $accountName, string $accountType): ?Account
-    {
-        $type = AccountType::whereType($accountType)->first();
-
-        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
-    }
-
-    /**
-     * @param string $accountName
-     * @param string $accountType
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    public function findOrCreate(string $accountName, string $accountType): Account
-    {
-        Log::debug(sprintf('Searching for "%s" of type "%s"', $accountName, $accountType));
-        /** @var AccountType $type */
-        $type   = AccountType::whereType($accountType)->first();
-        $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
-
-        if (null === $return) {
-            Log::debug('Found nothing. Will create a new one.');
-            $return = $this->create(
-                ['user_id' => $this->user->id, 'name' => $accountName, 'account_type_id' => $type->id, 'account_type' => null, 'virtual_balance' => '0',
-                 'iban'    => null, 'active' => true,]
-            );
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
      * @param int|null    $accountTypeId
      * @param null|string $accountType
      *
@@ -232,6 +211,27 @@ class AccountFactory
 
         return $result;
 
+    }
+
+    /**
+     * @param string $accountName
+     * @param string $accountType
+     *
+     * @return Account|null
+     */
+    public function find(string $accountName, string $accountType): ?Account
+    {
+        $type = AccountType::whereType($accountType)->first();
+
+        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
 

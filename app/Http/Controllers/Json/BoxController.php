@@ -69,7 +69,7 @@ class BoxController extends Controller
         $end      = session('end', Carbon::now()->endOfMonth());
         $today    = today(config('app.timezone'));
         $display  = 2; // see method docs.
-        $boxTitle = (string) trans('firefly.spent');
+        $boxTitle = (string)trans('firefly.spent');
 
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -96,21 +96,21 @@ class BoxController extends Controller
         // spent in this period, in budgets, for default currency.
         // also calculate spent per day.
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
-        $spentAmount = $spent[(int) $currency->id]['sum'] ?? '0';
+        $spentAmount = $spent[(int)$currency->id]['sum'] ?? '0';
 
-        $days = $today->between($start, $end) ? $today->diffInDays($start) + 1  : $end->diffInDays($start) + 1;
-        $spentPerDay = bcdiv($spentAmount, (string) $days);
+        $days        = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
+        $spentPerDay = bcdiv($spentAmount, (string)$days);
         if ($availableBudgets->count() > 0) {
             $display           = 0; // assume user overspent
-            $boxTitle          = (string) trans('firefly.overspent');
-            $totalAvailableSum = (string) $availableBudgets->sum('amount');
+            $boxTitle          = (string)trans('firefly.overspent');
+            $totalAvailableSum = (string)$availableBudgets->sum('amount');
             // calculate with available budget.
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             if (1 === bccomp($leftToSpendAmount, '0')) {
-                $boxTitle         = (string) trans('firefly.left_to_spend');
+                $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;
                 $display          = 1; // not overspent
-                $leftPerDayAmount = bcdiv($leftToSpendAmount, (string) $days);
+                $leftPerDayAmount = bcdiv($leftToSpendAmount, (string)$days);
             }
         }
 
@@ -164,7 +164,7 @@ class BoxController extends Controller
         $set = $collector->getExtractedJournals();
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId           = (int) $journal['currency_id'];
+            $currencyId           = (int)$journal['currency_id'];
             $amount               = $journal['amount'] ?? '0';
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
@@ -180,7 +180,7 @@ class BoxController extends Controller
         $set = $collector->getExtractedJournals();
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId            = (int) $journal['currency_id'];
+            $currencyId            = (int)$journal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount'] ?? '0');
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';

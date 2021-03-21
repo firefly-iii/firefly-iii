@@ -39,8 +39,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -63,8 +63,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $tags
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      *
@@ -85,8 +85,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $budgets
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -105,8 +105,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $categories
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -129,8 +129,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $categories
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
@@ -149,14 +149,14 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $opposing
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */
     protected function getIncomeForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
-        $total  =$accounts->merge($opposing);
+        $total = $accounts->merge($opposing);
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($total)->setRange($start, $end)->withAccountInformation()->setTypes([TransactionType::DEPOSIT]);
@@ -169,8 +169,8 @@ trait TransactionCalculation
      *
      * @param Collection $accounts
      * @param Collection $tags
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon     $start
+     * @param Carbon     $end
      *
      * @return array
      */

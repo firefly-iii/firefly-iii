@@ -36,6 +36,7 @@ use Log;
 class Range
 {
     use RequestInformation;
+
     /**
      * Handle an incoming request.
      *
@@ -59,51 +60,6 @@ class Range
         }
 
         return $next($request);
-    }
-
-    /**
-     * Configure the list length.
-     */
-    private function configureList(): void
-    {
-        $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
-        app('view')->share('listLength', $pref);
-    }
-
-    /**
-     * Configure the user's view.
-     */
-    private function configureView(): void
-    {
-        // get locale preference:
-        $language = app('steam')->getLanguage();
-        $locale   = app('steam')->getLocale();
-        App::setLocale($language);
-        Carbon::setLocale(substr($locale, 0, 2));
-
-        $localeArray = app('steam')->getLocaleArray($locale);
-
-        setlocale(LC_TIME, $localeArray);
-        $moneyResult = setlocale(LC_MONETARY, $localeArray);
-
-        // send error to view if could not set money format
-        if (false === $moneyResult) {
-            Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
-            app('view')->share('invalidMonetaryLocale', true); // @codeCoverageIgnore
-        }
-
-        // save some formats:
-        $monthAndDayFormat = (string) trans('config.month_and_day', [], $locale);
-        $dateTimeFormat    = (string) trans('config.date_time', [], $locale);
-        $defaultCurrency   = app('amount')->getDefaultCurrency();
-
-        // also format for moment JS:
-        $madMomentJS = (string) trans('config.month_and_day_moment_js', [], $locale);
-
-        app('view')->share('madMomentJS', $madMomentJS);
-        app('view')->share('monthAndDayFormat', $monthAndDayFormat);
-        app('view')->share('dateTimeFormat', $dateTimeFormat);
-        app('view')->share('defaultCurrency', $defaultCurrency);
     }
 
     /**
@@ -132,5 +88,50 @@ class Range
             }
             app('session')->put('first', $first);
         }
+    }
+
+    /**
+     * Configure the user's view.
+     */
+    private function configureView(): void
+    {
+        // get locale preference:
+        $language = app('steam')->getLanguage();
+        $locale   = app('steam')->getLocale();
+        App::setLocale($language);
+        Carbon::setLocale(substr($locale, 0, 2));
+
+        $localeArray = app('steam')->getLocaleArray($locale);
+
+        setlocale(LC_TIME, $localeArray);
+        $moneyResult = setlocale(LC_MONETARY, $localeArray);
+
+        // send error to view if could not set money format
+        if (false === $moneyResult) {
+            Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
+            app('view')->share('invalidMonetaryLocale', true); // @codeCoverageIgnore
+        }
+
+        // save some formats:
+        $monthAndDayFormat = (string)trans('config.month_and_day', [], $locale);
+        $dateTimeFormat    = (string)trans('config.date_time', [], $locale);
+        $defaultCurrency   = app('amount')->getDefaultCurrency();
+
+        // also format for moment JS:
+        $madMomentJS = (string)trans('config.month_and_day_moment_js', [], $locale);
+
+        app('view')->share('madMomentJS', $madMomentJS);
+        app('view')->share('monthAndDayFormat', $monthAndDayFormat);
+        app('view')->share('dateTimeFormat', $dateTimeFormat);
+        app('view')->share('defaultCurrency', $defaultCurrency);
+    }
+
+    /**
+     * Configure the list length.
+     */
+    private function configureList(): void
+    {
+        $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
+        app('view')->share('listLength', $pref);
     }
 }

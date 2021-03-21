@@ -825,19 +825,18 @@ export default {
      * Get API value.
      */
     getAllowedOpposingTypes: function () {
-      axios.get('./api/v1/configuration/static/firefly.allowed_opposing_types')
+      axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
-            this.allowedOpposingTypes = response.data['firefly.allowed_opposing_types'];
-            // console.log('Set allowedOpposingTypes');
+            this.allowedOpposingTypes = response.data.data.value;
           });
     },
     /**
      * Get API value.
      */
     getAccountToTransaction: function () {
-      axios.get('./api/v1/configuration/static/firefly.account_to_transaction')
+      axios.get('./api/v1/configuration/firefly.account_to_transaction')
           .then(response => {
-            this.accountToTransaction = response.data['firefly.account_to_transaction'];
+            this.accountToTransaction = response.data.data.value;
           });
     },
     /**

@@ -35,6 +35,7 @@ use Illuminate\Queue\SerializesModels;
 class DestroyedTransactionGroup extends Event
 {
     use SerializesModels;
+
     public TransactionGroup $transactionGroup;
 
 

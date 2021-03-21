@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\PiggyBank;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,34 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.piggy_banks.store';
-        $this->storeAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -74,90 +48,99 @@ class StoreControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
      * @return array
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'name' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return $faker->uuid;
-            },
-        ];
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('name', 'uuid'));
+        $defaultSet->addField(Field::createBasic('account_id', 'random-piggy-account'));
+        $defaultSet->addField(Field::createBasic('target_amount', 'random-amount-max'));
+        $configuration->addMandatoryFieldSet($defaultSet);
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        // add optional set
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('current_amount', 'random-amount-min'));
+        $configuration->addOptionalFieldSet('current_amount', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('start_date', 'random-past-date'));
+        $configuration->addOptionalFieldSet('start_date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('target_date', 'random-future-date'));
+        $configuration->addOptionalFieldSet('target_date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('order', 'order'));
+        $configuration->addOptionalFieldSet('order', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_id';
+        $field->fieldType       = 'random-og-id';
+        $field->ignorableFields = ['object_group_title'];
+        $field->title           = 'object_group_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_id', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = new Field;
+        $field->fieldTitle      = 'object_group_title';
+        $field->fieldType       = 'uuid';
+        $field->ignorableFields = ['object_group_id'];
+        $field->title           = 'object_group_id';
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('object_group_title', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
     /**
-     * @return array
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider emptyDataProvider
      */
-    private function minimalSets(): array
+    public function testStore(array $submission): void
     {
-        $faker = Factory::create();
-
-        return [
-            'default_piggy' => [
-                'parameters' => [],
-                'fields'     => [
-                    'name'          => $faker->uuid,
-                    'account_id'    => $faker->numberBetween(1, 3),
-                    'target_amount' => number_format($faker->randomFloat(2, 50, 100), 2),
-                ],
-            ],
-        ];
-    }
-
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        $objectGroupId   = $faker->numberBetween(1, 2);
-        $objectGroupName = sprintf('Object group %d', $objectGroupId);
-
-        return [
-            'current_amount'     => [
-                'fields' => [
-                    'current_amount' => number_format($faker->randomFloat(2, 10, 50), 2),
-                ],
-            ],
-            'start_date'         => [
-                'fields' => [
-                    'start_date' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d'),
-                ],
-            ],
-            'target_date'        => [
-                'fields' => [
-                    'target_date' => $faker->dateTimeBetween('+1 year', '+2 year')->format('Y-m-d'),
-                ],
-            ],
-            'order'              => [
-                'fields' => [
-                    'order' => $faker->numberBetween(1, 5),
-                ],
-            ],
-            'object_group_id'    => [
-                'fields' => [
-                    'object_group_id' => $objectGroupId,
-                ],
-            ],
-            'object_group_title' => [
-                'fields' => [
-                    'object_group_title' => $objectGroupName,
-                ],
-            ],
-            'notes'              => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-        ];
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.piggy_banks.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

@@ -48,12 +48,11 @@ class UpdateController extends Controller
     }
 
 
-
     /**
      * Update object.
      *
      * @param UpdateRequest $request
-     * @param LinkType              $linkType
+     * @param LinkType      $linkType
      *
      * @return JsonResponse
      * @throws FireflyException

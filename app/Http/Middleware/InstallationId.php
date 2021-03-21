@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\System\GeneratesInstallationId;
+use Illuminate\Http\Request;
 
 /**
  *
@@ -39,7 +40,7 @@ class InstallationId
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Closure                  $next
      *
      * @return mixed
@@ -49,7 +50,6 @@ class InstallationId
      */
     public function handle($request, Closure $next)
     {
-
 
 
         $this->generateInstallationId();

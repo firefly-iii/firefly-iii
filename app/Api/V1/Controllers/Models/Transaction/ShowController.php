@@ -94,6 +94,18 @@ class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
+    /**
+     * Show a single transaction, by transaction journal.
+     *
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function showJournal(TransactionJournal $transactionJournal): JsonResponse
+    {
+        return $this->show($transactionJournal->transactionGroup);
+    }
 
     /**
      * Show a single transaction.
@@ -128,19 +140,6 @@ class ShowController extends Controller
         $resource = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Show a single transaction, by transaction journal.
-     *
-     * @param TransactionJournal $transactionJournal
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function showJournal(TransactionJournal $transactionJournal): JsonResponse
-    {
-        return $this->show($transactionJournal->transactionGroup);
     }
 
 }

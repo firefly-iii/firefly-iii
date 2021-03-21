@@ -52,16 +52,28 @@ use Illuminate\Support\Collection;
 interface RuleEngineInterface
 {
     /**
-     * @param User $user
+     * Add operators added to each search by the rule engine.
+     *
+     * @param array $operator
      */
-    public function setUser(User $user): void;
+    public function addOperator(array $operator): void;
 
     /**
-     * Add rules for the engine to execute.
-     *
-     * @param Collection $rules
+     * Find all transactions only, dont apply anything.
      */
-    public function setRules(Collection $rules): void;
+    public function find(): Collection;
+
+    /**
+     * Fire the rule engine.
+     */
+    public function fire(): void;
+
+    /**
+     * Return the number of changed transactions from the previous "fire" action.
+     *
+     * @return int
+     */
+    public function getResults(): int;
 
     /**
      * Add entire rule groups for the engine to execute.
@@ -71,27 +83,15 @@ interface RuleEngineInterface
     public function setRuleGroups(Collection $ruleGroups): void;
 
     /**
-     * Add operators added to each search by the rule engine.
+     * Add rules for the engine to execute.
      *
-     * @param array $operator
+     * @param Collection $rules
      */
-    public function addOperator(array $operator): void;
+    public function setRules(Collection $rules): void;
 
     /**
-     * Fire the rule engine.
+     * @param User $user
      */
-    public function fire(): void;
-
-    /**
-     * Find all transactions only, dont apply anything.
-     */
-    public function find(): Collection;
-
-    /**
-     * Return the number of changed transactions from the previous "fire" action.
-     *
-     * @return int
-     */
-    public function getResults(): int;
+    public function setUser(User $user): void;
 
 }

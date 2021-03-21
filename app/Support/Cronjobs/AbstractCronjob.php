@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
 use Exception;
+
 /**
  * Class AbstractCronjob
  *
@@ -32,14 +33,15 @@ use Exception;
  */
 abstract class AbstractCronjob
 {
-    /** @var int */
-    public $timeBetweenRuns = 43200;
+    public int       $timeBetweenRuns = 43200;
+    protected Carbon $date;
+    protected bool   $force;
 
-    /** @var bool */
-    protected $force;
+    public bool $jobFired;
+    public bool $jobSucceeded;
+    public bool $jobErrored;
 
-    /** @var Carbon */
-    protected $date;
+    public ?string $message;
 
     /**
      * AbstractCronjob constructor.
@@ -50,17 +52,16 @@ abstract class AbstractCronjob
     {
         $this->force = false;
         $this->date  = today(config('app.timezone'));
+        $this->jobErrored   = false;
+        $this->jobSucceeded = false;
+        $this->jobFired     = false;
+        $this->message      = null;
     }
-
-
 
     /**
-     * @param bool $force
+     *
      */
-    public function setForce(bool $force): void
-    {
-        $this->force = $force;
-    }
+    abstract public function fire(): void;
 
     /**
      * @param Carbon $date
@@ -71,8 +72,11 @@ abstract class AbstractCronjob
     }
 
     /**
-     * @return bool
+     * @param bool $force
      */
-    abstract public function fire(): bool;
+    public function setForce(bool $force): void
+    {
+        $this->force = $force;
+    }
 
 }

@@ -39,30 +39,6 @@ trait FormSupport
 
 
     /**
-     * @return AccountRepositoryInterface
-     */
-    protected function getAccountRepository(): AccountRepositoryInterface
-    {
-        return app(AccountRepositoryInterface::class);
-    }
-
-    /**
-     * @return Carbon
-     */
-    protected function getDate(): Carbon
-    {
-        /** @var Carbon $date */
-        $date = null;
-        try {
-            $date = today(config('app.timezone'));
-        } catch (Exception $e) {
-            $e->getMessage();
-        }
-
-        return $date;
-    }
-
-    /**
      * @param string $name
      * @param array  $list
      * @param mixed  $selected
@@ -89,6 +65,23 @@ trait FormSupport
     }
 
     /**
+     * @param $name
+     * @param $options
+     *
+     * @return string
+     */
+    protected function label(string $name, array $options = null): string
+    {
+        $options = $options ?? [];
+        if (isset($options['label'])) {
+            return $options['label'];
+        }
+        $name = str_replace('[]', '', $name);
+
+        return (string)trans('form.' . $name);
+    }
+
+    /**
      * @param       $name
      * @param       $label
      * @param array $options
@@ -105,6 +98,25 @@ trait FormSupport
         $options['placeholder']  = ucfirst($label);
 
         return $options;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return string
+     */
+    protected function getHolderClasses(string $name): string
+    {
+        // Get errors from session:
+        /** @var MessageBag $errors */
+        $errors  = session('errors');
+        $classes = 'form-group';
+
+        if (null !== $errors && $errors->has($name)) {
+            $classes = 'form-group has-error has-feedback';
+        }
+
+        return $classes;
     }
 
     /**
@@ -137,38 +149,26 @@ trait FormSupport
     }
 
     /**
-     * @param $name
-     *
-     * @return string
+     * @return AccountRepositoryInterface
      */
-    protected function getHolderClasses(string $name): string
+    protected function getAccountRepository(): AccountRepositoryInterface
     {
-        // Get errors from session:
-        /** @var MessageBag $errors */
-        $errors  = session('errors');
-        $classes = 'form-group';
-
-        if (null !== $errors && $errors->has($name)) {
-            $classes = 'form-group has-error has-feedback';
-        }
-
-        return $classes;
+        return app(AccountRepositoryInterface::class);
     }
 
     /**
-     * @param $name
-     * @param $options
-     *
-     * @return string
+     * @return Carbon
      */
-    protected function label(string $name, array $options = null): string
+    protected function getDate(): Carbon
     {
-        $options = $options ?? [];
-        if (isset($options['label'])) {
-            return $options['label'];
+        /** @var Carbon $date */
+        $date = null;
+        try {
+            $date = today(config('app.timezone'));
+        } catch (Exception $e) {
+            $e->getMessage();
         }
-        $name = str_replace('[]', '', $name);
 
-        return (string)trans('form.' . $name);
+        return $date;
     }
 }

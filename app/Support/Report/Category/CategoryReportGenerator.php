@@ -151,7 +151,7 @@ class CategoryReportGenerator
      */
     private function processCategoryRow(int $currencyId, array $currencyRow, int $categoryId, array $categoryRow): void
     {
-        $key                        = sprintf('%s-%s', $currencyId, $categoryId);
+        $key                              = sprintf('%s-%s', $currencyId, $categoryId);
         $this->report['categories'][$key] = $this->report['categories'][$key] ?? [
                 'id'                      => $categoryId,
                 'title'                   => $categoryRow['name'],

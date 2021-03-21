@@ -49,12 +49,12 @@ class APIEventHandler
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull((int) $event->userId);
+        $user       = $repository->findNull((int)$event->userId);
         if (null !== $user) {
-            $email     = $user->email;
+            $email = $user->email;
 
             // if user is demo user, send to owner:
-            if($user->hasRole('demo')) {
+            if ($user->hasRole('demo')) {
                 $email = config('firefly.site_owner');
             }
 

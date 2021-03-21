@@ -55,9 +55,10 @@ class NewIPAddressWarningMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public string $host;
     public string $ipAddress;
     public string $time;
-    public string $host;
+
     /**
      * OAuthTokenCreatedMail constructor.
      *
@@ -78,12 +79,12 @@ class NewIPAddressWarningMail extends Mailable
         // time
         $this->time = now()->formatLocalized((string)trans('config.date_time'));
         $this->host = '';
-        $hostName = gethostbyaddr($this->ipAddress);
-        if($hostName !== $this->ipAddress) {
+        $hostName   = gethostbyaddr($this->ipAddress);
+        if ($hostName !== $this->ipAddress) {
             $this->host = $hostName;
         }
 
         return $this->view('v1.emails.new-ip-html')->text('v1.emails.new-ip-text')
-                    ->subject((string) trans('email.login_from_new_ip'));
+                    ->subject((string)trans('email.login_from_new_ip'));
     }
 }

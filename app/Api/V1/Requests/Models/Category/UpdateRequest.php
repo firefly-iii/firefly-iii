@@ -44,9 +44,10 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         $fields = [
-            'name' => ['name', 'string'],
-            'notes' => ['notes', 'nlString']
+            'name'  => ['name', 'string'],
+            'notes' => ['notes', 'nlString'],
         ];
+
         return $this->getAllData($fields);
     }
 

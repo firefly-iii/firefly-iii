@@ -32,25 +32,15 @@ use Twig\TwigFunction;
 class Rule extends AbstractExtension
 {
     /**
-     * @return TwigFunction
+     * @return array
      */
-    public function allActionTriggers(): TwigFunction
+    public function getFunctions(): array
     {
-        return new TwigFunction(
-            'allRuleActions',
-            static function () {
-                // array of valid values for actions
-                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-                $possibleActions = [];
-                foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
-                }
-                unset($ruleActions);
-                asort($possibleActions);
-
-                return $possibleActions;
-            }
-        );
+        return [
+            $this->allJournalTriggers(),
+            $this->allRuleTriggers(),
+            $this->allActionTriggers(),
+        ];
     }
 
     /**
@@ -93,14 +83,24 @@ class Rule extends AbstractExtension
     }
 
     /**
-     * @return array
+     * @return TwigFunction
      */
-    public function getFunctions(): array
+    public function allActionTriggers(): TwigFunction
     {
-        return [
-            $this->allJournalTriggers(),
-            $this->allRuleTriggers(),
-            $this->allActionTriggers(),
-        ];
+        return new TwigFunction(
+            'allRuleActions',
+            static function () {
+                // array of valid values for actions
+                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+                $possibleActions = [];
+                foreach ($ruleActions as $key) {
+                    $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
+                }
+                unset($ruleActions);
+                asort($possibleActions);
+
+                return $possibleActions;
+            }
+        );
     }
 }

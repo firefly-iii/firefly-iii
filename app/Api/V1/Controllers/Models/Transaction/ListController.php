@@ -26,8 +26,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionLinkTransformer;
@@ -75,8 +73,8 @@ class ListController extends Controller
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager     = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $manager    = $this->getManager();
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = new Collection;
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($collection);
@@ -108,13 +106,13 @@ class ListController extends Controller
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager = $this->getManager();
-        $collection  = new Collection;
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $manager    = $this->getManager();
+        $collection = new Collection;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($collection);
         }
-        $count       = $collection->count();
+        $count  = $collection->count();
         $events = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
 
@@ -130,12 +128,11 @@ class ListController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
 
-
-//        /** @var PiggyBankEventTransformer $transformer */
-//        $transformer = app(PiggyBankEventTransformer::class);
-//        $transformer->setParameters($this->parameters);
-//
-//        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
+        //        /** @var PiggyBankEventTransformer $transformer */
+        //        $transformer = app(PiggyBankEventTransformer::class);
+        //        $transformer->setParameters($this->parameters);
+        //
+        //        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -150,9 +147,9 @@ class ListController extends Controller
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {
         $manager      = $this->getManager();
-        $collection = $this->journalAPIRepository->getJournalLinks($transactionJournal);
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $count       = $collection->count();
+        $collection   = $this->journalAPIRepository->getJournalLinks($transactionJournal);
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $count        = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:

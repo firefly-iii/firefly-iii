@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Recurrence;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      *
@@ -53,13 +54,18 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.recurrences.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.recurrences.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
+
     }
 
 
@@ -68,177 +74,116 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
+        // optional fields
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('title', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('title', $fieldSet);
 
-        return $submissions;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('description', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('description', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('first_date', 'random-past-date');
+        $field->ignorableFields = ['repetitions'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('first_date', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('apply_rules', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('apply_rules', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-ndom');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-ndom'));
+        $configuration->addOptionalFieldSet('ndom', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-monthly');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-monthly'));
+        $configuration->addOptionalFieldSet('monthly', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/type', 'static-yearly');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'random-past-date'));
+        $configuration->addOptionalFieldSet('yearly', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/skip', 'random-skip');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('skip', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('repetitions/0/weekend', 'weekend');
+        $field->ignorableFields = ['repetitions/0/description', 'repetitions/0/occurrences'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('weekend', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('transactions/0/foreign_amount', 'random-amount'));
+        $field                  = Field::createBasic('transactions/0/foreign_currency_id', 'random-currency-id');
+        $field->ignorableFields = ['transactions/0/foreign_currency_code', 'transactions/0/foreign_currency_symbol'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('foreign1', $fieldSet);
+
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/budget_id', 'random-budget-id');
+        $field->ignorableFields = ['transactions/0/budget_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('budget', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/category_id', 'random-category-id');
+        $field->ignorableFields = ['transactions/0/category_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('category', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
+        $configuration->addOptionalFieldSet('tags', $fieldSet);
+
+        $fieldSet               = new FieldSet;
+        $fieldSet->parameters   = [1];
+        $field                  = Field::createBasic('transactions/0/piggy_bank_id', 'random-piggy-id');
+        $field->ignorableFields = ['transactions/0/piggy_bank_name'];
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('piggy', $fieldSet);
+
+        return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $types = [
-            ['daily', ''],
-            ['weekly', (string)$faker->numberBetween(1, 7)],
-            ['ndom', (string)$faker->numberBetween(1, 4) . ',' . $faker->numberBetween(1, 7)],
-            ['monthly', (string)$faker->numberBetween(1, 31)],
-            ['yearly', $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-        ];
-
-        $set = [
-            'title'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'title' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'description'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'description' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'first_date'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'first_date' => ['test_value' => $faker->date()],
-                ],
-                'extra_ignore' => [],
-            ],
-            'repeat_until'      => [
-                'id'           => 1,
-                'fields'       => [
-                    'repeat_until' => ['test_value' => $faker->dateTimeBetween('1 year', '2 year')->format('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-            'nr_of_repetitions' => [
-                'id'           => 1,
-                'fields'       => [
-                    'nr_of_repetitions' => ['test_value' => $faker->numberBetween(1, 5)],
-                ],
-                'extra_ignore' => ['repeat_until'],
-            ],
-            'apply_rules'       => [
-                'id'           => 1,
-                'fields'       => [
-                    'apply_rules' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'active'            => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'             => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-        // repetitions. Will submit 0,1 2 3 repetitions:
-        for ($i = 0; $i < 4; $i++) {
-            if (0 === $i) {
-                $set[] = [
-                    'id'           => 1,
-                    'fields'       => [
-                        'repetitions' => [
-                            'test_value' => [],
-                        ],
-                    ],
-                    'extra_ignore' => [],
-                ];
-                continue;
-            }
-            $extraRepetitions = [];
-            // do $i repetitions
-            for ($ii = 0; $ii < $i; $ii++) {
-                //echo 'Now at ' . $i . ':' . $ii . ' <br>' . "\n";
-                // now loop fields, enough to create sets I guess?
-                $thisType = $types[$faker->numberBetween(0, 4)];
-                // TODO maybe do some permutation stuff here?
-                $extraRepetition = [
-                    'type'    => $thisType[0],
-                    'moment'  => $thisType[1],
-                    'skip'    => $faker->numberBetween(1, 3),
-                    'weekend' => $faker->numberBetween(1, 4),
-                ];
-
-                $extraRepetitions[] = $extraRepetition;
-            }
-            $set[] = [
-                'id'           => 1,
-                'fields'       => [
-                    'repetitions' => [
-                        'test_value' => $extraRepetitions,
-                    ],
-                ],
-                'extra_ignore' => [],
-            ];
-        }
-
-        // transactions. Will submit 0,1 2 3 transactions:
-        for ($i = 0; $i < 4; $i++) {
-            if (0 === $i) {
-                $set[] = [
-                    'id'           => 1,
-                    'fields'       => [
-                        'transactions' => [
-                            'test_value' => [],
-                        ],
-                    ],
-                    'extra_ignore' => [],
-                ];
-                continue;
-            }
-            $extraTransactions = [];
-            // do $i repetitions
-            for ($ii = 0; $ii < $i; $ii++) {
-                //echo 'Now at ' . $i . ':' . $ii . ' <br>' . "\n";
-                // now loop fields, enough to create sets I guess?
-                // TODO maybe do some permutation stuff here?
-                $extraTransaction = [
-                    'description'    => $faker->uuid,
-                    'amount'         => number_format($faker->randomFloat(2, 10, 100), 2),
-                    'skip'           => $faker->numberBetween(1, 3),
-                    'weekend'        => $faker->numberBetween(1, 4),
-                    'budget_id'      => $faker->numberBetween(1, 2),
-                    'category_id'    => $faker->numberBetween(1, 2),
-                    'tags'           => ['a', 'c', 'd'],
-                    'source_id'      => 1,
-                    'destination_id' => 8,
-                ];
-
-                $extraTransactions[] = $extraTransaction;
-            }
-            // TODO later maybe
-//            $set[] = [
-//                'id'           => 1,
-//                'fields'       => [
-//                    'transactions' => [
-//                        'test_value' => $extraTransactions,
-//                    ],
-//                ],
-//                'extra_ignore' => [],
-//            ];
-        }
-
-        return $set;
-    }
-
-
 }

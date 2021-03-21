@@ -27,6 +27,7 @@ use FireflyIII\Models\AccountType;
 
 /**
  * Trait AccountFilter
+ *
  * @codeCoverageIgnore
  */
 trait AccountFilter
@@ -40,7 +41,7 @@ trait AccountFilter
      */
     protected function mapAccountTypes(string $type): array
     {
-        $types  = [
+        $types = [
             'all'                        => [AccountType::DEFAULT, AccountType::CASH,
                                              AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
                                              AccountType::INITIAL_BALANCE, AccountType::BENEFICIARY, AccountType::IMPORT, AccountType::RECONCILIATION,

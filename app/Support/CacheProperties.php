@@ -23,10 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Cache;
+use Carbon\Carbon;
+use FireflyIII\Models\Category;
 use Illuminate\Support\Collection;
 
 /**
  * Class CacheProperties.
+ *
  * @codeCoverageIgnore
  */
 class CacheProperties
@@ -49,8 +52,8 @@ class CacheProperties
     }
 
     /**
-     * @param $property
-     * @param Collection|\Carbon\Carbon|\FireflyIII\Models\Category|array|int|string $property
+     * @param                                                                        $property
+     * @param Collection|Carbon|Category|array|int|string                            $property
      */
     public function addProperty($property): void
     {
@@ -87,15 +90,6 @@ class CacheProperties
     }
 
     /**
-     * @param $data
-     * @param (array|mixed)[]|Collection|\Carbon\Carbon|string $data
-     */
-    public function store($data): void
-    {
-        Cache::forever($this->hash, $data);
-    }
-
-    /**
      */
     private function hash(): void
     {
@@ -104,5 +98,14 @@ class CacheProperties
             $content .= json_encode($property, JSON_THROW_ON_ERROR, 512);
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);
+    }
+
+    /**
+     * @param $data
+     * @param (array|mixed)[]|Collection|\Carbon\Carbon|string $data
+     */
+    public function store($data): void
+    {
+        Cache::forever($this->hash, $data);
     }
 }

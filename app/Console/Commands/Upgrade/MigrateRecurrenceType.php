@@ -66,14 +66,6 @@ class MigrateRecurrenceType extends Command
     /**
      *
      */
-    private function getInvalidType(): TransactionType
-    {
-        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
-    }
-
-    /**
-     *
-     */
     private function migrateTypes(): void
     {
         $set = Recurrence::get();
@@ -83,14 +75,6 @@ class MigrateRecurrenceType extends Command
                 $this->migrateRecurrence($recurrence);
             }
         }
-    }
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     private function migrateRecurrence(Recurrence $recurrence): void
@@ -105,5 +89,21 @@ class MigrateRecurrenceType extends Command
             $transaction->save();
         }
         $this->line(sprintf('Updated recurrence #%d to new transaction type model.', $recurrence->id));
+    }
+
+    /**
+     *
+     */
+    private function getInvalidType(): TransactionType
+    {
+        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

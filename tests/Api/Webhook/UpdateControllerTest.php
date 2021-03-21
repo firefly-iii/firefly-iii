@@ -22,12 +22,13 @@
 namespace Tests\Api\Webhook;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      *
@@ -53,13 +54,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.webhooks.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.webhooks.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,68 +73,45 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
-    }
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('active', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('active', $fieldSet);
 
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('title', 'uuid');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('title', $fieldSet);
 
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'active'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'active' => ['test_value' => $faker->boolean],
-                ],
-                'extra_ignore' => [],
-            ],
-            'title'  => [
-                'id'           => 1,
-                'fields'       => [
-                    'title' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'trigger' => [
-                'id'           => 1,
-                'fields'       => [
-                    'trigger' => ['test_value' => $faker->randomElement(['TRIGGER_STORE_TRANSACTION', 'TRIGGER_UPDATE_TRANSACTION', 'TRIGGER_DESTROY_TRANSACTION'])],
-                ],
-                'extra_ignore' => [],
-            ],
-            'response' => [
-                'id'           => 1,
-                'fields'       => [
-                    'response' => ['test_value' => $faker->randomElement(['RESPONSE_TRANSACTIONS', 'RESPONSE_ACCOUNTS', 'RESPONSE_NONE'])],
-                ],
-                'extra_ignore' => [],
-            ],
-            'delivery' => [
-                'id'           => 1,
-                'fields'       => [
-                    'delivery' => ['test_value' => $faker->randomElement(['DELIVERY_JSON'])],
-                ],
-                'extra_ignore' => [],
-            ],
-            'url' => [
-                'id'           => 1,
-                'fields'       => [
-                    'url' => ['test_value' => str_replace(['http://'], 'https://', $faker->url)],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('trigger', 'webhook-trigger');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('trigger', $fieldSet);
 
-        return $set;
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('response', 'webhook-response');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('response', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('delivery', 'webhook-delivery');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('delivery', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $field                = Field::createBasic('url', 'secure-url');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('url', $fieldSet);
+
+        return $configuration->generateAll();
     }
 
 

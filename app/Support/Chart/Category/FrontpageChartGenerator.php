@@ -100,6 +100,29 @@ class FrontpageChartGenerator
     }
 
     /**
+     * @param Category   $category
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function collectExpenses(Category $category, Collection $accounts): array
+    {
+        $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
+        $tempData = [];
+        foreach ($spent as $currency) {
+            $this->addCurrency($currency);
+            $tempData[] = [
+                'name'        => $category->name,
+                'sum'         => $currency['sum'],
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
+                'currency_id' => (int)$currency['currency_id'],
+            ];
+        }
+
+        return $tempData;
+    }
+
+    /**
      * @param array $currency
      */
     private function addCurrency(array $currency): void
@@ -116,29 +139,6 @@ class FrontpageChartGenerator
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    private function collectExpenses(Category $category, Collection $accounts): array
-    {
-        $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
-        $tempData = [];
-        foreach ($spent as $currency) {
-            $this->addCurrency($currency);
-            $tempData[] = [
-                'name'        => $category->name,
-                'sum'         => $currency['sum'],
-                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places']),
-                'currency_id' => (int)$currency['currency_id'],
-            ];
-        }
-
-        return $tempData;
-    }
-
-    /**
      * @param Collection $accounts
      *
      * @return array
@@ -152,7 +152,7 @@ class FrontpageChartGenerator
             $tempData[] = [
                 'name'        => trans('firefly.no_category'),
                 'sum'         => $currency['sum'],
-                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2),
+                'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places'] ?? 2),
                 'currency_id' => (int)$currency['currency_id'],
             ];
         }

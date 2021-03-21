@@ -27,6 +27,7 @@ use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use FireflyIII\User;
 use Illuminate\Http\Response as LaravelResponse;
+use League\Csv\CannotInsertRecord;
 
 /**
  * Class ExportController
@@ -59,7 +60,7 @@ class ExportController extends Controller
      * @param ExportRequest $request
      *
      * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
+     * @throws CannotInsertRecord
      */
     public function accounts(ExportRequest $request): LaravelResponse
     {
@@ -69,120 +70,11 @@ class ExportController extends Controller
 
     }
 
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function bills(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBills(true);
-
-        return $this->returnExport('bills');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function budgets(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBudgets(true);
-
-        return $this->returnExport('budgets');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function categories(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportCategories(true);
-
-        return $this->returnExport('categories');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function piggyBanks(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportPiggies(true);
-
-        return $this->returnExport('piggies');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function recurring(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRecurring(true);
-
-        return $this->returnExport('recurrences');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function rules(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRules(true);
-
-        return $this->returnExport('rules');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function tags(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportTags(true);
-
-        return $this->returnExport('tags');
-    }
-
-    /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
-     */
-    public function transactions(ExportRequest $request): LaravelResponse
-    {
-        $params = $request->getAll();
-        $this->exporter->setStart($params['start']);
-        $this->exporter->setEnd($params['end']);
-        $this->exporter->setAccounts($params['accounts']);
-        $this->exporter->setExportTransactions(true);
-
-        return $this->returnExport('transactions');
-    }
-
     /**
      * @param string $key
      *
      * @return LaravelResponse
-     * @throws \League\Csv\CannotInsertRecord
+     * @throws CannotInsertRecord
      */
     private function returnExport(string $key): LaravelResponse
     {
@@ -204,6 +96,114 @@ class ExportController extends Controller
             ->header('Content-Length', strlen($data[$key]));
 
         return $response;
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function bills(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBills(true);
+
+        return $this->returnExport('bills');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function budgets(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBudgets(true);
+
+        return $this->returnExport('budgets');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function categories(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportCategories(true);
+
+        return $this->returnExport('categories');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function piggyBanks(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportPiggies(true);
+
+        return $this->returnExport('piggies');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function recurring(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRecurring(true);
+
+        return $this->returnExport('recurrences');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function rules(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRules(true);
+
+        return $this->returnExport('rules');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function tags(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportTags(true);
+
+        return $this->returnExport('tags');
+    }
+
+    /**
+     * @param ExportRequest $request
+     *
+     * @return LaravelResponse
+     * @throws CannotInsertRecord
+     */
+    public function transactions(ExportRequest $request): LaravelResponse
+    {
+        $params = $request->getAll();
+        $this->exporter->setStart($params['start']);
+        $this->exporter->setEnd($params['end']);
+        $this->exporter->setAccounts($params['accounts']);
+        $this->exporter->setExportTransactions(true);
+
+        return $this->returnExport('transactions');
     }
 
 }

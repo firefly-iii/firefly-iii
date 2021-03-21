@@ -37,6 +37,7 @@ use Illuminate\Queue\SerializesModels;
 class RegisteredUser extends Mailable
 {
     use Queueable, SerializesModels;
+
     /** @var string Email address of user */
     public $address;
     /** @var string IP address of user */
@@ -61,6 +62,6 @@ class RegisteredUser extends Mailable
      */
     public function build(): self
     {
-        return $this->view('v1.emails.registered-html')->text('v1.emails.registered-text')->subject((string) trans('email.registered_subject'));
+        return $this->view('v1.emails.registered-html')->text('v1.emails.registered-text')->subject((string)trans('email.registered_subject'));
     }
 }

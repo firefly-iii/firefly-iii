@@ -36,10 +36,11 @@ use Illuminate\Support\HtmlString;
 class RuleForm
 {
     use FormSupport;
+
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
@@ -60,8 +61,8 @@ class RuleForm
     }
 
     /**
-     * @param string $name
-     * @param null $value
+     * @param string     $name
+     * @param null       $value
      * @param array|null $options
      *
      * @return HtmlString

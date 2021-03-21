@@ -62,7 +62,7 @@ class CurrencyController extends Controller
      *
      * @return JsonResponse
      */
-    public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
+    public function currencies(AutocompleteRequest $request): JsonResponse
     {
         $data       = $request->getData();
         $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
@@ -71,8 +71,8 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string) $currency->id,
-                'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
+                'id'             => (string)$currency->id,
+                'name'           => $currency->name,
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
                 'decimal_places' => $currency->decimal_places,
@@ -87,7 +87,7 @@ class CurrencyController extends Controller
      *
      * @return JsonResponse
      */
-    public function currencies(AutocompleteRequest $request): JsonResponse
+    public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
     {
         $data       = $request->getData();
         $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
@@ -96,8 +96,8 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string) $currency->id,
-                'name'           => $currency->name,
+                'id'             => (string)$currency->id,
+                'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
                 'decimal_places' => $currency->decimal_places,

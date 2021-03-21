@@ -46,50 +46,6 @@ trait RenderPartialViews
 {
 
     /**
-     * Get options for double report.
-     *
-     * @return string
-     */
-    protected function doubleReportOptions(): string // render a view
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
-        $set        = [];
-
-        /** @var Account $account */
-        foreach ($expense as $account) {
-            // loop revenue, find same account:
-            /** @var Account $otherAccount */
-            foreach ($revenue as $otherAccount) {
-                if (
-                    (
-                        ($otherAccount->name === $account->name)
-                        ||
-                        (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
-                    )
-                    && $otherAccount->id !== $account->id
-                ) {
-                    $set[] = $account;
-                }
-            }
-        }
-
-        // @codeCoverageIgnoreStart
-        try {
-            $result = prefixView('reports.options.double', compact('set'))->render();
-        } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
-            $result = 'Could not render view.';
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return $result;
-    }
-
-    /**
      * View for transactions in a budget for an account.
      *
      * @param array $attributes
@@ -103,10 +59,10 @@ trait RenderPartialViews
 
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budget           = $budgetRepository->findNull((int) $attributes['budgetId']);
+        $budget           = $budgetRepository->findNull((int)$attributes['budgetId']);
 
         $accountRepos = app(AccountRepositoryInterface::class);
-        $account      = $accountRepos->findNull((int) $attributes['accountId']);
+        $account      = $accountRepos->findNull((int)$attributes['accountId']);
 
         $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
         // @codeCoverageIgnoreStart
@@ -160,7 +116,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $budget = $budgetRepository->findNull((int) $attributes['budgetId']);
+        $budget = $budgetRepository->findNull((int)$attributes['budgetId']);
         if (null === $budget) {
             $budget = new Budget;
         }
@@ -192,7 +148,7 @@ trait RenderPartialViews
 
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = app(CategoryRepositoryInterface::class);
-        $category           = $categoryRepository->findNull((int) $attributes['categoryId']);
+        $category           = $categoryRepository->findNull((int)$attributes['categoryId']);
         $journals           = $popupHelper->byCategory($category, $attributes);
 
         try {
@@ -229,6 +185,49 @@ trait RenderPartialViews
     }
 
     /**
+     * Get options for double report.
+     *
+     * @return string
+     */
+    protected function doubleReportOptions(): string // render a view
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        $set        = [];
+
+        /** @var Account $account */
+        foreach ($expense as $account) {
+            // loop revenue, find same account:
+            /** @var Account $otherAccount */
+            foreach ($revenue as $otherAccount) {
+                if (
+                    (
+                        ($otherAccount->name === $account->name)
+                        || (null !== $account->iban && null !== $otherAccount->iban && $otherAccount->iban === $account->iban)
+                    )
+                    && $otherAccount->id !== $account->id
+                ) {
+                    $set[] = $account;
+                }
+            }
+        }
+
+        // @codeCoverageIgnoreStart
+        try {
+            $result = prefixView('reports.options.double', compact('set'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return $result;
+    }
+
+    /**
      * Returns all the expenses that went to the given expense account.
      *
      * @param array $attributes
@@ -243,7 +242,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $account = $accountRepository->findNull((int) $attributes['accountId']);
+        $account = $accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown account. Apologies.';
@@ -317,7 +316,7 @@ trait RenderPartialViews
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
 
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -369,7 +368,7 @@ trait RenderPartialViews
 
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
-        $account     = $accountRepository->findNull((int) $attributes['accountId']);
+        $account     = $accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown category. Apologies.';

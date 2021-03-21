@@ -335,6 +335,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ('none' === $type) {
             return $newBudget;
         }
+        if (0 === $type) {
+            return $newBudget;
+        }
 
         if ('reset' === $type) {
             $type = AutoBudget::AUTO_BUDGET_RESET;
@@ -343,7 +346,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $type = AutoBudget::AUTO_BUDGET_ROLLOVER;
         }
 
-        $repos = app(CurrencyRepositoryInterface::class);
+        $repos    = app(CurrencyRepositoryInterface::class);
+        $currency = null;
         if (array_key_exists('currency_id', $data)) {
             $currency = $repos->findNull((int)$data['currency_id']);
         }
@@ -390,6 +394,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
+        Log::debug('Now in update()');
+        // TODO update rules
         $oldName = $budget->name;
         if (array_key_exists('name', $data)) {
             $budget->name = $data['name'];
@@ -417,18 +423,24 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
+
         if (null === $autoBudget
             && array_key_exists('auto_budget_type', $data)
             && array_key_exists('auto_budget_amount', $data)
+            && 0 !== $data['auto_budget_type']
+            && 'none' !== $data['auto_budget_type']
         ) {
             // only create if all are here:
             $autoBudget                          = new AutoBudget;
             $autoBudget->budget_id               = $budget->id;
             $autoBudget->transaction_currency_id = $currency->id;
         }
+        if (null !== $autoBudget && null !== $currency) {
+            $autoBudget->transaction_currency_id = $currency->id;
+        }
 
         // update existing type
-        if (array_key_exists('auto_budget_type', $data)) {
+        if (array_key_exists('auto_budget_type', $data) && 0 !== $data['auto_budget_type']) {
             $autoBudgetType = $data['auto_budget_type'];
             if ('reset' === $autoBudgetType) {
                 $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_RESET;
@@ -436,16 +448,16 @@ class BudgetRepository implements BudgetRepositoryInterface
             if ('rollover' === $autoBudgetType) {
                 $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_ROLLOVER;
             }
-            if ('none' === $autoBudgetType && null !== $autoBudget->id) {
+            if ('none' === $autoBudgetType && null !== $autoBudget) {
                 $autoBudget->delete();
 
                 return $budget;
             }
         }
-        if (array_key_exists('auto_budget_amount', $data)) {
+        if (array_key_exists('auto_budget_amount', $data) && null !== $autoBudget) {
             $autoBudget->amount = $data['auto_budget_amount'];
         }
-        if (array_key_exists('auto_budget_period', $data)) {
+        if (array_key_exists('auto_budget_period', $data) && null !== $autoBudget) {
             $autoBudget->period = $data['auto_budget_period'];
         }
         if (null !== $autoBudget) {
@@ -454,27 +466,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
         return $budget;
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
-    private function updateRuleTriggers(string $oldName, string $newName): void
-    {
-        $types    = ['budget_is',];
-        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_triggers.trigger_type', $types)
-                               ->where('rule_triggers.trigger_value', $oldName)
-                               ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $trigger->trigger_value = $newName;
-            $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
-        }
     }
 
     /**
@@ -495,6 +486,27 @@ class BudgetRepository implements BudgetRepositoryInterface
             $action->action_value = $newName;
             $action->save();
             Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRuleTriggers(string $oldName, string $newName): void
+    {
+        $types    = ['budget_is',];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_triggers.trigger_type', $types)
+                               ->where('rule_triggers.trigger_value', $oldName)
+                               ->get(['rule_triggers.*']);
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $newName;
+            $trigger->save();
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 }

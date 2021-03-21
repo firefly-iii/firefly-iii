@@ -79,28 +79,6 @@ class AccountDestroyService
     /**
      * @param Account $account
      */
-    private function destroyJournals(Account $account): void
-    {
-
-        /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-
-        Log::debug('Now trigger account delete response #' . $account->id);
-        /** @var Transaction $transaction */
-        foreach ($account->transactions()->get() as $transaction) {
-            Log::debug('Now at transaction #' . $transaction->id);
-            /** @var TransactionJournal $journal */
-            $journal = $transaction->transactionJournal()->first();
-            if (null !== $journal) {
-                Log::debug('Call for deletion of journal #' . $journal->id);
-                $service->destroy($journal);
-            }
-        }
-    }
-
-    /**
-     * @param Account $account
-     */
     private function destroyOpeningBalance(Account $account): void
     {
         Log::debug(sprintf('Searching for opening balance for account #%d "%s"', $account->id, $account->name));
@@ -137,6 +115,47 @@ class AccountDestroyService
 
     /**
      * @param Account $account
+     * @param Account $moveTo
+     */
+    private function moveTransactions(Account $account, Account $moveTo): void
+    {
+        DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+    }
+
+    /**
+     * @param Account $account
+     * @param Account $moveTo
+     */
+    private function updateRecurrences(Account $account, Account $moveTo): void
+    {
+        DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
+        DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
+    }
+
+    /**
+     * @param Account $account
+     */
+    private function destroyJournals(Account $account): void
+    {
+
+        /** @var JournalDestroyService $service */
+        $service = app(JournalDestroyService::class);
+
+        Log::debug('Now trigger account delete response #' . $account->id);
+        /** @var Transaction $transaction */
+        foreach ($account->transactions()->get() as $transaction) {
+            Log::debug('Now at transaction #' . $transaction->id);
+            /** @var TransactionJournal $journal */
+            $journal = $transaction->transactionJournal()->first();
+            if (null !== $journal) {
+                Log::debug('Call for deletion of journal #' . $journal->id);
+                $service->destroy($journal);
+            }
+        }
+    }
+
+    /**
+     * @param Account $account
      */
     private function destroyRecurrences(Account $account): void
     {
@@ -153,26 +172,6 @@ class AccountDestroyService
         foreach ($recurrences as $recurrenceId) {
             $destroyService->destroyById((int)$recurrenceId);
         }
-    }
-
-
-    /**
-     * @param Account $account
-     * @param Account $moveTo
-     */
-    private function moveTransactions(Account $account, Account $moveTo): void
-    {
-        DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
-    }
-
-    /**
-     * @param Account $account
-     * @param Account $moveTo
-     */
-    private function updateRecurrences(Account $account, Account $moveTo): void
-    {
-        DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
-        DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
     }
 
 }

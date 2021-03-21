@@ -130,7 +130,9 @@
                                         <ul>
                                             {% for rep in rt.repetitions %}
                                                 {% for occ in rep.occurrences %}
+                                                    {% if loop.index0 < 2 %}
                                                     <li>{{ occ.formatLocalized(monthAndDayFormat) }}</li>
+                                                    {% endif %}
                                                 {% endfor %}
                                             {% endfor %}
                                         </ul>

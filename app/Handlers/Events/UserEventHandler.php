@@ -129,52 +129,6 @@ class UserEventHandler
     }
 
     /**
-     * @param Login $event
-     */
-    public function storeUserIPAddress(Login $event): void
-    {
-        /** @var User $user */
-        $user = $event->user;
-        /** @var array $preference */
-        $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
-        $inArray    = false;
-        $ip         = request()->ip();
-        Log::debug(sprintf('User logging in from IP address %s', $ip));
-
-        // update array if in array
-        foreach ($preference as $index => $row) {
-            if ($row['ip'] === $ip) {
-                Log::debug('Found IP in array, refresh time.');
-                $preference[$index]['time'] = now(config('app.timezone'))->format('Y-m-d H:i:s');
-                $inArray                    = true;
-            }
-            // clean up old entries (6 months)
-            $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
-            if ($carbon->diffInMonths(today()) > 6) {
-                Log::debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
-                unset($preference[$index]);
-            }
-        }
-        // add to array if not the case:
-        if (false === $inArray) {
-            $preference[] = [
-                'ip'       => $ip,
-                'time'     => now(config('app.timezone'))->format('Y-m-d H:i:s'),
-                'notified' => false,
-            ];
-
-
-        }
-        $preference = array_values($preference);
-        app('preferences')->setForUser($user, 'login_ip_history', $preference);
-
-        if (false === $inArray && true === config('firefly.warn_new_ip')) {
-            event(new DetectedNewIPAddress($user, $ip));
-        }
-
-    }
-
-    /**
      * @param DetectedNewIPAddress $event
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
@@ -183,11 +137,11 @@ class UserEventHandler
         $email     = $user->email;
         $ipAddress = $event->ipAddress;
 
-        if($user->hasRole('demo')) {
+        if ($user->hasRole('demo')) {
             return; // do not email demo user.
         }
 
-        $list      = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
 
         // see if user has alternative email address:
         $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
@@ -252,7 +206,7 @@ class UserEventHandler
         $user      = $event->user;
         $ipAddress = $event->ipAddress;
         $token     = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed    = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
+        $hashed    = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
         $uri       = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
@@ -328,5 +282,51 @@ class UserEventHandler
         }
 
         return true;
+    }
+
+    /**
+     * @param Login $event
+     */
+    public function storeUserIPAddress(Login $event): void
+    {
+        /** @var User $user */
+        $user = $event->user;
+        /** @var array $preference */
+        $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        $inArray    = false;
+        $ip         = request()->ip();
+        Log::debug(sprintf('User logging in from IP address %s', $ip));
+
+        // update array if in array
+        foreach ($preference as $index => $row) {
+            if ($row['ip'] === $ip) {
+                Log::debug('Found IP in array, refresh time.');
+                $preference[$index]['time'] = now(config('app.timezone'))->format('Y-m-d H:i:s');
+                $inArray                    = true;
+            }
+            // clean up old entries (6 months)
+            $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
+            if ($carbon->diffInMonths(today()) > 6) {
+                Log::debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
+                unset($preference[$index]);
+            }
+        }
+        // add to array if not the case:
+        if (false === $inArray) {
+            $preference[] = [
+                'ip'       => $ip,
+                'time'     => now(config('app.timezone'))->format('Y-m-d H:i:s'),
+                'notified' => false,
+            ];
+
+
+        }
+        $preference = array_values($preference);
+        app('preferences')->setForUser($user, 'login_ip_history', $preference);
+
+        if (false === $inArray && true === config('firefly.warn_new_ip')) {
+            event(new DetectedNewIPAddress($user, $ip));
+        }
+
     }
 }

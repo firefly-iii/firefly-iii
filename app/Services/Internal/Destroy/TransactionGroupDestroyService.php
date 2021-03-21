@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionGroup;
 
 /**
  * Class TransactionGroupDestroyService
+ *
  * @codeCoverageIgnore
  */
 class TransactionGroupDestroyService

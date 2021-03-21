@@ -38,16 +38,17 @@ trait CollectorProperties
     private $hasAccountInfo;
     /** @var bool Will be true if query result includes bill information. */
     private $hasBillInformation;
-    /** @var bool */
-    private $hasNotesInformation;
     /** @var bool Will be true if query result contains budget info. */
     private $hasBudgetInformation;
     /** @var bool Will be true if query result contains category info. */
     private $hasCatInformation;
     /** @var bool Will be true for attachments */
     private $hasJoinedAttTables;
+    private bool $hasJoinedMetaTables;
     /** @var bool Will be true of the query has the tag info tables joined. */
     private $hasJoinedTagTables;
+    /** @var bool */
+    private $hasNotesInformation;
     /** @var array */
     private $integerFields;
     /** @var int The maximum number of results. */
@@ -60,6 +61,4 @@ trait CollectorProperties
     private $total;
     /** @var User The user object. */
     private $user;
-
-    private bool $hasJoinedMetaTables;
 }

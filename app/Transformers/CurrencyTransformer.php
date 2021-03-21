@@ -43,10 +43,11 @@ class CurrencyTransformer extends AbstractTransformer
         $isDefault       = false;
         $defaultCurrency = $this->parameters->get('defaultCurrency');
         if (null !== $defaultCurrency) {
-            $isDefault = (int) $defaultCurrency->id === (int) $currency->id;
+            $isDefault = (int)$defaultCurrency->id === (int)$currency->id;
         }
+
         return [
-            'id'             => (int) $currency->id,
+            'id'             => (int)$currency->id,
             'created_at'     => $currency->created_at->toAtomString(),
             'updated_at'     => $currency->updated_at->toAtomString(),
             'default'        => $isDefault,
@@ -54,7 +55,7 @@ class CurrencyTransformer extends AbstractTransformer
             'name'           => $currency->name,
             'code'           => $currency->code,
             'symbol'         => $currency->symbol,
-            'decimal_places' => (int) $currency->decimal_places,
+            'decimal_places' => (int)$currency->decimal_places,
             'links'          => [
                 [
                     'rel' => 'self',

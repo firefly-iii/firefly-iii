@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Preference;
-use Log;
 
 /**
  * Class PreferenceTransformer

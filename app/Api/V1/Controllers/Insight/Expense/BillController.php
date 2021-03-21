@@ -87,7 +87,7 @@ class BillController extends Controller
             $foreignKey        = sprintf('%d-%d', $billId, $foreignCurrencyId);
 
             if (0 !== $currencyId) {
-                $response[$key]                            = $response[$key] ?? [
+                $response[$key]                     = $response[$key] ?? [
                         'id'               => (string)$billId,
                         'name'             => $journal['bill_name'],
                         'difference'       => '0',
@@ -139,7 +139,7 @@ class BillController extends Controller
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                            = $response[$currencyId] ?? [
+                $response[$currencyId]                     = $response[$currencyId] ?? [
                         'difference'       => '0',
                         'difference_float' => 0,
                         'currency_id'      => (string)$currencyId,

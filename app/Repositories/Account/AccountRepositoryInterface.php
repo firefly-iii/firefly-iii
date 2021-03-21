@@ -48,13 +48,6 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * @param string $type
-     *
-     * @return int
-     */
-    public function maxOrder(string $type): int;
-
-    /**
      * Moved here from account CRUD.
      *
      * @param Account      $account
@@ -242,6 +235,13 @@ interface AccountRepositoryInterface
      * @return bool
      */
     public function isLiability(Account $account): bool;
+
+    /**
+     * @param string $type
+     *
+     * @return int
+     */
+    public function maxOrder(string $type): int;
 
     /**
      * Returns the date of the very first transaction in this account.

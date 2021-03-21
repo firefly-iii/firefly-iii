@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +72,7 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->get();
@@ -93,7 +92,6 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
 
     /**

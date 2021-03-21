@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\TransactionLink;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,16 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
+
+    /**
+     * @return array
+     */
+    public function emptyDataProvider(): array
+    {
+        return [[[]]];
+
+    }
 
     /**
      *
@@ -45,6 +55,38 @@ class StoreControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
+     * @return array
+     */
+    public function storeDataProvider(): array
+    {
+        // some test configs:
+        $configuration = new TestConfiguration;
+
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('link_type_id', 'random-link-type-id'));
+        $defaultSet->addField(Field::createBasic('inward_id', 'random-low-journal-id'));
+        $defaultSet->addField(Field::createBasic('outward_id', 'random-high-journal-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
+
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object_name';
+        $defaultSet->addField(Field::createBasic('link_type_name', 'random-link-type-name'));
+        $defaultSet->addField(Field::createBasic('inward_id', 'random-low-journal-id'));
+        $defaultSet->addField(Field::createBasic('outward_id', 'random-high-journal-id'));
+        $configuration->addMandatoryFieldSet($defaultSet);
+
+        // optionals
+        $fieldSet = new FieldSet;
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        return $configuration->generateAll();
+
     }
 
 
@@ -58,86 +100,17 @@ class StoreControllerTest extends TestCase
     public function testStore(array $submission): void
     {
         if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
+            $this->markTestSkipped('Empty provider.');
         }
-        $route = 'api.v1.transaction_links.store';
-        $this->storeAndCompare($route, $submission);
-    }
-
-    /**
-     * @return array
-     */
-    public function emptyDataProvider(): array
-    {
-        return [[[]]];
-
-    }
-
-    /**
-     * @return array
-     */
-    public function storeDataProvider(): array
-    {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'inward_id'  => function () {
-                $faker = Factory::create();
-
-                return (string)$faker->numberBetween(1, 10);
-            },
-            'outward_id' => function () {
-                $faker = Factory::create();
-
-                return (string)$faker->numberBetween(11, 20);
-            },
-        ];
-
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
-    }
-
-    /**
-     * @return array
-     */
-    private function minimalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'default_link_id'   => [
-                'parameters' => [],
-                'fields'     => [
-                    'link_type_id' => (string)$faker->numberBetween(1, 4),
-                    'inward_id'    => (string)$faker->numberBetween(1, 10),
-                    'outward_id'   => (string)$faker->numberBetween(11, 20),
-                ],
-            ],
-            'default_link_name' => [
-                'parameters' => [],
-                'fields'     => [
-                    'link_type_name' => 'Related',
-                    'inward_id'      => (string)$faker->numberBetween(1, 10),
-                    'outward_id'     => (string)$faker->numberBetween(11, 20),
-                ],
-            ],
-        ];
-    }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.transaction_links.store');
+        $this->assertPOST($address, $submission);
 
 
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'notes' => [
-                'fields' => [
-                    'notes' => join(' ', $faker->words(5)),
-                ],
-            ],
-        ];
     }
 
 }

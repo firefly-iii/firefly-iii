@@ -59,6 +59,7 @@ class StoreRequest extends FormRequest
             'apply_rules'             => $this->boolean('apply_rules', true),
             'transactions'            => $this->getTransactionData(),
         ];
+
         // TODO location
         return $data;
     }
@@ -79,64 +80,64 @@ class StoreRequest extends FormRequest
             $return[] = [
                 'type'  => $this->stringFromValue($object['type']),
                 'date'  => $this->dateFromValue($object['date']),
-                'order' => $this->integerFromValue((string) $object['order']),
+                'order' => $this->integerFromValue((string)$object['order']),
 
-                'currency_id'           => $this->integerFromValue((string) $object['currency_id']),
+                'currency_id'           => $this->integerFromValue((string)$object['currency_id']),
                 'currency_code'         => $this->stringFromValue($object['currency_code']),
 
                 // foreign currency info:
-                'foreign_currency_id'   => $this->integerFromValue((string) $object['foreign_currency_id']),
-                'foreign_currency_code' => $this->stringFromValue((string) $object['foreign_currency_code']),
+                'foreign_currency_id'   => $this->integerFromValue((string)$object['foreign_currency_id']),
+                'foreign_currency_code' => $this->stringFromValue((string)$object['foreign_currency_code']),
 
                 // amount and foreign amount. Cannot be 0.
-                'amount'                => $this->stringFromValue((string) $object['amount']),
-                'foreign_amount'        => $this->stringFromValue((string) $object['foreign_amount']),
+                'amount'                => $this->stringFromValue((string)$object['amount']),
+                'foreign_amount'        => $this->stringFromValue((string)$object['foreign_amount']),
 
                 // description.
                 'description'           => $this->stringFromValue($object['description']),
 
                 // source of transaction. If everything is null, assume cash account.
-                'source_id'             => $this->integerFromValue((string) $object['source_id']),
-                'source_name'           => $this->stringFromValue((string) $object['source_name']),
-                'source_iban'           => $this->stringFromValue((string) $object['source_iban']),
-                'source_number'         => $this->stringFromValue((string) $object['source_number']),
-                'source_bic'            => $this->stringFromValue((string) $object['source_bic']),
+                'source_id'             => $this->integerFromValue((string)$object['source_id']),
+                'source_name'           => $this->stringFromValue((string)$object['source_name']),
+                'source_iban'           => $this->stringFromValue((string)$object['source_iban']),
+                'source_number'         => $this->stringFromValue((string)$object['source_number']),
+                'source_bic'            => $this->stringFromValue((string)$object['source_bic']),
 
                 // destination of transaction. If everything is null, assume cash account.
-                'destination_id'        => $this->integerFromValue((string) $object['destination_id']),
-                'destination_name'      => $this->stringFromValue((string) $object['destination_name']),
-                'destination_iban'      => $this->stringFromValue((string) $object['destination_iban']),
-                'destination_number'    => $this->stringFromValue((string) $object['destination_number']),
-                'destination_bic'       => $this->stringFromValue((string) $object['destination_bic']),
+                'destination_id'        => $this->integerFromValue((string)$object['destination_id']),
+                'destination_name'      => $this->stringFromValue((string)$object['destination_name']),
+                'destination_iban'      => $this->stringFromValue((string)$object['destination_iban']),
+                'destination_number'    => $this->stringFromValue((string)$object['destination_number']),
+                'destination_bic'       => $this->stringFromValue((string)$object['destination_bic']),
 
                 // budget info
-                'budget_id'             => $this->integerFromValue((string) $object['budget_id']),
-                'budget_name'           => $this->stringFromValue((string) $object['budget_name']),
+                'budget_id'             => $this->integerFromValue((string)$object['budget_id']),
+                'budget_name'           => $this->stringFromValue((string)$object['budget_name']),
 
                 // category info
-                'category_id'           => $this->integerFromValue((string) $object['category_id']),
-                'category_name'         => $this->stringFromValue((string) $object['category_name']),
+                'category_id'           => $this->integerFromValue((string)$object['category_id']),
+                'category_name'         => $this->stringFromValue((string)$object['category_name']),
 
                 // journal bill reference. Optional. Will only work for withdrawals
-                'bill_id'               => $this->integerFromValue((string) $object['bill_id']),
-                'bill_name'             => $this->stringFromValue((string) $object['bill_name']),
+                'bill_id'               => $this->integerFromValue((string)$object['bill_id']),
+                'bill_name'             => $this->stringFromValue((string)$object['bill_name']),
 
                 // piggy bank reference. Optional. Will only work for transfers
-                'piggy_bank_id'         => $this->integerFromValue((string) $object['piggy_bank_id']),
-                'piggy_bank_name'       => $this->stringFromValue((string) $object['piggy_bank_name']),
+                'piggy_bank_id'         => $this->integerFromValue((string)$object['piggy_bank_id']),
+                'piggy_bank_name'       => $this->stringFromValue((string)$object['piggy_bank_name']),
 
                 // some other interesting properties
-                'reconciled'            => $this->convertBoolean((string) $object['reconciled']),
-                'notes'                 => $this->nlStringFromValue((string) $object['notes']),
+                'reconciled'            => $this->convertBoolean((string)$object['reconciled']),
+                'notes'                 => $this->nlStringFromValue((string)$object['notes']),
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:
-                'internal_reference'    => $this->stringFromValue((string) $object['internal_reference']),
-                'external_id'           => $this->stringFromValue((string) $object['external_id']),
+                'internal_reference'    => $this->stringFromValue((string)$object['internal_reference']),
+                'external_id'           => $this->stringFromValue((string)$object['external_id']),
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
-                'bunq_payment_id'       => $this->stringFromValue((string) $object['bunq_payment_id']),
-                'external_uri'          => $this->stringFromValue((string) $object['external_uri']),
+                'bunq_payment_id'       => $this->stringFromValue((string)$object['bunq_payment_id']),
+                'external_uri'          => $this->stringFromValue((string)$object['external_uri']),
 
                 'sepa_cc'       => $this->stringFromValue($object['sepa_cc']),
                 'sepa_ct_op'    => $this->stringFromValue($object['sepa_ct_op']),

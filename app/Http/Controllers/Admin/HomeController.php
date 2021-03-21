@@ -57,16 +57,16 @@ class HomeController extends Controller
     public function index()
     {
         Log::channel('audit')->info('User visits admin index.');
-        $title         = (string) trans('firefly.administration');
+        $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $email = auth()->user()->email;
-        $pref = app('preferences')->get('remote_guard_alt_email', null);
-        if(null !== $pref && is_string($pref->data)) {
+        $email         = auth()->user()->email;
+        $pref          = app('preferences')->get('remote_guard_alt_email', null);
+        if (null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }
         Log::debug('Email is ', [$email]);
 
-        return prefixView('admin.index', compact('title', 'mainTitleIcon','email'));
+        return prefixView('admin.index', compact('title', 'mainTitleIcon', 'email'));
     }
 
     /**
@@ -84,7 +84,7 @@ class HomeController extends Controller
         $ipAddress = $request->ip();
         Log::debug(sprintf('Now in testMessage() controller. IP is %s', $ipAddress));
         event(new AdminRequestedTestMessage($user, $ipAddress));
-        session()->flash('info', (string) trans('firefly.send_test_triggered'));
+        session()->flash('info', (string)trans('firefly.send_test_triggered'));
 
         return redirect(route('admin.index'));
     }

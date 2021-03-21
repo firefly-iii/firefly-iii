@@ -41,13 +41,13 @@ class PiggyBankStoreRequest extends FormRequest
     public function getPiggyBankData(): array
     {
         return [
-            'name'         => $this->string('name'),
-            'startdate'    => $this->date('startdate'),
-            'account_id'   => $this->integer('account_id'),
-            'targetamount' => $this->string('targetamount'),
-            'targetdate'   => $this->date('targetdate'),
-            'notes'        => $this->nlString('notes'),
-            'object_group' => $this->string('object_group'),
+            'name'               => $this->string('name'),
+            'startdate'          => $this->date('startdate'),
+            'account_id'         => $this->integer('account_id'),
+            'targetamount'       => $this->string('targetamount'),
+            'targetdate'         => $this->date('targetdate'),
+            'notes'              => $this->nlString('notes'),
+            'object_group_title' => $this->string('object_group'),
         ];
     }
 

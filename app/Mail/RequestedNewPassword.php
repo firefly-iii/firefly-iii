@@ -36,6 +36,7 @@ use Illuminate\Queue\SerializesModels;
 class RequestedNewPassword extends Mailable
 {
     use Queueable, SerializesModels;
+
     /** @var string IP address of user */
     public $ipAddress;
     /** @var string URI of password change link */
@@ -60,6 +61,6 @@ class RequestedNewPassword extends Mailable
      */
     public function build(): self
     {
-        return $this->view('v1.emails.password-html')->text('v1.emails.password-text')->subject((string) trans('email.reset_pw_subject'));
+        return $this->view('v1.emails.password-html')->text('v1.emails.password-text')->subject((string)trans('email.reset_pw_subject'));
     }
 }

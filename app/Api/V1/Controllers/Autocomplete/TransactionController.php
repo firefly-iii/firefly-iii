@@ -38,10 +38,8 @@ use Illuminate\Support\Collection;
  */
 class TransactionController extends Controller
 {
-    private JournalRepositoryInterface          $repository;
-
     private TransactionGroupRepositoryInterface $groupRepository;
-
+    private JournalRepositoryInterface $repository;
 
     /**
      * TransactionController constructor.
@@ -102,7 +100,7 @@ class TransactionController extends Controller
         $result = new Collection;
         if (is_numeric($data['query'])) {
             // search for group, not journal.
-            $firstResult = $this->groupRepository->find((int) $data['query']);
+            $firstResult = $this->groupRepository->find((int)$data['query']);
             if (null !== $firstResult) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {

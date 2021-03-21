@@ -24,19 +24,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Scopes;
 
-use Adldap\Query\Builder;
 use Adldap\Laravel\Scopes\ScopeInterface;
+use Adldap\Query\Builder;
 
-class LdapFilterScope implements ScopeInterface {
+class LdapFilterScope implements ScopeInterface
+{
     /**
      * If the ADLDAP_AUTH_FILTER is provided, apply the filter to the LDAP query.
+     *
      * @param Builder $query
+     *
      * @return void
      */
     public function apply(Builder $query)
     {
-        $filter = (string) config('ldap_auth.custom_filter');
-        if ( '' !== $filter ) {
+        $filter = (string)config('ldap_auth.custom_filter');
+        if ('' !== $filter) {
             $query->rawFilter($filter);
         }
     }

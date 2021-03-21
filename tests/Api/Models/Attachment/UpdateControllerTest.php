@@ -22,12 +22,13 @@
 namespace Tests\Api\Models\Attachment;
 
 
-use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,7 +36,7 @@ use Tests\Traits\TestHelpers;
  */
 class UpdateControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
+    use TestHelpers, CollectsValues;
 
     /**
      *
@@ -53,13 +54,17 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdate(array $submission): void
     {
-        $ignore = [
-            'created_at',
-            'updated_at',
-        ];
-        $route  = route('api.v1.attachments.update', [$submission['id']]);
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        Log::debug('parameters       :', $submission['parameters']);
 
-        $this->updateAndCompare($route, $submission, $ignore);
+        $route = route('api.v1.attachments.update', $submission['parameters']);
+        $this->assertPUT($route, $submission);
     }
 
 
@@ -68,56 +73,30 @@ class UpdateControllerTest extends TestCase
      */
     public function updateDataProvider(): array
     {
-        $submissions = [];
-        $all         = $this->updateDataSet();
-        foreach ($all as $name => $data) {
-            $submissions[] = [$data];
-        }
+        $configuration = new TestConfiguration;
 
-        return $submissions;
+        // optional field sets (for all test configs)
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('filename', 'uuid'));
+        $configuration->addOptionalFieldSet('filename', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('title', 'uuid'));
+        $configuration->addOptionalFieldSet('title', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('notes', 'uuid'));
+        $configuration->addOptionalFieldSet('notes', $fieldSet);
+
+        $fieldSet             = new FieldSet;
+        $fieldSet->parameters = [1];
+        $fieldSet->addField(Field::createBasic('attachable_type', 'static-journal-type'));
+        $fieldSet->addField(Field::createBasic('attachable_id', 'random-journal-id'));
+        $configuration->addOptionalFieldSet('attachable_type', $fieldSet);
+
+        return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker = Factory::create();
-        $set   = [
-            'filename' => [
-                'id'           => 1,
-                'fields'       => [
-                    'filename' => ['test_value' => $faker->text(64)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'title'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'title' => ['test_value' => $faker->uuid],
-                ],
-                'extra_ignore' => [],
-            ],
-            'notes'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'notes' => ['test_value' => join(' ', $faker->words(5))],
-                ],
-                'extra_ignore' => [],
-            ],
-            'model'    => [
-                'id'           => 1,
-                'fields'       => [
-                    'attachable_type' => ['test_value' => 'TransactionJournal'],
-                    'attachable_id' => ['test_value' => (string)2],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-
-        return $set;
-    }
-
-
 }

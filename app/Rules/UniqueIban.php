@@ -34,7 +34,7 @@ use Log;
 class UniqueIban implements Rule
 {
     private ?Account $account;
-    private ?string $expectedType;
+    private ?string  $expectedType;
 
     /**
      * Create a new rule instance.
@@ -110,28 +110,6 @@ class UniqueIban implements Rule
     }
 
     /**
-     * @param string $type
-     * @param string $iban
-     *
-     * @return int
-     */
-    private function countHits(string $type, string $iban): int
-    {
-        $query
-            = auth()->user()
-                    ->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('accounts.iban', $iban)
-                    ->where('account_types.type', $type);
-
-        if (null !== $this->account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
-    }
-
-    /**
      * @return array
      *
      */
@@ -155,5 +133,27 @@ class UniqueIban implements Rule
         }
 
         return $maxCounts;
+    }
+
+    /**
+     * @param string $type
+     * @param string $iban
+     *
+     * @return int
+     */
+    private function countHits(string $type, string $iban): int
+    {
+        $query
+            = auth()->user()
+                    ->accounts()
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->where('accounts.iban', $iban)
+                    ->where('account_types.type', $type);
+
+        if (null !== $this->account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
     }
 }

@@ -27,6 +27,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 use Log;
+
 /**
  * @codeCoverageIgnore
  * Class Preferences.

@@ -50,8 +50,6 @@ class StoreController extends Controller
     }
 
 
-
-
     /**
      * Store new currency.
      *

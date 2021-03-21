@@ -30,6 +30,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 /**
  * Class AuditLogger
+ *
  * @codeCoverageIgnore
  */
 class AuditLogger
@@ -37,7 +38,7 @@ class AuditLogger
     /**
      * Customize the given logger instance.
      *
-     * @param  Logger $logger
+     * @param Logger $logger
      *
      * @return void
      */

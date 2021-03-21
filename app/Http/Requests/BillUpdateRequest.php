@@ -42,17 +42,17 @@ class BillUpdateRequest extends FormRequest
     public function getBillData(): array
     {
         return [
-            'name'          => $this->string('name'),
-            'amount_min'    => $this->string('amount_min'),
-            'currency_id'   => $this->integer('transaction_currency_id'),
-            'currency_code' => '',
-            'amount_max'    => $this->string('amount_max'),
-            'date'          => $this->date('date'),
-            'repeat_freq'   => $this->string('repeat_freq'),
-            'skip'          => $this->integer('skip'),
-            'notes'         => $this->nlString('notes'),
-            'active'        => $this->boolean('active'),
-            'object_group'  => $this->string('object_group'),
+            'name'               => $this->string('name'),
+            'amount_min'         => $this->string('amount_min'),
+            'currency_id'        => $this->integer('transaction_currency_id'),
+            'currency_code'      => '',
+            'amount_max'         => $this->string('amount_max'),
+            'date'               => $this->date('date'),
+            'repeat_freq'        => $this->string('repeat_freq'),
+            'skip'               => $this->integer('skip'),
+            'notes'              => $this->nlString('notes'),
+            'active'             => $this->boolean('active'),
+            'object_group_title' => $this->string('object_group'),
         ];
     }
 

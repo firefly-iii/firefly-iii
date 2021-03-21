@@ -29,7 +29,6 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class BillTransformer
@@ -72,8 +71,8 @@ class BillTransformer extends AbstractTransformer
         /** @var ObjectGroup $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int) $objectGroup->id;
-            $objectGroupOrder = (int) $objectGroup->order;
+            $objectGroupId    = (int)$objectGroup->id;
+            $objectGroupOrder = (int)$objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -81,18 +80,18 @@ class BillTransformer extends AbstractTransformer
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
             'updated_at'              => $bill->updated_at->toAtomString(),
-            'currency_id'             => (string) $bill->transaction_currency_id,
+            'currency_id'             => (string)$bill->transaction_currency_id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int) $currency->decimal_places,
+            'currency_decimal_places' => (int)$currency->decimal_places,
             'name'                    => $bill->name,
-            'amount_min'              => number_format((float) $bill->amount_min, $currency->decimal_places, '.', ''),
-            'amount_max'              => number_format((float) $bill->amount_max, $currency->decimal_places, '.', ''),
+            'amount_min'              => number_format((float)$bill->amount_min, $currency->decimal_places, '.', ''),
+            'amount_max'              => number_format((float)$bill->amount_max, $currency->decimal_places, '.', ''),
             'date'                    => $bill->date->format('Y-m-d'),
             'repeat_freq'             => $bill->repeat_freq,
-            'skip'                    => (int) $bill->skip,
+            'skip'                    => (int)$bill->skip,
             'active'                  => $bill->active,
-            'order'                   => (int) $bill->order,
+            'order'                   => (int)$bill->order,
             'notes'                   => $notes,
             'next_expected_match'     => $paidData['next_expected_match'],
             'pay_dates'               => $payDates,
@@ -110,52 +109,6 @@ class BillTransformer extends AbstractTransformer
     }
 
     /**
-     * Returns the latest date in the set, or start when set is empty.
-     *
-     * @param Collection $dates
-     * @param Carbon     $default
-     *
-     * @return Carbon
-     */
-    protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
-    {
-        if (0 === $dates->count()) {
-            return $default; // @codeCoverageIgnore
-        }
-        $latest = $dates->first()->date;
-        /** @var TransactionJournal $date */
-        foreach ($dates as $journal) {
-            if ($journal->date->gte($latest)) {
-                $latest = $journal->date;
-            }
-        }
-
-        return $latest;
-    }
-
-    /**
-     * Given a bill and a date, this method will tell you at which moment this bill expects its next
-     * transaction. Whether or not it is there already, is not relevant.
-     *
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return Carbon
-     */
-    protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
-    {
-        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
-        $start = clone $bill->date;
-        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
-        while ($start < $date) {
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-        }
-        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
-
-        return $start;
-    }
-
-    /**
      * Get the data the bill was paid and predict the next expected match.
      *
      * @param Bill $bill
@@ -166,7 +119,7 @@ class BillTransformer extends AbstractTransformer
     {
         //Log::debug(sprintf('Now in paidData for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-          //  Log::debug('parameters are NULL, return empty array');
+            //  Log::debug('parameters are NULL, return empty array');
 
             return [
                 'paid_dates'          => [],
@@ -202,7 +155,7 @@ class BillTransformer extends AbstractTransformer
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
             //Log::debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
         }
-        if($nextMatch->isSameDay($lastPaidDate)) {
+        if ($nextMatch->isSameDay($lastPaidDate)) {
             /*
              * Add another period because its the same day as the last paid date.
              */
@@ -224,9 +177,34 @@ class BillTransformer extends AbstractTransformer
             'paid_dates'          => $result,
             'next_expected_match' => $nextMatch->format('Y-m-d'),
         ];
+
         //Log::debug('Result', $result);
 
         return $result;
+    }
+
+    /**
+     * Returns the latest date in the set, or start when set is empty.
+     *
+     * @param Collection $dates
+     * @param Carbon     $default
+     *
+     * @return Carbon
+     */
+    protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
+    {
+        if (0 === $dates->count()) {
+            return $default; // @codeCoverageIgnore
+        }
+        $latest = $dates->first()->date;
+        /** @var TransactionJournal $date */
+        foreach ($dates as $journal) {
+            if ($journal->date->gte($latest)) {
+                $latest = $journal->date;
+            }
+        }
+
+        return $latest;
     }
 
     /**
@@ -262,8 +240,31 @@ class BillTransformer extends AbstractTransformer
                 return $date->format('Y-m-d');
             }
         );
-        $array = $simple->toArray();
+        $array  = $simple->toArray();
 
         return $array;
+    }
+
+    /**
+     * Given a bill and a date, this method will tell you at which moment this bill expects its next
+     * transaction. Whether or not it is there already, is not relevant.
+     *
+     * @param Bill   $bill
+     * @param Carbon $date
+     *
+     * @return Carbon
+     */
+    protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
+    {
+        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
+        $start = clone $bill->date;
+        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
+        while ($start < $date) {
+            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        }
+
+        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
+
+        return $start;
     }
 }

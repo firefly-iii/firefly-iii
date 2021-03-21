@@ -49,7 +49,6 @@ class ListController extends Controller
     }
 
 
-
     /**
      * Delete the resource.
      *

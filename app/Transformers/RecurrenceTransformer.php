@@ -149,61 +149,6 @@ class RecurrenceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param array                 $array
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        $array['tags']            = [];
-        $array['category_id']     = null;
-        $array['category_name']   = null;
-        $array['budget_id']       = null;
-        $array['budget_name']     = null;
-        $array['piggy_bank_id']   = null;
-        $array['piggy_bank_name'] = null;
-
-        /** @var RecurrenceTransactionMeta $transactionMeta */
-        foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
-            switch ($transactionMeta->name) {
-                default:
-                    throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
-                case 'bill_id':
-                    break;
-                case 'tags':
-                    $array['tags'] = json_decode($transactionMeta->value);
-                    break;
-                case 'piggy_bank_id':
-                    $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
-                    if (null !== $piggy) {
-                        $array['piggy_bank_id']   = (string)$piggy->id;
-                        $array['piggy_bank_name'] = $piggy->name;
-                    }
-                    break;
-                case 'category_name':
-                    $category = $this->factory->findOrCreate(null, $transactionMeta->value);
-                    if (null !== $category) {
-                        $array['category_id']   = (string)$category->id;
-                        $array['category_name'] = $category->name;
-                    }
-                    break;
-                case 'budget_id':
-                    $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
-                    if (null !== $budget) {
-                        $array['budget_id']   = (string)$budget->id;
-                        $array['budget_name'] = $budget->name;
-                    }
-                    break;
-            }
-        }
-
-        return $array;
-    }
-
-    /**
      * @param Recurrence $recurrence
      *
      * @return array
@@ -291,6 +236,69 @@ class RecurrenceTransformer extends AbstractTransformer
         }
 
         return $return;
+    }
+
+    /**
+     * @param RecurrenceTransaction $transaction
+     * @param array                 $array
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $array['tags']            = [];
+        $array['category_id']     = null;
+        $array['category_name']   = null;
+        $array['budget_id']       = null;
+        $array['budget_name']     = null;
+        $array['piggy_bank_id']   = null;
+        $array['piggy_bank_name'] = null;
+
+        /** @var RecurrenceTransactionMeta $transactionMeta */
+        foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
+            switch ($transactionMeta->name) {
+                default:
+                    throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
+                case 'bill_id':
+                    break;
+                case 'tags':
+                    $array['tags'] = json_decode($transactionMeta->value);
+                    break;
+                case 'piggy_bank_id':
+                    $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
+                    if (null !== $piggy) {
+                        $array['piggy_bank_id']   = (string)$piggy->id;
+                        $array['piggy_bank_name'] = $piggy->name;
+                    }
+                    break;
+                case 'category_id':
+                    $category = $this->factory->findOrCreate((int)$transactionMeta->value, null);
+                    if (null !== $category) {
+                        $array['category_id']   = (string)$category->id;
+                        $array['category_name'] = $category->name;
+                    }
+                    break;
+                    break;
+                case 'category_name':
+                    $category = $this->factory->findOrCreate(null, $transactionMeta->value);
+                    if (null !== $category) {
+                        $array['category_id']   = (string)$category->id;
+                        $array['category_name'] = $category->name;
+                    }
+                    break;
+                case 'budget_id':
+                    $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
+                    if (null !== $budget) {
+                        $array['budget_id']   = (string)$budget->id;
+                        $array['budget_name'] = $budget->name;
+                    }
+                    break;
+            }
+        }
+
+        return $array;
     }
 
 }

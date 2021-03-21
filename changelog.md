@@ -23,6 +23,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - OAuth settings are visible for LDAP users.
 - If you set `FIREFLY_III_LAYOUT=v2`, Firefly III will show you the new layout on pages where it's available.
+- New favicon.
+- Cron job endpoint has changed.
 
 ### Deprecated
 - The current layout will no longer receive fixes and changes.
@@ -48,6 +50,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4235](https://github.com/firefly-iii/firefly-iii/issues/4235) Info popup instandard financial report does not apply report's account filter
 - [Issue 4241](https://github.com/firefly-iii/firefly-iii/issues/4241) Broken chart
 - PHP configs that have "MB" as size indicator would be parsed badly.
+- RSA token generation is now PHP7/8 compatible.
 
 ### API
 
@@ -61,6 +64,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4394](https://github.com/firefly-iii/firefly-iii/issues/4394) Storing budgets works again.
 - [Issue 4426](https://github.com/firefly-iii/firefly-iii/issues/4426) Storing accounts would lead to bad capitalization in liability type.
 - [Issue 4435](https://github.com/firefly-iii/firefly-iii/issues/4435) Storing piggy banks with object group information would fail.
+- Users can submit almost any field without other fields changing as well.
 
 ## 5.4.6 (API 1.4.0) - 2020-10-07
 

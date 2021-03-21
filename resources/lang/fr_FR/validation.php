@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute doit être inférieur à 10 000 000',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'La date de fin doit être avant la date de début.',
     'alpha'                          => 'Le champ :attribute doit seulement contenir des lettres.',
     'alpha_dash'                     => 'Le champ :attribute peut seulement contenir des lettres, des chiffres et des tirets.',
     'alpha_num'                      => 'Le champ :attribute peut seulement contenir des chiffres et des lettres.',
@@ -183,7 +183,7 @@ return [
     'withdrawal_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
-    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'deposit_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',

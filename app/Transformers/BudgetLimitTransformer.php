@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Repositories\Budget\BudgetLimitRepository;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Item;
@@ -63,7 +62,9 @@ class BudgetLimitTransformer extends AbstractTransformer
     {
         $repository = app(OperationsRepository::class);
         $repository->setUser($budgetLimit->budget->user);
-        $expenses = $repository->sumExpenses($budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency);
+        $expenses = $repository->sumExpenses(
+            $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
+        );
 
 
         $currency              = $budgetLimit->transactionCurrency;
@@ -84,13 +85,13 @@ class BudgetLimitTransformer extends AbstractTransformer
         $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
 
         return [
-            'id'                      => (string) $budgetLimit->id,
+            'id'                      => (string)$budgetLimit->id,
             'created_at'              => $budgetLimit->created_at->toAtomString(),
             'updated_at'              => $budgetLimit->updated_at->toAtomString(),
             'start'                   => $budgetLimit->start_date->format('Y-m-d'),
             'end'                     => $budgetLimit->end_date->format('Y-m-d'),
             'budget_id'               => (string)$budgetLimit->budget_id,
-            'currency_id'             => (string) $currencyId,
+            'currency_id'             => (string)$currencyId,
             'currency_code'           => $currencyCode,
             'currency_name'           => $currencyName,
             'currency_decimal_places' => $currencyDecimalPlaces,

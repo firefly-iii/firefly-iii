@@ -62,10 +62,10 @@ class Authenticate
      * @param Closure  $next
      * @param string[] ...$guards
      *
-     * @throws AuthenticationException
-     * @throws FireflyException
      * @return mixed
      *
+     * @throws FireflyException
+     * @throws AuthenticationException
      */
     public function handle($request, Closure $next, ...$guards)
     {
@@ -81,9 +81,9 @@ class Authenticate
      * @param        $request
      * @param array  $guards
      *
-     * @throws AuthenticationException
-     * @throws FireflyException
      * @return mixed
+     * @throws FireflyException
+     * @throws AuthenticationException
      */
     protected function authenticate($request, array $guards)
     {
@@ -97,10 +97,10 @@ class Authenticate
                     // do an extra check on user object.
                     /** @noinspection PhpUndefinedMethodInspection */
                     $user = $this->auth->authenticate();
-                    if (1 === (int) $user->blocked) {
-                        $message = (string) trans('firefly.block_account_logout');
+                    if (1 === (int)$user->blocked) {
+                        $message = (string)trans('firefly.block_account_logout');
                         if ('email_changed' === $user->blocked_code) {
-                            $message = (string) trans('firefly.email_changed_logout');
+                            $message = (string)trans('firefly.email_changed_logout');
                         }
                         app('session')->flash('logoutMessage', $message);
                         /** @noinspection PhpUndefinedMethodInspection */

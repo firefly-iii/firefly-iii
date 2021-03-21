@@ -18,9 +18,9 @@ use Illuminate\Support\Collection;
  */
 class CategoryController extends Controller
 {
+    private NoCategoryRepositoryInterface $noRepository;
     private OperationsRepositoryInterface $opsRepository;
     private CategoryRepositoryInterface   $repository;
-    private NoCategoryRepositoryInterface $noRepository;
 
     /**
      * AccountController constructor.

@@ -124,11 +124,11 @@ interface RuleRepositoryInterface
     public function getUpdateRules(): Collection;
 
     /**
-     * @param Rule $rule
+     * @param RuleGroup $ruleGroup
      *
-     * @return bool
+     * @return int
      */
-    public function moveDown(Rule $rule): bool;
+    public function maxOrder(RuleGroup $ruleGroup): int;
 
     /**
      * @param Rule      $rule
@@ -138,29 +138,6 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule;
-
-    /**
-     * @param Rule $rule
-     *
-     * @return bool
-     */
-    public function moveUp(Rule $rule): bool;
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleActions(Rule $rule, array $ids): bool;
-
-    /**
-     * @param Rule  $rule
-     * @param array $ids
-     *
-     * @return bool
-     */
-    public function reorderRuleTriggers(Rule $rule, array $ids): bool;
 
     /**
      * @param RuleGroup $ruleGroup
@@ -178,6 +155,12 @@ interface RuleRepositoryInterface
     public function searchRule(string $query, int $limit): Collection;
 
     /**
+     * @param Rule $rule
+     * @param int  $newOrder
+     */
+    public function setOrder(Rule $rule, int $newOrder): void;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);
@@ -188,19 +171,6 @@ interface RuleRepositoryInterface
      * @return Rule
      */
     public function store(array $data): Rule;
-
-    /**
-     * @param Rule $rule
-     * @param int  $newOrder
-     */
-    public function setOrder(Rule $rule, int $newOrder): void;
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return int
-     */
-    public function maxOrder(RuleGroup $ruleGroup): int;
 
     /**
      * @param Rule  $rule

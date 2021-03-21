@@ -137,7 +137,7 @@ class UpdateController extends Controller
     /**
      * Update a currency.
      *
-     * @param UpdateRequest     $request
+     * @param UpdateRequest       $request
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse

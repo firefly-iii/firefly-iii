@@ -159,7 +159,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param TransactionJournal  $journal
      * @param TransactionCurrency $currency
      *
      * @return int

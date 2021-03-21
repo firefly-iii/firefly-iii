@@ -37,36 +37,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Bill
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int|null $transaction_currency_id
- * @property string $name
- * @property string $match
- * @property string $amount_min
- * @property string $amount_max
- * @property \Illuminate\Support\Carbon $date
- * @property string|null $end_date
- * @property string|null $extension_date
- * @property string $repeat_freq
- * @property int $skip
- * @property bool $automatch
- * @property bool $active
- * @property bool $name_encrypted
- * @property bool $match_encrypted
- * @property int $order
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
- * @property-read int|null $notes_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
- * @property-read int|null $object_groups_count
- * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
+ * @property int                                                                                   $id
+ * @property \Illuminate\Support\Carbon|null                                                       $created_at
+ * @property \Illuminate\Support\Carbon|null                                                       $updated_at
+ * @property \Illuminate\Support\Carbon|null                                                       $deleted_at
+ * @property int                                                                                   $user_id
+ * @property int|null                                                                              $transaction_currency_id
+ * @property string                                                                                $name
+ * @property string                                                                                $match
+ * @property string                                                                                $amount_min
+ * @property string                                                                                $amount_max
+ * @property \Illuminate\Support\Carbon                                                            $date
+ * @property string|null                                                                           $end_date
+ * @property string|null                                                                           $extension_date
+ * @property string                                                                                $repeat_freq
+ * @property int                                                                                   $skip
+ * @property bool                                                                                  $automatch
+ * @property bool                                                                                  $active
+ * @property bool                                                                                  $name_encrypted
+ * @property bool                                                                                  $match_encrypted
+ * @property int                                                                                   $order
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]         $attachments
+ * @property-read int|null                                                                         $attachments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]               $notes
+ * @property-read int|null                                                                         $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[]        $objectGroups
+ * @property-read int|null                                                                         $object_groups_count
+ * @property-read \FireflyIII\Models\TransactionCurrency|null                                      $transactionCurrency
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read User $user
+ * @property-read int|null                                                                         $transaction_journals_count
+ * @property-read User                                                                             $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newQuery()
  * @method static Builder|Bill onlyTrashed()
@@ -98,6 +98,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Bill extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -128,13 +129,13 @@ class Bill extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Bill
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Bill
     {
         if (auth()->check()) {
-            $billId = (int) $value;
+            $billId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Bill $bill */
@@ -179,7 +180,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string) $value;
+        $this->attributes['amount_max'] = (string)$value;
     }
 
     /**
@@ -189,7 +190,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string) $value;
+        $this->attributes['amount_min'] = (string)$value;
     }
 
     /**

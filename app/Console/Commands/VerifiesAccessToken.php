@@ -38,12 +38,12 @@ use Log;
 trait VerifiesAccessToken
 {
     /**
-     * @throws FireflyException
      * @return User
+     * @throws FireflyException
      */
     public function getUser(): User
     {
-        $userId = (int) $this->option('user');
+        $userId = (int)$this->option('user');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull($userId);
@@ -70,8 +70,8 @@ trait VerifiesAccessToken
      */
     protected function verifyAccessToken(): bool
     {
-        $userId = (int) $this->option('user');
-        $token  = (string) $this->option('token');
+        $userId = (int)$this->option('user');
+        $token  = (string)$this->option('token');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->findNull($userId);

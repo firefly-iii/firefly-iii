@@ -50,7 +50,7 @@ class AutoCompleteController extends Controller
      */
     public function allJournalsWithID(Request $request): JsonResponse
     {
-        $search = (string) $request->get('search');
+        $search = (string)$request->get('search');
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
 
@@ -61,7 +61,7 @@ class AutoCompleteController extends Controller
         $array  = [];
         if (is_numeric($search)) {
             // search for group, not journal.
-            $firstResult = $groupRepos->find((int) $search);
+            $firstResult = $groupRepos->find((int)$search);
             if (null !== $firstResult) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {

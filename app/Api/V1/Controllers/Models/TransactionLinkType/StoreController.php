@@ -47,7 +47,6 @@ class StoreController extends Controller
     }
 
 
-
     /**
      * Store new object.
      *

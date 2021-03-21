@@ -182,6 +182,9 @@ class Kernel extends HttpKernel
                 //'throttle:60,1',
                 'bindings',
             ],
+            'apiY' => [
+                'bindings',
+            ],
         ];
     /**
      * The priority-sorted list of middleware.

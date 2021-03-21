@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Trait BillServiceTrait
+ *
  * @codeCoverageIgnore
  */
 trait BillServiceTrait

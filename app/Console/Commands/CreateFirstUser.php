@@ -31,24 +31,23 @@ use Str;
 
 /**
  * Class CreateFirstUser
+ *
  * @package FireflyIII\Console\Commands
  */
 class CreateFirstUser extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:create-first-user {email}';
-
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
-
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**
@@ -60,12 +59,14 @@ class CreateFirstUser extends Command
     {
         if ('testing' !== env('APP_ENV', 'local')) {
             $this->error('This command only works in the testing environment.');
+
             return 1;
         }
         $this->stupidLaravel();
         $count = $this->repository->count();
         if ($count > 0) {
             $this->error('Already have more than zero users in DB.');
+
             return 1;
         }
         $data           = [
@@ -82,6 +83,7 @@ class CreateFirstUser extends Command
 
         $this->info(sprintf('Created new admin user (ID #%d) with email address "%s" and password "%s".', $user->id, $user->email, $password));
         $this->error('Change this password.');
+
         return 0;
     }
 

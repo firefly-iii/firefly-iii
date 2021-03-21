@@ -25,9 +25,12 @@ namespace Tests\Api\Models\TransactionCurrency;
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
+use Tests\Objects\Field;
+use Tests\Objects\FieldSet;
+use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
-use Tests\Traits\RandomValues;
+
 use Tests\Traits\TestHelpers;
 
 /**
@@ -35,34 +38,7 @@ use Tests\Traits\TestHelpers;
  */
 class StoreControllerTest extends TestCase
 {
-    use RandomValues, TestHelpers, CollectsValues;
-
-    /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-
-    /**
-     * @param array $submission
-     *
-     * emptyDataProvider / storeDataProvider
-     *
-     * @dataProvider storeDataProvider
-     */
-    public function testStore(array $submission): void
-    {
-        if ([] === $submission) {
-            $this->markTestSkipped('Empty data provider');
-        }
-        $route = 'api.v1.currencies.store';
-        $this->storeAndCompare($route, $submission);
-    }
+    use TestHelpers, CollectsValues;
 
     /**
      * @return array
@@ -74,76 +50,76 @@ class StoreControllerTest extends TestCase
     }
 
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Passport::actingAs($this->user());
+        Log::info(sprintf('Now in %s.', get_class($this)));
+    }
+
+    /**
      * @return array
      */
     public function storeDataProvider(): array
     {
-        $minimalSets  = $this->minimalSets();
-        $optionalSets = $this->optionalSets();
-        $regenConfig  = [
-            'code' => function () {
-                $faker = Factory::create();
+        // some test configs:
+        $configuration = new TestConfiguration;
 
-                return substr($faker->uuid, 0, 3);
-            },
-            'name' => function () {
-                $faker = Factory::create();
+        // default test set:
+        $defaultSet        = new FieldSet();
+        $defaultSet->title = 'default_object';
+        $defaultSet->addField(Field::createBasic('code', 'random-new-currency-code'));
+        $defaultSet->addField(Field::createBasic('name', 'uuid'));
+        $defaultSet->addField(Field::createBasic('symbol', 'random-new-currency-symbol'));
 
-                return $faker->uuid;
-            },
-            'symbol' => function () {
-                $faker = Factory::create();
-                return $faker->randomAscii.$faker->randomAscii;
-            },
-        ];
+        //                     'code'   => substr($faker->uuid, 0, 3),
+        //                    'name'   => $faker->uuid,
+        //                    'symbol' => $faker->randomAscii . $faker->randomAscii,
 
-        return $this->genericDataProvider($minimalSets, $optionalSets, $regenConfig);
+        $configuration->addMandatoryFieldSet($defaultSet);
+
+        // optionals
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('enabled', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('enabled', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('default', 'boolean');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('default', $fieldSet);
+
+        $fieldSet = new FieldSet;
+        $field    = Field::createBasic('decimal_places', 'currency-dp');
+        $fieldSet->addField($field);
+        $configuration->addOptionalFieldSet('decimal_places', $fieldSet);
+
+
+        return $configuration->generateAll();
+
     }
 
     /**
-     * @return array
+     * @param array $submission
+     *
+     * emptyDataProvider / storeDataProvider
+     *
+     * @dataProvider storeDataProvider
      */
-    private function minimalSets(): array
+    public function testStore(array $submission): void
     {
-        $faker = Factory::create();
-
-        return [
-            'default_currency' => [
-                'parameters' => [],
-                'fields'     => [
-                    'code'   => substr($faker->uuid, 0, 3),
-                    'name'   => $faker->uuid,
-                    'symbol' => $faker->randomAscii.$faker->randomAscii,
-                ],
-            ],
-        ];
-    }
-
-
-    /**
-     * @return \array[][]
-     */
-    private function optionalSets(): array
-    {
-        $faker = Factory::create();
-
-        return [
-            'enabled'        => [
-                'fields' => [
-                    'enabled' => $faker->boolean,
-                ],
-            ],
-            'default' => [
-                'fields' => [
-                    'default' => $faker->boolean,
-                ],
-            ],
-            'decimal_places'    => [
-                'fields' => [
-                    'decimal_places' => $faker->numberBetween(1, 6),
-                ],
-            ],
-        ];
+        if ([] === $submission) {
+            $this->markTestSkipped('Empty provider.');
+        }
+        Log::debug('testStoreUpdated()');
+        Log::debug('submission       :', $submission['submission']);
+        Log::debug('expected         :', $submission['expected']);
+        Log::debug('ignore           :', $submission['ignore']);
+        // run account store with a minimal data set:
+        $address = route('api.v1.currencies.store');
+        $this->assertPOST($address, $submission);
     }
 
 }

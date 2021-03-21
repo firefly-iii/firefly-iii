@@ -88,6 +88,7 @@ class ScanAttachments extends Command
         }
 
         app('telemetry')->feature('system.command.executed', $this->signature);
+
         return 0;
     }
 }

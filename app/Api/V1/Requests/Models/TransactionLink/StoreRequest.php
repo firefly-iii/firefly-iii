@@ -102,8 +102,8 @@ class StoreRequest extends FormRequest
         $journalRepos->setUser($user);
 
         $data      = $validator->getData();
-        $inwardId  = (int) ($data['inward_id'] ?? 0);
-        $outwardId = (int) ($data['outward_id'] ?? 0);
+        $inwardId  = (int)($data['inward_id'] ?? 0);
+        $outwardId = (int)($data['outward_id'] ?? 0);
         $inward    = $journalRepos->findNull($inwardId);
         $outward   = $journalRepos->findNull($outwardId);
 

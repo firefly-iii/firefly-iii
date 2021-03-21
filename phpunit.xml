@@ -29,20 +29,43 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./app</directory>
-    </include>
-  </coverage>
-  <testsuites>
-    <testsuite name="Api">
-      <directory suffix="Test.php">./tests/Api/Models</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <env name="APP_ENV" value="testing"/>
-    <env name="CACHE_DRIVER" value="array"/>
-    <env name="SESSION_DRIVER" value="array"/>
-    <env name="QUEUE_DRIVER" value="sync"/>
-  </php>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+        </include>
+    </coverage>
+    <testsuites>
+        <testsuite name="Api">
+            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
+            <!--
+            <directory suffix="Test.php">./tests/Api</directory>
+
+            <directory suffix="Test.php">./tests/Api/Models/Account</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Attachment</directory>
+            <directory suffix="Test.php">./tests/Api/Models/AvailableBudget</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Bill</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Budget</directory>
+            <directory suffix="Test.php">./tests/Api/Models/BudgetLimit</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Category</directory>
+            <directory suffix="Test.php">./tests/Api/Models/ObjectGroup</directory>
+            <directory suffix="Test.php">./tests/Api/Models/PiggyBank</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Recurrence</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Rule</directory>
+            <directory suffix="Test.php">./tests/Api/Models/RuleGroup</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Tag</directory>
+            <directory suffix="Test.php">./tests/Api/Models/Transaction</directory>
+            <directory suffix="Test.php">./tests/Api/Models/TransactionLink</directory>
+            <directory suffix="Test.php">./tests/Api/Models/TransactionLinkType</directory>
+            <directory suffix="Test.php">./tests/Api/Webhook</directory>
+            <directory suffix="Test.php">./tests/Api/Models/TransactionCurrency</directory>
+                    -->
+
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+    </php>
 </phpunit>

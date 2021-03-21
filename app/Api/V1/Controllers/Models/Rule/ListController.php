@@ -33,7 +33,7 @@ use FireflyIII\User;
 class ListController extends Controller
 {
     private AccountRepositoryInterface $accountRepository;
-    private RuleRepositoryInterface $ruleRepository;
+    private RuleRepositoryInterface    $ruleRepository;
 
 
     /**

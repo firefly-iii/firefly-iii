@@ -39,8 +39,8 @@ class SecureHeaders
      * @param Request $request
      * @param Closure $next
      *
-     * @throws Exception
      * @return mixed
+     * @throws Exception
      */
     public function handle(Request $request, Closure $next)
     {
@@ -48,9 +48,9 @@ class SecureHeaders
         $nonce = base64_encode(random_bytes(16));
         app('view')->share('JS_NONCE', $nonce);
 
-        $response          = $next($request);
+        $response = $next($request);
         $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp               = [
+        $csp = [
             "default-src 'none'",
             "object-src 'self'",
             sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
@@ -58,7 +58,10 @@ class SecureHeaders
             "base-uri 'self'",
             "font-src 'self' data:",
             "connect-src 'self'",
-            sprintf("img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s", $trackingScriptSrc),
+            sprintf(
+                "img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s",
+                $trackingScriptSrc
+            ),
             "manifest-src 'self'",
         ];
 
@@ -106,8 +109,8 @@ class SecureHeaders
      */
     private function getTrackingScriptSource(): string
     {
-        if ('' !== (string) config('firefly.tracker_site_id') && '' !== (string) config('firefly.tracker_url')) {
-            return (string) config('firefly.tracker_url');
+        if ('' !== (string)config('firefly.tracker_site_id') && '' !== (string)config('firefly.tracker_url')) {
+            return (string)config('firefly.tracker_url');
         }
 
         return '';

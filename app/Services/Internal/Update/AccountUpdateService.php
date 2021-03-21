@@ -119,15 +119,23 @@ class AccountUpdateService
     private function updateAccount(Account $account, array $data): Account
     {
         // update the account itself:
-        $account->name   = $data['name'] ?? $account->name;
-        $account->active = $data['active'] ?? $account->active;
-        $account->iban   = $data['iban'] ?? $account->iban;
+        if (array_key_exists('name', $data)) {
+            $account->name = $data['name'];
+        }
+        if (array_key_exists('active', $data)) {
+            $account->active = $data['active'];
+        }
+        if (array_key_exists('iban', $data)) {
+            $account->iban = $data['iban'];
+        }
 
-        // liability stuff:
-        $liabilityType = $data['liability_type'] ?? '';
-        if ($this->isLiability($account) && $this->isLiabilityType($liabilityType)) {
-            $type                     = $this->getAccountType($liabilityType);
-            $account->account_type_id = $type->id;
+        // set liability, but account must already be a liability.
+        //$liabilityType = $data['liability_type'] ?? '';
+        if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
+            $type = $this->getAccountType($data['liability_type']);
+            if (null !== $type) {
+                $account->account_type_id = $type->id;
+            }
         }
 
         // update virtual balance (could be set to zero if empty string).
@@ -150,20 +158,6 @@ class AccountUpdateService
         $type = $account->accountType->type;
 
         return in_array($type, [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true);
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return bool
-     */
-    private function isLiabilityType(string $type): bool
-    {
-        if ('' === $type) {
-            return false;
-        }
-
-        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('type', ucfirst($type))->count();
     }
 
     /**
@@ -325,5 +319,19 @@ class AccountUpdateService
             return;
         }
         Log::debug('Account was not marked as inactive, do nothing.');
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    private function isLiabilityType(string $type): bool
+    {
+        if ('' === $type) {
+            return false;
+        }
+
+        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('type', ucfirst($type))->count();
     }
 }

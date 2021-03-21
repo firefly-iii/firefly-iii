@@ -42,6 +42,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 class ListController extends Controller
 {
     use TransactionFilter;
+
     private TagRepositoryInterface $repository;
 
 
@@ -67,7 +68,6 @@ class ListController extends Controller
     }
 
 
-
     /**
      * @param Tag $tag
      *
@@ -77,7 +77,7 @@ class ListController extends Controller
     public function attachments(Tag $tag): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $collection = $this->repository->getAttachments($tag);
 
         $count       = $collection->count();
@@ -98,7 +98,6 @@ class ListController extends Controller
     }
 
 
-
     /**
      * Show all transactions.
      *
@@ -110,7 +109,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 

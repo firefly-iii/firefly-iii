@@ -57,7 +57,7 @@ class AutomationHandler
         $user       = $repository->findNull($event->userId);
         if (null !== $user && 0 !== $event->groups->count()) {
 
-            $email     = $user->email;
+            $email = $user->email;
 
             // see if user has alternative email address:
             $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
@@ -66,7 +66,7 @@ class AutomationHandler
             }
 
             // if user is demo user, send to owner:
-            if($user->hasRole('demo')) {
+            if ($user->hasRole('demo')) {
                 $email = config('firefly.site_owner');
             }
 

@@ -39,7 +39,7 @@ class SendWebhookMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private WebhookMessage  $message;
+    private WebhookMessage $message;
 
     /**
      * Create a new job instance.

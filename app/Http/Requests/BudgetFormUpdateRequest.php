@@ -45,12 +45,12 @@ class BudgetFormUpdateRequest extends FormRequest
     public function getBudgetData(): array
     {
         return [
-            'name'                    => $this->string('name'),
-            'active'                  => $this->boolean('active'),
-            'auto_budget_type'        => $this->integer('auto_budget_type'),
-            'transaction_currency_id' => $this->integer('auto_budget_currency_id'),
-            'auto_budget_amount'      => $this->string('auto_budget_amount'),
-            'auto_budget_period'      => $this->string('auto_budget_period'),
+            'name'               => $this->string('name'),
+            'active'             => $this->boolean('active'),
+            'auto_budget_type'   => $this->integer('auto_budget_type'),
+            'currency_id'        => $this->integer('auto_budget_currency_id'),
+            'auto_budget_amount' => $this->string('auto_budget_amount'),
+            'auto_budget_period' => $this->string('auto_budget_period'),
         ];
     }
 
