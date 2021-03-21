@@ -81,7 +81,6 @@ class ShowController extends Controller
     }
 
 
-
     /**
      * List single resource.
      *

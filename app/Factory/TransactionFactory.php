@@ -38,12 +38,12 @@ use Log;
  */
 class TransactionFactory
 {
-    private Account $account;
-    private TransactionCurrency $currency;
+    private Account              $account;
+    private TransactionCurrency  $currency;
     private ?TransactionCurrency $foreignCurrency;
-    private TransactionJournal $journal;
-    private bool $reconciled;
-    private User $user;
+    private TransactionJournal   $journal;
+    private bool                 $reconciled;
+    private User                 $user;
 
 
     /**
@@ -62,8 +62,8 @@ class TransactionFactory
      * @param string      $amount
      * @param string|null $foreignAmount
      *
-     * @throws FireflyException
      * @return Transaction
+     * @throws FireflyException
      */
     public function createNegative(string $amount, ?string $foreignAmount): Transaction
     {
@@ -78,13 +78,73 @@ class TransactionFactory
     }
 
     /**
+     * @param string      $amount
+     * @param string|null $foreignAmount
+     *
+     * @return Transaction
+     * @throws FireflyException
+     */
+    private function create(string $amount, ?string $foreignAmount): Transaction
+    {
+        $result = null;
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
+        $data = [
+            'reconciled'              => $this->reconciled,
+            'account_id'              => $this->account->id,
+            'transaction_journal_id'  => $this->journal->id,
+            'description'             => null,
+            'transaction_currency_id' => $this->currency->id,
+            'amount'                  => $amount,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => null,
+            'identifier'              => 0,
+        ];
+        try {
+            $result = Transaction::create($data);
+            // @codeCoverageIgnoreStart
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException('Query exception when creating transaction.');
+        }
+        if (null === $result) {
+            throw new FireflyException('Transaction is NULL.');
+        }
+        // @codeCoverageIgnoreEnd
+        if (null !== $result) {
+            Log::debug(
+                sprintf(
+                    'Created transaction #%d (%s %s, account %s), part of journal #%d',
+                    $result->id,
+                    $this->currency->code,
+                    $amount,
+                    $this->account->name,
+                    $this->journal->id
+                )
+            );
+
+            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
+                $result->foreign_currency_id = $this->foreignCurrency->id;
+                $result->foreign_amount      = $foreignAmount;
+            }
+            $result->save();
+        }
+
+        return $result;
+    }
+
+    /**
      * Create transaction with positive amount (for destination accounts).
      *
      * @param string      $amount
      * @param string|null $foreignAmount
      *
-     * @throws FireflyException
      * @return Transaction
+     * @throws FireflyException
      */
     public function createPositive(string $amount, ?string $foreignAmount): Transaction
     {
@@ -156,65 +216,5 @@ class TransactionFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @param string      $amount
-     * @param string|null $foreignAmount
-     *
-     * @throws FireflyException
-     * @return Transaction
-     */
-    private function create(string $amount, ?string $foreignAmount): Transaction
-    {
-        $result = null;
-        if ('' === $foreignAmount) {
-            $foreignAmount = null;
-        }
-        $data = [
-            'reconciled'              => $this->reconciled,
-            'account_id'              => $this->account->id,
-            'transaction_journal_id'  => $this->journal->id,
-            'description'             => null,
-            'transaction_currency_id' => $this->currency->id,
-            'amount'                  => $amount,
-            'foreign_amount'          => null,
-            'foreign_currency_id'     => null,
-            'identifier'              => 0,
-        ];
-        try {
-            $result = Transaction::create($data);
-            // @codeCoverageIgnoreStart
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException('Query exception when creating transaction.');
-        }
-        if (null === $result) {
-            throw new FireflyException('Transaction is NULL.');
-        }
-        // @codeCoverageIgnoreEnd
-        if (null !== $result) {
-            Log::debug(
-                sprintf(
-                    'Created transaction #%d (%s %s, account %s), part of journal #%d',
-                    $result->id,
-                    $this->currency->code,
-                    $amount,
-                    $this->account->name,
-                    $this->journal->id
-                )
-            );
-
-            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
-                $result->foreign_currency_id = $this->foreignCurrency->id;
-                $result->foreign_amount      = $foreignAmount;
-            }
-            $result->save();
-        }
-
-        return $result;
     }
 }

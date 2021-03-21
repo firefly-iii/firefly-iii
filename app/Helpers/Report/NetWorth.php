@@ -89,7 +89,7 @@ class NetWorth implements NetWorthInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d: "%s"', $account->id, $account->name));
-            $currencyId = (int) $this->accountRepository->getMetaValue($account, 'currency_id');
+            $currencyId = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
             $currencyId = 0 === $currencyId ? $default->id : $currencyId;
 
             Log::debug(sprintf('Currency ID is #%d', $currencyId));
@@ -100,7 +100,7 @@ class NetWorth implements NetWorthInterface
             Log::debug(sprintf('Balance is %s', $balance));
 
             // always subtract virtual balance.
-            $virtualBalance = (string) $account->virtual_balance;
+            $virtualBalance = (string)$account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }

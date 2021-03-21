@@ -36,6 +36,7 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+
 /**
  * Class Handler
  *
@@ -87,7 +88,9 @@ class Handler extends ExceptionHandler
                 );
             }
 
-            return response()->json(['message' => sprintf('Internal Firefly III Exception: %s', $exception->getMessage()), 'exception' => get_class($exception)], 500);
+            return response()->json(
+                ['message' => sprintf('Internal Firefly III Exception: %s', $exception->getMessage()), 'exception' => get_class($exception)], 500
+            );
         }
 
         if ($exception instanceof NotFoundHttpException) {
@@ -115,9 +118,9 @@ class Handler extends ExceptionHandler
      *
      * @param Exception $exception
      *
+     * @return void
      * @throws Exception
      *
-     * @return void
      */
     public function report(Throwable $exception)
     {
@@ -150,7 +153,7 @@ class Handler extends ExceptionHandler
 
             // create job that will mail.
             $ipAddress = request()->ip() ?? '0.0.0.0';
-            $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+            $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
             dispatch($job);
         }
 

@@ -27,6 +27,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 /**
  * Class ValidRecurrenceRepetitionType
+ *
  * @codeCoverageIgnore
  */
 class ValidRecurrenceRepetitionType implements Rule
@@ -45,8 +46,8 @@ class ValidRecurrenceRepetitionType implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      *

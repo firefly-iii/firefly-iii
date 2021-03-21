@@ -35,16 +35,6 @@ use Log;
 class AccountMetaFactory
 {
     /**
-     * @param array $data
-     *
-     * @return AccountMeta|null
-     */
-    public function create(array $data): ?AccountMeta
-    {
-        return AccountMeta::create($data);
-    }
-
-    /**
      * Create update or delete meta data.
      *
      * @param Account $account
@@ -85,6 +75,16 @@ class AccountMetaFactory
         }
 
         return $entry;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return AccountMeta|null
+     */
+    public function create(array $data): ?AccountMeta
+    {
+        return AccountMeta::create($data);
     }
 
 }

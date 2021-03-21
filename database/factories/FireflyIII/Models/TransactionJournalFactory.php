@@ -41,53 +41,7 @@ class TransactionJournalFactory extends Factory
     protected $model = TransactionJournal::class;
 
     /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {
-        return [
-            'user_id'             => 1,
-            'transaction_type_id' => 1,
-            'description'         => $this->faker->words(3, true),
-            'tag_count'           => 0,
-            'date'                => $this->faker->date('Y-m-d'),
-        ];
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function openingBalance()
-    {
-        return $this
-            ->state(fn () => ['transaction_type_id' => 4])
-            ->afterCreating(
-            function (TransactionJournal $journal) {
-                // fix factory
-                $obAccount    = Account::factory(Account::class)->initialBalance()->create();
-                $assetAccount = Account::factory(Account::class)->asset()->create();
-                Transaction::factory()->create(
-                    [
-                        'account_id'             => $obAccount->id,
-                        'transaction_journal_id' => $journal->id,
-                        'amount'                 => '5',
-                    ]
-                );
-                Transaction::factory()->create(
-                    [
-                        'account_id'             => $assetAccount->id,
-                        'transaction_journal_id' => $journal->id,
-                        'amount'                 => '-5',
-                    ]
-                );
-            }
-        );
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
     public function brokenOpeningBalance()
     {
@@ -119,5 +73,51 @@ class TransactionJournalFactory extends Factory
 
             }
         );
+    }
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'user_id'             => 1,
+            'transaction_type_id' => 1,
+            'description'         => $this->faker->words(3, true),
+            'tag_count'           => 0,
+            'date'                => $this->faker->date('Y-m-d'),
+        ];
+    }
+
+    /**
+     * @return Factory
+     */
+    public function openingBalance()
+    {
+        return $this
+            ->state(fn() => ['transaction_type_id' => 4])
+            ->afterCreating(
+                function (TransactionJournal $journal) {
+                    // fix factory
+                    $obAccount    = Account::factory(Account::class)->initialBalance()->create();
+                    $assetAccount = Account::factory(Account::class)->asset()->create();
+                    Transaction::factory()->create(
+                        [
+                            'account_id'             => $obAccount->id,
+                            'transaction_journal_id' => $journal->id,
+                            'amount'                 => '5',
+                        ]
+                    );
+                    Transaction::factory()->create(
+                        [
+                            'account_id'             => $assetAccount->id,
+                            'transaction_journal_id' => $journal->id,
+                            'amount'                 => '-5',
+                        ]
+                    );
+                }
+            );
     }
 }

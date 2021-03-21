@@ -31,41 +31,6 @@ use Log;
 trait AppendsLocationData
 {
     /**
-     * Abstract method stolen from "InteractsWithInput".
-     *
-     * @param null $key
-     * @param bool $default
-     *
-     * @return mixed
-     */
-    abstract public function boolean($key = null, $default = false);
-
-    /**
-     * Abstract method.
-     *
-     * @param $key
-     *
-     * @return bool
-     */
-    abstract public function has($key);
-
-    /**
-     * Abstract method.
-     *
-     * @return string
-     */
-    abstract public function method();
-
-    /**
-     * Abstract method.
-     *
-     * @param mixed ...$patterns
-     *
-     * @return mixed
-     */
-    abstract public function routeIs(...$patterns);
-
-    /**
      * Read the submitted Request data and add new or updated Location data to the array.
      *
      * @param array       $data
@@ -126,15 +91,6 @@ trait AppendsLocationData
     }
 
     /**
-     * Abstract method to ensure filling later.
-     *
-     * @param string $field
-     *
-     * @return string|null
-     */
-    abstract protected function nullableString(string $field): ?string;
-
-    /**
      * @param string|null $prefix
      * @param string      $key
      *
@@ -193,24 +149,60 @@ trait AppendsLocationData
     }
 
     /**
+     * Abstract method stolen from "InteractsWithInput".
+     *
+     * @param null $key
+     * @param bool $default
+     *
+     * @return mixed
+     */
+    abstract public function boolean($key = null, $default = false);
+
+    /**
+     * Abstract method.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    abstract public function has($key);
+
+    /**
+     * Abstract method.
+     *
+     * @return string
+     */
+    abstract public function method();
+
+    /**
+     * Abstract method.
+     *
+     * @param mixed ...$patterns
+     *
+     * @return mixed
+     */
+    abstract public function routeIs(...$patterns);
+
+    /**
      * @param string|null $prefix
      *
      * @return bool
      */
     private function isValidPUT(?string $prefix): bool
     {
-        $longitudeKey = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
+        $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');
         $hasLocationKey = $this->getLocationKey($prefix, 'has_location');
         Log::debug('Now in isValidPUT()');
 
         // all fields must be set:
-        if( null !== $this->get($longitudeKey) && null !== $this->get($latitudeKey) && null !== $this->get($zoomLevelKey)) {
+        if (null !== $this->get($longitudeKey) && null !== $this->get($latitudeKey) && null !== $this->get($zoomLevelKey)) {
             Log::debug('All fields present.');
             // must be PUT and API route:
             if ('PUT' === $this->method() && $this->routeIs('api.v1.*')) {
                 Log::debug('Is API location');
+
                 return true;
             }
             // if POST and not API route, must also have "has_location"
@@ -256,5 +248,14 @@ trait AppendsLocationData
                );
 
     }
+
+    /**
+     * Abstract method to ensure filling later.
+     *
+     * @param string $field
+     *
+     * @return string|null
+     */
+    abstract protected function nullableString(string $field): ?string;
 
 }

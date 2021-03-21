@@ -37,10 +37,8 @@ use Illuminate\Http\JsonResponse;
  */
 class PiggyBankController extends Controller
 {
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
-
-    private AccountRepositoryInterface   $accountRepository;
-
 
     /**
      * PiggyBankController constructor.

@@ -24,7 +24,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Rule;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;

@@ -29,7 +29,6 @@ use Carbon\Carbon;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Collection;
 
 /**
  * Class TestRequest
@@ -37,7 +36,6 @@ use Illuminate\Support\Collection;
 class TestRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
 
 
     /**

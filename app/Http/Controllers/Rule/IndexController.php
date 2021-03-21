@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -55,7 +56,7 @@ class IndexController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
                 $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
                 $this->ruleRepos      = app(RuleRepositoryInterface::class);
@@ -83,20 +84,6 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Rule $rule
-     * @return RedirectResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    public function search(Rule $rule): RedirectResponse
-    {
-        $route = route('search.index');
-        $query = $this->ruleRepos->getSearchQuery($rule);
-        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
-
-        return redirect($route);
-    }
-
-    /**
      * @param Request   $request
      * @param Rule      $rule
      * @param RuleGroup $ruleGroup
@@ -105,10 +92,25 @@ class IndexController extends Controller
      */
     public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse
     {
-        $order = (int) $request->get('order');
-        $this->ruleRepos->moveRule($rule, $ruleGroup, (int) $order);
+        $order = (int)$request->get('order');
+        $this->ruleRepos->moveRule($rule, $ruleGroup, (int)$order);
 
         return response()->json([]);
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return RedirectResponse
+     * @throws FireflyException
+     */
+    public function search(Rule $rule): RedirectResponse
+    {
+        $route = route('search.index');
+        $query = $this->ruleRepos->getSearchQuery($rule);
+        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
+
+        return redirect($route);
     }
 
 }

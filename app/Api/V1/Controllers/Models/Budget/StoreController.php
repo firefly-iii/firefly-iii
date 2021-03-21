@@ -67,7 +67,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $budget  = $this->repository->store($request->getAll());
+        $budget = $this->repository->store($request->getAll());
         $budget->refresh();
         $manager = $this->getManager();
 

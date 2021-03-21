@@ -80,7 +80,7 @@ trait CalculateRangeOccurrences
         }
         while ($start < $end) {
             $domCorrected = min($dayOfMonth, $start->daysInMonth);
-            $start->day = $domCorrected;
+            $start->day   = $domCorrected;
             if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
                 $return[] = clone $start;
             }
@@ -90,7 +90,6 @@ trait CalculateRangeOccurrences
 
         return $return;
     }
-
 
 
     /**

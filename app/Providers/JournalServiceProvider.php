@@ -59,44 +59,6 @@ class JournalServiceProvider extends ServiceProvider
     }
 
     /**
-     *
-     */
-    private function registerGroupCollector(): void
-    {
-        $this->app->bind(
-            GroupCollectorInterface::class,
-            static function (Application $app) {
-                /** @var GroupCollectorInterface $collector */
-                $collector = app(GroupCollector::class);
-                if ($app->auth->check()) {
-                    $collector->setUser(auth()->user());
-                }
-
-                return $collector;
-            }
-        );
-    }
-
-    /**
-     * Register group repos.
-     */
-    private function registerGroupRepository(): void
-    {
-        $this->app->bind(
-            TransactionGroupRepositoryInterface::class,
-            static function (Application $app) {
-                /** @var TransactionGroupRepositoryInterface $repository */
-                $repository = app(TransactionGroupRepository::class);
-                if ($app->auth->check()) {
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
-            }
-        );
-    }
-
-    /**
      * Register repository.
      */
     private function registerRepository(): void
@@ -139,6 +101,44 @@ class JournalServiceProvider extends ServiceProvider
                 }
 
                 return $repository;
+            }
+        );
+    }
+
+    /**
+     * Register group repos.
+     */
+    private function registerGroupRepository(): void
+    {
+        $this->app->bind(
+            TransactionGroupRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var TransactionGroupRepositoryInterface $repository */
+                $repository = app(TransactionGroupRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    private function registerGroupCollector(): void
+    {
+        $this->app->bind(
+            GroupCollectorInterface::class,
+            static function (Application $app) {
+                /** @var GroupCollectorInterface $collector */
+                $collector = app(GroupCollector::class);
+                if ($app->auth->check()) {
+                    $collector->setUser(auth()->user());
+                }
+
+                return $collector;
             }
         );
     }

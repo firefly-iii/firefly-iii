@@ -49,6 +49,7 @@ use Session;
 
 /**
  * Class EventServiceProvider.
+ *
  * @codeCoverageIgnore
  */
 class EventServiceProvider extends ServiceProvider
@@ -61,55 +62,55 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            RegisteredUser::class              => [
+            RegisteredUser::class               => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
             ],
             // is a User related event.
-            Login::class                       => [
+            Login::class                        => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
                 'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
             ],
-            DetectedNewIPAddress::class => [
+            DetectedNewIPAddress::class         => [
                 'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
             ],
-            RequestedVersionCheckStatus::class => [
+            RequestedVersionCheckStatus::class  => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
-            RequestedReportOnJournals::class   => [
+            RequestedReportOnJournals::class    => [
                 'FireflyIII\Handlers\Events\AutomationHandler@reportJournals',
             ],
 
             // is a User related event.
-            RequestedNewPassword::class        => [
+            RequestedNewPassword::class         => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
             // is a User related event.
-            UserChangedEmail::class            => [
+            UserChangedEmail::class             => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            AdminRequestedTestMessage::class   => [
+            AdminRequestedTestMessage::class    => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            StoredTransactionGroup::class    => [
+            StoredTransactionGroup::class       => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerWebhooks',
             ],
             // is a Transaction Journal related event.
-            UpdatedTransactionGroup::class   => [
+            UpdatedTransactionGroup::class      => [
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@triggerWebhooks',
             ],
-            DestroyedTransactionGroup::class => [
+            DestroyedTransactionGroup::class    => [
                 'FireflyIII\Handlers\Events\DestroyedGroupEventHandler@triggerWebhooks',
             ],
             // API related events:
-            AccessTokenCreated::class          => [
+            AccessTokenCreated::class           => [
                 'FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated',
             ],
 

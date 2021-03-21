@@ -50,8 +50,8 @@ class IsDateOrTime implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      */
@@ -65,7 +65,7 @@ class IsDateOrTime implements Rule
             // probably a date format.
             try {
                 Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException|Exception $e) {
+            } catch (InvalidDateException | Exception $e) {
                 Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return false;
@@ -76,7 +76,7 @@ class IsDateOrTime implements Rule
         // is an atom string, I hope?
         try {
             Carbon::parse($value);
-        } catch (InvalidDateException|Exception $e) {
+        } catch (InvalidDateException | Exception $e) {
             Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return false;

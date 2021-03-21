@@ -91,6 +91,194 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
+     * @param NullArrayObject $data
+     *
+     * @return array
+     */
+    private function transformTransactions(NullArrayObject $data): array
+    {
+        $result       = [];
+        $transactions = $data['transactions'] ?? [];
+        foreach ($transactions as $transaction) {
+            $result[] = $this->transformTransaction($transaction);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $transaction
+     *
+     * @return array
+     */
+    private function transformTransaction(array $transaction): array
+    {
+        $row = new NullArrayObject($transaction);
+
+        // amount:
+        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $amount        = app('steam')->positive($row['amount'] ?? '0');
+        $foreignAmount = null;
+        if (null !== $row['foreign_amount']) {
+            $foreignAmount = app('steam')->positive($row['foreign_amount']);
+        }
+
+        $metaFieldData = $this->groupRepos->getMetaFields((int)$row['transaction_journal_id'], $this->metaFields);
+        $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
+
+        $longitude = null;
+        $latitude  = null;
+        $zoomLevel = null;
+        $location  = $this->getLocationById((int)$row['transaction_journal_id']);
+        if (null !== $location) {
+            $longitude = $location->longitude;
+            $latitude  = $location->latitude;
+            $zoomLevel = $location->zoom_level;
+        }
+
+        return [
+            'user'                   => (string)$row['user_id'],
+            'transaction_journal_id' => (int)$row['transaction_journal_id'],
+            'type'                   => strtolower($type),
+            'date'                   => $row['date']->toAtomString(),
+            'order'                  => $row['order'],
+
+            'currency_id'             => (string)$row['currency_id'],
+            'currency_code'           => $row['currency_code'],
+            'currency_name'           => $row['currency_name'],
+            'currency_symbol'         => $row['currency_symbol'],
+            'currency_decimal_places' => (int)$row['currency_decimal_places'],
+
+            'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
+            'foreign_currency_code'           => $row['foreign_currency_code'],
+            'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
+            'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
+
+            'amount'         => $amount,
+            'foreign_amount' => $foreignAmount,
+
+            'description' => $row['description'],
+
+            'source_id'   => (string)$row['source_account_id'],
+            'source_name' => $row['source_account_name'],
+            'source_iban' => $row['source_account_iban'],
+            'source_type' => $row['source_account_type'],
+
+            'destination_id'   => (string)$row['destination_account_id'],
+            'destination_name' => $row['destination_account_name'],
+            'destination_iban' => $row['destination_account_iban'],
+            'destination_type' => $row['destination_account_type'],
+
+            'budget_id'   => $this->stringFromArray($transaction, 'budget_id', null),
+            'budget_name' => $row['budget_name'],
+
+            'category_id'   => $this->stringFromArray($transaction, 'category_id', null),
+            'category_name' => $row['category_name'],
+
+            'bill_id'   => $this->stringFromArray($transaction, 'bill_id', null),
+            'bill_name' => $row['bill_name'],
+
+            'reconciled' => $row['reconciled'],
+            'notes'      => $this->groupRepos->getNoteText((int)$row['transaction_journal_id']),
+            'tags'       => $this->groupRepos->getTags((int)$row['transaction_journal_id']),
+
+            'internal_reference' => $metaFieldData['internal_reference'],
+            'external_id'        => $metaFieldData['external_id'],
+            'original_source'    => $metaFieldData['original_source'],
+            'recurrence_id'      => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
+            'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
+            'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
+            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
+            'external_uri'       => $metaFieldData['external_uri'],
+            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+
+            'sepa_cc'       => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
+            'sepa_db'       => $metaFieldData['sepa_db'],
+            'sepa_country'  => $metaFieldData['sepa_country'],
+            'sepa_ep'       => $metaFieldData['sepa_ep'],
+            'sepa_ci'       => $metaFieldData['sepa_ci'],
+            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+
+            'interest_date' => $this->dateFromArray($metaDateData, 'interest_date'),
+            'book_date'     => $this->dateFromArray($metaDateData, 'book_date'),
+            'process_date'  => $this->dateFromArray($metaDateData, 'process_date'),
+            'due_date'      => $this->dateFromArray($metaDateData, 'due_date'),
+            'payment_date'  => $this->dateFromArray($metaDateData, 'payment_date'),
+            'invoice_date'  => $this->dateFromArray($metaDateData, 'invoice_date'),
+
+            // location data
+            'longitude'     => $longitude,
+            'latitude'      => $latitude,
+            'zoom_level'    => $zoomLevel,
+        ];
+    }
+
+    /**
+     * @param array       $array
+     * @param string      $key
+     * @param string|null $default
+     *
+     * @return string|null
+     */
+    private function stringFromArray(array $array, string $key, ?string $default): ?string
+    {
+        if (array_key_exists($key, $array) && null === $array[$key]) {
+            return null;
+        }
+        if (array_key_exists($key, $array) && null !== $array[$key]) {
+            return (string)$array[$key];
+        }
+
+        if (null !== $default) {
+            return (string)$default;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int $journalId
+     *
+     * @return Location|null
+     */
+    private function getLocationById(int $journalId): ?Location
+    {
+        return $this->groupRepos->getLocation($journalId);
+    }
+
+    /**
+     * @param array  $array
+     * @param string $key
+     *
+     * @return int|null
+     */
+    private function integerFromArray(array $array, string $key): ?int
+    {
+        if (array_key_exists($key, $array)) {
+            return (int)$array[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param NullArrayObject $object
+     * @param string          $key
+     *
+     * @return string|null
+     */
+    private function dateFromArray(NullArrayObject $object, string $key): ?string
+    {
+        if (null === $object[$key]) {
+            return null;
+        }
+
+        return $object[$key]->toAtomString();
+    }
+
+    /**
      * @param TransactionGroup $group
      *
      * @return array
@@ -125,182 +313,17 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param string $type
-     * @param string $amount
-     *
-     * @return string
-     */
-    private function getAmount(string $type, string $amount): string
-    {
-        $amount = app('steam')->positive($amount);
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $amount = app('steam')->negative($amount);
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param Bill|null $bill
+     * @param Collection $transactionJournals
      *
      * @return array
-     */
-    private function getBill(?Bill $bill): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $bill) {
-            return $array;
-        }
-        $array['id']   = (string)$bill->id;
-        $array['name'] = $bill->name;
-
-        return $array;
-    }
-
-    /**
-     * @param Budget|null $budget
-     *
-     * @return array
-     */
-    private function getBudget(?Budget $budget): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $budget) {
-            return $array;
-        }
-        $array['id']   = (int)$budget->id;
-        $array['name'] = $budget->name;
-
-        return $array;
-    }
-
-    /**
-     * @param Category|null $category
-     *
-     * @return array
-     */
-    private function getCategory(?Category $category): array
-    {
-        $array = [
-            'id'   => null,
-            'name' => null,
-        ];
-        if (null === $category) {
-            return $array;
-        }
-        $array['id']   = (int)$category->id;
-        $array['name'] = $category->name;
-
-        return $array;
-    }
-
-    /**
-     * @param NullArrayObject $dates
-     *
-     * @return array
-     */
-    private function getDates(NullArrayObject $dates): array
-    {
-        $fields = [
-            'interest_date',
-            'book_date',
-            'process_date',
-            'due_date',
-            'payment_date',
-            'invoice_date',
-        ];
-        $return = [];
-        foreach ($fields as $field) {
-            $return[$field] = null;
-            if (null !== $dates[$field]) {
-                $return[$field] = $dates[$field]->toAtomString();
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
      * @throws FireflyException
      */
-    private function getDestinationTransaction(TransactionJournal $journal): Transaction
+    private function transformJournals(Collection $transactionJournals): array
     {
-        $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
-                return (float)$transaction->amount > 0;
-            }
-        );
-        if (null === $result) {
-            throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string      $type
-     * @param string|null $foreignAmount
-     *
-     * @return string|null
-     */
-    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
-    {
-        $result = null;
-        if (null !== $foreignAmount) {
-            $result = TransactionType::WITHDRAWAL !== $type ? app('steam')->negative($foreignAmount) : app('steam')->positive($foreignAmount);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
-    private function getForeignCurrency(?TransactionCurrency $currency): array
-    {
-        $array = [
-            'id'             => null,
-            'code'           => null,
-            'symbol'         => null,
-            'decimal_places' => null,
-        ];
-        if (null === $currency) {
-            return $array;
-        }
-        $array['id']             = (int)$currency->id;
-        $array['code']           = $currency->code;
-        $array['symbol']         = $currency->symbol;
-        $array['decimal_places'] = (int)$currency->decimal_places;
-
-        return $array;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getSourceTransaction(TransactionJournal $journal): Transaction
-    {
-        $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
-                return (float)$transaction->amount < 0;
-            }
-        );
-        if (null === $result) {
-            throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
+        $result = [];
+        /** @var TransactionJournal $journal */
+        foreach ($transactionJournals as $journal) {
+            $result[] = $this->transformJournal($journal);
         }
 
         return $result;
@@ -417,198 +440,185 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Collection $transactionJournals
+     * @param TransactionJournal $journal
      *
-     * @return array
+     * @return Transaction
      * @throws FireflyException
      */
-    private function transformJournals(Collection $transactionJournals): array
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
-        $result = [];
-        /** @var TransactionJournal $journal */
-        foreach ($transactionJournals as $journal) {
-            $result[] = $this->transformJournal($journal);
+        $result = $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount < 0;
+            }
+        );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
         }
 
         return $result;
     }
 
     /**
-     * @param NullArrayObject $data
+     * @param TransactionJournal $journal
      *
-     * @return array
+     * @return Transaction
+     * @throws FireflyException
      */
-    private function transformTransactions(NullArrayObject $data): array
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        $result       = [];
-        $transactions = $data['transactions'] ?? [];
-        foreach ($transactions as $transaction) {
-            $result[] = $this->transformTransaction($transaction);
+        $result = $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount > 0;
+            }
+        );
+        if (null === $result) {
+            throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
         }
 
         return $result;
     }
 
     /**
-     * @param array $transaction
+     * @param string $type
+     * @param string $amount
+     *
+     * @return string
+     */
+    private function getAmount(string $type, string $amount): string
+    {
+        $amount = app('steam')->positive($amount);
+        if (TransactionType::WITHDRAWAL !== $type) {
+            $amount = app('steam')->negative($amount);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @param string      $type
+     * @param string|null $foreignAmount
+     *
+     * @return string|null
+     */
+    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
+    {
+        $result = null;
+        if (null !== $foreignAmount) {
+            $result = TransactionType::WITHDRAWAL !== $type ? app('steam')->negative($foreignAmount) : app('steam')->positive($foreignAmount);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param NullArrayObject $dates
      *
      * @return array
      */
-    private function transformTransaction(array $transaction): array
+    private function getDates(NullArrayObject $dates): array
     {
-        $row = new NullArrayObject($transaction);
-
-        // amount:
-        $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $amount        = app('steam')->positive($row['amount'] ?? '0');
-        $foreignAmount = null;
-        if (null !== $row['foreign_amount']) {
-            $foreignAmount = app('steam')->positive($row['foreign_amount']);
-        }
-
-        $metaFieldData = $this->groupRepos->getMetaFields((int)$row['transaction_journal_id'], $this->metaFields);
-        $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
-
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location = $this->getLocationById((int)$row['transaction_journal_id']);
-        if (null !== $location) {
-            $longitude = $location->longitude;
-            $latitude  = $location->latitude;
-            $zoomLevel = $location->zoom_level;
-        }
-
-        return [
-            'user'                   => (string)$row['user_id'],
-            'transaction_journal_id' => (int)$row['transaction_journal_id'],
-            'type'                   => strtolower($type),
-            'date'                   => $row['date']->toAtomString(),
-            'order'                  => $row['order'],
-
-            'currency_id'             => (string)$row['currency_id'],
-            'currency_code'           => $row['currency_code'],
-            'currency_name'           => $row['currency_name'],
-            'currency_symbol'         => $row['currency_symbol'],
-            'currency_decimal_places' => (int)$row['currency_decimal_places'],
-
-            'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
-            'foreign_currency_code'           => $row['foreign_currency_code'],
-            'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
-            'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
-
-            'amount'         => $amount,
-            'foreign_amount' => $foreignAmount,
-
-            'description' => $row['description'],
-
-            'source_id'   => (string)$row['source_account_id'],
-            'source_name' => $row['source_account_name'],
-            'source_iban' => $row['source_account_iban'],
-            'source_type' => $row['source_account_type'],
-
-            'destination_id'   => (string)$row['destination_account_id'],
-            'destination_name' => $row['destination_account_name'],
-            'destination_iban' => $row['destination_account_iban'],
-            'destination_type' => $row['destination_account_type'],
-
-            'budget_id'   => $this->stringFromArray($transaction, 'budget_id', null),
-            'budget_name' => $row['budget_name'],
-
-            'category_id'   => $this->stringFromArray($transaction, 'category_id', null),
-            'category_name' => $row['category_name'],
-
-            'bill_id'   => $this->stringFromArray($transaction, 'bill_id', null),
-            'bill_name' => $row['bill_name'],
-
-            'reconciled' => $row['reconciled'],
-            'notes'      => $this->groupRepos->getNoteText((int)$row['transaction_journal_id']),
-            'tags'       => $this->groupRepos->getTags((int)$row['transaction_journal_id']),
-
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
-            'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
-            'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'external_uri'       => $metaFieldData['external_uri'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
-
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
-
-            'interest_date' => $this->dateFromArray($metaDateData, 'interest_date'),
-            'book_date'     => $this->dateFromArray($metaDateData, 'book_date'),
-            'process_date'  => $this->dateFromArray($metaDateData, 'process_date'),
-            'due_date'      => $this->dateFromArray($metaDateData, 'due_date'),
-            'payment_date'  => $this->dateFromArray($metaDateData, 'payment_date'),
-            'invoice_date'  => $this->dateFromArray($metaDateData, 'invoice_date'),
-
-            // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
+        $fields = [
+            'interest_date',
+            'book_date',
+            'process_date',
+            'due_date',
+            'payment_date',
+            'invoice_date',
         ];
+        $return = [];
+        foreach ($fields as $field) {
+            $return[$field] = null;
+            if (null !== $dates[$field]) {
+                $return[$field] = $dates[$field]->toAtomString();
+            }
+        }
+
+        return $return;
     }
 
     /**
-     * @param array       $array
-     * @param string      $key
-     * @param string|null $default
+     * @param TransactionCurrency|null $currency
      *
-     * @return string|null
+     * @return array
      */
-    private function stringFromArray(array $array, string $key, ?string $default): ?string
+    private function getForeignCurrency(?TransactionCurrency $currency): array
     {
-        if (array_key_exists($key, $array) && null === $array[$key]) {
-            return null;
+        $array = [
+            'id'             => null,
+            'code'           => null,
+            'symbol'         => null,
+            'decimal_places' => null,
+        ];
+        if (null === $currency) {
+            return $array;
         }
-        if (array_key_exists($key, $array) && null !== $array[$key]) {
-            return (string) $array[$key];
-        }
+        $array['id']             = (int)$currency->id;
+        $array['code']           = $currency->code;
+        $array['symbol']         = $currency->symbol;
+        $array['decimal_places'] = (int)$currency->decimal_places;
 
-        if (null !== $default) {
-            return (string) $default;
-        }
-
-        return null;
+        return $array;
     }
 
     /**
-     * @param array  $array
-     * @param string $key
+     * @param Budget|null $budget
      *
-     * @return int|null
+     * @return array
      */
-    private function integerFromArray(array $array, string $key): ?int
+    private function getBudget(?Budget $budget): array
     {
-        if (array_key_exists($key, $array)) {
-            return (int)$array[$key];
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $budget) {
+            return $array;
         }
+        $array['id']   = (int)$budget->id;
+        $array['name'] = $budget->name;
 
-        return null;
+        return $array;
     }
 
     /**
-     * @param NullArrayObject $object
-     * @param string          $key
+     * @param Category|null $category
      *
-     * @return string|null
+     * @return array
      */
-    private function dateFromArray(NullArrayObject $object, string $key): ?string
+    private function getCategory(?Category $category): array
     {
-        if (null === $object[$key]) {
-            return null;
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $category) {
+            return $array;
         }
+        $array['id']   = (int)$category->id;
+        $array['name'] = $category->name;
 
-        return $object[$key]->toAtomString();
+        return $array;
+    }
+
+    /**
+     * @param Bill|null $bill
+     *
+     * @return array
+     */
+    private function getBill(?Bill $bill): array
+    {
+        $array = [
+            'id'   => null,
+            'name' => null,
+        ];
+        if (null === $bill) {
+            return $array;
+        }
+        $array['id']   = (string)$bill->id;
+        $array['name'] = $bill->name;
+
+        return $array;
     }
 
     /**
@@ -619,15 +629,5 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getLocation(TransactionJournal $journal): ?Location
     {
         return $journal->locations()->first();
-    }
-
-    /**
-     * @param int $journalId
-     *
-     * @return Location|null
-     */
-    private function getLocationById(int $journalId): ?Location
-    {
-        return $this->groupRepos->getLocation($journalId);
     }
 }

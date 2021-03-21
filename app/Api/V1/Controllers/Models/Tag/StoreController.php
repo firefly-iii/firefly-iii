@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Tag\StoreRequest;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -59,7 +58,6 @@ class StoreController extends Controller
             }
         );
     }
-
 
 
     /**

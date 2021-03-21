@@ -32,22 +32,6 @@ use Log;
 trait TransferValidation
 {
     /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    /**
-     * @param array  $validTypes
-     * @param int    $accountId
-     * @param string $accountName
-     *
-     * @return Account|null
-     */
-    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
-
-    /**
      * @param int|null $accountId
      * @param          $accountName
      *
@@ -61,16 +45,16 @@ trait TransferValidation
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a transfer can't be created.
-            $this->destError = (string) trans('validation.transfer_dest_need_data');
+            $this->destError = (string)trans('validation.transfer_dest_need_data');
             Log::error('Both values are NULL, cant create transfer destination.');
 
             return false;
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int) $accountId, (string) $accountName);
+        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
         if (null === $search) {
-            $this->destError = (string) trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->destError = (string)trans('validation.transfer_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
 
             return false;
         }
@@ -88,6 +72,22 @@ trait TransferValidation
     }
 
     /**
+     * @param array $accountTypes
+     *
+     * @return bool
+     */
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    /**
+     * @param array  $validTypes
+     * @param int    $accountId
+     * @param string $accountName
+     *
+     * @return Account|null
+     */
+    abstract protected function findExistingAccount(array $validTypes, int $accountId, string $accountName): ?Account;
+
+    /**
      * @param int|null    $accountId
      * @param string|null $accountName
      *
@@ -101,16 +101,16 @@ trait TransferValidation
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
-            $this->sourceError = (string) trans('validation.transfer_source_need_data');
+            $this->sourceError = (string)trans('validation.transfer_source_need_data');
             Log::warning('Not a valid source, need more data.');
 
             return false;
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, (int) $accountId, (string) $accountName);
+        $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string)trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source, cant find it.', $validTypes);
 
             return false;

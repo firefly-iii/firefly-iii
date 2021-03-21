@@ -62,7 +62,7 @@ class RuleController extends Controller
     public function rules(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $rules   = $this->repository->searchRule($data['query'], $data['limit']);
+        $rules    = $this->repository->searchRule($data['query'], $data['limit']);
         $response = [];
 
         /** @var Rule $rule */

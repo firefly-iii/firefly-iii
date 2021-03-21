@@ -56,14 +56,6 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function getVersion(): int
-    {
-        return $this->version;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function generate(WebhookMessage $message): string
     {
         try {
@@ -88,5 +80,13 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         // The timestamp is prefixed by t=, and each signature is prefixed by a scheme.
         // Schemes start with v, followed by an integer. Currently, the only valid live signature scheme is v1.
         return sprintf('t=%s,v%d=%s', $timestamp, $this->getVersion(), $signature);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
     }
 }

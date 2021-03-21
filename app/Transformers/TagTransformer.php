@@ -55,6 +55,7 @@ class TagTransformer extends AbstractTransformer
             $longitude = $location->longitude;
             $zoomLevel = (int)$location->zoom_level;
         }
+
         return [
             'id'          => (int)$tag->id,
             'created_at'  => $tag->created_at->toAtomString(),

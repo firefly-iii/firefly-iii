@@ -97,31 +97,6 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return JsonResponse
-     */
-    public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
-    {
-        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
-            throw new FireflyException('20028: The budget limit does not belong to the budget.');
-        }
-        // continue!
-        $manager = $this->getManager();
-
-        /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-
-    /**
      * Display a listing of the budget limits for this budget..
      *
      * @param DateRequest $request
@@ -146,6 +121,30 @@ class ShowController extends Controller
 
         $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * @param Request     $request
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
+     *
+     * @return JsonResponse
+     */
+    public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
+    {
+        if ((int)$budget->id !== (int)$budgetLimit->budget_id) {
+            throw new FireflyException('20028: The budget limit does not belong to the budget.');
+        }
+        // continue!
+        $manager = $this->getManager();
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

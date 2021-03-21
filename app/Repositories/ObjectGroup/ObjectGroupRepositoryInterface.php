@@ -38,11 +38,6 @@ interface ObjectGroupRepositoryInterface
     public function deleteAll(): void;
 
     /**
-     * Delete all.
-     */
-    public function resetOrder(): void;
-
-    /**
      * Delete empty ones.
      */
     public function deleteEmpty(): void;
@@ -70,6 +65,11 @@ interface ObjectGroupRepositoryInterface
      * @return Collection
      */
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection;
+
+    /**
+     * Delete all.
+     */
+    public function resetOrder(): void;
 
     /**
      * @param string $query

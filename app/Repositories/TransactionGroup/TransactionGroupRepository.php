@@ -329,7 +329,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ::table('tag_transaction_journal')
             ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
             ->where('tag_transaction_journal.transaction_journal_id', $journalId)
-            ->orderBy('tags.tag','ASC')
+            ->orderBy('tags.tag', 'ASC')
             ->get(['tags.tag']);
 
         return $result->pluck('tag')->toArray();

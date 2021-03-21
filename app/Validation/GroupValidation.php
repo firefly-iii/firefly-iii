@@ -37,40 +37,6 @@ trait GroupValidation
 {
 
     /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    abstract protected function getTransactionsArray(Validator $validator): array;
-
-    /**
-     * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've submitted more than 1 transaction
-     * journal. This check is necessary because Firefly III isn't able to distinguish between journals without the ID.
-     *
-     * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
-     */
-    protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
-    {
-        Log::debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
-        $transactions = $this->getTransactionsArray($validator);
-
-        if (count($transactions) < 2) {
-            // no need for validation.
-            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
-            return;
-        }
-        // check each array:
-        /**
-         * @var int   $index
-         * @var array $transaction
-         */
-        foreach ($transactions as $index => $transaction) {
-            $this->validateJournalId($validator, $index, $transaction, $transactionGroup);
-        }
-    }
-
-    /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
      *
@@ -96,6 +62,56 @@ trait GroupValidation
     }
 
     /**
+     * @param Validator $validator
+     */
+    protected function validateGroupDescription(Validator $validator): void
+    {
+        Log::debug('Now in validateGroupDescription()');
+        $data         = $validator->getData();
+        $transactions = $this->getTransactionsArray($validator);
+
+        $groupTitle = $data['group_title'] ?? '';
+        if ('' === $groupTitle && count($transactions) > 1) {
+            $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
+        }
+    }
+
+    /**
+     * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've submitted more than 1 transaction
+     * journal. This check is necessary because Firefly III isn't able to distinguish between journals without the ID.
+     *
+     * @param Validator        $validator
+     * @param TransactionGroup $transactionGroup
+     */
+    protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
+    {
+        Log::debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
+        $transactions = $this->getTransactionsArray($validator);
+
+        if (count($transactions) < 2) {
+            // no need for validation.
+            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
+
+            return;
+        }
+        // check each array:
+        /**
+         * @var int   $index
+         * @var array $transaction
+         */
+        foreach ($transactions as $index => $transaction) {
+            $this->validateJournalId($validator, $index, $transaction, $transactionGroup);
+        }
+    }
+
+    /**
+     * @param Validator $validator
+     *
+     * @return array
+     */
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
+    /**
      * Do the validation required by validateJournalIds.
      *
      * @param Validator        $validator
@@ -110,27 +126,11 @@ trait GroupValidation
         $journalId = $transaction['transaction_journal_id'] ?? null;
         Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
 
-        $journalId = null === $journalId ? null : (int) $journalId;
+        $journalId = null === $journalId ? null : (int)$journalId;
         $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
         if (null === $journalId || (null !== $journalId && 0 !== $journalId && 0 === $count)) {
             Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
-            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
-        }
-    }
-
-
-    /**
-     * @param Validator $validator
-     */
-    protected function validateGroupDescription(Validator $validator): void
-    {
-        Log::debug('Now in validateGroupDescription()');
-        $data         = $validator->getData();
-        $transactions = $this->getTransactionsArray($validator);
-
-        $groupTitle = $data['group_title'] ?? '';
-        if ('' === $groupTitle && count($transactions) > 1) {
-            $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
+            $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
         }
     }
 

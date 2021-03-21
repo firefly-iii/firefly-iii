@@ -74,6 +74,26 @@ class PreferencesController extends Controller
     }
 
     /**
+     * Return a single preference by name.
+     *
+     * @param Preference $preference
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function show(Preference $preference): JsonResponse
+    {
+        $manager = $this->getManager();
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($preference, $transformer, 'preferences');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
      * @param PreferenceStoreRequest $request
      *
      * @return JsonResponse
@@ -109,26 +129,6 @@ class PreferencesController extends Controller
         $transformer->setParameters($this->parameters);
 
         $resource = new Item($pref, $transformer, 'preferences');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    /**
-     * Return a single preference by name.
-     *
-     * @param Preference $preference
-     *
-     * @return JsonResponse
-     * @codeCoverageIgnore
-     */
-    public function show(Preference $preference): JsonResponse
-    {
-        $manager = $this->getManager();
-        /** @var PreferenceTransformer $transformer */
-        $transformer = app(PreferenceTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource = new Item($preference, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

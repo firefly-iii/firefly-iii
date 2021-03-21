@@ -27,6 +27,7 @@ use FireflyIII\Models\TransactionType;
 
 /**
  * Trait TransactionFilter
+ *
  * @codeCoverageIgnore
  */
 trait TransactionFilter
@@ -40,7 +41,7 @@ trait TransactionFilter
      */
     protected function mapTransactionTypes(string $type): array
     {
-        $types  = [
+        $types = [
             'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
                                   TransactionType::RECONCILIATION,],
             'withdrawal'      => [TransactionType::WITHDRAWAL,],
@@ -59,6 +60,7 @@ trait TransactionFilter
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
             'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
         ];
+
         return $types[$type] ?? $types['default'];
 
 

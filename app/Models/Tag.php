@@ -22,40 +22,40 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Tag
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property string $tag
- * @property string $tagMode
- * @property \Illuminate\Support\Carbon|null $date
- * @property string|null $description
- * @property float|null $latitude
- * @property float|null $longitude
- * @property int|null $zoomLevel
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[] $locations
- * @property-read int|null $locations_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read User $user
+ * @property int                                                                                   $id
+ * @property Carbon|null                                                       $created_at
+ * @property Carbon|null      $updated_at
+ * @property Carbon|null      $deleted_at
+ * @property int                                  $user_id
+ * @property string                               $tag
+ * @property string                               $tagMode
+ * @property Carbon|null      $date
+ * @property string|null                          $description
+ * @property float|null                           $latitude
+ * @property float|null                           $longitude
+ * @property int|null                             $zoomLevel
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|Location[]           $locations
+ * @property-read int|null                        $locations_count
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
  * @method static Builder|Tag onlyTrashed()
@@ -105,13 +105,13 @@ class Tag extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Tag
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Tag
     {
         if (auth()->check()) {
-            $tagId = (int) $value;
+            $tagId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Tag $tag */
@@ -127,18 +127,18 @@ class Tag extends Model
      * @codeCoverageIgnore
      * @return MorphMany
      */
-    public function locations(): MorphMany
+    public function attachments(): MorphMany
     {
-        return $this->morphMany(Location::class, 'locatable');
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
      * @codeCoverageIgnore
      * @return MorphMany
      */
-    public function attachments(): MorphMany
+    public function locations(): MorphMany
     {
-        return $this->morphMany(Attachment::class, 'attachable');
+        return $this->morphMany(Location::class, 'locatable');
     }
 
     /**

@@ -338,51 +338,6 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     }
 
     /**
-     * @param Rule $rule
-     */
-    private function resetRuleActionOrder(Rule $rule): void
-    {
-        $actions = $rule->ruleActions()
-                        ->orderBy('order', 'ASC')
-                        ->orderBy('active', 'DESC')
-                        ->orderBy('action_type', 'ASC')
-                        ->get();
-        $index   = 1;
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            if ((int)$action->order !== $index) {
-                $action->order = $index;
-                $action->save();
-                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
-            }
-            $index++;
-        }
-    }
-
-    /**
-     * @param Rule $rule
-     */
-    private function resetRuleTriggerOrder(Rule $rule): void
-    {
-        $triggers = $rule->ruleTriggers()
-                         ->orderBy('order', 'ASC')
-                         ->orderBy('active', 'DESC')
-                         ->orderBy('trigger_type', 'ASC')
-                         ->get();
-        $index    = 1;
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $order = (int)$trigger->order;
-            if ($order !== $index) {
-                $trigger->order = $index;
-                $trigger->save();
-                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
-            }
-            $index++;
-        }
-    }
-
-    /**
      * @inheritDoc
      */
     public function searchRuleGroup(string $query, int $limit): Collection
@@ -395,6 +350,32 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                ->orderBy('rule_groups.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
+    {
+        $oldOrder = (int)$ruleGroup->order;
+
+        if ($newOrder > $oldOrder) {
+            $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)
+                       ->where('rule_groups.id', '!=', $ruleGroup->id)
+                       ->decrement('order', 1);
+            $ruleGroup->order = $newOrder;
+            Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+            $ruleGroup->save();
+
+            return;
+        }
+
+        $this->user->ruleGroups()->where('rule_groups.order', '>=', $newOrder)->where('rule_groups.order', '<', $oldOrder)
+                   ->where('rule_groups.id', '!=', $ruleGroup->id)
+                   ->increment('order', 1);
+        $ruleGroup->order = $newOrder;
+        Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+        $ruleGroup->save();
     }
 
     /**
@@ -459,30 +440,48 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         return $ruleGroup;
     }
 
+    /**
+     * @param Rule $rule
+     */
+    private function resetRuleActionOrder(Rule $rule): void
+    {
+        $actions = $rule->ruleActions()
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('active', 'DESC')
+                        ->orderBy('action_type', 'ASC')
+                        ->get();
+        $index   = 1;
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            if ((int)$action->order !== $index) {
+                $action->order = $index;
+                $action->save();
+                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
+            }
+            $index++;
+        }
+    }
 
     /**
-     * @inheritDoc
+     * @param Rule $rule
      */
-    public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
+    private function resetRuleTriggerOrder(Rule $rule): void
     {
-        $oldOrder = (int)$ruleGroup->order;
-
-        if ($newOrder > $oldOrder) {
-            $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)
-                       ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->decrement('order', 1);
-            $ruleGroup->order = $newOrder;
-            Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
-            $ruleGroup->save();
-
-            return;
+        $triggers = $rule->ruleTriggers()
+                         ->orderBy('order', 'ASC')
+                         ->orderBy('active', 'DESC')
+                         ->orderBy('trigger_type', 'ASC')
+                         ->get();
+        $index    = 1;
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $order = (int)$trigger->order;
+            if ($order !== $index) {
+                $trigger->order = $index;
+                $trigger->save();
+                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
+            }
+            $index++;
         }
-
-        $this->user->ruleGroups()->where('rule_groups.order', '>=', $newOrder)->where('rule_groups.order', '<', $oldOrder)
-                   ->where('rule_groups.id', '!=', $ruleGroup->id)
-                   ->increment('order', 1);
-        $ruleGroup->order = $newOrder;
-        Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
-        $ruleGroup->save();
     }
 }

@@ -40,10 +40,10 @@ class ReportNewJournalsMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $email;
+    public string     $email;
     public Collection $groups;
-    public string $ipAddress;
-    public array $transformed;
+    public string     $ipAddress;
+    public array      $transformed;
 
     /**
      * ConfirmEmailChangeMail constructor.
@@ -69,7 +69,7 @@ class ReportNewJournalsMail extends Mailable
         $this->transform();
 
         return $this->view('v1.emails.report-new-journals-html')->text('v1.emails.report-new-journals-text')
-                    ->subject((string) trans_choice('email.new_journals_subject', $this->groups->count()));
+                    ->subject((string)trans_choice('email.new_journals_subject', $this->groups->count()));
     }
 
     private function transform(): void

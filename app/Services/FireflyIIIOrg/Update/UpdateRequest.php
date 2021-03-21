@@ -65,6 +65,77 @@ class UpdateRequest implements UpdateRequestInterface
     }
 
     /**
+     * @param string $channel
+     *
+     * @return array
+     */
+    private function contactServer(string $channel): array
+    {
+        Log::debug(sprintf('Now in contactServer(%s)', $channel));
+        // always fall back to current version:
+        $return = [
+            'version' => config('firefly.version'),
+            'date'    => Carbon::today()->startOfDay(),
+            'level'   => 'error',
+            'message' => (string)trans('firefly.unknown_error'),
+        ];
+
+        $uri = config('firefly.update_endpoint');
+        Log::debug(sprintf('Going to call %s', $uri));
+        try {
+            $client  = new Client;
+            $options = [
+                'headers' => [
+                    'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
+                ],
+                'timeout' => 3.1415,
+            ];
+            $res     = $client->request('GET', $uri, $options);
+        } catch (GuzzleException | Exception $e) {
+            Log::error('Ran into Guzzle error.');
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            $return['message'] = sprintf('Guzzle: %s', strip_tags($e->getMessage()));
+
+            return $return;
+        }
+
+        if (200 !== $res->getStatusCode()) {
+            Log::error(sprintf('Response status from server is %d.', $res->getStatusCode()));
+            Log::error((string)$res->getBody());
+            $return['message'] = sprintf('Error: %d', $res->getStatusCode());
+
+            return $return;
+        }
+        $body = (string)$res->getBody();
+        try {
+            $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+
+        } catch (JsonException | Exception $e) {
+            Log::error('Body is not valid JSON');
+            Log::error($body);
+            $return['message'] = 'Invalid JSON :(';
+
+            return $return;
+        }
+
+        if (!isset($json['firefly_iii'][$channel])) {
+            Log::error(sprintf('No valid update channel "%s"', $channel));
+            Log::error($body);
+            $return['message'] = sprintf('Unknown update channel "%s" :(', $channel);
+        }
+
+        // parse response a bit. No message yet.
+        $response          = $json['firefly_iii'][$channel];
+        $return['version'] = $response['version'];
+        $return['level']   = 'success';
+        $return['date']    = Carbon::createFromFormat('Y-m-d', $response['date'])->startOfDay();
+        Log::info('Response from update server', $response);
+
+        return $return;
+    }
+
+    /**
      * @param array $information
      *
      * @return array
@@ -146,77 +217,6 @@ class UpdateRequest implements UpdateRequestInterface
             Log::debug('New release is also a alpha!');
         }
         Log::debug('New release is here!', $return);
-
-        return $return;
-    }
-
-    /**
-     * @param string $channel
-     *
-     * @return array
-     */
-    private function contactServer(string $channel): array
-    {
-        Log::debug(sprintf('Now in contactServer(%s)', $channel));
-        // always fall back to current version:
-        $return = [
-            'version' => config('firefly.version'),
-            'date'    => Carbon::today()->startOfDay(),
-            'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
-        ];
-
-        $uri = config('firefly.update_endpoint');
-        Log::debug(sprintf('Going to call %s', $uri));
-        try {
-            $client  = new Client;
-            $options = [
-                'headers' => [
-                    'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
-                ],
-                'timeout' => 3.1415
-            ];
-            $res     = $client->request('GET', $uri, $options);
-        } catch (GuzzleException|Exception $e) {
-            Log::error('Ran into Guzzle error.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $return['message'] = sprintf('Guzzle: %s', strip_tags($e->getMessage()));
-
-            return $return;
-        }
-
-        if (200 !== $res->getStatusCode()) {
-            Log::error(sprintf('Response status from server is %d.', $res->getStatusCode()));
-            Log::error((string)$res->getBody());
-            $return['message'] = sprintf('Error: %d', $res->getStatusCode());
-
-            return $return;
-        }
-        $body = (string)$res->getBody();
-        try {
-            $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-
-        } catch (JsonException|Exception $e) {
-            Log::error('Body is not valid JSON');
-            Log::error($body);
-            $return['message'] = 'Invalid JSON :(';
-
-            return $return;
-        }
-
-        if (!isset($json['firefly_iii'][$channel])) {
-            Log::error(sprintf('No valid update channel "%s"', $channel));
-            Log::error($body);
-            $return['message'] = sprintf('Unknown update channel "%s" :(', $channel);
-        }
-
-        // parse response a bit. No message yet.
-        $response          = $json['firefly_iii'][$channel];
-        $return['version'] = $response['version'];
-        $return['level']   = 'success';
-        $return['date']    = Carbon::createFromFormat('Y-m-d', $response['date'])->startOfDay();
-        Log::info('Response from update server', $response);
 
         return $return;
     }

@@ -69,11 +69,6 @@ interface PiggyBankRepositoryInterface
     public function canRemoveAmount(PiggyBank $piggyBank, string $amount): bool;
 
     /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void;
-
-    /**
      * Create a new event.
      *
      * @param PiggyBank $piggyBank
@@ -236,6 +231,11 @@ interface PiggyBankRepositoryInterface
      * @return PiggyBank
      */
     public function removeObjectGroup(PiggyBank $piggyBank): PiggyBank;
+
+    /**
+     * Correct order of piggies in case of issues.
+     */
+    public function resetOrder(): void;
 
     /**
      * Search for piggy banks.

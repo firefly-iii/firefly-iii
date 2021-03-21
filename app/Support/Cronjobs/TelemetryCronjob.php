@@ -45,13 +45,14 @@ class TelemetryCronjob extends AbstractCronjob
         // do not fire if telemetry is disabled.
         if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
             Log::warning('Telemetry is disabled. The cron job will do nothing.');
+
             return false;
         }
 
 
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_tm_job', 0);
-        $lastTime      = (int) $config->data;
+        $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
         $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), true);
         if (0 === $lastTime) {
@@ -98,7 +99,7 @@ class TelemetryCronjob extends AbstractCronjob
 
         // TODO remove old, submitted telemetry data.
 
-        app('fireflyconfig')->set('last_tm_job', (int) $this->date->format('U'));
+        app('fireflyconfig')->set('last_tm_job', (int)$this->date->format('U'));
         Log::info('Done with telemetry cron job task.');
     }
 }

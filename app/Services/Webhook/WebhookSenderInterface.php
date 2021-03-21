@@ -56,12 +56,12 @@ interface WebhookSenderInterface
     public function getVersion(): int;
 
     /**
-     * @param WebhookMessage $message
-     */
-    public function setMessage(WebhookMessage $message): void;
-
-    /**
      *
      */
     public function send(): void;
+
+    /**
+     * @param WebhookMessage $message
+     */
+    public function setMessage(WebhookMessage $message): void;
 }

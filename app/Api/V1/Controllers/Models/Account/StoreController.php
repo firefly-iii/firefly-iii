@@ -67,7 +67,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data    = $request->getAllAccountData();
+        $data = $request->getAllAccountData();
         $this->repository->resetAccountOrder();
         $account = $this->repository->store($data);
         $manager = $this->getManager();

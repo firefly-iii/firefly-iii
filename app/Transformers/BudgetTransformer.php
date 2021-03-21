@@ -87,6 +87,7 @@ class BudgetTransformer extends AbstractTransformer
             $abAmount       = number_format((float)$autoBudget->amount, $autoBudget->transactionCurrency->decimal_places, '.', '');
             $abPeriod       = $autoBudget->period;
         }
+
         return [
             'id'                        => (string)$budget->id,
             'created_at'                => $budget->created_at->toAtomString(),

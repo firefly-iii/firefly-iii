@@ -53,7 +53,7 @@ class AdminEventHandler
             $ipAddress = $event->ipAddress;
 
             // if user is demo user, send to owner:
-            if($event->user->hasRole('demo')) {
+            if ($event->user->hasRole('demo')) {
                 $email = config('firefly.site_owner');
             }
 

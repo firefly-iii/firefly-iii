@@ -141,74 +141,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param bool $errorOnHash
-     */
-    public function setErrorOnHash(bool $errorOnHash): void
-    {
-        $this->errorOnHash = $errorOnHash;
-        if (true === $errorOnHash) {
-            Log::info('Will trigger duplication alert for this journal.');
-        }
-    }
-
-    /**
-     * Set the user.
-     *
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->currencyRepository->setUser($this->user);
-        $this->tagFactory->setUser($user);
-        $this->billRepository->setUser($this->user);
-        $this->budgetRepository->setUser($this->user);
-        $this->categoryRepository->setUser($this->user);
-        $this->piggyRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     * @param string             $field
-     */
-    protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
-    {
-        $set = [
-            'journal' => $journal,
-            'name'    => $field,
-            'data'    => (string)($data[$field] ?? ''),
-        ];
-
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
-
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate($set);
-    }
-
-    /**
-     * Set foreign currency to NULL if it's the same as the normal currency:
-     *
-     * @param TransactionCurrency      $currency
-     * @param TransactionCurrency|null $foreignCurrency
-     *
-     * @return TransactionCurrency|null
-     */
-    private function compareCurrencies(?TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): ?TransactionCurrency
-    {
-        if (null === $currency) {
-            return null;
-        }
-        if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
-            return null;
-        }
-
-        return $foreignCurrency;
-    }
-
-    /**
      * @param NullArrayObject $row
      *
      * @return TransactionJournal|null
@@ -361,6 +293,29 @@ class TransactionJournalFactory
     }
 
     /**
+     * @param NullArrayObject $row
+     *
+     * @return string
+     */
+    private function hashArray(NullArrayObject $row): string
+    {
+        $dataRow = $row->getArrayCopy();
+
+        unset($dataRow['import_hash_v2'], $dataRow['original_source']);
+        $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
+        if (false === $json) {
+            // @codeCoverageIgnoreStart
+            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR, 512);
+            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
+            // @codeCoverageIgnoreEnd
+        }
+        $hash = hash('sha256', $json);
+        Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
+
+        return $hash;
+    }
+
+    /**
      * If this transaction already exists, throw an error.
      *
      * @param string $hash
@@ -385,6 +340,127 @@ class TransactionJournalFactory
             Log::warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $result->transactionJournal->transaction_group_id));
         }
+    }
+
+    /**
+     * @param NullArrayObject $data
+     *
+     * @throws FireflyException
+     */
+    private function validateAccounts(NullArrayObject $data): void
+    {
+        $transactionType = $data['type'] ?? 'invalid';
+        $this->accountValidator->setUser($this->user);
+        $this->accountValidator->setTransactionType($transactionType);
+
+        // validate source account.
+        $sourceId    = $data['source_id'] ? (int)$data['source_id'] : null;
+        $sourceName  = $data['source_name'] ? (string)$data['source_name'] : null;
+        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
+
+        // do something with result:
+        if (false === $validSource) {
+            throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError)); // @codeCoverageIgnore
+        }
+        Log::debug('Source seems valid.');
+        // validate destination account
+        $destinationId    = $data['destination_id'] ? (int)$data['destination_id'] : null;
+        $destinationName  = $data['destination_name'] ? (string)$data['destination_name'] : null;
+        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
+        // do something with result:
+        if (false === $validDestination) {
+            throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore
+        }
+    }
+
+    /**
+     * @param string                   $type
+     * @param TransactionCurrency|null $currency
+     * @param Account                  $source
+     * @param Account                  $destination
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
+    {
+        Log::debug('Now ingetCurrencyByAccount()');
+        switch ($type) {
+            default:
+            case TransactionType::WITHDRAWAL:
+            case TransactionType::TRANSFER:
+                return $this->getCurrency($currency, $source);
+            case TransactionType::DEPOSIT:
+                return $this->getCurrency($currency, $destination);
+
+        }
+    }
+
+    /**
+     * @param TransactionCurrency|null $currency
+     * @param Account                  $account
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
+    {
+        Log::debug('Now in getCurrency()');
+        $preference = $this->accountRepository->getAccountCurrency($account);
+        if (null === $preference && null === $currency) {
+            // return user's default:
+            return app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        $result = ($preference ?? $currency) ?? app('amount')->getSystemCurrency();
+        Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
+
+        return $result;
+    }
+
+    /**
+     * Set foreign currency to NULL if it's the same as the normal currency:
+     *
+     * @param TransactionCurrency      $currency
+     * @param TransactionCurrency|null $foreignCurrency
+     *
+     * @return TransactionCurrency|null
+     */
+    private function compareCurrencies(?TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): ?TransactionCurrency
+    {
+        if (null === $currency) {
+            return null;
+        }
+        if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
+            return null;
+        }
+
+        return $foreignCurrency;
+    }
+
+    /**
+     * @param string                   $type
+     * @param TransactionCurrency|null $foreignCurrency
+     * @param Account                  $destination
+     *
+     * @return TransactionCurrency|null
+     */
+    private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
+    {
+        if (TransactionType::TRANSFER === $type) {
+            return $this->getCurrency($foreignCurrency, $destination);
+        }
+
+        return $foreignCurrency;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return string
+     */
+    private function getDescription(string $description): string
+    {
+        $description = '' === $description ? '(empty description)' : $description;
+
+        return substr($description, 0, 255);
     }
 
     /**
@@ -419,110 +495,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param TransactionCurrency|null $currency
-     * @param Account                  $account
-     *
-     * @return TransactionCurrency
-     */
-    private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
-    {
-        Log::debug('Now in getCurrency()');
-        $preference = $this->accountRepository->getAccountCurrency($account);
-        if (null === $preference && null === $currency) {
-            // return user's default:
-            return app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-        $result = ($preference ?? $currency) ?? app('amount')->getSystemCurrency();
-        Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
-
-        return $result;
-    }
-
-    /**
-     * @param string                   $type
-     * @param TransactionCurrency|null $currency
-     * @param Account                  $source
-     * @param Account                  $destination
-     *
-     * @return TransactionCurrency
-     */
-    private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
-    {
-        Log::debug('Now ingetCurrencyByAccount()');
-        switch ($type) {
-            default:
-            case TransactionType::WITHDRAWAL:
-            case TransactionType::TRANSFER:
-                return $this->getCurrency($currency, $source);
-            case TransactionType::DEPOSIT:
-                return $this->getCurrency($currency, $destination);
-
-        }
-    }
-
-    /**
-     * @param string $description
-     *
-     * @return string
-     */
-    private function getDescription(string $description): string
-    {
-        $description = '' === $description ? '(empty description)' : $description;
-
-        return substr($description, 0, 255);
-    }
-
-    /**
-     * @param string                   $type
-     * @param TransactionCurrency|null $foreignCurrency
-     * @param Account                  $destination
-     *
-     * @return TransactionCurrency|null
-     */
-    private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
-    {
-        if (TransactionType::TRANSFER === $type) {
-            return $this->getCurrency($foreignCurrency, $destination);
-        }
-
-        return $foreignCurrency;
-    }
-
-    /**
-     * @param NullArrayObject $row
-     *
-     * @return string
-     */
-    private function hashArray(NullArrayObject $row): string
-    {
-        $dataRow = $row->getArrayCopy();
-
-        unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
-        if (false === $json) {
-            // @codeCoverageIgnoreStart
-            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR, 512);
-            Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
-            // @codeCoverageIgnoreEnd
-        }
-        $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
-
-        return $hash;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $transaction
-     */
-    private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
-    {
-        foreach ($this->fields as $field) {
-            $this->storeMeta($journal, $transaction, $field);
-        }
-    }
-
-    /**
      * Link a piggy bank to this journal.
      *
      * @param TransactionJournal $journal
@@ -549,34 +521,62 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param NullArrayObject $data
-     *
-     * @throws FireflyException
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $transaction
      */
-    private function validateAccounts(NullArrayObject $data): void
+    private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
     {
-        $transactionType = $data['type'] ?? 'invalid';
-        $this->accountValidator->setUser($this->user);
-        $this->accountValidator->setTransactionType($transactionType);
-
-        // validate source account.
-        $sourceId    = $data['source_id'] ? (int)$data['source_id'] : null;
-        $sourceName  = $data['source_name'] ? (string)$data['source_name'] : null;
-        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName, null);
-
-        // do something with result:
-        if (false === $validSource) {
-            throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError)); // @codeCoverageIgnore
+        foreach ($this->fields as $field) {
+            $this->storeMeta($journal, $transaction, $field);
         }
-        Log::debug('Source seems valid.');
-        // validate destination account
-        $destinationId    = $data['destination_id'] ? (int)$data['destination_id'] : null;
-        $destinationName  = $data['destination_name'] ? (string)$data['destination_name'] : null;
-        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
-        // do something with result:
-        if (false === $validDestination) {
-            throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     * @param string             $field
+     */
+    protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
+    {
+        $set = [
+            'journal' => $journal,
+            'name'    => $field,
+            'data'    => (string)($data[$field] ?? ''),
+        ];
+
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate($set);
+    }
+
+    /**
+     * @param bool $errorOnHash
+     */
+    public function setErrorOnHash(bool $errorOnHash): void
+    {
+        $this->errorOnHash = $errorOnHash;
+        if (true === $errorOnHash) {
+            Log::info('Will trigger duplication alert for this journal.');
         }
+    }
+
+    /**
+     * Set the user.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->currencyRepository->setUser($this->user);
+        $this->tagFactory->setUser($user);
+        $this->billRepository->setUser($this->user);
+        $this->budgetRepository->setUser($this->user);
+        $this->categoryRepository->setUser($this->user);
+        $this->piggyRepository->setUser($this->user);
+        $this->accountRepository->setUser($this->user);
     }
 
 

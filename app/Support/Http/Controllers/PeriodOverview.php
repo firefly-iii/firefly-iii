@@ -70,8 +70,8 @@ trait PeriodOverview
      * performance reasons.
      *
      * @param Account $account The account involved
-     * @param Carbon $date The start date.
-     * @param Carbon $end The end date.
+     * @param Carbon  $date    The start date.
+     * @param Carbon  $end     The end date.
      *
      * @return array
      */
@@ -124,18 +124,18 @@ trait PeriodOverview
             $spent           = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
             $transferredAway = $this->filterTransferredAway($account, $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']));
             $transferredIn   = $this->filterTransferredIn($account, $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']));
-            $entries[]       =
-                [
-                    'title' => $title,
-                    'route' =>
-                        route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+            $entries[]
+                             = [
+                'title' => $title,
+                'route' =>
+                    route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
 
-                    'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred_away'   => $this->groupByCurrency($transferredAway),
-                    'transferred_in'     => $this->groupByCurrency($transferredIn),
-                ];
+                'total_transactions' => count($spent) + count($earned) + count($transferredAway) + count($transferredIn),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred_away'   => $this->groupByCurrency($transferredAway),
+                'transferred_in'     => $this->groupByCurrency($transferredIn),
+            ];
         }
         $cache->store($entries);
 
@@ -143,11 +143,126 @@ trait PeriodOverview
     }
 
     /**
+     * Filter a list of journals by a set of dates, and then group them by currency.
+     *
+     * @param array  $array
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            if ($journal['date'] <= $end && $journal['date'] >= $start) {
+                $result[] = $journal;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     *
+     * @param Account $account
+     * @param array   $journals
+     *
+     * @return array
+     */
+    private function filterTransferredAway(Account $account, array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['source_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     *
+     * @param Account $account
+     * @param array   $journals
+     *
+     * @return array
+     * @codeCoverageIgnore
+     */
+    private function filterTransferredIn(Account $account, array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['destination_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $journals
+     *
+     * @return array
+     * @codeCoverageIgnore
+     */
+    private function groupByCurrency(array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId        = (int)$journal['currency_id'];
+            $foreignCurrencyId = $journal['foreign_currency_id'];
+            if (!isset($return[$currencyId])) {
+                $return[$currencyId] = [
+                    'amount'                  => '0',
+                    'count'                   => 0,
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            }
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
+            $return[$currencyId]['count']++;
+
+            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
+                if (!isset($return[$foreignCurrencyId])) {
+                    $return[$foreignCurrencyId] = [
+                        'amount'                  => '0',
+                        'count'                   => 0,
+                        'currency_id'             => (int)$foreignCurrencyId,
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                    ];
+
+                }
+                $return[$foreignCurrencyId]['count']++;
+                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
+            }
+
+        }
+
+        return $return;
+    }
+
+    /**
      * Overview for single category. Has been refactored recently.
      *
      * @param Category $category
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
      * @return array
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
@@ -200,17 +315,19 @@ trait PeriodOverview
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
             $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries[]   =
-                [
-                    'transactions'       => 0,
-                    'title'              => $title,
-                    'route'              => route('categories.show',
-                                                  [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+            $entries[]
+                         = [
+                'transactions'       => 0,
+                'title'              => $title,
+                'route'              => route(
+                    'categories.show',
+                    [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
+                ),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
         $cache->store($entries);
 
@@ -254,18 +371,18 @@ trait PeriodOverview
         $journals = $collector->getExtractedJournals();
 
         foreach ($dates as $currentDate) {
-            $set       = $this->filterJournalsByDate($journals, $currentDate['start'], $currentDate['end']);
-            $title     = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries[] =
-                [
-                    'title'              => $title,
-                    'route'              => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($set),
-                    'spent'              => $this->groupByCurrency($set),
-                    'earned'             => [],
-                    'transferred_away'   => [],
-                    'transferred_in'     => [],
-                ];
+            $set   = $this->filterJournalsByDate($journals, $currentDate['start'], $currentDate['end']);
+            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $entries[]
+                   = [
+                'title'              => $title,
+                'route'              => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($set),
+                'spent'              => $this->groupByCurrency($set),
+                'earned'             => [],
+                'transferred_away'   => [],
+                'transferred_in'     => [],
+            ];
         }
         $cache->store($entries);
 
@@ -336,15 +453,15 @@ trait PeriodOverview
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
             $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries[]   =
-                [
-                    'title'              => $title,
-                    'route'              => route('categories.no-category', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+            $entries[]
+                         = [
+                'title'              => $title,
+                'route'              => route('categories.no-category', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
         Log::debug('End of loops');
         $cache->store($entries);
@@ -355,7 +472,7 @@ trait PeriodOverview
     /**
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
-     * @param Tag $tag
+     * @param Tag    $tag
      *
      * @param Carbon $date
      *
@@ -374,7 +491,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-             return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -409,17 +526,19 @@ trait PeriodOverview
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
             $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
             $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries[]   =
-                [
-                    'transactions'       => 0,
-                    'title'              => $title,
-                    'route'              => route('tags.show',
-                                                  [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+            $entries[]
+                         = [
+                'transactions'       => 0,
+                'title'              => $title,
+                'route'              => route(
+                    'tags.show',
+                    [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
+                ),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
 
         return $entries;
@@ -473,127 +592,18 @@ trait PeriodOverview
             }
 
 
-            $entries[] =
-                [
-                    'title'              => $title,
-                    'route'              =>
-                        route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+            $entries[]
+                = [
+                'title'              => $title,
+                'route'              =>
+                    route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
         }
 
         return $entries;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     * @param Account $account
-     * @param array $journals
-     * @return array
-     */
-    private function filterTransferredAway(Account $account, array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['source_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     * @param Account $account
-     * @param array $journals
-     * @return array
-     * @codeCoverageIgnore
-     */
-    private function filterTransferredIn(Account $account, array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['destination_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Filter a list of journals by a set of dates, and then group them by currency.
-     *
-     * @param array $array
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return array
-     */
-    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
-    {
-        $result = [];
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            if ($journal['date'] <= $end && $journal['date'] >= $start) {
-                $result[] = $journal;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $journals
-     *
-     * @return array
-     * @codeCoverageIgnore
-     */
-    private function groupByCurrency(array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = $journal['foreign_currency_id'];
-            if (!isset($return[$currencyId])) {
-                $return[$currencyId] = [
-                    'amount'                  => '0',
-                    'count'                   => 0,
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
-            $return[$currencyId]['count']++;
-
-            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
-                if (!isset($return[$foreignCurrencyId])) {
-                    $return[$foreignCurrencyId] = [
-                        'amount'                  => '0',
-                        'count'                   => 0,
-                        'currency_id'             => (int)$foreignCurrencyId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-
-                }
-                $return[$foreignCurrencyId]['count']++;
-                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
-            }
-
-        }
-
-        return $return;
     }
 }

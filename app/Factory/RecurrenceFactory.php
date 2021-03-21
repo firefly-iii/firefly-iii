@@ -73,13 +73,13 @@ class RecurrenceFactory
 
             throw new FireflyException($message);
         }
-        $firstDate   = null;
-        $repeatUntil = null;
-        $repetitions = 0;
-        $title       = null;
-        $description = '';
-        $applyRules  = true;
-        $active      = true;
+        $firstDate         = null;
+        $repeatUntil       = null;
+        $repetitions       = 0;
+        $title             = null;
+        $description       = '';
+        $applyRules        = true;
+        $active            = true;
         $repeatUntilString = null;
         if (array_key_exists('first_date', $data['recurrence'])) {
             /** @var Carbon $firstDate */

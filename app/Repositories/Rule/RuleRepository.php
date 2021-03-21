@@ -261,6 +261,14 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function maxOrder(RuleGroup $ruleGroup): int
+    {
+        return (int)$ruleGroup->rules()->max('order');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function moveRule(Rule $rule, RuleGroup $ruleGroup, int $order): Rule
     {
         if ($rule->rule_group_id !== $ruleGroup->id) {
@@ -303,15 +311,6 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-
-    /**
      * @inheritDoc
      */
     public function setOrder(Rule $rule, int $newOrder): void
@@ -345,6 +344,14 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->order = $newOrder;
         Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -490,6 +497,30 @@ class RuleRepository implements RuleRepositoryInterface
     }
 
     /**
+     * @param string $moment
+     * @param Rule   $rule
+     */
+    private function setRuleTrigger(string $moment, Rule $rule): void
+    {
+        /** @var RuleTrigger $trigger */
+        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        if (null !== $trigger) {
+            $trigger->trigger_value = $moment;
+            $trigger->save();
+
+            return;
+        }
+        $trigger                  = new RuleTrigger;
+        $trigger->order           = 0;
+        $trigger->trigger_type    = 'user_action';
+        $trigger->trigger_value   = $moment;
+        $trigger->rule_id         = $rule->id;
+        $trigger->active          = true;
+        $trigger->stop_processing = false;
+        $trigger->save();
+    }
+
+    /**
      * @param Rule  $rule
      * @param array $data
      *
@@ -546,37 +577,5 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param string $moment
-     * @param Rule   $rule
-     */
-    private function setRuleTrigger(string $moment, Rule $rule): void
-    {
-        /** @var RuleTrigger $trigger */
-        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
-        if (null !== $trigger) {
-            $trigger->trigger_value = $moment;
-            $trigger->save();
-
-            return;
-        }
-        $trigger                  = new RuleTrigger;
-        $trigger->order           = 0;
-        $trigger->trigger_type    = 'user_action';
-        $trigger->trigger_value   = $moment;
-        $trigger->rule_id         = $rule->id;
-        $trigger->active          = true;
-        $trigger->stop_processing = false;
-        $trigger->save();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function maxOrder(RuleGroup $ruleGroup): int
-    {
-        return (int)$ruleGroup->rules()->max('order');
     }
 }

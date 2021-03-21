@@ -65,7 +65,22 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
+     * @param string $model
+     *
+     * @return string
+     */
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
+    }
+
+    /**
      * Get the validation error message.
+     *
      * @codeCoverageIgnore
      * @return string
      */
@@ -77,8 +92,8 @@ class IsValidAttachmentModel implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
      *
      * @return bool
      */
@@ -104,7 +119,7 @@ class IsValidAttachmentModel implements Rule
         }
         $method = $methods[$this->model];
 
-        return $this->$method((int) $value);
+        return $this->$method((int)$value);
     }
 
     /**
@@ -112,10 +127,10 @@ class IsValidAttachmentModel implements Rule
      *
      * @return bool
      */
-    private function validateTag(int $value): bool
+    private function validateAccount(int $value): bool
     {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
         return null !== $repository->findNull($value);
@@ -126,13 +141,13 @@ class IsValidAttachmentModel implements Rule
      *
      * @return bool
      */
-    private function validatePiggyBank(int $value): bool
+    private function validateBill(int $value): bool
     {
-        /** @var PiggyBankRepositoryInterface $repository */
-        $repository = app(PiggyBankRepositoryInterface::class);
+        /** @var BillRepositoryInterface $repository */
+        $repository = app(BillRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -168,10 +183,9 @@ class IsValidAttachmentModel implements Rule
      *
      * @return bool
      */
-    private function validateAccount(int $value): bool
+    private function validateJournal(int $value): bool
     {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository = app(JournalRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
         return null !== $repository->findNull($value);
@@ -182,9 +196,24 @@ class IsValidAttachmentModel implements Rule
      *
      * @return bool
      */
-    private function validateJournal(int $value): bool
+    private function validatePiggyBank(int $value): bool
     {
-        $repository = app(JournalRepositoryInterface::class);
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->findNull($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateTag(int $value): bool
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
         return null !== $repository->findNull($value);
@@ -201,34 +230,6 @@ class IsValidAttachmentModel implements Rule
         $repository = app(JournalAPIRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findTransaction((int) $value);
-    }
-
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
-    private function validateBill(int $value): bool
-    {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-
-        return null !== $repository->find($value);
-    }
-
-    /**
-     * @param string $model
-     *
-     * @return string
-     */
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
+        return null !== $repository->findTransaction((int)$value);
     }
 }

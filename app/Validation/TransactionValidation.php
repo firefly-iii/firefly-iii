@@ -63,6 +63,30 @@ trait TransactionValidation
 
     /**
      * @param Validator $validator
+     *
+     * @return array
+     */
+    protected function getTransactionsArray(Validator $validator): array
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        if (!is_countable($transactions)) {
+            Log::error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
+
+            return [];
+        }
+        // a superfluous check but you never know.
+        if (!is_array($transactions)) {
+            Log::error(sprintf('Transactions array is not an array, because its a %s', gettype($transactions)));
+
+            return [];
+        }
+
+        return $transactions;
+    }
+
+    /**
+     * @param Validator $validator
      * @param int       $index
      * @param string    $transactionType
      * @param array     $transaction
@@ -194,6 +218,40 @@ trait TransactionValidation
     }
 
     /**
+     * @param TransactionGroup $group
+     * @param array            $transactions
+     *
+     * @return string
+     */
+    private function getTransactionType(TransactionGroup $group, array $transactions): string
+    {
+        return $transactions[0]['type'] ?? strtolower($group->transactionJournals()->first()->transactionType->type);
+    }
+
+    /**
+     * @param array            $transaction
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return Account|null
+     */
+    private function getOriginalSource(array $transaction, TransactionGroup $transactionGroup): ?Account
+    {
+        if (1 === $transactionGroup->transactionJournals->count()) {
+            $journal = $transactionGroup->transactionJournals->first();
+
+            return $journal->transactions()->where('amount', '<', 0)->first()->account;
+        }
+        /** @var TransactionJournal $journal */
+        foreach ($transactionGroup->transactionJournals as $journal) {
+            if ((int)$journal->id === (int)$transaction['transaction_journal_id']) {
+                return $journal->transactions()->where('amount', '<', 0)->first()->account;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Adds an error to the validator when there are no transactions in the array of data.
      *
      * @param Validator $validator
@@ -206,22 +264,6 @@ trait TransactionValidation
         // need at least one transaction
         if (0 === count($transactions)) {
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
-        }
-    }
-
-    /**
-     * @param Validator $validator
-     */
-    public function validateTransactionArray(Validator $validator): void
-    {
-        $transactions = $this->getTransactionsArray($validator);
-        foreach ($transactions as $key => $value) {
-            if (!is_int($key)) {
-                $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
-                Log::debug('Added error: at_least_one_transaction.');
-
-                return;
-            }
         }
     }
 
@@ -242,6 +284,22 @@ trait TransactionValidation
             return;
         }
         Log::debug('Added NO errors.');
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    public function validateTransactionArray(Validator $validator): void
+    {
+        $transactions = $this->getTransactionsArray($validator);
+        foreach ($transactions as $key => $value) {
+            if (!is_int($key)) {
+                $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
+                Log::debug('Added error: at_least_one_transaction.');
+
+                return;
+            }
+        }
     }
 
     /**
@@ -297,48 +355,6 @@ trait TransactionValidation
     }
 
     /**
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function arrayEqual(array $array): bool
-    {
-        return 1 === count(array_unique($array));
-    }
-
-    /**
-     * @param int $journalId
-     *
-     * @return array
-     */
-    private function getOriginalData(int $journalId): array
-    {
-        $return = [
-            'source_id'        => 0,
-            'source_name'      => '',
-            'destination_id'   => 0,
-            'destination_name' => '',
-        ];
-        if (0 === $journalId) {
-            return $return;
-        }
-        /** @var Transaction $source */
-        $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
-        if (null !== $source) {
-            $return['source_id']   = $source->account_id;
-            $return['source_name'] = $source->account->name;
-        }
-        /** @var Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
-        if (null !== $source) {
-            $return['destination_id']   = $destination->account_id;
-            $return['destination_name'] = $destination->account->name;
-        }
-
-        return $return;
-    }
-
-    /**
      * @param int $journalId
      *
      * @return string
@@ -355,30 +371,6 @@ trait TransactionValidation
         }
 
         return 'invalid';
-    }
-
-    /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
-    protected function getTransactionsArray(Validator $validator): array
-    {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
-        if (!is_countable($transactions)) {
-            Log::error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
-
-            return [];
-        }
-        // a superfluous check but you never know.
-        if (!is_array($transactions)) {
-            Log::error(sprintf('Transactions array is not an array, because its a %s', gettype($transactions)));
-
-            return [];
-        }
-
-        return $transactions;
     }
 
     /**
@@ -424,125 +416,6 @@ trait TransactionValidation
     }
 
     /**
-     * @param TransactionGroup $group
-     * @param array            $transactions
-     *
-     * @return string
-     */
-    private function getTransactionType(TransactionGroup $group, array $transactions): string
-    {
-        return $transactions[0]['type'] ?? strtolower($group->transactionJournals()->first()->transactionType->type);
-    }
-
-    /**
-     * @param array $transactions
-     *
-     * @return array
-     */
-    private function collectComparisonData(array $transactions): array
-    {
-        $fields     = ['source_id', 'destination_id', 'source_name', 'destination_name'];
-        $comparison = [];
-        foreach ($fields as $field) {
-            $comparison[$field] = [];
-            /** @var array $transaction */
-            foreach ($transactions as $transaction) {
-                // source or destination may be omitted. If this is the case, use the original source / destination name + ID.
-                $originalData = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
-
-                // get field.
-                $comparison[$field][] = $transaction[$field] ?? $originalData[$field];
-            }
-        }
-
-        return $comparison;
-    }
-
-    /**
-     * @param string $type
-     * @param array  $comparison
-     *
-     * @return bool
-     */
-    private function compareAccountData(string $type, array $comparison): bool
-    {
-        switch ($type) {
-            default:
-            case 'withdrawal':
-                return $this->compareAccountDataWithdrawal($comparison);
-            case 'deposit':
-                return $this->compareAccountDataDeposit($comparison);
-            case 'transfer':
-                return $this->compareAccountDataTransfer($comparison);
-        }
-    }
-
-    /**
-     * @param array $comparison
-     *
-     * @return bool
-     */
-    private function compareAccountDataTransfer(array $comparison): bool
-    {
-        if ($this->arrayEqual($comparison['source_id'])) {
-            // source ID's are equal, return void.
-            return true;
-        }
-        if ($this->arrayEqual($comparison['source_name'])) {
-            // source names are equal, return void.
-            return true;
-        }
-        if ($this->arrayEqual($comparison['destination_id'])) {
-            // destination ID's are equal, return void.
-            return true;
-        }
-        if ($this->arrayEqual($comparison['destination_name'])) {
-            // destination names are equal, return void.
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array $comparison
-     *
-     * @return bool
-     */
-    private function compareAccountDataWithdrawal(array $comparison): bool
-    {
-        if ($this->arrayEqual($comparison['source_id'])) {
-            // source ID's are equal, return void.
-            return true;
-        }
-        if ($this->arrayEqual($comparison['source_name'])) {
-            // source names are equal, return void.
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array $comparison
-     *
-     * @return bool
-     */
-    private function compareAccountDataDeposit(array $comparison): bool
-    {
-        if ($this->arrayEqual($comparison['destination_id'])) {
-            // destination ID's are equal, return void.
-            return true;
-        }
-        if ($this->arrayEqual($comparison['destination_name'])) {
-            // destination names are equal, return void.
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param Validator        $validator
      * @param TransactionGroup $transactionGroup
      */
@@ -584,25 +457,152 @@ trait TransactionValidation
     }
 
     /**
-     * @param array            $transaction
-     * @param TransactionGroup $transactionGroup
+     * @param array $transactions
      *
-     * @return Account|null
+     * @return array
      */
-    private function getOriginalSource(array $transaction, TransactionGroup $transactionGroup): ?Account
+    private function collectComparisonData(array $transactions): array
     {
-        if (1 === $transactionGroup->transactionJournals->count()) {
-            $journal = $transactionGroup->transactionJournals->first();
+        $fields     = ['source_id', 'destination_id', 'source_name', 'destination_name'];
+        $comparison = [];
+        foreach ($fields as $field) {
+            $comparison[$field] = [];
+            /** @var array $transaction */
+            foreach ($transactions as $transaction) {
+                // source or destination may be omitted. If this is the case, use the original source / destination name + ID.
+                $originalData = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
 
-            return $journal->transactions()->where('amount', '<', 0)->first()->account;
-        }
-        /** @var TransactionJournal $journal */
-        foreach ($transactionGroup->transactionJournals as $journal) {
-            if ((int)$journal->id === (int)$transaction['transaction_journal_id']) {
-                return $journal->transactions()->where('amount', '<', 0)->first()->account;
+                // get field.
+                $comparison[$field][] = $transaction[$field] ?? $originalData[$field];
             }
         }
 
-        return null;
+        return $comparison;
+    }
+
+    /**
+     * @param int $journalId
+     *
+     * @return array
+     */
+    private function getOriginalData(int $journalId): array
+    {
+        $return = [
+            'source_id'        => 0,
+            'source_name'      => '',
+            'destination_id'   => 0,
+            'destination_name' => '',
+        ];
+        if (0 === $journalId) {
+            return $return;
+        }
+        /** @var Transaction $source */
+        $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['source_id']   = $source->account_id;
+            $return['source_name'] = $source->account->name;
+        }
+        /** @var Transaction $destination */
+        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['destination_id']   = $destination->account_id;
+            $return['destination_name'] = $destination->account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param string $type
+     * @param array  $comparison
+     *
+     * @return bool
+     */
+    private function compareAccountData(string $type, array $comparison): bool
+    {
+        switch ($type) {
+            default:
+            case 'withdrawal':
+                return $this->compareAccountDataWithdrawal($comparison);
+            case 'deposit':
+                return $this->compareAccountDataDeposit($comparison);
+            case 'transfer':
+                return $this->compareAccountDataTransfer($comparison);
+        }
+    }
+
+    /**
+     * @param array $comparison
+     *
+     * @return bool
+     */
+    private function compareAccountDataWithdrawal(array $comparison): bool
+    {
+        if ($this->arrayEqual($comparison['source_id'])) {
+            // source ID's are equal, return void.
+            return true;
+        }
+        if ($this->arrayEqual($comparison['source_name'])) {
+            // source names are equal, return void.
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function arrayEqual(array $array): bool
+    {
+        return 1 === count(array_unique($array));
+    }
+
+    /**
+     * @param array $comparison
+     *
+     * @return bool
+     */
+    private function compareAccountDataDeposit(array $comparison): bool
+    {
+        if ($this->arrayEqual($comparison['destination_id'])) {
+            // destination ID's are equal, return void.
+            return true;
+        }
+        if ($this->arrayEqual($comparison['destination_name'])) {
+            // destination names are equal, return void.
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $comparison
+     *
+     * @return bool
+     */
+    private function compareAccountDataTransfer(array $comparison): bool
+    {
+        if ($this->arrayEqual($comparison['source_id'])) {
+            // source ID's are equal, return void.
+            return true;
+        }
+        if ($this->arrayEqual($comparison['source_name'])) {
+            // source names are equal, return void.
+            return true;
+        }
+        if ($this->arrayEqual($comparison['destination_id'])) {
+            // destination ID's are equal, return void.
+            return true;
+        }
+        if ($this->arrayEqual($comparison['destination_name'])) {
+            // destination names are equal, return void.
+            return true;
+        }
+
+        return false;
     }
 }

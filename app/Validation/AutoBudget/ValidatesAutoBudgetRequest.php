@@ -39,27 +39,27 @@ trait ValidatesAutoBudgetRequest
         $data         = $validator->getData();
         $type         = $data['auto_budget_type'] ?? '';
         $amount       = $data['auto_budget_amount'] ?? '';
-        $period       = (string) ($data['auto_budget_period'] ?? '');
+        $period       = (string)($data['auto_budget_period'] ?? '');
         $currencyId   = $data['auto_budget_currency_id'] ?? '';
         $currencyCode = $data['auto_budget_currency_code'] ?? '';
         if (is_numeric($type)) {
-            $type = (int) $type;
+            $type = (int)$type;
         }
         if (0 === $type || 'none' === $type || '' === $type) {
             return;
         }
         // basic float check:
         if ('' === $amount) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
+            $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
         }
-        if (1 !== bccomp((string) $amount, '0')) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.auto_budget_amount_positive'));
+        if (1 !== bccomp((string)$amount, '0')) {
+            $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
         }
         if ('' === $period) {
-            $validator->errors()->add('auto_budget_period', (string) trans('validation.auto_budget_period_mandatory'));
+            $validator->errors()->add('auto_budget_period', (string)trans('validation.auto_budget_period_mandatory'));
         }
         if ('' === $currencyCode && '' === $currencyId) {
-            $validator->errors()->add('auto_budget_amount', (string) trans('validation.require_currency_info'));
+            $validator->errors()->add('auto_budget_amount', (string)trans('validation.require_currency_info'));
         }
     }
 }

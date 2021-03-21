@@ -472,27 +472,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param string $oldName
      * @param string $newName
      */
-    private function updateRuleTriggers(string $oldName, string $newName): void
-    {
-        $types    = ['budget_is',];
-        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_triggers.trigger_type', $types)
-                               ->where('rule_triggers.trigger_value', $oldName)
-                               ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $trigger->trigger_value = $newName;
-            $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
-        }
-    }
-
-    /**
-     * @param string $oldName
-     * @param string $newName
-     */
     private function updateRuleActions(string $oldName, string $newName): void
     {
         $types   = ['set_budget',];
@@ -507,6 +486,27 @@ class BudgetRepository implements BudgetRepositoryInterface
             $action->action_value = $newName;
             $action->save();
             Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRuleTriggers(string $oldName, string $newName): void
+    {
+        $types    = ['budget_is',];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_triggers.trigger_type', $types)
+                               ->where('rule_triggers.trigger_value', $oldName)
+                               ->get(['rule_triggers.*']);
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $newName;
+            $trigger->save();
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 }

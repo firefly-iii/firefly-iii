@@ -39,10 +39,11 @@ use Throwable;
 class ExpandedForm
 {
     use FormSupport;
+
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      *
@@ -59,7 +60,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float) $value, 8);
+            $value = round((float)$value, 8);
         }
         try {
             $html = prefixView('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
@@ -73,9 +74,9 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param int $value
-     * @param mixed $checked
-     * @param array $options
+     * @param int    $value
+     * @param mixed  $checked
+     * @param array  $options
      *
      * @return string
      *
@@ -109,8 +110,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      *
@@ -134,7 +135,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      *
@@ -157,8 +158,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      *
@@ -183,8 +184,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      *
@@ -207,7 +208,7 @@ class ExpandedForm
     }
 
     /**
-     * @param \Illuminate\Support\Collection $set
+     * @param Collection $set
      *
      * @return array
      *
@@ -235,8 +236,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
@@ -252,7 +253,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float) $value, $selectedCurrency->decimal_places);
+            $value = round((float)$value, $selectedCurrency->decimal_places);
         }
         try {
             $html = prefixView('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
@@ -266,8 +267,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      *
@@ -285,153 +286,6 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render number(): %s', $e->getMessage()));
             $html = 'Could not render number.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $type
-     * @param string $name
-     *
-     * @return string
-     *
-     */
-    public function optionsList(string $type, string $name): string
-    {
-        try {
-            $html = prefixView('form.options', compact('type', 'name'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
-            $html = 'Could not render optionsList.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param array $options
-     *
-     * @return string
-     *
-     */
-    public function password(string $name, array $options = null): string
-    {
-
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        try {
-            $html = prefixView('form.password', compact('classes', 'name', 'label', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
-            $html = 'Could not render password.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * Function to render a percentage.
-     *
-     * @param string $name
-     * @param mixed $value
-     * @param array $options
-     *
-     * @return string
-     *
-     */
-    public function percentage(string $name, $value = null, array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        unset($options['placeholder']);
-        try {
-            $html = prefixView('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
-            $html = 'Could not render percentage.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     * @param array $options
-     *
-     * @return string
-     *
-     */
-    public function staticText(string $name, $value, array $options = null): string
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        try {
-            $html = prefixView('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
-            $html = 'Could not render staticText.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     * @param array $options
-     *
-     * @return string
-     *
-     */
-    public function text(string $name, $value = null, array $options = null): string
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
-        try {
-            $html = prefixView('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
-            $html = 'Could not render text.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     * @param array $options
-     *
-     * @return string
-     *
-     */
-    public function textarea(string $name, $value = null, array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['rows'] = 4;
-
-        if (null === $value) {
-            $value = '';
-        }
-
-        try {
-            $html = prefixView('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
-            $html = 'Could not render textarea.';
         }
 
         return $html;
@@ -461,6 +315,153 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
             $html = 'Could not render objectGroup.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $type
+     * @param string $name
+     *
+     * @return string
+     *
+     */
+    public function optionsList(string $type, string $name): string
+    {
+        try {
+            $html = prefixView('form.options', compact('type', 'name'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            $html = 'Could not render optionsList.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function password(string $name, array $options = null): string
+    {
+
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        try {
+            $html = prefixView('form.password', compact('classes', 'name', 'label', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
+            $html = 'Could not render password.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Function to render a percentage.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function percentage(string $name, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        unset($options['placeholder']);
+        try {
+            $html = prefixView('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
+            $html = 'Could not render percentage.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function staticText(string $name, $value, array $options = null): string
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        try {
+            $html = prefixView('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
+            $html = 'Could not render staticText.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function text(string $name, $value = null, array $options = null): string
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        try {
+            $html = prefixView('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
+            $html = 'Could not render text.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function textarea(string $name, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['rows'] = 4;
+
+        if (null === $value) {
+            $value = '';
+        }
+
+        try {
+            $html = prefixView('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
+            $html = 'Could not render textarea.';
         }
 
         return $html;

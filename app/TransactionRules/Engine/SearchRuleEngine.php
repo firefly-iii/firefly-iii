@@ -42,11 +42,11 @@ use Log;
  */
 class SearchRuleEngine implements RuleEngineInterface
 {
-    private User       $user;
-    private Collection $rules;
-    private array      $operators;
     private Collection $groups;
+    private array      $operators;
     private array      $resultCount;
+    private Collection $rules;
+    private User       $user;
 
     public function __construct()
     {
@@ -59,47 +59,31 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * @inheritDoc
      */
-    public function setUser(User $user): void
-    {
-        $this->user      = $user;
-        $this->operators = [];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRules(Collection $rules): void
-    {
-        Log::debug(__METHOD__);
-        foreach ($rules as $rule) {
-            if ($rule instanceof Rule) {
-                Log::debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
-                $this->rules->push($rule);
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRuleGroups(Collection $ruleGroups): void
-    {
-        Log::debug(__METHOD__);
-        foreach ($ruleGroups as $group) {
-            if ($group instanceof RuleGroup) {
-                Log::debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
-                $this->groups->push($group);
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function addOperator(array $operator): void
     {
         Log::debug('Add extra operator: ', $operator);
         $this->operators[] = $operator;
+    }
+
+    /**
+     *
+     */
+    public function find(): Collection
+    {
+        Log::debug('SearchRuleEngine::find()');
+        $collection = new Collection;
+        foreach ($this->rules as $rule) {
+            $found = new Collection;
+            if (true === $rule->strict) {
+                $found = $this->findStrictRule($rule);
+            }
+            if (false === $rule->strict) {
+                $found = $this->findNonStrictRule($rule);
+            }
+            $collection = $collection->merge($found);
+        }
+
+        return $collection->unique();
     }
 
     /**
@@ -133,27 +117,6 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     *
-     */
-    public function find(): Collection
-    {
-        Log::debug('SearchRuleEngine::find()');
-        $collection = new Collection;
-        foreach ($this->rules as $rule) {
-            $found = new Collection;
-            if (true === $rule->strict) {
-                $found = $this->findStrictRule($rule);
-            }
-            if (false === $rule->strict) {
-                $found = $this->findNonStrictRule($rule);
-            }
-            $collection = $collection->merge($found);
-        }
-
-        return $collection->unique();
-    }
-
-    /**
      * Return the number of changed transactions from the previous "fire" action.
      *
      * @return int
@@ -161,6 +124,43 @@ class SearchRuleEngine implements RuleEngineInterface
     public function getResults(): int
     {
         return count($this->resultCount);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRuleGroups(Collection $ruleGroups): void
+    {
+        Log::debug(__METHOD__);
+        foreach ($ruleGroups as $group) {
+            if ($group instanceof RuleGroup) {
+                Log::debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
+                $this->groups->push($group);
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setRules(Collection $rules): void
+    {
+        Log::debug(__METHOD__);
+        foreach ($rules as $rule) {
+            if ($rule instanceof Rule) {
+                Log::debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
+                $this->rules->push($rule);
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUser(User $user): void
+    {
+        $this->user      = $user;
+        $this->operators = [];
     }
 
     /**
@@ -182,6 +182,152 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('Rule #%d is not strict rule.', $rule->id));
 
         return $this->fireNonStrictRule($rule);
+    }
+
+    /**
+     * Return true if the rule is fired (the collection is larger than zero).
+     *
+     * @param Rule $rule
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    private function fireStrictRule(Rule $rule): bool
+    {
+        Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
+        $collection = $this->findStrictRule($rule);
+
+        $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
+
+        $result = $collection->count() > 0;
+        if (true === $result) {
+            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
+            return true;
+        }
+        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+
+        return false;
+    }
+
+    /**
+     * Finds the transactions a strict rule will execute on.
+     *
+     * @param Rule $rule
+     *
+     * @return Collection
+     */
+    private function findStrictRule(Rule $rule): Collection
+    {
+        Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
+        $searchArray = [];
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($rule->ruleTriggers as $ruleTrigger) {
+            // if needs no context, value is different:
+            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
+            if (false === $needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
+                $searchArray[$ruleTrigger->trigger_type][] = 'true';
+            }
+            if (true === $needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
+                $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
+            }
+        }
+
+        // add local operators:
+        foreach ($this->operators as $operator) {
+            Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
+            $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
+        }
+        $date = today(config('app.timezone'));
+        if ($this->hasSpecificJournalTrigger($searchArray)) {
+            $date = $this->setDateFromJournalTrigger($searchArray);
+        }
+
+
+        // build and run the search engine.
+        $searchEngine = app(SearchInterface::class);
+        $searchEngine->setUser($this->user);
+        $searchEngine->setPage(1);
+        $searchEngine->setLimit(31337);
+        $searchEngine->setDate($date);
+
+        foreach ($searchArray as $type => $searches) {
+            foreach ($searches as $value) {
+                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+            }
+        }
+
+        $result = $searchEngine->searchTransactions();
+
+        return $result->getCollection();
+    }
+
+    /**
+     * Search in the triggers of this particular search and if it contains
+     * one search operator for "journal_id" it means the date ranges
+     * in the search may need to be updated.
+     *
+     * @param array $array
+     *
+     * @return bool
+     */
+    private function hasSpecificJournalTrigger(array $array): bool
+    {
+        Log::debug('Now in hasSpecificJournalTrigger.');
+        $journalTrigger = false;
+        $dateTrigger    = false;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName) {
+                if (is_array($values) && 1 === count($values)) {
+                    Log::debug('Found a journal_id trigger with 1 journal, true.');
+                    $journalTrigger = true;
+                }
+            }
+            if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
+                Log::debug('Found a date related trigger, set to true.');
+                $dateTrigger = true;
+            }
+        }
+        $result = $journalTrigger && $dateTrigger;
+        Log::debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
+
+        return $result;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return Carbon
+     */
+    private function setDateFromJournalTrigger(array $array): Carbon
+    {
+        Log::debug('Now in setDateFromJournalTrigger()');
+        $journalId = 0;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName) {
+                if (is_array($values) && 1 === count($values)) {
+                    $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
+                    Log::debug(sprintf('Found journal ID #%d', $journalId));
+                }
+            }
+        }
+        if (0 !== $journalId) {
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->user);
+            $journal = $repository->findNull($journalId);
+            if (null !== $journal) {
+                $date = $journal->date;
+                Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
+
+                return $date;
+            }
+        }
+        Log::debug('Found no journal, return default date.');
+
+        return today(config('app.timezone'));
     }
 
     /**
@@ -280,33 +426,6 @@ class SearchRuleEngine implements RuleEngineInterface
      * @return bool
      * @throws FireflyException
      */
-    private function fireStrictRule(Rule $rule): bool
-    {
-        Log::debug(sprintf('SearchRuleEngine::fireStrictRule(%d)!', $rule->id));
-        $collection = $this->findStrictRule($rule);
-
-        $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
-
-        $result = $collection->count() > 0;
-        if (true === $result) {
-            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
-
-            return true;
-        }
-        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
-
-        return false;
-    }
-
-    /**
-     * Return true if the rule is fired (the collection is larger than zero).
-     *
-     * @param Rule $rule
-     *
-     * @return bool
-     * @throws FireflyException
-     */
     private function fireNonStrictRule(Rule $rule): bool
     {
         Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
@@ -316,60 +435,6 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
 
         return $collection->count() > 0;
-    }
-
-    /**
-     * Finds the transactions a strict rule will execute on.
-     *
-     * @param Rule $rule
-     *
-     * @return Collection
-     */
-    private function findStrictRule(Rule $rule): Collection
-    {
-        Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
-        $searchArray = [];
-        /** @var RuleTrigger $ruleTrigger */
-        foreach ($rule->ruleTriggers as $ruleTrigger) {
-            // if needs no context, value is different:
-            $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
-            if (false === $needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
-                $searchArray[$ruleTrigger->trigger_type][] = 'true';
-            }
-            if (true === $needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
-                $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
-            }
-        }
-
-        // add local operators:
-        foreach ($this->operators as $operator) {
-            Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
-            $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
-        }
-        $date = today(config('app.timezone'));
-        if ($this->hasSpecificJournalTrigger($searchArray)) {
-            $date = $this->setDateFromJournalTrigger($searchArray);
-        }
-
-
-        // build and run the search engine.
-        $searchEngine = app(SearchInterface::class);
-        $searchEngine->setUser($this->user);
-        $searchEngine->setPage(1);
-        $searchEngine->setLimit(31337);
-        $searchEngine->setDate($date);
-
-        foreach ($searchArray as $type => $searches) {
-            foreach ($searches as $value) {
-                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
-            }
-        }
-
-        $result = $searchEngine->searchTransactions();
-
-        return $result->getCollection();
     }
 
     /**
@@ -445,38 +510,6 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * Search in the triggers of this particular search and if it contains
-     * one search operator for "journal_id" it means the date ranges
-     * in the search may need to be updated.
-     *
-     * @param array $array
-     *
-     * @return bool
-     */
-    private function hasSpecificJournalTrigger(array $array): bool
-    {
-        Log::debug('Now in hasSpecificJournalTrigger.');
-        $journalTrigger = false;
-        $dateTrigger    = false;
-        foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName) {
-                if (is_array($values) && 1 === count($values)) {
-                    Log::debug('Found a journal_id trigger with 1 journal, true.');
-                    $journalTrigger = true;
-                }
-            }
-            if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
-                Log::debug('Found a date related trigger, set to true.');
-                $dateTrigger = true;
-            }
-        }
-        $result = $journalTrigger && $dateTrigger;
-        Log::debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
-
-        return $result;
-    }
-
-    /**
      * @param RuleGroup $group
      *
      * @return bool
@@ -500,38 +533,5 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         return $all;
-    }
-
-    /**
-     * @param array $array
-     *
-     * @return Carbon
-     */
-    private function setDateFromJournalTrigger(array $array): Carbon
-    {
-        Log::debug('Now in setDateFromJournalTrigger()');
-        $journalId = 0;
-        foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName) {
-                if (is_array($values) && 1 === count($values)) {
-                    $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
-                    Log::debug(sprintf('Found journal ID #%d', $journalId));
-                }
-            }
-        }
-        if (0 !== $journalId) {
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->user);
-            $journal    = $repository->findNull($journalId);
-            if (null !== $journal) {
-                $date = $journal->date;
-                Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
-
-                return $date;
-            }
-        }
-        Log::debug('Found no journal, return default date.');
-
-        return today(config('app.timezone'));
     }
 }

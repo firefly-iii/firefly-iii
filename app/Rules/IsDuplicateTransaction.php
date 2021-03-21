@@ -56,17 +56,18 @@ class IsDuplicateTransaction implements Rule
     /**
      * @inheritDoc
      */
-    public function passes($attribute, $value)
+    public function message()
     {
-        $this->value = $value;
-        return false;
+        return $this->value;
     }
 
     /**
      * @inheritDoc
      */
-    public function message()
+    public function passes($attribute, $value)
     {
-        return $this->value;
+        $this->value = $value;
+
+        return false;
     }
 }

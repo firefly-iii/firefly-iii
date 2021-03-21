@@ -86,7 +86,7 @@ class RecurringCronjob extends AbstractCronjob
         $job->setForce($this->force);
         $job->handle();
         app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)',$this->date->format('Y-m-d H:i:s'),(int)$this->date->format('U')));
+        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int)$this->date->format('U')));
         Log::info('Done with recurring cron job task.');
     }
 }

@@ -77,7 +77,7 @@ class UserController extends Controller
     {
         /** @var User $admin */
         $admin = auth()->user();
-        if($admin->id === $user->id) {
+        if ($admin->id === $user->id) {
             return response()->json([], 500);
         }
 
@@ -98,7 +98,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         // user preferences
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $manager  = $this->getManager();
 
         // build collection

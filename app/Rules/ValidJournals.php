@@ -31,6 +31,7 @@ use Log;
 
 /**
  * Class ValidJournals
+ *
  * @codeCoverageIgnore
  */
 class ValidJournals implements Rule
@@ -49,7 +50,7 @@ class ValidJournals implements Rule
      * Determine if the validation rule passes.
      *
      * @param string $attribute
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return bool
      *

@@ -45,7 +45,7 @@ class RemoteUserGuard implements Guard
     /**
      * Create a new authentication guard.
      *
-     * @param \Illuminate\Contracts\Auth\UserProvider $provider
+     * @param UserProvider $provider
      *
      * @return void
      */
@@ -79,10 +79,10 @@ class RemoteUserGuard implements Guard
         $retrievedUser = $this->provider->retrieveById($userID);
 
         // store email address if present in header and not already set.
-        $header       = config('auth.guard_email');
+        $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? null);
+            $emailAddress = (string)(request()->server($header) ?? null);
             $preference   = app('preferences')->getForUser($retrievedUser, 'remote_guard_alt_email', null);
 
             if (null !== $emailAddress && null === $preference && $emailAddress !== $userID) {

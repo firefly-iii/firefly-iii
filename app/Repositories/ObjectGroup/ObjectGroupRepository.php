@@ -109,6 +109,27 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function resetOrder(): void
+    {
+        Log::debug('Now in resetOrder');
+        $list  = $this->get();
+        $index = 1;
+        /** @var ObjectGroup $objectGroup */
+        foreach ($list as $objectGroup) {
+            if ($index !== (int)$objectGroup->order) {
+                Log::debug(
+                    sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
+                );
+                $objectGroup->order = $index;
+                $objectGroup->save();
+            }
+            $index++;
+        }
+    }
+
+    /**
      * @param string $query
      * @param int    $limit
      *
@@ -164,11 +185,11 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
-        if(array_key_exists('title', $data)) {
+        if (array_key_exists('title', $data)) {
             $objectGroup->title = $data['title'];
         }
 
-        if(array_key_exists('order', $data)) {
+        if (array_key_exists('order', $data)) {
             $this->setOrder($objectGroup, (int)$data['order']);
         }
 
@@ -183,26 +204,5 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function resetOrder(): void
-    {
-        Log::debug('Now in resetOrder');
-        $list  = $this->get();
-        $index = 1;
-        /** @var ObjectGroup $objectGroup */
-        foreach ($list as $objectGroup) {
-            if ($index !== (int)$objectGroup->order) {
-                Log::debug(
-                    sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
-                );
-                $objectGroup->order = $index;
-                $objectGroup->save();
-            }
-            $index++;
-        }
     }
 }

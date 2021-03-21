@@ -88,7 +88,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int)$currency->decimal_places,
             'transaction_journal_id'  => $journalId ? (string)$journalId : null,
-            'transaction_group_id'    => $groupId ? (string)$groupId: null,
+            'transaction_group_id'    => $groupId ? (string)$groupId : null,
             'links'                   => [
                 [
                     'rel' => 'self',

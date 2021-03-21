@@ -34,46 +34,6 @@ trait ConvertsDataTypes
 {
 
     /**
-     * Returns all data in the request, or omits the field if not set,
-     * according to the config from the request. This is the way.
-     *
-     * @param array $fields
-     *
-     * @return array
-     */
-    protected function getAllData(array $fields): array
-    {
-        $return = [];
-        foreach ($fields as $field => $info) {
-            if ($this->has($info[0])) {
-                $method         = $info[1];
-                $return[$field] = $this->$method($info[0]);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Return date or NULL.
-     *
-     * @param string $field
-     *
-     * @return Carbon|null
-     */
-    protected function date(string $field): ?Carbon
-    {
-        $result = null;
-        try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
-        } catch (Exception $e) {
-            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
-        }
-
-        return $result;
-    }
-
-    /**
      * Return integer value.
      *
      * @param string $field
@@ -85,41 +45,28 @@ trait ConvertsDataTypes
         return (int)$this->get($field);
     }
 
-
     /**
-     * Return floating value.
+     * Return string value, but keep newlines.
      *
      * @param string $field
      *
-     * @return float|null
+     * @return string
      */
-    protected function float(string $field): ?float
+    public function nlString(string $field): string
     {
-        $res = $this->get($field);
-        if (null === $res) {
-            return null;
-        }
-
-        return (float)$res;
+        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
     }
 
-
     /**
-     * Parse and clean a string, but keep the newlines.
+     * Return string value.
      *
-     * @param string|null $string
+     * @param string $field
      *
-     * @return string|null
+     * @return string
      */
-    protected function nlStringFromValue(?string $string): ?string
+    public function string(string $field): string
     {
-        if (null === $string) {
-            return null;
-        }
-        $result = app('steam')->nlCleanString($string);
-
-        return '' === $result ? null : $result;
-
+        return app('steam')->cleanString((string)($this->get($field) ?? ''));
     }
 
     /**
@@ -142,6 +89,56 @@ trait ConvertsDataTypes
         return null;
     }
 
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function convertBoolean(?string $value): bool
+    {
+        if (null === $value) {
+            return false;
+        }
+        if ('' === $value) {
+            return false;
+        }
+        if ('true' === $value) {
+            return true;
+        }
+        if ('yes' === $value) {
+            return true;
+        }
+        if (1 === $value) {
+            return true;
+        }
+        if ('1' === $value) {
+            return true;
+        }
+        if (true === $value) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Return date or NULL.
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function date(string $field): ?Carbon
+    {
+        $result = null;
+        try {
+            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+        } catch (Exception $e) {
+            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        }
+
+        return $result;
+    }
 
     /**
      * @param string|null $string
@@ -169,22 +166,42 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Parse and clean a string.
+     * Return floating value.
      *
-     * @param string|null $string
+     * @param string $field
      *
-     * @return string|null
+     * @return float|null
      */
-    protected function stringFromValue(?string $string): ?string
+    protected function float(string $field): ?float
     {
-        if (null === $string) {
+        $res = $this->get($field);
+        if (null === $res) {
             return null;
         }
-        $result = app('steam')->cleanString($string);
 
-        return '' === $result ? null : $result;
+        return (float)$res;
     }
 
+    /**
+     * Returns all data in the request, or omits the field if not set,
+     * according to the config from the request. This is the way.
+     *
+     * @param array $fields
+     *
+     * @return array
+     */
+    protected function getAllData(array $fields): array
+    {
+        $return = [];
+        foreach ($fields as $field => $info) {
+            if ($this->has($info[0])) {
+                $method         = $info[1];
+                $return[$field] = $this->$method($info[0]);
+            }
+        }
+
+        return $return;
+    }
 
     /**
      * Parse to integer
@@ -206,15 +223,21 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Return string value, but keep newlines.
+     * Parse and clean a string, but keep the newlines.
      *
-     * @param string $field
+     * @param string|null $string
      *
-     * @return string
+     * @return string|null
      */
-    public function nlString(string $field): string
+    protected function nlStringFromValue(?string $string): ?string
     {
-        return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->nlCleanString($string);
+
+        return '' === $result ? null : $result;
+
     }
 
     /**
@@ -254,39 +277,6 @@ trait ConvertsDataTypes
         return app('steam')->nlCleanString((string)($this->get($field) ?? ''));
     }
 
-
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    protected function convertBoolean(?string $value): bool
-    {
-        if (null === $value) {
-            return false;
-        }
-        if ('' === $value) {
-            return false;
-        }
-        if ('true' === $value) {
-            return true;
-        }
-        if ('yes' === $value) {
-            return true;
-        }
-        if (1 === $value) {
-            return true;
-        }
-        if ('1' === $value) {
-            return true;
-        }
-        if (true === $value) {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * Return string value, or NULL if empty.
      *
@@ -308,14 +298,19 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Return string value.
+     * Parse and clean a string.
      *
-     * @param string $field
+     * @param string|null $string
      *
-     * @return string
+     * @return string|null
      */
-    public function string(string $field): string
+    protected function stringFromValue(?string $string): ?string
     {
-        return app('steam')->cleanString((string)($this->get($field) ?? ''));
+        if (null === $string) {
+            return null;
+        }
+        $result = app('steam')->cleanString($string);
+
+        return '' === $result ? null : $result;
     }
 }

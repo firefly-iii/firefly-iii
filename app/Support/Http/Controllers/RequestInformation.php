@@ -98,6 +98,7 @@ trait RequestInformation
             // also check cache first:
             if ($help->inCache($route, $language)) {
                 Log::debug(sprintf('Help text %s was in cache.', $language));
+
                 return $help->getFromCache($route, $language);
             }
             $baseHref   = route('index');
@@ -115,6 +116,24 @@ trait RequestInformation
         }
 
         return '<p>' . trans('firefly.route_has_no_help') . '</p>'; // @codeCoverageIgnore
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**
@@ -152,7 +171,6 @@ trait RequestInformation
         $specificPage = $this->getSpecificPageName();
 
 
-
         // indicator if user has seen the help for this page ( + special page):
         $key = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?
@@ -170,24 +188,6 @@ trait RequestInformation
         }
 
         return $shownDemo;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**
@@ -249,7 +249,7 @@ trait RequestInformation
     /**
      * Validate users new password.
      *
-     * @param User $user
+     * @param User   $user
      * @param string $current
      * @param string $new
      *

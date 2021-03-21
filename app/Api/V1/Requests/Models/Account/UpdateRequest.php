@@ -70,7 +70,7 @@ class UpdateRequest extends FormRequest
             'currency_code'           => ['currency_code', 'string'],
         ];
         $data   = $this->getAllData($fields);
-        $data = $this->appendLocationData($data, null);
+        $data   = $this->appendLocationData($data, null);
 
         if (array_key_exists('account_type', $data) && 'liability' === $data['account_type']) {
             $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');

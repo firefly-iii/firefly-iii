@@ -59,10 +59,10 @@ class UpdateRequest extends FormRequest
         $return   = $this->getAllData($fields);
         $triggers = $this->getRuleTriggers();
         $actions  = $this->getRuleActions();
-        if(null !== $triggers) {
+        if (null !== $triggers) {
             $return['triggers'] = $triggers;
         }
-        if(null !== $actions) {
+        if (null !== $actions) {
             $return['actions'] = $actions;
         }
 
@@ -81,9 +81,9 @@ class UpdateRequest extends FormRequest
         $return   = [];
         if (is_array($triggers)) {
             foreach ($triggers as $trigger) {
-                $active = array_key_exists('active', $trigger) ? $trigger['active'] : true;
-                $stopProcessing= array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
-                $return[] = [
+                $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
+                $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
+                $return[]       = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
                     'active'          => $active,

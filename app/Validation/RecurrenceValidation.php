@@ -38,26 +38,6 @@ use Log;
  */
 trait RecurrenceValidation
 {
-    public function validateRecurringConfig(Validator $validator)
-    {
-        $data        = $validator->getData();
-        $reps        = array_key_exists('nr_of_repetitions', $data) ? (int)$data['nr_of_repetitions'] : null;
-        $repeatUntil = array_key_exists('repeat_until', $data) ? new Carbon($data['repeat_until']) : null;
-
-        if (null === $reps && null === $repeatUntil) {
-            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
-            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
-
-            return;
-        }
-        if ($reps > 0 && null !== $repeatUntil) {
-            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
-            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
-
-            return;
-        }
-    }
-
     /**
      * Validate account information input for recurrences which are being updated.
      *
@@ -85,7 +65,7 @@ trait RecurrenceValidation
                     $transactionType = $first->transactionType ? $first->transactionType->type : 'withdrawal';
                     Log::debug(sprintf('Determined type to be %s.', $transactionType));
                 }
-                if(null === $first) {
+                if (null === $first) {
                     Log::warning('Just going to assume type is a withdrawal.');
                     $transactionType = 'withdrawal';
                 }
@@ -102,11 +82,11 @@ trait RecurrenceValidation
             $transactionType = $transaction['type'] ?? $transactionType;
             $accountValidator->setTransactionType($transactionType);
 
-            if(
-                !array_key_exists('source_id', $transaction) &&
-                !array_key_exists('destination_id', $transaction) &&
-                !array_key_exists('source_name', $transaction) &&
-                !array_key_exists('destination_name', $transaction)
+            if (
+                !array_key_exists('source_id', $transaction)
+                && !array_key_exists('destination_id', $transaction)
+                && !array_key_exists('source_name', $transaction)
+                && !array_key_exists('destination_name', $transaction)
             ) {
                 continue;
             }
@@ -186,6 +166,26 @@ trait RecurrenceValidation
             // expect a date OR count:
             $validator->errors()->add('repeat_until', (string)trans('validation.require_repeat_until'));
             $validator->errors()->add('nr_of_repetitions', (string)trans('validation.require_repeat_until'));
+        }
+    }
+
+    public function validateRecurringConfig(Validator $validator)
+    {
+        $data        = $validator->getData();
+        $reps        = array_key_exists('nr_of_repetitions', $data) ? (int)$data['nr_of_repetitions'] : null;
+        $repeatUntil = array_key_exists('repeat_until', $data) ? new Carbon($data['repeat_until']) : null;
+
+        if (null === $reps && null === $repeatUntil) {
+            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
+            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
+
+            return;
+        }
+        if ($reps > 0 && null !== $repeatUntil) {
+            $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
+            $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
+
+            return;
         }
     }
 

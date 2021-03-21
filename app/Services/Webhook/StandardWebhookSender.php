@@ -71,14 +71,6 @@ class StandardWebhookSender implements WebhookSenderInterface
     /**
      * @inheritDoc
      */
-    public function setMessage(WebhookMessage $message): void
-    {
-        $this->message = $message;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function send(): void
     {
         // have the signature generator generate a signature. If it fails, the error thrown will
@@ -143,5 +135,13 @@ class StandardWebhookSender implements WebhookSenderInterface
         Log::debug(sprintf('Webhook message #%d was sent. Status code %d', $this->message->id, $res->getStatusCode()));
         Log::debug(sprintf('Webhook request body size: %d bytes', strlen($json)));
         Log::debug(sprintf('Response body: %s', $res->getBody()));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMessage(WebhookMessage $message): void
+    {
+        $this->message = $message;
     }
 }

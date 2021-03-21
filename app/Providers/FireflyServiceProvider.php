@@ -234,7 +234,7 @@ class FireflyServiceProvider extends ServiceProvider
 
         // webhooks:
         $this->app->bind(MessageGeneratorInterface::class, StandardMessageGenerator::class);
-        $this->app->bind(SignatureGeneratorInterface::class,Sha3SignatureGenerator::class);
+        $this->app->bind(SignatureGeneratorInterface::class, Sha3SignatureGenerator::class);
         $this->app->bind(WebhookSenderInterface::class, StandardWebhookSender::class);
 
         // password verifier thing

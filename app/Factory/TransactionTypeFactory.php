@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Models\TransactionType;
-use Log;
 
 /**
  * Class TransactionTypeFactory

@@ -44,56 +44,67 @@ class CurrencyForm
     use FormSupport;
 
     /**
-     * TODO cleanup and describe.
      * @param string $name
      * @param mixed  $value
      * @param array  $options
      *
      * @return string
      */
-    public function currencyList(string $name, $value = null, array $options = null): string
+    public function amount(string $name, $value = null, array $options = null): string
     {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [];
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
-        }
-
-        return $this->select($name, $array, $value, $options);
+        return $this->currencyField($name, 'amount', $value, $options);
     }
 
     /**
-     * TODO cleanup and describe.
-     *
      * @param string $name
+     * @param string $view
      * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     *
      */
-    public function currencyListEmpty(string $name, $value = null, array $options = null): string
+    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
     {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        /** @var Collection $currencies */
+        $currencies = app('amount')->getCurrencies();
+        unset($options['currency'], $options['placeholder']);
 
-        // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [
-            0 => (string)trans('firefly.no_currency'),
-        ];
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled      = session('preFilled');
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
+
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
+                break;
+            }
         }
 
-        return $this->select($name, $array, $value, $options);
-    }
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = round((float)$value, $defaultCurrency->decimal_places);
+        }
+        try {
+            $html = prefixView('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+        }
 
+        return $html;
+    }
 
     /**
      * TODO describe and cleanup.
@@ -151,7 +162,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float) $value, $defaultCurrency->decimal_places);
+            $value = round((float)$value, $defaultCurrency->decimal_places);
         }
         try {
             $html = prefixView('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
@@ -164,66 +175,55 @@ class CurrencyForm
     }
 
     /**
+     * TODO cleanup and describe.
+     *
      * @param string $name
-     * @param string $view
      * @param mixed  $value
      * @param array  $options
      *
      * @return string
-     *
      */
-    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
+    public function currencyList(string $name, $value = null, array $options = null): string
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
-        /** @var Collection $currencies */
-        $currencies = app('amount')->getCurrencies();
-        unset($options['currency'], $options['placeholder']);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled      = session('preFilled');
-        $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
-
-        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
-
-        // find this currency in set of currencies:
-        foreach ($currencies as $currency) {
-            if ($currency->id === $sentCurrencyId) {
-                $defaultCurrency = $currency;
-                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
-                break;
-            }
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
 
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = round((float) $value, $defaultCurrency->decimal_places);
-        }
-        try {
-            $html = prefixView('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
-            $html = 'Could not render currencyField.';
-        }
-
-        return $html;
+        return $this->select($name, $array, $value, $options);
     }
 
     /**
+     * TODO cleanup and describe.
+     *
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
-    public function amount(string $name, $value = null, array $options = null): string
+    public function currencyListEmpty(string $name, $value = null, array $options = null): string
     {
-        return $this->currencyField($name, 'amount', $value, $options);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list  = $currencyRepos->get();
+        $array = [
+            0 => (string)trans('firefly.no_currency'),
+        ];
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
+        }
+
+        return $this->select($name, $array, $value, $options);
     }
 
 }

@@ -42,18 +42,39 @@ class AccountForm
 {
     use FormSupport;
 
+    /**
+     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function activeDepositDestinations(string $name, $value = null, array $options = null): string
+    {
+        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
+        $repository               = $this->getAccountRepository();
+        $grouped                  = $this->getAccountsGrouped($types, $repository);
+        $cash                     = $repository->getCashAccount();
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
     private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
     {
         if (null === $repository) {
             $repository = $this->getAccountRepository();
         }
-        $accountList     = $repository->getActiveAccountsByType($types);
-        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $grouped         = [];
+        $accountList    = $repository->getActiveAccountsByType($types);
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $grouped        = [];
 
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role       = (string)$repository->getMetaValue($account, 'account_role');
+            $role = (string)$repository->getMetaValue($account, 'account_role');
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = sprintf('l_%s', $account->accountType->type);
             } elseif ('' === $role) {
@@ -65,7 +86,7 @@ class AccountForm
                     $role = 'no_account_type';
                 }
             }
-            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
+            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
             $grouped[$key][$account->id] = $account->name;
         }
 
@@ -76,8 +97,8 @@ class AccountForm
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
@@ -95,32 +116,10 @@ class AccountForm
     }
 
     /**
-     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     */
-    public function activeDepositDestinations(string $name, $value = null, array $options = null): string
-    {
-        $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
-        $repository = $this->getAccountRepository();
-        $grouped    = $this->getAccountsGrouped($types, $repository);
-        $cash                     = $repository->getCashAccount();
-        $key                      = (string)trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
-
-        return $this->select($name, $grouped, $value, $options);
-    }
-
-
-    /**
      * Check list of asset accounts.
      *
      * @param string $name
-     * @param array $options
+     * @param array  $options
      *
      * @return string
      *
@@ -134,8 +133,8 @@ class AccountForm
         $selected = request()->old($name) ?? [];
 
         // get all asset accounts:
-        $types         = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
-        $grouped       = $this->getAccountsGrouped($types);
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
+        $grouped = $this->getAccountsGrouped($types);
 
         unset($options['class']);
         try {
@@ -152,8 +151,8 @@ class AccountForm
      * Basic list of asset accounts.
      *
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
@@ -170,8 +169,8 @@ class AccountForm
      * Same list but all liabilities as well.
      *
      * @param string $name
-     * @param mixed $value
-     * @param array $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */

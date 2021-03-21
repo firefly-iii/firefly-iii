@@ -45,8 +45,8 @@ class AccountController extends Controller
     use ApiSupport;
 
     private CurrencyRepositoryInterface   $currencyRepository;
-    private AccountRepositoryInterface    $repository;
     private OperationsRepositoryInterface $opsRepository;
+    private AccountRepositoryInterface    $repository;
 
     /**
      * AccountController constructor.
@@ -74,20 +74,19 @@ class AccountController extends Controller
     }
 
     /**
-     * // TOOD same as
+     * TODO same code as Expense/AccountController.
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function revenue(GenericRequest $request): JsonResponse
+    public function asset(GenericRequest $request): JsonResponse
     {
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $assetAccounts   = $request->getAssetAccounts();
-        $revenueAccounts = $request->getRevenueAccounts();
-        $income          = $this->opsRepository->sumIncome($start, $end, $assetAccounts, $revenueAccounts);
-        $result          = [];
-
+        $start         = $request->getStart();
+        $end           = $request->getEnd();
+        $assetAccounts = $request->getAssetAccounts();
+        $income        = $this->opsRepository->sumIncome($start, $end, $assetAccounts);
+        $result        = [];
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
@@ -102,19 +101,21 @@ class AccountController extends Controller
     }
 
     /**
-     * TODO same code as Expense/AccountController.
+     * // TOOD same as
      *
      * @param GenericRequest $request
      *
      * @return JsonResponse
      */
-    public function asset(GenericRequest $request): JsonResponse
+    public function revenue(GenericRequest $request): JsonResponse
     {
-        $start         = $request->getStart();
-        $end           = $request->getEnd();
-        $assetAccounts = $request->getAssetAccounts();
-        $income        = $this->opsRepository->sumIncome($start, $end, $assetAccounts);
-        $result        = [];
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $assetAccounts   = $request->getAssetAccounts();
+        $revenueAccounts = $request->getRevenueAccounts();
+        $income          = $this->opsRepository->sumIncome($start, $end, $assetAccounts, $revenueAccounts);
+        $result          = [];
+
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [

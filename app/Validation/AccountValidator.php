@@ -45,8 +45,8 @@ class AccountValidator
 
     public bool                        $createMode;
     public string                      $destError;
-    public ?Account                     $destination;
-    public ?Account                     $source;
+    public ?Account                    $destination;
+    public ?Account                    $source;
     public string                      $sourceError;
     private AccountRepositoryInterface $accountRepository;
     private array                      $combinations;
@@ -67,6 +67,14 @@ class AccountValidator
 
         /** @var AccountRepositoryInterface accountRepository */
         $this->accountRepository = app(AccountRepositoryInterface::class);
+    }
+
+    /**
+     * @return Account|null
+     */
+    public function getSource(): ?Account
+    {
+        return $this->source;
     }
 
     /**
@@ -168,21 +176,6 @@ class AccountValidator
     }
 
     /**
-     * @param string $accountType
-     *
-     * @return bool
-     */
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @param array $accountTypes
      *
      * @return bool
@@ -199,6 +192,21 @@ class AccountValidator
             }
         }
         Log::debug('NO, we cant create any of those.');
+
+        return false;
+    }
+
+    /**
+     * @param string $accountType
+     *
+     * @return bool
+     */
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE];
+        if (in_array($accountType, $canCreate, true)) {
+            return true;
+        }
 
         return false;
     }
@@ -226,14 +234,6 @@ class AccountValidator
         }
 
         return null;
-    }
-
-    /**
-     * @return Account|null
-     */
-    public function getSource(): ?Account
-    {
-        return $this->source;
     }
 
 }

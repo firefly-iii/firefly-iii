@@ -103,12 +103,17 @@ class DestroyController extends Controller
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function destroyMessage(Webhook $webhook, WebhookMessage $message): JsonResponse
+    public function destroyAttempt(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
     {
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('Webhook and webhook message are no match');
         }
-        $this->repository->destroyMessage($message);
+        if ($attempt->webhook_message_id !== $message->id) {
+            throw new FireflyException('Webhook message and webhook attempt are no match');
+
+        }
+
+        $this->repository->destroyAttempt($attempt);
 
         return response()->json([], 204);
     }
@@ -121,21 +126,15 @@ class DestroyController extends Controller
      * @return JsonResponse
      * @codeCoverageIgnore
      */
-    public function destroyAttempt(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
+    public function destroyMessage(Webhook $webhook, WebhookMessage $message): JsonResponse
     {
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('Webhook and webhook message are no match');
         }
-        if($attempt->webhook_message_id !== $message->id) {
-            throw new FireflyException('Webhook message and webhook attempt are no match');
-
-        }
-
-        $this->repository->destroyAttempt($attempt);
+        $this->repository->destroyMessage($message);
 
         return response()->json([], 204);
     }
-
 
 
 }

@@ -44,8 +44,8 @@ class AccountController extends Controller
     use ApiSupport;
 
     private CurrencyRepositoryInterface   $currencyRepository;
-    private AccountRepositoryInterface    $repository;
     private OperationsRepositoryInterface $opsRepository;
+    private AccountRepositoryInterface    $repository;
 
     /**
      * AccountController constructor.
@@ -77,14 +77,13 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      */
-    public function expense(GenericRequest $request): JsonResponse
+    public function asset(GenericRequest $request): JsonResponse
     {
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $assetAccounts   = $request->getAssetAccounts();
-        $expenseAccounts = $request->getExpenseAccounts();
-        $expenses        = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, $expenseAccounts);
-        $result          = [];
+        $start         = $request->getStart();
+        $end           = $request->getEnd();
+        $assetAccounts = $request->getAssetAccounts();
+        $expenses      = $this->opsRepository->sumExpenses($start, $end, $assetAccounts);
+        $result        = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {
@@ -104,13 +103,14 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      */
-    public function asset(GenericRequest $request): JsonResponse
+    public function expense(GenericRequest $request): JsonResponse
     {
-        $start         = $request->getStart();
-        $end           = $request->getEnd();
-        $assetAccounts = $request->getAssetAccounts();
-        $expenses      = $this->opsRepository->sumExpenses($start, $end, $assetAccounts);
-        $result        = [];
+        $start           = $request->getStart();
+        $end             = $request->getEnd();
+        $assetAccounts   = $request->getAssetAccounts();
+        $expenseAccounts = $request->getExpenseAccounts();
+        $expenses        = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, $expenseAccounts);
+        $result          = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {

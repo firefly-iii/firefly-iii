@@ -35,7 +35,7 @@ use Log;
 class UniqueAccountNumber implements Rule
 {
     private ?Account $account;
-    private ?string $expectedType;
+    private ?string  $expectedType;
 
     /**
      * Create a new rule instance.
@@ -109,30 +109,8 @@ class UniqueAccountNumber implements Rule
             }
         }
         Log::debug('Account number is valid.');
+
         return true;
-    }
-
-    /**
-     * @param string $type
-     * @param string $accountNumber
-     *
-     * @return int
-     */
-    private function countHits(string $type, string $accountNumber): int
-    {
-        $query = AccountMeta
-            ::leftJoin('accounts','accounts.id','=','account_meta.account_id')
-            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('accounts.user_id', auth()->user()->id)
-            ->where('account_types.type', $type)
-            ->where('account_meta.name','=','account_number')
-            ->where('account_meta.data',json_encode($accountNumber));
-
-        if (null !== $this->account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
     }
 
     /**
@@ -159,5 +137,28 @@ class UniqueAccountNumber implements Rule
         }
 
         return $maxCounts;
+    }
+
+    /**
+     * @param string $type
+     * @param string $accountNumber
+     *
+     * @return int
+     */
+    private function countHits(string $type, string $accountNumber): int
+    {
+        $query = AccountMeta
+            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_types.type', $type)
+            ->where('account_meta.name', '=', 'account_number')
+            ->where('account_meta.data', json_encode($accountNumber));
+
+        if (null !== $this->account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
     }
 }

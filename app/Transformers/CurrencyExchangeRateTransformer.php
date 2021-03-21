@@ -38,22 +38,23 @@ class CurrencyExchangeRateTransformer extends AbstractTransformer
      */
     public function transform(CurrencyExchangeRate $rate): array
     {
-        $result = number_format((float) $rate->rate * (float) $this->parameters->get('amount'), $rate->toCurrency->decimal_places, '.', '');
+        $result = number_format((float)$rate->rate * (float)$this->parameters->get('amount'), $rate->toCurrency->decimal_places, '.', '');
         $result = 0.0 === $result ? null : $result;
+
         return [
             'id'                           => (int)$rate->id,
             'created_at'                   => $rate->created_at->toAtomString(),
             'updated_at'                   => $rate->updated_at->toAtomString(),
-            'from_currency_id'             => (int) $rate->fromCurrency->id,
+            'from_currency_id'             => (int)$rate->fromCurrency->id,
             'from_currency_name'           => $rate->fromCurrency->name,
             'from_currency_code'           => $rate->fromCurrency->code,
             'from_currency_symbol'         => $rate->fromCurrency->symbol,
-            'from_currency_decimal_places' => (int) $rate->fromCurrency->decimal_places,
-            'to_currency_id'               => (int) $rate->toCurrency->id,
+            'from_currency_decimal_places' => (int)$rate->fromCurrency->decimal_places,
+            'to_currency_id'               => (int)$rate->toCurrency->id,
             'to_currency_name'             => $rate->toCurrency->name,
             'to_currency_code'             => $rate->toCurrency->code,
             'to_currency_symbol'           => $rate->toCurrency->symbol,
-            'to_currency_decimal_places'   => (int) $rate->toCurrency->decimal_places,
+            'to_currency_decimal_places'   => (int)$rate->toCurrency->decimal_places,
             'date'                         => $rate->date->format('Y-m-d'),
             'rate'                         => (float)$rate->rate,
             'amount'                       => $result,

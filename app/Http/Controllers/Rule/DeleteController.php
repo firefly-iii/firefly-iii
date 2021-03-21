@@ -50,7 +50,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 $this->ruleRepos = app(RuleRepositoryInterface::class);
@@ -69,7 +69,7 @@ class DeleteController extends Controller
      */
     public function delete(Rule $rule)
     {
-        $subTitle = (string) trans('firefly.delete_rule', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
         $this->rememberPreviousUri('rules.delete.uri');
@@ -89,7 +89,7 @@ class DeleteController extends Controller
         $title = $rule->title;
         $this->ruleRepos->destroy($rule);
 
-        session()->flash('success', (string) trans('firefly.deleted_rule', ['title' => $title]));
+        session()->flash('success', (string)trans('firefly.deleted_rule', ['title' => $title]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('rules.delete.uri'));

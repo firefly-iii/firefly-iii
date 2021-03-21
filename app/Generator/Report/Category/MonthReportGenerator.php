@@ -76,7 +76,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType', ))
+            return view('reports.category.month', compact('accountIds', 'categoryIds', 'reportType',))
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)

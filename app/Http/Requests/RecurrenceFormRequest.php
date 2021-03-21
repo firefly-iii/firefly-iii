@@ -127,11 +127,11 @@ class RecurrenceFormRequest extends FormRequest
         // replace category name with a new category:
         $factory = app(CategoryFactory::class);
         $factory->setUser(auth()->user());
-        foreach($return['transactions'] as $index => $transaction) {
-            $categoryName =$transaction['category_name'] ??null;
-            if(null !== $categoryName) {
+        foreach ($return['transactions'] as $index => $transaction) {
+            $categoryName = $transaction['category_name'] ?? null;
+            if (null !== $categoryName) {
                 $category = $factory->findOrCreate(null, $categoryName);
-                if(null !== $category) {
+                if (null !== $category) {
                     $return['transactions'][$index]['category_id'] = $category->id;
                 }
             }

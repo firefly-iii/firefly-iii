@@ -40,6 +40,20 @@ class AccountFactory extends Factory
     protected $model = Account::class;
 
     /**
+     * @return AccountFactory
+     */
+    public function asset()
+    {
+        return $this->state(
+            function () {
+                return [
+                    'account_type_id' => 3,
+                ];
+            }
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function definition()
@@ -58,12 +72,12 @@ class AccountFactory extends Factory
     /**
      * @return AccountFactory
      */
-    public function asset()
+    public function expense()
     {
         return $this->state(
             function () {
                 return [
-                    'account_type_id' => 3,
+                    'account_type_id' => 4,
                 ];
             }
         );
@@ -78,20 +92,6 @@ class AccountFactory extends Factory
             function () {
                 return [
                     'account_type_id' => 6,
-                ];
-            }
-        );
-    }
-
-    /**
-     * @return AccountFactory
-     */
-    public function expense()
-    {
-        return $this->state(
-            function () {
-                return [
-                    'account_type_id' => 4,
                 ];
             }
         );

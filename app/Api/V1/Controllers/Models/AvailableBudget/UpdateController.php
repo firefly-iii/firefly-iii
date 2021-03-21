@@ -26,7 +26,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\AvailableBudget\Request;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
@@ -73,9 +72,9 @@ class UpdateController extends Controller
         $data = $request->getAll();
 
         // find and validate currency ID
-        if(array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $factory = app(TransactionCurrencyFactory::class);
-            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null) ?? app('amount')->getDefaultCurrency();
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            $factory           = app(TransactionCurrencyFactory::class);
+            $currency          = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null) ?? app('amount')->getDefaultCurrency();
             $currency->enabled = true;
             $currency->save();
             unset($data['currency_code']);

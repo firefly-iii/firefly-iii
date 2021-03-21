@@ -123,23 +123,6 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * Correct order of piggies in case of issues.
-     */
-    public function resetOrder(): void
-    {
-        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
-        $current = 1;
-        foreach ($set as $piggyBank) {
-            if ((int)$piggyBank->order !== $current) {
-                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
-                $piggyBank->order = $current;
-                $piggyBank->save();
-            }
-            $current++;
-        }
-    }
-
-    /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
      *
@@ -215,6 +198,23 @@ trait ModifiesPiggyBanks
         $piggyBank->objectGroups()->sync([]);
 
         return $piggyBank;
+    }
+
+    /**
+     * Correct order of piggies in case of issues.
+     */
+    public function resetOrder(): void
+    {
+        $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
+        $current = 1;
+        foreach ($set as $piggyBank) {
+            if ((int)$piggyBank->order !== $current) {
+                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
+                $piggyBank->order = $current;
+                $piggyBank->save();
+            }
+            $current++;
+        }
     }
 
     /**

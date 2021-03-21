@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
-use Log;
 use FireflyIII\Models\AccountType;
+use Log;
 
 /**
  * Trait ReconciliationValidation
@@ -89,20 +89,24 @@ trait ReconciliationValidation
         Log::debug('In validateReconciliationSource');
         if (null === $accountId) {
             Log::debug('Return FALSE');
+
             return false;
         }
         $result = $this->accountRepository->findNull($accountId);
         $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
         if (null === $result) {
             Log::debug('Return FALSE');
+
             return false;
         }
         if (in_array($result->accountType->type, $types, true)) {
             $this->source = $result;
             Log::debug('Return TRUE');
+
             return true;
         }
         Log::debug('Return FALSE');
+
         return false;
     }
 

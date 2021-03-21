@@ -26,7 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use Log;
 
 /**
  * Class AttachmentTransformer

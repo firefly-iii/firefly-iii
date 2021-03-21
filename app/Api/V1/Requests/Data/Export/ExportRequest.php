@@ -37,21 +37,6 @@ class ExportRequest extends FormRequest
 {
     use ChecksLogin, ConvertsDataTypes;
 
-    /**
-     * The rules that the incoming request must be matched against.
-     *
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'type'     => 'in:csv',
-            'accounts' => 'min:1',
-            'start'    => 'date|before:end',
-            'end'      => 'date|after:start',
-        ];
-    }
-
     public function getAll(): array
     {
         $result     = [
@@ -76,5 +61,20 @@ class ExportRequest extends FormRequest
         $result['accounts'] = $accounts;
 
         return $result;
+    }
+
+    /**
+     * The rules that the incoming request must be matched against.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'type'     => 'in:csv',
+            'accounts' => 'min:1',
+            'start'    => 'date|before:end',
+            'end'      => 'date|after:start',
+        ];
     }
 }

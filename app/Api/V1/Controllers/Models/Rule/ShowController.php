@@ -24,7 +24,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Rule;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\User;
@@ -74,7 +73,7 @@ class ShowController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int) app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of budgets. Count it and split it.
         $collection = $this->ruleRepository->getAll();
@@ -95,7 +94,6 @@ class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
-
 
 
     /**

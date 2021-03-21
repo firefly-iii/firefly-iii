@@ -48,16 +48,6 @@ interface SearchInterface
     public function getWordsAsString(): string;
 
     /**
-     * @param int $page
-     */
-    public function setPage(int $page): void;
-
-    /**
-     * @param int $limit
-     */
-    public function setLimit(int $limit): void;
-
-    /**
      * @return bool
      */
     public function hasModifiers(): bool;
@@ -78,12 +68,22 @@ interface SearchInterface
     public function searchTransactions(): LengthAwarePaginator;
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user);
-
-    /**
      * @param Carbon $date
      */
     public function setDate(Carbon $date): void;
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit(int $limit): void;
+
+    /**
+     * @param int $page
+     */
+    public function setPage(int $page): void;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user);
 }

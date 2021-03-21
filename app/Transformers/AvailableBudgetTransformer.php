@@ -29,16 +29,15 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class AvailableBudgetTransformer
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private NoBudgetRepositoryInterface $noBudgetRepository;
+    private NoBudgetRepositoryInterface   $noBudgetRepository;
     private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface $repository;
+    private BudgetRepositoryInterface     $repository;
 
     /**
      * CurrencyTransformer constructor.
@@ -68,11 +67,11 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'id'                      => (string)$availableBudget->id,
             'created_at'              => $availableBudget->created_at->toAtomString(),
             'updated_at'              => $availableBudget->updated_at->toAtomString(),
-            'currency_id'             => (string) $currency->id,
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int) $currency->decimal_places,
-            'amount'                  => number_format((float) $availableBudget->amount, $currency->decimal_places, '.', ''),
+            'currency_decimal_places' => (int)$currency->decimal_places,
+            'amount'                  => number_format((float)$availableBudget->amount, $currency->decimal_places, '.', ''),
             'start'                   => $availableBudget->start_date->format('Y-m-d'),
             'end'                     => $availableBudget->end_date->format('Y-m-d'),
             'spent_in_budgets'        => [],

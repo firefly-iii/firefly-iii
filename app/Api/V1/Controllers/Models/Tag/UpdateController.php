@@ -26,7 +26,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Tag\UpdateRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -62,12 +61,11 @@ class UpdateController extends Controller
     }
 
 
-
     /**
      * Update a rule.
      *
      * @param UpdateRequest $request
-     * @param Tag              $tag
+     * @param Tag           $tag
      *
      * @return JsonResponse
      */

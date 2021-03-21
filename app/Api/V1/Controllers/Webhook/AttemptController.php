@@ -29,7 +29,6 @@ use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookAttemptTransformer;
-use FireflyIII\Transformers\WebhookMessageTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -42,8 +41,8 @@ use League\Fractal\Resource\Item;
  */
 class AttemptController extends Controller
 {
-    private WebhookRepositoryInterface $repository;
     public const RESOURCE_KEY = 'webhook_attempts';
+    private WebhookRepositoryInterface $repository;
 
     /**
      * @codeCoverageIgnore
@@ -108,10 +107,10 @@ class AttemptController extends Controller
      */
     public function show(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
     {
-        if($message->webhook_id !== $webhook->id) {
+        if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('Webhook and webhook message are no match');
         }
-        if($attempt->webhook_message_id !== $message->id) {
+        if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('Webhook message and webhook attempt are no match');
 
         }

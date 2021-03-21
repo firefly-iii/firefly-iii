@@ -36,9 +36,9 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
+    private NoBudgetRepositoryInterface   $noRepository;
     private OperationsRepositoryInterface $opsRepository;
     private BudgetRepositoryInterface     $repository;
-    private NoBudgetRepositoryInterface   $noRepository;
 
     /**
      * AccountController constructor.

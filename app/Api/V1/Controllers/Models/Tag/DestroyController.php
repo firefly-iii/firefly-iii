@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -57,7 +56,6 @@ class DestroyController extends Controller
             }
         );
     }
-
 
 
     /**
