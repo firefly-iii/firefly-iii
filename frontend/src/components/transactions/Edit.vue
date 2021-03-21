@@ -136,19 +136,19 @@ export default {
       groupTitle: '',
       originalGroupTitle: '',
       transactionType: 'any',
-      groudId: 0,
+      groupId: 0,
 
       // errors in the group title:
       groupTitleErrors: [],
 
-      // which custom fields to show TODO
+      // which custom fields to show
       customFields: {},
 
       // group ID + title once submitted:
       returnedGroupId: 0,
       returnedGroupTitle: '',
 
-      // date and time of the transaction, TODO
+      // date and time of the transaction,
       date: new Date,
       time: new Date,
       originalDate: new Date,
@@ -252,7 +252,7 @@ export default {
       // meta data
       result.category = array.category_name;
       result.budget_id = array.budget_id;
-      result.bill_id = array.bill_id;
+      result.bill_id = array.bill_id ?? 0;
 
       result.tags = array.tags;
 
@@ -287,7 +287,7 @@ export default {
      * Get the links of this transaction group from the API.
      */
     parseLinks: function (journalId, index) {
-      axios.get('./api/v1/transactions/' + journalId + '/links')
+      axios.get('./api/v1/transaction-journals/' + journalId + '/links')
           .then(response => {
             let links = response.data.data;
             for (let i in links) {
@@ -342,6 +342,7 @@ export default {
         let direction = responses[0].direction;
         let linkTypeId = responses[2].data.data.id;
         let object = {
+          id: link.id,
           link_type_id: linkTypeId + '-' + direction,
           transaction_group_id: responses[1].data.data.id,
           transaction_journal_id: journal.transaction_journal_id,
@@ -355,12 +356,13 @@ export default {
       });
     },
     /**
+     * TODO same method as Create
      * Get API value.
      */
     getAllowedOpposingTypes: function () {
-      axios.get('./api/v1/configuration/static/firefly.allowed_opposing_types')
+      axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
-            this.allowedOpposingTypes = response.data['firefly.allowed_opposing_types'];
+            this.allowedOpposingTypes = response.data.data.value;
             // console.log('Set allowedOpposingTypes');
           });
     },
@@ -439,6 +441,7 @@ export default {
         submission.group_title = this.groupTitle;
         shouldSubmit = true;
       }
+      let transactionCount = this.originalTransactions.length;
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // original transaction present?
@@ -467,17 +470,20 @@ export default {
                 // console.log(originalTransaction[fieldName]);
                 // console.log(currentTransaction[fieldName]);
                 diff[fieldName] = currentTransaction[fieldName];
+                shouldSubmit = true;
               }
             }
           }
           if (0 !== currentTransaction.piggy_bank_id) {
             diff.piggy_bank_id = currentTransaction.piggy_bank_id;
+            shouldSubmit = true;
           }
           if (JSON.stringify(currentTransaction.tags) !== JSON.stringify(originalTransaction.tags)) {
             // console.log('tags are different');
             // console.log(currentTransaction.tags);
             // console.log(originalTransaction.tags);
             diff.tags = currentTransaction.tags;
+            shouldSubmit = true;
           }
 
           // compare links:
@@ -515,10 +521,13 @@ export default {
             dateStr = toW3CString(theDate);
             submission.date = dateStr;
           }
-
-          if (Object.keys(diff).length !== 0) {
+          if (Object.keys(diff).length === 0 && transactionCount > 1) {
             diff.transaction_journal_id = originalTransaction.transaction_journal_id;
-            submission.transactions.push(diff);
+            submission.transactions.push(lodashClonedeep(diff));
+            shouldSubmit = true;
+          } else if (Object.keys(diff).length !== 0) {
+            diff.transaction_journal_id = originalTransaction.transaction_journal_id;
+            submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
           }
         }
@@ -529,8 +538,12 @@ export default {
       console.log(shouldLinks);
       console.log(shouldSubmit);
       if (shouldSubmit) {
-        this.submitUpdate(submission);
+        this.submitUpdate(submission, shouldLinks, shouldUpload);
       }
+      if (!shouldSubmit && shouldLinks) {
+        this.submitTransactionLinks();
+      }
+
       //console.log(submission);
     },
     compareLinks: function (array) {
@@ -553,17 +566,24 @@ export default {
       // console.log(compare);
       return JSON.stringify(compare);
     },
-    submitUpdate: function (submission) {
+    submitUpdate: function (submission, shouldLinks, shouldUpload) {
       console.log('submitUpdate');
       const url = './api/v1/transactions/' + this.groupId;
+      console.log(submission);
       axios.put(url, submission)
           .then(response => {
-                  // console.log('Response is OK!');
+                  console.log('Response is OK!');
                   // report the transaction is submitted.
                   this.submittedTransaction = true;
 
-                  // // submit links and attachments (can only be done when the transaction is created)
-                  // this.submitTransactionLinks(data, response);
+                  // submit links and attachments (can only be done when the transaction is created)
+                  if (shouldLinks) {
+                    console.log('Need to update links.');
+                    this.submitTransactionLinks();
+                  }
+                  if (!shouldLinks) {
+                    console.log('No need to update links.');
+                  }
                   // this.submitAttachments(data, response);
                   //
                   // // meanwhile, store the ID and the title in some easy to access variables.
@@ -677,6 +697,116 @@ export default {
     },
     resetErrors(payload) {
       this.transactions[payload.index].errors = lodashClonedeep(getDefaultErrors());
+    },
+
+    deleteOriginalLinks: function (transaction) {
+      console.log(transaction.links);
+      for (let i in transaction.links) {
+        if (transaction.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = transaction.links[i];
+          let url = '/api/v1/transaction_links/' + current.id;
+          axios.delete(url).then(response => {
+            // TODO response
+          });
+        }
+      }
+    },
+
+    /**
+     * Submit transaction links.
+     * TODO same method as CREATE
+     */
+    submitTransactionLinks() {
+      let total = 0;
+      let promises = [];
+
+      console.log('submitTransactionLinks()');
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          // original transaction present?
+          let currentTransaction = this.transactions[i];
+          let originalTransaction = this.originalTransactions.hasOwnProperty(i) ? this.originalTransactions[i] : {};
+          // compare links:
+          let newLinks = this.compareLinks(currentTransaction.links);
+          let originalLinks = this.compareLinks(originalTransaction.links);
+          if (newLinks !== originalLinks) {
+            if ('[]' !== originalLinks) {
+              this.deleteOriginalLinks(originalTransaction);
+            }
+
+            console.log('links are different!');
+            // console.log(newLinks);
+            // console.log(originalLinks);
+            for (let ii in currentTransaction.links) {
+              if (currentTransaction.links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+                let currentLink = currentTransaction.links[ii];
+                let linkObject = {
+                  inward_id: currentTransaction.transaction_journal_id,
+                  outward_id: currentTransaction.transaction_journal_id,
+                  link_type_id: 'something'
+                };
+
+                let parts = currentLink.link_type_id.split('-');
+                linkObject.link_type_id = parts[0];
+                if ('inward' === parts[1]) {
+                  linkObject.inward_id = currentLink.transaction_journal_id;
+                }
+                if ('outward' === parts[1]) {
+                  linkObject.outward_id = currentLink.transaction_journal_id;
+                }
+
+                console.log(linkObject);
+                total++;
+                // submit transaction link:
+                promises.push(axios.post('./api/v1/transaction_links', linkObject).then(response => {
+                  // TODO error handling.
+                }));
+              }
+            }
+
+            // shouldLinks = true;
+          }
+
+        }
+      }
+
+
+      return;
+      let result = response.data.data.attributes.transactions;
+
+      // for (let i in data.transactions) {
+      //   if (data.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+      //     let submitted = data.transactions[i];
+      //     if (result.hasOwnProperty(i)) {
+      //       // found matching created transaction.
+      //       let received = result[i];
+      //       // grab ID from received, loop "submitted" transaction links
+      //       for (let ii in submitted.links) {
+      //         if (submitted.links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+      //           let currentLink = submitted.links[ii];
+      //           total++;
+      //           if (0 === currentLink.outward_id) {
+      //             currentLink.outward_id = received.transaction_journal_id;
+      //           }
+      //           if (0 === currentLink.inward_id) {
+      //             currentLink.inward_id = received.transaction_journal_id;
+      //           }
+      //           // submit transaction link:
+      //           promises.push(axios.post('./api/v1/transaction_links', currentLink).then(response => {
+      //             // TODO error handling.
+      //           }));
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+      if (0 === total) {
+        this.submittedLinks = true;
+        return;
+      }
+      Promise.all(promises).then(function () {
+        this.submittedLinks = true;
+      });
     },
   }
 }
