@@ -22,6 +22,7 @@
   <div>
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
+    <Alert :message="warningMessage" type="warning"/>
     <SplitPills :transactions="transactions"/>
 
     <div class="tab-content">
@@ -93,8 +94,8 @@
               </div>
               <div class="col">
                 <div class="form-check">
-                  <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
-                  <label class="form-check-label" for="createAnother">
+                  <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
+                  <label class="form-check-label" for="stayHere">
                     <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
                   </label>
                 </div>
@@ -129,6 +130,7 @@ export default {
     return {
       successMessage: '',
       errorMessage: '',
+      warningMessage: '',
 
       // transaction props
       transactions: [],
@@ -158,6 +160,7 @@ export default {
       submittedTransaction: false,
       submittedLinks: false,
       submittedAttachments: false,
+      inError: false,
 
       // meta data for accounts
       allowedOpposingTypes: {},
@@ -166,8 +169,7 @@ export default {
 
       // states for the form (makes sense right)
       enableSubmit: true,
-      createAnother: false,
-      resetFormAfter: false,
+      stayHere: false,
 
     }
   },
@@ -177,6 +179,22 @@ export default {
     SplitForm,
     TransactionGroupTitle
   },
+
+  watch: {
+    submittedTransaction: function () {
+      // see finalizeSubmit()
+      this.finalizeSubmit();
+    },
+    submittedLinks: function () {
+      // see finalizeSubmit()
+      this.finalizeSubmit();
+    },
+    submittedAttachments: function () {
+      // see finalizeSubmit()
+      this.finalizeSubmit();
+    }
+  },
+
   methods: {
     /**
      * Grap transaction group from URL and submit GET.
@@ -534,16 +552,30 @@ export default {
       }
 
       console.log('submitTransaction');
-      console.log(shouldUpload);
-      console.log(shouldLinks);
-      console.log(shouldSubmit);
+      console.log('shouldUpload : ' + shouldUpload);
+      console.log('shouldLinks  : ' + shouldLinks);
+      console.log('shouldSubmit : ' + shouldSubmit);
       if (shouldSubmit) {
         this.submitUpdate(submission, shouldLinks, shouldUpload);
+      }
+      if (!shouldSubmit) {
+        this.submittedTransaction = true;
+      }
+      if (!shouldLinks) {
+        this.submittedLinks = true;
+      }
+      if (!shouldUpload) {
+        this.submittedAttachments = true;
       }
       if (!shouldSubmit && shouldLinks) {
         this.submitTransactionLinks();
       }
 
+      if (!shouldSubmit && shouldLinks) {
+        // TODO
+        //this.submittedAttachments();
+      }
+      console.log('Done with submit methd.');
       //console.log(submission);
     },
     compareLinks: function (array) {
@@ -568,6 +600,7 @@ export default {
     },
     submitUpdate: function (submission, shouldLinks, shouldUpload) {
       console.log('submitUpdate');
+      this.inError = false;
       const url = './api/v1/transactions/' + this.groupId;
       console.log(submission);
       axios.put(url, submission)
@@ -584,11 +617,14 @@ export default {
                   if (!shouldLinks) {
                     console.log('No need to update links.');
                   }
+                  // TODO attachments:
                   // this.submitAttachments(data, response);
                   //
                   // // meanwhile, store the ID and the title in some easy to access variables.
-                  // this.returnedGroupId = parseInt(response.data.data.id);
-                  // this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+                  this.returnedGroupId = parseInt(response.data.data.id);
+                  this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+
+
                 }
           )
           .catch(error => {
@@ -763,43 +799,11 @@ export default {
                 }));
               }
             }
-
             // shouldLinks = true;
           }
 
         }
       }
-
-
-      return;
-      let result = response.data.data.attributes.transactions;
-
-      // for (let i in data.transactions) {
-      //   if (data.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-      //     let submitted = data.transactions[i];
-      //     if (result.hasOwnProperty(i)) {
-      //       // found matching created transaction.
-      //       let received = result[i];
-      //       // grab ID from received, loop "submitted" transaction links
-      //       for (let ii in submitted.links) {
-      //         if (submitted.links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
-      //           let currentLink = submitted.links[ii];
-      //           total++;
-      //           if (0 === currentLink.outward_id) {
-      //             currentLink.outward_id = received.transaction_journal_id;
-      //           }
-      //           if (0 === currentLink.inward_id) {
-      //             currentLink.inward_id = received.transaction_journal_id;
-      //           }
-      //           // submit transaction link:
-      //           promises.push(axios.post('./api/v1/transaction_links', currentLink).then(response => {
-      //             // TODO error handling.
-      //           }));
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
       if (0 === total) {
         this.submittedLinks = true;
         return;
@@ -808,6 +812,66 @@ export default {
         this.submittedLinks = true;
       });
     },
+    finalizeSubmit: function () {
+      console.log('now in finalizeSubmit()');
+      console.log('submittedTransaction : ' + this.submittedTransaction);
+      console.log('submittedLinks       : ' + this.submittedLinks);
+      console.log('submittedAttachments : ' + this.submittedAttachments);
+
+      if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
+        console.log('all true');
+        console.log('inError         = ' + this.inError);
+        console.log('stayHere        = ' + this.stayHere);
+        console.log('returnedGroupId = ' + this.returnedGroupId);
+
+        // no error + no changes + no redirect
+        if (true === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
+          console.log('no error + no changes + no redirect');
+          // show message:
+          this.errorMessage = '';
+          this.successMessage = '';
+          // maybe nothing changed in post
+          this.warningMessage = this.$t('firefly.transaction_updated_no_changes', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
+        }
+
+        // no error + no changes + redirect
+        if (false === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
+          console.log('no error + no changes + redirect');
+          window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=no_change';
+        }
+        // no error + changes + no redirect
+        if (true === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
+          console.log('no error + changes + redirect');
+          // show message:
+          this.errorMessage = '';
+          this.warningMessage = '';
+          // maybe nothing changed in post
+          this.successMessage = this.$t('firefly.transaction_updated_link', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
+        }
+
+        // no error + changes + redirect
+        if (false === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
+          console.log('no error + changes + redirect');
+          window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=updated';
+        }
+        console.log('end of the line');
+        // enable flags:
+        this.enableSubmit = true;
+        this.submittedTransaction = false;
+        this.submittedLinks = false;
+        this.submittedAttachments = false;
+        this.inError = false;
+
+        // reset attachments (always do this)
+        for (let i in this.transactions) {
+          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            if (this.transactions.hasOwnProperty(i)) {
+              // TODO
+            }
+          }
+        }
+      }
+    }
   }
 }
 </script>

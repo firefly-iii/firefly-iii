@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col">
             <!-- alert from URL -->
-            <div class="alert alert-success alert-dismissible" v-if="successMessage.length > 0">
+            <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h5><i class="icon fas fa-thumbs-up"></i> {{ 'flash_success'|_ }}</h5>
                 <span>
@@ -12,6 +12,27 @@
                 {% endif %}
                         {{ session('success') }}
                         {% if session_has('success_uri') %}
+                    </a>
+                {% endif %}
+            </span>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if session_has('warning') %}
+    <div class="row">
+        <div class="col">
+            <!-- alert from URL -->
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-exclamation-triangle"></i> {{ 'flash_warning'|_ }}</h5>
+                <span>
+                {% if session_has('warning_uri') %}
+                    <a href="{{ session('warning_uri') }}" style="color:rgb(31, 45, 61);">
+                {% endif %}
+                        {{ session('warning') }}
+                        {% if session_has('warning_uri') %}
                     </a>
                 {% endif %}
             </span>
