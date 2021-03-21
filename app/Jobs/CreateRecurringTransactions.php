@@ -110,7 +110,7 @@ class CreateRecurringTransactions implements ShouldQueue
             // clear cache for user
             app('preferences')->setForUser($recurrence->user, 'lastActivity', microtime());
 
-            Log::debug(sprintf('Now at recurrence #%d', $recurrence->id));
+            Log::debug(sprintf('Now at recurrence #%d of user #%d', $recurrence->id, $recurrence->user_id));
             $createdReps = $this->handleRepetitions($recurrence);
             Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));
             $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($createdReps);
@@ -153,6 +153,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {
+        Log::debug(sprintf('Now filtering recurrence #%d, owned by user #%d', $recurrence->id, $recurrence->user_id));
         // is not active.
         if (!$this->active($recurrence)) {
             Log::info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
@@ -203,6 +204,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
             return false;
         }
+        Log::debug('Will be included.');
 
         return true;
     }

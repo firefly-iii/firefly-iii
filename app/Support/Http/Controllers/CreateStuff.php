@@ -30,7 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
-use phpseclib3\Crypt\RSA;
+
 
 /**
  * Trait CreateStuff
@@ -110,7 +110,7 @@ trait CreateStuff
             $keys = $rsa->createKey(4096);
         }
         if (8 === PHP_MAJOR_VERSION) {
-            $keys = RSA::createKeys(4096);
+            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
         }
 
         [$publicKey, $privateKey] = [

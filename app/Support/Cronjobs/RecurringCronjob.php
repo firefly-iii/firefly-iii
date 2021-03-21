@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
@@ -35,16 +36,17 @@ use Log;
 class RecurringCronjob extends AbstractCronjob
 {
     /**
-     * @return bool
      * @throws FireflyException
      */
-    public function fire(): bool
+    public function fire(): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_rt_job', 0);
         $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
         $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), true);
+
         if (0 === $lastTime) {
             Log::info('Recurring transactions cron-job has never fired before.');
         }
@@ -53,8 +55,9 @@ class RecurringCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
+                $this->message = sprintf('It has been %s since the recurring transactions cron-job has fired. It will not fire now.', $diffForHumans);
 
-                return false;
+                return;
             }
 
             // fire job regardless.
@@ -70,8 +73,6 @@ class RecurringCronjob extends AbstractCronjob
         $this->fireRecurring();
 
         app('preferences')->mark();
-
-        return true;
     }
 
     /**
@@ -85,6 +86,13 @@ class RecurringCronjob extends AbstractCronjob
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
+
+        // get stuff from job:
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
+        $this->jobSucceeded = true;
+        $this->message      = 'Recurring transactions cron job fired successfully.';
+
         app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
         Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int)$this->date->format('U')));
         Log::info('Done with recurring cron job task.');

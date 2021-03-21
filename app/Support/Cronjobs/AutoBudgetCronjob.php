@@ -39,7 +39,7 @@ class AutoBudgetCronjob extends AbstractCronjob
     /**
      * @inheritDoc
      */
-    public function fire(): bool
+    public function fire(): void
     {
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_ab_job', 0);
@@ -54,8 +54,8 @@ class AutoBudgetCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the auto budget cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The auto budget cron-job will not fire now.');
-
-                return false;
+                $this->message = sprintf('It has been %s since the auto budget cron-job has fired. It will not fire now.', $diffForHumans);
+                return;
             }
 
             // fire job regardless.
@@ -69,10 +69,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         }
 
         $this->fireAutoBudget();
-
         app('preferences')->mark();
-
-        return true;
     }
 
     /**
@@ -85,6 +82,13 @@ class AutoBudgetCronjob extends AbstractCronjob
         $job = app(CreateAutoBudgetLimits::class);
         $job->setDate($this->date);
         $job->handle();
+
+        // get stuff from job:
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
+        $this->jobSucceeded = true;
+        $this->message      = 'Auto-budget cron job fired successfully.';
+
         app('fireflyconfig')->set('last_ab_job', (int)$this->date->format('U'));
         Log::info('Done with auto budget cron job task.');
     }

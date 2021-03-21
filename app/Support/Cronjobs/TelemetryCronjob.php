@@ -40,13 +40,15 @@ class TelemetryCronjob extends AbstractCronjob
      * @inheritDoc
      * @throws FireflyException
      */
-    public function fire(): bool
+    public function fire(): void
     {
         // do not fire if telemetry is disabled.
         if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
-            Log::warning('Telemetry is disabled. The cron job will do nothing.');
+            $msg           = 'Telemetry is disabled. The cron job will do nothing.';
+            $this->message = $msg;
+            Log::warning($msg);
 
-            return false;
+            return;
         }
 
 
@@ -63,8 +65,8 @@ class TelemetryCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the telemetry cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
-
-                return false;
+                $this->message = sprintf('It has been %s since the telemetry cron-job has fired. It will not fire now.', $diffForHumans);
+                return;
             }
 
             // fire job regardless.
@@ -80,8 +82,6 @@ class TelemetryCronjob extends AbstractCronjob
         $this->fireTelemetry();
 
         app('preferences')->mark();
-
-        return true;
     }
 
 
@@ -96,6 +96,11 @@ class TelemetryCronjob extends AbstractCronjob
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
+
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
+        $this->jobSucceeded = true;
+        $this->message      = 'Telemetry cron job fired successfully.';
 
         // TODO remove old, submitted telemetry data.
 

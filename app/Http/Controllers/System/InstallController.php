@@ -134,14 +134,14 @@ class InstallController extends Controller
     public function keys(): void
     {
         // switch on PHP version.
+        // switch on PHP version.
         if (7 === PHP_MAJOR_VERSION) {
             $rsa  = new \phpseclib\Crypt\RSA;
             $keys = $rsa->createKey(4096);
         }
         if (8 === PHP_MAJOR_VERSION) {
-            $keys = \phpseclib3\Crypt\RSA::createKeys(4096);
+            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
         }
-
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),

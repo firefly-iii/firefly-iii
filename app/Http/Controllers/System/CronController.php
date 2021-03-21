@@ -22,26 +22,19 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
-
-use FireflyIII\Support\Http\Controllers\CronRunner;
+use Log;
 
 /**
  * Class CronController
  */
 class CronController
 {
-    use CronRunner;
-
     /**
      * @return string
      */
-    public function cron(): string
+    public function cron()
     {
-        $results   = [];
-        $results[] = $this->runRecurring();
-        $results[] = $this->runAutoBudget();
-        $results[] = $this->runTelemetry();
-
-        return implode("<br>\n", $results);
+        Log::error('The cron endpoint has moved to GET /api/v1/cron/[token]');
+        return response('The cron endpoint has moved to GET /api/v1/cron/[token]', 500);
     }
 }

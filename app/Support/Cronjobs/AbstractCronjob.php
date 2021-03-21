@@ -33,12 +33,15 @@ use Exception;
  */
 abstract class AbstractCronjob
 {
-    /** @var int */
-    public $timeBetweenRuns = 43200;
-    /** @var Carbon */
-    protected $date;
-    /** @var bool */
-    protected $force;
+    public int       $timeBetweenRuns = 43200;
+    protected Carbon $date;
+    protected bool   $force;
+
+    public bool $jobFired;
+    public bool $jobSucceeded;
+    public bool $jobErrored;
+
+    public ?string $message;
 
     /**
      * AbstractCronjob constructor.
@@ -49,12 +52,16 @@ abstract class AbstractCronjob
     {
         $this->force = false;
         $this->date  = today(config('app.timezone'));
+        $this->jobErrored   = false;
+        $this->jobSucceeded = false;
+        $this->jobFired     = false;
+        $this->message      = null;
     }
 
     /**
-     * @return bool
+     *
      */
-    abstract public function fire(): bool;
+    abstract public function fire(): void;
 
     /**
      * @param Carbon $date

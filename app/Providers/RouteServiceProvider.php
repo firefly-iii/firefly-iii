@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map(): void
     {
         $this->mapApiRoutes();
-
+        $this->mapCronApiRoutes();
         $this->mapWebRoutes();
     }
 
@@ -69,6 +69,19 @@ class RouteServiceProvider extends ServiceProvider
              ->middleware('apiX')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     */
+    protected function mapCronApiRoutes(): void
+    {
+        Route::prefix('api/v1/cron')
+             ->middleware('apiY')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/api-noauth.php'));
     }
 
     /**
