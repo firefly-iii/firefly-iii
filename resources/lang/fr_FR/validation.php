@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute doit être inférieur à 10 000 000',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
-    'date_after'                     => 'La date de fin doit être avant la date de début.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => 'Le champ :attribute doit seulement contenir des lettres.',
     'alpha_dash'                     => 'Le champ :attribute peut seulement contenir des lettres, des chiffres et des tirets.',
     'alpha_num'                      => 'Le champ :attribute peut seulement contenir des chiffres et des lettres.',

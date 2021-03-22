@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute moet minder zijn dan 10.000.000',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',
-    'date_after'                     => 'Einddatum kan niet vóór startdatum vallen.',
+    'date_after'                     => 'De startdatum moet vóór de einddatum zijn.',
     'alpha'                          => ':attribute mag alleen letters bevatten.',
     'alpha_dash'                     => ':attribute mag alleen letters, nummers, onderstreep(_) en strepen(-) bevatten.',
     'alpha_num'                      => ':attribute mag alleen letters en nummers bevatten.',

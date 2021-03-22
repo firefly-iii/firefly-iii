@@ -60,7 +60,7 @@ return [
     'less'                           => 'Το :attribute πρέπει να είναι μικρότερο από 10,000,000',
     'active_url'                     => 'Το :attribute δεν είναι έγκυρο URL.',
     'after'                          => 'Το :attribute πρέπει να είναι ημερομηνία μετά από :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => 'Το :attribute μπορεί να περιέχει μόνο γράμματα.',
     'alpha_dash'                     => 'Το :attribute μπορεί να περιέχει γράμματα, αριθμοί, και παύλες.',
     'alpha_num'                      => 'Το :attribute μπορεί να περιέχει γράμματα και αριθμούς.',

@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute kisebbnek kell lennie 10,000,000-nél',
     'active_url'                     => ':attribute nem egy érvényes URL.',
     'after'                          => ':attribute egy :date utáni dátum kell legyen.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute csak betűket tartalmazhat.',
     'alpha_dash'                     => ':attribute csak számokat, betűket és kötőjeleket tartalmazhat.',
     'alpha_num'                      => ':attribute csak betűket és számokat tartalmazhat.',

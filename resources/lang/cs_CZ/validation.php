@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute musí být menší než 10.000.000',
     'active_url'                     => ':attribute není platná adresa URL.',
     'after'                          => ':attribute nemůže být dříve než :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute může obsahovat pouze písmena.',
     'alpha_dash'                     => ':attribute může obsahovat pouze písmena, čísla a pomlčky.',
     'alpha_num'                      => ':attribute může obsahovat pouze písmena a čísla.',

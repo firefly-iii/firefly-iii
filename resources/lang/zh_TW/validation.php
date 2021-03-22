@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute 必須小於 10,000,000。',
     'active_url'                     => ':attribute 不是有效的 URL。',
     'after'                          => ':attribute 必須是一個在 :date 之後的日期。',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute 只能包含字母。',
     'alpha_dash'                     => ':attribute 只能包含字母、數字和破折號。',
     'alpha_num'                      => ':attribute 只能包含數字和字母。',

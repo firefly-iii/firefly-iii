@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute трябва да е по-малко от 10 000 000',
     'active_url'                     => ':attribute не е валиден URL адрес.',
     'after'                          => ':attribute трябва да бъде дата след :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute може да съдържа единствено букви.',
     'alpha_dash'                     => ':attribute може да съдържа само букви, числа и тирета.',
     'alpha_num'                      => ':attribute може да съдържа само букви и числа.',

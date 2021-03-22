@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute  10.000.000 den daha az olmalıdır',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute sadece harf içerebilir.',
     'alpha_dash'                     => ':attribute sadece harf, sayı ve kısa çizgi içerebilir.',
     'alpha_num'                      => ':attribute sadece harf ve sayı içerebilir.',

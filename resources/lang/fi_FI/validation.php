@@ -60,7 +60,7 @@ return [
     'less'                           => 'Määritteen :attribute täytyy olla pienempi kuin 10,000,000',
     'active_url'                     => ':attribute ei ole verkko-osoite.',
     'after'                          => 'Määritteen :attribute täytyy olla :date jälkeen oleva päivämäärä.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute saa sisältää ainoastaan kirjaimia.',
     'alpha_dash'                     => ':attribute saa sisältää ainoastaan kirjaimia, numeroita ja viivoja.',
     'alpha_num'                      => ':attribute saa sisältää ainoastaan kirjaimia ja numeroita.',

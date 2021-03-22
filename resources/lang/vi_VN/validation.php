@@ -60,7 +60,7 @@ return [
     'less'                           => ':thuộc tính phải nhỏ hơn 10,000,000',
     'active_url'                     => 'Thuộc tính: không phải là một URL hợp lệ.',
     'after'                          => 'Thuộc tính: phải là một ngày sau: ngày.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => 'Thuộc tính: chỉ có thể chứa các chữ cái.',
     'alpha_dash'                     => 'Thuộc tính: chỉ có thể chứa chữ cái, số và dấu gạch ngang.',
     'alpha_num'                      => 'Thuộc tính: chỉ có thể chứa các chữ cái và số.',

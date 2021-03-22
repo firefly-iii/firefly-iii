@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute harus kurang dari 10,000,000',
     'active_url'                     => ':attribute bukan URL yang valid.',
     'after'                          => ':attribute harus tanggal setelah :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute hanya boleh berisi huruf.',
     'alpha_dash'                     => ':attribute hanya boleh berisi huruf, angka dan tanda hubung.',
     'alpha_num'                      => ':attribute hanya boleh berisi huruf dan angka.',

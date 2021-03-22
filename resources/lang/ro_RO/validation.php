@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute trebuie să fie mai mic decât 10,000,000',
     'active_url'                     => ':attribute nu este o adresă URL validă.',
     'after'                          => ':attribute trebuie să fie o dată ulterioară :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute poate conține numai litere.',
     'alpha_dash'                     => ':attribute poate conține numai litere, numere și liniuțe.',
     'alpha_num'                      => ':attribute poate conține numai litere și numere.',

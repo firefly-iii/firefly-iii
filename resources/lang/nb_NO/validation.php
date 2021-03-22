@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute må være mindre enn 10,000,000',
     'active_url'                     => ':attribute er ikke en gyldig URL.',
     'after'                          => ':attribute må være en dato etter :date.',
-    'date_after'                     => 'End date must be before start date.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute kan kun inneholde bokstaver.',
     'alpha_dash'                     => ':attribute kan bare inneholde bokstaver, tall og bindestreker.',
     'alpha_num'                      => ':attribute kan bare inneholde bokstaver og tall.',

@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute muss kleiner als 10.000.000 sein',
     'active_url'                     => ':attribute ist keine gültige URL.',
     'after'                          => ':attribute muss ein Datum nach :date sein.',
-    'date_after'                     => 'Enddatum muss nach dem Startdatum liegen.',
+    'date_after'                     => 'The start date must be before the end date.',
     'alpha'                          => ':attribute darf nur Buchstaben enthalten.',
     'alpha_dash'                     => ':attribute darf nur Buchstaben, Zahlen und Bindestrichen enthalten.',
     'alpha_num'                      => ':attribute darf nur Buchstaben und Zahlen enthalten.',
