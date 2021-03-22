@@ -387,7 +387,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @inheritDoc
-     *            TODO need to sort by group order as well.
      */
     public function searchPiggyBank(string $query, int $limit): Collection
     {

@@ -43,6 +43,7 @@ export default {
     return {
       notes: this.value,
       availableFields: this.customFields,
+      emitEvent: true
     }
   },
   computed: {
@@ -55,13 +56,17 @@ export default {
   },
   watch: {
     value: function (value) {
+      this.emitEvent = false;
       this.notes = value;
     },
     customFields: function (value) {
       this.availableFields = value;
     },
     notes: function (value) {
-      this.$emit('set-field', {field: 'notes', index: this.index, value: value});
+      if (true === this.emitEvent) {
+        this.$emit('set-field', {field: 'notes', index: this.index, value: value});
+      }
+      this.emitEvent = true;
     }
   }
 }

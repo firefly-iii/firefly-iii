@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -38,7 +37,7 @@ use Illuminate\Http\JsonResponse;
  */
 class PiggyBankController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
 
     /**
@@ -76,19 +75,9 @@ class PiggyBankController extends Controller
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
             $currency   = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
-            $groupTitle = null;
-            $groupId    = null;
-            /** @var ObjectGroup $group */
-            $group = $piggy->objectGroups()->first();
-            if (null !== $group) {
-                $groupTitle = $group->title;
-                $groupId    = (string)$group->id;
-            }
             $response[] = [
                 'id'                      => (string)$piggy->id,
                 'name'                    => $piggy->name,
-                'object_group_id'         => $groupId,
-                'object_group_title'      => $groupTitle,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
@@ -114,23 +103,13 @@ class PiggyBankController extends Controller
         foreach ($piggies as $piggy) {
             $currency      = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $currentAmount = $this->piggyRepository->getRepetition($piggy)->currentamount ?? '0';
-            $groupTitle    = null;
-            $groupId       = null;
-            /** @var ObjectGroup $group */
-            $group = $piggy->objectGroups()->first();
-            if (null !== $group) {
-                $groupTitle = $group->title;
-                $groupId    = (string)$group->id;
-            }
-            $response[] = [
+            $response[]    = [
                 'id'                      => (string)$piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
                     '%s (%s / %s)', $piggy->name, app('amount')->formatAnything($currency, $currentAmount, false),
                     app('amount')->formatAnything($currency, $piggy->targetamount, false),
                 ),
-                'object_group_id'         => $groupId,
-                'object_group_title'      => $groupTitle,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,

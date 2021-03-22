@@ -27,9 +27,7 @@
       <div class="row">
         <div class="col">
           <p v-if="links.length === 0">
-            <button class="btn btn-default btn-xs" :data-target="'#linkModal' + index" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction
-              link
-            </button>
+            <button class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
           <ul v-if="links.length > 0" class="list-group">
             <li v-for="(transaction, index) in links" class="list-group-item" v-bind:key="index">
@@ -66,13 +64,13 @@
             </li>
           </ul>
           <div v-if="links.length > 0" class="form-text">
-            <button class="btn btn-default" @click="resetModal" :data-target="'#linkModal' + index" data-toggle="modal"><i class="fas fa-plus"></i></button>
+            <button class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
           </div>
         </div>
       </div>
     </div>
     <!-- modal -->
-    <div :id="'linkModal' + index" class="modal" tabindex="-1" :ref="'linkModal' + index">
+    <div id="linkModal" class="modal" tabindex="-1" ref="linkModal">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -307,7 +305,7 @@ export default {
                 }
           );
     },
-    resetModal: function () {
+    resetModal: function() {
       this.search();
     },
     parseLinkTypes: function (data) {
@@ -334,7 +332,7 @@ export default {
       }
     },
     search: function () {
-      if ('' === this.query) {
+      if('' === this.query) {
         this.searchResults = [];
         return;
       }
@@ -353,28 +351,11 @@ export default {
           for (let ii in data.data[i].attributes.transactions) {
             if (data.data[i].attributes.transactions.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
               let current = data.data[i].attributes.transactions[ii];
-              let copied = {
-                transaction_journal_id: current.transaction_journal_id,
-                transaction_group_id: parseInt(data.data[i].id),
-                description: current.description,
-                type: current.type,
-                amount: current.amount,
-                currency_code: current.currency_code,
-                source_id: current.source_id,
-                source_name: current.source_name,
-                destination_id: current.destination_id,
-                destination_name: current.destination_name,
-                selected: this.isJournalSelected(current.transaction_journal_id),
-                link_type_id: this.getJournalLinkType(current.transaction_journal_id),
-                link_type_text: '',
-              };
-
-              // current.transaction_group_id = parseInt(data.data[i].id);
-              // current.selected = this.isJournalSelected(current.transaction_journal_id);
-              // current.link_type_id = this.getJournalLinkType(current.transaction_journal_id);
-              // current.link_type_text = '';
-
-              this.searchResults.push(copied);
+              current.transaction_group_id = parseInt(data.data[i].id);
+              current.selected = this.isJournalSelected(current.transaction_journal_id);
+              current.link_type_id = this.getJournalLinkType(current.transaction_journal_id);
+              current.link_type_text = '';
+              this.searchResults.push(current);
             }
           }
         }

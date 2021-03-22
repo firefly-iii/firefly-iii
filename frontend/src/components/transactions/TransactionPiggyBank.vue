@@ -33,16 +33,9 @@
           name="piggy_bank_id[]"
           v-on:submit.prevent
       >
-        <optgroup v-for="group in this.piggyGroups" v-bind:key="group.title" :label="group.title">
-          <option v-for="piggy in group.piggies" :label="piggy.name_with_balance" :value="piggy.id">{{ piggy.name_with_balance }}</option>
-        </optgroup>
+        <option v-for="piggy in this.piggyList" :label="piggy.name_with_balance" :value="piggy.id">{{ piggy.name_with_balance }}</option>
 
       </select>
-      <!--
-      <span v-for="group in this.piggyList">"{{ group.title }}"<br>
-
-      </span>
-      -->
     </div>
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
@@ -57,8 +50,7 @@ export default {
   name: "TransactionPiggyBank",
   data() {
     return {
-      piggyGroups: [],
-      piggyList: {},
+      piggyList: [],
       piggy_bank_id: this.value,
       emitEvent: true
     }
@@ -68,33 +60,12 @@ export default {
   },
   methods: {
     collectData() {
-      // add empty group:
-      this.piggyGroups.push(
+      this.piggyList.push(
           {
             id: 0,
-            title: this.$t('firefly.default_group_title_name'),
-            piggies: []
+            name_with_balance: this.$t('firefly.no_piggy_bank'),
           }
       );
-
-
-      // empty piggy list:
-      // this.piggyList['0'] = {
-      //   title: this.$t('firefly.default_group_title_name'),
-      //   piggies: [
-      //     {
-      //       id: 0,
-      //       name_with_balance: this.$t('firefly.no_piggy_bank'),
-      //     }
-      //   ]
-      // };
-
-      // this.piggyList.push(
-      //     {
-      //       id: 0,
-      //       name_with_balance: this.$t('firefly.no_piggy_bank'),
-      //     }
-      // );
       this.getPiggies();
     },
     getPiggies() {
@@ -104,67 +75,18 @@ export default {
                 }
           );
     },
-    groupExists: function (title) {
-      for (let i in this.piggyGroups) {
-        if (this.piggyGroups.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.piggyGroups[i];
-          if (current.title === title) {
-            return true;
-          }
-        }
-      }
-      return false;
-    },
-    getGroupIndex: function (groupId) {
-      for (let i in this.piggyGroups) {
-        if (this.piggyGroups.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.piggyGroups[i];
-          if (current.id === groupId) {
-            return i;
-          }
-        }
-      }
-      return 0;
-    },
     parsePiggies(data) {
       for (let key in data) {
         if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           let current = data[key];
-          let groupId = current.object_group_id ?? '0';
-          if ('0' !== groupId) {
-            if (this.groupExists(current.object_group_title)) {
-              let currentGroup = this.getGroupIndex(parseInt(current.object_group_id));
-              this.piggyGroups[currentGroup].piggies.push(current);
-            }
-
-            if (!this.groupExists(current.object_group_title)) {
-              this.piggyGroups.push(
-                  {
-                    id: parseInt(current.object_group_id),
-                    title: current.object_group_title,
-                    piggies: [current]
-                  }
-              );
-            }
-          }
-          if ('0' === groupId) {
-            this.piggyGroups[0].piggies.push(current);
-          }
-
-          // //console.log('group id is ' + groupId);
-          // if ('0' !== groupId) {
-          //   this.piggyList[groupId] = this.piggyList[groupId] ? this.piggyList[groupId] : {title: current.object_group_title, piggies: []};
-          // }
-          // this.piggyList[groupId].piggies.push(
-          //     {
-          //       id: parseInt(current.id),
-          //       name_with_balance: current.name_with_balance
-          //     }
-          // );
+          this.piggyList.push(
+              {
+                id: parseInt(current.id),
+                name_with_balance: current.name_with_balance
+              }
+          );
         }
       }
-
-      //console.log(this.piggyList);
     },
   },
   watch: {
