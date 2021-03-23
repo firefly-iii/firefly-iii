@@ -70,6 +70,8 @@ class TransferCurrenciesCorrections extends Command
      */
     public function handle(): int
     {
+
+
         $this->stupidLaravel();
         $start = microtime(true);
         // @codeCoverageIgnoreStart
