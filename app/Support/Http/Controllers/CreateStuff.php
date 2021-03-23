@@ -105,11 +105,18 @@ trait CreateStuff
     protected function createOAuthKeys(): void // create stuff
     {
         // switch on PHP version.
-        if (7 === PHP_MAJOR_VERSION) {
+        $result = version_compare(phpversion(), '8.0');
+        Log::info(sprintf('PHP version is %s', $result));
+        if (-1 === $result) {
+            Log::info('Will run PHP7 code.');
+            // PHP 7
             $rsa  = new \phpseclib\Crypt\RSA;
             $keys = $rsa->createKey(4096);
         }
-        if (8 === PHP_MAJOR_VERSION) {
+
+        if ($result >= 0) {
+            Log::info('Will run PHP8 code.');
+            // PHP 8
             $keys = \phpseclib3\Crypt\RSA::createKey(4096);
         }
 

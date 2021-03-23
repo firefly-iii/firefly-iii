@@ -78,7 +78,7 @@ class HomeController extends Controller
 
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
-        if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
+        if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
             $isCustomRange = true;
             Log::debug('Range is now marked as "custom".');
         }
@@ -86,7 +86,7 @@ class HomeController extends Controller
         $diff = $start->diffInDays($end) + 1;
 
         if ($diff > 50) {
-            $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => $diff]));
+            $request->session()->flash('warning', (string)trans('firefly.warning_much_data', ['days' => $diff]));
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
@@ -110,14 +110,15 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $repository->count($types);
+        $result = version_compare(phpversion(), '8.0');
+        $types  = config('firefly.accountTypesByIdentifier.asset');
+        $count  = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');
 
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-        $subTitle     = (string) trans('firefly.welcome_back');
+        $subTitle     = (string)trans('firefly.welcome_back');
         $transactions = [];
         $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */

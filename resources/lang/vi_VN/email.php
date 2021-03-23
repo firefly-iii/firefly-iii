@@ -34,12 +34,12 @@ return [
     'admin_test_body'                  => 'Đây là một thông báo thử nghiệm từ Firefly III của bạn. Nó đã được gửi đến :email.',
 
     // new IP
-    'login_from_new_ip'                => 'New login on Firefly III',
-    'new_ip_body'                      => 'Firefly III detected a new login on your account from an unknown IP address. If you never logged in from the IP address below, or it has been more than six months ago, Firefly III will warn you.',
-    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
-    'ip_address'                       => 'IP address',
-    'host_name'                        => 'Host',
-    'date_time'                        => 'Date + time',
+    'login_from_new_ip'                => 'Đăng nhập mới trên Firefly III',
+    'new_ip_body'                      => 'Firefly III đã phát hiện một thông tin đăng nhập mới vào tài khoản của bạn từ một địa chỉ IP không xác định. Nếu bạn chưa bao giờ đăng nhập từ địa chỉ IP bên dưới hoặc đã hơn sáu tháng trước, Firefly III sẽ cảnh báo bạn.',
+    'new_ip_warning'                   => 'Nếu bạn nhận ra địa chỉ IP này hoặc thông tin đăng nhập, bạn có thể bỏ qua thông báo này. Nếu bạn không đăng nhập, nếu bạn không biết điều này là gì, hãy xác minh bảo mật mật khẩu của bạn, thay đổi mật khẩu và đăng xuất tất cả các phiên khác. Để làm điều này, hãy truy cập trang hồ sơ của bạn.',
+    'ip_address'                       => 'Địa chỉ IP',
+    'host_name'                        => 'Máy chủ',
+    'date_time'                        => 'Ngày & Giờ',
 
     // access token created
     'access_token_created_subject'     => 'Mã truy cập mới đã được tạo',
@@ -52,7 +52,7 @@ return [
     'registered_welcome'               => 'Chào mừng đến <a style="color:#337ab7" href=":address">Firefly III</a>. Đăng ký của bạn đã được thực hiện và email này để xác nhận nó!',
     'registered_pw'                    => 'Nếu bạn đã quên mật khẩu của mình, vui lòng đặt lại bằng cách sử dụng <a style="color:#337ab7" href=":address/password/reset"> công cụ đặt lại mật khẩu </a>.',
     'registered_help'                  => 'Có một biểu tượng trợ giúp ở góc trên bên phải của mỗi trang. Nếu bạn cần giúp đỡ, bấm vào nó!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
+    'registered_doc_html'              => 'Nếu bạn chưa có, vui lòng đọc lý thuyết <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/grand-theory"> </ a>.',
     'registered_doc_text'              => 'Nếu bạn chưa có, xin vui lòng đọc hướng dẫn sử dụng đầu tiên và mô tả.',
     'registered_closing'               => 'Hãy tận hưởng!',
     'registered_firefly_iii_link'      => 'Firefly III:',
