@@ -25,9 +25,9 @@ declare(strict_types=1);
 return [
     // common items
     'greeting'                         => 'Γεια σου,',
-    'closing'                          => 'Beep boop,',
+    'closing'                          => 'Μπιπ μπιπ,',
     'signature'                        => 'Το Ρομπότ Αλληλογραφίας του Firefly III',
-    'footer_ps'                        => 'PS: This message was sent because a request from IP :ipAddress triggered it.',
+    'footer_ps'                        => 'ΥΓ: Αυτό το μήνυμα στάλθηκε επειδή μια αίτηση από την IP :ipAddress το ενεργοποίησε.',
 
     // admin test
     'admin_test_subject'               => 'Ένα δοκιμαστικό μήνυμα από την εγκατάσταση του Firefly III',
@@ -36,24 +36,24 @@ return [
     // new IP
     'login_from_new_ip'                => 'Νέα σύνδεση χρήστη στο Firefly III',
     'new_ip_body'                      => 'Το Firefly III εντόπισε μια νέα σύνδεση στο λογαριασμό σας από μια άγνωστη διεύθυνση IP. Αν δεν συνδεθήκατε ποτέ από την παρακάτω διεύθυνση IP ή έγινε πριν από περισσότερο από έξι μήνες, το Firefly III θα σας προειδοποιήσει.',
-    'new_ip_warning'                   => 'If you recognize this IP address or the login, you can ignore this message. If you didn\'t login, of if you have no idea what this is about, verify your password security, change it, and log out all other sessions. To do this, go to your profile page. Of course you have 2FA enabled already, right? Stay safe!',
+    'new_ip_warning'                   => 'Αν αναγνωρίζετε αυτή τη διεύθυνση IP ή τη σύνδεση χρήστη, μπορείτε να αγνοήσετε αυτό το μήνυμα. Αν δεν συνδεθήκατε, αν δεν έχετε ιδέα για το τι είναι αυτό, επαληθεύστε ένα ασφαλή κωδικό πρόσβασης, αλλάξτε τον και αποσυνδεθείτε από όλες τις άλλες συνεδρίες. Για να το κάνετε αυτό, πηγαίνετε στη σελίδα του προφίλ σας. Φυσικά έχετε ήδη ενεργοποιημένο το 2FactorAuthentication, έτσι? Μείνετε ασφαλείς!',
     'ip_address'                       => 'Διεύθυνση IP',
     'host_name'                        => 'Διακομιστής',
     'date_time'                        => 'Ημερομηνία και ώρα',
 
     // access token created
     'access_token_created_subject'     => 'Δημιουργήθηκε ένα νέο διακριτικό πρόσβασης',
-    'access_token_created_body'        => 'Somebody (hopefully you) just created a new Firefly III API Access Token for your user account.',
-    'access_token_created_explanation' => 'With this token, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'access_token_created_revoke'      => 'If this wasn\'t you, please revoke this token as soon as possible at :url.',
+    'access_token_created_body'        => 'Κάποιος (ελπίζω εσείς) μόλις δημιούργησε ένα νέο Διακριτικό Πρόσβασης Firefly III API για το δικό σας λογαριασμό χρήστη.',
+    'access_token_created_explanation' => 'Με αυτό το διακριτικό μπορούν να έχουν πρόσβαση σε <strong>όλες</strong> τις οικονομικές σας εγγραφές μέσω του Firefly III API.',
+    'access_token_created_revoke'      => 'Εάν δεν είστασταν εσείς, παρακαλώ να ανακαλέσετε αυτό το διακριτικό το συντομότερο δυνατό στο :url.',
 
     // registered
     'registered_subject'               => 'Καλωσήρθατε στο Firefly III!',
-    'registered_welcome'               => 'Welcome to <a style="color:#337ab7" href=":address">Firefly III</a>. Your registration has made it, and this email is here to confirm it. Yay!',
-    'registered_pw'                    => 'If you have forgotten your password already, please reset it using <a style="color:#337ab7" href=":address/password/reset">the password reset tool</a>.',
-    'registered_help'                  => 'There is a help-icon in the top right corner of each page. If you need help, click it!',
-    'registered_doc_html'              => 'If you haven\'t already, please read the <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">grand theory</a>.',
-    'registered_doc_text'              => 'If you haven\'t already, please read the first use guide and the full description.',
+    'registered_welcome'               => 'Καλώς ήρθατε στο <a style="color:#337ab7" href=":address">Firefly III</a>. Η εγγραφή σας έχει ολοκληρωθεί και αυτό το email είναι εδώ για επιβεβαίωση. Ναι!',
+    'registered_pw'                    => 'Εάν έχετε ήδη ξεχάσει τον κωδικό πρόσβασής σας, παρακαλούμε να τον επαναφέρετε χρησιμοποιώντας το <a style="color:#337ab7" href=":address/password/reset">εργαλείο επαναφοράς κωδικού πρόσβασης</a>.',
+    'registered_help'                  => 'Υπάρχει ένα εικονίδιο βοήθειας στην επάνω δεξιά γωνία κάθε σελίδας. Αν χρειάζεστε βοήθεια, κάντε κλικ σε αυτό!',
+    'registered_doc_html'              => 'Αν δεν το έχετε ήδη κάνει, παρακαλώ διαβάστε το <a style="color:#337ab7" href="https://docs.firefly-iii.org/about-firefly-iii/personal-finances">θεωρητικό πλάνο</a>.',
+    'registered_doc_text'              => 'Αν δεν το έχετε ήδη κάνει, διαβάστε τον οδηγό πρώτης χρήσης και την πλήρη περιγραφή.',
     'registered_closing'               => 'Καλή Διασκέδαση!',
     'registered_firefly_iii_link'      => 'Firefly III:',
     'registered_pw_reset_link'         => 'Επαναφορά κωδικού πρόσβασης:',
@@ -61,21 +61,21 @@ return [
 
     // email change
     'email_change_subject'             => 'Η διεύθυνση email σας στο Firefly III έχει αλλάξει',
-    'email_change_body_to_new'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this message, please ignore and delete it.',
-    'email_change_body_to_old'         => 'You or somebody with access to your Firefly III account has changed your email address. If you did not expect this to happen, you <strong>must</strong> follow the "undo"-link below to protect your account!',
-    'email_change_ignore'              => 'If you initiated this change, you may safely ignore this message.',
+    'email_change_body_to_new'         => 'Εσείς ή κάποιος με πρόσβαση στο λογαριασμό σας στο Firefly III έχει αλλάξει τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας. Αν δεν περιμένατε αυτό το μήνυμα, παρακαλώ αγνοήστε και διαγράψτε το.',
+    'email_change_body_to_old'         => 'Εσείς ή κάποιος με πρόσβαση στο λογαριασμό σας στο Firefly III έχει αλλάξει τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας. Αν δεν το περιμένατε αυτό, <strong>πρέπει</strong> να ακολουθήσετε τον παρακάτω "σύνδεσμο αναίρεσης" για να προστατεύσετε τον λογαριασμό σας!',
+    'email_change_ignore'              => 'Αν ξεκινήσατε αυτήν την αλλαγή, μπορείτε να αγνοήσετε με ασφάλεια αυτό το μήνυμα.',
     'email_change_old'                 => 'Η παλιά διεύθυνση ηλεκτρονικού ταχυδρομείου ήταν: :email',
     'email_change_old_strong'          => 'Η παλιά διεύθυνση ηλεκτρονικού ταχυδρομείου ήταν: <strong>:email</strong>',
     'email_change_new'                 => 'Η νέα διεύθυνση ηλεκτρονικού ταχυδρομείου είναι: :email',
     'email_change_new_strong'          => 'Η νέα διεύθυνση ηλεκτρονικού ταχυδρομείου είναι: <strong>:email</strong>',
-    'email_change_instructions'        => 'You cannot use Firefly III until you confirm this change. Please follow the link below to do so.',
+    'email_change_instructions'        => 'Δεν μπορείτε να χρησιμοποιήσετε το Firefly III μέχρι να επιβεβαιώσετε αυτήν την αλλαγή. Ακολουθήστε τον παρακάτω σύνδεσμο για να το κάνετε.',
     'email_change_undo_link'           => 'Για να αναιρέσετε την αλλαγή, ακολουθήστε αυτόν τον σύνδεσμο:',
 
     // OAuth token created
     'oauth_created_subject'            => 'Δημιουργήθηκε ένας νέος πελάτης OAuth',
-    'oauth_created_body'               => 'Somebody (hopefully you) just created a new Firefly III API OAuth Client for your user account. It\'s labeled ":name" and has callback URL <span style="font-family: monospace;">:url</span>.',
-    'oauth_created_explanation'        => 'With this client, they can access <strong>all</strong> of your financial records through the Firefly III API.',
-    'oauth_created_undo'               => 'If this wasn\'t you, please revoke this client as soon as possible at :url.',
+    'oauth_created_body'               => 'Κάποιος (ελπίζω εσείς) μόλις δημιούργησε ένα νέο πελάτη API Firefly III OAuth για το λογαριασμό χρήστη σας. Έχει την ένδειξη ":name" και έχει URL επιστροφής κλήσης <span style="font-family: monospace;">:url</span>.',
+    'oauth_created_explanation'        => 'Με αυτόν τον πελάτη, μπορούν να έχουν πρόσβαση σε <strong>όλες</strong> τις οικονομικες σας εγγραφές μέσω του Firefly III API.',
+    'oauth_created_undo'               => 'Αν δεν ήσασταν εσείς, παρακαλώ να ανακαλέσετε αυτόν τον πελάτη το συντομότερο δυνατό στο :url.',
 
     // reset password
     'reset_pw_subject'                 => 'Αίτημα επαναφοράς κωδικού πρόσβασης',
@@ -93,12 +93,12 @@ return [
     'error_ip'                         => 'Η διεύθυνση IP που σχετίζεται με αυτό το σφάλμα είναι: :ip',
     'error_url'                        => 'Το URL είναι: :url',
     'error_user_agent'                 => 'User agent: :userAgent',
-    'error_stacktrace'                 => 'The full stacktrace is below. If you think this is a bug in Firefly III, you can forward this message to <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. This can help fix the bug you just encountered.',
-    'error_github_html'                => 'If you prefer, you can also open a new issue on <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
-    'error_github_text'                => 'If you prefer, you can also open a new issue on https://github.com/firefly-iii/firefly-iii/issues.',
-    'error_stacktrace_below'           => 'The full stacktrace is below:',
+    'error_stacktrace'                 => 'Το πλήρες stacktrace είναι παρακάτω. Αν νομίζετε ότι αυτό είναι ένα σφάλμα στο Firefly III, μπορείτε να προωθήσετε αυτό το μήνυμα στο <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-iii.org</a>. Αυτό μπορεί να βοηθήσει στη διόρθωση του σφάλματος που μόλις αντιμετωπίσατε.',
+    'error_github_html'                => 'Αν προτιμάτε, μπορείτε επίσης να ανοίξετε ένα νέο ζήτημα στο <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
+    'error_github_text'                => 'Αν προτιμάτε, μπορείτε επίσης να ανοίξετε ένα νέο ζήτημα στο https://github.com/firefly-iii/firefly-iii/issues.',
+    'error_stacktrace_below'           => 'Το πλήρες stacktrace είναι παρακάτω:',
 
     // report new journals
-    'new_journals_subject'             => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
-    'new_journals_header'              => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:',
+    'new_journals_subject'             => 'Το Firefly III έχει δημιουργήσει μια νέα συναλλαγή|Το Firefly III έχει δημιουργήσει :count νέες συναλλαγές',
+    'new_journals_header'              => 'Το Firefly III έχει δημιουργήσει μια συναλλαγή για εσάς. Μπορείτε να τη βρείτε στην εγκατάσταση Firefly ΙΙΙ:|Το Firefly III έχει δημιουργήσει :count συναλλαγές για εσάς. Μπορείτε να τις βρείτε στην εγκατάσταση Firefly III:',
 ];
