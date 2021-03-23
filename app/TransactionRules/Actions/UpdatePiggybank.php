@@ -54,42 +54,49 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @param array     $journalArray
-     * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @inheritDoc
      */
-    private function addAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
+    public function actOnArray(array $journal): bool
     {
-        $user = User::find($journalArray['user_id']);
-        $journal = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUser($journal->user);
+        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
+        if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
+            Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal['transaction_journal_id'], $journal['transaction_type_type']));
 
-        // how much can we add to the piggy bank?
-        $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
-        Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+            return false;
+        }
+        $user = User::find($journal['user_id']);
 
-        // update amount to fit:
-        $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
-        Log::debug(sprintf('Amount is now %s', $amount));
+        $piggyBank = $this->findPiggybank($user);
+        if (null === $piggyBank) {
+            Log::info(
+                sprintf('No piggy bank names "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
+            );
 
-        // if amount is zero, stop.
-        if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
-
-            return;
+            return false;
         }
 
-        // make sure we can add amount:
-        if (false === $repository->canAddAmount($piggyBank, $amount)) {
-            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
+        Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
-            return;
+        /** @var Transaction $source */
+        $source = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '<', 0)->first();
+        /** @var Transaction $destination */
+        $destination = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '>', 0)->first();
+
+        if ((int)$source->account_id === (int)$piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so remove amount.');
+            $this->removeAmount($journal, $piggyBank, $destination->amount);
+
+            return true;
         }
-        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
+        if ((int)$destination->account_id === (int)$piggyBank->account_id) {
+            Log::debug('Piggy bank account is linked to source, so add amount.');
+            $this->addAmount($journal, $piggyBank, $destination->amount);
 
-        $repository->addAmount($piggyBank, $amount);
-        $repository->createEventWithJournal($piggyBank, app('steam')->positive($amount), $journal);
+            return true;
+        }
+        Log::info('Piggy bank is not linked to source or destination, so no action will be taken.');
+
+        return true;
     }
 
     /**
@@ -109,8 +116,8 @@ class UpdatePiggybank implements ActionInterface
      */
     private function removeAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
     {
-        $user = User::find($journalArray['user_id']);
-        $journal = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
+        $user       = User::find($journalArray['user_id']);
+        $journal    = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser($journal->user);
 
@@ -141,46 +148,41 @@ class UpdatePiggybank implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * @param array     $journalArray
+     * @param PiggyBank $piggyBank
+     * @param string    $amount
      */
-    public function actOnArray(array $journal): bool
+    private function addAmount(array $journalArray, PiggyBank $piggyBank, string $amount): void
     {
-        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
-        if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
-            Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal['transaction_journal_id'], $journal['transaction_type_type']));
+        $user       = User::find($journalArray['user_id']);
+        $journal    = $user->transactionJournals()->find($journalArray['transaction_journal_id']);
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($journal->user);
 
-            return false;
+        // how much can we add to the piggy bank?
+        $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
+        Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+
+        // update amount to fit:
+        $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
+        Log::debug(sprintf('Amount is now %s', $amount));
+
+        // if amount is zero, stop.
+        if (0 === bccomp('0', $amount)) {
+            Log::warning('Amount left is zero, stop.');
+
+            return;
         }
-        $user = User::find($journal['user_id']);
 
-        $piggyBank = $this->findPiggybank($user);
-        if (null === $piggyBank) {
-            Log::info(sprintf('No piggy bank names "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id));
+        // make sure we can add amount:
+        if (false === $repository->canAddAmount($piggyBank, $amount)) {
+            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
 
-            return false;
+            return;
         }
+        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
 
-        Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
-
-        /** @var Transaction $source */
-        $source = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '<', 0)->first();
-        /** @var Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journal['transaction_journal_id'])->where('amount', '>', 0)->first();
-
-        if ((int) $source->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so remove amount.');
-            $this->removeAmount($journal, $piggyBank, $destination->amount);
-
-            return true;
-        }
-        if ((int) $destination->account_id === (int) $piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so add amount.');
-            $this->addAmount($journal, $piggyBank, $destination->amount);
-
-            return true;
-        }
-        Log::info('Piggy bank is not linked to source or destination, so no action will be taken.');
-
-        return true;
+        $repository->addAmount($piggyBank, $amount);
+        $repository->createEventWithJournal($piggyBank, app('steam')->positive($amount), $journal);
     }
 }

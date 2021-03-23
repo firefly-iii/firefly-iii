@@ -49,27 +49,6 @@ class SetDestinationAccount implements ActionInterface
     }
 
     /**
-     * @return Account|null
-     */
-    private function findExpenseAccount(): ?Account
-    {
-        $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
-        if (null === $account) {
-            $data    = [
-                'name'            => $this->action->action_value,
-                'account_type'    => 'expense',
-                'account_type_id' => null,
-                'virtual_balance' => 0,
-                'active'          => true,
-                'iban'            => null,
-            ];
-            $account = $this->repository->store($data);
-        }
-        Log::debug(sprintf('Found or created expense account #%d ("%s")', $account->id, $account->name));
-        return $account;
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool
@@ -82,7 +61,11 @@ class SetDestinationAccount implements ActionInterface
         // it depends on the type what kind of destination account is expected.
         $expectedTypes = config(sprintf('firefly.source_dests.%s.%s', $type, $journal['source_account_type']));
         if (null === $expectedTypes) {
-            Log::error(sprintf('Configuration line "%s" is unexpectedly empty. Stopped.', sprintf('firefly.source_dests.%s.%s', $type, $journal['source_account_type'])));
+            Log::error(
+                sprintf(
+                    'Configuration line "%s" is unexpectedly empty. Stopped.', sprintf('firefly.source_dests.%s.%s', $type, $journal['source_account_type'])
+                )
+            );
 
             return false;
         }
@@ -106,6 +89,7 @@ class SetDestinationAccount implements ActionInterface
             $expense = $this->findExpenseAccount();
             if (null === $expense) {
                 Log::error('Could not create expense account.');
+
                 return false;
             }
             DB::table('transactions')
@@ -122,10 +106,33 @@ class SetDestinationAccount implements ActionInterface
 
     /**
      * @param array $types
+     *
      * @return Account|null
      */
     private function findAccount(array $types): ?Account
     {
         return $this->repository->findByName($this->action->action_value, $types);
+    }
+
+    /**
+     * @return Account|null
+     */
+    private function findExpenseAccount(): ?Account
+    {
+        $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
+        if (null === $account) {
+            $data    = [
+                'name'            => $this->action->action_value,
+                'account_type'    => 'expense',
+                'account_type_id' => null,
+                'virtual_balance' => 0,
+                'active'          => true,
+                'iban'            => null,
+            ];
+            $account = $this->repository->store($data);
+        }
+        Log::debug(sprintf('Found or created expense account #%d ("%s")', $account->id, $account->name));
+
+        return $account;
     }
 }

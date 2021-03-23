@@ -25,6 +25,8 @@ namespace FireflyIII\TransactionRules\Actions;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -46,6 +48,74 @@ class SetSourceAccount implements ActionInterface
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function actOnArray(array $journal): bool
+    {
+        $user = User::find($journal['user_id']);
+        $type = $journal['transaction_type_type'];
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::find((int)$journal['transaction_journal_id']);
+        /** @var AccountRepositoryInterface repository */
+        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository->setUser($user);
+
+        // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
+        $newAccount = $this->findAssetAccount($type);
+        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
+            Log::error(
+                sprintf(
+                    'Cannot change source account of journal #%d because no asset account with name "%s" exists.', $journal['transaction_journal_id'],
+                    $this->action->action_value
+                )
+            );
+
+            return false;
+        }
+        // new source account must be different from the current destination:
+        $destinationId = (int)$journal['destination_account_id'];
+        /** @var Transaction $source */
+        $source = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null !== $source) {
+            $destinationId = $source->account ? (int)$source->account->id : $destinationId;
+        }
+        if (TransactionType::TRANSFER === $type && null !== $newAccount && (int)$newAccount->id === $destinationId) {
+            Log::error(
+                sprintf(
+                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.', $newAccount->id,
+                    $destinationId
+                )
+            );
+
+            return false;
+        }
+
+
+        // if this is a deposit, the new source account must be a revenue account and may be created:
+        if (TransactionType::DEPOSIT === $type) {
+            $newAccount = $this->findRevenueAccount();
+        }
+        if (null === $newAccount) {
+            Log::error('New account is NULL');
+
+            return false;
+        }
+
+        Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
+
+        // update source transaction with new source account:
+        // get source transaction:
+        DB::table('transactions')
+          ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
+          ->where('amount', '<', 0)
+          ->update(['account_id' => $newAccount->id]);
+
+        Log::debug(sprintf('Updated journal #%d and gave it new source account ID.', $journal['transaction_journal_id']));
+
+        return true;
     }
 
     /**
@@ -83,47 +153,7 @@ class SetSourceAccount implements ActionInterface
             $account = $this->repository->store($data);
         }
         Log::debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
+
         return $account;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function actOnArray(array $journal): bool
-    {
-        $user             = User::find($journal['user_id']);
-        $type             = $journal['transaction_type_type'];
-        $this->repository = app(AccountRepositoryInterface::class);
-        $this->repository->setUser($user);
-
-        // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        $newAccount = $this->findAssetAccount($type);
-        if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
-            Log::error(sprintf('Cannot change source account of journal #%d because no asset account with name "%s" exists.', $journal['transaction_journal_id'], $this->action->action_value));
-
-            return false;
-        }
-
-        // if this is a deposit, the new source account must be a revenue account and may be created:
-        if (TransactionType::DEPOSIT === $type) {
-            $newAccount = $this->findRevenueAccount();
-        }
-        if (null === $newAccount) {
-            Log::error('New account is NULL');
-            return false;
-        }
-
-        Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
-
-        // update source transaction with new source account:
-        // get source transaction:
-        DB::table('transactions')
-          ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
-          ->where('amount', '<', 0)
-          ->update(['account_id' => $newAccount->id]);
-
-        Log::debug(sprintf('Updated journal #%d and gave it new source account ID.', $journal['transaction_journal_id']));
-
-        return true;
     }
 }

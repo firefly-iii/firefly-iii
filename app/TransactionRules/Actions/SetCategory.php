@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\User;
 use Log;
-use DB;
 
 /**
  * Class SetCategory.
@@ -52,8 +52,9 @@ class SetCategory implements ActionInterface
     {
         $user = User::find($journal['user_id']);
         $search = $this->action->action_value;
-        if(null === $user) {
+        if (null === $user) {
             Log::error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
+
             return false;
         }
 
@@ -62,12 +63,22 @@ class SetCategory implements ActionInterface
         $factory->setUser($user);
         $category = $factory->findOrCreate(null, $search);
         if (null === $category) {
-            Log::debug(sprintf('RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'], $search));
+            Log::debug(
+                sprintf(
+                    'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.', $journal['transaction_journal_id'],
+                    $search
+                )
+            );
 
             return false;
         }
 
-        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal['transaction_journal_id'], $category->id, $category->name));
+        Log::debug(
+            sprintf(
+                'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal['transaction_journal_id'], $category->id,
+                $category->name
+            )
+        );
 
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);

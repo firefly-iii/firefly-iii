@@ -60,6 +60,7 @@ class SetDescription implements ActionInterface
                 $this->action->action_value
             )
         );
+
         return true;
     }
 }

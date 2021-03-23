@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\RuleAction;
 use DB;
+use FireflyIII\Models\RuleAction;
 
 /**
  * Class AppendDescription.
@@ -49,6 +49,7 @@ class AppendDescription implements ActionInterface
     {
         $description = sprintf('%s%s', $journal['description'], $this->action->action_value);
         DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+
         return true;
     }
 }
