@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'Pierwszy podział określa wartość tego pola',
     'first_split_overrules_source'              => 'Pierwszy podział może nadpisać konto źródłowe',
     'first_split_overrules_destination'         => 'Pierwszy podział może nadpisać konto docelowe',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Witaj w Firefly III!',

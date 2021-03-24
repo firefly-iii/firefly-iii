@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'De eerste split bepaalt wat hier staat',
     'first_split_overrules_source'              => 'De eerste split kan de bronrekening overschrijven',
     'first_split_overrules_destination'         => 'De eerste split kan de doelrekening overschrijven',
+    'spent_x_of_y'                              => '{amount} van {total} uitgegeven',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',

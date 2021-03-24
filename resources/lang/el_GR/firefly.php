@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'Ο πρώτος διαχωρισμός καθορίζει την τιμή αυτού του πεδίου',
     'first_split_overrules_source'              => 'Ο πρώτος διαχωρισμός ενδέχεται να παρακάμψει τον λογαριασμό προέλευσης',
     'first_split_overrules_destination'         => 'Ο πρώτος διαχωρισμός ενδέχεται να παρακάμψει τον λογαριασμό προορισμού',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Καλωσήρθατε στο Firefly III!',

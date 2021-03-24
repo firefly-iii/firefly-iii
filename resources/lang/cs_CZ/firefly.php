@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'The first split determines the value of this field',
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Vítejte ve Firefly III!',

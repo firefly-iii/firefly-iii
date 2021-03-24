@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'La première ventilation détermine la valeur de ce champ',
     'first_split_overrules_source'              => 'La première ventilation peut remplacer le compte source',
     'first_split_overrules_destination'         => 'La première ventilation peut remplacer le compte de destination',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Bienvenue sur Firefly III !',

@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => '首笔拆分决定此字段的值',
     'first_split_overrules_source'              => '首笔拆分可能覆盖来源账户',
     'first_split_overrules_destination'         => '首笔拆分可能覆盖目标账户',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => '欢迎使用 Firefly III！',

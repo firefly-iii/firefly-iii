@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'La prima suddivisione determina il valore di questo campo',
     'first_split_overrules_source'              => 'La prima suddivisione potrebbe sovrascrivere l\'account di origine',
     'first_split_overrules_destination'         => 'La prima suddivisione potrebbe sovrascrivere l\'account di destinazione',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Benvenuto in Firefly III!',

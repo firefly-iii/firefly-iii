@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'Die erste Aufteilung bestimmt den Wert dieses Feldes',
     'first_split_overrules_source'              => 'Die erste Aufteilung könnte das Quellkonto überschreiben',
     'first_split_overrules_destination'         => 'Die erste Aufteilung könnte das Zielkonto überschreiben',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',

@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'A primeira divisão determina o valor deste campo',
     'first_split_overrules_source'              => 'A primeira divisão pode anular a conta de origem',
     'first_split_overrules_destination'         => 'A primeira divisão pode anular a conta de destino',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Bem Vindo ao Firefly III!',

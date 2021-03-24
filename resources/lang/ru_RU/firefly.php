@@ -1243,6 +1243,7 @@ return [
     'first_split_decides'                       => 'В данном поле используется значение из первой части разделенной транзакции',
     'first_split_overrules_source'              => 'Значение из первой части транзакции может изменить счет источника',
     'first_split_overrules_destination'         => 'Значение из первой части транзакции может изменить счет назначения',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Добро пожаловать в Firefly III!',
