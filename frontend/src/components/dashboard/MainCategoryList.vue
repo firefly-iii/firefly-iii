@@ -53,14 +53,15 @@
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.spent) }}
                 </span>
               </div>
-              <span v-if="category.spentPct <= 20">&nbsp;
+              <span v-if="category.spentPct <= 20" class="progress-label" style="line-height: 16px;">&nbsp;
               {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.spent) }}
               </span>
+
             </div>
 
             <!-- EARNED -->
             <div v-if="category.earnedPct > 0" class="progress justify-content-end" title="hello2">
-              <span v-if="category.earnedPct <= 20">
+              <span v-if="category.earnedPct <= 20" style="line-height: 16px;">
                 {{ Intl.NumberFormat(locale, {style: 'currency', currency: category.currency_code}).format(category.earned) }}
                 &nbsp;</span>
               <div :aria-valuenow="category.earnedPct" :style="{ width: category.earnedPct  + '%'}" aria-valuemax="100"

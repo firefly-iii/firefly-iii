@@ -3183,9 +3183,9 @@ ekko-lightbox@^5.3.0:
   integrity sha512-mbacwySuVD3Ad6F2hTkjSTvJt59bcVv2l/TmBerp4xZnLak8tPtA4AScUn4DL42c1ksTiAO6sGhJZ52P/1Qgew==
 
 electron-to-chromium@^1.3.649:
-  version "1.3.695"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.695.tgz#955f419cf99137226180cc4cca2e59015a4e248d"
-  integrity sha512-lz66RliUqLHU1Ojxx1A4QUxKydjiQ79Y4dZyPobs2Dmxj5aVL2TM3KoQ2Gs7HS703Bfny+ukI3KOxwAB0xceHQ==
+  version "1.3.697"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.697.tgz#4ba8af135d72d06534bd78f68d1be0dca3d2c590"
+  integrity sha512-VTAS+IWwGlfaL7VtfUMzFeV55PT/HglNFqQ6eW9E3PfjvPqhZfqJj+8dd9zrqrJYcouUfCgQw0OIse85Dz9V9Q==
 
 elliptic@^6.5.3:
   version "6.5.4"
@@ -6724,9 +6724,9 @@ regjsgen@^0.5.1:
   integrity sha512-OFFT3MfrH90xIW8OOSyUrk6QHD5E9JOTeGodiJeBS3J6IwlgzJMNE/1bZklWz5oTg+9dCMyEetclvCVXOPoN3A==
 
 regjsparser@^0.6.4:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.6.8.tgz#4532c3da36d75d56e3f394ce2ea6842bde7496bd"
-  integrity sha512-3weFrFQREJhJ2PW+iCGaG6TenyzNSZgsBKZ/oEf6Trme31COSeIWhHw9O6FPkuXktfx+b6Hf/5e6dKPHaROq2g==
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.6.9.tgz#b489eef7c9a2ce43727627011429cf833a7183e6"
+  integrity sha512-ZqbNRz1SNjLAiYuwY0zoXW8Ne675IX5q+YHioAGbCw4X96Mjl2+dcX9B2ciaeyYjViDAfvIjFpQjJgLttTEERQ==
   dependencies:
     jsesc "~0.5.0"
 
@@ -8106,9 +8106,9 @@ vue-typeahead-bootstrap@^2.5.5:
     vue "^2.5.17"
 
 vue2-leaflet@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/vue2-leaflet/-/vue2-leaflet-2.6.0.tgz#c83c60a745fbc2a74d9dbd0f75b2a5ae07d220a9"
-  integrity sha512-JG+w9TtNuk1yRpPta+RjzH6J+opdRUPzSo8UuBnwk+a/6XD0f2tsaB6g3D6ZpBgIE4wZA2dbZ0dZFz2ulYMj3A==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/vue2-leaflet/-/vue2-leaflet-2.7.0.tgz#e8a78671b8fa843ab19cfd93582bc166a05ec3ed"
+  integrity sha512-uT7lpFoVEDhINMyTpiAthh6aiKFGHuYWLoVH8JJ0YNNSch+XMZFl4YBQ0S2hHYDquQIsh8zx+yINeUI01y9ugw==
 
 vue@^2.5.17, vue@^2.6.10, vue@^2.6.12:
   version "2.6.12"
