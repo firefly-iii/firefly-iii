@@ -65,6 +65,7 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "Opprett ny utgiftskonto",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "Description of the split transaction",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "S\u00f8k",
+        "create_new_asset": "Opprett ny aktivakonto",
+        "asset_accounts": "Aktivakontoer",
         "reset_after": "Reset form after submission",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Transaksjonskoblinger",
         "go_to_withdrawals": "Go to your withdrawals",
         "revenue_accounts": "Inntektskontoer",
-        "add_another_split": "Legg til en oppdeling til"
+        "add_another_split": "Legg til en oppdeling til",
+        "actions": "Handlinger",
+        "edit": "Rediger",
+        "delete": "Slett",
+        "reconcile_this_account": "Avstem denne kontoen"
     },
     "list": {
         "piggy_bank": "Sparegris",
@@ -101,9 +109,7 @@
         "name": "Navn",
         "role": "Rolle",
         "iban": "IBAN",
-        "lastActivity": "Siste aktivitet",
         "currentBalance": "N\u00e5v\u00e6rende saldo",
-        "balanceDiff": "Saldodifferanse",
         "next_expected_match": "Neste forventede treff"
     },
     "config": {

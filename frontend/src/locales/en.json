@@ -65,6 +65,7 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "Create new expense account",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "Description of the split transaction",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Search",
+        "create_new_asset": "Create new asset account",
+        "asset_accounts": "Asset accounts",
         "reset_after": "Reset form after submission",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Transaction links",
         "go_to_withdrawals": "Go to your withdrawals",
         "revenue_accounts": "Revenue accounts",
-        "add_another_split": "Add another split"
+        "add_another_split": "Add another split",
+        "actions": "Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "reconcile_this_account": "Reconcile this account"
     },
     "list": {
         "piggy_bank": "Piggy bank",
@@ -101,9 +109,7 @@
         "name": "Name",
         "role": "Role",
         "iban": "IBAN",
-        "lastActivity": "Last activity",
         "currentBalance": "Current balance",
-        "balanceDiff": "Balance difference",
         "next_expected_match": "Next expected match"
     },
     "config": {

@@ -65,6 +65,7 @@
         "weekly_budgets": "Budget settimanali",
         "monthly_budgets": "Budget mensili",
         "quarterly_budgets": "Bilanci trimestrali",
+        "create_new_expense": "Crea un nuovo conto di spesa",
         "half_year_budgets": "Bilanci semestrali",
         "yearly_budgets": "Budget annuali",
         "split_transaction_title": "Descrizione della transazione suddivisa",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> (\"{title}\") non ha avuto cambiamenti.",
         "transaction_updated_link": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> (\"{title}\") \u00e8 stata aggiornata.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Cerca",
+        "create_new_asset": "Crea un nuovo conto attivit\u00e0",
+        "asset_accounts": "Conti attivit\u00e0",
         "reset_after": "Resetta il modulo dopo l'invio",
         "bill_paid_on": "Pagata il {date}",
         "first_split_decides": "La prima suddivisione determina il valore di questo campo",
@@ -92,7 +96,11 @@
         "journal_links": "Collegamenti della transazione",
         "go_to_withdrawals": "Vai ai tuoi prelievi",
         "revenue_accounts": "Conti entrate",
-        "add_another_split": "Aggiungi un'altra divisione"
+        "add_another_split": "Aggiungi un'altra divisione",
+        "actions": "Azioni",
+        "edit": "Modifica",
+        "delete": "Elimina",
+        "reconcile_this_account": "Riconcilia questo conto"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
@@ -101,9 +109,7 @@
         "name": "Nome",
         "role": "Ruolo",
         "iban": "IBAN",
-        "lastActivity": "Ultima attivit\u00e0",
         "currentBalance": "Saldo corrente",
-        "balanceDiff": "Differenze saldi",
         "next_expected_match": "Prossimo abbinamento previsto"
     },
     "config": {

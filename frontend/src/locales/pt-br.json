@@ -65,6 +65,7 @@
         "weekly_budgets": "Or\u00e7amentos semanais",
         "monthly_budgets": "Or\u00e7amentos mensais",
         "quarterly_budgets": "Or\u00e7amentos trimestrais",
+        "create_new_expense": "Criar nova conta de despesa",
         "half_year_budgets": "Or\u00e7amentos semestrais",
         "yearly_budgets": "Or\u00e7amentos anuais",
         "split_transaction_title": "Descri\u00e7\u00e3o da transa\u00e7\u00e3o dividida",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "A <a href=\"transactions\/show\/{ID}\">Transa\u00e7\u00e3o #{ID}<\/a> (\"{title}\") n\u00e3o recebeu nenhuma altera\u00e7\u00e3o.",
         "transaction_updated_link": "A <a href=\"transactions\/show\/{ID}\">Transa\u00e7\u00e3o #{ID}<\/a> (\"{title}\") foi atualizada.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Pesquisa",
+        "create_new_asset": "Criar nova conta de ativo",
+        "asset_accounts": "Contas de ativo",
         "reset_after": "Resetar o formul\u00e1rio ap\u00f3s o envio",
         "bill_paid_on": "Pago em {date}",
         "first_split_decides": "A primeira divis\u00e3o determina o valor deste campo",
@@ -92,7 +96,11 @@
         "journal_links": "Transa\u00e7\u00f5es ligadas",
         "go_to_withdrawals": "V\u00e1 para seus saques",
         "revenue_accounts": "Contas de receitas",
-        "add_another_split": "Adicionar outra divis\u00e3o"
+        "add_another_split": "Adicionar outra divis\u00e3o",
+        "actions": "A\u00e7\u00f5es",
+        "edit": "Editar",
+        "delete": "Apagar",
+        "reconcile_this_account": "Concilie esta conta"
     },
     "list": {
         "piggy_bank": "Cofrinho",
@@ -101,9 +109,7 @@
         "name": "Nome",
         "role": "Papel",
         "iban": "IBAN",
-        "lastActivity": "\u00daltima atividade",
         "currentBalance": "Saldo atual",
-        "balanceDiff": "Diferen\u00e7a de saldo",
         "next_expected_match": "Pr\u00f3ximo correspondente esperado"
     },
     "config": {

@@ -78,6 +78,7 @@ new Vue({
             beforeCreate() {
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
+                this.$store.dispatch('updateListPageSizePreference');
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });

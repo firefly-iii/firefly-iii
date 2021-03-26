@@ -65,6 +65,7 @@
         "weekly_budgets": "Presupuestos semanales",
         "monthly_budgets": "Presupuestos mensuales",
         "quarterly_budgets": "Presupuestos trimestrales",
+        "create_new_expense": "Crear nueva cuenta de gastos",
         "half_year_budgets": "Presupuestos semestrales",
         "yearly_budgets": "Presupuestos anuales",
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> (\"{title}\") no recibi\u00f3 ning\u00fan cambio.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">La transacci\u00f3n #{ID}<\/a> (\"{title}\") ha sido actualizada.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Buscar",
+        "create_new_asset": "Crear nueva cuenta de activos",
+        "asset_accounts": "Cuenta de activos",
         "reset_after": "Restablecer formulario despu\u00e9s del env\u00edo",
         "bill_paid_on": "Pagado el {date}",
         "first_split_decides": "La primera divisi\u00f3n determina el valor de este campo",
@@ -92,7 +96,11 @@
         "journal_links": "Enlaces de transacciones",
         "go_to_withdrawals": "Ir a tus retiradas",
         "revenue_accounts": "Cuentas de ingresos",
-        "add_another_split": "A\u00f1adir otra divisi\u00f3n"
+        "add_another_split": "A\u00f1adir otra divisi\u00f3n",
+        "actions": "Acciones",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "reconcile_this_account": "Reconciliar esta cuenta"
     },
     "list": {
         "piggy_bank": "Alcancilla",
@@ -101,9 +109,7 @@
         "name": "Nombre",
         "role": "Rol",
         "iban": "IBAN",
-        "lastActivity": "Actividad m\u00e1s reciente",
         "currentBalance": "Balance actual",
-        "balanceDiff": "Diferencia de saldo",
         "next_expected_match": "Pr\u00f3xima coincidencia esperada"
     },
     "config": {

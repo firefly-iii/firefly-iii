@@ -65,6 +65,7 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "\u00daj k\u00f6lts\u00e9gsz\u00e1mla l\u00e9trehoz\u00e1sa",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "Felosztott tranzakci\u00f3 le\u00edr\u00e1sa",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Keres\u00e9s",
+        "create_new_asset": "\u00daj eszk\u00f6zsz\u00e1mla l\u00e9trehoz\u00e1sa",
+        "asset_accounts": "Eszk\u00f6zsz\u00e1ml\u00e1k",
         "reset_after": "\u0170rlap t\u00f6rl\u00e9se a bek\u00fcld\u00e9s ut\u00e1n",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Tranzakci\u00f3 \u00f6sszekapcsol\u00e1sok",
         "go_to_withdrawals": "Ugr\u00e1s a k\u00f6lts\u00e9gekhez",
         "revenue_accounts": "J\u00f6vedelemsz\u00e1ml\u00e1k",
-        "add_another_split": "M\u00e1sik feloszt\u00e1s hozz\u00e1ad\u00e1sa"
+        "add_another_split": "M\u00e1sik feloszt\u00e1s hozz\u00e1ad\u00e1sa",
+        "actions": "M\u0171veletek",
+        "edit": "Szerkeszt\u00e9s",
+        "delete": "T\u00f6rl\u00e9s",
+        "reconcile_this_account": "Sz\u00e1mla egyeztet\u00e9se"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -101,9 +109,7 @@
         "name": "N\u00e9v",
         "role": "Szerepk\u00f6r",
         "iban": "IBAN",
-        "lastActivity": "Utols\u00f3 aktivit\u00e1s",
         "currentBalance": "Aktu\u00e1lis egyenleg",
-        "balanceDiff": "Egyenleg k\u00fcl\u00f6nbs\u00e9g",
         "next_expected_match": "K\u00f6vetkez\u0151 v\u00e1rhat\u00f3 egyez\u00e9s"
     },
     "config": {

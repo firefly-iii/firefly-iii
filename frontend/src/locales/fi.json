@@ -65,6 +65,7 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "Luo uusi maksutili",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "Jaetun tapahtuman kuvaus",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Hae",
+        "create_new_asset": "Luo uusi omaisuustili",
+        "asset_accounts": "K\u00e4ytt\u00f6tilit",
         "reset_after": "Tyhjenn\u00e4 lomake l\u00e4hetyksen j\u00e4lkeen",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Tapahtuman linkit",
         "go_to_withdrawals": "Go to your withdrawals",
         "revenue_accounts": "Tuottotilit",
-        "add_another_split": "Lis\u00e4\u00e4 tapahtumaan uusi osa"
+        "add_another_split": "Lis\u00e4\u00e4 tapahtumaan uusi osa",
+        "actions": "Toiminnot",
+        "edit": "Muokkaa",
+        "delete": "Poista",
+        "reconcile_this_account": "T\u00e4sm\u00e4yt\u00e4 t\u00e4m\u00e4 tili"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
@@ -101,9 +109,7 @@
         "name": "Nimi",
         "role": "Rooli",
         "iban": "IBAN",
-        "lastActivity": "Viimeisin tapahtuma",
         "currentBalance": "T\u00e4m\u00e4nhetkinen saldo",
-        "balanceDiff": "Saldomuutos",
         "next_expected_match": "Seuraava lasku odotettavissa"
     },
     "config": {

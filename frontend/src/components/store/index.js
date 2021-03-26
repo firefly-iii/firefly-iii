@@ -48,12 +48,16 @@ export default new Vuex.Store(
         plugins: debug ? [createLogger()] : [],
         state: {
             currencyPreference: {},
-            locale: 'en-US'
+            locale: 'en-US',
+            listPageSize: 50
         },
         mutations: {
             setCurrencyPreference(state, payload) {
                 //console.log('setCurrencyPreference', payload);
                 state.currencyPreference = payload.payload;
+            },
+            setListPageSizePreference(state, payload) {
+                state.listPageSize = payload.length;
             },
             initialiseStore(state) {
                 // if locale in local storage:
@@ -81,9 +85,24 @@ export default new Vuex.Store(
             },
             locale: state => {
                 return state.locale;
-            }
+            },
+            listPageSize: state => {
+                return state.listPageSize
+            },
         },
         actions: {
+            updateListPageSizePreference: function (context) {
+                if (localStorage.listPageSize) {
+                    context.commit('updateListPageSizePreference', {payload: JSON.parse(localStorage.listPageSize)});
+                    return;
+                }
+                axios.get('./api/v1/preferences/listPageSize')
+                    .then(response => {
+                              console.log('listPageSize is ' + parseInt(response.data.data.attributes.data));
+                              context.commit('setListPageSizePreference', {length: parseInt(response.data.data.attributes.data)});
+                          }
+                    );
+            },
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
                     //console.log('set from local storage.');

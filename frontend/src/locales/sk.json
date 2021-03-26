@@ -65,6 +65,7 @@
         "weekly_budgets": "T\u00fd\u017edenn\u00e9 rozpo\u010dty",
         "monthly_budgets": "Mesa\u010dn\u00e9 rozpo\u010dty",
         "quarterly_budgets": "\u0160tvr\u0165ro\u010dn\u00e9 rozpo\u010dty",
+        "create_new_expense": "Vytvori\u0165 v\u00fddavko\u00fd \u00fa\u010det",
         "half_year_budgets": "Polro\u010dn\u00e9 rozpo\u010dty",
         "yearly_budgets": "Ro\u010dn\u00e9 rozpo\u010dty",
         "split_transaction_title": "Popis roz\u00fa\u010dtovania",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "H\u013eada\u0165",
+        "create_new_asset": "Vytvori\u0165 nov\u00fd \u00fa\u010det akt\u00edv",
+        "asset_accounts": "\u00da\u010dty akt\u00edv",
         "reset_after": "Po odoslan\u00ed vynulova\u0165 formul\u00e1r",
         "bill_paid_on": "Uhraden\u00e9 {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Prepojenia transakcie",
         "go_to_withdrawals": "Zobrazi\u0165 v\u00fdbery",
         "revenue_accounts": "V\u00fdnosov\u00e9 \u00fa\u010dty",
-        "add_another_split": "Prida\u0165 \u010fal\u0161ie roz\u00fa\u010dtovanie"
+        "add_another_split": "Prida\u0165 \u010fal\u0161ie roz\u00fa\u010dtovanie",
+        "actions": "Akcie",
+        "edit": "Upravi\u0165",
+        "delete": "Odstr\u00e1ni\u0165",
+        "reconcile_this_account": "Vy\u00fa\u010dtovat tento \u00fa\u010det"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -101,9 +109,7 @@
         "name": "Meno\/N\u00e1zov",
         "role": "Rola",
         "iban": "IBAN",
-        "lastActivity": "Posledn\u00e1 aktivita",
         "currentBalance": "Aktu\u00e1lny zostatok",
-        "balanceDiff": "Rozdiel zostatku",
         "next_expected_match": "\u010eal\u0161ia o\u010dak\u00e1van\u00e1 zhoda"
     },
     "config": {

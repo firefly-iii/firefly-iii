@@ -18,17 +18,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-require('../../bootstrap');
-
+import Vue from "vue";
 import Index from "../../components/accounts/Index";
+import store from "../../components/store";
+import {BTable, BPagination} from 'bootstrap-vue';
+
+require('../../bootstrap');
 
 // i18n
 let i18n = require('../../i18n');
 
 let props = {};
+
+
+Vue.component('b-table', BTable);
+Vue.component('b-pagination', BPagination);
+
+
 new Vue({
             i18n,
-            render(createElement) {
+            store,
+            el: "#accounts",
+            render: (createElement) => {
                 return createElement(Index, {props: props});
-            }
-        }).$mount('#accounts');
+            },
+            beforeCreate() {
+                this.$store.commit('initialiseStore');
+                this.$store.dispatch('updateCurrencyPreference');
+                this.$store.dispatch('updateListPageSizePreference');
+                // also init the dashboard store.
+                this.$store.dispatch('dashboard/index/initialiseStore');
+            },
+        });

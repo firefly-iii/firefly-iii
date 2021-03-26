@@ -65,6 +65,7 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "T\u1ea1o t\u00e0i kho\u1ea3n chi ph\u00ed m\u1edbi",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "M\u00f4 t\u1ea3 giao d\u1ecbch t\u00e1ch",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "T\u00ecm ki\u1ebfm",
+        "create_new_asset": "T\u1ea1o t\u00e0i kho\u1ea3n m\u1edbi",
+        "asset_accounts": "t\u00e0i kho\u1ea3n",
         "reset_after": "\u0110\u1eb7t l\u1ea1i m\u1eabu sau khi g\u1eedi",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Li\u00ean k\u1ebft giao d\u1ecbch",
         "go_to_withdrawals": "Chuy\u1ec3n \u0111\u1ebfn m\u1ee5c r\u00fat ti\u1ec1n c\u1ee7a b\u1ea1n",
         "revenue_accounts": "T\u00e0i kho\u1ea3n doanh thu",
-        "add_another_split": "Th\u00eam m\u1ed9t ph\u00e2n chia kh\u00e1c"
+        "add_another_split": "Th\u00eam m\u1ed9t ph\u00e2n chia kh\u00e1c",
+        "actions": "H\u00e0nh \u0111\u1ed9ng",
+        "edit": "S\u1eeda",
+        "delete": "X\u00f3a",
+        "reconcile_this_account": "\u0110i\u1ec1u ch\u1ec9nh t\u00e0i kho\u1ea3n n\u00e0y"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",
@@ -101,9 +109,7 @@
         "name": "T\u00ean",
         "role": "Quy t\u1eafc",
         "iban": "IBAN",
-        "lastActivity": "Ho\u1ea1t \u0111\u1ed9ng cu\u1ed1i c\u00f9ng",
         "currentBalance": "S\u1ed1 d\u01b0 hi\u1ec7n t\u1ea1i",
-        "balanceDiff": "S\u1ed1 d\u01b0 ch\u00eanh l\u1ec7ch",
         "next_expected_match": "Tr\u1eadn \u0111\u1ea5u d\u1ef1 ki\u1ebfn ti\u1ebfp theo"
     },
     "config": {

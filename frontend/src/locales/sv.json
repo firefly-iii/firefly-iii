@@ -65,6 +65,7 @@
         "weekly_budgets": "Veckovis budgetar",
         "monthly_budgets": "M\u00e5natliga budgetar",
         "quarterly_budgets": "Kvartalsbudgetar",
+        "create_new_expense": "Skapa ett nytt utgiftskonto",
         "half_year_budgets": "Halv\u00e5rsbudgetar",
         "yearly_budgets": "\u00c5rliga budgetar",
         "split_transaction_title": "Beskrivning av delad transaktion",
@@ -78,6 +79,9 @@
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "S\u00f6k",
+        "create_new_asset": "Skapa ett nytt tillg\u00e5ngskonto",
+        "asset_accounts": "Tillg\u00e5ngskonton",
         "reset_after": "\u00c5terst\u00e4ll formul\u00e4r efter inskickat",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -92,7 +96,11 @@
         "journal_links": "Transaktionsl\u00e4nkar",
         "go_to_withdrawals": "G\u00e5 till dina uttag",
         "revenue_accounts": "Int\u00e4ktskonton",
-        "add_another_split": "L\u00e4gga till en annan delning"
+        "add_another_split": "L\u00e4gga till en annan delning",
+        "actions": "\u00c5tg\u00e4rder",
+        "edit": "Redigera",
+        "delete": "Ta bort",
+        "reconcile_this_account": "St\u00e4m av detta konto"
     },
     "list": {
         "piggy_bank": "Spargris",
@@ -101,9 +109,7 @@
         "name": "Namn",
         "role": "Roll",
         "iban": "IBAN",
-        "lastActivity": "Senaste aktivitet",
         "currentBalance": "Nuvarande saldo",
-        "balanceDiff": "Saldodifferens",
         "next_expected_match": "N\u00e4sta f\u00f6rv\u00e4ntade tr\u00e4ff"
     },
     "config": {
