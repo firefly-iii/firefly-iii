@@ -21,8 +21,6 @@
 const mix = require('laravel-mix');
 require('laravel-mix-bundle-analyzer');
 
-
-
 // production
 mix.webpackConfig({
                       resolve: {

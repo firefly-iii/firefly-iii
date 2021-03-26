@@ -173,7 +173,7 @@ export default {
       ready: false,
       fields: [],
       currentPage: 1,
-      perPage: 5,
+      perPage: 50,
       total: 0
     }
   },
@@ -204,6 +204,7 @@ export default {
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
+
 
     // per page:
     //this.perPage = this.get
@@ -255,6 +256,7 @@ export default {
 
   methods: {
     getAccountList: function () {
+      this.perPage = this.listPageSize;
       this.accounts = [];
       // needs to be async so call itself again:
       this.downloadAccountList(1);
