@@ -6,6 +6,21 @@
 <div id="accounts"></div>
 {% endblock %}
 
+{% block control %}
+    <div>
+        <div class="p-3 control-sidebar-content">
+            <h5>{{ 'date_range'|_ }}</h5>
+            <hr class="mb-2">
+            <div id="calendar"></div>
+            <hr class="mb-2">
+            <h5>{{ 'list_options'|_ }}</h5>
+            <div id="indexOptions"></div>
+            <hr class="mb-2">
+        </div>
+    </div>
+{% endblock %}
+
+
 {% block scripts %}
     <script src="v2/js/accounts/index.js" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

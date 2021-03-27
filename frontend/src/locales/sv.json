@@ -66,6 +66,8 @@
         "monthly_budgets": "M\u00e5natliga budgetar",
         "quarterly_budgets": "Kvartalsbudgetar",
         "create_new_expense": "Skapa ett nytt utgiftskonto",
+        "create_new_revenue": "Skapa ett nytt int\u00e4ktskonto",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "Halv\u00e5rsbudgetar",
         "yearly_budgets": "\u00c5rliga budgetar",
         "split_transaction_title": "Beskrivning av delad transaktion",

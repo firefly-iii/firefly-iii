@@ -23,19 +23,29 @@ import Vuex, {createLogger} from 'vuex'
 import transactions_create from './modules/transactions/create';
 import transactions_edit from './modules/transactions/edit';
 import dashboard_index from './modules/dashboard/index';
+import root_store from './modules/root';
+import accounts_index from './modules/accounts/index';
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store(
     {
+        namespaced: true,
         modules: {
+            root: root_store,
             transactions: {
                 namespaced: true,
                 modules: {
                     create: transactions_create,
                     edit: transactions_edit
                 }
+            },
+            accounts: {
+                namespaced: true,
+                modules: {
+                    index: accounts_index
+                },
             },
             dashboard: {
                 namespaced: true,
@@ -53,11 +63,7 @@ export default new Vuex.Store(
         },
         mutations: {
             setCurrencyPreference(state, payload) {
-                //console.log('setCurrencyPreference', payload);
                 state.currencyPreference = payload.payload;
-            },
-            setListPageSizePreference(state, payload) {
-                state.listPageSize = payload.length;
             },
             initialiseStore(state) {
                 // if locale in local storage:
@@ -65,6 +71,7 @@ export default new Vuex.Store(
                     state.locale = localStorage.locale;
                     return;
                 }
+
                 // set locale from HTML:
                 let localeToken = document.head.querySelector('meta[name="locale"]');
                 if (localeToken) {
@@ -85,29 +92,12 @@ export default new Vuex.Store(
             },
             locale: state => {
                 return state.locale;
+            }
             },
-            listPageSize: state => {
-                return state.listPageSize
-            },
-        },
         actions: {
-            updateListPageSizePreference: function (context) {
-                if (localStorage.listPageSize) {
-                    context.commit('updateListPageSizePreference', {payload: JSON.parse(localStorage.listPageSize)});
-                    return;
-                }
-                axios.get('./api/v1/preferences/listPageSize')
-                    .then(response => {
-                              console.log('listPageSize is ' + parseInt(response.data.data.attributes.data));
-                              context.commit('setListPageSizePreference', {length: parseInt(response.data.data.attributes.data)});
-                          }
-                    );
-            },
+
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
-                    //console.log('set from local storage.');
-                    //console.log(localStorage.currencyPreference);
-                    //console.log({payload: JSON.parse(localStorage.currencyPreference)});
                     context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;
                 }

@@ -76,8 +76,12 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
-
+import Vue from "vue";
+import DatePicker from "v-calendar/lib/components/date-picker.umd";
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
+
+Vue.component('date-picker', DatePicker)
 
 export default {
   name: "Calendar",

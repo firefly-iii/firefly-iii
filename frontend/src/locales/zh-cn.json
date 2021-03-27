@@ -66,6 +66,8 @@
         "monthly_budgets": "\u6bcf\u6708\u9884\u7b97",
         "quarterly_budgets": "\u6bcf\u5b63\u5ea6\u9884\u7b97",
         "create_new_expense": "\u521b\u5efa\u65b0\u652f\u51fa\u8d26\u6237",
+        "create_new_revenue": "\u521b\u5efa\u65b0\u6536\u5165\u8d26\u6237",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "\u6bcf\u534a\u5e74\u9884\u7b97",
         "yearly_budgets": "\u6bcf\u5e74\u9884\u7b97",
         "split_transaction_title": "\u62c6\u5206\u4ea4\u6613\u7684\u63cf\u8ff0",

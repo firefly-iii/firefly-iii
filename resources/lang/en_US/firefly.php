@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Create new deposit',
     'create_new_transfer'                       => 'Create new transfer',
     'create_new_asset'                          => 'Create new asset account',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Create new expense account',
     'create_new_revenue'                        => 'Create new revenue account',
     'create_new_piggy_bank'                     => 'Create new piggy bank',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per month',
     'interest_calc_yearly'                      => 'Per year',
     'initial_balance_account'                   => 'Initial balance account of :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'New category',

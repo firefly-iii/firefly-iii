@@ -66,6 +66,8 @@
         "monthly_budgets": "Monatsbudgets",
         "quarterly_budgets": "Quartalsbudgets",
         "create_new_expense": "Neues Ausgabenkonto erstellen",
+        "create_new_revenue": "Neues Einnahmenkonto erstellen",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "Halbjahresbudgets",
         "yearly_budgets": "Jahresbudgets",
         "split_transaction_title": "Beschreibung der Splittbuchung",

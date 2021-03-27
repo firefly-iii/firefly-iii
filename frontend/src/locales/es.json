@@ -66,6 +66,8 @@
         "monthly_budgets": "Presupuestos mensuales",
         "quarterly_budgets": "Presupuestos trimestrales",
         "create_new_expense": "Crear nueva cuenta de gastos",
+        "create_new_revenue": "Crear nueva cuenta de ingresos",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "Presupuestos semestrales",
         "yearly_budgets": "Presupuestos anuales",
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",

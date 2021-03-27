@@ -34,52 +34,17 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="card-header">
-
-            <!--
-            <div class="card-tools">
-              <div class="input-group input-group-sm" style="width: 150px;">
-                <input class="form-control float-right" name="table_search" :placeholder="$t('firefly.search')" type="text">
-
-                <div class="input-group-append">
-                  <button class="btn btn-default" type="submit">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-            -->
-
-
           </div>
           <div class="card-body p-0">
-            <!--
-                <td style="text-align: right;">
-
-
-                </td>
-                <td>
-                  <div class="btn-group btn-group-sm dropleft">
-                    <div class="dropdown">
-                      <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + account.id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ $t('firefly.actions') }}
-                      </button>
-                      <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + account.id">
-                        <a class="dropdown-item" :href="'./accounts/edit/' + account.id"><i class="fa fas fa-pencil-alt"></i> {{ $t('firefly.edit') }}</a>
-                        <a class="dropdown-item" :href="'./accounts/delete/' + account.id"><i class="fa far fa-trash"></i> {{ $t('firefly.delete') }}</a>
-                        <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + account.id"><i class="fas fa-check"></i> {{ $t('firefly.reconcile_this_account') }}</a>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            -->
-
             <b-table id="my-table" striped hover primary-key="id"
                      :items="accounts" :fields="fields"
                      :per-page="perPage"
+                     sort-icon-left
+                     ref="table"
                      :current-page="currentPage"
+                     :busy.sync="loading"
+                     :sort-by.sync="sortBy"
+                     :sort-desc.sync="sortDesc"
             >
               <template #cell(title)="data">
                 <a :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
@@ -135,13 +100,25 @@
                       data.item.currency_code
                     }).format(data.item.balance_diff)
                   }}</span>)
-
-
                 </span>
               </template>
+              <template #cell(menu)="data">
+                <div class="btn-group btn-group-sm">
+                  <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + data.item.id" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                      {{ $t('firefly.actions') }}
+                    </button>
+                    <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
+                      <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><i class="fa fas fa-pencil-alt"></i> {{ $t('firefly.edit') }}</a>
+                      <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><i class="fa far fa-trash"></i> {{ $t('firefly.delete') }}</a>
+                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id"><i class="fas fa-check"></i>
+                        {{ $t('firefly.reconcile_this_account') }}</a>
+                    </div>
+                  </div>
+                </div>
+              </template>
             </b-table>
-
-
           </div>
           <div class="card-footer">
             <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
@@ -154,11 +131,8 @@
 
 <script>
 
-import {createNamespacedHelpers} from "vuex";
 import {mapGetters} from "vuex";
-// import {createNamespacedHelpers}
-//const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('');
-//const {rootMapState, rootMapGetters, rootMapActions, rootMapMutations} = createNamespacedHelpers('')
+import Sortable from "sortablejs";
 
 export default {
   name: "Index",
@@ -169,29 +143,52 @@ export default {
     return {
       accounts: [],
       type: 'all',
-      loading: true,
+      loading: false,
       ready: false,
       fields: [],
       currentPage: 1,
-      perPage: 50,
-      total: 0
+      perPage: 5,
+      total: 0,
+      sortBy: 'order',
+      sortDesc: false,
+      sortableOptions: {
+        disabled: false,
+        chosenClass: 'is-selected',
+        onEnd: null
+      },
+      sortable: null
     }
   },
   watch: {
-    datesReady: function (value) {
-      if (true === value) {
-        this.getAccountList();
-      }
+    storeReady: function () {
+      this.getAccountList();
     },
+    start: function () {
+      this.getAccountList();
+    },
+    end: function () {
+      this.getAccountList();
+    },
+    orderMode: function (value) {
+      this.updateFieldList();
+      this.sortableOptions.disabled = !value;
+      this.sortableOptions.onEnd = this.saveAccountSort;
+      if (true === value) {
+        this.reorderAccountList();
+      }
+      // make sortable of table:
+      if (null === this.sortable) {
+        this.sortable = Sortable.create(this.$refs.table.$el.querySelector('tbody'), this.sortableOptions);
+      }
+      this.sortable.option('disabled', this.sortableOptions.disabled);
+    }
   },
   computed: {
-    ...mapGetters('', ['listPageSize']),
-    ...mapGetters('dashboard/index', [
-      'start',
-      'end',
-    ]),
-    'datesReady': function () {
-      return null !== this.start && null !== this.end && this.ready;
+    ...mapGetters('root', ['listPageSize']),
+    ...mapGetters('accounts/index', ['orderMode']),
+    ...mapGetters('dashboard/index', ['start', 'end',]),
+    'indexReady': function () {
+      return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
     },
     cardTitle: function () {
       return this.$t('firefly.' + this.type + '_accounts');
@@ -204,66 +201,54 @@ export default {
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
-
-
-    // per page:
-    //this.perPage = this.get
-
-    this.fields = [
-      {
-        key: 'title',
-        label: this.$t('list.name'),
-        sortable: true
-      }
-    ];
-    // TODO sortable handle
-    // TODO menu.
-    // add extra field
-    if ('asset' === this.type) {
-      this.fields.push(
-          {
-            key: 'role',
-            label: this.$t('list.role'),
-            sortable: true
-          }
-      );
-    }
-
-    // add the rest
-    this.fields.push(
-        {
-          key: 'number',
-          label: this.$t('list.iban'),
-          sortable: false
-        }
-    );
-    this.fields.push(
-        {
-          key: 'current_balance',
-          label: this.$t('list.currentBalance'),
-          sortable: true
-        }
-    );
-    this.fields.push(
-        {
-          key: 'menu',
-          label: ' ',
-          sortable: false
-        }
-    );
+    this.updateFieldList();
     this.ready = true;
   },
 
   methods: {
-    getAccountList: function () {
-      this.perPage = this.listPageSize;
-      this.accounts = [];
-      // needs to be async so call itself again:
-      this.downloadAccountList(1);
+    saveAccountSort: function (event) {
+      let oldIndex = parseInt(event.oldIndex);
+      let newIndex = parseInt(event.newIndex);
+      let identifier = parseInt(event.item.attributes.getNamedItem('data-pk').value);
+      for (let i in this.accounts) {
+        if (this.accounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let current = this.accounts[i];
+          if (current.id === identifier) {
+            let newOrder = parseInt(current.order) + (newIndex - oldIndex);
+            let url = './api/v1/accounts/' + current.id;
+            axios.put(url, {order: newOrder}).then(response => {
+              // TODO should update local account list, not refresh the whole thing.
+              this.getAccountList();
+            });
+          }
+        }
+      }
     },
+    reorderAccountList() {
+      this.sortBy = 'order';
+      this.sortDesc = false;
+    },
+    updateFieldList() {
+      this.fields = [];
 
+      this.fields = [{key: 'title', label: this.$t('list.name'), sortable: !this.orderMode}];
+      if ('asset' === this.type) {
+        this.fields.push({key: 'role', label: this.$t('list.role'), sortable: !this.orderMode});
+      }
+      // add the rest
+      this.fields.push({key: 'number', label: this.$t('list.iban'), sortable: !this.orderMode});
+      this.fields.push({key: 'current_balance', label: this.$t('list.currentBalance'), sortable: !this.orderMode});
+      this.fields.push({key: 'menu', label: ' ', sortable: false});
+    },
+    getAccountList: function () {
+      if (this.indexReady && !this.loading) {
+        this.loading = true;
+        this.perPage = this.listPageSize ?? 51;
+        this.accounts = [];
+        this.downloadAccountList(1);
+      }
+    },
     downloadAccountList(page) {
-      console.log('Downloading page ' + page);
       axios.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
           .then(response => {
                   let currentPage = parseInt(response.data.meta.pagination.current_page);
@@ -273,6 +258,8 @@ export default {
                   if (currentPage < totalPage) {
                     let nextPage = currentPage + 1;
                     this.downloadAccountList(nextPage);
+                  } else {
+                    this.loading = false;
                   }
                 }
           );
@@ -291,14 +278,18 @@ export default {
         if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           let current = data[key];
           let acct = {};
-          acct.id = current.id;
+          acct.id = parseInt(current.id);
+          acct.order = current.attributes.order;
           acct.title = current.attributes.name;
           acct.role = this.roleTranslate(current.attributes.account_role);
-          acct.iban = current.attributes.iban;
           acct.account_number = current.attributes.account_number;
           acct.current_balance = current.attributes.current_balance;
           acct.currency_code = current.attributes.currency_code;
           acct.balance_diff = 'loading';
+
+          if (null !== current.attributes.iban) {
+            acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
+          }
 
 
           this.accounts.push(acct);
