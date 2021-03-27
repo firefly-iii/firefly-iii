@@ -9,7 +9,7 @@
         "split": "\u62c6\u5206",
         "single_split": "\u62c6\u5206",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID} (\u201c{title}\u201d)<\/a> \u5df2\u4fdd\u5b58\u3002",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID}<\/a> \u5df2\u66f4\u65b0\u3002",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID}<\/a> \u5df2\u4fdd\u5b58\u3002",
         "transaction_journal_information": "\u4ea4\u6613\u4fe1\u606f",
         "no_budget_pointer": "\u60a8\u8fd8\u6ca1\u6709\u9884\u7b97\uff0c\u60a8\u5e94\u8be5\u5728<a href=\"budgets\">\u9884\u7b97\u9875\u9762<\/a>\u8fdb\u884c\u521b\u5efa\u3002\u9884\u7b97\u53ef\u4ee5\u5e2e\u52a9\u60a8\u8ffd\u8e2a\u652f\u51fa\u3002",

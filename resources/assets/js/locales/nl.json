@@ -9,7 +9,7 @@
         "split": "Splitsen",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID} (\"{title}\")<\/a> is opgeslagen.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> is ge\u00fcpdatet.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> (\"{title}\") is ge\u00fcpdatet.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> is opgeslagen.",
         "transaction_journal_information": "Transactieinformatie",
         "no_budget_pointer": "Je hebt nog geen budgetten. Maak er een aantal op de <a href=\"budgets\">budgetten<\/a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.",

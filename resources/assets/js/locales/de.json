@@ -9,7 +9,7 @@
         "split": "Teilen",
         "single_split": "Teil",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID} (\"{title}\")<\/a> wurde gespeichert.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Buchung#{ID}<\/a> wurde aktualisiert.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Die Buchung #{ID}<\/a> (\"{title}\") wurde aktualisiert.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID}<\/a> wurde gespeichert.",
         "transaction_journal_information": "Transaktionsinformationen",
         "no_budget_pointer": "Sie scheinen noch keine Kostenrahmen festgelegt zu haben. Sie sollten einige davon auf der Seite <a href=\"budgets\">Kostenrahmen<\/a>- anlegen. Kostenrahmen k\u00f6nnen Ihnen dabei helfen, den \u00dcberblick \u00fcber die Ausgaben zu behalten.",
