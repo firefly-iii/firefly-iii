@@ -218,8 +218,8 @@ export default {
 
           // the actual account
           if (current.id === identifier) {
-            this.accounts[i].order = newOrder;
             let newOrder = parseInt(current.order) + (newIndex - oldIndex);
+            this.accounts[i].order = newOrder;
             let url = './api/v1/accounts/' + current.id;
             axios.put(url, {order: newOrder}).then(response => {
               // TODO should update local account list, not refresh the whole thing.

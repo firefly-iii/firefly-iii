@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Erstelle eine neue Einnahme',
     'create_new_transfer'                       => 'Eine neue Umbuchung erstellen',
     'create_new_asset'                          => 'Neues Bestandskonto erstellen',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Neues Ausgabenkonto erstellen',
     'create_new_revenue'                        => 'Neues Einnahmenkonto erstellen',
     'create_new_piggy_bank'                     => 'Ein neues Sparschwein erstellen',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Monatlich',
     'interest_calc_yearly'                      => 'Jährlich',
     'initial_balance_account'                   => 'Anfangsguthaben von „:account”',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Neue Kategorie',
@@ -1243,7 +1245,7 @@ return [
     'first_split_decides'                       => 'Die erste Aufteilung bestimmt den Wert dieses Feldes',
     'first_split_overrules_source'              => 'Die erste Aufteilung könnte das Quellkonto überschreiben',
     'first_split_overrules_destination'         => 'Die erste Aufteilung könnte das Zielkonto überschreiben',
-    'spent_x_of_y'                              => 'Spent {amount} of {total}',
+    'spent_x_of_y'                              => '{amount} von {total} ausgegeben',
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',

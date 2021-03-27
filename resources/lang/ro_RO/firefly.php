@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Creați un nou depozit',
     'create_new_transfer'                       => 'Creați un nou transfer',
     'create_new_asset'                          => 'Creați un nou cont de active',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Creați un nou cont de cheltuieli',
     'create_new_revenue'                        => 'Creați un nou cont de venituri',
     'create_new_piggy_bank'                     => 'Creați o nouă pușculiță',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Pe lună',
     'interest_calc_yearly'                      => 'Pe an',
     'initial_balance_account'                   => 'Bilanțul inițial al contului :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Categorie nouă',

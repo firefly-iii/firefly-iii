@@ -80,7 +80,7 @@
         "after_update_create_another": "Po aktualizacji wr\u00f3\u0107 tutaj, aby kontynuowa\u0107 edycj\u0119.",
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> (\"{title}\") nie zosta\u0142a zmieniona.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> (\"{title}\") zosta\u0142a zaktualizowana.",
-        "spent_x_of_y": "Spent {amount} of {total}",
+        "spent_x_of_y": "Wydano {amount} z {total}",
         "search": "Szukaj",
         "create_new_asset": "Utw\u00f3rz nowe konto aktyw\u00f3w",
         "asset_accounts": "Konta aktyw\u00f3w",

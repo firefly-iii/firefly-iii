@@ -71,8 +71,8 @@ class ChangesForV440 extends Migration
                     $table->integer('from_currency_id', false, true);
                     $table->integer('to_currency_id', false, true);
                     $table->date('date');
-                    $table->decimal('rate', 22, 12);
-                    $table->decimal('user_rate', 22, 12)->nullable();
+                    $table->decimal('rate', 36, 24);
+                    $table->decimal('user_rate', 36, 24)->nullable();
 
                     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                     $table->foreign('from_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');

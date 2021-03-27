@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Skapa en ny insättning',
     'create_new_transfer'                       => 'Skapa en ny överföring',
     'create_new_asset'                          => 'Skapa ett nytt tillgångskonto',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Skapa ett nytt utgiftskonto',
     'create_new_revenue'                        => 'Skapa ett nytt intäktskonto',
     'create_new_piggy_bank'                     => 'Skapa en ny spargris',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per månad',
     'interest_calc_yearly'                      => 'Per år',
     'initial_balance_account'                   => 'Startbalans för konto :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Ny kategori',

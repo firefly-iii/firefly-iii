@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Създай нов депозит',
     'create_new_transfer'                       => 'Създай ново прехвърляне',
     'create_new_asset'                          => 'Създай нова сметка за активи',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Създай нова сметка за разходи',
     'create_new_revenue'                        => 'Създай нова сметка за приходи',
     'create_new_piggy_bank'                     => 'Създай нова касичка',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'На месец',
     'interest_calc_yearly'                      => 'Годишно',
     'initial_balance_account'                   => 'Първоначално салдо на сметка ":account"',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Нова категория',

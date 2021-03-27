@@ -80,7 +80,7 @@
         "after_update_create_another": "Apr\u00e8s la mise \u00e0 jour, revenir ici pour continuer l'\u00e9dition.",
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> (\"{title}\") a \u00e9t\u00e9 mise \u00e0 jour.",
-        "spent_x_of_y": "Spent {amount} of {total}",
+        "spent_x_of_y": "D\u00e9pens\u00e9 {amount} sur {total}",
         "search": "Rechercher",
         "create_new_asset": "Cr\u00e9er un nouveau compte d\u2019actif",
         "asset_accounts": "Comptes d\u2019actif",

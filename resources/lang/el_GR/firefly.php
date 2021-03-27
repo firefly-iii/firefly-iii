@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Δημιουργία νέας κατάθεσης',
     'create_new_transfer'                       => 'Δημιουργία νέας μεταφοράς',
     'create_new_asset'                          => 'Δημιουργία νέου λογαριασμού κεφαλαίου',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Δημιουργία νέου λογαριασμού δαπανών',
     'create_new_revenue'                        => 'Δημιουργία νέου λογαριασμού εσόδων',
     'create_new_piggy_bank'                     => 'Δημιουργία ενός νέου κουμπαρά',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Ανά μήνα',
     'interest_calc_yearly'                      => 'Ανά έτος',
     'initial_balance_account'                   => 'Αρχικό υπόλοιπο του λογαριασμού :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Νέα κατηγορία',

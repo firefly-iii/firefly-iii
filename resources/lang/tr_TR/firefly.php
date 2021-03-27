@@ -887,6 +887,7 @@ return [
     'create_new_deposit'                        => 'Yeni mevduat oluştur',
     'create_new_transfer'                       => 'Yeni transfer oluştur',
     'create_new_asset'                          => 'Yeni varlık hesabı oluştur',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Yeni gider hesabı oluştur',
     'create_new_revenue'                        => 'Yeni gelir hesabı oluştur',
     'create_new_piggy_bank'                     => 'Yeni bir kumbara oluştur',
@@ -1131,6 +1132,7 @@ return [
     'interest_calc_monthly'                     => 'Per month',
     'interest_calc_yearly'                      => 'Per year',
     'initial_balance_account'                   => 'Initial balance account of :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Yeni Kategori',

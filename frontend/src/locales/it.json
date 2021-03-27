@@ -80,7 +80,7 @@
         "after_update_create_another": "Dopo l'aggiornamento, torna qui per continuare la modifica.",
         "transaction_updated_no_changes": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> (\"{title}\") non ha avuto cambiamenti.",
         "transaction_updated_link": "La <a href=\"transactions\/show\/{ID}\">transazione #{ID}<\/a> (\"{title}\") \u00e8 stata aggiornata.",
-        "spent_x_of_y": "Spent {amount} of {total}",
+        "spent_x_of_y": "Spesi {amount} di {total}",
         "search": "Cerca",
         "create_new_asset": "Crea un nuovo conto attivit\u00e0",
         "asset_accounts": "Conti attivit\u00e0",

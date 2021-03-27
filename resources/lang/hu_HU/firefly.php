@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Új bevétel létrehozása',
     'create_new_transfer'                       => 'Új átvezetés létrehozása',
     'create_new_asset'                          => 'Új eszközszámla létrehozása',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Új költségszámla létrehozása',
     'create_new_revenue'                        => 'Új jövedelemszámla létrehozása',
     'create_new_piggy_bank'                     => 'Új malacpersely létrehozása',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Havonta',
     'interest_calc_yearly'                      => 'Évente',
     'initial_balance_account'                   => ':account kezdeti egyenlegfiókja',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Új kategória',

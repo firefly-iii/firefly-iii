@@ -80,7 +80,7 @@
         "after_update_create_another": "Ap\u00f3s a atualiza\u00e7\u00e3o, regresse aqui para continuar a editar.",
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transa\u00e7\u00e3o #{ID}<\/a> (\"{title}\") n\u00e3o recebeu nenhuma altera\u00e7\u00e3o.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transa\u00e7\u00e3o #{ID}<\/a> (\"{title}\") foi atualizada.",
-        "spent_x_of_y": "Spent {amount} of {total}",
+        "spent_x_of_y": "Gasto {amount} de {total}",
         "search": "Procurar",
         "create_new_asset": "Criar nova conta de activos",
         "asset_accounts": "Conta de activos",

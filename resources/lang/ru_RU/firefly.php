@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Создать новый доход',
     'create_new_transfer'                       => 'Создать новый перевод',
     'create_new_asset'                          => 'Создать новый активный счёт',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Создать новый счёт расхода',
     'create_new_revenue'                        => 'Создать новый счёт дохода',
     'create_new_piggy_bank'                     => 'Создать новую копилку',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'В месяц',
     'interest_calc_yearly'                      => 'В год',
     'initial_balance_account'                   => 'Начальный баланс для счёта :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Новая категория',

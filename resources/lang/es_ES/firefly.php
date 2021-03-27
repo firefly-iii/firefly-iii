@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Crear nuevo deposito',
     'create_new_transfer'                       => 'Crear nueva transferencia',
     'create_new_asset'                          => 'Crear nueva cuenta de activos',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Crear nueva cuenta de gastos',
     'create_new_revenue'                        => 'Crear nueva cuenta de ingresos',
     'create_new_piggy_bank'                     => 'Crear nueva hucha',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Por mes',
     'interest_calc_yearly'                      => 'Por año',
     'initial_balance_account'                   => 'Balance inicial de la cuenta :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Nueva categoría',

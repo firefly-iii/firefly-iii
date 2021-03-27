@@ -46,7 +46,7 @@ class CronController extends Controller
         $config = $request->getAll();
 
         Log::debug(sprintf('Now in %s', __METHOD__));
-
+        Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);

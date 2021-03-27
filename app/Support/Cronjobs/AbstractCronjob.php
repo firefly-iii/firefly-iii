@@ -50,8 +50,8 @@ abstract class AbstractCronjob
      */
     public function __construct()
     {
-        $this->force = false;
-        $this->date  = today(config('app.timezone'));
+        $this->force        = false;
+        $this->date         = today(config('app.timezone'));
         $this->jobErrored   = false;
         $this->jobSucceeded = false;
         $this->jobFired     = false;
@@ -68,7 +68,8 @@ abstract class AbstractCronjob
      */
     public function setDate(Carbon $date): void
     {
-        $this->date = $date;
+        $newDate = clone $date;
+        $this->date = $newDate;
     }
 
     /**

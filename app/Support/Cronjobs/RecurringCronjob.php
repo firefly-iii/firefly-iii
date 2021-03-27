@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
@@ -55,7 +54,10 @@ class RecurringCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the recurring transactions cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
-                $this->message = sprintf('It has been %s since the recurring transactions cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->message      = sprintf('It has been %s since the recurring transactions cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->jobFired     = false;
+                $this->jobErrored   = false;
+                $this->jobSucceeded = false;
 
                 return;
             }
@@ -80,7 +82,7 @@ class RecurringCronjob extends AbstractCronjob
      */
     private function fireRecurring(): void
     {
-        Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d')));
+        Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
         /** @var CreateRecurringTransactions $job */
         $job = app(CreateRecurringTransactions::class);
         $job->setDate($this->date);

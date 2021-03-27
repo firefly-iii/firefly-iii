@@ -80,7 +80,7 @@
         "after_update_create_another": "Nach dem Aktualisieren hierher zur\u00fcckkehren, um weiter zu bearbeiten.",
         "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Die Buchung #{ID}<\/a> (\"{title}\") wurde nicht ver\u00e4ndert.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Die Buchung #{ID}<\/a> (\"{title}\") wurde aktualisiert.",
-        "spent_x_of_y": "Spent {amount} of {total}",
+        "spent_x_of_y": "{amount} von {total} ausgegeben",
         "search": "Suche",
         "create_new_asset": "Neues Bestandskonto erstellen",
         "asset_accounts": "Bestandskonten",

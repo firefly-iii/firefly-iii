@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Luo uusi talletus',
     'create_new_transfer'                       => 'Luo uusi siirto',
     'create_new_asset'                          => 'Luo uusi omaisuustili',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Luo uusi maksutili',
     'create_new_revenue'                        => 'Luo uusi tuottotili',
     'create_new_piggy_bank'                     => 'Luo uusi säästöpossu',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Kuukaudessa',
     'interest_calc_yearly'                      => 'Vuodessa',
     'initial_balance_account'                   => 'Alkutasetili :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Uusi kategoria',

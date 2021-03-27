@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Tạo tiền gửi mới',
     'create_new_transfer'                       => 'Tạo chuyển khoản mới',
     'create_new_asset'                          => 'Tạo tài khoản mới',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Tạo tài khoản chi phí mới',
     'create_new_revenue'                        => 'Tạo tài khoản doanh thu mới',
     'create_new_piggy_bank'                     => 'Tạo heo đất mới',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Mỗi tháng',
     'interest_calc_yearly'                      => 'Mỗi năm',
     'initial_balance_account'                   => 'Tài khoản số dư ban đầu của: tài khoản',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Danh muc mới',
