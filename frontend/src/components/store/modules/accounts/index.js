@@ -21,7 +21,8 @@
 // initial state
 const state = () => (
     {
-        orderMode: false
+        orderMode: false,
+        activeFilter: 1
     }
 )
 
@@ -31,6 +32,9 @@ const getters = {
     orderMode: state => {
         return state.orderMode;
     },
+    activeFilter: state => {
+        return state.activeFilter;
+    }
 }
 
 // actions
@@ -41,6 +45,9 @@ const mutations = {
     setOrderMode(state, payload) {
         state.orderMode = payload;
     },
+    setActiveFilter(state, payload) {
+        state.activeFilter = payload;
+    }
 }
 
 export default {

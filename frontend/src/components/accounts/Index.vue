@@ -142,7 +142,9 @@ export default {
   data() {
     return {
       accounts: [],
+      allAccounts: [],
       type: 'all',
+      downloaded: false,
       loading: false,
       ready: false,
       fields: [],
@@ -170,22 +172,22 @@ export default {
       this.getAccountList();
     },
     orderMode: function (value) {
+      // update the table headers
       this.updateFieldList();
-      this.sortableOptions.disabled = !value;
-      this.sortableOptions.onEnd = this.saveAccountSort;
-      if (true === value) {
-        this.reorderAccountList();
-      }
-      // make sortable of table:
-      if (null === this.sortable) {
-        this.sortable = Sortable.create(this.$refs.table.$el.querySelector('tbody'), this.sortableOptions);
-      }
-      this.sortable.option('disabled', this.sortableOptions.disabled);
+
+      // reorder the accounts:
+      this.reorderAccountList(value);
+
+      // make table sortable:
+      this.makeTableSortable(value);
+    },
+    activeFilter: function (value) {
+      this.filterAccountList();
     }
   },
   computed: {
     ...mapGetters('root', ['listPageSize']),
-    ...mapGetters('accounts/index', ['orderMode']),
+    ...mapGetters('accounts/index', ['orderMode', 'activeFilter']),
     ...mapGetters('dashboard/index', ['start', 'end',]),
     'indexReady': function () {
       return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
@@ -213,7 +215,10 @@ export default {
       for (let i in this.accounts) {
         if (this.accounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = this.accounts[i];
+
+          // the actual account
           if (current.id === identifier) {
+            this.accounts[i].order = newOrder;
             let newOrder = parseInt(current.order) + (newIndex - oldIndex);
             let url = './api/v1/accounts/' + current.id;
             axios.put(url, {order: newOrder}).then(response => {
@@ -224,11 +229,24 @@ export default {
         }
       }
     },
-    reorderAccountList() {
-      this.sortBy = 'order';
-      this.sortDesc = false;
+    reorderAccountList: function (orderMode) {
+      if (orderMode) {
+        this.sortBy = 'order';
+        this.sortDesc = false;
+      }
     },
-    updateFieldList() {
+    makeTableSortable: function (orderMode) {
+      this.sortableOptions.disabled = !orderMode;
+      this.sortableOptions.onEnd = this.saveAccountSort;
+
+      // make sortable of table:
+      if (null === this.sortable) {
+        this.sortable = Sortable.create(this.$refs.table.$el.querySelector('tbody'), this.sortableOptions);
+      }
+      this.sortable.option('disabled', this.sortableOptions.disabled);
+    },
+
+    updateFieldList: function () {
       this.fields = [];
 
       this.fields = [{key: 'title', label: this.$t('list.name'), sortable: !this.orderMode}];
@@ -241,14 +259,24 @@ export default {
       this.fields.push({key: 'menu', label: ' ', sortable: false});
     },
     getAccountList: function () {
-      if (this.indexReady && !this.loading) {
+      console.log('getAccountList()');
+      if (this.indexReady && !this.loading && !this.downloaded) {
+        console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
         this.accounts = [];
+        this.allAccounts = [];
         this.downloadAccountList(1);
       }
+      if (this.indexReady && !this.loading && this.downloaded) {
+        console.log('Index ready, not loading and not downloaded.');
+        this.loading = true;
+        this.filterAccountList();
+        // TODO filter accounts.
+      }
     },
-    downloadAccountList(page) {
+    downloadAccountList: function (page) {
+      console.log('downloadAccountList(' + page + ')');
       axios.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
           .then(response => {
                   let currentPage = parseInt(response.data.meta.pagination.current_page);
@@ -258,11 +286,38 @@ export default {
                   if (currentPage < totalPage) {
                     let nextPage = currentPage + 1;
                     this.downloadAccountList(nextPage);
-                  } else {
-                    this.loading = false;
+                  }
+                  if (currentPage >= totalPage) {
+                    console.log('Looks like all downloaded.');
+                    this.downloaded = true;
+                    this.filterAccountList();
                   }
                 }
           );
+    },
+    filterAccountList: function () {
+      console.log('filterAccountList()');
+      this.accounts = [];
+      for (let i in this.allAccounts) {
+        if (this.allAccounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          // 1 = active only
+          // 2 = inactive only
+          // 3 = both
+          if (1 === this.activeFilter && false === this.allAccounts[i].active) {
+            console.log('Skip account #' + this.allAccounts[i].id + ' because not active.');
+            continue;
+          }
+          if (2 === this.activeFilter && true === this.allAccounts[i].active) {
+            console.log('Skip account #' + this.allAccounts[i].id + ' because active.');
+            continue;
+          }
+          console.log('Include account #' + this.allAccounts[i].id + '.');
+
+          this.accounts.push(this.allAccounts[i]);
+        }
+      }
+      this.total = this.accounts.length;
+      this.loading = false;
     },
     roleTranslate: function (role) {
       if (null === role) {
@@ -272,8 +327,10 @@ export default {
     },
     parsePages: function (data) {
       this.total = parseInt(data.pagination.total);
+      //console.log('Total is now ' + this.total);
     },
     parseAccounts: function (data) {
+      console.log('In parseAccounts()');
       for (let key in data) {
         if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           let current = data[key];
@@ -281,6 +338,7 @@ export default {
           acct.id = parseInt(current.id);
           acct.order = current.attributes.order;
           acct.title = current.attributes.name;
+          acct.active = current.attributes.active;
           acct.role = this.roleTranslate(current.attributes.account_role);
           acct.account_number = current.attributes.account_number;
           acct.current_balance = current.attributes.current_balance;
@@ -291,15 +349,15 @@ export default {
             acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
           }
 
-
-          this.accounts.push(acct);
+          this.allAccounts.push(acct);
           if ('asset' === this.type) {
-            this.getAccountBalanceDifference(this.accounts.length - 1, current);
+            this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
           }
         }
       }
     },
     getAccountBalanceDifference: function (index, acct) {
+      console.log('getAccountBalanceDifference(' + index + ')');
       // get account on day 0
       let promises = [];
 
@@ -320,16 +378,8 @@ export default {
         let index = responses[0].index;
         let startBalance = parseFloat(responses[1].data.data.attributes.current_balance);
         let endBalance = parseFloat(responses[2].data.data.attributes.current_balance);
-        this.accounts[index].balance_diff = endBalance - startBalance;
+        this.allAccounts[index].balance_diff = endBalance - startBalance;
       });
-    },
-    loadAccounts: function (data) {
-      for (let key in data) {
-        if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          let acct = data[key];
-          this.accounts.push(acct);
-        }
-      }
     },
   }
 }

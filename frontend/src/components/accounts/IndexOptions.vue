@@ -20,9 +20,32 @@
 
 <template>
   <div>
-    <p v-if="'asset' === type">
-      <input type="checkbox" name="order_mode" id="order_mode" v-model="orderMode"> <label for="order_mode">Enable order mode</label>
-    </p>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="order_mode" id="order_mode" v-model="orderMode">
+      <label class="form-check-label" for="order_mode">
+        Enable order mode
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" :disabled="orderMode" type="radio" value="1" v-model="activeFilter" id="active_filter_1">
+      <label class="form-check-label" for="active_filter_1">
+        Show active accounts
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" :disabled="orderMode" type="radio" value="2" v-model="activeFilter" id="active_filter_2">
+      <label class="form-check-label" for="active_filter_2">
+        Show inactive accounts
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" :disabled="orderMode" type="radio" value="3" v-model="activeFilter" id="active_filter_3">
+      <label class="form-check-label" for="active_filter_3">
+        Show both
+      </label>
+    </div>
   </div>
 </template>
 
@@ -35,6 +58,7 @@ export default {
       type: 'invalid'
     }
   },
+  // watch orderMode, if its false then go to active in filter.
   computed: {
     orderMode: {
       get() {
@@ -42,9 +66,19 @@ export default {
       },
       set(value) {
         this.$store.commit('accounts/index/setOrderMode', value);
+        if(true===value) {
+          this.$store.commit('accounts/index/setActiveFilter', 1);
+        }
       }
     },
-
+    activeFilter: {
+      get() {
+        return this.$store.getters["accounts/index/activeFilter"];
+      },
+      set(value) {
+        this.$store.commit('accounts/index/setActiveFilter', parseInt(value));
+      }
+    },
   },
   created() {
     let pathName = window.location.pathname;
