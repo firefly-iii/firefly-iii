@@ -630,6 +630,10 @@ class AccountRepository implements AccountRepositoryInterface
             $list  = $this->getAccountsByType($set);
             $index = 1;
             foreach ($list as $account) {
+                if(false === $account->active) {
+                    $account->order = 0;
+                    continue;
+                }
                 if ($index !== (int)$account->order) {
                     Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
