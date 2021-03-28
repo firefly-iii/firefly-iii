@@ -164,9 +164,6 @@
             </div>
         {% endif %}
     </div>
-
-
-
 {% endblock %}
 
 {% block scripts %}
@@ -188,9 +185,6 @@
         var chartUri = '{{ chartUri }}';
         {% if not showAll %}
         showAll = false;
-
-
-
         // uri's for charts:
 
         var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';

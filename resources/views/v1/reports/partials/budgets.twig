@@ -72,9 +72,6 @@
                         {{ formatAmountBySymbol(budget_limit.left, budget_limit.currency_symbol, budget_limit.currency_decimal_places) }}
                     {% endif %}
                 </td>
-
-
-
                 <!-- overspent, visible. -->
                 <td data-value="{{ budget_limit.overspent|default(0) }}" style="text-align: right;">
                     {% if null != budget_limit.overspent %}

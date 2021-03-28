@@ -152,10 +152,6 @@
             </div>
         </div>
     {% endif %}
-
-
-
-
     {% if total == 0 and page == 1 %}
         {% include 'v1.partials.empty' with {objectType: 'default', type: 'recurring',route: route('recurring.create')} %}
     {% endif %}
