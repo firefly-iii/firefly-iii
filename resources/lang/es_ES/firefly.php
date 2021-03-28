@@ -886,7 +886,7 @@ return [
     'create_new_deposit'                        => 'Crear nuevo deposito',
     'create_new_transfer'                       => 'Crear nueva transferencia',
     'create_new_asset'                          => 'Crear nueva cuenta de activos',
-    'create_new_liabilities'                    => 'Create new liability',
+    'create_new_liabilities'                    => 'Crear nuevo pasivo',
     'create_new_expense'                        => 'Crear nueva cuenta de gastos',
     'create_new_revenue'                        => 'Crear nueva cuenta de ingresos',
     'create_new_piggy_bank'                     => 'Crear nueva hucha',
@@ -1131,7 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Por mes',
     'interest_calc_yearly'                      => 'Por año',
     'initial_balance_account'                   => 'Balance inicial de la cuenta :account',
-    'list_options'                              => 'List options',
+    'list_options'                              => 'Opciones de lista',
 
     // categories:
     'new_category'                              => 'Nueva categoría',
@@ -1245,7 +1245,7 @@ return [
     'first_split_decides'                       => 'La primera división determina el valor de este campo',
     'first_split_overrules_source'              => 'La primera división puede anular la cuenta de origen',
     'first_split_overrules_destination'         => 'La primera división puede anular la cuenta de destino',
-    'spent_x_of_y'                              => 'Spent {amount} of {total}',
+    'spent_x_of_y'                              => '{amount} gastado de {total}',
 
     // new user:
     'welcome'                                   => 'Bienvenido a Firefly III!',

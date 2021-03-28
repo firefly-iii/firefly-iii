@@ -886,7 +886,7 @@ return [
     'create_new_deposit'                        => 'Créer un nouveau dépôt',
     'create_new_transfer'                       => 'Créer un nouveau transfert',
     'create_new_asset'                          => 'Créer un nouveau compte d’actif',
-    'create_new_liabilities'                    => 'Create new liability',
+    'create_new_liabilities'                    => 'Créer un nouveau passif',
     'create_new_expense'                        => 'Créer nouveau compte de dépenses',
     'create_new_revenue'                        => 'Créer nouveau compte de recettes',
     'create_new_piggy_bank'                     => 'Créer une nouvelle tirelire',
@@ -1131,7 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Par mois',
     'interest_calc_yearly'                      => 'Par an',
     'initial_balance_account'                   => 'Solde initial du compte :account',
-    'list_options'                              => 'List options',
+    'list_options'                              => 'Lister les options',
 
     // categories:
     'new_category'                              => 'Nouvelle catégorie',

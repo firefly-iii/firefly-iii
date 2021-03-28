@@ -886,7 +886,7 @@ return [
     'create_new_deposit'                        => 'Erstelle eine neue Einnahme',
     'create_new_transfer'                       => 'Eine neue Umbuchung erstellen',
     'create_new_asset'                          => 'Neues Bestandskonto erstellen',
-    'create_new_liabilities'                    => 'Create new liability',
+    'create_new_liabilities'                    => 'Neue Verbindlichkeit anlegen',
     'create_new_expense'                        => 'Neues Ausgabenkonto erstellen',
     'create_new_revenue'                        => 'Neues Einnahmenkonto erstellen',
     'create_new_piggy_bank'                     => 'Ein neues Sparschwein erstellen',
@@ -1131,7 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Monatlich',
     'interest_calc_yearly'                      => 'Jährlich',
     'initial_balance_account'                   => 'Anfangsguthaben von „:account”',
-    'list_options'                              => 'List options',
+    'list_options'                              => 'Listenoptionen',
 
     // categories:
     'new_category'                              => 'Neue Kategorie',

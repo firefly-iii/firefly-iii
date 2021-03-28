@@ -3353,9 +3353,9 @@ html-comment-regex@^1.1.0:
   integrity sha512-P+M65QY2JQ5Y0G9KKdlDpo0zK+/OHptU5AaBwUfAIDJZk1MYf32Frm84EcOytfJE0t5JvkAnKlmjsXDnWzCJmQ==
 
 html-entities@^2.1.1:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.2.0.tgz#25115921cb7234d44ea76f23f0f31798a595777c"
-  integrity sha512-wy65ltEBQPf8884vKoA8fHh+A0++7N/NaBIR+hFesj5HhJK0ANSYlXtBMxV5zo/7pj1os51BQWb02WLNTBghyQ==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.0.tgz#83474887115f12d33a7b85f6573c95223c2940a4"
+  integrity sha512-/XzLX7A79umjBdw7yYw99bk20uj+L1hQINB029One2OCIqtHj0o5F+XMRam1pveHF4pEYZyr8RSLYWdhguHrwg==
 
 html-loader@^1.3.2:
   version "1.3.2"
