@@ -75,9 +75,10 @@ new Vue({
                 return createElement(Dashboard, {props: props});
             },
             beforeCreate() {
+                // TODO migrate to "root" store.
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
-                this.$store.dispatch('updateListPageSizePreference');
+                this.$store.dispatch('root/initialiseStore');
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });
