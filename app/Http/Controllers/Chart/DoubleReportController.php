@@ -247,8 +247,6 @@ class DoubleReportController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * @param Collection $accounts
      * @param Collection $others

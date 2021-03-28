@@ -118,8 +118,6 @@ class RecurrenceController extends Controller
                 $occurrences = $this->recurring->getXOccurrences($repetition, $actualStart, $repetitions);
                 break;
         }
-
-
         /** @var Carbon $current */
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {
@@ -179,8 +177,6 @@ class RecurrenceController extends Controller
             ];
         }
         Log::debug('Dropdown is', $result);
-
-
         return response()->json($result);
     }
 }

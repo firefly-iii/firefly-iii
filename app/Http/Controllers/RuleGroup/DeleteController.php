@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -61,8 +59,6 @@ class DeleteController extends Controller
             }
         );
     }
-
-
     /**
      * Delete a rule group.
      *

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -61,8 +59,6 @@ class DeleteController extends Controller
             }
         );
     }
-
-
     /**
      * Deletes a budget.
      *

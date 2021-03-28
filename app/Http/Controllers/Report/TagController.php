@@ -118,8 +118,6 @@ class TagController extends Controller
                 }
             }
         }
-
-
         // loop income.
         foreach ($earned as $currency) {
             $currencyId = $currency['currency_id'];
@@ -137,8 +135,6 @@ class TagController extends Controller
                                          'currency_decimal_places' => $currency['currency_decimal_places'],
                                          'tags'                    => [],
                                      ];
-
-
                     $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
                                                                                                      = $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
                                                                                                        ??

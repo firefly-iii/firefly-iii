@@ -48,7 +48,6 @@ class UpgradeDatabase extends Command
      */
     protected $signature = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
-
     /**
      * Execute the console command.
      *
@@ -58,8 +57,6 @@ class UpgradeDatabase extends Command
     {
 
         $this->callInitialCommands();
-
-
         $commands = [
             // there are 14 upgrade commands.
             'firefly-iii:transaction-identifiers',

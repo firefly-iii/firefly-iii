@@ -308,8 +308,6 @@ trait PeriodOverview
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::TRANSFER]);
         $transferSet = $collector->getExtractedJournals();
-
-
         foreach ($dates as $currentDate) {
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
             $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
@@ -362,8 +360,6 @@ trait PeriodOverview
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = [];
-
-
         // get all expenses without a budget.
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -590,8 +586,6 @@ trait PeriodOverview
             if ('transfer' === $transactionType || 'transfers' === $transactionType) {
                 $transferred = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
             }
-
-
             $entries[]
                 = [
                 'title'              => $title,

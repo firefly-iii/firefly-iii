@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Rules;
-
-
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\Rule;

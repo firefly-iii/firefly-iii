@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
-
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
@@ -63,8 +61,6 @@ class ExecutionController extends Controller
             }
         );
     }
-
-
     /**
      * Execute the given rulegroup on a set of existing transactions.
      *
@@ -117,6 +113,4 @@ class ExecutionController extends Controller
 
         return prefixView('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));
     }
-
-
 }

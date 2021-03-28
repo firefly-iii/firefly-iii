@@ -45,7 +45,6 @@ class ReportSum extends Command
      */
     protected $signature = 'firefly-iii:report-sum';
 
-
     /**
      * Execute the console command.
      *
@@ -57,7 +56,6 @@ class ReportSum extends Command
 
         return 0;
     }
-
 
     /**
      * Reports for each user when the sum of their transactions is not zero.

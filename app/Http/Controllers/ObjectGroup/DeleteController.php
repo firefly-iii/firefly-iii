@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;

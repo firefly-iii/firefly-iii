@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
@@ -196,8 +194,6 @@ class RecurrenceTransformer extends AbstractTransformer
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
-
-
             $amount        = number_format((float)$transaction->amount, $transaction->transactionCurrency->decimal_places, '.', '');
             $foreignAmount = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {

@@ -65,8 +65,6 @@ class ShowController extends Controller
             }
         );
     }
-
-
     /**
      * Show a single category.
      *

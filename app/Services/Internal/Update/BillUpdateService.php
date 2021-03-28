@@ -76,8 +76,6 @@ class BillUpdateService
             'amount_max'                => $bill->amount_max,
             'transaction_currency_name' => $bill->transactionCurrency->name,
         ];
-
-
         // update note:
         if (array_key_exists('notes', $data)) {
             $this->updateNote($bill, (string)$data['notes']);

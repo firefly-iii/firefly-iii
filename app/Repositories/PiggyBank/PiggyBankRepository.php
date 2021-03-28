@@ -230,8 +230,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-
-
         $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
@@ -309,8 +307,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
             $piggy->name   = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
         }
-
-
         return $set;
     }
 

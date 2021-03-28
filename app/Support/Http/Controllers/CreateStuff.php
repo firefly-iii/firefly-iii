@@ -32,8 +32,6 @@ use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA as LegacyRSA;
 use phpseclib3\Crypt\RSA;
-
-
 /**
  * Trait CreateStuff
  *
@@ -106,8 +104,6 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-
-
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
             Passport::keyPath('oauth-private.key'),

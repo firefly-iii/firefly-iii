@@ -103,8 +103,6 @@ class RecurrenceUpdateService
             $this->updateRepetitions($recurrence, $data['repetitions'] ?? []);
         }
         // update all transactions:
-
-
         // update all transactions (and associated meta-data)
         if (array_key_exists('transactions', $data)) {
             $this->updateTransactions($recurrence, $data['transactions'] ?? []);
@@ -240,8 +238,6 @@ class RecurrenceUpdateService
             return;
         }
         $currencyFactory = app(TransactionCurrencyFactory::class);
-
-
         // loop all and try to match them:
         if ($originalCount === count($transactions)) {
             Log::debug('Loop and find');

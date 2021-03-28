@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
-
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankStoreRequest;
@@ -82,8 +80,6 @@ class CreateController extends Controller
 
         return prefixView('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
     }
-
-
     /**
      * Store a new piggy bank.
      *
@@ -115,8 +111,6 @@ class CreateController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
-
-
         $redirect = redirect($this->getPreviousUri('piggy-banks.create.uri'));
 
         if (1 === (int) $request->get('create_another')) {

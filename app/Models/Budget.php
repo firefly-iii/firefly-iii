@@ -137,8 +137,6 @@ class Budget extends Model
     {
         return $this->hasMany(BudgetLimit::class);
     }
-
-
     /**
      * @codeCoverageIgnore
      * @return MorphMany

@@ -31,8 +31,6 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-
-
 /**
  * Interface RecurringRepositoryInterface
  *

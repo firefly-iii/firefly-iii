@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\TransactionCurrency;
-
-
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -95,8 +95,6 @@ class StoreControllerTest extends TestCase
         $field    = Field::createBasic('decimal_places', 'currency-dp');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('decimal_places', $fieldSet);
-
-
         return $configuration->generateAll();
 
     }

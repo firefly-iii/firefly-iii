@@ -161,8 +161,6 @@ class BudgetLimitController extends Controller
 
         if ($request->expectsJson()) {
             $array = $limit->toArray();
-
-
             // add some extra meta data:
             $spentArr                  = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
             $array['spent']            = $spentArr[$currency->id]['sum'] ?? '0';

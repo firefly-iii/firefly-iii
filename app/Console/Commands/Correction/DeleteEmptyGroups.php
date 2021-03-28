@@ -46,7 +46,6 @@ class DeleteEmptyGroups extends Command
      */
     protected $signature = 'firefly-iii:delete-empty-groups';
 
-
     /**
      * Execute the console command.
      *

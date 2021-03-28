@@ -112,8 +112,6 @@ class CreateController extends Controller
         $previousUri          = str_replace($search, '', $previousUri);
 
         session()->put('preFilled', $preFilled);
-
-
         return prefixView(
             'transactions.create',
             compact(

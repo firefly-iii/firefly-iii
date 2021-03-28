@@ -318,8 +318,6 @@ class UserEventHandler
                 'time'     => now(config('app.timezone'))->format('Y-m-d H:i:s'),
                 'notified' => false,
             ];
-
-
         }
         $preference = array_values($preference);
         app('preferences')->setForUser($user, 'login_ip_history', $preference);

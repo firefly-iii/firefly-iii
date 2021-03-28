@@ -66,8 +66,6 @@ class ShowController extends Controller
             }
         );
     }
-
-
     /**
      * Show a single recurring transaction.
      *

@@ -347,8 +347,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         }
 
         $journalLink->link_type_id = $data['link_type_id'] ? $data['link_type_id'] : $journalLink->link_type_id;
-
-
         $journalLink->save();
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);

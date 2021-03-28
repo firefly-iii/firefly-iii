@@ -166,8 +166,6 @@ class EditController extends Controller
             )
         );
     }
-
-
     /**
      * Update the account.
      *

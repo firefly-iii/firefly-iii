@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
-
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -178,8 +176,6 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
-
-
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('recurrences.edit.uri'));
         if (1 === (int) $request->get('return_to_edit')) {
@@ -192,6 +188,4 @@ class EditController extends Controller
         // redirect to previous URL.
         return $redirect;
     }
-
-
 }

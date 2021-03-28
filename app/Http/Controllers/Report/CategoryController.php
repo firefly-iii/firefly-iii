@@ -124,8 +124,6 @@ class CategoryController extends Controller
                 }
             }
         }
-
-
         // loop income.
         foreach ($earned as $currency) {
             $currencyId = $currency['currency_id'];
@@ -143,8 +141,6 @@ class CategoryController extends Controller
                                          'currency_decimal_places' => $currency['currency_decimal_places'],
                                          'categories'              => [],
                                      ];
-
-
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]
                                                                                                                 = $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]
                                                                                                                   ??

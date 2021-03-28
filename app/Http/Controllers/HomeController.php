@@ -74,8 +74,6 @@ class HomeController extends Controller
         $isCustomRange = false;
 
         Log::debug('Received dateRange', ['start' => $request->get('start'), 'end' => $request->get('end'), 'label' => $request->get('label')]);
-
-
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
@@ -98,8 +96,6 @@ class HomeController extends Controller
 
         return response()->json(['ok' => 'ok']);
     }
-
-
     /**
      * Show index.
      *
@@ -134,8 +130,6 @@ class HomeController extends Controller
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
-
-
         // collect groups for each transaction.
         foreach ($accounts as $account) {
             /** @var GroupCollectorInterface $collector */

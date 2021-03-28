@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
-
-
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;

@@ -48,7 +48,6 @@ class DeleteEmptyJournals extends Command
      */
     protected $signature = 'firefly-iii:delete-empty-journals';
 
-
     /**
      * Execute the console command.
      *

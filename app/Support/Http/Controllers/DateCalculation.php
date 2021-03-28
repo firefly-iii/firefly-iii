@@ -99,8 +99,6 @@ trait DateCalculation
 
         return $step;
     }
-
-
     /**
      * Get a list of the periods that will occur after this date. For example,
      * March 2018, April 2018, etc.
@@ -130,8 +128,6 @@ trait DateCalculation
                 'start' => clone $currentStart,
                 'end'   => clone $current,
             ];
-
-
             ++$count;
             $current->addDay();
         }

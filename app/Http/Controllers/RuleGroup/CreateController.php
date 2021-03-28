@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;

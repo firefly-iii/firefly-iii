@@ -174,8 +174,6 @@ class CreateRecurringTransactions implements ShouldQueue
 
             return false;
         }
-
-
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
             Log::info(

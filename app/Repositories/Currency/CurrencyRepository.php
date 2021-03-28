@@ -171,8 +171,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-
-
         if ($repository->hasRole($this->user, 'owner')) {
             /** @var CurrencyDestroyService $service */
             $service = app(CurrencyDestroyService::class);

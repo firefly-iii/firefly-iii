@@ -75,6 +75,4 @@ class ReportController extends Controller
 
         return response()->json(['html' => $html]);
     }
-
-
 }

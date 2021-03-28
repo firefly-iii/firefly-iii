@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Bill;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -128,8 +128,6 @@ class StoreControllerTest extends TestCase
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('active', 'boolean'));
         $configuration->addOptionalFieldSet('active', $fieldSet);
-
-
         $fieldSet             = new FieldSet;
         $fieldSet->parameters = [1];
         $fieldSet->addField(Field::createBasic('notes', 'uuid'));
@@ -157,8 +155,6 @@ class StoreControllerTest extends TestCase
 
         return $configuration->generateAll();
     }
-
-
     /**
      * @param array $submission
      *

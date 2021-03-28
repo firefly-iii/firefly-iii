@@ -176,15 +176,11 @@ class FireflyServiceProvider extends ServiceProvider
 
         // chart generator:
         $this->app->bind(GeneratorInterface::class, ChartJsGenerator::class);
-
-
         // other generators
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
 
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
-
-
         $this->app->bind(
             ObjectGroupRepositoryInterface::class,
             static function (Application $app) {

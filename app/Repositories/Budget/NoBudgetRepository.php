@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
-
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;

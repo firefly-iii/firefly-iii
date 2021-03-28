@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Transaction;
-
-
 use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Log;
@@ -104,8 +104,6 @@ class StoreControllerTest extends TestCase
         $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('transactions/0/tags', 'random-tags'));
         $configuration->addOptionalFieldSet('tags', $fieldSet);
-
-
         $array = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
                   'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
 
@@ -117,8 +115,6 @@ class StoreControllerTest extends TestCase
 
         return $configuration->generateAll();
     }
-
-
     /**
      * @param array $submission
      *

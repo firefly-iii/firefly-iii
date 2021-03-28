@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Transaction;
-
-
 use Carbon\Carbon;
 use Laravel\Passport\Passport;
 use Log;
@@ -48,8 +48,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @dataProvider updateDataProvider
      *
@@ -69,8 +67,6 @@ class UpdateControllerTest extends TestCase
         $route = route('api.v1.transactions.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
     }
-
-
     /**
      * @return array
      */
@@ -133,8 +129,6 @@ class UpdateControllerTest extends TestCase
         $field->ignorableFields = ['transactions/0/destination_name', 'transactions/0/destination_iban'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('dest', $fieldSet);
-
-
         // optional fields
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
@@ -162,8 +156,6 @@ class UpdateControllerTest extends TestCase
         };
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('tags', $fieldSet);
-
-
         $array = ['notes', 'internal_reference', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
                   'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id'];
 
@@ -173,12 +165,8 @@ class UpdateControllerTest extends TestCase
             $fieldSet->addField(Field::createBasic('transactions/0/' . $value, 'uuid'));
             $configuration->addOptionalFieldSet($value, $fieldSet);
         }
-
-
         $result = $configuration->generateAll();
 
         return $result;
     }
-
-
 }

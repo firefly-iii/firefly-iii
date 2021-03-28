@@ -61,8 +61,6 @@ trait BillServiceTrait
             $ruleAction->save();
         }
     }
-
-
     /**
      * @param Bill   $bill
      * @param string $note

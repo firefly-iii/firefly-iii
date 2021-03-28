@@ -52,8 +52,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * These accounts must not be source accounts.
      *
@@ -72,8 +70,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
@@ -119,8 +115,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
@@ -139,8 +133,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * Define which accounts can be part of the source and destination transactions.
      *
@@ -159,8 +151,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
      *
@@ -197,8 +187,6 @@ trait AccountCollection
 
         return $this;
     }
-
-
     /**
      * Will include the source and destination account names and types.
      *
@@ -225,8 +213,6 @@ trait AccountCollection
             $this->fields[] = 'dest_account.name as destination_account_name';
             $this->fields[] = 'dest_account.iban as destination_account_iban';
             $this->fields[] = 'dest_account_type.type as destination_account_type';
-
-
             $this->hasAccountInfo = true;
         }
 

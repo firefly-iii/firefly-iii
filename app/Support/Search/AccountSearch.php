@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
-
-
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;

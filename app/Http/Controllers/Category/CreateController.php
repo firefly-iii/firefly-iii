@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
-
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -62,8 +60,6 @@ class CreateController extends Controller
             }
         );
     }
-
-
     /**
      * Create category.
      *
@@ -81,8 +77,6 @@ class CreateController extends Controller
 
         return prefixView('categories.create', compact('subTitle'));
     }
-
-
     /**
      * Store new category.
      *

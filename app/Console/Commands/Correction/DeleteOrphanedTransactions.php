@@ -48,7 +48,6 @@ class DeleteOrphanedTransactions extends Command
      */
     protected $signature = 'firefly-iii:delete-orphaned-transactions';
 
-
     /**
      * Execute the console command.
      *

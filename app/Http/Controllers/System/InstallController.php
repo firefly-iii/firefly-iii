@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
-
-
 use Artisan;
 use Cache;
 use Exception;
@@ -49,8 +47,6 @@ class InstallController extends Controller
     public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     private array  $upgradeCommands;
     private string $lastError;
-
-
     /** @noinspection MagicMethodsValidityInspection */
     /** @noinspection PhpMissingParentConstructorInspection */
     /**

@@ -470,6 +470,4 @@ trait MetaCollection
             $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
         }
     }
-
-
 }

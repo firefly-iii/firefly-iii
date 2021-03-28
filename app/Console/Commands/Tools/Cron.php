@@ -57,7 +57,6 @@ class Cron extends Command
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         ';
 
-
     /**
      * @return int
      */

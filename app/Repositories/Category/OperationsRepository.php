@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
-
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
@@ -101,8 +99,6 @@ class OperationsRepository implements OperationsRepositoryInterface
             // add journal to array:
             // only a subset of the fields.
             $journalId = (int)$journal['transaction_journal_id'];
-
-
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'date'                     => $journal['date'],
@@ -180,8 +176,6 @@ class OperationsRepository implements OperationsRepositoryInterface
             // add journal to array:
             // only a subset of the fields.
             $journalId = (int)$journal['transaction_journal_id'];
-
-
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->positive($journal['amount']),
                 'date'                     => $journal['date'],

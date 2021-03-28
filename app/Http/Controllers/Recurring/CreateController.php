@@ -154,8 +154,6 @@ class CreateController extends Controller
                 'apply_rules'               => true,
             ];
         }
-
-
         $request->session()->flash('preFilled', $preFilled);
 
         return prefixView(
@@ -195,8 +193,6 @@ class CreateController extends Controller
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string) trans('firefly.jump_to_friday'),
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string) trans('firefly.jump_to_monday'),
         ];
-
-
         $hasOldInput = null !== $request->old('_token'); // flash some data
         $preFilled   = [
             'first_date'       => $tomorrow->format('Y-m-d'),
@@ -211,8 +207,6 @@ class CreateController extends Controller
             compact('tomorrow', 'oldRepetitionType', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
         );
     }
-
-
     /**
      * Store a recurring transaction.
      *

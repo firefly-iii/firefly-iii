@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -120,6 +118,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUri('transactions.delete.uri'));
     }
-
-
 }

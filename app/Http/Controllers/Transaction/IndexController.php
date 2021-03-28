@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
-
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;

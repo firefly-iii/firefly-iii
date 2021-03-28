@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
@@ -51,8 +49,6 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
     }
-
-
     /**
      * Transform the piggy bank.
      *

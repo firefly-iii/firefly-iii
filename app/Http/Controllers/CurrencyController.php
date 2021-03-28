@@ -21,8 +21,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
-
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
@@ -67,8 +65,6 @@ class CurrencyController extends Controller
             }
         );
     }
-
-
     /**
      * Create a currency.
      *
@@ -346,8 +342,6 @@ class CurrencyController extends Controller
 
         return prefixView('currencies.index', compact('currencies', 'defaultCurrency', 'isOwner'));
     }
-
-
     /**
      * Store new currency.
      *
@@ -394,8 +388,6 @@ class CurrencyController extends Controller
 
         return $redirect;
     }
-
-
     /**
      * Updates a currency.
      *
@@ -421,8 +413,6 @@ class CurrencyController extends Controller
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
         }
-
-
         $currency = $this->repository->update($currency, $data);
         Log::channel('audit')->info('Updated (POST) currency.', $data);
         $request->session()->flash('success', (string) trans('firefly.updated_currency', ['name' => $currency->name]));

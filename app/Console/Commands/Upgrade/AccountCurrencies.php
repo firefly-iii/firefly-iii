@@ -59,7 +59,6 @@ class AccountCurrencies extends Command
     /** @var UserRepositoryInterface */
     private $userRepos;
 
-
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *
@@ -87,7 +86,6 @@ class AccountCurrencies extends Command
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed account currencies in %s seconds.', $end));
         $this->markAsExecuted();
-
 
         return 0;
     }
@@ -206,8 +204,6 @@ class AccountCurrencies extends Command
 
             return;
         }
-
-
         // do not match and opening balance id is not null.
         if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
             Log::debug(sprintf('Account (#%d) and OB currency (#%d) are different. Overrule OB, set to account currency.', $accountCurrency, $obCurrency));

@@ -40,8 +40,6 @@ class TransactionGroupFactory
     private $journalFactory;
     /** @var User The user */
     private $user;
-
-
     /**
      * TransactionGroupFactory constructor.
      */

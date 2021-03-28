@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
-
-
 use Carbon\Carbon;
 use Log;
 

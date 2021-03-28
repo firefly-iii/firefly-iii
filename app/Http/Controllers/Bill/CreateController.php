@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
-
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;

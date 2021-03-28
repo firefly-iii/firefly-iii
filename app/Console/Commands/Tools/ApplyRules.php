@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Tools;
 
-
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
@@ -77,7 +76,6 @@ class ApplyRules extends Command
     private RuleRepositoryInterface      $ruleRepository;
     private array                        $ruleSelection;
     private Carbon                       $startDate;
-
 
     /**
      * Execute the console command.
@@ -227,8 +225,6 @@ class ApplyRules extends Command
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
-
-
         foreach ($accountList as $accountId) {
             $accountId = (int)$accountId;
             $account   = $accountRepository->findNull($accountId);

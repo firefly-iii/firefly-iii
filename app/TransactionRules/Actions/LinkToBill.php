@@ -78,8 +78,6 @@ class LinkToBill implements ActionInterface
                 $journal['transaction_journal_id'], $billName
             )
         );
-
-
         return false;
     }
 }

@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Account;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -30,8 +30,6 @@ use Tests\Objects\TestConfiguration;
 use Tests\TestCase;
 use Tests\Traits\CollectsValues;
 use Tests\Traits\TestHelpers;
-
-
 /**
  * Class UpdateControllerTest
  */

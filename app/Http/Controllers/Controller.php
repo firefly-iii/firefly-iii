@@ -76,8 +76,6 @@ abstract class Controller extends BaseController
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-
-
         app('view')->share('uploadSize', $uploadSize);
 
         // share is alpha, is beta

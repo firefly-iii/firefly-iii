@@ -75,11 +75,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-
-
     }
-
-
     /**
      * Shows the balances for all the user's expense accounts (on the front page).
      *
@@ -333,8 +329,6 @@ class AccountController extends Controller
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
-
-
         Log::debug('Frontpage preference set is ', $frontPage->data);
         if (0 === count($frontPage->data)) {
             app('preferences')->set('frontPageAccounts', $defaultSet);
@@ -471,8 +465,6 @@ class AccountController extends Controller
     {
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
-
-
     /**
      * Shows the balances for all the user's revenue accounts.
      *

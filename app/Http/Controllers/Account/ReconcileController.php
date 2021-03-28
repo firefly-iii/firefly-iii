@@ -95,8 +95,6 @@ class ReconcileController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
-
-
         if (AccountType::ASSET !== $account->accountType->type) {
             // @codeCoverageIgnoreStart
             session()->flash('error', (string) trans('firefly.must_be_asset_account'));

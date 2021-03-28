@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -60,8 +58,6 @@ class IndexController extends Controller
             }
         );
     }
-
-
     /**
      * Show all categories.
      *

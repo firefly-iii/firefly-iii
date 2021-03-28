@@ -321,8 +321,6 @@ class BudgetController extends Controller
 
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
-
-
         // list expenses for budgets in account(s)
         $expenses = $this->opsRepository->listExpenses($start, $end, $accounts);
 

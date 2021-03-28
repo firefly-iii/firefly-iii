@@ -66,7 +66,6 @@ class OtherCurrenciesCorrections extends Command
     /** @var JournalRepositoryInterface */
     private $journalRepos;
 
-
     /**
      * Execute the console command.
      *

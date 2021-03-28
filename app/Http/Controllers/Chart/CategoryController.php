@@ -60,8 +60,6 @@ class CategoryController extends Controller
         // create chart generator:
         $this->generator = app(GeneratorInterface::class);
     }
-
-
     /**
      * Show an overview for a category for all time, per month/week/year.
      * TODO test method, for category refactor.
@@ -94,8 +92,6 @@ class CategoryController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows the category chart on the front page.
      * TODO test method, for category refactor.
@@ -116,8 +112,6 @@ class CategoryController extends Controller
         }
 
         $frontPageGenerator = new FrontpageChartGenerator($start, $end);
-
-
         $chartData = $frontPageGenerator->generate();
         $data      = $this->generator->multiSet($chartData);
         $cache->store($data);
@@ -153,8 +147,6 @@ class CategoryController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Chart for period for transactions without a category.
      * TODO test me.
@@ -205,8 +197,6 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($category->id);
         $cache->addProperty('chart.category.period-chart');
-
-
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
@@ -295,8 +285,6 @@ class CategoryController extends Controller
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ];
-
-
             // loop empty periods:
             foreach (array_keys($periods) as $period) {
                 $label                                 = $periods[$period];

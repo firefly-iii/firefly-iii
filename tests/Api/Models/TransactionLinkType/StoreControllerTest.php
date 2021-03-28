@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\TransactionLinkType;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -72,8 +72,6 @@ class StoreControllerTest extends TestCase
         $defaultSet->addField(Field::createBasic('inward', 'uuid'));
         $defaultSet->addField(Field::createBasic('outward', 'uuid'));
         $configuration->addMandatoryFieldSet($defaultSet);
-
-
         return $configuration->generateAll();
     }
 

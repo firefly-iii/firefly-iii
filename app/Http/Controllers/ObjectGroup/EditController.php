@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ObjectGroupFormRequest;
 use FireflyIII\Models\ObjectGroup;
@@ -75,8 +73,6 @@ class EditController extends Controller
 
         return prefixView('object-groups.edit', compact('subTitle', 'subTitleIcon', 'objectGroup'));
     }
-
-
     /**
      * Update a piggy bank.
      *

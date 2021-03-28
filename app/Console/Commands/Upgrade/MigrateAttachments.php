@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
@@ -47,7 +46,6 @@ class MigrateAttachments extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:migrate-attachments {--F|force : Force the execution of this command.}';
-
 
     /**
      * Execute the console command.
@@ -117,7 +115,6 @@ class MigrateAttachments extends Command
 
         return false; // @codeCoverageIgnore
     }
-
 
     /**
      *

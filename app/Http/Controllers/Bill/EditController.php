@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
-
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillUpdateRequest;
@@ -64,8 +62,6 @@ class EditController extends Controller
             }
         );
     }
-
-
     /**
      * Edit a bill.
      *
@@ -112,8 +108,6 @@ class EditController extends Controller
 
         return prefixView('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'defaultCurrency', 'preFilled'));
     }
-
-
     /**
      * Update a bill.
      *

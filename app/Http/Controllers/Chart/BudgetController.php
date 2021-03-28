@@ -77,8 +77,6 @@ class BudgetController extends Controller
             }
         );
     }
-
-
     /**
      * Shows overview of a single budget.
      *
@@ -143,8 +141,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows the amount left in a specific budget limit.
      *
@@ -196,8 +192,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows how much is spent per asset account.
      *
@@ -265,8 +259,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows how much is spent per category.
      *
@@ -330,8 +322,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows how much is spent per expense account.
      *
@@ -398,8 +388,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows a budget list with spent/left/overspent.
      *
@@ -431,8 +419,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows a budget overview chart (spent and budgeted).
      *
@@ -508,8 +494,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows a chart for transactions without a budget.
      *

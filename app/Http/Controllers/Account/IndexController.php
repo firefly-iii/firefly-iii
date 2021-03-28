@@ -181,6 +181,4 @@ class IndexController extends Controller
 
         return prefixView('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }
-
-
 }

@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
-
-
 use Carbon\Carbon;
 use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;

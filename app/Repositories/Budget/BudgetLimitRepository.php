@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
-
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -428,8 +426,6 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             } catch (Exception $e) {
                 Log::debug(sprintf('Could not delete limit: %s', $e->getMessage()));
             }
-
-
             return null;
         }
         // update if exists:

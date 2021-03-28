@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Category;
-
-
 use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -97,6 +95,4 @@ interface NoCategoryRepositoryInterface
      * @return array
      */
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
-
-
 }

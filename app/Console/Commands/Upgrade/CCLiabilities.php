@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
@@ -34,8 +33,6 @@ use Illuminate\Support\Collection;
  */
 class CCLiabilities extends Command
 {
-
-
     public const CONFIG_NAME = '480_cc_liabilities';
     /**
      * The console command description.
@@ -49,7 +46,6 @@ class CCLiabilities extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:cc-liabilities {--F|force : Force the execution of this command.}';
-
 
     /**
      * Execute the console command.
@@ -107,7 +103,6 @@ class CCLiabilities extends Command
 
         return false; // @codeCoverageIgnore
     }
-
 
     /**
      *

@@ -76,8 +76,6 @@ class AccountTasker implements AccountTaskerInterface
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
                     'currency_decimal_places' => $currency->decimal_places,];
-
-
             $entry = [
                 'name'                    => $account->name,
                 'id'                      => $account->id,

@@ -55,8 +55,6 @@ class RecurringRepository implements RecurringRepositoryInterface
     use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
 
     private User $user;
-
-
     /**
      * Destroy a recurring transaction.
      *
@@ -242,8 +240,6 @@ class RecurringRepository implements RecurringRepositoryInterface
         if ('yearly' === $repetition->repetition_type) {
             $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
         }
-
-
         // filter out all the weekend days:
         return $this->filterWeekends($repetition, $occurrences);
     }

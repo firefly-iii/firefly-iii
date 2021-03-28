@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
-
-
 use Closure;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;

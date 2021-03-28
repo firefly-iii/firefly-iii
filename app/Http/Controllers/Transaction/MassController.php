@@ -110,8 +110,6 @@ class MassController extends Controller
                 }
             }
         }
-
-
         app('preferences')->mark();
         session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
 

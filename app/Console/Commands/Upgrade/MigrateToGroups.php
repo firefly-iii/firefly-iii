@@ -104,8 +104,6 @@ class MigrateToGroups extends Command
         if (0 === $this->count) {
             $this->line('No journals to migrate to groups.');
         }
-
-
         $this->markAsMigrated();
 
         return 0;

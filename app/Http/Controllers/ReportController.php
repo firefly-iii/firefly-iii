@@ -406,8 +406,6 @@ class ReportController extends Controller
 
         return redirect($uri);
     }
-
-
     /**
      * Get a tag report.
      *

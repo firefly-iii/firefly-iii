@@ -46,7 +46,6 @@ class CreateAccessTokens extends Command
      */
     protected $signature = 'firefly-iii:create-access-tokens';
 
-
     /**
      * Execute the console command.
      *

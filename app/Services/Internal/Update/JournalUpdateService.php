@@ -145,8 +145,6 @@ class JournalUpdateService
         $this->updateField('description');
         $this->updateField('date');
         $this->updateField('order');
-
-
         $this->transactionJournal->save();
         $this->transactionJournal->refresh();
 
@@ -294,8 +292,6 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
-
-
         $result = $validator->validateDestination($destId, $destName, null);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
@@ -393,8 +389,6 @@ class JournalUpdateService
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
-
-
         Log::debug(sprintf('Will set source to #%d ("%s")', $source->id, $source->name));
         Log::debug(sprintf('Will set dest to #%d ("%s")', $destination->id, $destination->name));
     }
@@ -505,8 +499,6 @@ class JournalUpdateService
                 // do some parsing.
                 Log::debug(sprintf('Create date value from string "%s".', $value));
             }
-
-
             $this->transactionJournal->$fieldName = $value;
             Log::debug(sprintf('Updated %s', $fieldName));
         }
@@ -692,13 +684,9 @@ class JournalUpdateService
         $origSourceTransaction         = $this->getSourceTransaction();
         $origSourceTransaction->amount = app('steam')->negative($amount);
         $origSourceTransaction->save();
-
-
         $destTransaction         = $this->getDestinationTransaction();
         $destTransaction->amount = app('steam')->positive($amount);
         $destTransaction->save();
-
-
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
@@ -738,8 +726,6 @@ class JournalUpdateService
             $source->foreign_currency_id = $foreignCurrency->id;
             $source->foreign_amount      = app('steam')->negative($foreignAmount);
             $source->save();
-
-
             $dest->foreign_currency_id = $foreignCurrency->id;
             $dest->foreign_amount      = app('steam')->positive($foreignAmount);
             $dest->save();

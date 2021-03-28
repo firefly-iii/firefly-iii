@@ -320,8 +320,6 @@ trait RenderPartialViews
             }
         }
         asort($triggers);
-
-
         $index           = 0;
         $renderedEntries = [];
         // todo must be repos

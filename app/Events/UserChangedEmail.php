@@ -44,8 +44,6 @@ class UserChangedEmail extends Event
     public $oldEmail;
     /** @var User The user itself */
     public $user;
-
-
     /**
      * UserChangedEmail constructor.
      *

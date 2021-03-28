@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
-
-
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
@@ -87,8 +85,6 @@ class ConvertToWithdrawal implements ActionInterface
         $expenseName   = '' === $this->action->action_value ? $journal['source_account_name'] : $this->action->action_value;
         $expense       = $factory->findOrCreate($expenseName, AccountType::EXPENSE);
         $destinationId = $journal['destination_account_id'];
-
-
         Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $expenseName));
 
         // update source transaction(s) to be the original destination account
@@ -126,15 +122,11 @@ class ConvertToWithdrawal implements ActionInterface
      */
     private function convertTransferArray(array $journal): bool
     {
-
-
         // find or create expense account.
         $user = User::find($journal['user_id']);
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
-
-
         $expenseName = '' === $this->action->action_value ? $journal['destination_account_name'] : $this->action->action_value;
         $expense     = $factory->findOrCreate($expenseName, AccountType::EXPENSE);
 

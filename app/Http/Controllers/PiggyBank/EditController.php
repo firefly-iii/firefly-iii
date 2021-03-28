@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
-
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
@@ -105,8 +103,6 @@ class EditController extends Controller
 
         return prefixView('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
     }
-
-
     /**
      * Update a piggy bank.
      *
@@ -136,8 +132,6 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
-
-
         $redirect = redirect($this->getPreviousUri('piggy-banks.edit.uri'));
 
         if (1 === (int) $request->get('return_to_edit')) {

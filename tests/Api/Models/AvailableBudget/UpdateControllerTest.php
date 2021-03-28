@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\AvailableBudget;
-
-
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -48,8 +48,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @param array $submission
      *
@@ -69,8 +67,6 @@ class UpdateControllerTest extends TestCase
         $route = route('api.v1.available_budgets.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
     }
-
-
     /**
      * @return array
      */

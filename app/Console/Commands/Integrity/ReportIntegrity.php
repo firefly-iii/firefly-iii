@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
-
 use Artisan;
 use Illuminate\Console\Command;
 use Schema;
@@ -48,7 +47,6 @@ class ReportIntegrity extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:report-integrity';
-
 
     /**
      * Execute the console command.

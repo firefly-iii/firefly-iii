@@ -49,7 +49,6 @@ class FixGroupAccounts extends Command
      */
     protected $signature = 'firefly-iii:unify-group-accounts';
 
-
     /**
      * Execute the console command.
      *
@@ -74,7 +73,6 @@ class FixGroupAccounts extends Command
         }
 
         $this->line('Updated inconsistent transaction groups.');
-
 
         return 0;
     }

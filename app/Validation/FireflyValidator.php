@@ -629,8 +629,6 @@ class FireflyValidator extends Validator
                 $response = $responses[$this->data['response']] ?? 0;
                 $delivery = $deliveries[$this->data['delivery']] ?? 0;
             }
-
-
             $url    = $this->data['url'];
             $userId = auth()->user()->id;
 
@@ -672,8 +670,6 @@ class FireflyValidator extends Validator
         if (!isset($parameters[2]) && isset($data['id']) && (int)$data['id'] > 0) {
             $exclude = (int)$data['id'];
         }
-
-
         // get entries from table
         $set = DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
                  ->where('id', '!=', $exclude)->get([$field]);

@@ -37,8 +37,6 @@ class DestroyedTransactionGroup extends Event
     use SerializesModels;
 
     public TransactionGroup $transactionGroup;
-
-
     /**
      * Create a new event instance.
      *

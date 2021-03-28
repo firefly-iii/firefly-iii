@@ -422,8 +422,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
-
-
         if (null === $autoBudget
             && array_key_exists('auto_budget_type', $data)
             && array_key_exists('auto_budget_amount', $data)
@@ -463,8 +461,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null !== $autoBudget) {
             $autoBudget->save();
         }
-
-
         return $budget;
     }
 

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
-
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormStoreRequest;
@@ -50,8 +48,6 @@ class CreateController extends Controller
     public function __construct()
     {
         parent::__construct();
-
-
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string) trans('firefly.budgets'));
@@ -63,8 +59,6 @@ class CreateController extends Controller
             }
         );
     }
-
-
     /**
      * Form to create a budget.
      *
@@ -108,8 +102,6 @@ class CreateController extends Controller
 
         return prefixView('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
     }
-
-
     /**
      * Stores a budget.
      *

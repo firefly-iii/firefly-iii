@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * 2020_03_13_201950_changes_for_v520.php
  * Copyright (c) 2020 james@firefly-iii.org

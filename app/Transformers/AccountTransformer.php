@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;

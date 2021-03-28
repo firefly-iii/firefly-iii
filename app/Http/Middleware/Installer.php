@@ -76,8 +76,6 @@ class Installer
         OAuthKeys::verifyKeysRoutine();
         // update scheme version
         // update firefly version
-
-
         return $next($request);
     }
 

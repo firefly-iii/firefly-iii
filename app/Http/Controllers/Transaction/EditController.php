@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -58,8 +56,6 @@ class EditController extends Controller
             }
         );
     }
-
-
     /**
      * @param TransactionGroup $transactionGroup
      *
@@ -87,8 +83,6 @@ class EditController extends Controller
         $parts           = parse_url($previousUri);
         $search          = sprintf('?%s', $parts['query'] ?? '');
         $previousUri     = str_replace($search, '', $previousUri);
-
-
         return prefixView(
             'transactions.edit',
             compact(

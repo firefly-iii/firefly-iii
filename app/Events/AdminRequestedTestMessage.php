@@ -41,8 +41,6 @@ class AdminRequestedTestMessage extends Event
     public $ipAddress;
     /** @var User The user */
     public $user;
-
-
     /**
      * Create a new event instance.
      *

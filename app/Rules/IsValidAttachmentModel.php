@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Rules;
-
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;

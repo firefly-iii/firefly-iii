@@ -50,8 +50,6 @@ class TagList implements BinderInterface
                              ->orderBy('tag', 'ASC')
                              ->get();
             }
-
-
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             Log::debug('List of tags is', $list);
             // @codeCoverageIgnoreStart

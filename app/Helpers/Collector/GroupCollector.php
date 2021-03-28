@@ -654,8 +654,6 @@ class GroupCollector implements GroupCollectorInterface
             }
             // or parse the rest.
             $journalId = (int)$augumentedJournal->transaction_journal_id;
-
-
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);

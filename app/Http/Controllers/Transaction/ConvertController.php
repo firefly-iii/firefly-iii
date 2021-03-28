@@ -76,8 +76,6 @@ class ConvertController extends Controller
             }
         );
     }
-
-
     /**
      * Show overview of a to be converted transaction.
      *

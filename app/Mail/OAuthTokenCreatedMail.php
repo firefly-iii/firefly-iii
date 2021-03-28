@@ -27,8 +27,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Laravel\Passport\Client;
-
-
 /**
  * Class OAuthTokenCreatedMail
  *

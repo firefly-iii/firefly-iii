@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
-
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -105,8 +103,6 @@ class NoCategoryController extends Controller
 
         return prefixView('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
-
-
     /**
      * Show all transactions without a category.
      *

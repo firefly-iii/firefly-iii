@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
-
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -133,8 +131,6 @@ class ShowController extends Controller
 
         return prefixView('budgets.no-budget', compact('groups', 'subTitle', 'start', 'end'));
     }
-
-
     /**
      * Show a single budget.
      *
@@ -148,8 +144,6 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $allStart = session('first', Carbon::now()->startOfYear());
         $allEnd   = today();
-
-
         $page       = (int) $request->get('page');
         $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
         $limits     = $this->getLimits($budget, $allStart, $allEnd);

@@ -50,8 +50,6 @@ class BillController extends Controller
         parent::__construct();
         $this->generator = app(GeneratorInterface::class);
     }
-
-
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
      *
@@ -94,8 +92,6 @@ class BillController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * Shows overview for a single bill.
      *

@@ -21,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 namespace FireflyIII\Rules;
 
 use Illuminate\Contracts\Validation\Rule;

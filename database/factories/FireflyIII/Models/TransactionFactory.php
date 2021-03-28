@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace Database\Factories\FireflyIII\Models;
-
-
 use FireflyIII\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

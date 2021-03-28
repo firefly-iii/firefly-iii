@@ -20,8 +20,6 @@
  */
 
 declare(strict_types=1);
-
-
 namespace Tests\Traits;
 
 use Illuminate\Support\Facades\Log;
@@ -31,8 +29,6 @@ use Illuminate\Support\Facades\Log;
  */
 trait TestHelpers
 {
-
-
     /**
      * @param string $route
      * @param array  $content
@@ -100,8 +96,6 @@ trait TestHelpers
         }
 
     }
-
-
     /**
      * @param string $route
      * @param array  $content

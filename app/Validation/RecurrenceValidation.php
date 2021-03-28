@@ -90,8 +90,6 @@ trait RecurrenceValidation
             ) {
                 continue;
             }
-
-
             // validate source account.
             $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
             $sourceName  = $transaction['source_name'] ?? null;

@@ -64,8 +64,6 @@ class ExpenseReportController extends Controller
             }
         );
     }
-
-
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *

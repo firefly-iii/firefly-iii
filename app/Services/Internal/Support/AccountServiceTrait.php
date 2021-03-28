@@ -66,8 +66,6 @@ trait AccountServiceTrait
 
             return null;
         }
-
-
         return $iban;
     }
 

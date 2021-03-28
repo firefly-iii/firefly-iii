@@ -72,9 +72,6 @@ class ShowController extends Controller
             }
         );
     }
-
-
-
     /**
      * Show an account.
      *
@@ -167,8 +164,6 @@ class ShowController extends Controller
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
-
-
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);
         $attachments      = $this->repository->getAttachments($account);

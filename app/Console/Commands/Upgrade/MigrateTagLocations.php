@@ -48,7 +48,6 @@ class MigrateTagLocations extends Command
      */
     protected $signature = 'firefly-iii:migrate-tag-locations {--F|force : Force the execution of this command.}';
 
-
     /**
      * Execute the console command.
      *
@@ -130,6 +129,4 @@ class MigrateTagLocations extends Command
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
-
-
 }

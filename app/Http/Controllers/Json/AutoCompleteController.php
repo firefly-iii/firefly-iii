@@ -36,8 +36,6 @@ use Illuminate\Http\Request;
  */
 class AutoCompleteController extends Controller
 {
-
-
     /**
      * Searches in the titles of all transaction journals.
      * The result is limited to the top 15 unique results.
@@ -78,8 +76,6 @@ class AutoCompleteController extends Controller
             // give another key for consistency
             $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
         }
-
-
         return response()->json($array);
     }
 

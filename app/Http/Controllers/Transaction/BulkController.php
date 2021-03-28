@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
-
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -40,8 +38,6 @@ class BulkController extends Controller
 {
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
-
-
     /**
      * BulkController constructor.
      *
@@ -86,8 +82,6 @@ class BulkController extends Controller
 
         return prefixView('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }
-
-
     /**
      * Update all journals.
      *

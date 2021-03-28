@@ -98,8 +98,6 @@ class Handler extends ExceptionHandler
 
             return $handler->render($request, $exception);
         }
-
-
         if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
             $isDebug = config('app.debug');
 

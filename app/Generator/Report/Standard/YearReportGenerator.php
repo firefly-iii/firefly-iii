@@ -65,8 +65,6 @@ class YearReportGenerator implements ReportGeneratorInterface
 
         return $result;
     }
-
-
     /**
      * Set the accounts.
      *

@@ -171,8 +171,6 @@ class AttachmentController extends Controller
                 return $attachment;
             }
         );
-
-
         return prefixView('attachments.index', compact('set'));
     }
 

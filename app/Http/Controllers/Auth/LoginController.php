@@ -67,8 +67,6 @@ class LoginController extends Controller
         parent::__construct();
         $this->middleware('guest')->except('logout');
     }
-
-
     /**
      * Handle a login request to the application.
      *
@@ -216,8 +214,6 @@ class LoginController extends Controller
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
             request()->cookies->set($cookieName, 'invalid');
         }
-
-
         return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
     }
 

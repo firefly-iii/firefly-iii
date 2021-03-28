@@ -58,8 +58,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
-
-
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [
@@ -114,8 +112,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
         $journals = $collector->getExtractedJournals();
         $array    = [];
-
-
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [

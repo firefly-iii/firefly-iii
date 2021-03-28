@@ -171,8 +171,6 @@ class TagReportController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * @param Collection $accounts
      * @param Collection $tags
@@ -427,8 +425,6 @@ class TagReportController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * @param Collection $accounts
      * @param Collection $tags
@@ -462,8 +458,6 @@ class TagReportController extends Controller
 
         return response()->json($data);
     }
-
-
     /**
      * TODO duplicate function
      *

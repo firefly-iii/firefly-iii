@@ -245,8 +245,6 @@ class SearchRuleEngine implements RuleEngineInterface
         if ($this->hasSpecificJournalTrigger($searchArray)) {
             $date = $this->setDateFromJournalTrigger($searchArray);
         }
-
-
         // build and run the search engine.
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
@@ -407,8 +405,6 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         // pick up from the action if it actually acted or not:
-
-
         if ($ruleAction->stop_processing) {
             Log::debug(sprintf('Rule action "%s" asks to break, so break!', $ruleAction->action_type));
 

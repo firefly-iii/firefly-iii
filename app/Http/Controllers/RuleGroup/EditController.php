@@ -79,8 +79,6 @@ class EditController extends Controller
 
         return redirect(route('rules.index'));
     }
-
-
     /**
      * Edit a rule group.
      *
@@ -97,8 +95,6 @@ class EditController extends Controller
         $preFilled   = [
             'active' => $hasOldInput ? (bool)$request->old('active') : $ruleGroup->active,
         ];
-
-
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUri('rule-groups.edit.uri');

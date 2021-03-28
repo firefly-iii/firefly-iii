@@ -70,8 +70,6 @@ class TransferCurrenciesCorrections extends Command
      */
     public function handle(): int
     {
-
-
         $this->stupidLaravel();
         $start = microtime(true);
         // @codeCoverageIgnoreStart
@@ -188,8 +186,6 @@ class TransferCurrenciesCorrections extends Command
             return;
         }
         // @codeCoverageIgnoreEnd
-
-
         // both accounts must have currency preference:
         // @codeCoverageIgnoreStart
         if ($this->isNoCurrencyPresent()) {

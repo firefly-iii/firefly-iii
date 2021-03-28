@@ -172,8 +172,6 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         return $return;
-
-
     }
 
     /**
@@ -324,8 +322,6 @@ class RecurrenceFormRequest extends FormRequest
                 $destinationId = (int)$data['destination_id'];
                 break;
         }
-
-
         // validate source account.
         $validSource = $accountValidator->validateSource($sourceId, null, null);
 
