@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Bill;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Bill\UpdateRequest;
@@ -37,7 +38,6 @@ use League\Fractal\Resource\Item;
 class UpdateController extends Controller
 {
     private BillRepositoryInterface $repository;
-
 
     /**
      * BillController constructor.

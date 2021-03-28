@@ -31,7 +31,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use function is_array;
 
-
 /**
  * Class UpdateRequest
  */

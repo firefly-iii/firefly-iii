@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Category;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Category;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Category\StoreRequest;
@@ -37,7 +38,6 @@ use League\Fractal\Resource\Item;
 class StoreController extends Controller
 {
     private CategoryRepositoryInterface $repository;
-
 
     /**
      * CategoryController constructor.

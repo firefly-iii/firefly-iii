@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Rule;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Rule;
@@ -61,7 +62,6 @@ class ShowController extends Controller
         );
     }
 
-
     /**
      * List all of them.
      *
@@ -94,7 +94,6 @@ class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
-
 
     /**
      * List single resource.

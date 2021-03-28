@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Tag;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -45,7 +46,6 @@ class ListController extends Controller
 
     private TagRepositoryInterface $repository;
 
-
     /**
      * TagController constructor.
      *
@@ -66,7 +66,6 @@ class ListController extends Controller
             }
         );
     }
-
 
     /**
      * @param Tag $tag
@@ -96,7 +95,6 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
     /**
      * Show all transactions.

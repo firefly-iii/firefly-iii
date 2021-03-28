@@ -45,7 +45,6 @@ class AccountController extends Controller
     private CurrencyRepositoryInterface $currencyRepository;
     private AccountRepositoryInterface  $repository;
 
-
     /**
      * AccountController constructor.
      *

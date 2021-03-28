@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
@@ -56,7 +57,6 @@ class DestroyController extends Controller
             }
         );
     }
-
 
     /**
      * Delete the resource.

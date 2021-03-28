@@ -53,8 +53,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4231](https://github.com/firefly-iii/firefly-iii/issues/4231) Inconsistent hiding of columns.
 - [Issue 4235](https://github.com/firefly-iii/firefly-iii/issues/4235) The info popup in the standard financial report does not apply report's account filter.
 - [Issue 4241](https://github.com/firefly-iii/firefly-iii/issues/4241) A broken chart works again.
+- [Issue 4520](https://github.com/firefly-iii/firefly-iii/issues/4520) RSA token generation is now PHP7/8 compatible.
+- [Issue 4529](https://github.com/firefly-iii/firefly-iii/issues/4529) Convert transaction routine was broken.  
 - PHP configurations that have "MB" as size indicator would be parsed badly.
-- RSA token generation is now PHP7/8 compatible.
 
 ### API
 

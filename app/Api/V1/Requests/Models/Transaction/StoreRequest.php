@@ -147,8 +147,6 @@ class StoreRequest extends FormRequest
                 'sepa_ep'       => $this->stringFromValue($object['sepa_ep']),
                 'sepa_ci'       => $this->stringFromValue($object['sepa_ci']),
                 'sepa_batch_id' => $this->stringFromValue($object['sepa_batch_id']),
-
-
                 // custom date fields. Must be Carbon objects. Presence is optional.
                 'interest_date' => $this->dateFromValue($object['interest_date']),
                 'book_date'     => $this->dateFromValue($object['book_date']),
@@ -250,8 +248,6 @@ class StoreRequest extends FormRequest
             'transactions.*.payment_date'          => 'date|nullable',
             'transactions.*.invoice_date'          => 'date|nullable',
         ];
-
-
     }
 
     /**

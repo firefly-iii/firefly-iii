@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\ObjectGroup\UpdateRequest;
@@ -37,7 +38,6 @@ use League\Fractal\Resource\Item;
 class UpdateController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
-
 
     /**
      * ObjectGroupController constructor.
@@ -58,7 +58,6 @@ class UpdateController extends Controller
             }
         );
     }
-
 
     /**
      * @param UpdateRequest $request

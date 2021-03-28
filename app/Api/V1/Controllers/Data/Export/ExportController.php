@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * AccountController.php
  * Copyright (c) 2021 james@firefly-iii.org
@@ -20,7 +22,6 @@
  */
 
 namespace FireflyIII\Api\V1\Controllers\Data\Export;
-
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
@@ -54,7 +55,6 @@ class ExportController extends Controller
             }
         );
     }
-
 
     /**
      * @param ExportRequest $request

@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\BudgetLimit\StoreRequest;
@@ -38,7 +39,6 @@ use League\Fractal\Resource\Item;
 class StoreController extends Controller
 {
     private BudgetLimitRepositoryInterface $blRepository;
-
 
     /**
      * BudgetLimitController constructor.
@@ -60,7 +60,6 @@ class StoreController extends Controller
         );
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -79,8 +78,6 @@ class StoreController extends Controller
 
         $budgetLimit = $this->blRepository->store($data);
         $manager     = $this->getManager();
-
-
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);

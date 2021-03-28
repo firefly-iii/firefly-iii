@@ -81,7 +81,6 @@ class BasicController extends Controller
                 $this->abRepository->setUser($user);
                 $this->opsRepository->setUser($user);
 
-
                 return $next($request);
             }
         );
@@ -162,8 +161,6 @@ class BasicController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes([TransactionType::WITHDRAWAL]);
-
-
         $set = $collector->getExtractedJournals();
 
         /** @var array $transactionJournal */
@@ -346,8 +343,6 @@ class BasicController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $date = Carbon::now()->startOfDay();
-
-
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */

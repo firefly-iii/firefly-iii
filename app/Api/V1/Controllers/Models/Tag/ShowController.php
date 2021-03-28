@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Tag;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Tag;
@@ -39,7 +40,6 @@ use League\Fractal\Resource\Item;
 class ShowController extends Controller
 {
     private TagRepositoryInterface $repository;
-
 
     /**
      * TagController constructor.
@@ -92,7 +92,6 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
     /**
      * List single resource.

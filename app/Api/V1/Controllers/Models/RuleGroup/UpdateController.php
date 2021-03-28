@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\UpdateRequest;
@@ -38,7 +39,6 @@ class UpdateController extends Controller
 {
 
     private RuleGroupRepositoryInterface $ruleGroupRepository;
-
 
     /**
      * RuleGroupController constructor.
@@ -60,7 +60,6 @@ class UpdateController extends Controller
             }
         );
     }
-
 
     /**
      * Update a rule group.

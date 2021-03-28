@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
@@ -36,7 +37,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private BudgetLimitRepositoryInterface $blRepository;
-
 
     /**
      * BudgetLimitController constructor.

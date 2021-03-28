@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Bill;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -45,7 +46,6 @@ class ListController extends Controller
     use TransactionFilter;
 
     private BillRepositoryInterface $repository;
-
 
     /**
      * BillController constructor.
@@ -100,7 +100,6 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-
     /**
      * List all of them.
      *
@@ -128,15 +127,12 @@ class ListController extends Controller
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
-
-
         $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
 
     }
-
 
     /**
      * Show all transactions.

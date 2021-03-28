@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\AvailableBudget;

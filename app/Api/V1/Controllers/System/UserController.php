@@ -37,14 +37,12 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
-
 /**
  * Class UserController.
  */
 class UserController extends Controller
 {
     private UserRepositoryInterface $repository;
-
 
     /**
      * UserController constructor.

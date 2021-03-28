@@ -31,14 +31,12 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use function is_array;
 
-
 /**
  * Class StoreRequest
  */
 class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, GetRuleConfiguration, ChecksLogin;
-
 
     /**
      * Get all data from the request.

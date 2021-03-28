@@ -46,7 +46,6 @@ class AccountController extends Controller
 
     private array $validFields;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -85,8 +84,6 @@ class AccountController extends Controller
         $search->setQuery($query);
 
         $accounts = $search->search();
-
-
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);

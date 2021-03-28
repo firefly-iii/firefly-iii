@@ -48,8 +48,6 @@ class StoreRequest extends FormRequest
             'outward' => $this->string('outward'),
             'inward'  => $this->string('inward'),
         ];
-
-
     }
 
     /**

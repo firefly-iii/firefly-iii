@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\RuleGroup;
 
-
 use Carbon\Carbon;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -36,7 +35,6 @@ use Illuminate\Foundation\Http\FormRequest;
 class TestRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
-
 
     /**
      * @return array

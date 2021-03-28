@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\RuleGroup;
@@ -36,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 class RuleGroupController extends Controller
 {
     private RuleGroupRepositoryInterface $repository;
-
 
     /**
      * RuleGroupController constructor.

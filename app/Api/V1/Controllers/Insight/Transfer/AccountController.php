@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Insight\Transfer;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Insight\Transfer;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;

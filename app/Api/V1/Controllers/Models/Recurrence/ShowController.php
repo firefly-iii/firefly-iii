@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
@@ -114,7 +115,5 @@ class ShowController extends Controller
         $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-
-
     }
 }
