@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -44,6 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class IndexController extends Controller
 {
     use GetConfigurationData;
+
     private RecurringRepositoryInterface $recurringRepos;
 
     /**
@@ -59,7 +59,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurringRepos = app(RecurringRepositoryInterface::class);
 
@@ -74,20 +74,20 @@ class IndexController extends Controller
      *
      * @param Request $request
      *
+     * @return Factory|View
      * @throws FireflyException
      *
-     * @return Factory|View
      */
     public function index(Request $request)
     {
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurringRepos->get();
         $today      = today(config('app.timezone'));
         $year       = today(config('app.timezone'));
 
         // split collection
-        $total = $collection->count();
+        $total       = $collection->count();
         $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
         /** @var RecurrenceTransformer $transformer */

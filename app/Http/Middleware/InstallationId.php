@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
@@ -41,7 +40,7 @@ class InstallationId
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure                  $next
+     * @param Closure $next
      *
      * @return mixed
      *
@@ -50,8 +49,6 @@ class InstallationId
      */
     public function handle($request, Closure $next)
     {
-
-
         $this->generateInstallationId();
 
         return $next($request);

@@ -65,6 +65,9 @@
         "weekly_budgets": "Budgets hebdomadaires",
         "monthly_budgets": "Budgets mensuels",
         "quarterly_budgets": "Budgets trimestriels",
+        "create_new_expense": "Cr\u00e9er nouveau compte de d\u00e9penses",
+        "create_new_revenue": "Cr\u00e9er nouveau compte de recettes",
+        "create_new_liabilities": "Cr\u00e9er un nouveau passif",
         "half_year_budgets": "Budgets semestriels",
         "yearly_budgets": "Budgets annuels",
         "split_transaction_title": "Description de l'op\u00e9ration ventil\u00e9e",
@@ -75,6 +78,12 @@
         "create_another": "Apr\u00e8s enregistrement, revenir ici pour en cr\u00e9er un nouveau.",
         "update_transaction": "Mettre \u00e0 jour l'op\u00e9ration",
         "after_update_create_another": "Apr\u00e8s la mise \u00e0 jour, revenir ici pour continuer l'\u00e9dition.",
+        "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">L'op\u00e9ration n\u00b0{ID}<\/a> (\"{title}\") a \u00e9t\u00e9 mise \u00e0 jour.",
+        "spent_x_of_y": "D\u00e9pens\u00e9 {amount} sur {total}",
+        "search": "Rechercher",
+        "create_new_asset": "Cr\u00e9er un nouveau compte d\u2019actif",
+        "asset_accounts": "Comptes d\u2019actif",
         "reset_after": "R\u00e9initialiser le formulaire apr\u00e8s soumission",
         "bill_paid_on": "Pay\u00e9 le {date}",
         "first_split_decides": "La premi\u00e8re ventilation d\u00e9termine la valeur de ce champ",
@@ -89,7 +98,11 @@
         "journal_links": "Liens d'op\u00e9ration",
         "go_to_withdrawals": "Acc\u00e9der \u00e0 vos retraits",
         "revenue_accounts": "Comptes de recettes",
-        "add_another_split": "Ajouter une autre fraction"
+        "add_another_split": "Ajouter une autre fraction",
+        "actions": "Actions",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "reconcile_this_account": "Rapprocher ce compte"
     },
     "list": {
         "piggy_bank": "Tirelire",
@@ -98,9 +111,7 @@
         "name": "Nom",
         "role": "R\u00f4le",
         "iban": "Num\u00e9ro IBAN",
-        "lastActivity": "Activit\u00e9 r\u00e9cente",
         "currentBalance": "Solde courant",
-        "balanceDiff": "Diff\u00e9rence de solde",
         "next_expected_match": "Prochaine association attendue"
     },
     "config": {

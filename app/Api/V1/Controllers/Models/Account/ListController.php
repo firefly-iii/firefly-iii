@@ -133,7 +133,6 @@ class ListController extends Controller
 
     }
 
-
     /**
      * Show all transaction groups related to the account.
      *

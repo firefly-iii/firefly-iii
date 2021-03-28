@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
-
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;

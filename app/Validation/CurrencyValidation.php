@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Validation;
-
-
 use Illuminate\Validation\Validator;
 use Log;
 

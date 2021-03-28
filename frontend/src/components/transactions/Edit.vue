@@ -529,6 +529,7 @@ export default {
               this.date.toISOString() !== this.originalDate.toISOString() ||
               this.time.toISOString() !== this.originalTime.toISOString()
           ) {
+            console.log('Date and/or time is changed');
             // set date and time!
             shouldSubmit = true;
             let theDate = this.date;
@@ -537,7 +538,7 @@ export default {
             theDate.setMinutes(this.time.getMinutes());
             theDate.setSeconds(this.time.getSeconds());
             dateStr = toW3CString(theDate);
-            submission.date = dateStr;
+            diff.date = dateStr;
           }
           if (Object.keys(diff).length === 0 && transactionCount > 1) {
             diff.transaction_journal_id = originalTransaction.transaction_journal_id;
@@ -623,8 +624,6 @@ export default {
                   // // meanwhile, store the ID and the title in some easy to access variables.
                   this.returnedGroupId = parseInt(response.data.data.id);
                   this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
-
-
                 }
           )
           .catch(error => {

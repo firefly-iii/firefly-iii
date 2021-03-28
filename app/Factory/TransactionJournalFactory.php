@@ -263,8 +263,6 @@ class TransactionJournalFactory
             $this->forceDeleteOnError(new Collection([$journal]));
             throw new FireflyException($e->getMessage());
         }
-
-
         // verify that journal has two transactions. Otherwise, delete and cancel.
         $journal->completed = true;
         $journal->save();
@@ -578,6 +576,4 @@ class TransactionJournalFactory
         $this->piggyRepository->setUser($this->user);
         $this->accountRepository->setUser($this->user);
     }
-
-
 }

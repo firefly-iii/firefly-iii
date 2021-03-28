@@ -208,7 +208,6 @@ class AccountFactory
             Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountType, $result->type));
         }
 
-
         return $result;
 
     }
@@ -233,6 +232,4 @@ class AccountFactory
     {
         $this->user = $user;
     }
-
-
 }

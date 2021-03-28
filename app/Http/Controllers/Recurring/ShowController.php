@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class ShowController extends Controller
 {
     use GetConfigurationData;
+
     /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
@@ -58,7 +59,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -67,14 +68,13 @@ class ShowController extends Controller
         );
     }
 
-
     /**
      * Show a single recurring transaction.
      *
      * @param Recurrence $recurrence
      *
-     * @throws FireflyException
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Recurrence $recurrence)
     {
@@ -94,8 +94,8 @@ class ShowController extends Controller
             }
         }
 
-        $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return prefixView('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups','today'));
+        return prefixView('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups', 'today'));
     }
 }

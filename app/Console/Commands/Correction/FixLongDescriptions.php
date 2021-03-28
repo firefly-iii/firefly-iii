@@ -47,7 +47,6 @@ class FixLongDescriptions extends Command
      */
     protected $signature = 'firefly-iii:fix-long-descriptions';
 
-
     /**
      * Execute the console command.
      *

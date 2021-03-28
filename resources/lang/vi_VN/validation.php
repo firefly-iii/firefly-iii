@@ -60,7 +60,7 @@ return [
     'less'                           => ':thuộc tính phải nhỏ hơn 10,000,000',
     'active_url'                     => 'Thuộc tính: không phải là một URL hợp lệ.',
     'after'                          => 'Thuộc tính: phải là một ngày sau: ngày.',
-    'date_after'                     => 'The start date must be before the end date.',
+    'date_after'                     => '"Ngày bắt đầu" phải trước "Ngày kết thúc".',
     'alpha'                          => 'Thuộc tính: chỉ có thể chứa các chữ cái.',
     'alpha_dash'                     => 'Thuộc tính: chỉ có thể chứa chữ cái, số và dấu gạch ngang.',
     'alpha_num'                      => 'Thuộc tính: chỉ có thể chứa các chữ cái và số.',
@@ -131,7 +131,7 @@ return [
     'current_target_amount'          => 'Số tiền hiện tại phải nhỏ hơn số tiền mục tiêu.',
     'unique_piggy_bank_for_user'     => 'Tên của con heo đất phải là duy nhất.',
     'unique_object_group'            => 'Tên nhóm phải không bị trùng',
-    'starts_with'                    => 'The value must start with :values.',
+    'starts_with'                    => 'Giá trị phải bắt đầu bằng :values.',
     'unique_webhook'                 => 'You already have a webhook with these values.',
     'unique_existing_webhook'        => 'You already have another webhook with these values.',
 
@@ -143,7 +143,7 @@ return [
         'email'                   => 'địa chỉ email',
         'description'             => 'mô tả',
         'amount'                  => 'số tiền',
-        'transactions.*.amount'   => 'transaction amount',
+        'transactions.*.amount'   => 'số tiền giao dịch',
         'name'                    => 'tên',
         'piggy_bank_id'           => 'ID heo đất',
         'targetamount'            => 'lượng mục tiêu',
@@ -183,7 +183,7 @@ return [
     'withdrawal_dest_need_data'   => 'Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
     'withdrawal_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
-    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data'  => 'Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
     'deposit_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
     'deposit_source_bad_data'  => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để continuaCould không tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm IDe ":id" hoặc tên ":name".',
@@ -205,7 +205,7 @@ return [
     'generic_invalid_destination' => 'Bạn không thể sử dụng tài khoản này làm tài khoản đích.',
 
     'gte.numeric' => ':attribute phải lớn hơn hoặc bằng :value.',
-    'gt.numeric'  => 'The :attribute must be greater than :value.',
+    'gt.numeric'  => ':attribute phải lớn hơn :value.',
     'gte.file'    => ':attribute phải lớn hơn hoặc bằng :value kilobyte.',
     'gte.string'  => ':attribute phải lớn hơn hoặc bằng :value ký tự.',
     'gte.array'   => ':attribute phải có :value mục trở lên.',

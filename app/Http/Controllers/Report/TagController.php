@@ -118,8 +118,6 @@ class TagController extends Controller
                 }
             }
         }
-
-
         // loop income.
         foreach ($earned as $currency) {
             $currencyId = $currency['currency_id'];
@@ -127,18 +125,16 @@ class TagController extends Controller
             /** @var array $category */
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
-                    $destinationId = $journal['destination_account_id'];
+                    $destinationId                                                                   = $journal['destination_account_id'];
                     $report[$destinationId]['currencies'][$currencyId]
-                                   = $report[$destinationId]['currencies'][$currencyId]
-                                     ?? [
-                                         'currency_id'             => $currency['currency_id'],
-                                         'currency_symbol'         => $currency['currency_symbol'],
-                                         'currency_name'           => $currency['currency_name'],
-                                         'currency_decimal_places' => $currency['currency_decimal_places'],
-                                         'tags'                    => [],
-                                     ];
-
-
+                                                                                                     = $report[$destinationId]['currencies'][$currencyId]
+                                                                                                       ?? [
+                                                                                                           'currency_id'             => $currency['currency_id'],
+                                                                                                           'currency_symbol'         => $currency['currency_symbol'],
+                                                                                                           'currency_name'           => $currency['currency_name'],
+                                                                                                           'currency_decimal_places' => $currency['currency_decimal_places'],
+                                                                                                           'tags'                    => [],
+                                                                                                       ];
                     $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
                                                                                                      = $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
                                                                                                        ??

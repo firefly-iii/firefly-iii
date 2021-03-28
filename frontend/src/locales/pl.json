@@ -65,6 +65,9 @@
         "weekly_budgets": "Bud\u017cety tygodniowe",
         "monthly_budgets": "Bud\u017cety miesi\u0119czne",
         "quarterly_budgets": "Bud\u017cety kwartalne",
+        "create_new_expense": "Utw\u00f3rz nowe konto wydatk\u00f3w",
+        "create_new_revenue": "Utw\u00f3rz nowe konto przychod\u00f3w",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "Bud\u017cety p\u00f3\u0142roczne",
         "yearly_budgets": "Bud\u017cety roczne",
         "split_transaction_title": "Opis podzielonej transakcji",
@@ -75,6 +78,12 @@
         "create_another": "Po zapisaniu wr\u00f3\u0107 tutaj, aby utworzy\u0107 kolejny.",
         "update_transaction": "Zaktualizuj transakcj\u0119",
         "after_update_create_another": "Po aktualizacji wr\u00f3\u0107 tutaj, aby kontynuowa\u0107 edycj\u0119.",
+        "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> (\"{title}\") nie zosta\u0142a zmieniona.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID}<\/a> (\"{title}\") zosta\u0142a zaktualizowana.",
+        "spent_x_of_y": "Wydano {amount} z {total}",
+        "search": "Szukaj",
+        "create_new_asset": "Utw\u00f3rz nowe konto aktyw\u00f3w",
+        "asset_accounts": "Konta aktyw\u00f3w",
         "reset_after": "Wyczy\u015b\u0107 formularz po zapisaniu",
         "bill_paid_on": "Zap\u0142acone {date}",
         "first_split_decides": "Pierwszy podzia\u0142 okre\u015bla warto\u015b\u0107 tego pola",
@@ -89,7 +98,11 @@
         "journal_links": "Powi\u0105zane transakcje",
         "go_to_withdrawals": "Przejd\u017a do swoich wydatk\u00f3w",
         "revenue_accounts": "Konta przychod\u00f3w",
-        "add_another_split": "Dodaj kolejny podzia\u0142"
+        "add_another_split": "Dodaj kolejny podzia\u0142",
+        "actions": "Akcje",
+        "edit": "Modyfikuj",
+        "delete": "Usu\u0144",
+        "reconcile_this_account": "Uzgodnij to konto"
     },
     "list": {
         "piggy_bank": "Skarbonka",
@@ -98,9 +111,7 @@
         "name": "Nazwa",
         "role": "Rola",
         "iban": "IBAN",
-        "lastActivity": "Ostatnia aktywno\u015b\u0107",
         "currentBalance": "Bie\u017c\u0105ce saldo",
-        "balanceDiff": "R\u00f3\u017cnica sald",
         "next_expected_match": "Nast\u0119pne oczekiwane dopasowanie"
     },
     "config": {

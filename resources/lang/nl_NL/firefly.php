@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Nieuwe inkomsten',
     'create_new_transfer'                       => 'Nieuwe overschrijving',
     'create_new_asset'                          => 'Nieuwe betaalrekening',
+    'create_new_liabilities'                    => 'Maak nieuwe passiva',
     'create_new_expense'                        => 'Nieuwe crediteur',
     'create_new_revenue'                        => 'Nieuwe debiteur',
     'create_new_piggy_bank'                     => 'Nieuw spaarpotje',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per maand',
     'interest_calc_yearly'                      => 'Per jaar',
     'initial_balance_account'                   => 'Startsaldorekening voor :account',
+    'list_options'                              => 'Lijstopties',
 
     // categories:
     'new_category'                              => 'Nieuwe categorie',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'De eerste split bepaalt wat hier staat',
     'first_split_overrules_source'              => 'De eerste split kan de bronrekening overschrijven',
     'first_split_overrules_destination'         => 'De eerste split kan de doelrekening overschrijven',
+    'spent_x_of_y'                              => '{amount} van {total} uitgegeven',
 
     // new user:
     'welcome'                                   => 'Welkom bij Firefly III!',

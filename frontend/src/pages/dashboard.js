@@ -30,7 +30,6 @@ import MainPiggyList from "../components/dashboard/MainPiggyList";
 import TransactionListLarge from "../components/transactions/TransactionListLarge";
 import TransactionListMedium from "../components/transactions/TransactionListMedium";
 import TransactionListSmall from "../components/transactions/TransactionListSmall";
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import Calendar from "../components/dashboard/Calendar";
 import MainCategoryList from "../components/dashboard/MainCategoryList";
 import Vue from "vue";
@@ -51,7 +50,7 @@ Vue.component('transaction-list-medium', TransactionListMedium);
 Vue.component('transaction-list-small', TransactionListSmall);
 
 // components as an example
-Vue.component('date-picker', DatePicker)
+
 Vue.component('dashboard', Dashboard);
 Vue.component('top-boxes', TopBoxes);
 Vue.component('main-account', MainAccount);
@@ -78,6 +77,7 @@ new Vue({
             beforeCreate() {
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
+                this.$store.dispatch('updateListPageSizePreference');
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });

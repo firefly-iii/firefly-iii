@@ -41,8 +41,6 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use Log;
-
-
 /**
  * Trait RecurringTransactionTrait
  *
@@ -136,8 +134,6 @@ trait RecurringTransactionTrait
             $validator = app(AccountValidator::class);
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
-
-
             if (!$validator->validateSource($source->id, null, null)) {
                 throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
             }

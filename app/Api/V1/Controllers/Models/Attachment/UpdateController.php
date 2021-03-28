@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Attachment;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Attachment;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Middleware\ApiDemoUser;
@@ -39,7 +40,6 @@ class UpdateController extends Controller
 {
     private AttachmentRepositoryInterface $repository;
 
-
     /**
      * UpdateController constructor.
      *
@@ -56,12 +56,10 @@ class UpdateController extends Controller
                 $this->repository = app(AttachmentRepositoryInterface::class);
                 $this->repository->setUser($user);
 
-
                 return $next($request);
             }
         );
     }
-
 
     /**
      * Update the specified resource in storage.

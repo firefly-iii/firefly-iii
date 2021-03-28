@@ -87,8 +87,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
         $data         = [];
-
-
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -183,8 +181,6 @@ class OperationsRepository implements OperationsRepositoryInterface
             // add journal to array:
             // only a subset of the fields.
             $journalId = (int)$journal['transaction_journal_id'];
-
-
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'destination_account_id'   => $journal['destination_account_id'],
@@ -347,8 +343,6 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
             }
         }
-
-
         return $array;
     }
 

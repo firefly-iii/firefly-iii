@@ -23,19 +23,29 @@ import Vuex, {createLogger} from 'vuex'
 import transactions_create from './modules/transactions/create';
 import transactions_edit from './modules/transactions/edit';
 import dashboard_index from './modules/dashboard/index';
+import root_store from './modules/root';
+import accounts_index from './modules/accounts/index';
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store(
     {
+        namespaced: true,
         modules: {
+            root: root_store,
             transactions: {
                 namespaced: true,
                 modules: {
                     create: transactions_create,
                     edit: transactions_edit
                 }
+            },
+            accounts: {
+                namespaced: true,
+                modules: {
+                    index: accounts_index
+                },
             },
             dashboard: {
                 namespaced: true,
@@ -48,11 +58,11 @@ export default new Vuex.Store(
         plugins: debug ? [createLogger()] : [],
         state: {
             currencyPreference: {},
-            locale: 'en-US'
+            locale: 'en-US',
+            listPageSize: 50
         },
         mutations: {
             setCurrencyPreference(state, payload) {
-                //console.log('setCurrencyPreference', payload);
                 state.currencyPreference = payload.payload;
             },
             initialiseStore(state) {
@@ -61,6 +71,7 @@ export default new Vuex.Store(
                     state.locale = localStorage.locale;
                     return;
                 }
+
                 // set locale from HTML:
                 let localeToken = document.head.querySelector('meta[name="locale"]');
                 if (localeToken) {
@@ -82,13 +93,11 @@ export default new Vuex.Store(
             locale: state => {
                 return state.locale;
             }
-        },
+            },
         actions: {
+
             updateCurrencyPreference(context) {
                 if (localStorage.currencyPreference) {
-                    //console.log('set from local storage.');
-                    //console.log(localStorage.currencyPreference);
-                    //console.log({payload: JSON.parse(localStorage.currencyPreference)});
                     context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;
                 }

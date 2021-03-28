@@ -45,7 +45,6 @@ class TransactionFactory
     private bool                 $reconciled;
     private User                 $user;
 
-
     /**
      * Constructor.
      *

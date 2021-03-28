@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TestRequest;
@@ -44,7 +45,6 @@ class TriggerController extends Controller
 {
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
-
     /**
      * RuleGroupController constructor.
      *
@@ -65,7 +65,6 @@ class TriggerController extends Controller
             }
         );
     }
-
 
     /**
      * @param TestRequest $request
@@ -120,7 +119,6 @@ class TriggerController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
     /**
      * Execute the given rule group on a set of existing transactions.

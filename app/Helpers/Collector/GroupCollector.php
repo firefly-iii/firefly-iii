@@ -486,6 +486,25 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Join table to get attachment information.
+     */
+    private function joinAttachmentTables(): void
+    {
+        if (false === $this->hasJoinedAttTables) {
+            // join some extra tables:
+            $this->hasJoinedAttTables = true;
+            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
+                        ->where(
+                            static function (EloquentBuilder $q1) {
+                                $q1->where('attachments.attachable_type', TransactionJournal::class);
+                                $q1->where('attachments.uploaded', 1);
+                                $q1->orWhereNull('attachments.attachable_type');
+                            }
+                        );
+        }
+    }
+
+    /**
      * Build the query.
      */
     private function startQuery(): void
@@ -526,25 +545,6 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
-    }
-
-    /**
-     * Join table to get attachment information.
-     */
-    private function joinAttachmentTables(): void
-    {
-        if (false === $this->hasJoinedAttTables) {
-            // join some extra tables:
-            $this->hasJoinedAttTables = true;
-            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                        ->where(
-                            static function (EloquentBuilder $q1) {
-                                $q1->where('attachments.attachable_type', TransactionJournal::class);
-                                $q1->where('attachments.uploaded', 1);
-                                $q1->orWhereNull('attachments.attachable_type');
-                            }
-                        );
-        }
     }
 
     /**
@@ -654,8 +654,6 @@ class GroupCollector implements GroupCollectorInterface
             }
             // or parse the rest.
             $journalId = (int)$augumentedJournal->transaction_journal_id;
-
-
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);

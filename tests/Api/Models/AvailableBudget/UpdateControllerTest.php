@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\AvailableBudget;
-
-
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -48,8 +48,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @param array $submission
      *
@@ -69,8 +67,6 @@ class UpdateControllerTest extends TestCase
         $route = route('api.v1.available_budgets.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
     }
-
-
     /**
      * @return array
      */
@@ -122,64 +118,4 @@ class UpdateControllerTest extends TestCase
 
         return $configuration->generateAll();
     }
-
-
-    /**
-     * @return array
-     */
-    public function updateDataSet(): array
-    {
-        $faker        = Factory::create();
-        $currencies   = ['EUR', 'GBP', 'USD', 'HUF'];
-        $currencyCode = $currencies[rand(0, count($currencies) - 1)];
-        $set          = [
-            'currency_id'   => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_id' => ['test_value' => (string)$faker->numberBetween(1, 10)],
-                ],
-                'extra_ignore' => ['currency_code', 'currency_symbol'],
-            ],
-            'currency_code' => [
-                'id'           => 1,
-                'fields'       => [
-                    'currency_code' => ['test_value' => $currencyCode],
-                ],
-                'extra_ignore' => ['currency_id', 'currency_symbol'],
-            ],
-            'amount'        => [
-                'id'           => 1,
-                'fields'       => [
-                    'amount' => ['test_value' => number_format($faker->randomFloat(2, 10, 100), 2)],
-                ],
-                'extra_ignore' => [],
-            ],
-            'start'         => [
-                'id'           => 1,
-                'fields'       => [
-                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-            'end'           => [
-                'id'           => 1,
-                'fields'       => [
-                    'end' => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-            'both'          => [
-                'id'           => 1,
-                'fields'       => [
-                    'start' => ['test_value' => $faker->dateTimeBetween('-2 year', '-1 year')->format('Y-m-d')],
-                    'end'   => ['test_value' => $faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d')],
-                ],
-                'extra_ignore' => [],
-            ],
-        ];
-
-        return $set;
-    }
-
-
 }

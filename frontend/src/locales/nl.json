@@ -65,6 +65,9 @@
         "weekly_budgets": "Wekelijkse budgetten",
         "monthly_budgets": "Maandelijkse budgetten",
         "quarterly_budgets": "Driemaandelijkse budgetten",
+        "create_new_expense": "Nieuwe crediteur",
+        "create_new_revenue": "Nieuwe debiteur",
+        "create_new_liabilities": "Maak nieuwe passiva",
         "half_year_budgets": "Halfjaarlijkse budgetten",
         "yearly_budgets": "Jaarlijkse budgetten",
         "split_transaction_title": "Beschrijving van de gesplitste transactie",
@@ -75,6 +78,12 @@
         "create_another": "Terug naar deze pagina voor een nieuwe transactie.",
         "update_transaction": "Update transactie",
         "after_update_create_another": "Na het opslaan terug om door te gaan met wijzigen.",
+        "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> (\"{title}\") is niet gewijzigd.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID}<\/a> (\"{title}\") is ge\u00fcpdatet.",
+        "spent_x_of_y": "{amount} van {total} uitgegeven",
+        "search": "Zoeken",
+        "create_new_asset": "Nieuwe betaalrekening",
+        "asset_accounts": "Betaalrekeningen",
         "reset_after": "Reset formulier na opslaan",
         "bill_paid_on": "Betaald op {date}",
         "first_split_decides": "De eerste split bepaalt wat hier staat",
@@ -89,7 +98,11 @@
         "journal_links": "Transactiekoppelingen",
         "go_to_withdrawals": "Ga naar je uitgaven",
         "revenue_accounts": "Debiteuren",
-        "add_another_split": "Voeg een split toe"
+        "add_another_split": "Voeg een split toe",
+        "actions": "Acties",
+        "edit": "Wijzig",
+        "delete": "Verwijder",
+        "reconcile_this_account": "Stem deze rekening af"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
@@ -98,9 +111,7 @@
         "name": "Naam",
         "role": "Rol",
         "iban": "IBAN",
-        "lastActivity": "Laatste activiteit",
         "currentBalance": "Huidig saldo",
-        "balanceDiff": "Saldoverschil",
         "next_expected_match": "Volgende verwachte match"
     },
     "config": {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Preference;
@@ -62,7 +61,6 @@ class MigrateToRules extends Command
     private $ruleRepository;
     /** @var UserRepositoryInterface */
     private $userRepository;
-
 
     /**
      * Execute the console command.

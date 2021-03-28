@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Telemetry;
-
-
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**

@@ -30,8 +30,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Laravel\Passport\Passport;
 use Log;
-
-
+use phpseclib\Crypt\RSA as LegacyRSA;
+use phpseclib3\Crypt\RSA;
 /**
  * Trait CreateStuff
  *
@@ -104,15 +104,6 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-        // switch on PHP version.
-        if (7 === PHP_MAJOR_VERSION) {
-            $rsa  = new \phpseclib\Crypt\RSA;
-            $keys = $rsa->createKey(4096);
-        }
-        if (8 === PHP_MAJOR_VERSION) {
-            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
-        }
-
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
             Passport::keyPath('oauth-private.key'),
@@ -121,6 +112,22 @@ trait CreateStuff
         if (file_exists($publicKey) || file_exists($privateKey)) {
             return;
         }
+
+        // switch on class existence.
+
+        Log::info(sprintf('PHP version is %s', phpversion()));
+        if (class_exists(LegacyRSA::class)) {
+            // PHP 7
+            Log::info('Will run PHP7 code.');
+            $keys = (new LegacyRSA)->createKey(4096);
+        }
+
+        if (!class_exists(LegacyRSA::class)) {
+            // PHP 8
+            Log::info('Will run PHP8 code.');
+            $keys = RSA::createKey(4096);
+        }
+
         // @codeCoverageIgnoreStart
         Log::alert('NO OAuth keys were found. They have been created.');
 

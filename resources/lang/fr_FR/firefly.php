@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Créer un nouveau dépôt',
     'create_new_transfer'                       => 'Créer un nouveau transfert',
     'create_new_asset'                          => 'Créer un nouveau compte d’actif',
+    'create_new_liabilities'                    => 'Créer un nouveau passif',
     'create_new_expense'                        => 'Créer nouveau compte de dépenses',
     'create_new_revenue'                        => 'Créer nouveau compte de recettes',
     'create_new_piggy_bank'                     => 'Créer une nouvelle tirelire',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Par mois',
     'interest_calc_yearly'                      => 'Par an',
     'initial_balance_account'                   => 'Solde initial du compte :account',
+    'list_options'                              => 'Lister les options',
 
     // categories:
     'new_category'                              => 'Nouvelle catégorie',
@@ -1155,9 +1157,9 @@ return [
     'updated_withdrawal'                        => 'Dépense ":description" mise à jour',
     'updated_deposit'                           => 'Dépôt ":description" mis à jour',
     'updated_transfer'                          => 'Transfert ":description" mis à jour',
-    'no_changes_withdrawal'                     => 'Withdrawal ":description" was not changed.',
-    'no_changes_deposit'                        => 'Deposit ":description" was not changed.',
-    'no_changes_transfer'                       => 'Transfer ":description" was not changed.',
+    'no_changes_withdrawal'                     => 'Le retrait ":description" n\'a pas été modifié.',
+    'no_changes_deposit'                        => 'Le dépôt ":description" n\'a pas été modifié.',
+    'no_changes_transfer'                       => 'Le transfert ":description" n\'a pas été changé.',
     'delete_withdrawal'                         => 'Supprimer la dépense ":description"',
     'delete_deposit'                            => 'Supprimer le dépôt ":description"',
     'delete_transfer'                           => 'Supprimer le transfert ":description"',
@@ -1238,11 +1240,12 @@ return [
     'journal_link_bill'                         => 'Cette opération est liée à la facture <a href=":route">:name</a>. Pour supprimer l\'association, décocher la case. Utilisez les règles pour la connecter à une autre facture.',
     'transaction_stored_link'                   => '<a href="transactions/show/{ID}">L\'opération n°{ID} ("{title}")</a> a été enregistrée.',
     'transaction_new_stored_link'               => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> a été enregistrée.',
-    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") has been updated.',
+    'transaction_updated_link'                  => '<a href="transactions/show/{ID}">L\'opération n°{ID}</a> ("{title}") a été mise à jour.',
     'transaction_updated_no_changes'            => '<a href="transactions/show/{ID}">Transaction #{ID}</a> ("{title}") did not receive any changes.',
     'first_split_decides'                       => 'La première ventilation détermine la valeur de ce champ',
     'first_split_overrules_source'              => 'La première ventilation peut remplacer le compte source',
     'first_split_overrules_destination'         => 'La première ventilation peut remplacer le compte de destination',
+    'spent_x_of_y'                              => 'Dépensé {amount} sur {total}',
 
     // new user:
     'welcome'                                   => 'Bienvenue sur Firefly III !',

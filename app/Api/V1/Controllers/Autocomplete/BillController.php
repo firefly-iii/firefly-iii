@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\Bill;
@@ -37,7 +36,6 @@ use Illuminate\Http\JsonResponse;
 class BillController extends Controller
 {
     private BillRepositoryInterface $repository;
-
 
     /**
      * BillController constructor.
@@ -74,7 +72,6 @@ class BillController extends Controller
                 ];
             }
         );
-
 
         return response()->json($filtered->toArray());
     }

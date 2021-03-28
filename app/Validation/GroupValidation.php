@@ -133,6 +133,4 @@ trait GroupValidation
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
         }
     }
-
-
 }

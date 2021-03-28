@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\RuleAction;
 use DB;
+use FireflyIII\Models\RuleAction;
 
 /**
  * Class PrependDescription.
@@ -50,6 +50,7 @@ class PrependDescription implements ActionInterface
     {
         $description = sprintf('%s%s', $this->action->action_value, $journal['description']);
         DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
+
         return true;
     }
 }

@@ -42,6 +42,7 @@ use Illuminate\Support\Collection;
 class ExpenseReportController extends Controller
 {
     use AugumentData, TransactionCalculation;
+
     /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
     /** @var GeneratorInterface Chart generation methods. */
@@ -64,7 +65,6 @@ class ExpenseReportController extends Controller
             }
         );
     }
-
 
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
@@ -112,27 +112,27 @@ class ExpenseReportController extends Controller
             /** @var Account $exp */
             $exp                          = $combination->first();
             $chartData[$exp->id . '-in']  = [
-                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.income')),
+                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.income')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-out'] = [
-                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.expenses')),
+                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.expenses')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
                 'entries' => [],
             ];
             // total in, total out:
             $chartData[$exp->id . '-total-in']  = [
-                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_income')),
+                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_income')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
                 'entries' => [],
             ];
             $chartData[$exp->id . '-total-out'] = [
-                'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_expenses')),
+                'label'   => sprintf('%s (%s)', $name, (string)trans('firefly.sum_of_expenses')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',

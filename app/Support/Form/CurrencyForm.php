@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
-
-
 use Amount as Amt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;

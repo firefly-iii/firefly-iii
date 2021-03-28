@@ -42,6 +42,7 @@ use Illuminate\View\View;
 class ShowController extends Controller
 {
     use PeriodOverview;
+
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
@@ -57,7 +58,7 @@ class ShowController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository = app(CategoryRepositoryInterface::class);
 
@@ -65,7 +66,6 @@ class ShowController extends Controller
             }
         );
     }
-
 
     /**
      * Show a single category.
@@ -84,9 +84,9 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
         $subTitleIcon = 'fa-bookmark';
-        $page         = (int) $request->get('page');
+        $page         = (int)$request->get('page');
         $attachments  = $this->repository->getAttachments($category);
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? Carbon::now()->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
@@ -105,7 +105,7 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return prefixView('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return prefixView('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -120,19 +120,19 @@ class ShowController extends Controller
     {
         // default values:
         $subTitleIcon = 'fa-bookmark';
-        $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection;
 
-        $subTitle = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
         /** @var Carbon $start */
-        $start = $first ?? today(config('app.timezone'));
-        $end   = today(config('app.timezone'));
-        $path  = route('categories.show.all', [$category->id]);
-        $attachments  = $this->repository->getAttachments($category);
+        $start       = $first ?? today(config('app.timezone'));
+        $end         = today(config('app.timezone'));
+        $path        = route('categories.show.all', [$category->id]);
+        $attachments = $this->repository->getAttachments($category);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -143,6 +143,6 @@ class ShowController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return prefixView('categories.show', compact('category','attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return prefixView('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 }

@@ -42,7 +42,6 @@ class StoreRequest extends FormRequest
 {
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 
-
     /**
      * Get all data from the request.
      *
@@ -171,8 +170,6 @@ class StoreRequest extends FormRequest
             'transactions.*.piggy_bank_id'         => ['numeric', 'mustExist:piggy_banks,id', new BelongsUser],
             'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.tags'                  => 'between:1,64000',
-
-
         ];
     }
 

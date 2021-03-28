@@ -56,7 +56,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /** @var Filesystem The disk where attachments are stored. */
     protected $uploadDisk;
 
-
     /**
      * AttachmentHelper constructor.
      *
@@ -71,7 +70,6 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->attachments   = new Collection;
         $this->uploadDisk    = Storage::disk('upload');
     }
-
 
     /**
      * Returns the content of an attachment.

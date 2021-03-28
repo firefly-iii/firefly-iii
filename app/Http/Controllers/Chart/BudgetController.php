@@ -78,7 +78,6 @@ class BudgetController extends Controller
         );
     }
 
-
     /**
      * Shows overview of a single budget.
      *
@@ -144,7 +143,6 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-
     /**
      * Shows the amount left in a specific budget limit.
      *
@@ -171,7 +169,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-             return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $locale           = app('steam')->getLocale();
         $entries          = [];
@@ -196,7 +194,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
 
     /**
      * Shows how much is spent per asset account.
@@ -266,7 +263,6 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-
     /**
      * Shows how much is spent per category.
      *
@@ -330,7 +326,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
 
     /**
      * Shows how much is spent per expense account.
@@ -399,7 +394,6 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-
     /**
      * Shows a budget list with spent/left/overspent.
      *
@@ -431,7 +425,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
 
     /**
      * Shows a budget overview chart (spent and budgeted).
@@ -491,13 +484,13 @@ class BudgetController extends Controller
             // get budget limit in this period for this currency.
             $limit = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
             if (null !== $limit) {
-                $chartData[1]['entries'][$title] = round((float) $limit->amount, $currency->decimal_places);
+                $chartData[1]['entries'][$title] = round((float)$limit->amount, $currency->decimal_places);
             }
 
             // get spent amount in this period for this currency.
             $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection([$budget]), $currency);
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[0]['entries'][$title] = round((float) $amount, $currency->decimal_places);
+            $chartData[0]['entries'][$title] = round((float)$amount, $currency->decimal_places);
 
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -508,7 +501,6 @@ class BudgetController extends Controller
 
         return response()->json($data);
     }
-
 
     /**
      * Shows a chart for transactions without a budget.
@@ -543,7 +535,7 @@ class BudgetController extends Controller
             $title             = $currentStart->formatLocalized($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[$title] = round((float) $amount, $currency->decimal_places);
+            $chartData[$title] = round((float)$amount, $currency->decimal_places);
             $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
         }
 

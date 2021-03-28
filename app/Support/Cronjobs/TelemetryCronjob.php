@@ -50,8 +50,6 @@ class TelemetryCronjob extends AbstractCronjob
 
             return;
         }
-
-
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_tm_job', 0);
         $lastTime      = (int)$config->data;
@@ -83,8 +81,6 @@ class TelemetryCronjob extends AbstractCronjob
 
         app('preferences')->mark();
     }
-
-
     /**
      * @throws FireflyException
      */

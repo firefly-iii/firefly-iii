@@ -61,8 +61,6 @@ class BoxController extends Controller
         $opsRepository = app(OperationsRepositoryInterface::class);
         /** @var AvailableBudgetRepositoryInterface $abRepository */
         $abRepository = app(AvailableBudgetRepositoryInterface::class);
-
-
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -127,7 +125,6 @@ class BoxController extends Controller
 
         return response()->json($return);
     }
-
 
     /**
      * Current total balance.
@@ -209,8 +206,6 @@ class BoxController extends Controller
             'size'      => count($sums),
             'preferred' => $currency->id,
         ];
-
-
         $cache->store($response);
 
         return response()->json($response);
@@ -256,9 +251,7 @@ class BoxController extends Controller
         );
 
         $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
-
-
-        $return = [];
+        $return      = [];
         foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency              = $data['currency'];

@@ -39,6 +39,7 @@ use Illuminate\Support\Collection;
 class PiggyBankController extends Controller
 {
     use DateCalculation;
+
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -74,9 +75,9 @@ class PiggyBankController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $set = $repository->getEvents($piggyBank);
-        $set = $set->reverse();
-        $locale =app('steam')->getLocale();
+        $set    = $repository->getEvents($piggyBank);
+        $set    = $set->reverse();
+        $locale = app('steam')->getLocale();
 
         // get first event or start date of piggy bank or today
         $startDate = $piggyBank->start_date ?? today(config('app.timezone'));
@@ -100,7 +101,7 @@ class PiggyBankController extends Controller
                 }
             );
             $currentSum        = $filtered->sum('amount');
-            $label             = $oldest->formatLocalized((string) trans('config.month_and_day', [], $locale));
+            $label             = $oldest->formatLocalized((string)trans('config.month_and_day', [], $locale));
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
@@ -111,7 +112,7 @@ class PiggyBankController extends Controller
             }
         );
         $finalSum               = $finalFiltered->sum('amount');
-        $finalLabel             = $today->formatLocalized((string) trans('config.month_and_day', [], $locale));
+        $finalLabel             = $today->formatLocalized((string)trans('config.month_and_day', [], $locale));
         $chartData[$finalLabel] = $finalSum;
 
         $data = $this->generator->singleSet($piggyBank->name, $chartData);

@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Создать новый доход',
     'create_new_transfer'                       => 'Создать новый перевод',
     'create_new_asset'                          => 'Создать новый активный счёт',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Создать новый счёт расхода',
     'create_new_revenue'                        => 'Создать новый счёт дохода',
     'create_new_piggy_bank'                     => 'Создать новую копилку',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'В месяц',
     'interest_calc_yearly'                      => 'В год',
     'initial_balance_account'                   => 'Начальный баланс для счёта :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Новая категория',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'В данном поле используется значение из первой части разделенной транзакции',
     'first_split_overrules_source'              => 'Значение из первой части транзакции может изменить счет источника',
     'first_split_overrules_destination'         => 'Значение из первой части транзакции может изменить счет назначения',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Добро пожаловать в Firefly III!',

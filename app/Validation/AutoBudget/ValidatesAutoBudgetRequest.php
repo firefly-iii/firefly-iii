@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Validation\AutoBudget;
-
-
 use Illuminate\Validation\Validator;
 
 /**

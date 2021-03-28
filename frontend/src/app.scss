@@ -40,9 +40,12 @@
 @import '~admin-lte/build/scss/bootstrap-variables';
 @import '~bootstrap/scss/bootstrap';
 
+@import '~bootstrap-vue/src/index.scss';
+
 // Variables and Mixins
 // ---------------------------------------------------
 @import '~admin-lte/build/scss/variables';
+@import '~admin-lte/build/scss/variables-alt';
 
 
 

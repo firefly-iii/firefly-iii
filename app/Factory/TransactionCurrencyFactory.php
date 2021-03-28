@@ -102,6 +102,4 @@ class TransactionCurrencyFactory
 
         return null;
     }
-
-
 }

@@ -29,8 +29,6 @@ namespace FireflyIII\Support\Http\Controllers;
  */
 trait BasicDataSupport
 {
-
-
     /**
      * Find the ID in a given array. Return '0' of not there (amount).
      *
@@ -43,6 +41,4 @@ trait BasicDataSupport
     {
         return $array[$entryId] ?? '0';
     }
-
-
 }

@@ -44,7 +44,6 @@ class CreateLinkTypes extends Command
      */
     protected $signature = 'firefly-iii:create-link-types';
 
-
     /**
      * Execute the console command.
      *

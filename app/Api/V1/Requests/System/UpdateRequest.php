@@ -38,7 +38,6 @@ class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, ChecksLogin;
 
-
     /**
      * Get all data from the request.
      *

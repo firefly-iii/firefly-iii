@@ -39,7 +39,6 @@ class StoreController extends Controller
 
     private AccountRepositoryInterface $repository;
 
-
     /**
      * AccountController constructor.
      *

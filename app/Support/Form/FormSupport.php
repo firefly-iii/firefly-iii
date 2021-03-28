@@ -36,8 +36,6 @@ use Throwable;
  */
 trait FormSupport
 {
-
-
     /**
      * @param string $name
      * @param array  $list

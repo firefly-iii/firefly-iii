@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Vytvoriť nový vklad',
     'create_new_transfer'                       => 'Vytvoriť nový prevod',
     'create_new_asset'                          => 'Vytvoriť nový účet aktív',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Vytvoriť výdavkoý účet',
     'create_new_revenue'                        => 'Vytvoriť nový príjmový účet',
     'create_new_piggy_bank'                     => 'Vytvoriť novú pokladničku',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Za mesiac',
     'interest_calc_yearly'                      => 'Za rok',
     'initial_balance_account'                   => 'Počiatočný zostatok pre :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Nová kategória',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'The first split determines the value of this field',
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Vitajte ve Firefly III!',

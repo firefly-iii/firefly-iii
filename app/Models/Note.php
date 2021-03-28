@@ -22,26 +22,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Note
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $noteable_id
- * @property string $noteable_type
- * @property string|null $title
- * @property string|null $text
- * @property-read Model|\Eloquent $noteable
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property Carbon|null         $deleted_at
+ * @property int                 $noteable_id
+ * @property string              $noteable_type
+ * @property string|null         $title
+ * @property string|null         $text
+ * @property-read Model|Eloquent $noteable
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()
  * @method static Builder|Note onlyTrashed()
@@ -85,6 +84,4 @@ class Note extends Model
     {
         return $this->morphTo();
     }
-
-
 }

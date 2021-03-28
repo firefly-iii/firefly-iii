@@ -9,7 +9,7 @@
         "split": "Feloszt\u00e1s",
         "single_split": "Feloszt\u00e1s",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> mentve.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> mentve.",
         "transaction_journal_information": "Tranzakci\u00f3s inform\u00e1ci\u00f3k",
         "no_budget_pointer": "\u00dagy t\u0171nik, m\u00e9g nincsenek k\u00f6lts\u00e9gkeretek. K\u00f6lts\u00e9gkereteket a <a href=\"budgets\">k\u00f6lts\u00e9gkeretek<\/a> oldalon lehet l\u00e9trehozni. A k\u00f6lts\u00e9gkeretek seg\u00edtenek nyomon k\u00f6vetni a k\u00f6lts\u00e9geket.",

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
-
-
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 

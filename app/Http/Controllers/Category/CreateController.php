@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -39,8 +38,8 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    private CategoryRepositoryInterface $repository;
     private AttachmentHelperInterface   $attachments;
+    private CategoryRepositoryInterface $repository;
 
     /**
      * CategoryController constructor.
@@ -53,7 +52,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bookmark');
                 $this->repository  = app(CategoryRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -62,7 +61,6 @@ class CreateController extends Controller
             }
         );
     }
-
 
     /**
      * Create category.
@@ -77,11 +75,10 @@ class CreateController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle = (string) trans('firefly.create_new_category');
+        $subTitle = (string)trans('firefly.create_new_category');
 
         return prefixView('categories.create', compact('subTitle'));
     }
-
 
     /**
      * Store new category.
@@ -95,7 +92,7 @@ class CreateController extends Controller
         $data     = $request->getCategoryData();
         $category = $this->repository->store($data);
 
-        $request->session()->flash('success', (string) trans('firefly.stored_category', ['name' => $category->name]));
+        $request->session()->flash('success', (string)trans('firefly.stored_category', ['name' => $category->name]));
         app('preferences')->mark();
 
         // store attachment(s):
@@ -104,7 +101,7 @@ class CreateController extends Controller
             $this->attachments->saveAttachmentsForModel($category, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -112,7 +109,7 @@ class CreateController extends Controller
         }
 
         $redirect = redirect(route('categories.index'));
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('categories.create.fromStore', true);
 

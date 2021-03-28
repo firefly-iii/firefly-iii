@@ -21,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 use FireflyIII\Http\Middleware\IsAdmin;
 
 /**
@@ -158,8 +156,6 @@ Route::group(
         // TODO Transfers for piggies
     }
 );
-
-
 /**
  * SUMMARY CONTROLLER
  */
@@ -262,8 +258,6 @@ Route::group(
         Route::put('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\UpdateController@update', 'as' => 'limits.update']);
         Route::delete('{budget}/limits/{budgetLimit}', ['uses' => 'BudgetLimit\DestroyController@destroy', 'as' => 'limits.delete']);
         Route::get('{budget}/limits/{budgetLimit}/transactions', ['uses' => 'BudgetLimit\ListController@transactions', 'as' => 'limits.transactions']);
-
-
     }
 );
 
@@ -509,9 +503,6 @@ Route::group(
         Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
     }
 );
-
-
-
 // Configuration API routes
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'configuration',
@@ -522,8 +513,6 @@ Route::group(
         Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
     }
 );
-
-
 // Users API routes:
 Route::group(
     ['middleware' => ['auth:api', 'bindings', IsAdmin::class], 'namespace' => 'FireflyIII\Api\V1\Controllers\System', 'prefix' => 'users',

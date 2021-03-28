@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;

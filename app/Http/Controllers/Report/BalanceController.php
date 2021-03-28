@@ -57,7 +57,6 @@ class BalanceController extends Controller
         );
     }
 
-
     /**
      * Show overview of budget balances.
      *
@@ -136,8 +135,6 @@ class BalanceController extends Controller
             $report['budgets'][$budgetId]['spent'] = $spent;
             // get transactions in budget
         }
-
-
         try {
             $result = prefixView('reports.partials.balance', compact('report'))->render();
             // @codeCoverageIgnoreStart

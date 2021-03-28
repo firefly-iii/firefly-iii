@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\PiggyBank\StoreRequest;
@@ -49,7 +50,6 @@ class StoreController extends Controller
             function ($request, $next) {
                 $this->repository = app(PiggyBankRepositoryInterface::class);
                 $this->repository->setUser(auth()->user());
-
 
                 return $next($request);
             }

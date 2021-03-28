@@ -50,7 +50,6 @@ class UpgradeFireflyInstructions extends Command
      */
     protected $signature = 'firefly:instructions {task}';
 
-
     /**
      * Execute the console command.
      */
@@ -168,8 +167,6 @@ class UpgradeFireflyInstructions extends Command
                 $text = $config[$compare];
             }
         }
-
-
         $this->showLine();
         $this->boxed('');
         if (null === $text) {

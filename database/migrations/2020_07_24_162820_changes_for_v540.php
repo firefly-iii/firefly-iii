@@ -83,8 +83,6 @@ class ChangesForV540 extends Migration
             $table->date('extension_date')->nullable()->after('end_date');
         }
         );
-
-
         // make column nullable:
         Schema::table(
             'oauth_clients', function (Blueprint $table) {

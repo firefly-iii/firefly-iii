@@ -41,7 +41,6 @@ class TransactionGroupFactory
     /** @var User The user */
     private $user;
 
-
     /**
      * TransactionGroupFactory constructor.
      */
@@ -75,7 +74,7 @@ class TransactionGroupFactory
         if (null !== $title) {
             $title = substr($title, 0, 1000);
         }
-        if(0 === $collection->count()) {
+        if (0 === $collection->count()) {
             throw new FireflyException('Created zero transaction journals.');
         }
 

@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Rule;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -116,11 +116,7 @@ class StoreControllerTest extends TestCase
         $fieldSet = new FieldSet;
         $fieldSet->addField(Field::createBasic('actions/0/active', 'boolean'));
         $configuration->addOptionalFieldSet('activeXX', $fieldSet);
-
-
         return $configuration->generateAll();
-
-
     }
 
     /**

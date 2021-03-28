@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\User;
 use Log;
-use DB;
 
 /**
  * Class RemoveTag.

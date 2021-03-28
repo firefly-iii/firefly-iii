@@ -292,6 +292,31 @@ class DoubleController extends Controller
     }
 
     /**
+     * TODO this method is double.
+     *
+     * @param Collection  $accounts
+     * @param int         $id
+     * @param string      $name
+     * @param string|null $iban
+     *
+     * @return string
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
      * @param Collection $accounts
      * @param Collection $double
      * @param Carbon     $start
@@ -489,30 +514,5 @@ class DoubleController extends Controller
         }
 
         return $result;
-    }
-
-    /**
-     * TODO this method is double.
-     *
-     * @param Collection  $accounts
-     * @param int         $id
-     * @param string      $name
-     * @param string|null $iban
-     *
-     * @return string
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
     }
 }

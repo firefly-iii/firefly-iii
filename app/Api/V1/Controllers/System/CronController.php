@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\System;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
@@ -46,12 +47,11 @@ class CronController extends Controller
         $config = $request->getAll();
 
         Log::debug(sprintf('Now in %s', __METHOD__));
-
+        Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
         $return['telemetry']              = $this->runTelemetry($config['force'], $config['date']);
-
 
         return response()->json($return);
     }

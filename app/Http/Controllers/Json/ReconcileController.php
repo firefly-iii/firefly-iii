@@ -162,8 +162,6 @@ class ReconcileController extends Controller
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
-
-
         $return = [
             'post_uri' => $route,
             'html'     => $view,

@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Edit celengan ":name"',
     'preferences'            => 'Preferensi',
     'profile'                => 'Profil',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Rekening',
     'changePassword'         => 'Ubah kata sandi Anda',
     'change_email'           => 'Ubah alamat email anda',
     'bills'                  => 'Tagihan',
@@ -50,7 +50,7 @@ return [
     'create_transfer'        => 'Buat transfer baru',
     'create_new_transaction' => 'Buat transaksi baru',
     'edit_journal'           => 'Edit transaksi ":description"',
-    'edit_reconciliation'    => 'Edit ":description"',
+    'edit_reconciliation'    => 'Ubah ":description"',
     'delete_journal'         => 'Hapus transaksi ":description"',
     'delete_group'           => 'Hapus transaksi ":description"',
     'tags'                   => 'Label',
@@ -60,7 +60,7 @@ return [
     'delete_journal_link'    => 'Hapus tautan antar transaksi',
     'telemetry_index'        => 'Pengukur jarak',
     'telemetry_view'         => 'Melihat data',
-    'edit_object_group'      => 'Edit group ":title"',
-    'delete_object_group'    => 'Delete group ":title"',
+    'edit_object_group'      => 'Ubah grup ":title"',
+    'delete_object_group'    => 'Hapus grup ":title"',
     'logout_others'          => 'Keluar dari semua sesi'
 ];

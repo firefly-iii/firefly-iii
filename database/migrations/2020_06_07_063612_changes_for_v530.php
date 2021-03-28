@@ -63,8 +63,6 @@ class ChangesForV530 extends Migration
             }
             );
         }
-
-
         if (!Schema::hasTable('object_groupables')) {
             Schema::create(
                 'object_groupables', static function (Blueprint $table) {

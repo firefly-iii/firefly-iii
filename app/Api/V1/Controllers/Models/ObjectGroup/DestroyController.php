@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
@@ -34,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
-
 
     /**
      * ObjectGroupController constructor.

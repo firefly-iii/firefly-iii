@@ -127,9 +127,7 @@ class AvailableBudgetController extends Controller
                 return true;
             }
         );
-
-
-        $page = (int)($request->get('page') ?? 1);
+        $page       = (int)($request->get('page') ?? 1);
 
         return prefixView('budgets.available-budgets.create-alternative', compact('start', 'end', 'page', 'currencies'));
     }
@@ -245,8 +243,6 @@ class AvailableBudgetController extends Controller
 
             return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
         }
-
-
         $this->abRepository->update($availableBudget, ['amount' => $amount]);
         session()->flash('success', trans('firefly.updated_ab'));
 

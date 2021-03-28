@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
@@ -98,8 +97,6 @@ class EditController extends Controller
             }
             $oldTriggers = $this->parseFromOperators($operators);
         }
-
-
         // has old input?
         if (count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);

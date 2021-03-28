@@ -38,6 +38,7 @@ use Illuminate\Support\Collection;
 class TagReportController extends Controller
 {
     use AugumentData, TransactionCalculation;
+
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -172,7 +173,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-
     /**
      * @param Collection $accounts
      * @param Collection $tags
@@ -270,7 +270,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
+                        (string)trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -297,7 +297,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
+                        (string)trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -320,6 +320,31 @@ class TagReportController extends Controller
         $data = $this->generator->multiSet($chartData);
 
         return response()->json($data);
+    }
+
+    /**
+     * TODO duplicate function
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->formatLocalized($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 
     /**
@@ -428,7 +453,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-
     /**
      * @param Collection $accounts
      * @param Collection $tags
@@ -461,31 +485,5 @@ class TagReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
-    }
-
-
-    /**
-     * TODO duplicate function
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->formatLocalized($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 }

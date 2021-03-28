@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Budget;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -105,12 +105,8 @@ class StoreControllerTest extends TestCase
         $fieldSet->addField(Field::createBasic('auto_budget_amount', 'random-amount'));
         $fieldSet->addField(Field::createBasic('auto_budget_period', 'random-auto-period'));
         $configuration->addOptionalFieldSet('auto-code', $fieldSet);
-
-
         return $configuration->generateAll();
     }
-
-
     /**
      * @param array $submission
      *

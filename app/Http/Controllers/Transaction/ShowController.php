@@ -54,7 +54,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -75,8 +75,8 @@ class ShowController extends Controller
     /**
      * @param TransactionGroup $transactionGroup
      *
-     * @throws FireflyException
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Request $request, TransactionGroup $transactionGroup)
     {
@@ -88,7 +88,7 @@ class ShowController extends Controller
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string) trans(sprintf('firefly.%s', $first->transactionType->type));
+        $type     = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
 
@@ -98,7 +98,7 @@ class ShowController extends Controller
         $groupArray = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
-        $amounts = $this->getAmounts($groupArray);
+        $amounts  = $this->getAmounts($groupArray);
         $accounts = $this->getAccounts($groupArray);
 
         foreach ($groupArray['transactions'] as $index => $transaction) {
@@ -161,7 +161,7 @@ class ShowController extends Controller
 
         return $amounts;
     }
-    
+
     /**
      * @param array $group
      *
@@ -170,22 +170,23 @@ class ShowController extends Controller
     private function getAccounts(array $group): array
     {
         $accounts = [];
-        
+
         foreach ($group['transactions'] as $transaction) {
-            $accounts['source'][] = [ 
+            $accounts['source'][]      = [
                 'type' => $transaction['source_type'],
-                'id' => $transaction['source_id'],
+                'id'   => $transaction['source_id'],
                 'name' => $transaction['source_name'],
-                'iban' => $transaction['source_iban'] ];
-            $accounts['destination'][] = [ 
+                'iban' => $transaction['source_iban']];
+            $accounts['destination'][] = [
                 'type' => $transaction['destination_type'],
-                'id' => $transaction['destination_id'],
+                'id'   => $transaction['destination_id'],
                 'name' => $transaction['destination_name'],
-                'iban' => $transaction['destination_iban'] ];
+                'iban' => $transaction['destination_iban']];
         }
 
-        $accounts['source'] = array_unique($accounts['source'], SORT_REGULAR);
+        $accounts['source']      = array_unique($accounts['source'], SORT_REGULAR);
         $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
+
         return $accounts;
     }
 }

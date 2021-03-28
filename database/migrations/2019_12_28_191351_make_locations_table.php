@@ -59,8 +59,8 @@ class MakeLocationsTable extends Migration
             $table->integer('locatable_id', false, true);
             $table->string('locatable_type', 255);
 
-            $table->decimal('latitude', 24, 12)->nullable();
-            $table->decimal('longitude', 24, 12)->nullable();
+            $table->decimal('latitude', 36, 24)->nullable();
+            $table->decimal('longitude', 36, 24)->nullable();
             $table->smallInteger('zoom_level', false, true)->nullable();
         }
         );

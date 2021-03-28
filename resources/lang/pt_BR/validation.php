@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute deve ser menor do que 10.000.000',
     'active_url'                     => 'O campo :attribute não contém um URL válido.',
     'after'                          => 'O campo :attribute deverá conter uma data posterior a :date.',
-    'date_after'                     => 'The start date must be before the end date.',
+    'date_after'                     => 'A data de início deve ser anterior à data de término.',
     'alpha'                          => 'O campo :attribute deverá conter apenas letras.',
     'alpha_dash'                     => 'O campo :attribute deverá conter apenas letras, números e traços.',
     'alpha_num'                      => 'O campo :attribute deverá conter apenas letras e números .',

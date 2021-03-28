@@ -103,7 +103,6 @@ trait TimeCollection
         return $this;
     }
 
-
     /**
      * Collect transactions updated on a specific date.
      *

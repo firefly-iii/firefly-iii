@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
+
 use Log;
 
 /**
@@ -35,6 +36,7 @@ class CronController
     public function cron()
     {
         Log::error('The cron endpoint has moved to GET /api/v1/cron/[token]');
+
         return response('The cron endpoint has moved to GET /api/v1/cron/[token]', 500);
     }
 }

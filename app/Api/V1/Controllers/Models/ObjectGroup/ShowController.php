@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
@@ -41,7 +42,6 @@ class ShowController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
 
-
     /**
      * ObjectGroupController constructor.
      *
@@ -61,7 +61,6 @@ class ShowController extends Controller
             }
         );
     }
-
 
     /**
      * Display a listing of the resource.
@@ -97,7 +96,6 @@ class ShowController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-
     /**
      * Show single instance.
      *
@@ -118,6 +116,4 @@ class ShowController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
-
 }

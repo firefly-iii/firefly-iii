@@ -93,8 +93,6 @@ return [
             'driver'     => 'redis',
             'connection' => 'default',
         ],
-
-
         'dynamodb' => [
             'driver' => 'dynamodb',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -117,6 +115,4 @@ return [
     */
 
     'prefix' => env('CACHE_PREFIX', 'firefly'),
-
-
 ];

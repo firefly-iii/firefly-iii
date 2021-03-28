@@ -69,8 +69,14 @@ class CreateRecurringTransactions implements ShouldQueue
     public function __construct(?Carbon $date)
     {
         if (null !== $date) {
-            $date->startOfDay();
-            $this->date = $date;
+            $newDate = clone $date;
+            $newDate->startOfDay();
+            $this->date = $newDate;
+        }
+        if (null === $date) {
+            $newDate = new Carbon;
+            $newDate->startOfDay();
+            $this->date = $newDate;
         }
         $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
@@ -168,8 +174,6 @@ class CreateRecurringTransactions implements ShouldQueue
 
             return false;
         }
-
-
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
             Log::info(
@@ -457,8 +461,9 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     public function setDate(Carbon $date): void
     {
-        $date->startOfDay();
-        $this->date = $date;
+        $newDate = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 
     /**

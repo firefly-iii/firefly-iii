@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
-
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -103,7 +102,6 @@ class SelectController extends Controller
 
         return redirect()->route('rules.index');
     }
-
 
     /**
      * View to select transactions by a rule.
@@ -206,8 +204,6 @@ class SelectController extends Controller
         if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
-
-
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
 
@@ -235,6 +231,4 @@ class SelectController extends Controller
 
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
-
-
 }

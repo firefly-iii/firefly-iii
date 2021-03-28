@@ -9,7 +9,7 @@
         "split": "Roz\u00fa\u010dtova\u0165",
         "single_split": "Roz\u00fa\u010dtova\u0165",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcia #{ID} (\"{title}\")<\/a> bola ulo\u017een\u00e1.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transakcia #{ID}<\/a> bola aktualizovan\u00e1.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcia #{ID}<\/a> bola ulo\u017een\u00e1.",
         "transaction_journal_information": "Inform\u00e1cie o transakcii",
         "no_budget_pointer": "Zd\u00e1 sa, \u017ee zatia\u013e nem\u00e1te \u017eiadne rozpo\u010dty. Na str\u00e1nke <a href=\"\/budgets\">rozpo\u010dty<\/a> by ste si nejak\u00e9 mali vytvori\u0165. Rozpo\u010dty m\u00f4\u017eu pom\u00f4c\u0165 udr\u017ea\u0165 preh\u013ead vo v\u00fddavkoch.",

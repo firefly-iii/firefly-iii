@@ -69,8 +69,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         $journals       = $collector->getExtractedJournals();
         $array          = [];
         $listedJournals = [];
-
-
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $array[$currencyId] = $array[$currencyId] ?? [

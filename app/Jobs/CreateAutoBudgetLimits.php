@@ -57,8 +57,9 @@ class CreateAutoBudgetLimits implements ShouldQueue
     public function __construct(?Carbon $date)
     {
         if (null !== $date) {
-            $date->startOfDay();
-            $this->date = $date;
+            $newDate = clone $date;
+            $newDate->startOfDay();
+            $this->date = $newDate;
             Log::debug(sprintf('Created new CreateAutoBudgetLimits("%s")', $this->date->format('Y-m-d')));
         }
     }
@@ -293,7 +294,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     public function setDate(Carbon $date): void
     {
-        $date->startOfDay();
-        $this->date = $date;
+        $newDate = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 }

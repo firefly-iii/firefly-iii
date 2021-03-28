@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * PeriodController.php
  * Copyright (c) 2021 james@firefly-iii.org
@@ -20,7 +22,6 @@
  */
 
 namespace FireflyIII\Api\V1\Controllers\Insight\Expense;
-
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;

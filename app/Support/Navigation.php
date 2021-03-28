@@ -212,8 +212,6 @@ class Navigation
 
             return $currentEnd;
         }
-
-
         if (!isset($functionMap[$repeatFreq])) {
             Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
@@ -303,8 +301,6 @@ class Navigation
             $increment     = 'addYear';
             $displayFormat = (string)trans('config.year');
         }
-
-
         $begin   = clone $start;
         $entries = [];
         while ($begin < $end) {
@@ -581,8 +577,6 @@ class Navigation
             $tEnd       = session('end', Carbon::now()->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $date->subDays($diffInDays * $subtract);
-
-
             return $date;
         }
 
@@ -632,8 +626,6 @@ class Navigation
 
             return $fiscalHelper->endOfFiscalYear($end);
         }
-
-
         throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 

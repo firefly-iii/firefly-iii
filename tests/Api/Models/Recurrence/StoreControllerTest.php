@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Recurrence;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -93,8 +93,6 @@ class StoreControllerTest extends TestCase
         $defaultSet->addField(Field::createBasic('transactions/0/source_id', 'random-asset-id'));
         $defaultSet->addField(Field::createBasic('transactions/0/destination_id', 'random-expense-id'));
         $configuration->addMandatoryFieldSet($defaultSet);
-
-
         $defaultSet        = new FieldSet();
         $defaultSet->title = 'default_deposit';
         $defaultSet->addField(Field::createBasic('type', 'static-deposit'));

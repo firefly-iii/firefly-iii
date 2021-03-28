@@ -47,7 +47,6 @@ class MigrateRecurrenceMeta extends Command
      */
     protected $signature = 'firefly-iii:migrate-recurrence-meta {--F|force : Force the execution of this command.}';
 
-
     /**
      * Execute the console command.
      *

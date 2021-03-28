@@ -78,7 +78,6 @@ class ExportData extends Command
     private JournalRepositoryInterface $journalRepository;
     private User                       $user;
 
-
     /**
      * Execute the console command.
      *
@@ -115,8 +114,6 @@ class ExportData extends Command
         $exporter->setStart($options['start']);
         $exporter->setEnd($options['end']);
         $exporter->setAccounts($options['accounts']);
-
-
         $exporter->setExportTransactions($options['export']['transactions']);
         $exporter->setExportAccounts($options['export']['accounts']);
         $exporter->setExportBudgets($options['export']['budgets']);
@@ -294,6 +291,4 @@ class ExportData extends Command
             $this->info(sprintf('Wrote %s-export to file "%s".', $key, $file));
         }
     }
-
-
 }

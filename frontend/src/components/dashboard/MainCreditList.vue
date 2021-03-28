@@ -50,7 +50,7 @@
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}
                 </span>
               </div>
-              <span v-if="entry.pct <= 20">&nbsp;
+              <span v-if="entry.pct <= 20" style="line-height: 16px;">&nbsp;
               {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}
               </span>
             </div>

@@ -54,7 +54,6 @@ class ScanAttachments extends Command
      */
     protected $signature = 'firefly-iii:scan-attachments';
 
-
     /**
      * Execute the console command.
      */

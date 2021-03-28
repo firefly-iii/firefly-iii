@@ -62,7 +62,5 @@ trait TransactionFilter
         ];
 
         return $types[$type] ?? $types['default'];
-
-
     }
 }

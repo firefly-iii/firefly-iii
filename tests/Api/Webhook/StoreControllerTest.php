@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Webhook;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -79,8 +79,6 @@ class StoreControllerTest extends TestCase
         $field    = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('active', $fieldSet);
-
-
         return $configuration->generateAll();
     }
 

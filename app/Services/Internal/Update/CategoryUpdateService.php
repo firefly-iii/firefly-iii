@@ -39,8 +39,6 @@ use Log;
 class CategoryUpdateService
 {
     private $user;
-
-
     /**
      * Constructor.
      */
@@ -138,8 +136,6 @@ class CategoryUpdateService
             ->where('rt_meta.value', $oldName)
             ->update(['rt_meta.value' => $newName]);
     }
-
-
     /**
      * @param Category $category
      * @param array    $data

@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
-
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

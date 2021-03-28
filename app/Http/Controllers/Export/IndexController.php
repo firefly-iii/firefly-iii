@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Export;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -55,7 +54,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string) trans('firefly.export_data_title'));
+                app('view')->share('title', (string)trans('firefly.export_data_title'));
                 $this->journalRepository = app(JournalRepositoryInterface::class);
                 $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -65,8 +64,8 @@ class IndexController extends Controller
     }
 
     /**
-     * @throws CannotInsertRecord
      * @return LaravelResponse
+     * @throws CannotInsertRecord
      */
     public function export(): LaravelResponse
     {

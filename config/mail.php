@@ -74,9 +74,6 @@ return [
     ],
 
     'from' => ['address' => envNonEmpty('MAIL_FROM', 'changeme@example.com'), 'name' => 'Firefly III Mailer'],
-
-
-
     'markdown' => [
         'theme' => 'default',
 

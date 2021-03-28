@@ -50,7 +50,6 @@ class EnableCurrencies extends Command
      */
     protected $signature = 'firefly-iii:enable-currencies';
 
-
     /**
      * Execute the console command.
      *

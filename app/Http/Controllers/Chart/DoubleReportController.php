@@ -199,7 +199,7 @@ class DoubleReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string) trans('firefly.spent_in_specific_double', ['account' => $name]),
+                        (string)trans('firefly.spent_in_specific_double', ['account' => $name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -225,7 +225,7 @@ class DoubleReportController extends Controller
             $chartData[$earnedKey] = $chartData[$earnedKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string) trans('firefly.earned_in_specific_double', ['account' => $name]),
+                        (string)trans('firefly.earned_in_specific_double', ['account' => $name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -248,6 +248,55 @@ class DoubleReportController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * TODO this method is double.
+     *
+     * @param Collection  $accounts
+     * @param int         $id
+     * @param string      $name
+     * @param null|string $iban
+     *
+     * @return string
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
+     * TODO duplicate function
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->formatLocalized($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
+    }
 
     /**
      * @param Collection $accounts
@@ -367,55 +416,5 @@ class DoubleReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
-    }
-
-    /**
-     * TODO this method is double.
-     *
-     * @param Collection  $accounts
-     * @param int         $id
-     * @param string      $name
-     * @param null|string $iban
-     *
-     * @return string
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
-    }
-
-    /**
-     * TODO duplicate function
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->formatLocalized($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 }

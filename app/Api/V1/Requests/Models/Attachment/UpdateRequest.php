@@ -72,7 +72,6 @@ class UpdateRequest extends FormRequest
         $models = implode(',', $models);
         $model  = $this->string('attachable_type');
 
-
         return [
             'filename'        => 'between:1,255',
             'title'           => 'between:1,255',

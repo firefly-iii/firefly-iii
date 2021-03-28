@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Opprett nytt innskudd',
     'create_new_transfer'                       => 'Opprett ny overføring',
     'create_new_asset'                          => 'Opprett ny aktivakonto',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Opprett ny utgiftskonto',
     'create_new_revenue'                        => 'Opprett ny inntektskonto',
     'create_new_piggy_bank'                     => 'Opprett ny sparegris',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per måned',
     'interest_calc_yearly'                      => 'Per år',
     'initial_balance_account'                   => 'Initial balance account of :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Ny kategori',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'The first split determines the value of this field',
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Velkommen til Firefly III!',

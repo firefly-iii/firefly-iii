@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => '建立新存款',
     'create_new_transfer'                       => '建立新轉帳',
     'create_new_asset'                          => '建立新資產帳戶',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => '建立新支出帳戶',
     'create_new_revenue'                        => '建立新收入帳戶',
     'create_new_piggy_bank'                     => '建立新小豬撲滿',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => '每月',
     'interest_calc_yearly'                      => '每年',
     'initial_balance_account'                   => ':account 初始餘額帳戶',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => '新分類',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'The first split determines the value of this field',
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => '歡迎使用 Firefly III！',

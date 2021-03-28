@@ -201,8 +201,6 @@ trait TransactionValidation
                     $accountValidator->source = $source;
                 }
             }
-
-
             $destinationId    = (int)($transaction['destination_id'] ?? 0);
             $destinationName  = $transaction['destination_name'] ?? null;
             $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, null);

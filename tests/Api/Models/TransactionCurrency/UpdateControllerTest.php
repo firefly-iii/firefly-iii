@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\TransactionCurrency;
-
-
 use Faker\Factory;
 use Laravel\Passport\Passport;
 use Log;
@@ -49,8 +49,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @dataProvider updateDataProvider
      */
@@ -68,8 +66,6 @@ class UpdateControllerTest extends TestCase
         $route = route('api.v1.currencies.update', $submission['parameters']);
         $this->assertPUT($route, $submission);
     }
-
-
     /**
      * @return array
      */
@@ -109,12 +105,8 @@ class UpdateControllerTest extends TestCase
         $fieldSet->parameters = ['RMB'];
         $fieldSet->addField(Field::createBasic('symbol', 'random-new-currency-code'));
         $configuration->addOptionalFieldSet('code', $fieldSet);
-
-
         return $configuration->generateAll();
     }
-
-
     /**
      * @return array
      */
@@ -168,6 +160,4 @@ class UpdateControllerTest extends TestCase
 
         return $set;
     }
-
-
 }

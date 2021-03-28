@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * 2020_03_13_201950_changes_for_v520.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -61,7 +59,7 @@ class ChangesForV520 extends Migration
                     $table->integer('budget_id', false, true);
                     $table->integer('transaction_currency_id', false, true);
                     $table->tinyInteger('auto_budget_type', false, true)->default(1);
-                    $table->decimal('amount', 22, 12);
+                    $table->decimal('amount', 36, 24);
                     $table->string('period', 50);
 
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');

@@ -21,15 +21,23 @@
         "resolve-url-loader": "^3.1.2",
         "sass": "^1.32.8",
         "sass-loader": "^10.1.1",
+        "sortablejs": "^1.13.0",
         "vue": "^2.6.12",
+        "vue-chartjs": "^3.5.1",
         "vue-i18n": "^8.22.2",
-        "vue-template-compiler": "^2.6.12"
+        "vue-router": "^3.4.9",
+        "vue-simple-suggest": "^1.10.3",
+        "vue-template-compiler": "^2.6.12",
+        "vue-typeahead-bootstrap": "^2.5.5",
+        "vue2-leaflet": "^2.6.0",
+        "vuex": "^3.6.0"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.1",
         "@johmun/vue-tags-input": "^2.1.0",
         "@popperjs/core": "^2.8.6",
-        "bootstrap": "^4.5.3",
+        "bootstrap": "^4.6.0",
+        "bootstrap-vue": "^2.21.2",
         "chart.js": "^2.9.4",
         "icheck-bootstrap": "^3.0.1",
         "jquery": "^3.5.1",
@@ -38,12 +46,6 @@
         "overlayscrollbars": "^1.13.1",
         "popper.js": "^1.16.1",
         "tempusdominus": "^5.16.0",
-        "v-calendar": "^2.2.4",
-        "vue-chartjs": "^3.5.1",
-        "vue-router": "^3.4.9",
-        "vue-simple-suggest": "^1.10.3",
-        "vue-typeahead-bootstrap": "^2.5.5",
-        "vue2-leaflet": "^2.6.0",
-        "vuex": "^3.6.0"
+        "v-calendar": "^2.2.4"
     }
 }

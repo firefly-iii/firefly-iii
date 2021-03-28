@@ -90,8 +90,8 @@ class ChangesForV475 extends Migration
             $table->integer('source_id', false, true);
             $table->integer('destination_id', false, true);
 
-            $table->decimal('amount', 22, 12);
-            $table->decimal('foreign_amount', 22, 12)->nullable();
+            $table->decimal('amount', 36, 24);
+            $table->decimal('foreign_amount', 36, 24)->nullable();
             $table->string('description', 1024);
 
             $table->foreign('recurrence_id')->references('id')->on('recurrences')->onDelete('cascade');

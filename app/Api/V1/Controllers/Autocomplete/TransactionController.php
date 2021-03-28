@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -39,7 +38,7 @@ use Illuminate\Support\Collection;
 class TransactionController extends Controller
 {
     private TransactionGroupRepositoryInterface $groupRepository;
-    private JournalRepositoryInterface $repository;
+    private JournalRepositoryInterface          $repository;
 
     /**
      * TransactionController constructor.
@@ -60,7 +59,6 @@ class TransactionController extends Controller
             }
         );
     }
-
 
     /**
      * @param AutocompleteRequest $request

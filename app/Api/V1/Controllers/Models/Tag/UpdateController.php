@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Tag;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Tag\UpdateRequest;
@@ -37,7 +38,6 @@ use League\Fractal\Resource\Item;
 class UpdateController extends Controller
 {
     private TagRepositoryInterface $repository;
-
 
     /**
      * TagController constructor.
@@ -59,7 +59,6 @@ class UpdateController extends Controller
             }
         );
     }
-
 
     /**
      * Update a rule.

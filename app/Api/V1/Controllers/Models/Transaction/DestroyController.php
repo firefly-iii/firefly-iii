@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Events\DestroyedTransactionGroup;
@@ -36,7 +37,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private JournalRepositoryInterface $repository;
-
 
     /**
      * TransactionController constructor.
@@ -59,7 +59,6 @@ class DestroyController extends Controller
         );
     }
 
-
     /**
      * Remove the specified resource from storage.
      *
@@ -76,7 +75,6 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
-
 
     /**
      * Remove the specified resource from storage.

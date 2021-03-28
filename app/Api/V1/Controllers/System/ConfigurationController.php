@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\System;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\UpdateRequest;
@@ -169,9 +170,7 @@ class ConfigurationController extends Controller
 
         // get updated config:
         $newConfig = $this->getDynamicConfiguration();
-
-
-        $data = [
+        $data      = [
             'title'    => $name,
             'value'    => $newConfig[$shortName],
             'editable' => true,

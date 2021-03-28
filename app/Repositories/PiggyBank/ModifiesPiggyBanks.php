@@ -23,8 +23,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
-
-
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;

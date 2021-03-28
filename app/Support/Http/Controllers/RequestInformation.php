@@ -43,8 +43,6 @@ use Route as RouteFacade;
  */
 trait RequestInformation
 {
-
-
     /**
      * Get the domain of FF system.
      *
@@ -169,8 +167,6 @@ trait RequestInformation
     {
         $page         = $this->getPageName();
         $specificPage = $this->getSpecificPageName();
-
-
         // indicator if user has seen the help for this page ( + special page):
         $key = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?

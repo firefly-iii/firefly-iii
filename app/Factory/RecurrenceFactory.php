@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
@@ -44,7 +43,6 @@ class RecurrenceFactory
 
     private MessageBag $errors;
     private User       $user;
-
 
     /**
      * Constructor.

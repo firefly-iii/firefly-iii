@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Sửa heo đất ":name"',
     'preferences'            => 'Quyền ưu tiên',
     'profile'                => 'Hồ sơ',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Tài khoản',
     'changePassword'         => 'Đổi mật khẩu',
     'change_email'           => 'Đổi địa chỉ email',
     'bills'                  => 'Hóa đơn',
@@ -62,5 +62,5 @@ return [
     'telemetry_view'         => 'Xem dữ liệu thu thập',
     'edit_object_group'      => 'Chỉnh sửa nhóm ":title"',
     'delete_object_group'    => 'Xóa nhóm ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'logout_others'          => 'Đăng xuất tất cả phiên đăng nhập'
 ];

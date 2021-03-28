@@ -28,7 +28,6 @@ use Illuminate\Console\Command;
 use PDO;
 use PDOException;
 
-
 /**
  * Class CreateDatabase
  */
@@ -46,7 +45,6 @@ class CreateDatabase extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:create-database';
-
 
     /**
      * Execute the console command.

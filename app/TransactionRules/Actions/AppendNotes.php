@@ -52,19 +52,20 @@ class AppendNotes implements ActionInterface
     {
         $dbNote = Note
             ::
-            where('noteable_id', (int) $journal['transaction_journal_id'])
+            where('noteable_id', (int)$journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*']);
         if (null === $dbNote) {
             $dbNote                = new Note;
-            $dbNote->noteable_id   = (int) $journal['transaction_journal_id'];
+            $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $this->action->action_value, $dbNote->text));
-        $text = sprintf('%s%s', $dbNote->text, $this->action->action_value);
+        $text         = sprintf('%s%s', $dbNote->text, $this->action->action_value);
         $dbNote->text = $text;
         $dbNote->save();
+
         return true;
     }
 }

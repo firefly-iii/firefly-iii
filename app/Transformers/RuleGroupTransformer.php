@@ -56,8 +56,4 @@ class RuleGroupTransformer extends AbstractTransformer
             ],
         ];
     }
-
-
 }
-
-

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionGroup;
-
-
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -366,8 +364,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException($e->getMessage());
         }
-
-
     }
 
     /**

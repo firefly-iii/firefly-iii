@@ -53,7 +53,6 @@ class FixAccountTypes extends Command
     private array          $expected;
     private AccountFactory $factory;
 
-
     /**
      * Execute the console command.
      *

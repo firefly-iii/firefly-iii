@@ -44,12 +44,12 @@ use Illuminate\View\View;
 class EditController extends Controller
 {
     use ModelInformation, UserNavigation;
+
+    private AttachmentHelperInterface $attachments;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
-
-    private AttachmentHelperInterface $attachments;
 
     /**
      * EditController constructor.
@@ -62,7 +62,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -89,7 +89,7 @@ class EditController extends Controller
         }
 
         $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitle       = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $roles          = $this->getRoles();
         $liabilityTypes = $this->getLiabilityTypes();
@@ -109,9 +109,9 @@ class EditController extends Controller
 
         // interest calculation periods:
         $interestPeriods = [
-            'daily'   => (string) trans('firefly.interest_calc_daily'),
-            'monthly' => (string) trans('firefly.interest_calc_monthly'),
-            'yearly'  => (string) trans('firefly.interest_calc_yearly'),
+            'daily'   => (string)trans('firefly.interest_calc_daily'),
+            'monthly' => (string)trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
         ];
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -120,7 +120,7 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = (string) $repository->getOpeningBalanceAmount($account);
+        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -145,7 +145,7 @@ class EditController extends Controller
             'interest'                => $repository->getMetaValue($account, 'interest'),
             'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
             'notes'                   => $this->repository->getNoteText($account),
-            'active'                  => $hasOldInput ? (bool) $request->old('active') : $account->active,
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -167,7 +167,6 @@ class EditController extends Controller
         );
     }
 
-
     /**
      * Update the account.
      *
@@ -185,7 +184,7 @@ class EditController extends Controller
         $data = $request->getAccountData();
         $this->repository->update($account, $data);
 
-        $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
+        $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
@@ -193,7 +192,7 @@ class EditController extends Controller
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
@@ -202,7 +201,7 @@ class EditController extends Controller
 
         // redirect
         $redirect = redirect($this->getPreviousUri('accounts.edit.uri'));
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('accounts.edit.fromUpdate', true);
 

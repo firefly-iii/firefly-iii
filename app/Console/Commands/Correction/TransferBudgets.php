@@ -46,7 +46,6 @@ class TransferBudgets extends Command
      */
     protected $signature = 'firefly-iii:fix-transfer-budgets';
 
-
     /**
      * Execute the console command.
      *

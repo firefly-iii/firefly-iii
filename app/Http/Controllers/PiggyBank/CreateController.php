@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankStoreRequest;
@@ -53,7 +52,7 @@ class CreateController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
+                app('view')->share('title', (string)trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->attachments = app(AttachmentHelperInterface::class);
@@ -71,7 +70,7 @@ class CreateController extends Controller
      */
     public function create()
     {
-        $subTitle     = (string) trans('firefly.new_piggy_bank');
+        $subTitle     = (string)trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
 
         // put previous url in session if not redirect from store (not "create another").
@@ -82,7 +81,6 @@ class CreateController extends Controller
 
         return prefixView('piggy-banks.create', compact('subTitle', 'subTitleIcon'));
     }
-
 
     /**
      * Store a new piggy bank.
@@ -99,7 +97,7 @@ class CreateController extends Controller
         }
         $piggyBank = $this->piggyRepos->store($data);
 
-        session()->flash('success', (string) trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
+        session()->flash('success', (string)trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
         app('preferences')->mark();
 
         // store attachment(s):
@@ -109,17 +107,15 @@ class CreateController extends Controller
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
-
-
         $redirect = redirect($this->getPreviousUri('piggy-banks.create.uri'));
 
-        if (1 === (int) $request->get('create_another')) {
+        if (1 === (int)$request->get('create_another')) {
             // @codeCoverageIgnoreStart
             session()->put('piggy-banks.create.fromStore', true);
 

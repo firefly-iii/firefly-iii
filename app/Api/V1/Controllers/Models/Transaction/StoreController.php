@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
@@ -48,7 +49,6 @@ class StoreController extends Controller
 
     private TransactionGroupRepositoryInterface $groupRepository;
 
-
     /**
      * TransactionController constructor.
      *
@@ -69,7 +69,6 @@ class StoreController extends Controller
             }
         );
     }
-
 
     /**
      * Store a new transaction.

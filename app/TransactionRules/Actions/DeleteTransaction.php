@@ -64,7 +64,9 @@ class DeleteTransaction implements ActionInterface
 
             return true;
         }
-        Log::debug(sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description']));
+        Log::debug(
+            sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description'])
+        );
 
         // trigger delete factory:
         $journal = TransactionJournal::find($journal['transaction_group_id']);

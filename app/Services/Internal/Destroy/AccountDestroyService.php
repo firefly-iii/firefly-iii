@@ -66,8 +66,6 @@ class AccountDestroyService
 
         // delete account meta:
         $account->accountMeta()->delete();
-
-
         // delete account.
         try {
             $account->delete();

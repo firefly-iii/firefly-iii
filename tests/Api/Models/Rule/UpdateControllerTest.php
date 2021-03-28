@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UpdateControllerTEst.php
  * Copyright (c) 2021 james@firefly-iii.org
@@ -46,8 +48,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @dataProvider updateDataProvider
      */
@@ -66,8 +66,6 @@ class UpdateControllerTest extends TestCase
         $this->assertPUT($route, $submission);
 
     }
-
-
     /**
      * @return array
      */

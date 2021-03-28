@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
@@ -64,7 +65,6 @@ class ListController extends Controller
         );
     }
 
-
     /**
      * @param TransactionGroup $transactionGroup
      *
@@ -97,7 +97,6 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-
     /**
      * @param TransactionGroup $transactionGroup
      *
@@ -114,8 +113,6 @@ class ListController extends Controller
         }
         $count  = $collection->count();
         $events = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-
-
         // make paginator:
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.transactions.piggy_bank_events', [$transactionGroup->id]) . $this->buildParams());
@@ -126,8 +123,6 @@ class ListController extends Controller
 
         $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-
         //        /** @var PiggyBankEventTransformer $transformer */
         //        $transformer = app(PiggyBankEventTransformer::class);
         //        $transformer->setParameters($this->parameters);
@@ -136,7 +131,6 @@ class ListController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 
     /**
      * @param TransactionJournal $transactionJournal

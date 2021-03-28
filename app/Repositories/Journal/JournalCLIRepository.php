@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
-
-
 use Carbon\Carbon;
 use DB;
 use Exception;

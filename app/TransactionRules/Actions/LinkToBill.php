@@ -58,21 +58,26 @@ class LinkToBill implements ActionInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName = (string) $this->action->action_value;
+        $billName = (string)$this->action->action_value;
         $bill     = $repository->findByName($billName);
 
         if (null !== $bill && $journal['transaction_type_type'] === TransactionType::WITHDRAWAL) {
             DB::table('transaction_journals')
               ->where('id', '=', $journal['transaction_journal_id'])
               ->update(['bill_id' => $bill->id]);
-            Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name));
+            Log::debug(
+                sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
+            );
 
             return true;
         }
 
-        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.', $journal['transaction_journal_id'], $billName));
-
-
+        Log::error(
+            sprintf(
+                'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
+                $journal['transaction_journal_id'], $billName
+            )
+        );
         return false;
     }
 }

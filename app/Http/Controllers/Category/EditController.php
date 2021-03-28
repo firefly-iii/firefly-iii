@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -41,8 +40,8 @@ use Illuminate\View\View;
 class EditController extends Controller
 {
 
-    private CategoryRepositoryInterface $repository;
     private AttachmentHelperInterface   $attachments;
+    private CategoryRepositoryInterface $repository;
 
     /**
      * CategoryController constructor.
@@ -64,7 +63,6 @@ class EditController extends Controller
             }
         );
     }
-
 
     /**
      * Edit a category.
@@ -119,8 +117,6 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
-
-
         $redirect = redirect($this->getPreviousUri('categories.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {

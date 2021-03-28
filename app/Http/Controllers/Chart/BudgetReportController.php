@@ -42,6 +42,7 @@ use Illuminate\Support\Collection;
 class BudgetReportController extends Controller
 {
     use AugumentData, TransactionCalculation;
+
     /** @var GeneratorInterface Chart generation methods. */
     private $generator;
 
@@ -199,7 +200,7 @@ class BudgetReportController extends Controller
             $chartData[$spentKey] = $chartData[$spentKey] ?? [
                     'label'           => sprintf(
                         '%s (%s)',
-                        (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
+                        (string)trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
                         $currency['currency_name']
                     ),
                     'type'            => 'bar',
@@ -222,6 +223,29 @@ class BudgetReportController extends Controller
         $data = $this->generator->multiSet($chartData);
 
         return response()->json($data);
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->formatLocalized($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 
     /**
@@ -259,28 +283,5 @@ class BudgetReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->formatLocalized($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 }

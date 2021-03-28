@@ -49,8 +49,6 @@ class UpdateRequest extends FormRequest
             'outward' => $this->string('outward'),
             'inward'  => $this->string('inward'),
         ];
-
-
     }
 
     /**

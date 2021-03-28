@@ -121,8 +121,6 @@ class Category extends Model
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
-
-
     /**
      * @codeCoverageIgnore
      * @return MorphMany

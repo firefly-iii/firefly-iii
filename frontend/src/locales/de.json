@@ -65,6 +65,9 @@
         "weekly_budgets": "Wochenbudgets",
         "monthly_budgets": "Monatsbudgets",
         "quarterly_budgets": "Quartalsbudgets",
+        "create_new_expense": "Neues Ausgabenkonto erstellen",
+        "create_new_revenue": "Neues Einnahmenkonto erstellen",
+        "create_new_liabilities": "Neue Verbindlichkeit anlegen",
         "half_year_budgets": "Halbjahresbudgets",
         "yearly_budgets": "Jahresbudgets",
         "split_transaction_title": "Beschreibung der Splittbuchung",
@@ -75,6 +78,12 @@
         "create_another": "Nach dem Speichern hierher zur\u00fcckkehren, um ein weiteres zu erstellen.",
         "update_transaction": "Buchung aktualisieren",
         "after_update_create_another": "Nach dem Aktualisieren hierher zur\u00fcckkehren, um weiter zu bearbeiten.",
+        "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Die Buchung #{ID}<\/a> (\"{title}\") wurde nicht ver\u00e4ndert.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Die Buchung #{ID}<\/a> (\"{title}\") wurde aktualisiert.",
+        "spent_x_of_y": "{amount} von {total} ausgegeben",
+        "search": "Suche",
+        "create_new_asset": "Neues Bestandskonto erstellen",
+        "asset_accounts": "Bestandskonten",
         "reset_after": "Formular nach der \u00dcbermittlung zur\u00fccksetzen",
         "bill_paid_on": "Bezahlt am {date}",
         "first_split_decides": "Die erste Aufteilung bestimmt den Wert dieses Feldes",
@@ -89,7 +98,11 @@
         "journal_links": "Buchungsverkn\u00fcpfungen",
         "go_to_withdrawals": "Ausgaben anzeigen",
         "revenue_accounts": "Einnahmekonten",
-        "add_another_split": "Eine weitere Aufteilung hinzuf\u00fcgen"
+        "add_another_split": "Eine weitere Aufteilung hinzuf\u00fcgen",
+        "actions": "Aktionen",
+        "edit": "Bearbeiten",
+        "delete": "L\u00f6schen",
+        "reconcile_this_account": "Dieses Konto abgleichen"
     },
     "list": {
         "piggy_bank": "Sparschwein",
@@ -98,9 +111,7 @@
         "name": "Name",
         "role": "Rolle",
         "iban": "IBAN",
-        "lastActivity": "Letzte Aktivit\u00e4t",
         "currentBalance": "Aktueller Kontostand",
-        "balanceDiff": "Saldendifferenz",
         "next_expected_match": "N\u00e4chste erwartete \u00dcbereinstimmung"
     },
     "config": {

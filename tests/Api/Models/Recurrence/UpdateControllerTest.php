@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Recurrence;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -47,8 +47,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @dataProvider updateDataProvider
      */
@@ -67,8 +65,6 @@ class UpdateControllerTest extends TestCase
         $this->assertPUT($route, $submission);
 
     }
-
-
     /**
      * @return array
      */
@@ -106,8 +102,6 @@ class UpdateControllerTest extends TestCase
         $field                = Field::createBasic('active', 'boolean');
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('active', $fieldSet);
-
-
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('repetitions/0/type', 'static-ndom');
@@ -115,8 +109,6 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-ndom'));
         $configuration->addOptionalFieldSet('ndom', $fieldSet);
-
-
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('repetitions/0/type', 'static-monthly');
@@ -124,8 +116,6 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'moment-monthly'));
         $configuration->addOptionalFieldSet('monthly', $fieldSet);
-
-
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('repetitions/0/type', 'static-yearly');
@@ -133,8 +123,6 @@ class UpdateControllerTest extends TestCase
         $fieldSet->addField($field);
         $fieldSet->addField(Field::createBasic('repetitions/0/moment', 'random-past-date'));
         $configuration->addOptionalFieldSet('yearly', $fieldSet);
-
-
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('repetitions/0/skip', 'random-skip');
@@ -156,8 +144,6 @@ class UpdateControllerTest extends TestCase
         $field->ignorableFields = ['transactions/0/foreign_currency_code', 'transactions/0/foreign_currency_symbol'];
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('foreign1', $fieldSet);
-
-
         $fieldSet               = new FieldSet;
         $fieldSet->parameters   = [1];
         $field                  = Field::createBasic('transactions/0/budget_id', 'random-budget-id');

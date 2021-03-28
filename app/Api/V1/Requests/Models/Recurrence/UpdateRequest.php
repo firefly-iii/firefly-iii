@@ -42,7 +42,6 @@ class UpdateRequest extends FormRequest
 {
     use ConvertsDataTypes, RecurrenceValidation, TransactionValidation, CurrencyValidation, GetRecurrenceData, ChecksLogin;
 
-
     /**
      * Get all data from the request.
      *

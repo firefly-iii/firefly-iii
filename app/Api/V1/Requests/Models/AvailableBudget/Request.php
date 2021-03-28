@@ -96,6 +96,4 @@ class Request extends FormRequest
             }
         );
     }
-
-
 }

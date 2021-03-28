@@ -32,10 +32,12 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 /**
  * Class ShowController
@@ -46,7 +48,7 @@ class ShowController extends Controller
     use UserNavigation, PeriodOverview;
 
     private CurrencyRepositoryInterface $currencyRepos;
-    private AccountRepositoryInterface $repository;
+    private AccountRepositoryInterface  $repository;
 
     /**
      * ShowController constructor.
@@ -63,7 +65,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+                app('view')->share('title', (string)trans('firefly.accounts'));
 
                 $this->repository    = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -73,8 +75,6 @@ class ShowController extends Controller
         );
     }
 
-
-
     /**
      * Show an account.
      *
@@ -83,13 +83,13 @@ class ShowController extends Controller
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
+     * @return RedirectResponse|Redirector|Factory|View
      * @throws Exception
      *
-     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
-        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
@@ -107,12 +107,12 @@ class ShowController extends Controller
         $attachments      = $this->repository->getAttachments($account);
         $today            = today(config('app.timezone'));
         $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page             = (int) $request->get('page');
-        $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page             = (int)$request->get('page');
+        $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $fStart           = $start->formatLocalized($this->monthAndDayFormat);
         $fEnd             = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
@@ -158,29 +158,27 @@ class ShowController extends Controller
      * @param Request $request
      * @param Account $account
      *
+     * @return RedirectResponse|Redirector|Factory|View
      * @throws Exception
      *
-     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
         }
-
-
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);
-        $attachments      = $this->repository->getAttachments($account);
+        $attachments  = $this->repository->getAttachments($account);
         $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
-        $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $subTitle     = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection;
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

@@ -38,8 +38,6 @@ class StoredTransactionGroup extends Event
 
     public bool             $applyRules;
     public TransactionGroup $transactionGroup;
-
-
     /**
      * Create a new event instance.
      *

@@ -108,8 +108,6 @@ class Steam
         $repository->setUser($account->user);
 
         $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
-
-
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))

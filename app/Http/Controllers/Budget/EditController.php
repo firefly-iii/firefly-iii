@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
-
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
@@ -41,11 +40,10 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
-
     /** @var AttachmentHelperInterface Helper for attachments. */
     private $attachments;
+    /** @var BudgetRepositoryInterface The budget repository */
+    private $repository;
 
     /**
      * EditController constructor.
@@ -58,9 +56,9 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository  = app(BudgetRepositoryInterface::class);
                 $this->attachments = app(AttachmentHelperInterface::class);
 
                 return $next($request);
@@ -78,30 +76,30 @@ class EditController extends Controller
      */
     public function edit(Request $request, Budget $budget)
     {
-        $subTitle   = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
+        $subTitle   = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
         $autoBudget = $this->repository->getAutoBudget($budget);
 
         // auto budget types
         $autoBudgetTypes   = [
-            0                                => (string) trans('firefly.auto_budget_none'),
-            AutoBudget::AUTO_BUDGET_RESET    => (string) trans('firefly.auto_budget_reset'),
-            AutoBudget::AUTO_BUDGET_ROLLOVER => (string) trans('firefly.auto_budget_rollover'),
+            0                                => (string)trans('firefly.auto_budget_none'),
+            AutoBudget::AUTO_BUDGET_RESET    => (string)trans('firefly.auto_budget_reset'),
+            AutoBudget::AUTO_BUDGET_ROLLOVER => (string)trans('firefly.auto_budget_rollover'),
         ];
         $autoBudgetPeriods = [
-            'daily'     => (string) trans('firefly.auto_budget_period_daily'),
-            'weekly'    => (string) trans('firefly.auto_budget_period_weekly'),
-            'monthly'   => (string) trans('firefly.auto_budget_period_monthly'),
-            'quarterly' => (string) trans('firefly.auto_budget_period_quarterly'),
-            'half_year' => (string) trans('firefly.auto_budget_period_half_year'),
-            'yearly'    => (string) trans('firefly.auto_budget_period_yearly'),
+            'daily'     => (string)trans('firefly.auto_budget_period_daily'),
+            'weekly'    => (string)trans('firefly.auto_budget_period_weekly'),
+            'monthly'   => (string)trans('firefly.auto_budget_period_monthly'),
+            'quarterly' => (string)trans('firefly.auto_budget_period_quarterly'),
+            'half_year' => (string)trans('firefly.auto_budget_period_half_year'),
+            'yearly'    => (string)trans('firefly.auto_budget_period_yearly'),
         ];
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
         $currency    = app('amount')->getDefaultCurrency();
         $preFilled   = [
-            'active'                  => $hasOldInput ? (bool) $request->old('active') : $budget->active,
-            'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $currency->id,
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $budget->active,
+            'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
         if ($autoBudget) {
             $preFilled['auto_budget_amount'] = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
@@ -130,7 +128,7 @@ class EditController extends Controller
         $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
-        $request->session()->flash('success', (string) trans('firefly.updated_budget', ['name' => $budget->name]));
+        $request->session()->flash('success', (string)trans('firefly.updated_budget', ['name' => $budget->name]));
         $this->repository->cleanupBudgets();
         app('preferences')->mark();
 
@@ -142,14 +140,14 @@ class EditController extends Controller
             $this->attachments->saveAttachmentsForModel($budget, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            session()->flash('info',(string)trans('firefly.no_att_demo_user'));
+            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             $request->session()->put('budgets.edit.fromUpdate', true);
 

@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
-
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -163,8 +161,6 @@ class AccountForm
 
         return $this->select($name, $grouped, $value, $options);
     }
-
-
     /**
      * Same list but all liabilities as well.
      *

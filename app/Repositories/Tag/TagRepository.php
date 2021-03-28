@@ -547,8 +547,6 @@ class TagRepository implements TagRepositoryInterface
             }
             $min = -1 === bccomp($amount, $min) ? $amount : $min;
         }
-
-
         if (null === $min) {
             $min = '0';
         }

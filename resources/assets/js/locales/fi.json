@@ -9,7 +9,7 @@
         "split": "Jaa",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been updated.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Tapahtumatiedot",
         "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",

@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => 'Skapa en ny insättning',
     'create_new_transfer'                       => 'Skapa en ny överföring',
     'create_new_asset'                          => 'Skapa ett nytt tillgångskonto',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => 'Skapa ett nytt utgiftskonto',
     'create_new_revenue'                        => 'Skapa ett nytt intäktskonto',
     'create_new_piggy_bank'                     => 'Skapa en ny spargris',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => 'Per månad',
     'interest_calc_yearly'                      => 'Per år',
     'initial_balance_account'                   => 'Startbalans för konto :account',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => 'Ny kategori',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => 'The first split determines the value of this field',
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => 'Välkommen till Firefly III!',

@@ -45,8 +45,6 @@ class RequestedReportOnJournals
     public $groups;
     /** @var int The ID of the user. */
     public $userId;
-
-
     /**
      * Create a new event instance.
      *

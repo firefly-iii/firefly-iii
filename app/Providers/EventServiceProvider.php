@@ -177,8 +177,6 @@ class EventServiceProvider extends ServiceProvider
                     Session::flash('error', 'Possible email error: ' . $e->getMessage());
                 }
                 Log::debug('If no error above this line, message was sent.');
-
-
             }
         );
     }

@@ -78,7 +78,6 @@ export default {
   watch: {
     datesReady: function (value) {
       if (true === value) {
-        // console.log(this.chartOptions);
         this.initialiseChart();
       }
     },

@@ -16,11 +16,11 @@ The different alpha and beta builds will be compiled from their corresponding ta
 ### Minor Release Support Matrix
 | Version | Supported          |
 | ------- | ------------------ |
-| Firefly III v5.4.x   | :white_check_mark: |
+| Firefly III v5.5.x   | :white_check_mark: |
+| Firefly III v5.4.x   | :x: |
 | Firefly III v5.3.x   | :x: |
 | Firefly III v5.2.x   | :x: |
-| Firefly III v5.1.x   | :x: |
-| Firefly III v5.0.x (and earlier)   | :x: |
+| Firefly III v5.1.x (and earlier)   | :x: |
 
 ### Upgrade path and support policy
 The upgrade path for Firefly III is:

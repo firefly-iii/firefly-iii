@@ -65,8 +65,6 @@ class BudgetLimitTransformer extends AbstractTransformer
         $expenses = $repository->sumExpenses(
             $budgetLimit->start_date, $budgetLimit->end_date, null, new Collection([$budgetLimit->budget]), $budgetLimit->transactionCurrency
         );
-
-
         $currency              = $budgetLimit->transactionCurrency;
         $amount                = $budgetLimit->amount;
         $currencyDecimalPlaces = 2;

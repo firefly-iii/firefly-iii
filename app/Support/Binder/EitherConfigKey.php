@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * StaticConfigKey.php
  * Copyright (c) 2021 james@firefly-iii.org
@@ -20,8 +22,6 @@
  */
 
 namespace FireflyIII\Support\Binder;
-
-
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

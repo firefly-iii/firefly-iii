@@ -886,6 +886,7 @@ return [
     'create_new_deposit'                        => '创建新收入',
     'create_new_transfer'                       => '创建新转账',
     'create_new_asset'                          => '创建新资产账户',
+    'create_new_liabilities'                    => 'Create new liability',
     'create_new_expense'                        => '创建新支出账户',
     'create_new_revenue'                        => '创建新收入账户',
     'create_new_piggy_bank'                     => '创建新存钱罐',
@@ -1130,6 +1131,7 @@ return [
     'interest_calc_monthly'                     => '每月',
     'interest_calc_yearly'                      => '每年',
     'initial_balance_account'                   => '初始余额账户“:account”',
+    'list_options'                              => 'List options',
 
     // categories:
     'new_category'                              => '新分类',
@@ -1243,6 +1245,7 @@ return [
     'first_split_decides'                       => '首笔拆分决定此字段的值',
     'first_split_overrules_source'              => '首笔拆分可能覆盖来源账户',
     'first_split_overrules_destination'         => '首笔拆分可能覆盖目标账户',
+    'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
     // new user:
     'welcome'                                   => '欢迎使用 Firefly III！',

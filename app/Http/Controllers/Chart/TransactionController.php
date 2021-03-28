@@ -56,8 +56,8 @@ class TransactionController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function budgets(Carbon $start, Carbon $end)
     {
@@ -68,8 +68,6 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -82,8 +80,8 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $budget = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
-            $title  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
+            $budget                 = $journal['budget_name'] ?? (string)trans('firefly.no_budget');
+            $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -102,8 +100,8 @@ class TransactionController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
@@ -115,8 +113,6 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -141,8 +137,8 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
-            $category = $journal['category_name'] ?? (string) trans('firefly.no_category');
-            $title    = sprintf('%s (%s)', $category, $journal['currency_symbol']);
+            $category               = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
             $data[$title]           = $data[$title] ?? [
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
@@ -162,8 +158,8 @@ class TransactionController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
@@ -175,8 +171,6 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -221,8 +215,8 @@ class TransactionController extends Controller
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {
@@ -234,8 +228,6 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);

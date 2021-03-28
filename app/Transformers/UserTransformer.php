@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-
-
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 

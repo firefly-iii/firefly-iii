@@ -32,7 +32,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
-
 /**
  * Interface AccountRepositoryInterface.
  */

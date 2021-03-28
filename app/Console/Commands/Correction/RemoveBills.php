@@ -45,7 +45,6 @@ class RemoveBills extends Command
      */
     protected $signature = 'firefly-iii:remove-bills';
 
-
     /**
      * Execute the console command.
      *

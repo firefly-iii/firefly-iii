@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
@@ -56,7 +55,7 @@ class AmountController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
+                app('view')->share('title', (string)trans('firefly.piggyBanks'));
                 app('view')->share('mainTitleIcon', 'fa-bullseye');
 
                 $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
@@ -126,7 +125,7 @@ class AmountController extends Controller
             $this->piggyRepos->createEvent($piggyBank, $amount);
             session()->flash(
                 'success',
-                (string) trans(
+                (string)trans(
                     'firefly.added_amount_to_piggy',
                     ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                 )
@@ -139,7 +138,7 @@ class AmountController extends Controller
         Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
         session()->flash(
             'error',
-            (string) trans(
+            (string)trans(
                 'firefly.cannot_add_amount_piggy',
                 ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )
@@ -168,7 +167,7 @@ class AmountController extends Controller
             $this->piggyRepos->removeAmount($piggyBank, $amount);
             session()->flash(
                 'success',
-                (string) trans(
+                (string)trans(
                     'firefly.removed_amount_from_piggy',
                     ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => $piggyBank->name]
                 )
@@ -177,11 +176,11 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-        $amount = number_format((float) $request->get('amount'), 12, '.', '');
+        $amount = number_format((float)$request->get('amount'), 12, '.', '');
 
         session()->flash(
             'error',
-            (string) trans(
+            (string)trans(
                 'firefly.cannot_remove_from_piggy',
                 ['amount' => app('amount')->formatAnything($currency, $amount, false), 'name' => e($piggyBank->name)]
             )

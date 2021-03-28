@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Tag;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Tag;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Tag;
@@ -34,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private TagRepositoryInterface $repository;
-
 
     /**
      * TagController constructor.
@@ -56,7 +56,6 @@ class DestroyController extends Controller
             }
         );
     }
-
 
     /**
      * Delete the resource.

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
 
-
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ObjectGroupFormRequest;
 use FireflyIII\Models\ObjectGroup;
@@ -49,7 +48,7 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-envelope-o');
-                app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
+                app('view')->share('title', (string)trans('firefly.object_groups_page_title'));
 
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
 
@@ -65,7 +64,7 @@ class EditController extends Controller
      */
     public function edit(ObjectGroup $objectGroup)
     {
-        $subTitle     = (string) trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
+        $subTitle     = (string)trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
         $subTitleIcon = 'fa-pencil';
 
         if (true !== session('object-groups.edit.fromUpdate')) {
@@ -76,24 +75,23 @@ class EditController extends Controller
         return prefixView('object-groups.edit', compact('subTitle', 'subTitleIcon', 'objectGroup'));
     }
 
-
     /**
      * Update a piggy bank.
      *
      * @param ObjectGroupFormRequest $request
-     * @param ObjectGroup $objectGroup
+     * @param ObjectGroup            $objectGroup
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup)
     {
         $data      = $request->getObjectGroupData();
         $piggyBank = $this->repository->update($objectGroup, $data);
 
-        session()->flash('success', (string) trans('firefly.updated_object_group', ['title' => $objectGroup->title]));
+        session()->flash('success', (string)trans('firefly.updated_object_group', ['title' => $objectGroup->title]));
         app('preferences')->mark();
 
         $redirect = redirect($this->getPreviousUri('object-groups.edit.uri'));
 
-        if (1 === (int) $request->get('return_to_edit')) {
+        if (1 === (int)$request->get('return_to_edit')) {
             // @codeCoverageIgnoreStart
             session()->put('object-groups.edit.fromUpdate', true);
 

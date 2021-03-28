@@ -22,8 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
-
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;

@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\TransactionLink;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -88,8 +88,6 @@ class StoreControllerTest extends TestCase
         return $configuration->generateAll();
 
     }
-
-
     /**
      * @param array $submission
      *
@@ -109,8 +107,6 @@ class StoreControllerTest extends TestCase
         // run account store with a minimal data set:
         $address = route('api.v1.transaction_links.store');
         $this->assertPOST($address, $submission);
-
-
     }
 
 }

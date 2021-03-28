@@ -65,6 +65,9 @@
         "weekly_budgets": "Weekly budgets",
         "monthly_budgets": "Monthly budgets",
         "quarterly_budgets": "Quarterly budgets",
+        "create_new_expense": "Vytvo\u0159it v\u00fddajov\u00fd \u00fa\u010det",
+        "create_new_revenue": "Vytvo\u0159it nov\u00fd p\u0159\u00edjmov\u00fd \u00fa\u010det",
+        "create_new_liabilities": "Create new liability",
         "half_year_budgets": "Half-yearly budgets",
         "yearly_budgets": "Yearly budgets",
         "split_transaction_title": "Popis roz\u00fa\u010dtov\u00e1n\u00ed",
@@ -75,6 +78,12 @@
         "create_another": "After storing, return here to create another one.",
         "update_transaction": "Update transaction",
         "after_update_create_another": "After updating, return here to continue editing.",
+        "transaction_updated_no_changes": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") did not receive any changes.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
+        "spent_x_of_y": "Spent {amount} of {total}",
+        "search": "Hledat",
+        "create_new_asset": "Vytvo\u0159it nov\u00fd \u00fa\u010det aktiv",
+        "asset_accounts": "\u00da\u010dty aktiv",
         "reset_after": "Reset form after submission",
         "bill_paid_on": "Paid on {date}",
         "first_split_decides": "The first split determines the value of this field",
@@ -89,7 +98,11 @@
         "journal_links": "Transaction links",
         "go_to_withdrawals": "Go to your withdrawals",
         "revenue_accounts": "P\u0159\u00edjmov\u00e9 \u00fa\u010dty",
-        "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed"
+        "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed",
+        "actions": "Akce",
+        "edit": "Upravit",
+        "delete": "Odstranit",
+        "reconcile_this_account": "Vy\u00fa\u010dtovat tento \u00fa\u010det"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -98,9 +111,7 @@
         "name": "Jm\u00e9no",
         "role": "Role",
         "iban": "IBAN",
-        "lastActivity": "Posledn\u00ed aktivita",
         "currentBalance": "Aktu\u00e1ln\u00ed z\u016fstatek",
-        "balanceDiff": "Rozd\u00edl z\u016fstatku",
         "next_expected_match": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 shoda"
     },
     "config": {

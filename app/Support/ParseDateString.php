@@ -21,8 +21,6 @@
  */
 
 declare(strict_types=1);
-
-
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
@@ -249,8 +247,6 @@ class ParseDateString
 
         return false;
     }
-
-
     /**
      * @param string $date
      *

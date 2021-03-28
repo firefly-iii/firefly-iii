@@ -186,8 +186,6 @@ class TransferCurrenciesCorrections extends Command
             return;
         }
         // @codeCoverageIgnoreEnd
-
-
         // both accounts must have currency preference:
         // @codeCoverageIgnoreStart
         if ($this->isNoCurrencyPresent()) {

@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\Api\Models\Budget;
-
-
 use Laravel\Passport\Passport;
 use Log;
 use Tests\Objects\Field;
@@ -47,8 +47,6 @@ class UpdateControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
-
-
     /**
      * @dataProvider updateDataProvider
      */
@@ -67,8 +65,6 @@ class UpdateControllerTest extends TestCase
         $this->assertPUT($route, $submission);
 
     }
-
-
     /**
      * @return array
      */
@@ -129,10 +125,6 @@ class UpdateControllerTest extends TestCase
         $field->title           = 'auto_budget_type';
         $fieldSet->addField($field);
         $configuration->addOptionalFieldSet('none', $fieldSet);
-
-
         return $configuration->generateAll();
     }
-
-
 }

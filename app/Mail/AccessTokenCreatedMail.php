@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

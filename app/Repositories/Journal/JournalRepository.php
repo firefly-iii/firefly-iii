@@ -43,8 +43,6 @@ use Illuminate\Support\Collection;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
-
-
     /** @var User */
     private $user;
 

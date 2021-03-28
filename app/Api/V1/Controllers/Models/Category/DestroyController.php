@@ -19,8 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Controllers\Models\Category;
+declare(strict_types=1);
 
+namespace FireflyIII\Api\V1\Controllers\Models\Category;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Category;
@@ -34,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 class DestroyController extends Controller
 {
     private CategoryRepositoryInterface $repository;
-
 
     /**
      * CategoryController constructor.
@@ -72,6 +72,4 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
-
-
 }
