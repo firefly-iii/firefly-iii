@@ -4,7 +4,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-- No unreleased changes.
+### Added
+- Initial release.
+
+### Changed
+- Initial release.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- Initial release.
+
+### Fixed
+- #4547 Call to bad function breaks several reports
+
+### Security
+- Initial release.
+
+### API
+- Initial release
 
 ## 5.5.0 (API 1.5.0) 2021-03-27
 
