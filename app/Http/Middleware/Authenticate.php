@@ -73,6 +73,7 @@ class Authenticate
 
         return $next($request);
     }
+
     /**
      * Determine if the user is logged in to any of the given guards.
      *

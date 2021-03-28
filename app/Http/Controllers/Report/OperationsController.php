@@ -57,6 +57,7 @@ class OperationsController extends Controller
             }
         );
     }
+
     /**
      * View of income and expense.
      *

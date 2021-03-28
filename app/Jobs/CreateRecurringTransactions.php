@@ -73,7 +73,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $newDate->startOfDay();
             $this->date = $newDate;
         }
-        if(null === $date) {
+        if (null === $date) {
             $newDate = new Carbon;
             $newDate->startOfDay();
             $this->date = $newDate;

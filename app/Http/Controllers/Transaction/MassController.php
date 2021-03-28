@@ -60,7 +60,7 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -78,7 +78,7 @@ class MassController extends Controller
      */
     public function delete(array $journals): IlluminateView
     {
-        $subTitle = (string) trans('firefly.mass_delete_journals');
+        $subTitle = (string)trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
@@ -103,15 +103,15 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
 
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->findNull((int) $journalId);
-                if (null !== $journal && (int) $journalId === $journal->id) {
+                $journal = $this->repository->findNull((int)$journalId);
+                if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                 }
             }
         }
         app('preferences')->mark();
-        session()->flash('success', (string) trans_choice('firefly.mass_deleted_transactions_success', $count));
+        session()->flash('success', (string)trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
@@ -126,7 +126,7 @@ class MassController extends Controller
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle = (string) trans('firefly.mass_edit_journals');
+        $subTitle = (string)trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -160,8 +160,8 @@ class MassController extends Controller
      *
      * @param MassEditJournalRequest $request
      *
-     * @throws FireflyException
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function update(MassEditJournalRequest $request)
     {
@@ -173,7 +173,7 @@ class MassController extends Controller
         $count = 0;
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
-            $integer = (int) $journalId;
+            $integer = (int)$journalId;
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
@@ -183,80 +183,10 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string) trans_choice('firefly.mass_edited_transactions_success', $count ));
+        session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));
-    }
-
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
-     *
-     * @return Carbon|null
-     * @codeCoverageIgnore
-     */
-    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?Carbon
-    {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!isset($value[$journalId])) {
-            return null;
-        }
-        try {
-            $carbon = Carbon::parse($value[$journalId]);
-        } catch (InvalidArgumentException $e) {
-            $e->getMessage();
-
-            return null;
-        }
-
-        return $carbon;
-    }
-
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
-     *
-     * @return int|null
-     * @codeCoverageIgnore
-     */
-    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
-    {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!isset($value[$journalId])) {
-            return null;
-        }
-
-        return (int) $value[$journalId];
-    }
-
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
-     *
-     * @return string|null
-     * @codeCoverageIgnore
-     */
-    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
-    {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
-        }
-        if (!isset($value[$journalId])) {
-            return null;
-        }
-
-        return (string) $value[$journalId];
     }
 
     /**
@@ -294,5 +224,75 @@ class MassController extends Controller
         $service->update();
         // trigger rules
         event(new UpdatedTransactionGroup($journal->transactionGroup));
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $string
+     *
+     * @return Carbon|null
+     * @codeCoverageIgnore
+     */
+    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?Carbon
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!isset($value[$journalId])) {
+            return null;
+        }
+        try {
+            $carbon = Carbon::parse($value[$journalId]);
+        } catch (InvalidArgumentException $e) {
+            $e->getMessage();
+
+            return null;
+        }
+
+        return $carbon;
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $string
+     *
+     * @return string|null
+     * @codeCoverageIgnore
+     */
+    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!isset($value[$journalId])) {
+            return null;
+        }
+
+        return (string)$value[$journalId];
+    }
+
+    /**
+     * @param MassEditJournalRequest $request
+     * @param int                    $journalId
+     * @param string                 $string
+     *
+     * @return int|null
+     * @codeCoverageIgnore
+     */
+    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!isset($value[$journalId])) {
+            return null;
+        }
+
+        return (int)$value[$journalId];
     }
 }

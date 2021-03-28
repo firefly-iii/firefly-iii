@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
+
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -38,6 +39,7 @@ class BulkController extends Controller
 {
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
+
     /**
      * BulkController constructor.
      *
@@ -78,10 +80,11 @@ class BulkController extends Controller
         // get list of budgets:
         /** @var BudgetRepositoryInterface $budgetRepos */
         $budgetRepos = app(BudgetRepositoryInterface::class);
-        $budgetList = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
+        $budgetList  = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
         return prefixView('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
     }
+
     /**
      * Update all journals.
      *
@@ -138,24 +141,6 @@ class BulkController extends Controller
 
     /**
      * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param string             $category
-     *
-     * @return bool
-     */
-    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
-    {
-        if (true === $ignoreUpdate) {
-            return false;
-        }
-        Log::debug(sprintf('Set budget to %s', $category));
-        $this->repository->updateCategory($journal, $category);
-
-        return true;
-    }
-
-    /**
-     * @param TransactionJournal $journal
      * @param string             $action
      * @param array              $tags
      *
@@ -172,6 +157,25 @@ class BulkController extends Controller
             $new      = array_unique(array_merge($tags, $existing));
             $this->repository->updateTags($journal, $new);
         }
+
+        return true;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param bool               $ignoreUpdate
+     * @param string             $category
+     *
+     * @return bool
+     */
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if (true === $ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
+
         return true;
     }
 }

@@ -127,7 +127,7 @@ class AvailableBudgetController extends Controller
                 return true;
             }
         );
-        $page = (int)($request->get('page') ?? 1);
+        $page       = (int)($request->get('page') ?? 1);
 
         return prefixView('budgets.available-budgets.create-alternative', compact('start', 'end', 'page', 'currencies'));
     }

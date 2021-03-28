@@ -48,9 +48,9 @@ class SecureHeaders
         $nonce = base64_encode(random_bytes(16));
         app('view')->share('JS_NONCE', $nonce);
 
-        $response = $next($request);
+        $response          = $next($request);
         $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp = [
+        $csp               = [
             "default-src 'none'",
             "object-src 'self'",
             sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),

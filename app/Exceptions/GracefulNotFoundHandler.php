@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
+
 use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;

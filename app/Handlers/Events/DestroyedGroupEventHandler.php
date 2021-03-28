@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
+
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;

@@ -22,51 +22,51 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Bill
  *
- * @property int                                                                                   $id
- * @property \Illuminate\Support\Carbon|null                                                       $created_at
- * @property \Illuminate\Support\Carbon|null                                                       $updated_at
- * @property \Illuminate\Support\Carbon|null                                                       $deleted_at
- * @property int                                                                                   $user_id
- * @property int|null                                                                              $transaction_currency_id
- * @property string                                                                                $name
- * @property string                                                                                $match
- * @property string                                                                                $amount_min
- * @property string                                                                                $amount_max
- * @property \Illuminate\Support\Carbon                                                            $date
- * @property string|null                                                                           $end_date
- * @property string|null                                                                           $extension_date
- * @property string                                                                                $repeat_freq
- * @property int                                                                                   $skip
- * @property bool                                                                                  $automatch
- * @property bool                                                                                  $active
- * @property bool                                                                                  $name_encrypted
- * @property bool                                                                                  $match_encrypted
- * @property int                                                                                   $order
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]         $attachments
- * @property-read int|null                                                                         $attachments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]               $notes
- * @property-read int|null                                                                         $notes_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[]        $objectGroups
- * @property-read int|null                                                                         $object_groups_count
- * @property-read \FireflyIII\Models\TransactionCurrency|null                                      $transactionCurrency
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read int|null                                                                         $transaction_journals_count
- * @property-read User                                                                             $user
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                                  $user_id
+ * @property int|null                             $transaction_currency_id
+ * @property string                               $name
+ * @property string                               $match
+ * @property string                               $amount_min
+ * @property string                               $amount_max
+ * @property Carbon                               $date
+ * @property string|null                          $end_date
+ * @property string|null                          $extension_date
+ * @property string                               $repeat_freq
+ * @property int                                  $skip
+ * @property bool                                 $automatch
+ * @property bool                                 $active
+ * @property bool                                 $name_encrypted
+ * @property bool                                 $match_encrypted
+ * @property int                                  $order
+ * @property-read Collection|Attachment[]         $attachments
+ * @property-read int|null                        $attachments_count
+ * @property-read Collection|Note[]               $notes
+ * @property-read int|null                        $notes_count
+ * @property-read Collection|ObjectGroup[]        $objectGroups
+ * @property-read int|null                        $object_groups_count
+ * @property-read TransactionCurrency|null        $transactionCurrency
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bill newQuery()
  * @method static Builder|Bill onlyTrashed()

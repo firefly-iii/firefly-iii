@@ -37,14 +37,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Tag
  *
- * @property int                                                                                   $id
- * @property Carbon|null                                                       $created_at
- * @property Carbon|null      $updated_at
- * @property Carbon|null      $deleted_at
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
  * @property int                                  $user_id
  * @property string                               $tag
  * @property string                               $tagMode
- * @property Carbon|null      $date
+ * @property Carbon|null                          $date
  * @property string|null                          $description
  * @property float|null                           $latitude
  * @property float|null                           $longitude

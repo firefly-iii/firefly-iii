@@ -23,12 +23,14 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
+
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
+
 /**
  * Class VersionCheckEventHandler
  */

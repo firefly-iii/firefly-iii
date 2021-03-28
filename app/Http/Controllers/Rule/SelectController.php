@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
+
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -101,6 +102,7 @@ class SelectController extends Controller
 
         return redirect()->route('rules.index');
     }
+
     /**
      * View to select transactions by a rule.
      *

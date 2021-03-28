@@ -44,8 +44,8 @@ class CategoryController extends Controller
 {
     use BasicDataSupport;
 
-    private OperationsRepositoryInterface $opsRepository;
     private NoCategoryRepositoryInterface $noCatRepository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * ExpenseReportController constructor.
@@ -131,16 +131,16 @@ class CategoryController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $destinationId = $journal['destination_account_id'];
+                    $destinationId                                                                              = $journal['destination_account_id'];
                     $report[$destinationId]['currencies'][$currencyId]
-                                   = $report[$destinationId]['currencies'][$currencyId]
-                                     ?? [
-                                         'currency_id'             => $currency['currency_id'],
-                                         'currency_symbol'         => $currency['currency_symbol'],
-                                         'currency_name'           => $currency['currency_name'],
-                                         'currency_decimal_places' => $currency['currency_decimal_places'],
-                                         'categories'              => [],
-                                     ];
+                                                                                                                = $report[$destinationId]['currencies'][$currencyId]
+                                                                                                                  ?? [
+                                                                                                                      'currency_id'             => $currency['currency_id'],
+                                                                                                                      'currency_symbol'         => $currency['currency_symbol'],
+                                                                                                                      'currency_name'           => $currency['currency_name'],
+                                                                                                                      'currency_decimal_places' => $currency['currency_decimal_places'],
+                                                                                                                      'categories'              => [],
+                                                                                                                  ];
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]
                                                                                                                 = $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]
                                                                                                                   ??

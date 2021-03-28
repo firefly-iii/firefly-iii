@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
+
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -39,8 +40,8 @@ use Illuminate\View\View;
 class EditController extends Controller
 {
 
-    private CategoryRepositoryInterface $repository;
     private AttachmentHelperInterface   $attachments;
+    private CategoryRepositoryInterface $repository;
 
     /**
      * CategoryController constructor.
@@ -62,6 +63,7 @@ class EditController extends Controller
             }
         );
     }
+
     /**
      * Edit a category.
      *

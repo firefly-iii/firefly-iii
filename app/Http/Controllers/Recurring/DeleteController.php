@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
+
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -52,7 +53,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -70,7 +71,7 @@ class DeleteController extends Controller
      */
     public function delete(Recurrence $recurrence)
     {
-        $subTitle = (string) trans('firefly.delete_recurring', ['title' => $recurrence->title]);
+        $subTitle = (string)trans('firefly.delete_recurring', ['title' => $recurrence->title]);
         // put previous url in session
         $this->rememberPreviousUri('recurrences.delete.uri');
 
@@ -91,7 +92,7 @@ class DeleteController extends Controller
     public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence)
     {
         $repository->destroy($recurrence);
-        $request->session()->flash('success', (string) trans('firefly.' . 'recurrence_deleted', ['title' => $recurrence->title]));
+        $request->session()->flash('success', (string)trans('firefly.' . 'recurrence_deleted', ['title' => $recurrence->title]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('recurrences.delete.uri'));

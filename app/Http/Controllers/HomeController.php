@@ -96,6 +96,7 @@ class HomeController extends Controller
 
         return response()->json(['ok' => 'ok']);
     }
+
     /**
      * Show index.
      *

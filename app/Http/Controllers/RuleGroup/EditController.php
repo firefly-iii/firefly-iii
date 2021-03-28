@@ -70,8 +70,8 @@ class EditController extends Controller
      */
     public function down(RuleGroup $ruleGroup)
     {
-        $maxOrder =$this->repository->maxOrder();
-        $order = (int)$ruleGroup->order;
+        $maxOrder = $this->repository->maxOrder();
+        $order    = (int)$ruleGroup->order;
         if ($order < $maxOrder) {
             $newOrder = $order + 1;
             $this->repository->setOrder($ruleGroup, $newOrder);
@@ -79,6 +79,7 @@ class EditController extends Controller
 
         return redirect(route('rules.index'));
     }
+
     /**
      * Edit a rule group.
      *

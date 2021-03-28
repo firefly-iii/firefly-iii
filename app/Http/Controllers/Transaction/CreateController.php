@@ -49,7 +49,7 @@ class CreateController extends Controller
 
         $this->middleware(
             static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -75,7 +75,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-        $link = route('transactions.show', [$newGroup->id]);
+        $link  = route('transactions.show', [$newGroup->id]);
         session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
         session()->flash('success_uri', $link);
 
@@ -93,14 +93,14 @@ class CreateController extends Controller
     {
         app('preferences')->mark();
 
-        $sourceId      = (int) request()->get('source');
-        $destinationId = (int) request()->get('destination');
+        $sourceId      = (int)request()->get('source');
+        $destinationId = (int)request()->get('destination');
 
         /** @var AccountRepositoryInterface $repository */
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle             = (string) trans('breadcrumbs.create_new_transaction');
+        $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
@@ -112,6 +112,7 @@ class CreateController extends Controller
         $previousUri          = str_replace($search, '', $previousUri);
 
         session()->put('preFilled', $preFilled);
+
         return prefixView(
             'transactions.create',
             compact(

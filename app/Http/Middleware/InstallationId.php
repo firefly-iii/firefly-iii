@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
@@ -39,7 +40,7 @@ class InstallationId
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure                  $next
+     * @param Closure $next
      *
      * @return mixed
      *

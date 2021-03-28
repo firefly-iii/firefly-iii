@@ -43,7 +43,7 @@ trait CollectorProperties
     /** @var bool Will be true if query result contains category info. */
     private $hasCatInformation;
     /** @var bool Will be true for attachments */
-    private $hasJoinedAttTables;
+    private      $hasJoinedAttTables;
     private bool $hasJoinedMetaTables;
     /** @var bool Will be true of the query has the tag info tables joined. */
     private $hasJoinedTagTables;

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
+
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
 

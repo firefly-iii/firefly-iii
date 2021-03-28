@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
+
 use Closure;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -114,7 +115,7 @@ class InterestingMessage
             session()->flash('success_uri', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string)trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
-        if('no_change' === $message) {
+        if ('no_change' === $message) {
             $type = strtolower($journal->transactionType->type);
             session()->flash('warning_uri', route('transactions.show', [$transactionGroupId]));
             session()->flash('warning', (string)trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));

@@ -27,13 +27,16 @@ use Artisan;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Routing\Route;
+use Illuminate\View\View;
 use Log;
 use Monolog\Handler\RotatingFileHandler;
 use Route as RouteFacade;
@@ -113,7 +116,7 @@ class DebugController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      *
      */
     public function index(Request $request)
@@ -132,7 +135,7 @@ class DebugController extends Controller
         $userAgent            = $request->header('user-agent');
         $trustedProxies       = config('firefly.trusted_proxies');
         $displayErrors        = ini_get('display_errors');
-        $errorReporting       = $this->errorReporting((int) ini_get('error_reporting'));
+        $errorReporting       = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv               = config('app.env');
         $appDebug             = var_export(config('app.debug'), true);
         $logChannel           = config('logging.default');
@@ -144,12 +147,12 @@ class DebugController extends Controller
 
         // expected + found DB version:
         $expectedDBversion = config('firefly.db_version');
-        $foundDBversion = \FireflyConfig::get('db_version',1)->data;
+        $foundDBversion    = FireflyConfig::get('db_version', 1)->data;
 
         // some new vars.
         $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
-        $defaultLanguage = (string) config('firefly.default_language');
-        $defaultLocale   = (string) config('firefly.default_locale');
+        $defaultLanguage = (string)config('firefly.default_language');
+        $defaultLocale   = (string)config('firefly.default_locale');
         $userLanguage    = app('steam')->getLanguage();
         $userLocale      = app('steam')->getLocale();
         $isDocker        = env('IS_DOCKER', false);
@@ -248,7 +251,7 @@ class DebugController extends Controller
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = (string) $route->getName();
+            $name = (string)$route->getName();
             if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {

@@ -49,11 +49,12 @@ use Log;
 class IndexController extends Controller
 {
     use DateCalculation;
+
     private AvailableBudgetRepositoryInterface $abRepository;
-    private BudgetLimitRepositoryInterface $blRepository;
-    private CurrencyRepositoryInterface $currencyRepository;
-    private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface $repository;
+    private BudgetLimitRepositoryInterface     $blRepository;
+    private CurrencyRepositoryInterface        $currencyRepository;
+    private OperationsRepositoryInterface      $opsRepository;
+    private BudgetRepositoryInterface          $repository;
 
     /**
      * IndexController constructor.
@@ -66,7 +67,7 @@ class IndexController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository         = app(BudgetRepositoryInterface::class);
                 $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -95,7 +96,7 @@ class IndexController extends Controller
         Log::debug('Start of IndexController::index()');
 
         // collect some basic vars:
-        $range           = (string) app('preferences')->get('viewRange', '1M')->data;
+        $range           = (string)app('preferences')->get('viewRange', '1M')->data;
         $start           = $start ?? session('start', Carbon::now()->startOfMonth());
         $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $defaultCurrency = app('amount')->getDefaultCurrency();
@@ -139,91 +140,6 @@ class IndexController extends Controller
                                'defaultCurrency', 'activeDaysPassed', 'activeDaysLeft', 'inactive', 'budgets', 'start', 'end', 'sums'
                            )
         );
-    }
-
-    /**
-     * @param Request                   $request
-     * @param BudgetRepositoryInterface $repository
-     *
-     * @return JsonResponse
-     */
-    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
-    {
-        $budgetIds = $request->get('budgetIds');
-
-        foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int) $budgetId;
-            $budget   = $repository->findNull($budgetId);
-            if (null !== $budget) {
-                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
-                $repository->setBudgetOrder($budget, $index + 1);
-            }
-        }
-        app('preferences')->mark();
-
-        return response()->json(['OK']);
-    }
-
-    /**
-     * @param array $budgets
-     *
-     * @return array
-     */
-    private function getSums(array $budgets): array
-    {
-        $sums = [
-            'budgeted' => [],
-            'spent'    => [],
-            'left'     => [],
-        ];
-
-        /** @var array $budget */
-        foreach ($budgets as $budget) {
-            /** @var array $spent */
-            foreach ($budget['spent'] as $spent) {
-                $currencyId                           = $spent['currency_id'];
-                $sums['spent'][$currencyId]
-                                                      = $sums['spent'][$currencyId]
-                                                        ?? [
-                                                            'amount'                  => '0',
-                                                            'currency_id'             => $spent['currency_id'],
-                                                            'currency_symbol'         => $spent['currency_symbol'],
-                                                            'currency_decimal_places' => $spent['currency_decimal_places'],
-                                                        ];
-                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], $spent['spent']);
-            }
-
-            /** @var array $budgeted */
-            foreach ($budget['budgeted'] as $budgeted) {
-                $currencyId                              = $budgeted['currency_id'];
-                $sums['budgeted'][$currencyId]
-                                                         = $sums['budgeted'][$currencyId]
-                                                           ?? [
-                                                               'amount'                  => '0',
-                                                               'currency_id'             => $budgeted['currency_id'],
-                                                               'currency_symbol'         => $budgeted['currency_symbol'],
-                                                               'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                                           ];
-                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], $budgeted['amount']);
-
-                // also calculate how much left from budgeted:
-                $sums['left'][$currencyId] = $sums['left'][$currencyId]
-                                             ?? [
-                                                 'amount'                  => '0',
-                                                 'currency_id'             => $budgeted['currency_id'],
-                                                 'currency_symbol'         => $budgeted['currency_symbol'],
-                                                 'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                             ];
-            }
-        }
-        // final calculation for 'left':
-        foreach ($sums['budgeted'] as $currencyId => $info) {
-            $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
-            $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';
-            $sums['left'][$currencyId]['amount'] = bcadd($spent, $budgeted);
-        }
-
-        return $sums;
     }
 
     /**
@@ -289,7 +205,7 @@ class IndexController extends Controller
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
-                    'amount'                  => number_format((float) $limit->amount, $currency->decimal_places, '.', ''),
+                    'amount'                  => number_format((float)$limit->amount, $currency->decimal_places, '.', ''),
                     'start_date'              => $limit->start_date->formatLocalized($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->formatLocalized($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
@@ -312,6 +228,92 @@ class IndexController extends Controller
             }
             $budgets[] = $array;
         }
+
         return $budgets;
+    }
+
+    /**
+     * @param array $budgets
+     *
+     * @return array
+     */
+    private function getSums(array $budgets): array
+    {
+        $sums = [
+            'budgeted' => [],
+            'spent'    => [],
+            'left'     => [],
+        ];
+
+        /** @var array $budget */
+        foreach ($budgets as $budget) {
+            /** @var array $spent */
+            foreach ($budget['spent'] as $spent) {
+                $currencyId                           = $spent['currency_id'];
+                $sums['spent'][$currencyId]
+                                                      = $sums['spent'][$currencyId]
+                                                        ?? [
+                                                            'amount'                  => '0',
+                                                            'currency_id'             => $spent['currency_id'],
+                                                            'currency_symbol'         => $spent['currency_symbol'],
+                                                            'currency_decimal_places' => $spent['currency_decimal_places'],
+                                                        ];
+                $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], $spent['spent']);
+            }
+
+            /** @var array $budgeted */
+            foreach ($budget['budgeted'] as $budgeted) {
+                $currencyId                              = $budgeted['currency_id'];
+                $sums['budgeted'][$currencyId]
+                                                         = $sums['budgeted'][$currencyId]
+                                                           ?? [
+                                                               'amount'                  => '0',
+                                                               'currency_id'             => $budgeted['currency_id'],
+                                                               'currency_symbol'         => $budgeted['currency_symbol'],
+                                                               'currency_decimal_places' => $budgeted['currency_decimal_places'],
+                                                           ];
+                $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], $budgeted['amount']);
+
+                // also calculate how much left from budgeted:
+                $sums['left'][$currencyId] = $sums['left'][$currencyId]
+                                             ?? [
+                                                 'amount'                  => '0',
+                                                 'currency_id'             => $budgeted['currency_id'],
+                                                 'currency_symbol'         => $budgeted['currency_symbol'],
+                                                 'currency_decimal_places' => $budgeted['currency_decimal_places'],
+                                             ];
+            }
+        }
+        // final calculation for 'left':
+        foreach ($sums['budgeted'] as $currencyId => $info) {
+            $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
+            $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';
+            $sums['left'][$currencyId]['amount'] = bcadd($spent, $budgeted);
+        }
+
+        return $sums;
+    }
+
+    /**
+     * @param Request                   $request
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return JsonResponse
+     */
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $budgetIds = $request->get('budgetIds');
+
+        foreach ($budgetIds as $index => $budgetId) {
+            $budgetId = (int)$budgetId;
+            $budget   = $repository->findNull($budgetId);
+            if (null !== $budget) {
+                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
+            }
+        }
+        app('preferences')->mark();
+
+        return response()->json(['OK']);
     }
 }

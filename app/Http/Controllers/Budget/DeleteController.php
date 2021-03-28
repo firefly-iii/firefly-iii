@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
+
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -51,7 +52,7 @@ class DeleteController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
+                app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-pie-chart');
                 $this->repository = app(BudgetRepositoryInterface::class);
 
@@ -59,6 +60,7 @@ class DeleteController extends Controller
             }
         );
     }
+
     /**
      * Deletes a budget.
      *
@@ -68,7 +70,7 @@ class DeleteController extends Controller
      */
     public function delete(Budget $budget)
     {
-        $subTitle = (string) trans('firefly.delete_budget', ['name' => $budget->name]);
+        $subTitle = (string)trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('budgets.delete.uri');
@@ -88,7 +90,7 @@ class DeleteController extends Controller
     {
         $name = $budget->name;
         $this->repository->destroy($budget);
-        $request->session()->flash('success', (string) trans('firefly.deleted_budget', ['name' => $name]));
+        $request->session()->flash('success', (string)trans('firefly.deleted_budget', ['name' => $name]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUri('budgets.delete.uri'));

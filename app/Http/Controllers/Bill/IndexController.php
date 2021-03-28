@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
+
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
@@ -139,6 +140,7 @@ class IndexController extends Controller
 
         return prefixView('bills.index', compact('bills', 'sums', 'total', 'totals'));
     }
+
     /**
      * @param array $bills
      *

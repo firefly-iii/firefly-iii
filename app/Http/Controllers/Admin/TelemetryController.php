@@ -28,6 +28,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Jobs\SubmitTelemetryData;
 use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -47,7 +49,7 @@ class TelemetryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.administration'));
+                app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
                 $this->repository = app(TelemetryRepositoryInterface::class);
 
@@ -57,7 +59,19 @@ class TelemetryController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
+     */
+    public function deleteAll()
+    {
+        $this->repository->deleteAll();
+
+        session()->flash('success', trans('firefly.telemetry_all_deleted'));
+
+        return redirect(url()->previous(route('admin.telemetry.index')));
+    }
+
+    /**
+     * @return RedirectResponse|Redirector
      */
     public function deleteSubmitted()
     {
@@ -69,15 +83,18 @@ class TelemetryController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * Index
      */
-    public function deleteAll()
+    public function index()
     {
-        $this->repository->deleteAll();
+        app('view')->share('subTitleIcon', 'fa-eye');
+        app('view')->share('subTitle', (string)trans('firefly.telemetry_admin_index'));
+        $version = config('firefly.version');
+        $enabled = config('firefly.send_telemetry', false) && config('firefly.feature_flags.telemetry');
 
-        session()->flash('success', trans('firefly.telemetry_all_deleted'));
+        $count = $this->repository->count();
 
-        return redirect(url()->previous(route('admin.telemetry.index')));
+        return prefixView('admin.telemetry.index', compact('version', 'enabled', 'count'));
     }
 
     /**
@@ -92,21 +109,6 @@ class TelemetryController extends Controller
         session()->flash('info', trans('firefly.telemetry_submission_executed'));
 
         return redirect(url()->previous(route('admin.telemetry.index')));
-    }
-
-    /**
-     * Index
-     */
-    public function index()
-    {
-        app('view')->share('subTitleIcon', 'fa-eye');
-        app('view')->share('subTitle', (string) trans('firefly.telemetry_admin_index'));
-        $version = config('firefly.version');
-        $enabled = config('firefly.send_telemetry', false) && config('firefly.feature_flags.telemetry');
-
-        $count   = $this->repository->count();
-
-        return prefixView('admin.telemetry.index', compact('version', 'enabled', 'count'));
     }
 
     /**

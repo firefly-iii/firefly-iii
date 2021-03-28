@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
+
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -116,6 +117,7 @@ class ShowController extends Controller
 
         return redirect(route('bills.show', [$bill->id]));
     }
+
     /**
      * Show a bill.
      *

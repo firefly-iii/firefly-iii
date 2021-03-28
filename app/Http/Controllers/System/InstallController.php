@@ -22,17 +22,22 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
+
 use Artisan;
 use Cache;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use Log;
+use phpseclib3\Crypt\RSA;
+
 /**
  * Class InstallController
  *
@@ -45,10 +50,11 @@ class InstallController extends Controller
     public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
-    private array  $upgradeCommands;
     private string $lastError;
+    private array  $upgradeCommands;
     /** @noinspection MagicMethodsValidityInspection */
     /** @noinspection PhpMissingParentConstructorInspection */
+
     /**
      * InstallController constructor.
      */
@@ -110,7 +116,7 @@ class InstallController extends Controller
     /**
      * Show index.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -121,40 +127,6 @@ class InstallController extends Controller
         app('fireflyconfig')->set('db_version', (int)config('firefly.db_version'));
 
         return prefixView('install.index');
-    }
-
-    /**
-     * Create specific RSA keys.
-     */
-    public function keys(): void
-    {
-        // switch on PHP version.
-        $result = version_compare(phpversion(), '8.0');
-        Log::info(sprintf('PHP version is %s', $result));
-        if (-1 === $result) {
-            Log::info('Will run PHP7 code.');
-            // PHP 7
-            $rsa  = new \phpseclib\Crypt\RSA;
-            $keys = $rsa->createKey(4096);
-        }
-
-        if ($result >= 0) {
-            Log::info('Will run PHP8 code.');
-            // PHP 8
-            $keys = \phpseclib3\Crypt\RSA::createKey(4096);
-        }
-
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
-
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
-        }
-
-        file_put_contents($publicKey, Arr::get($keys, 'publickey'));
-        file_put_contents($privateKey, Arr::get($keys, 'privatekey'));
     }
 
     /**
@@ -237,5 +209,39 @@ class InstallController extends Controller
         Preferences::mark();
 
         return true;
+    }
+
+    /**
+     * Create specific RSA keys.
+     */
+    public function keys(): void
+    {
+        // switch on PHP version.
+        $result = version_compare(phpversion(), '8.0');
+        Log::info(sprintf('PHP version is %s', $result));
+        if (-1 === $result) {
+            Log::info('Will run PHP7 code.');
+            // PHP 7
+            $rsa  = new \phpseclib\Crypt\RSA;
+            $keys = $rsa->createKey(4096);
+        }
+
+        if ($result >= 0) {
+            Log::info('Will run PHP8 code.');
+            // PHP 8
+            $keys = RSA::createKey(4096);
+        }
+
+        [$publicKey, $privateKey] = [
+            Passport::keyPath('oauth-public.key'),
+            Passport::keyPath('oauth-private.key'),
+        ];
+
+        if (file_exists($publicKey) || file_exists($privateKey)) {
+            return;
+        }
+
+        file_put_contents($publicKey, Arr::get($keys, 'publickey'));
+        file_put_contents($privateKey, Arr::get($keys, 'privatekey'));
     }
 }

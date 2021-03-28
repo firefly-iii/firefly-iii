@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Factory;
+
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\User;

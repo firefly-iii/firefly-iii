@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
+
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
 use Log;

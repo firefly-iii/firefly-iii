@@ -56,6 +56,7 @@ class BalanceController extends Controller
             }
         );
     }
+
     /**
      * Show overview of budget balances.
      *

@@ -265,7 +265,7 @@ class BudgetController extends Controller
                 $total = $sums[$currencyId]['sum'] ?? '0';
                 $pct   = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
-                    $pct = round((float) bcmul(bcdiv($sum, $total), '100'));
+                    $pct = round((float)bcmul(bcdiv($sum, $total), '100'));
                 }
                 $report[$budgetId]['currencies'][$currencyId]['sum_pct'] = $pct;
             }

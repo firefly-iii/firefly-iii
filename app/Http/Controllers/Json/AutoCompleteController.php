@@ -76,6 +76,7 @@ class AutoCompleteController extends Controller
             // give another key for consistency
             $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
         }
+
         return response()->json($array);
     }
 

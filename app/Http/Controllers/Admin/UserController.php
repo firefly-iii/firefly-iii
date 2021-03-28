@@ -27,8 +27,11 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -36,8 +39,8 @@ use Log;
  */
 class UserController extends Controller
 {
-    private UserRepositoryInterface $repository;
     protected bool                  $externalIdentity;
+    private UserRepositoryInterface $repository;
 
     /**
      * UserController constructor.
@@ -64,7 +67,7 @@ class UserController extends Controller
     /**
      * @param User $user
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|RedirectResponse|Redirector|\Illuminate\View\View
+     * @return Application|Factory|RedirectResponse|Redirector|View
      */
     public function delete(User $user)
     {
@@ -104,7 +107,7 @@ class UserController extends Controller
      *
      * @param User $user
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(User $user)
     {
@@ -135,7 +138,7 @@ class UserController extends Controller
     /**
      * Show index of user manager.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -159,7 +162,7 @@ class UserController extends Controller
      *
      * @param User $user
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function show(User $user)
     {

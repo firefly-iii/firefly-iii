@@ -177,6 +177,7 @@ class RecurrenceController extends Controller
             ];
         }
         Log::debug('Dropdown is', $result);
+
         return response()->json($result);
     }
 }

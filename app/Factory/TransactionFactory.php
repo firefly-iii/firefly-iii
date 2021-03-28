@@ -44,6 +44,7 @@ class TransactionFactory
     private TransactionJournal   $journal;
     private bool                 $reconciled;
     private User                 $user;
+
     /**
      * Constructor.
      *

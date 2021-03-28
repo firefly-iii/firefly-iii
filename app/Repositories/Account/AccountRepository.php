@@ -630,7 +630,7 @@ class AccountRepository implements AccountRepositoryInterface
             $list  = $this->getAccountsByType($set);
             $index = 1;
             foreach ($list as $account) {
-                if(false === $account->active) {
+                if (false === $account->active) {
                     $account->order = 0;
                     continue;
                 }

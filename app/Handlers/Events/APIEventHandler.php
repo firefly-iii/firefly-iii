@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
+
 use Exception;
 use FireflyIII\Mail\AccessTokenCreatedMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;

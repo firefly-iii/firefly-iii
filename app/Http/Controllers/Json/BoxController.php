@@ -125,6 +125,7 @@ class BoxController extends Controller
 
         return response()->json($return);
     }
+
     /**
      * Current total balance.
      *
@@ -250,7 +251,7 @@ class BoxController extends Controller
         );
 
         $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
-        $return = [];
+        $return      = [];
         foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency              = $data['currency'];
