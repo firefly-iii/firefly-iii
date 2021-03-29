@@ -730,7 +730,6 @@ export default {
         // meta data
         budget_id: array.budget_id,
         category_name: array.category,
-        tags: array.tags,
 
         // optional date fields (6x):
         interest_date: array.interest_date,
@@ -750,11 +749,28 @@ export default {
         zoom_level: array.zoom_level,
         longitude: array.longitude,
         latitude: array.latitude,
+        tags: [],
 
         // from thing:
         order: 0,
         reconciled: false,
       };
+
+      if (0 !== array.tags.length) {
+        for (let i in array.tags) {
+          if (array.tags.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            // array.tags
+            let current = array.tags[i];
+            if(typeof current === 'object' && null !== current) {
+              currentSplit.tags.push(current.text);
+            }
+            if(typeof current === 'string') {
+              currentSplit.tags.push(current);
+            }
+          }
+        }
+      }
+
       // bills and piggy banks
       if (0 !== array.piggy_bank_id) {
         currentSplit.piggy_bank_id = array.piggy_bank_id;
