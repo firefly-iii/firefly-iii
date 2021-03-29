@@ -42,7 +42,9 @@ class ChangesForV550b2 extends Migration
             'recurrences_transactions', function (Blueprint $table) {
 
             $table->dropForeign('type_foreign');
-            $table->dropColumn('transaction_type_id');
+            if (Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
+                $table->dropColumn('transaction_type_id');
+            }
 
         }
         );
@@ -58,8 +60,10 @@ class ChangesForV550b2 extends Migration
         // expand recurrence transaction table
         Schema::table(
             'recurrences_transactions', function (Blueprint $table) {
-            $table->integer('transaction_type_id', false, true)->nullable()->after('transaction_currency_id');
-            $table->foreign('transaction_type_id', 'type_foreign')->references('id')->on('transaction_types')->onDelete('set null');
+            if (!Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
+                $table->integer('transaction_type_id', false, true)->nullable()->after('transaction_currency_id');
+                $table->foreign('transaction_type_id', 'type_foreign')->references('id')->on('transaction_types')->onDelete('set null');
+            }
         }
         );
     }
