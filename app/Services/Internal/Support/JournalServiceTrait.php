@@ -217,7 +217,7 @@ trait JournalServiceTrait
             if (null !== $data['number']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
             }
 
         }
