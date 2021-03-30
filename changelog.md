@@ -17,7 +17,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Initial release.
 
 ### Fixed
-- #4547 Call to bad function breaks several reports
+- #4547 Call to bad function breaks several report.
+- #4545 Migration error in some cases, fixed with an if-statement.
+- #4557 LDAP configuration error in Docker image.
 
 ### Security
 - Initial release.
