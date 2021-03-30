@@ -77,6 +77,9 @@ export default {
       for (let key in data.data) {
         if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           let current = data.data[key];
+          if(!current.attributes.active) {
+            continue;
+          }
           this.budgetList.push(
               {
                 id: parseInt(current.id),

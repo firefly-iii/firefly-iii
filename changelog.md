@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #4547 Call to bad function breaks several report.
 - #4545 Migration error in some cases, fixed with an if-statement.
 - #4557 LDAP configuration error in Docker image.
+- #4562 Hidden budgets were visible in v2.
 
 ### Security
 - Initial release.
