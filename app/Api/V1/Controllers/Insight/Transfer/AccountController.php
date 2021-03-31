@@ -59,7 +59,7 @@ class AccountController extends Controller
 
     /**
      * TODO same code as Expense/AccountController.
-     *
+     * TODO does not actually include the name of the expense account.
      * @param GenericRequest $request
      *
      * @return JsonResponse

@@ -75,7 +75,7 @@ class AccountController extends Controller
 
     /**
      * TODO same code as Expense/AccountController.
-     *
+     * TODO does not actually include the name of the expense account.
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -85,11 +85,13 @@ class AccountController extends Controller
         $start         = $request->getStart();
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
-        $income        = $this->opsRepository->sumIncome($start, $end, $assetAccounts);
+        $income        = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
         $result        = [];
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
+                'id'               => (string)$entry['id'],
+                'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
                 'difference_float' => (float)$entry['sum'],
                 'currency_id'      => (string)$entry['currency_id'],
@@ -101,7 +103,7 @@ class AccountController extends Controller
     }
 
     /**
-     * // TOOD same as
+     * TODO does not actually include the name of the expense account.
      *
      * @param GenericRequest $request
      *
@@ -113,12 +115,14 @@ class AccountController extends Controller
         $end             = $request->getEnd();
         $assetAccounts   = $request->getAssetAccounts();
         $revenueAccounts = $request->getRevenueAccounts();
-        $income          = $this->opsRepository->sumIncome($start, $end, $assetAccounts, $revenueAccounts);
+        $income          = $this->opsRepository->sumIncomeBySource($start, $end, $assetAccounts, $revenueAccounts);
         $result          = [];
 
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
+                'id'               => (string)$entry['id'],
+                'name'             => $entry['name'],
                 'difference'       => $entry['sum'],
                 'difference_float' => (float)$entry['sum'],
                 'currency_id'      => (string)$entry['currency_id'],
