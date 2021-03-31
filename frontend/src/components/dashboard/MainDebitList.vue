@@ -78,7 +78,7 @@ export default {
     return {
       locale: 'en-US',
       expenses: [],
-      max: 0,
+      min: 0,
       loading: true,
       error: false
     }
@@ -132,20 +132,27 @@ export default {
     parseExpenses(data) {
       for (let mainKey in data) {
         if (data.hasOwnProperty(mainKey) && /^0$|^[1-9]\d*$/.test(mainKey) && mainKey <= 4294967294) {
-          // contains currency info and entries.
           let current = data[mainKey];
-          if (0 === parseInt(mainKey)) {
-            this.max = data[mainKey].difference_float;
-            current.pct = 100;
-          }
-          if (0 !== parseInt(mainKey)) {
-            // calc percentage:
-            current.pct = (data[mainKey].difference_float / this.max) * 100;
-          }
-          this.expenses.push(current);
+          current.pct = 0;
 
+          this.min = current.difference_float < this.min ? current.difference_float : this.min;
+          this.expenses.push(current);
         }
       }
+
+      if (0 === this.min) {
+        this.min = -1;
+      }
+      // now sort + pct:
+      for (let i in this.expenses) {
+        if (this.expenses.hasOwnProperty(i)) {
+          let current = this.expenses[i];
+          current.pct = (current.difference_float*-1 / this.min*-1) * 100;
+          this.expenses[i] = current;
+        }
+      }
+      this.expenses.sort((a,b) => (a.pct > b.pct) ? -1 : ((b.pct > a.pct) ? 1 : 0));
+
     }
   }
 }

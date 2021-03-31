@@ -71,6 +71,7 @@ import {createNamespacedHelpers} from "vuex";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
+// TODO same as credit list but reversed
 
 export default {
   name: "MainCreditList",
@@ -131,21 +132,27 @@ export default {
     },
     parseIncome(data) {
       for (let mainKey in data) {
-        if (data.hasOwnProperty(mainKey) ) {
+        if (data.hasOwnProperty(mainKey)) {
           mainKey = parseInt(mainKey);
           // contains currency info and entries.
           let current = data[mainKey];
-          if (0 === mainKey) {
-            this.max = data[mainKey].difference_float;
-            current.pct = 100;
-          }
-          if (0 !== mainKey) {
-            // calc percentage:
-            current.pct = (data[mainKey].difference_float / this.max) * 100;
-          }
+          current.pct = 0;
+          this.max = current.difference_float > this.max ? current.difference_float : this.max;
           this.income.push(current);
         }
       }
+      if (0 === this.max) {
+        this.max = 1;
+      }
+      // now sort + pct:
+      for (let i in this.income) {
+        if (this.income.hasOwnProperty(i)) {
+          let current = this.income[i];
+          current.pct = (current.difference_float / this.max) * 100;
+          this.income[i] = current;
+        }
+      }
+      this.income.sort((a,b) => (a.pct > b.pct) ? -1 : ((b.pct > a.pct) ? 1 : 0));
     }
   }
 }
