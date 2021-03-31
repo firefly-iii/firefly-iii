@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4560](https://github.com/firefly-iii/firefly-iii/issues/4560) The account number would be stored in the BIC field, if the BIC field was set.
 - [Issue 4562](https://github.com/firefly-iii/firefly-iii/issues/4562) Hidden budgets were visible in v2.
 - [Issue 4567](https://github.com/firefly-iii/firefly-iii/issues/4567) Missing translation marked as intentionally missing.
+- [Issue 4570](https://github.com/firefly-iii/firefly-iii/issues/4570) It was impossible to set or change auto budgets.
 
 ### Security
 - Nothing (yet)

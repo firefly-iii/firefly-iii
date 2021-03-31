@@ -47,7 +47,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // this is the way:
-        $fields = [
+        $fields  = [
             'name'               => ['name', 'string'],
             'active'             => ['active', 'boolean'],
             'order'              => ['order', 'integer'],
@@ -57,8 +57,17 @@ class UpdateRequest extends FormRequest
             'auto_budget_amount' => ['auto_budget_amount', 'string'],
             'auto_budget_period' => ['auto_budget_period', 'string'],
         ];
+        $allData = $this->getAllData($fields);
+        if (array_key_exists('auto_budget_type', $allData)) {
+            $types                       = [
+                'none'     => 0,
+                'reset'    => 1,
+                'rollover' => 2,
+            ];
+            $allData['auto_budget_type'] = $types[$allData['auto_budget_type']] ?? 0;
+        }
 
-        return $this->getAllData($fields);
+        return $allData;
     }
 
     /**
@@ -69,7 +78,6 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         $budget = $this->route()->parameter('budget');
-
         return [
             'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean],
