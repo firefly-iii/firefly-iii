@@ -131,14 +131,15 @@ export default {
     },
     parseIncome(data) {
       for (let mainKey in data) {
-        if (data.hasOwnProperty(mainKey) && /^0$|^[1-9]\d*$/.test(mainKey) && mainKey <= 4294967294) {
+        if (data.hasOwnProperty(mainKey) ) {
+          mainKey = parseInt(mainKey);
           // contains currency info and entries.
           let current = data[mainKey];
-          if (0 === parseInt(mainKey)) {
+          if (0 === mainKey) {
             this.max = data[mainKey].difference_float;
             current.pct = 100;
           }
-          if (0 !== parseInt(mainKey)) {
+          if (0 !== mainKey) {
             // calc percentage:
             current.pct = (data[mainKey].difference_float / this.max) * 100;
           }
