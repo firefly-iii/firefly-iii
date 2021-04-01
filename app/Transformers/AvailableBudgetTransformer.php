@@ -70,8 +70,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int)$currency->decimal_places,
             'amount'                  => number_format((float)$availableBudget->amount, $currency->decimal_places, '.', ''),
-            'start'                   => $availableBudget->start_date->format('Y-m-d'),
-            'end'                     => $availableBudget->end_date->format('Y-m-d'),
+            'start'                   => $availableBudget->start_date->toAtomString(),
+            'end'                     => $availableBudget->end_date->endOfDay()->toAtomString(),
             'spent_in_budgets'        => [],
             'spent_no_budget'         => [],
             'links'                   => [
