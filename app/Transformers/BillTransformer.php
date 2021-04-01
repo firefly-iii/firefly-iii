@@ -76,6 +76,17 @@ class BillTransformer extends AbstractTransformer
             $objectGroupTitle = $objectGroup->title;
         }
 
+        $paidDataFormatted = [];
+        $payDatesFormatted = [];
+        foreach($paidData['paid_dates'] as $object) {
+            $object['date'] = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'))->toAtomString();
+                $paidDataFormatted[] = $object;
+        }
+
+        foreach ($payDates as $string) {
+            $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
+        }
+
         return [
             'id'                      => (int)$bill->id,
             'created_at'              => $bill->created_at->toAtomString(),
@@ -87,15 +98,15 @@ class BillTransformer extends AbstractTransformer
             'name'                    => $bill->name,
             'amount_min'              => number_format((float)$bill->amount_min, $currency->decimal_places, '.', ''),
             'amount_max'              => number_format((float)$bill->amount_max, $currency->decimal_places, '.', ''),
-            'date'                    => $bill->date->format('Y-m-d'),
+            'date'                    => $bill->date->toAtomString(),
             'repeat_freq'             => $bill->repeat_freq,
             'skip'                    => (int)$bill->skip,
             'active'                  => $bill->active,
             'order'                   => (int)$bill->order,
             'notes'                   => $notes,
-            'next_expected_match'     => $paidData['next_expected_match'],
-            'pay_dates'               => $payDates,
-            'paid_dates'              => $paidData['paid_dates'],
+            'next_expected_match'     => Carbon::createFromFormat('!Y-m-d', $paidData['next_expected_match'], config('app.timezone'))->toAtomString(),
+            'pay_dates'               => $payDatesFormatted,
+            'paid_dates'              => $paidDataFormatted,
             'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,

@@ -62,7 +62,8 @@
               <span v-html="renderPaidDate(paidDate)"/><br/>
             </span>
             <span v-for="payDate in bill.attributes.pay_dates" v-if="0===bill.attributes.paid_dates.length">
-              {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(payDate)) }}<br/>
+              {{ new Intl.DateTimeFormat(locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(new Date(payDate)) }}
+              <br/>
             </span>
           </td>
         </tr>
