@@ -103,7 +103,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_symbol'         => $currencySymbol,
             'currency_decimal_places' => $decimalPlaces,
             'current_balance'         => number_format((float)app('steam')->balance($account, $date), $decimalPlaces, '.', ''),
-            'current_balance_date'    => $date->format('Y-m-d'),
+            'current_balance_date'    => $date->toAtomString(),
             'notes'                   => $this->repository->getNoteText($account),
             'monthly_payment_date'    => $monthlyPaymentDate,
             'credit_card_type'        => $creditCardType,
@@ -195,6 +195,9 @@ class AccountTransformer extends AbstractTransformer
             $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
+        if(null !== $monthlyPaymentDate) {
+            $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+        }
 
         return [$creditCardType, $monthlyPaymentDate];
     }
@@ -217,6 +220,9 @@ class AccountTransformer extends AbstractTransformer
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = $amount;
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
+        }
+        if(null !== $openingBalanceDate) {
+            $openingBalanceDate = Carbon::createFromFormat('!Y-m-d', $openingBalanceDate, config('app.timezone'))->toAtomString();
         }
 
         return [$openingBalance, $openingBalanceDate];
