@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 5.5.2 (API 1.5.0) 2021-04-02
+## 5.5.2 (API 1.5.1) 2021-04-02
 
 ### Added
 - Nothing (yet)
@@ -26,11 +26,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4562](https://github.com/firefly-iii/firefly-iii/issues/4562) Hidden budgets were visible in v2.
 - [Issue 4567](https://github.com/firefly-iii/firefly-iii/issues/4567) Missing translation marked as intentionally missing.
 - [Issue 4570](https://github.com/firefly-iii/firefly-iii/issues/4570) It was impossible to set or change auto budgets.
+- [Issue 4571](https://github.com/firefly-iii/firefly-iii/issues/4571) New layout could be one day behind in some cases.
+- [Issue 4572](https://github.com/firefly-iii/firefly-iii/issues/4572) Link to reconcile page was broken.
+- [Issue 4574](https://github.com/firefly-iii/firefly-iii/issues/4574) 500-error when trying to update bills.
+- [Issue 4575](https://github.com/firefly-iii/firefly-iii/issues/4575) Add new date-ranges to the v2 index page.
+- [Issue 4578](https://github.com/firefly-iii/firefly-iii/issues/4578) Fixed some time selection issues in v2.
 
 ### Security
 - Nothing (yet)
 
 ### API
+
+This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.0...1.5.1).
+
+- All endpoints that used to deliver dates (`2021-04-27`) will now deliver date time strings (`2021-04-27T16:43:12+02:00`).
 - [Issue 4566](https://github.com/firefly-iii/firefly-iii/issues/4566) Some API end points did not deliver the promised data.
 
 ## 5.5.1 (API 1.5.0) 2021-03-27
