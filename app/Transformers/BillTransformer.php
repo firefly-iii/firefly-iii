@@ -86,6 +86,10 @@ class BillTransformer extends AbstractTransformer
         foreach ($payDates as $string) {
             $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
         }
+        $nextExpectedMatch = null;
+        if(null !== $paidData['next_expected_match'] ) {
+            $nextExpectedMatch = Carbon::createFromFormat('!Y-m-d', $paidData['next_expected_match'], config('app.timezone'))->toAtomString();
+        }
 
         return [
             'id'                      => (int)$bill->id,
@@ -104,7 +108,7 @@ class BillTransformer extends AbstractTransformer
             'active'                  => $bill->active,
             'order'                   => (int)$bill->order,
             'notes'                   => $notes,
-            'next_expected_match'     => Carbon::createFromFormat('!Y-m-d', $paidData['next_expected_match'], config('app.timezone'))->toAtomString(),
+            'next_expected_match'     => $nextExpectedMatch,
             'pay_dates'               => $payDatesFormatted,
             'paid_dates'              => $paidDataFormatted,
             'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
