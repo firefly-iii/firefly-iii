@@ -1,6 +1,6 @@
 /*
- * dashboard.js
- * Copyright (c) 2020 james@firefly-iii.org
+ * empty.js
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -16,12 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-/**
- * First we will load Axios via bootstrap.js
- * jquery and bootstrap-sass preloaded in app.js
- * vue, uiv and vuei18n are in app_vue.js
  */
 
 require('../bootstrap');
