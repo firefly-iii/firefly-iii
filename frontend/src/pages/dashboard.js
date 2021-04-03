@@ -1,6 +1,6 @@
 /*
  * dashboard.js
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,21 +18,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Dashboard from "../components/dashboard/Dashboard";
-import TopBoxes from "../components/dashboard/TopBoxes";
-import MainAccount from "../components/dashboard/MainAccount";
-import MainAccountList from "../components/dashboard/MainAccountList";
-import MainBillsList from "../components/dashboard/MainBillsList";
-import MainBudgetList from "../components/dashboard/MainBudgetList";
-import MainCreditList from "../components/dashboard/MainCreditList";
-import MainDebitList from "../components/dashboard/MainDebitList";
-import MainPiggyList from "../components/dashboard/MainPiggyList";
-import TransactionListLarge from "../components/transactions/TransactionListLarge";
-import TransactionListMedium from "../components/transactions/TransactionListMedium";
-import TransactionListSmall from "../components/transactions/TransactionListSmall";
-import Calendar from "../components/dashboard/Calendar";
-import MainCategoryList from "../components/dashboard/MainCategoryList";
-import Vue from "vue";
+
+import Dashboard from '../components/dashboard/Dashboard';
+import TopBoxes from '../components/dashboard/TopBoxes';
+import MainAccount from '../components/dashboard/MainAccount';
+import MainAccountList from '../components/dashboard/MainAccountList';
+import MainBillsList from '../components/dashboard/MainBillsList';
+import MainBudgetList from '../components/dashboard/MainBudgetList';
+import MainCreditList from '../components/dashboard/MainCreditList';
+import MainDebitList from '../components/dashboard/MainDebitList';
+import MainPiggyList from '../components/dashboard/MainPiggyList';
+import TransactionListLarge from '../components/transactions/TransactionListLarge';
+import TransactionListMedium from '../components/transactions/TransactionListMedium';
+import TransactionListSmall from '../components/transactions/TransactionListSmall';
+import Calendar from '../components/dashboard/Calendar';
+import MainCategoryList from '../components/dashboard/MainCategoryList';
+import Vue from 'vue';
 import Vuex from 'vuex'
 import store from '../components/store';
 
@@ -70,14 +71,15 @@ let props = {};
 new Vue({
             i18n,
             store,
-            el: "#dashboard",
+            el: '#dashboard',
             render: (createElement) => {
                 return createElement(Dashboard, {props: props});
             },
             beforeCreate() {
+                // TODO migrate to "root" store.
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
-                this.$store.dispatch('updateListPageSizePreference');
+                this.$store.dispatch('root/initialiseStore');
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });

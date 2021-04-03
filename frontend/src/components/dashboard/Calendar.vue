@@ -127,7 +127,73 @@ export default {
       this.setEnd(end);
       this.range.start = start;
       this.range.end = end;
+      this.generatePeriods()
       return false;
+    },
+    generatePeriods: function () {
+      this.periods = [];
+      // create periods.
+      let today;
+      let end;
+
+      today = new Date(this.range.start);
+
+      // previous month
+      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth()-1, 1);
+      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      this.periods.push(
+          {
+            start: firstDayOfMonth.toDateString(),
+            end: lastDayOfMonth.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+          }
+      );
+
+      // this month
+      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+      this.periods.push(
+          {
+            start: firstDayOfMonth.toDateString(),
+            end: lastDayOfMonth.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+          }
+      );
+
+      // next month
+      let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 1);
+      let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+2, 0);
+      this.periods.push(
+          {
+            start: firstDayOfMonth.toDateString(),
+            end: lastDayOfMonth.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+          }
+      );
+
+      // last 7 days
+      today = new Date;
+      end = new Date;
+      end.setDate(end.getDate() - 7);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_seven_days')
+          }
+      );
+
+      // last 30 days:
+      end.setDate(end.getDate() - 23);
+      this.periods.push(
+          {
+            start: end.toDateString(),
+            end: today.toDateString(),
+            title: this.$t('firefly.last_thirty_days')
+          }
+      );
+      // last 30 days
+      // everything
     }
   },
   computed: {
@@ -149,31 +215,8 @@ export default {
       }
       this.range.start = new Date(this.start);
       this.range.end = new Date(this.end);
-      this.periods = [];
-      // create periods.
-      // last 7 days
-      let today = new Date;
-      let end = new Date;
-      end.setDate(end.getDate() - 7);
-      this.periods.push(
-          {
-            start: end.toDateString(),
-            end: today.toDateString(),
-            title: this.$t('firefly.last_seven_days')
-          }
-      );
+      this.generatePeriods();
 
-      // last 30 days:
-      end.setDate(end.getDate() - 23);
-      this.periods.push(
-          {
-            start: end.toDateString(),
-            end: today.toDateString(),
-            title: this.$t('firefly.last_thirty_days')
-          }
-      );
-      // last 30 days
-      // everything
     },
     range: function (value) {
       //console.log('User updated range');

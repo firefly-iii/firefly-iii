@@ -132,15 +132,15 @@ class EditController extends Controller
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-        $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
+        $hasOldInput                      = null !== $request->old('_token');
+        $preFilled                        = [
             'transaction_type'          => strtolower($recurrence->transactionType->type),
             'active'                    => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
             'apply_rules'               => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
             'deposit_source_id'         => $array['transactions'][0]['source_id'],
             'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
-
+        $array['first_date']              = substr($array['first_date'], 0, 10);
         $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
         return prefixView(

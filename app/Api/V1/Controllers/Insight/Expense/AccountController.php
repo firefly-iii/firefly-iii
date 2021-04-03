@@ -82,12 +82,14 @@ class AccountController extends Controller
         $start         = $request->getStart();
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
-        $expenses      = $this->opsRepository->sumExpenses($start, $end, $assetAccounts);
+        $expenses      = $this->opsRepository->sumExpensesBySource($start, $end, $assetAccounts);
         $result        = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [
+                'id'               => (string)$expense['id'],
+                'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
                 'difference_float' => (float)$expense['sum'],
                 'currency_id'      => (string)$expense['currency_id'],
@@ -109,12 +111,14 @@ class AccountController extends Controller
         $end             = $request->getEnd();
         $assetAccounts   = $request->getAssetAccounts();
         $expenseAccounts = $request->getExpenseAccounts();
-        $expenses        = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, $expenseAccounts);
+        $expenses        = $this->opsRepository->sumExpensesByDestination($start, $end, $assetAccounts, $expenseAccounts);
         $result          = [];
 
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [
+                'id'               => (string)$expense['id'],
+                'name'             => $expense['name'],
                 'difference'       => $expense['sum'],
                 'difference_float' => (float)$expense['sum'],
                 'currency_id'      => (string)$expense['currency_id'],

@@ -92,6 +92,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
             return;
         }
+        if (false === $autoBudget->budget->active) {
+            Log::info(sprintf('Auto budget #%d is associated with an inactive budget.', $autoBudget->id));
+
+            return;
+        }
         if (!$this->isMagicDay($autoBudget)) {
             Log::info(
                 sprintf(

@@ -30,7 +30,7 @@ return [
     'edit_piggyBank'         => 'Upravit pokladničku „:name“',
     'preferences'            => 'Předvolby',
     'profile'                => 'Profil',
-    'accounts'               => 'Accounts',
+    'accounts'               => 'Účty',
     'changePassword'         => 'Změnit heslo',
     'change_email'           => 'Změnit e-mailovou adresu',
     'bills'                  => 'Účtenky a faktury',
@@ -60,7 +60,7 @@ return [
     'delete_journal_link'    => 'Odstranit vazbu mezi transakcemi',
     'telemetry_index'        => 'Telemetrie',
     'telemetry_view'         => 'Zobrazit telemetrii',
-    'edit_object_group'      => 'Edit group ":title"',
-    'delete_object_group'    => 'Delete group ":title"',
-    'logout_others'          => 'Logout other sessions'
+    'edit_object_group'      => 'Upravit skupinu „:title“',
+    'delete_object_group'    => 'Odstranit skupinu „:title“',
+    'logout_others'          => 'Odhlásit ostatní relace'
 ];

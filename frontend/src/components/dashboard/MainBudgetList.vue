@@ -86,7 +86,7 @@ export default {
         yearly: [],
         other: [],
       },
-      budgets: {},
+      budgets: {}, // used to collect some meta data.
       rawBudgets: [],
       locale: 'en-US',
       ready: false,
@@ -116,17 +116,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters([
-                    'start',
-                    'end'
-                  ]),
+    ...mapGetters(['start', 'end']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
     }
   },
   methods:
       {
-        getBudgets() {
+        getBudgets: function () {
           this.budgets = {};
           this.rawBudgets = [];
           this.budgetLimits = {
@@ -148,12 +145,16 @@ export default {
               );
         },
         parseBudgets(data) {
-          for (let key in data.data) {
-            if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-              let current = data.data[key];
-              for (let subKey in current.attributes.spent) {
-                if (current.attributes.spent.hasOwnProperty(subKey) && /^0$|^[1-9]\d*$/.test(subKey) && subKey <= 4294967294) {
-                  let spentData = current.attributes.spent[subKey];
+          for (let i in data.data) {
+            if (data.data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              let current = data.data[i];
+              if (false === current.attributes.active) {
+                // skip inactive budgets
+                continue;
+              }
+              for (let ii in current.attributes.spent) {
+                if (current.attributes.spent.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+                  let spentData = current.attributes.spent[ii];
                   this.rawBudgets.push(
                       {
                         id: parseInt(current.id),
@@ -163,9 +164,9 @@ export default {
                         spent: spentData.sum
                       }
                   );
+                  console.log('Added budget ' + current.attributes.name + ' (' + spentData.currency_code + ')');
                 }
               }
-
             }
           }
           this.getBudgetLimits();
@@ -181,61 +182,76 @@ export default {
               );
         },
         parseBudgetLimits(data) {
-          for (let key in data.included) {
-            if (data.included.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-              this.budgets[data.included[key].id] =
+          // collect budget meta data.
+          for (let i in data.included) {
+            if (data.included.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              let current = data.included[i];
+              let currentId = parseInt(current.id);
+              this.budgets[currentId] =
                   {
-                    id: data.included[key].id,
-                    name: data.included[key].attributes.name,
+                    id: currentId,
+                    name: current.attributes.name,
                   };
+              console.log('Collected meta data: budget #' + currentId + ' is named ' + current.attributes.name);
             }
           }
 
-          for (let key in data.data) {
-            if (data.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+          for (let i in data.data) {
+            if (data.data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              let current = data.data[i];
+              let currentId = parseInt(current.id);
+              let budgetId = parseInt(current.attributes.budget_id);
+              let currencyId = parseInt(current.attributes.currency_id);
+              let spentFloat = parseFloat(current.attributes.spent);
+              let spentFloatPos = parseFloat(current.attributes.spent) * -1;
+              let amount = parseFloat(current.attributes.amount);
+              let period = current.attributes.period ?? 'other';
               let pctGreen = 0;
               let pctOrange = 0;
               let pctRed = 0;
+              //console.log('Collected "' + period + '" budget limit #' + currentId + ' (part of budget #' + budgetId + ')');
+              //console.log('Spent ' + spentFloat + ' of ' + amount);
 
               // remove budget info from rawBudgets if it's there:
-              this.filterBudgets(data.data[key].attributes.budget_id, data.data[key].attributes.currency_id);
+              this.filterBudgets(budgetId, currencyId);
 
               // spent within budget:
-              if (0.0 !== parseFloat(data.data[key].attributes.spent) && (parseFloat(data.data[key].attributes.spent) * -1) < parseFloat(data.data[key].attributes.amount)) {
-                pctGreen = (parseFloat(data.data[key].attributes.spent) * -1 / parseFloat(data.data[key].attributes.amount) * 100);
+              if (0.0 !== spentFloat && spentFloatPos < amount) {
+                pctGreen = (spentFloatPos / amount) * 100;
               }
 
               // spent over budget
-              if (0.0 !== parseFloat(data.data[key].attributes.spent) && (parseFloat(data.data[key].attributes.spent) * -1) > parseFloat(data.data[key].attributes.amount)) {
-                pctOrange = (parseFloat(data.data[key].attributes.amount) / parseFloat(data.data[key].attributes.spent) * -1) * 100;
+              if (0.0 !== spentFloatPos && spentFloatPos > amount) {
+                pctOrange = (spentFloatPos / amount) * 100;
                 pctRed = 100 - pctOrange;
               }
               let obj = {
-                id: data.data[key].id,
-                amount: data.data[key].attributes.amount,
-                budget_id: data.data[key].attributes.budget_id,
-                budget_name: this.budgets[data.data[key].attributes.budget_id].name,
-                currency_id: data.data[key].attributes.currency_id,
-                currency_code: data.data[key].attributes.currency_code,
-                period: data.data[key].attributes.period,
-                start: new Date(data.data[key].attributes.start),
-                end: new Date(data.data[key].attributes.end),
-                spent: data.data[key].attributes.spent,
+                id: currentId,
+                amount: current.attributes.amount,
+                budget_id: budgetId,
+                budget_name: this.budgets[current.attributes.budget_id].name,
+                currency_id: currencyId,
+                currency_code: current.attributes.currency_code,
+                period: current.attributes.period,
+                start: new Date(current.attributes.start),
+                end: new Date(current.attributes.end),
+                spent: current.attributes.spent,
                 pctGreen: pctGreen,
                 pctOrange: pctOrange,
                 pctRed: pctRed,
               };
 
-              let period = data.data[key].attributes.period ?? 'other';
               this.budgetLimits[period].push(obj);
             }
           }
         },
+
         filterBudgets(budgetId, currencyId) {
-          for (let key in this.rawBudgets) {
-            if (this.rawBudgets.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-              if (this.rawBudgets[key].currency_id === currencyId && this.rawBudgets[key].id === budgetId) {
-                this.rawBudgets.splice(key, 1);
+          for (let i in this.rawBudgets) {
+            if (this.rawBudgets.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              if (this.rawBudgets[i].currency_id === currencyId && this.rawBudgets[i].id === budgetId) {
+                console.log('Budget ' + this.rawBudgets[i].name + ' with currency ' + this.rawBudgets[i].currency_code + ' will be removed in favor of a budget limit.');
+                this.rawBudgets.splice(parseInt(i), 1);
               }
             }
           }

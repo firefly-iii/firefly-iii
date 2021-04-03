@@ -184,6 +184,7 @@ class PreferencesController extends Controller
             app('preferences')->set('language', $lang);
         }
         if ($currentLang->data !== $lang) {
+            // this string is untranslated on purpose.
             session()->flash('info', 'All translations are supplied by volunteers. There might be errors and mistakes. I appreciate your feedback.');
         }
 

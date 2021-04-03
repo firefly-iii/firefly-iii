@@ -10,8 +10,8 @@
   */
 
 /*!
- * AdminLTE v3.0.5 (https://adminlte.io)
- * Copyright 2014-2020 Colorlib <http://colorlib.com>
+ * AdminLTE v3.1.0 (https://adminlte.io)
+ * Copyright 2014-2021 Colorlib <https://colorlib.com>
  * Licensed under MIT (https://github.com/ColorlibHQ/AdminLTE/blob/master/LICENSE)
  */
 
@@ -73,6 +73,12 @@
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license.
  * http://jquery.org/license
+ */
+
+/*!
+ * vue-i18n v8.24.2 
+ * (c) 2021 kazuya kawaguchi
+ * Released under the MIT License.
  */
 
 /*!

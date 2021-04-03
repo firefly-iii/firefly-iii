@@ -89,9 +89,9 @@ class RecurrenceTransformer extends AbstractTransformer
             'type'              => $shortType,
             'title'             => $recurrence->title,
             'description'       => $recurrence->description,
-            'first_date'        => $recurrence->first_date->format('Y-m-d'),
-            'latest_date'       => null === $recurrence->latest_date ? null : $recurrence->latest_date->format('Y-m-d'),
-            'repeat_until'      => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->format('Y-m-d'),
+            'first_date'        => $recurrence->first_date->toAtomString(),
+            'latest_date'       => null === $recurrence->latest_date ? null : $recurrence->latest_date->toAtomString(),
+            'repeat_until'      => null === $recurrence->repeat_until ? null : $recurrence->repeat_until->toAtomString(),
             'apply_rules'       => $recurrence->apply_rules,
             'active'            => $recurrence->active,
             'nr_of_repetitions' => $reps,
@@ -137,7 +137,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon, 5);
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
-                $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');
+                $repetitionArray['occurrences'][] = $carbon->toAtomString();
             }
 
             $return[] = $repetitionArray;

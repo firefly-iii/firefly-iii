@@ -222,6 +222,9 @@ class BillUpdateService
             'amount_max'                => 'amount_less',
             'transaction_currency_name' => 'currency_is'];
         foreach ($fields as $field => $ruleTriggerKey) {
+            if (!array_key_exists($field, $newData)) {
+                continue;
+            }
             if ($oldData[$field] === $newData[$field]) {
                 Log::debug(sprintf('Field %s is unchanged ("%s"), continue.', $field, $oldData[$field]));
                 continue;

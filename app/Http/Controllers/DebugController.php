@@ -144,6 +144,7 @@ class DebugController extends Controller
         $loginProvider        = config('auth.providers.users.driver');
         $bcscale              = bcscale();
         $layout               = env('FIREFLY_III_LAYOUT');
+        $tz = env('TZ');
 
         // expected + found DB version:
         $expectedDBversion = config('firefly.db_version');
@@ -202,6 +203,7 @@ class DebugController extends Controller
                 'appEnv',
                 'appDebug',
                 'logChannel',
+                'tz',
                 'appLogLevel',
                 'now',
                 'drivers',

@@ -136,9 +136,9 @@ return [
     'unique_existing_webhook'        => 'Você já tem outro gancho web (webhook) com esses valores.',
 
     'secure_password'             => 'Esta nao e uma password segura. Tenta de novo por favor. Para mais informacoes visita https://bit.ly/FF3-password-security',
-    'valid_recurrence_rep_type'   => 'Tipo de repeticao invalido para transaccoes recorrentes.',
+    'valid_recurrence_rep_type'   => 'Tipo de repetição inválido para transações recorrentes.',
     'valid_recurrence_rep_moment' => 'Dia invalido para este tipo de repeticao.',
-    'invalid_account_info'        => 'Informacao de conta invalida.',
+    'invalid_account_info'        => 'Informação de conta invalida.',
     'attributes'                  => [
         'email'                   => 'endereco de email',
         'description'             => 'descricao',
@@ -153,7 +153,7 @@ return [
         'amount_min'              => 'montante minimo',
         'amount_max'              => 'montante maximo',
         'title'                   => 'titulo',
-        'tag'                     => 'tag',
+        'tag'                     => 'etiqueta',
         'transaction_description' => 'descricao da transaccao',
         'rule-action-value.1'     => 'valor da accao da regra #1',
         'rule-action-value.2'     => 'valor da accao da regra #2',

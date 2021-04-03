@@ -1,6 +1,6 @@
 /*!
  * app.scss
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,8 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
 // Firefly III colors (?)
-@import 'scss/variables';
+$blue: #1E6581;
+$green: #64B624;
+$red: #CD5029;
+
 
 
 // Fonts
@@ -40,7 +44,7 @@
 @import '~admin-lte/build/scss/bootstrap-variables';
 @import '~bootstrap/scss/bootstrap';
 
-@import '~bootstrap-vue/src/index.scss';
+@import '~bootstrap-vue/src/index';
 
 // Variables and Mixins
 // ---------------------------------------------------
@@ -74,7 +78,7 @@
 //@import '../social-widgets';
 
 // admin LTE pages (unused)
- @import '~admin-lte/build/scss/parts/pages';
+@import '~admin-lte/build/scss/parts/pages';
 
 // admin LTE plugins (unused)
 // @import 'parts/plugins';

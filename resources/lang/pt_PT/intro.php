@@ -65,25 +65,25 @@ return [
     'reports_report_audit_intro'                      => 'Este relatório vai-lhe dar informações detalhadas das suas contas de ativos.',
     'reports_report_audit_optionsBox'                 => 'Usa estes campos para mostrar ou esconder colunas que tenhas interesse.',
 
-    'reports_report_category_intro'                  => 'Este relatorio vai-te dar informacoes detalhadas numa ou multiplas categorias.',
-    'reports_report_category_pieCharts'              => 'Estes graficos vao-te dar informacoes de despesas e receitas, por categoria ou por conta.',
-    'reports_report_category_incomeAndExpensesChart' => 'Este grafico mostra-te as despesas e receitas por categoria.',
+    'reports_report_category_intro'                  => 'Este relatório irá-lhe dar informações detalhadas numa ou múltiplas categorias.',
+    'reports_report_category_pieCharts'              => 'Estes gráficos irão-lhe dar informações de despesas e receitas, por categoria ou por conta.',
+    'reports_report_category_incomeAndExpensesChart' => 'Este gráfico mostra-te as despesas e receitas por categoria.',
 
-    'reports_report_tag_intro'                  => 'Este relatorio vai-te dar informacoes de uma ou multiplas tags.',
-    'reports_report_tag_pieCharts'              => 'Estes graficos vao-te dar informacoes de despesas e receitas por tag, conta, categoria ou orcamento.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Este grafico mostra-te as tuas despesas e receitas por tag.',
+    'reports_report_tag_intro'                  => 'Este relatório irá-lhe dar informações de uma ou múltiplas etiquetas.',
+    'reports_report_tag_pieCharts'              => 'Estes gráficos irão-lhe dar informações de despesas e receitas por etiqueta, conta, categoria ou orçamento.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Este gráfico mostra-lhe as suas despesas e receitas por etiqueta.',
 
-    'reports_report_budget_intro'                             => 'Este relatorio vai-te dar informacoes de um ou multiplos orcamentos.',
-    'reports_report_budget_pieCharts'                         => 'Estes graficos vao-te dar informacoes de despesas por orcamento ou por conta.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'Este grafico mostra-te as tuas despesas por orcamento.',
+    'reports_report_budget_intro'                             => 'Este relatório irá-lhe dar informações de um ou múltiplos orçamentos.',
+    'reports_report_budget_pieCharts'                         => 'Estes gráficos irão-lhe dar informações de despesas por orçamento ou por conta.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Este gráfico mostra-lhe as suas despesas por orçamento.',
 
     // create transaction
     'transactions_create_switch_box'                          => 'Usa estes botoes para modares rapidamente o tipo de transaccao que desejas gravar.',
     'transactions_create_ffInput_category'                    => 'Podes escrever livremente neste campo. Categorias criadas previamente vao ser sugeridas.',
     'transactions_create_withdrawal_ffInput_budget'           => 'Associa o teu levantamento a um orcamento para um melhor controlo financeiro.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Usa esta caixa de seleccao quando o teu levantamento e noutra divisa.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Usa esta caixa de seleccao quando o teu deposito e noutra divisa.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Selecciona um mealheiro e associa esta transferencia as tuas economias.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Utilize esta caixa de seleção quando o seu depósito estiver noutra moeda.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Selecione um mealheiro e associe esta transferência as suas poupanças.',
 
     // piggy banks index:
     'piggy-banks_index_saved'                                 => 'Este campo mostra-te quando ja guardaste em cada mealheiro.',
@@ -95,7 +95,7 @@ return [
     'piggy-banks_create_date'                                 => 'Podes definir uma data alvo ou um prazo limite para o teu mealheiro.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'Este grafico mostra-te o historico deste mealheiro.',
+    'piggy-banks_show_piggyChart'                             => 'Este gráfico mostra-lhe o histórico deste mealheiro.',
     'piggy-banks_show_piggyDetails'                           => 'Alguns detalhes sobre o teu mealheiro',
     'piggy-banks_show_piggyEvents'                            => 'Quaisquer adicoes ou remocoes tambem serao listadas aqui.',
 
@@ -105,9 +105,9 @@ return [
     'bills_index_expected_in_period'                          => 'Este campo indica, para cada factura, se, e quando a proxima factura sera atingida.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'Esta tabela mostra alguma informacao geral sobre esta factura.',
+    'bills_show_billInfo'                                     => 'Esta tabela mostra alguma informação geral sobre esta fatura.',
     'bills_show_billButtons'                                  => 'Usa este botao para tornar a analizar transaccoes antigas para assim elas poderem ser associadas com esta factura.',
-    'bills_show_billChart'                                    => 'Este grafico mostra as transaccoes associadas a esta factura.',
+    'bills_show_billChart'                                    => 'Este gráfico mostra as transações associadas a esta fatura.',
 
     // create bill
     'bills_create_intro'                                      => 'Usa as facturas para controlares o montante de dinheiro e deves em cada periodo. Pensa nas despesas como uma renda, seguro ou pagamentos de hipotecas.',
@@ -133,7 +133,7 @@ return [
     'rules_create_actions'                                    => 'Define todas as accoes que quiseres.',
 
     // preferences
-    'preferences_index_tabs'                                  => 'Mais opcoes estao disponiveis por tras dessas abas.',
+    'preferences_index_tabs'                                  => 'Mais opções estão disponíveis atrás destas abas.',
 
     // currencies
     'currencies_index_intro'                                  => 'O Firefly III suporta multiplas divisas que podes mudar nesta pagina.',

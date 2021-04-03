@@ -395,6 +395,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function update(Budget $budget, array $data): Budget
     {
         Log::debug('Now in update()');
+
         // TODO update rules
         $oldName = $budget->name;
         if (array_key_exists('name', $data)) {
@@ -408,8 +409,47 @@ class BudgetRepository implements BudgetRepositoryInterface
         // update or create auto-budget:
         $autoBudget = $this->getAutoBudget($budget);
 
-        // get currency:
-        $currency = null;
+        // first things first: delete when no longer required:
+        $autoBudgetType = array_key_exists('auto_budget_type', $data) ? $data['auto_budget_type'] : null;
+
+        if (0 === $autoBudgetType && null !== $autoBudget) {
+            // delete!
+            $autoBudget->delete();
+
+            return $budget;
+        }
+        if (0 === $autoBudgetType && null === $autoBudget) {
+            return $budget;
+        }
+        if (null === $autoBudgetType && null === $autoBudget) {
+            return $budget;
+        }
+        $this->updateAutoBudget($budget, $data);
+
+        return $budget;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param array  $data
+     */
+    private function updateAutoBudget(Budget $budget, array $data): void
+    {
+        // update or create auto-budget:
+        $autoBudget = $this->getAutoBudget($budget);
+
+        // grab default currency:
+        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+
+        if (null === $autoBudget) {
+            // at this point it's a blind assumption auto_budget_type is 1 or 2.
+            $autoBudget                          = new AutoBudget;
+            $autoBudget->auto_budget_type        = $data['auto_budget_type'];
+            $autoBudget->budget_id               = $budget->id;
+            $autoBudget->transaction_currency_id = $currency->id;
+        }
+
+        // set or update the currency.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $repos        = app(CurrencyRepositoryInterface::class);
             $currencyId   = (int)($data['currency_id'] ?? 0);
@@ -418,50 +458,24 @@ class BudgetRepository implements BudgetRepositoryInterface
             if (null === $currency) {
                 $currency = $repos->findByCodeNull($currencyCode);
             }
-        }
-        if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-        if (null === $autoBudget
-            && array_key_exists('auto_budget_type', $data)
-            && array_key_exists('auto_budget_amount', $data)
-            && 0 !== $data['auto_budget_type']
-            && 'none' !== $data['auto_budget_type']
-        ) {
-            // only create if all are here:
-            $autoBudget                          = new AutoBudget;
-            $autoBudget->budget_id               = $budget->id;
-            $autoBudget->transaction_currency_id = $currency->id;
-        }
-        if (null !== $autoBudget && null !== $currency) {
-            $autoBudget->transaction_currency_id = $currency->id;
+            if (null !== $currency) {
+                $autoBudget->transaction_currency_id = $currency->id;
+            }
         }
 
-        // update existing type
-        if (array_key_exists('auto_budget_type', $data) && 0 !== $data['auto_budget_type']) {
-            $autoBudgetType = $data['auto_budget_type'];
-            if ('reset' === $autoBudgetType) {
-                $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_RESET;
-            }
-            if ('rollover' === $autoBudgetType) {
-                $autoBudget->auto_budget_type = AutoBudget::AUTO_BUDGET_ROLLOVER;
-            }
-            if ('none' === $autoBudgetType && null !== $autoBudget) {
-                $autoBudget->delete();
-
-                return $budget;
-            }
+        // change values if submitted or presented:
+        if (array_key_exists('auto_budget_type', $data)) {
+            $autoBudget->auto_budget_type = $data['auto_budget_type'];
         }
-        if (array_key_exists('auto_budget_amount', $data) && null !== $autoBudget) {
+        if (array_key_exists('auto_budget_amount', $data)) {
             $autoBudget->amount = $data['auto_budget_amount'];
+
         }
-        if (array_key_exists('auto_budget_period', $data) && null !== $autoBudget) {
+        if (array_key_exists('auto_budget_period', $data)) {
             $autoBudget->period = $data['auto_budget_period'];
         }
-        if (null !== $autoBudget) {
-            $autoBudget->save();
-        }
-        return $budget;
+
+        $autoBudget->save();
     }
 
     /**

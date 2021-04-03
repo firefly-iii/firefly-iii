@@ -500,7 +500,23 @@ export default {
             // console.log('tags are different');
             // console.log(currentTransaction.tags);
             // console.log(originalTransaction.tags);
-            diff.tags = currentTransaction.tags;
+            diff.tags = [];//currentTransaction.tags;
+
+            if (0 !== currentTransaction.tags.length) {
+              for (let ii in currentTransaction.tags) {
+                if (currentTransaction.tags.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+                  // array.tags
+                  let currentTag = currentTransaction.tags[ii];
+                  if(typeof currentTag === 'object' && null !== currentTag) {
+                    diff.tags.push(currentTag.text);
+                  }
+                  if(typeof currentTag === 'string') {
+                    diff.tags.push(currentTag);
+                  }
+                }
+              }
+            }
+
             shouldSubmit = true;
           }
 

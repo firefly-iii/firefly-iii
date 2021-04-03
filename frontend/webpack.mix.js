@@ -1,6 +1,6 @@
 /*
  * webpack.mix.js
- * Copyright (c) 2020 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,9 +19,21 @@
  */
 
 const mix = require('laravel-mix');
-require('laravel-mix-bundle-analyzer');
+
+/*
+ |--------------------------------------------------------------------------
+ | Mix Asset Management
+ |--------------------------------------------------------------------------
+ |
+ | Mix provides a clean, fluent API for defining some Webpack build steps
+ | for your Laravel applications. By default, we are compiling the CSS
+ | file for the application as well as bundling up all the JS files.
+ |
+ */
+
 
 // production
+// require('laravel-mix-bundle-analyzer');
 mix.webpackConfig({
                       resolve: {
                           alias: {
@@ -30,50 +42,34 @@ mix.webpackConfig({
                       }
                   });
 
-mix
-    // AUTO LOAD
-    // .autoload({
-    //              jquery: ['$', 'window.jQuery','jQuery']
-    //          })
 
-    // MIX IN CLASSIC SCRIPT
-    // .babel([
-    //              '../resources/assets/js/v2/classic/adminlte.js',
-    //          ], 'public/v2/js/classic.js')
-
-    // MIX IN CLASSIC SCRIPT
-    // .scripts([
-    //              '../resources/assets/js/v2/classic/adminlte.js',
-    //          ], 'public/v2/js/classic.js')
+// dashboard and empty page
+mix.js('src/pages/dashboard.js', 'public/js').vue({version: 2});
+// accounts.
+mix.js('src/pages/accounts/index.js', 'public/js/accounts').vue({version: 2});
+mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
 
 
-    // COPY SCRIPT
-    //.copy('../resources/assets/js/v2/classic/adminlte.js', 'public/v2/js/classic.js')
+// transactions.
+mix.js('src/pages/transactions/create.js', 'public/js/transactions').vue({version: 2});
+mix.js('src/pages/transactions/edit.js', 'public/js/transactions').vue({version: 2});
 
-    // misc pages
-    .js('src/pages/dashboard.js', 'public/js')
-    .js('src/pages/empty.js', 'public/js')
-    .js('src/pages/new-user/index.js', 'public/js/new-user')
-
-    // accounts.
-    .js('src/pages/accounts/index.js', 'public/js/accounts')
-    .js('src/pages/accounts/show.js', 'public/js/accounts')
-
-    // transactions.
-    .js('src/pages/transactions/create.js', 'public/js/transactions')
-    .js('src/pages/transactions/edit.js', 'public/js/transactions')
-    // register page
-    .js('src/pages/register.js', 'public/js')
+// static pages
+mix.js('src/pages/empty.js', 'public/js').vue({version: 2});
+mix.js('src/pages/register.js', 'public/js').vue({version: 2})
 
 
+mix.extract().sourceMaps();
 
-    .extract().sourceMaps()
-    .sass('src/app.scss', 'public/css')
+mix.sass('src/app.scss', 'public/css', {
+    sassOptions: {
+        outputStyle: 'compressed'
+    }
+});
 
-    // move to right dir
-    .copy('public/js','../public/v2/js')
-    .copy('fonts','../public/fonts')
-    .copy('images','../public/images')
-    .copy('public/css','../public/v2/css')
-;
+// move to right dir
+mix.copy('public/js', '../public/v2/js')
+    .copy('fonts', '../public/fonts')
+    .copy('images', '../public/images')
+    .copy('public/css', '../public/v2/css');
 

@@ -90,8 +90,8 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // left to save:
         $leftToSave = bcsub($piggyBank->targetamount, $currentAmountStr);
-        $startDate  = null === $piggyBank->startdate ? null : $piggyBank->startdate->format('Y-m-d');
-        $targetDate = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->format('Y-m-d');
+        $startDate  = null === $piggyBank->startdate ? null : $piggyBank->startdate->toAtomString();
+        $targetDate = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->toAtomString();
 
         // target and percentage:
         $targetAmount = $piggyBank->targetamount;
