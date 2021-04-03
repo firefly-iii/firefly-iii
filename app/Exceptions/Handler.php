@@ -32,6 +32,7 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Log;
@@ -131,9 +132,10 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e)
     {
         $doMailError = config('firefly.send_error_message');
-        if ($this->shouldntReport($e) || !$doMailError) {
+        if ($this->shouldntReportLocal($e) || !$doMailError) {
             Log::info('Will not report on this error.');
             parent::report($e);
+
             return;
         }
         $userData = [
@@ -164,5 +166,21 @@ class Handler extends ExceptionHandler
         dispatch($job);
 
         parent::report($e);
+    }
+
+    /**
+     * @param Throwable $e
+     *
+     * @return bool
+     */
+    private function shouldntReportLocal(Throwable $e): bool
+    {
+        return !is_null(
+            Arr::first(
+                $this->dontReport, function ($type) use ($e) {
+                return $e instanceof $type;
+            }
+            )
+        );
     }
 }
