@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Bruk regel ":title" til et utvalg av dine transaksjoner',
     'apply_rule_selection_intro'                          => 'Regler som ":title" brukes normalt bare til nye eller oppdaterte transaksjoner, men du kan få Firefly III til å kjøre dem på et utvalg av dine eksisterende transaksjoner. Dette kan være nyttig når du har oppdatert en regel, og du trenger at endringene blir brukt på alle dine tidligere transaksjoner.',
     'include_transactions_from_accounts'                  => 'Ta med transaksjoner fra disse kontoene',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Kjør',
     'apply_rule_group_selection'                          => 'Bruk regelgruppe ":title" til et utvalg av dine transaksjoner',

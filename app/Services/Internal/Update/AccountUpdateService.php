@@ -320,18 +320,4 @@ class AccountUpdateService
         }
         Log::debug('Account was not marked as inactive, do nothing.');
     }
-
-    /**
-     * @param string $type
-     *
-     * @return bool
-     */
-    private function isLiabilityType(string $type): bool
-    {
-        if ('' === $type) {
-            return false;
-        }
-
-        return 1 === AccountType::whereIn('type', [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->where('type', ucfirst($type))->count();
-    }
 }

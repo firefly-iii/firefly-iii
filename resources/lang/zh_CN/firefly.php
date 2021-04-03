@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => '选取交易并应用规则“:title”',
     'apply_rule_selection_intro'                          => '规则如“:title”一般仅应用于新增的或更新后的交易，但您可要求 Firefly III 针对已有的单笔或多笔交易执行规则。在您更新一条规则后，且必须应用此规则至其他交易时，即可使用此功能。',
     'include_transactions_from_accounts'                  => '包含来自这些账户的交易',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} 规则“:title”没有改变任何您选择的交易。|[1] 规则“:title”改变了一条您选择的交易。|[2,*] 规则“:title”改变了:count条您选择的交易。',
     'execute'                                             => '执行',
     'apply_rule_group_selection'                          => '选取交易并应用规则组“:title”',

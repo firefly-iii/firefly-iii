@@ -4,6 +4,7 @@
     "/public/js/accounts/show.js": "/public/js/accounts/show.js",
     "/public/js/transactions/create.js": "/public/js/transactions/create.js",
     "/public/js/transactions/edit.js": "/public/js/transactions/edit.js",
+    "/public/js/transactions/index.js": "/public/js/transactions/index.js",
     "/public/js/empty.js": "/public/js/empty.js",
     "/public/js/register.js": "/public/js/register.js",
     "/public/js/manifest.js": "/public/js/manifest.js",

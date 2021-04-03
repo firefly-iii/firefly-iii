@@ -105,12 +105,13 @@
               <div class="row">
                 <div class="col">
                   <span v-if="searching"><i class="fas fa-spinner fa-spin"></i></span>
-                  <h4 v-if="searchResults.length > 0">Search results</h4>
+                  <h4 v-if="searchResults.length > 0">{{ $t('firefly.search_results') }}</h4>
                   <table v-if="searchResults.length > 0" class="table table-sm">
+                    <caption style="display:none;">{{ $t('firefly.search_results') }}</caption>
                     <thead>
                     <tr>
-                      <th colspan="2" style="width:33%">Include?</th>
-                      <th>Transaction</th>
+                      <th scope="col" colspan="2" style="width:33%">{{ $t('firefly.include') }}</th>
+                      <th scope="col">{{ $t('firefly.transaction') }}</th>
                     </tr>
                     </thead>
                     <tbody>

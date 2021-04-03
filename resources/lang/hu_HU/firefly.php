@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => '":title" szabály alkalmazása a tranzakciók egy csoportján',
     'apply_rule_selection_intro'                          => 'Az olyan szabályok mint a ":title" normális esetben csak az új vagy a frissített tranzakciókon lesznek alkalmazva, de meg lehet mondani a Firefly III-nak, hogy futtassa le a már létező tranzakciókon. Ez hasznos lehet, ha egy szabály frissítve lett és a módosításokat az összes tranzakción alkalmazni kell.',
     'include_transactions_from_accounts'                  => 'Beleértve a tranzakciókat ezekből a számlákból',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Végrehajtás',
     'apply_rule_group_selection'                          => '":title" szabálycsoport alkalmazása a tranzakciók egy csoportján',

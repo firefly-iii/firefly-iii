@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Appliquer la règle ":title" à une sélection de vos opérations',
     'apply_rule_selection_intro'                          => 'Les règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III de l’exécuter sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour une règle et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
     'include_transactions_from_accounts'                  => 'Inclure les opérations depuis ces comptes',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} Aucune opération dans votre sélection n\'a été modifiée par la règle ":title".|[1] Une opération dans votre sélection a été modifiée par la règle ":title".|[2,*] :count opérations dans votre sélection ont été modifiées par la règle ":title".',
     'execute'                                             => 'Exécuter',
     'apply_rule_group_selection'                          => 'Appliquer le groupe de règles ":title" à une sélection de vos opérations',
