@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="{{ route('index') }}/">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Firefly III | 500 Error</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="v2/plugins/local-fonts/gf-source.css">
+    <link rel="stylesheet" href="v2/css/app.css">
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="error-page">
+                <h2 class="headline text-danger">500</h2>
+
+                <div class="error-content">
+                    <h3><i class="fas fa-exclamation-triangle text-danger"></i> {{ trans('errors.error_occurred') }}</h3>
+
+                    <p>
+                        {{ trans('errors.error_not_recoverable') }}
+                    </p>
+                    <p class="text-danger">
+                        {{ exception.getMessage |default('General unknown errror') }}
+                    </p>
+
+                    {% if not debug %}
+                        <h4>
+                            {{ trans('errors.more_info') }}
+                        </h4>
+                        <p>
+                            {{ trans('errors.collect_info')|raw }}
+                            {{ trans('errors.collect_info_more')|raw }}
+                        </p>
+                        <h4>
+                            {{ trans('errors.github_help') }}
+                        </h4>
+                        <p>
+                            {{ trans('errors.github_instructions')|raw }}
+                        </p>
+                        <ol>
+                            <li>{{ trans('errors.use_search') }}</li>
+                            <li>{{ trans('errors.include_info', { link: route('debug') })|raw }}</li>
+                            <li>{{ trans('errors.tell_more') }}</li>
+                            <li>{{ trans('errors.include_logs') }}</li>
+                            <li>{{ trans('errors.what_did_you_do') }}</li>
+                        </ol>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if debug %}
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+                <h4>{{ trans('errors.error') }}</h4>
+                <p>
+                    {{ trans('errors.error_location', {file: exception.getFile, line: exception.getLine, code: exception.getCode })|raw }}
+                </p>
+                <h4>
+                    {{ trans('errors.stacktrace') }}
+                </h4>
+                <div style="font-family: monospace;font-size:11px;">
+                    {{ exception.getTraceAsString|nl2br }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
+</body>
+</html>
