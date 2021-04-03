@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -51,36 +50,37 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport
         = [
-            AuthenticationException::class
+            AuthenticationException::class,
+            LaravelValidationException::class,
         ];
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param Request   $request
-     * @param Exception $exception
+     * @param Throwable $e
      *
      * @return mixed
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        if ($exception instanceof LaravelValidationException && $request->expectsJson()) {
+        if ($e instanceof LaravelValidationException && $request->expectsJson()) {
             // ignore it: controller will handle it.
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
-        if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+        if ($e instanceof NotFoundHttpException && $request->expectsJson()) {
             // JSON error:
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
-        if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+        if ($e instanceof AuthenticationException && $request->expectsJson()) {
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
 
-        if ($exception instanceof OAuthServerException && $request->expectsJson()) {
+        if ($e instanceof OAuthServerException && $request->expectsJson()) {
             // somehow Laravel handler does not catch this:
-            return response()->json(['message' => $exception->getMessage(), 'exception' => 'OAuthServerException'], 401);
+            return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
 
         if ($request->expectsJson()) {
@@ -88,33 +88,33 @@ class Handler extends ExceptionHandler
             if ($isDebug) {
                 return response()->json(
                     [
-                        'message'   => $exception->getMessage(),
-                        'exception' => get_class($exception),
-                        'line'      => $exception->getLine(),
-                        'file'      => $exception->getFile(),
-                        'trace'     => $exception->getTrace(),
+                        'message'   => $e->getMessage(),
+                        'exception' => get_class($e),
+                        'line'      => $e->getLine(),
+                        'file'      => $e->getFile(),
+                        'trace'     => $e->getTrace(),
                     ],
                     500
                 );
             }
 
             return response()->json(
-                ['message' => sprintf('Internal Firefly III Exception: %s', $exception->getMessage()), 'exception' => get_class($exception)], 500
+                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)], 500
             );
         }
 
-        if ($exception instanceof NotFoundHttpException) {
+        if ($e instanceof NotFoundHttpException) {
             $handler = app(GracefulNotFoundHandler::class);
 
-            return $handler->render($request, $exception);
+            return $handler->render($request, $e);
         }
-        if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
+        if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
             $isDebug = config('app.debug');
 
-            return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
+            return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
     /**
@@ -122,19 +122,16 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry etc.
      *
-     *  // it's five its fine.
-     *
      * @param Throwable $e
      *
      * @return void
-     * @throws Exception
+     * @throws Throwable
      *
      */
     public function report(Throwable $e)
     {
         $doMailError = config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
-            Log::info('Will not report on this error.');
             parent::report($e);
 
             return;
