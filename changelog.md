@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 5.5.2 (API 1.5.1) 2021-04-03
+## 5.5.3 (API 1.5.1) 2021-04-03
 
 ### Changed
 - Upgraded the render engine for the frontend.
@@ -30,6 +30,10 @@ This release features an update API version. Check out [the difference](https://
 
 - All endpoints that used to deliver dates (`2021-04-27`) will now deliver date time strings (`2021-04-27T16:43:12+02:00`).
 - [Issue 4566](https://github.com/firefly-iii/firefly-iii/issues/4566) Some API end points did not deliver the promised data.
+
+## 5.5.2
+
+Skipped.
 
 ## 5.5.1 (API 1.5.0) 2021-03-27
 
@@ -95,6 +99,10 @@ This release features an update API version. Check out [the difference](https://
 - [Issue 4426](https://github.com/firefly-iii/firefly-iii/issues/4426) Storing accounts would lead to bad capitalization in liability type.
 - [Issue 4435](https://github.com/firefly-iii/firefly-iii/issues/4435) Storing piggy banks with object group information would fail.
 - Users can submit almost any field without other fields changing as well.
+
+## 5.5.0 
+
+Skipped.
 
 ## 5.4.6 (API 1.4.0) - 2020-10-07
 
