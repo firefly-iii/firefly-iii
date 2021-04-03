@@ -1,4 +1,4 @@
-{% include 'v1.emails.header-text' %}
+{% include 'emails.header-text' %}
 {{ trans_choice('email.new_journals_header', transformed|length )|raw }}
 
 
@@ -13,4 +13,4 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
-{% include 'v1.emails.footer-text' %}
+{% include 'emails.footer-text' %}

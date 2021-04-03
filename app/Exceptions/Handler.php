@@ -34,6 +34,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -44,6 +45,13 @@ use Throwable;
  */
 class Handler extends ExceptionHandler
 {
+    /**
+     * @var array
+     */
+    protected $dontReport
+        = [
+        ];
+
     /**
      * Render an exception into an HTTP response.
      *
@@ -114,47 +122,47 @@ class Handler extends ExceptionHandler
      *
      *  // it's five its fine.
      *
-     * @param Exception $exception
+     * @param Throwable $e
      *
      * @return void
      * @throws Exception
      *
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
         $doMailError = config('firefly.send_error_message');
-        // if the user wants us to mail:
-        if (true === $doMailError
-            // and if is one of these error instances
-            && ($exception instanceof FireflyException || $exception instanceof ErrorException)) {
-            $userData = [
-                'id'    => 0,
-                'email' => 'unknown@example.com',
-            ];
-            if (auth()->check()) {
-                $userData['id']    = auth()->user()->id;
-                $userData['email'] = auth()->user()->email;
-            }
-            $data = [
-                'class'        => get_class($exception),
-                'errorMessage' => $exception->getMessage(),
-                'time'         => date('r'),
-                'stackTrace'   => $exception->getTraceAsString(),
-                'file'         => $exception->getFile(),
-                'line'         => $exception->getLine(),
-                'code'         => $exception->getCode(),
-                'version'      => config('firefly.version'),
-                'url'          => request()->fullUrl(),
-                'userAgent'    => request()->userAgent(),
-                'json'         => request()->acceptsJson(),
-            ];
-
-            // create job that will mail.
-            $ipAddress = request()->ip() ?? '0.0.0.0';
-            $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
-            dispatch($job);
+        if ($this->shouldntReport($e) || !$doMailError) {
+            Log::info('Will not report on this error.');
+            parent::report($e);
+            return;
         }
+        $userData = [
+            'id'    => 0,
+            'email' => 'unknown@example.com',
+        ];
+        if (auth()->check()) {
+            $userData['id']    = auth()->user()->id;
+            $userData['email'] = auth()->user()->email;
+        }
+        $data = [
+            'class'        => get_class($e),
+            'errorMessage' => $e->getMessage(),
+            'time'         => date('r'),
+            'stackTrace'   => $e->getTraceAsString(),
+            'file'         => $e->getFile(),
+            'line'         => $e->getLine(),
+            'code'         => $e->getCode(),
+            'version'      => config('firefly.version'),
+            'url'          => request()->fullUrl(),
+            'userAgent'    => request()->userAgent(),
+            'json'         => request()->acceptsJson(),
+        ];
 
-        parent::report($exception);
+        // create job that will mail.
+        $ipAddress = request()->ip() ?? '0.0.0.0';
+        $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
+        dispatch($job);
+
+        parent::report($e);
     }
 }

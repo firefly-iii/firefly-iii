@@ -1,4 +1,4 @@
-{% include 'v2.emails.header-html' %}
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.access_token_created_body') }}
 </p>
@@ -10,4 +10,4 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.access_token_created_revoke', {url: route('profile.index') }) }}
 </p>
-{% include 'v2.emails.footer-html' %}
+{% include 'emails.footer-html' %}

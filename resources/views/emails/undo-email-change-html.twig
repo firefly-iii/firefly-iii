@@ -1,18 +1,17 @@
-{% include 'v1.emails.header-html' %}
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.email_change_body_to_new')}}
+    {{ trans('email.email_change_body_to_old')|raw }}
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{trans('email.email_change_old', { email: oldEmail }) }}
+    {{ trans('email.email_change_ignore') }}
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{trans('email.email_change_new_strong', { email: newEmail })|raw }}
+    {{trans('email.email_change_old_strong', { email: oldEmail })|raw }}
 </p>
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    {{ trans('email.email_change_instructions')}}
+    {{trans('email.email_change_new', { email: newEmail }) }}
 </p>
-
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
-    <a href="{{ uri }}">{{ uri }}</a>
+    {{trans('email.email_change_undo_link')}} <a href="{{ uri }}">{{ uri }}</a>
 </p>
-{% include 'v1.emails.footer-html' %}
+{% include 'emails.footer-html' %}

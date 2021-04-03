@@ -1,4 +1,4 @@
-{% include 'v1.emails.header-html' %}
+{% include 'emails.header-html' %}
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.registered_welcome', {address: address})|raw }}
 </p>
@@ -17,4 +17,4 @@
 <p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
     {{ trans('email.registered_closing')}}
 </p>
-{% include 'v1.emails.footer-html' %}
+{% include 'emails.footer-html' %}
