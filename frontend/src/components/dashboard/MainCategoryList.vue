@@ -38,6 +38,13 @@
     <!-- body if normal -->
     <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
+        <caption style="display:none;">{{ $t('firefly.categories') }}</caption>
+        <thead>
+        <tr>
+          <th scope="col">{{ $t('firefly.category') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }}</th>
+        </tr>
+        </thead>
         <tbody>
         <tr v-for="category in sortedList">
           <td style="width:20%;">

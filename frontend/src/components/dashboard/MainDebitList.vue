@@ -38,6 +38,13 @@
     <!-- body if normal -->
     <div v-if="!loading && !error" class="card-body table-responsive p-0">
       <table class="table table-sm">
+        <caption style="display:none;">{{ $t('firefly.expense_accounts') }}</caption>
+        <thead>
+        <tr>
+          <th scope="col">{{ $t('firefly.category') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }}</th>
+        </tr>
+        </thead>
         <tbody>
         <tr v-for="entry in expenses">
           <td style="width:20%;"><a :href="'./accounts/show/' +  entry.id">{{ entry.name }}</a></td>

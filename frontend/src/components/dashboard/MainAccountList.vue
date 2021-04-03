@@ -100,7 +100,7 @@ export default {
                   ]),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
-    }
+    },
   },
   watch: {
     datesReady: function (value) {
@@ -137,7 +137,8 @@ export default {
                                id: accountIds[key],
                                title: '',
                                url: '',
-                               current_balance: '',
+                               include: false,
+                               current_balance: '0',
                                currency_code: 'EUR',
                                transactions: []
                              });
@@ -148,12 +149,15 @@ export default {
     loadSingleAccount(key, accountId) {
       axios.get('./api/v1/accounts/' + accountId)
           .then(response => {
-                  this.accounts[key].title = response.data.data.attributes.name;
-                  this.accounts[key].url = './accounts/show/' + response.data.data.id;
-                  this.accounts[key].current_balance = response.data.data.attributes.current_balance;
-                  this.accounts[key].currency_code = response.data.data.attributes.currency_code;
-
-                  this.loadTransactions(key, accountId);
+                  let account = response.data.data;
+                  if ('asset' === account.attributes.type || 'liabilities' === account.attributes.type) {
+                    this.accounts[key].title = account.attributes.name;
+                    this.accounts[key].url = './accounts/show/' + account.id;
+                    this.accounts[key].current_balance = account.attributes.current_balance;
+                    this.accounts[key].currency_code = account.attributes.currency_code;
+                    this.accounts[key].include = true;
+                    this.loadTransactions(key, accountId);
+                  }
                 }
           );
     },

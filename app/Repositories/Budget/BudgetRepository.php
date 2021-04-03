@@ -396,10 +396,11 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         Log::debug('Now in update()');
 
-        // TODO update rules
         $oldName = $budget->name;
         if (array_key_exists('name', $data)) {
             $budget->name = $data['name'];
+            $this->updateRuleActions($oldName, $budget->name);
+            $this->updateRuleTriggers($oldName, $budget->name);
         }
         if (array_key_exists('active', $data)) {
             $budget->active = $data['active'];

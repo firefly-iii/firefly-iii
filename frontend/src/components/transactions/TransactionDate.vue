@@ -66,7 +66,8 @@ export default {
     return {
       localDate: this.date,
       localTime: this.time,
-      timeZone: ''
+      timeZone: '',
+      timeString: '',
     }
   },
   methods: {},
@@ -98,6 +99,7 @@ export default {
           // console.log('Time is: ' + localStr);
           return localStr;
         }
+        // console.log('Return empty string!');
         return '';
       },
       set(value) {
@@ -115,9 +117,20 @@ export default {
         let parts = value.split(':');
         // console.log('Parts are:');
         // console.log(parts);
-        current.setHours(parseInt(parts[0] ?? 0));
-        current.setMinutes(parseInt(parts[1] ?? 0));
-        current.setSeconds(parseInt(parts[2] ?? 0));
+
+        let hrs = parts[0] ?? '0';
+        let min = parts[1] ?? '0';
+        let sec = parts[2] ?? '0';
+        hrs = 3 === hrs.length ? hrs.substr(1, 2) : hrs;
+        min = 3 === min.length ? min.substr(1, 2) : min;
+        sec = 3 === sec.length ? sec.substr(1, 2) : sec;
+        // console.log('Hrs: ' + hrs);
+        // console.log('Min: ' + min);
+        // console.log('Sec: ' + sec);
+
+        current.setHours(parseInt(hrs));
+        current.setMinutes(parseInt(min));
+        current.setSeconds(parseInt(sec));
         this.localTime = current;
         this.$emit('set-time', {time: this.localTime});
       }

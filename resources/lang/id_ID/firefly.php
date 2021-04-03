@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Terapkan aturan ":title" untuk pilihan transaksi Anda',
     'apply_rule_selection_intro'                          => 'Aturan seperti ":title" biasanya hanya diterapkan pada transaksi baru atau yang telah diperbarui, namun Anda bisa memberi tahu Firefly III untuk menjalankannya pada pilihan transaksi Anda yang ada. Ini bisa berguna bila Anda telah memperbarui peraturan dan Anda memerlukan perubahan yang akan diterapkan pada semua transaksi Anda yang lain.',
     'include_transactions_from_accounts'                  => 'Sertakan transaksi dari akun ini',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Menjalankan',
     'apply_rule_group_selection'                          => 'Terapkan grup aturan ":title" ke pilihan transaksi Anda',

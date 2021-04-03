@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Uplatniť pravidlo „:title“ na vybrané transakcie',
     'apply_rule_selection_intro'                          => 'Pravidlá ako „:title“ sa zvyčajne uplatňujú iba na nové alebo aktualizované transakcie, môžete však Firefly III povedať, aby ho spustil pri výbere vašich existujúcich transakcií. To môže byť užitočné, keď ste aktualizovali pravidlo a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
     'include_transactions_from_accounts'                  => 'Zahrnúť transakcie z týchto účtov',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Vykonať',
     'apply_rule_group_selection'                          => 'Uplatniť skupinu pravidiel „:title“ na vybrané transakcie',

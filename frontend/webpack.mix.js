@@ -53,6 +53,7 @@ mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
 // transactions.
 mix.js('src/pages/transactions/create.js', 'public/js/transactions').vue({version: 2});
 mix.js('src/pages/transactions/edit.js', 'public/js/transactions').vue({version: 2});
+mix.js('src/pages/transactions/index.js', 'public/js/transactions').vue({version: 2});
 
 // static pages
 mix.js('src/pages/empty.js', 'public/js').vue({version: 2});

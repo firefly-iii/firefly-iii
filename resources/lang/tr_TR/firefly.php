@@ -424,6 +424,7 @@ return [
     'apply_rule_selection'                                => 'İşleminizin bir bölümüne ":title" kuralını uygulayın',
     'apply_rule_selection_intro'                          => '":title" gibi kurallar normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kuralı değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
     'include_transactions_from_accounts'                  => 'Bu hesaplardan gelen işlemleri dahil et',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Çalıştır',
     'apply_rule_group_selection'                          => 'İşlemlerinizin bir bölümüne ":title" kural grubunu uygulayın',

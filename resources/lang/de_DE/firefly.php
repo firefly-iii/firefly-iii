@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Regel „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_selection_intro'                          => 'Regeln wie „:title” werden im Normalfall nur auf neue oder aktualisierte Buchungen angewandt. Sie können die Regel aber auch auf eine Auswahl Ihrer bestehenden Buchungen anwenden. Dies kann nützlich sein, wenn Sie eine Regel aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'include_transactions_from_accounts'                  => 'Buchungen von diesem Konto einbeziehen',
+    'include'                                             => 'Inbegriffen?',
     'applied_rule_selection'                              => '{0} In Ihrer Auswahl wurden keine Buchungen durch die Regel „:title” geändert.|[1] In Ihrer Auswahl wurde eine Buchung durch die Regel „:title” geändert.|[2,*] In Ihrer Auswahl wurden :count Buchungen durch die Regel „:title” geändert.',
     'execute'                                             => 'Ausführen',
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',

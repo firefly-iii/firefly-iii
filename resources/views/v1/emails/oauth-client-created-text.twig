@@ -1,7 +1,0 @@
-{% include 'v1.emails.header-text' %}
-{{ trans('email.oauth_created_body', {name:  client.name, url: client.redirect })|striptags|raw }}
-
-{{ trans('email.oauth_created_explanation')|striptags|raw }}
-
-{{ trans('email.oauth_created_undo', { url:route('profile.index')})|raw }}
-{% include 'v1.emails.footer-text' %}

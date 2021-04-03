@@ -54,13 +54,13 @@
 
             <div class="form-group has-feedback">
                 {% if config('firefly.login_provider') == 'eloquent' %}
-                    <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
+                    <input type="email" autocomplete="email" name="email" value="{% if not IS_DEMO_SITE %}{{ email }}{% else %}{{ DEMO_USERNAME }}{% endif %}" class="form-control" placeholder="{{ trans('form.email') }}"/>
                 {% else %}
                     <input type="text" autocomplete="username" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
                 {% endif %}
             </div>
             <div class="form-group has-feedback">
-                <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ trans('form.password') }}"/>
+                <input type="password" name="password" autocomplete="current-password" {% if IS_DEMO_SITE %}value="{{ DEMO_PASSWORD }}"{% endif%} class="form-control" placeholder="{{ trans('form.password') }}"/>
             </div>
             <div class="row">
                 <div class="col-xs-6">

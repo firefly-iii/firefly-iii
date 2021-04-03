@@ -25,6 +25,14 @@
     </div>
     <div class="card-body table-responsive p-0">
       <table class="table table-sm">
+        <caption style="display:none;">{{ title }}</caption>
+        <thead>
+        <tr>
+          <th scope="col">{{ $t('firefly.budget') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }}</th>
+          <th scope="col">{{ $t('firefly.left') }}</th>
+        </tr>
+        </thead>
         <tbody>
         <BudgetLimitRow v-for="(budgetLimit, key) in budgetLimits" v-bind:key="key" :budgetLimit="budgetLimit"/>
         <BudgetRow v-for="(budget, key) in budgets" v-bind:key="key" :budget="budget"/>

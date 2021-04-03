@@ -423,6 +423,7 @@ return [
     'apply_rule_selection'                                => 'Áp dụng quy tắc ":title" cho giao dịch bạn lựa chọn',
     'apply_rule_selection_intro'                          => 'Quy tắc như ":title" thường chỉ được áp dụng cho các giao dịch mới hoặc được cập nhật, nhưng bạn có thể yêu cầu Firefly III chạy nó trên một lựa chọn các giao dịch hiện tại của bạn. Điều này có thể hữu ích khi bạn đã cập nhật quy tắc và bạn cần thay đổi để áp dụng cho tất cả các giao dịch khác của mình.',
     'include_transactions_from_accounts'                  => 'Bao gồm các giao dịch từ các tài khoản này',
+    'include'                                             => 'Include?',
     'applied_rule_selection'                              => '{0} No transactions in your selection were changed by rule ":title".|[1] One transaction in your selection was changed by rule ":title".|[2,*] :count transactions in your selection were changed by rule ":title".',
     'execute'                                             => 'Hoàn thành',
     'apply_rule_group_selection'                          => 'Áp dụng nhóm quy tắc ":title" để lựa chọn các giao dịch của bạn',
