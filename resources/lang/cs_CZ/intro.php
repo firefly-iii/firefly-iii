@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Toto jsou doposud vytvořené účty. Hotovostní účet můžete použít pro sledování výdajů v hotovosti, ale není to pochopitelně povinné.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Zadejte základní informace o vaší transakci. Zdroj, destinace, datum a popis.',
+    'transactions_create_amount_info'                 => 'Zadejte částku transakce. V případě potřeby budou pole automaticky aktualizována pro informace o zahraniční měně.',
+    'transactions_create_optional_info'               => 'Všechna tato pole jsou nepovinná. Přidáním metadat se ale vaše transakce lépe organizují.',
+    'transactions_create_split'                       => 'Pokud chcete transakci rozdělit, přidejte další rozdělení s tímto tlačítkem',
 
     // create account:
     'accounts_create_iban'                            => 'Zadejte u svých účtů platný IBAN identifikátor. To by v budoucnu mohlo velmi ulehčit import dat.',

@@ -60,7 +60,7 @@ return [
     'less'                           => ':attribute måste vara mindre än 10 000 000',
     'active_url'                     => ':attribute är inte en giltig URL.',
     'after'                          => ':attribute måste vara ett datum efter :date.',
-    'date_after'                     => 'The start date must be before the end date.',
+    'date_after'                     => 'Startdatum måste vara före slutdatum.',
     'alpha'                          => ':attribute får enbart innehålla bokstäver.',
     'alpha_dash'                     => ':attribute får endast innehålla bokstäver, siffror och bindestreck.',
     'alpha_num'                      => ':attribute får endast innehålla bokstäver och siffror.',
@@ -183,7 +183,7 @@ return [
     'withdrawal_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
     'withdrawal_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
 
-    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
 
     'deposit_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
     'deposit_source_bad_data'  => 'Det gick inte att hitta ett giltigt källkonto med ID ":id" eller namn ":name".',
