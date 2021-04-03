@@ -116,7 +116,7 @@ class IndexController extends Controller
             }
             $current = $array['pay_dates'][0] ?? null;
             if (null !== $current && !$nextExpectedMatch->isToday()) {
-                $currentExpectedMatch              = Carbon::createFromFormat('!Y-m-d', $current);
+                $currentExpectedMatch              = Carbon::createFromFormat(Carbon::ATOM, $current);
                 $array['next_expected_match_diff'] = $currentExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
             }
 
