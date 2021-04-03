@@ -483,11 +483,29 @@ export default {
           for (let ii in basicFields) {
             if (basicFields.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
               let fieldName = basicFields[ii];
+              let submissionFieldName = fieldName;
               if (currentTransaction[fieldName] !== originalTransaction[fieldName]) {
                 // console.log('Index ' + i + ': Field ' + fieldName + ' updated ("' + originalTransaction[fieldName] + '" > "' + currentTransaction[fieldName] + '")');
                 // console.log(originalTransaction[fieldName]);
                 // console.log(currentTransaction[fieldName]);
-                diff[fieldName] = currentTransaction[fieldName];
+
+                // some field names may need to be different. little basic but it works:
+                // console.log('pre:  ' + submissionFieldName);
+                if ('source_account_id' === submissionFieldName) {
+                  submissionFieldName = 'source_id';
+                }
+                if ('source_account_name' === submissionFieldName) {
+                  submissionFieldName = 'source_name';
+                }
+                if ('destination_account_id' === submissionFieldName) {
+                  submissionFieldName = 'destination_id';
+                }
+                if ('destination_account_name' === submissionFieldName) {
+                  submissionFieldName = 'destination_name';
+                }
+                // console.log('post: ' + submissionFieldName);
+
+                diff[submissionFieldName] = currentTransaction[fieldName];
                 shouldSubmit = true;
               }
             }
@@ -507,10 +525,10 @@ export default {
                 if (currentTransaction.tags.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
                   // array.tags
                   let currentTag = currentTransaction.tags[ii];
-                  if(typeof currentTag === 'object' && null !== currentTag) {
+                  if (typeof currentTag === 'object' && null !== currentTag) {
                     diff.tags.push(currentTag.text);
                   }
-                  if(typeof currentTag === 'string') {
+                  if (typeof currentTag === 'string') {
                     diff.tags.push(currentTag);
                   }
                 }
