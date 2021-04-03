@@ -123,6 +123,7 @@ return [
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
+    'ipinfo_token'                 => env('IPINFO_TOKEN',''),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),

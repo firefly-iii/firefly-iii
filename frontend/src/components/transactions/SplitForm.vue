@@ -56,6 +56,7 @@
                     :errors="transaction.errors.source"
                     :index="index"
                     :source-allowed-types="sourceAllowedTypes"
+                    :transaction-type="transactionType"
                     direction="source"
                 />
               </div>
@@ -79,6 +80,7 @@
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.destination"
                     :index="index"
+                    :transaction-type="transactionType"
                     :source-allowed-types="sourceAllowedTypes"
                     direction="destination"
                 />

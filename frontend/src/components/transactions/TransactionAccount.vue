@@ -96,6 +96,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    transactionType: {
+      type: String,
+      default: 'any'
+    },
   },
   data() {
     return {
@@ -234,10 +238,6 @@ export default {
     }
   },
   computed: {
-    // 'transactionType',
-    // 'sourceAllowedTypes',
-    // 'destinationAllowedTypes',
-    // 'allowedOpposingTypes'
     accountKey: {
       get() {
         return 'source' === this.direction ? 'source_account' : 'destination_account';
@@ -249,11 +249,13 @@ export default {
         if (0 === this.index) {
           return true;
         }
+        // console.log('Direction of account ' + this.index + ' is ' + this.direction + '(' + this.transactionType + ')');
+        // console.log(this.transactionType);
         if ('source' === this.direction) {
-          return 'any' === this.transactionType || 'Deposit' === this.transactionType
+            return 'any' === this.transactionType || 'Deposit' === this.transactionType || typeof this.transactionType === 'undefined';
         }
         if ('destination' === this.direction) {
-          return 'any' === this.transactionType || 'Withdrawal' === this.transactionType;
+          return 'any' === this.transactionType || 'Withdrawal' === this.transactionType || typeof this.transactionType === 'undefined';
         }
         return false;
       }
