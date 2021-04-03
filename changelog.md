@@ -4,19 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-## 5.5.2 (API 1.5.1) 2021-04-02
-
-### Added
-- Nothing (yet)
+## 5.5.2 (API 1.5.1) 2021-04-03
 
 ### Changed
-- Nothing (yet)
-
-### Deprecated
-- Nothing (yet)
-
-### Removed
-- Nothing (yet)
+- Upgraded the render engine for the frontend.
 
 ### Fixed
 - [Issue 4547](https://github.com/firefly-iii/firefly-iii/issues/4547) Call to bad function breaks several report.
@@ -31,9 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4574](https://github.com/firefly-iii/firefly-iii/issues/4574) 500-error when trying to update bills.
 - [Issue 4575](https://github.com/firefly-iii/firefly-iii/issues/4575) Add new date-ranges to the v2 index page.
 - [Issue 4578](https://github.com/firefly-iii/firefly-iii/issues/4578) Fixed some time selection issues in v2.
-
-### Security
-- Nothing (yet)
+- [Issue 4582](https://github.com/firefly-iii/firefly-iii/issues/4582) Inactive budgets would still get budget limits.
 
 ### API
 

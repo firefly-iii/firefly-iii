@@ -133,6 +133,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum($start, $end, $accounts, $revenue, $currency, TransactionType::DEPOSIT);
+
         return $this->groupByDirection($journals, 'destination', 'positive');
     }
 
@@ -143,6 +144,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $revenue = null, ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum($start, $end, $accounts, $revenue, $currency, TransactionType::DEPOSIT);
+
         return $this->groupByDirection($journals, 'source', 'positive');
     }
 
@@ -151,67 +153,11 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
-        $start->startOfDay();
-        $end->endOfDay();
+        $journals = $this->getTransactionsForSum($start, $end, $accounts, null, $currency, TransactionType::TRANSFER);
 
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER]);
-
-        if (null !== $accounts) {
-            $collector->setAccounts($accounts);
-        }
-        if (null !== $currency) {
-            $collector->setCurrency($currency);
-        }
-        $journals = $collector->getExtractedJournals();
-
-        // same but for foreign currencies:
-        if (null !== $currency) {
-            /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                      ->setForeignCurrency($currency);
-
-            if (null !== $accounts) {
-                $collector->setAccounts($accounts);
-            }
-            $result = $collector->getExtractedJournals();
-
-            // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-            $journals = $result + $journals;
-        }
-        $array = [];
-
-        foreach ($journals as $journal) {
-            $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
-                    'sum'                     => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->positive($journal['amount']));
-
-            // also do foreign amount:
-            $foreignId = (int)$journal['foreign_currency_id'];
-            if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
-                        'sum'                     => '0',
-                        'currency_id'             => $foreignId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->positive($journal['foreign_amount']));
-            }
-        }
-
-        return $array;
+        return $this->groupByEither($journals);
     }
+
 
     /**
      * Collect transactions with some parameters
@@ -438,5 +384,127 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @param array $journals
+     *
+     * @return array
+     */
+    private function groupByEither(array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $return = $this->groupByEitherJournal($return, $journal);
+        }
+        $final = [];
+        foreach ($return as $array) {
+            $array['difference_float'] = (float)$array['difference'];
+            $array['in_float']         = (float)$array['in'];
+            $array['out_float']        = (float)$array['out'];
+            $final[]                   = $array;
+        }
+
+        return $final;
+    }
+
+    /**
+     * @param array $return
+     * @param array $journal
+     *
+     * @return array
+     */
+    private function groupByEitherJournal(array $return, array $journal): array
+    {
+        $sourceId      = $journal['source_account_id'];
+        $destinationId = $journal['destination_account_id'];
+        $currencyId    = $journal['currency_id'];
+        $sourceKey     = sprintf('%d-%d', $currencyId, $sourceId);
+        $destKey       = sprintf('%d-%d', $currencyId, $destinationId);
+        $amount        = app('steam')->positive($journal['amount']);
+
+        // source first
+        $return[$sourceKey] = $return[$sourceKey] ?? [
+                'id'               => (string)$sourceId,
+                'name'             => $journal['source_account_name'],
+                'difference'       => '0',
+                'difference_float' => 0,
+                'in'               => '0',
+                'in_float'         => 0,
+                'out'              => '0',
+                'out_float'        => 0,
+                'currency_id'      => (string)$currencyId,
+                'currency_code'    => $journal['currency_code'],
+            ];
+
+        // dest next:
+        $return[$destKey] = $return[$destKey] ?? [
+                'id'               => (string)$destinationId,
+                'name'             => $journal['destination_account_name'],
+                'difference'       => '0',
+                'difference_float' => 0,
+                'in'               => '0',
+                'in_float'         => 0,
+                'out'              => '0',
+                'out_float'        => 0,
+                'currency_id'      => (string)$currencyId,
+                'currency_code'    => $journal['currency_code'],
+            ];
+
+        // source account? money goes out!
+        $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
+        $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
+
+        // destination  account? money comes in:
+        $return[$destKey]['in']         = bcadd($return[$destKey]['in'], $amount);
+        $return[$destKey]['difference'] = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+
+        // foreign currency
+        if (null !== $journal['foreign_currency_id'] && null !== $journal['foreign_amount']) {
+            $currencyId = $journal['foreign_currency_id'];
+            $sourceKey  = sprintf('%d-%d', $currencyId, $sourceId);
+            $destKey    = sprintf('%d-%d', $currencyId, $destinationId);
+            $amount     = app('steam')->positive($journal['foreign_amount']);
+
+            // same as above:
+            // source first
+            $return[$sourceKey] = $return[$sourceKey] ?? [
+                    'id'               => (string)$sourceId,
+                    'name'             => $journal['source_account_name'],
+                    'difference'       => '0',
+                    'difference_float' => 0,
+                    'in'               => '0',
+                    'in_float'         => 0,
+                    'out'              => '0',
+                    'out_float'        => 0,
+                    'currency_id'      => (string)$currencyId,
+                    'currency_code'    => $journal['foreign_currency_code'],
+                ];
+
+            // dest next:
+            $return[$destKey] = $return[$destKey] ?? [
+                    'id'               => (string)$destinationId,
+                    'name'             => $journal['destination_account_name'],
+                    'difference'       => '0',
+                    'difference_float' => 0,
+                    'in'               => '0',
+                    'in_float'         => 0,
+                    'out'              => '0',
+                    'out_float'        => 0,
+                    'currency_id'      => (string)$currencyId,
+                    'currency_code'    => $journal['foreign_currency_code'],
+                ];
+            // source account? money goes out! (same as above)
+            $return[$sourceKey]['out']        = bcadd($return[$sourceKey]['out'], app('steam')->negative($amount));
+            $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
+
+            // destination  account? money comes in:
+            $return[$destKey]['in']         = bcadd($return[$destKey]['in'], $amount);
+            $return[$destKey]['difference'] = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+
+        }
+
+        return $return;
     }
 }
