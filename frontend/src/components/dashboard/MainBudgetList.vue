@@ -203,25 +203,26 @@ export default {
               let budgetId = parseInt(current.attributes.budget_id);
               let currencyId = parseInt(current.attributes.currency_id);
               let spentFloat = parseFloat(current.attributes.spent);
+              let spentFloatPos = parseFloat(current.attributes.spent) * -1;
               let amount = parseFloat(current.attributes.amount);
               let period = current.attributes.period ?? 'other';
               let pctGreen = 0;
               let pctOrange = 0;
               let pctRed = 0;
-              console.log('Collected "' + period + '" budget limit #' + currentId + ' (part of budget #' + budgetId + ')');
-              console.log('Spent ' + spentFloat + ' of ' + amount);
+              //console.log('Collected "' + period + '" budget limit #' + currentId + ' (part of budget #' + budgetId + ')');
+              //console.log('Spent ' + spentFloat + ' of ' + amount);
 
               // remove budget info from rawBudgets if it's there:
               this.filterBudgets(budgetId, currencyId);
 
               // spent within budget:
-              if (0.0 !== spentFloat && spentFloat * -1 < amount) {
-                pctGreen = (spentFloat * -1) / (amount * 100);
+              if (0.0 !== spentFloat && spentFloatPos < amount) {
+                pctGreen = (spentFloatPos / amount) * 100;
               }
 
               // spent over budget
-              if (0.0 !== spentFloat && (spentFloat * -1) > amount) {
-                pctOrange = (amount / (spentFloat * -1)) * 100;
+              if (0.0 !== spentFloatPos && spentFloatPos > amount) {
+                pctOrange = (spentFloatPos / amount) * 100;
                 pctRed = 100 - pctOrange;
               }
               let obj = {
