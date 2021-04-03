@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Pas regel ":title" toe op een selectie van je transacties',
     'apply_rule_selection_intro'                          => 'Regels zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je een regels hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'include_transactions_from_accounts'                  => 'Gebruik transacties van deze rekeningen',
-    'include'                                             => 'Include?',
+    'include'                                             => 'Opnemen?',
     'applied_rule_selection'                              => '{0} Er zijn geen transacties in je selectie veranderd door regel ":title".|[1] Eén transactie in je selectie is veranderd door regel ":title".|[2,*] :count transacties in je selectie zijn veranderd door regel ":title".',
     'execute'                                             => 'Uitvoeren',
     'apply_rule_group_selection'                          => 'Pas regelgroep ":title" toe op een selectie van je transacties',

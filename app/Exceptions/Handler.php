@@ -51,6 +51,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport
         = [
+            AuthenticationException::class
         ];
 
     /**
