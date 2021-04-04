@@ -21,10 +21,16 @@
                 <h2 class="headline text-info">503</h2>
 
                 <div class="error-content">
-                    <h3><i class="fas fa-robot text-info"></i> {{ trans('errors.maintenance_mode') }}</h3>
+                    <h3><i class="fas fa-wrench text-info"></i> {{ trans('errors.maintenance_mode') }}</h3>
                     <p>
                         {{ trans('errors.check_back') }}
                     </p>
+                    {% if 'demo.firefly-iii.org' == Request.getHost() %}
+                        <p>
+                            <i class="fas fa-recycle"></i> The Firefly III demo website resets every <strong>four hours</strong>.
+                            Please wait for this process to finish.
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
