@@ -2,7 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 5.5.4 (API 1.5.2) 2021-04-xx (unreleased)
+
+### Added
+- Nothing (yet)
+
+### Changed
+- Nothing (yet)
+
+### Deprecated
+- Nothing (yet)
+
+### Removed
+- Nothing (yet)
+
+### Fixed
+- Nothing (yet)
+
+### Security
+- Nothing (yet)
+
+### API
+- Nothing (yet)
 
 ## 5.5.3 (API 1.5.1) 2021-04-03
 
@@ -27,6 +48,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### API
 
 This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.0...1.5.1).
+
 
 - All endpoints that used to deliver dates (`2021-04-27`) will now deliver date time strings (`2021-04-27T16:43:12+02:00`).
 - [Issue 4566](https://github.com/firefly-iii/firefly-iii/issues/4566) Some API end points did not deliver the promised data.
