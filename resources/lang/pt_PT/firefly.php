@@ -423,7 +423,7 @@ return [
     'apply_rule_selection'                                => 'Aplicar a regra ":title" a uma selecção de transacções',
     'apply_rule_selection_intro'                          => 'Regras como ":title" são normalmente aplicadas a transações novas ou atualizadas, no entanto pode dizer ao Firefly III para executar as mesmas em transações selecionadas. Isto pode ser útil quando tiver atualizado uma regra e necessite de aplicar as alterações a todas as transações que devem ser afetas.',
     'include_transactions_from_accounts'                  => 'Incluir transações destas contas',
-    'include'                                             => 'Include?',
+    'include'                                             => 'Incluir?',
     'applied_rule_selection'                              => '{0} Nenhuma transação na sua seleção foi alterada pela regra ":title".[1] Uma transação na sua seleção foi alterada pela regra ":title".├[2,*] :count transações na sua seleção foram alteradas pela regra ":title".',
     'execute'                                             => 'Executar',
     'apply_rule_group_selection'                          => 'Aplicar grupo de regras ":title" a uma selecção de transacções',

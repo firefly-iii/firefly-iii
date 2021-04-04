@@ -123,12 +123,19 @@ trait GroupValidation
      */
     private function validateJournalId(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void
     {
-        $journalId = $transaction['transaction_journal_id'] ?? null;
+        $journalId = 0;
+        if (array_key_exists('transaction_journal_id', $transaction)) {
+            $journalId = $transaction['transaction_journal_id'];
+        }
         Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
+        if (0 === $journalId) {
+            Log::debug('Submitted 0, will accept to be used in a new transaction.');
 
-        $journalId = null === $journalId ? null : (int)$journalId;
-        $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
-        if (null === $journalId || (null !== $journalId && 0 !== $journalId && 0 === $count)) {
+            return;
+        }
+        $count = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
+        if (null === $journalId || 0 === $count) {
+            Log::warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
             Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
         }

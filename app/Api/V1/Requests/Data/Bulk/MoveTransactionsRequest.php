@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * MoveTransactionsRequest.php
  * Copyright (c) 2021 james@firefly-iii.org

@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Der Wert muss mit :values beginnen.',
     'unique_webhook'                 => 'Sie haben bereits einen Webhook mit diesen Werten.',
     'unique_existing_webhook'        => 'Sie haben bereits einen anderen Webhook mit diesen Werten.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Dies ist ein unsicheres Passwort. Bitte versuchen Sie es erneut. Weitere Informationen finden Sie unter https://github.com/firefly-iii/help/wiki/Secure-password',
     'valid_recurrence_rep_type'   => 'Ungültige Wiederholungsart für Daueraufträge.',

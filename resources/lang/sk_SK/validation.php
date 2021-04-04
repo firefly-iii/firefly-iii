@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Hodnota musí začínať :values.',
     'unique_webhook'                 => 'Webhook s týmito hodnotami už existuje.',
     'unique_existing_webhook'        => 'Iný webhook s týmito hodnotami už existuje.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Toto nie je bezpečné heslo. Skúste iné. Viac se dozviete na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Neplatný typ opakovania pre opakované transakcie.',

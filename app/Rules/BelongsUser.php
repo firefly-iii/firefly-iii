@@ -186,6 +186,9 @@ class BelongsUser implements Rule
      */
     private function validateBillId(int $value): bool
     {
+        if (0 === $value) {
+            return true;
+        }
         $count = Bill::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;

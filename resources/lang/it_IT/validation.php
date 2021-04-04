@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Il valore deve iniziare con :values.',
     'unique_webhook'                 => 'Hai già un webhook con questi valori.',
     'unique_existing_webhook'        => 'Hai già un altro webhook con questi valori.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Il tipo di ripetizione della transazione ricorrente non è valido.',

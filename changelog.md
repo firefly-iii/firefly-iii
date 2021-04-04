@@ -17,13 +17,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Nothing (yet)
 
 ### Fixed
-- Nothing (yet)
+- [Issue 4589](https://github.com/firefly-iii/firefly-iii/issues/4589) It was not possible to change accounts in layout v2.
+- [Issue 4591](https://github.com/firefly-iii/firefly-iii/issues/4591) It was not possible to create splits in layout v2.
 
 ### Security
 - Nothing (yet)
 
 ### API
-- Nothing (yet)
+
+This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.1...1.5.2).
+
+
+- New endpoint to bulk update transactions.
+- The chart API endpoint includes the time in the labels.
 
 ## 5.5.3 (API 1.5.1) 2021-04-03
 
