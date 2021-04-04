@@ -105,7 +105,7 @@ class AccountUpdateService
         }
 
         // update preferences if inactive:
-        $this->updatePreferences($account, $data);
+        $this->updatePreferences($account);
 
         return $account;
     }
@@ -290,34 +290,29 @@ class AccountUpdateService
 
     /**
      * @param Account $account
-     * @param array   $data
      */
-    private function updatePreferences(Account $account, array $data): void
+    private function updatePreferences(Account $account): void
     {
-        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
-        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
-            Log::debug('Account was marked as inactive.');
-            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
-            if (null !== $preference) {
-                $removeAccountId = (int)$account->id;
-                $array           = $preference->data;
-                Log::debug('Current list of accounts: ', $array);
-                Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
-                $filtered = array_filter(
-                    $array, function ($accountId) use ($removeAccountId) {
-                    return (int)$accountId !== $removeAccountId;
-                }
-                );
-                Log::debug('Left with accounts', array_values($filtered));
-                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
-                app('preferences')->forget($account->user, 'frontpageAccounts');
-
-                return;
-            }
-            Log::debug("Found no frontpageAccounts preference, do nothing.");
-
+        $account->refresh();
+        if (true === $account->active) {
             return;
         }
-        Log::debug('Account was not marked as inactive, do nothing.');
+        $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+        if (null === $preference) {
+            return;
+        }
+        $array = $preference->data;
+        Log::debug('Old array is: ', $array);
+        Log::debug(sprintf('Must remove : %d', $account->id));
+        $removeAccountId = (int)$account->id;
+        $new             = [];
+        foreach ($array as $value) {
+            if ((int)$value !== $removeAccountId) {
+                Log::debug(sprintf('Will include: %d', $value));
+                $new[] = (int)$value;
+            }
+        }
+        Log::debug('Final new array is', $new);
+        app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
     }
 }
