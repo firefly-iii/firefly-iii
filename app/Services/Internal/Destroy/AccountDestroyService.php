@@ -115,7 +115,7 @@ class AccountDestroyService
      * @param Account $account
      * @param Account $moveTo
      */
-    private function moveTransactions(Account $account, Account $moveTo): void
+    public function moveTransactions(Account $account, Account $moveTo): void
     {
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
     }

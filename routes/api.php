@@ -90,6 +90,15 @@ Route::group(
     }
 );
 
+// Bulk update Account routes
+Route::group(
+    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Bulk', 'prefix' => 'data/bulk/accounts',
+     'as'        => 'api.v1.data.bulk.',],
+    static function () {
+        Route::post('transactions', ['uses' => 'AccountController@moveTransactions', 'as' => 'accounts.move-transactions']);
+    }
+);
+
 /**
  * INSIGHTS ROUTES
  */
