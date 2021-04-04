@@ -107,7 +107,6 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $result = version_compare(phpversion(), '8.0');
         $types  = config('firefly.accountTypesByIdentifier.asset');
         $count  = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');

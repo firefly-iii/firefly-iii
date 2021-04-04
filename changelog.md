@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - [Issue 4589](https://github.com/firefly-iii/firefly-iii/issues/4589) It was not possible to change accounts in layout v2.
 - [Issue 4591](https://github.com/firefly-iii/firefly-iii/issues/4591) It was not possible to create splits in layout v2.
+- #4593 Could not change or update recurring repetition data.
 
 ### Security
 - Nothing (yet)

@@ -56,15 +56,15 @@ class RecurrenceFormRequest extends FormRequest
         $repetitionData = $this->parseRepetitionData();
         $return         = [
             'recurrence'   => [
-                'type'           => $this->string('transaction_type'),
-                'title'          => $this->string('title'),
-                'description'    => $this->string('recurring_description'),
-                'first_date'     => $this->date('first_date'),
-                'repeat_until'   => $this->date('repeat_until'),
-                'repetitions'    => $this->integer('repetitions'),
-                'apply_rules'    => $this->boolean('apply_rules'),
-                'active'         => $this->boolean('active'),
-                'repetition_end' => $this->string('repetition_end'),
+                'type'              => $this->string('transaction_type'),
+                'title'             => $this->string('title'),
+                'description'       => $this->string('recurring_description'),
+                'first_date'        => $this->date('first_date'),
+                'repeat_until'      => $this->date('repeat_until'),
+                'nr_of_repetitions' => $this->integer('repetitions'),
+                'apply_rules'       => $this->boolean('apply_rules'),
+                'active'            => $this->boolean('active'),
+                'repetition_end'    => $this->string('repetition_end'),
             ],
             'transactions' => [
                 [

@@ -141,6 +141,7 @@ class EditController extends Controller
             'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
         $array['first_date']              = substr($array['first_date'], 0, 10);
+        $array['repeat_until']            = substr((string)$array['repeat_until'], 0, 10);
         $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
 
         return prefixView(
