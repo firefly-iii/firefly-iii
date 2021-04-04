@@ -27,7 +27,6 @@ declare(strict_types=1);
 namespace FireflyIII\Exceptions;
 
 use ErrorException;
-use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -52,6 +51,7 @@ class Handler extends ExceptionHandler
         = [
             AuthenticationException::class,
             LaravelValidationException::class,
+            NotFoundHttpException::class,
         ];
 
     /**
