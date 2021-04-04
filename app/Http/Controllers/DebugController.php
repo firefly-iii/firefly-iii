@@ -193,7 +193,7 @@ class DebugController extends Controller
             $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
         }
 
-        return prefixView(
+        return view(
             'debug',
             compact(
                 'phpVersion',
