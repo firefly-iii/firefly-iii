@@ -15,11 +15,11 @@
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
         <strong>{{ 'flash_success'|_ }}</strong>
-        {% if session_has('success_uri') %}
-            <a href="{{ session('success_uri') }}">
+        {% if session_has('success_url') %}
+            <a href="{{ session('success_url') }}">
         {% endif %}
                 {{ session('success') }}
-        {% if session_has('success_uri') %}
+        {% if session_has('success_url') %}
             </a>
         {% endif %}
 
