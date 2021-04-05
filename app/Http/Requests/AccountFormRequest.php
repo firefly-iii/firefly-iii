@@ -47,8 +47,7 @@ class AccountFormRequest extends FormRequest
         $data = [
             'name'                    => $this->string('name'),
             'active'                  => $this->boolean('active'),
-            'account_type'            => $this->string('objectType'),
-            'account_type_id'         => 0,
+            'account_type_name'       => $this->string('objectType'),
             'currency_id'             => $this->integer('currency_id'),
             'virtual_balance'         => $this->string('virtual_balance'),
             'iban'                    => $this->string('iban'),
@@ -72,9 +71,9 @@ class AccountFormRequest extends FormRequest
 
         // if the account type is "liabilities" there are actually four types of liability
         // that could have been selected.
-        if ('liabilities' === $data['account_type']) {
-            $data['account_type']    = null;
-            $data['account_type_id'] = $this->integer('liability_type_id');
+        if ('liabilities' === $data['account_type_name']) {
+            $data['account_type_name'] = null;
+            $data['account_type_id']   = $this->integer('liability_type_id');
         }
 
         return $data;

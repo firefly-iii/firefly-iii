@@ -117,7 +117,30 @@ class AccountDestroyService
      */
     public function moveTransactions(Account $account, Account $moveTo): void
     {
+        Log::debug(sprintf('Move from account #%d to #%d', $account->id, $moveTo->id));
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+
+        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')
+                                 ->where('account_id', $moveTo->id)
+                                 ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]);
+        if (0 === $collection->count()) {
+            return;
+        }
+
+        /** @var JournalDestroyService $service */
+        $service = app(JournalDestroyService::class);
+        $user    = $account->user;
+        /** @var \stdClass $row */
+        foreach ($collection as $row) {
+            if ((int)$row->the_count > 1) {
+                $journalId = (int)$row->transaction_journal_id;
+                $journal   = $user->transactionJournals()->find($journalId);
+                if (null !== $journal) {
+                    Log::debug(sprintf('Deleted journal #%d because it has the same source as destination.', $journal->id));
+                    $service->destroy($journal);
+                }
+            }
+        }
     }
 
     /**

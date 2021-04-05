@@ -123,7 +123,7 @@ return [
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
     'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
-    'ipinfo_token'                 => env('IPINFO_TOKEN',''),
+    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
@@ -849,4 +849,8 @@ return [
             Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
         ],
     ],
+    'can_have_virtual_amounts'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
+    'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'],
 ];

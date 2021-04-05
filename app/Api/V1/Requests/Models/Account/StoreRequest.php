@@ -59,7 +59,7 @@ class StoreRequest extends FormRequest
             'name'                    => $this->string('name'),
             'active'                  => $active,
             'include_net_worth'       => $includeNetWorth,
-            'account_type'            => $this->string('type'),
+            'account_type_name'       => $this->string('type'),
             'account_type_id'         => null,
             'currency_id'             => $this->integer('currency_id'),
             'order'                   => $this->integer('order'),
