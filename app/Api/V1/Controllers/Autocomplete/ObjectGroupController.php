@@ -66,7 +66,7 @@ class ObjectGroupController extends Controller
         $return = [];
         $result = $this->repository->search($data['query'], $data['limit']);
 
-        /** @var ObjectGroup $account */
+        /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
             $return[] = [
                 'id'    => (string)$objectGroup->id,

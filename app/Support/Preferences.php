@@ -143,9 +143,9 @@ class Preferences
     }
 
     /**
-     * @param User        $user
-     * @param string      $name
-     * @param null|string $default
+     * @param User            $user
+     * @param string          $name
+     * @param null|string|int $default
      *
      * @return \FireflyIII\Models\Preference|null
      */

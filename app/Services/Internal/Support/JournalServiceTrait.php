@@ -197,14 +197,14 @@ trait JournalServiceTrait
 
             $account = $this->accountRepository->store(
                 [
-                    'account_type_id' => null,
-                    'account_type'    => $preferredType,
-                    'name'            => $data['name'],
-                    'virtual_balance' => null,
-                    'active'          => true,
-                    'iban'            => $data['iban'],
-                    'currency_id'     => $data['currency_id'] ?? null,
-                    'order'           => $this->accountRepository->maxOrder($preferredType),
+                    'account_type_id'   => null,
+                    'account_type_name' => $preferredType,
+                    'name'              => $data['name'],
+                    'virtual_balance'   => null,
+                    'active'            => true,
+                    'iban'              => $data['iban'],
+                    'currency_id'       => $data['currency_id'] ?? null,
+                    'order'             => $this->accountRepository->maxOrder($preferredType),
                 ]
             );
             // store BIC

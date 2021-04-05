@@ -80,10 +80,10 @@ class StoreRequest extends FormRequest
         // append Location information.
         $data = $this->appendLocationData($data, null);
 
-        if ('liability' === $data['account_type'] || 'liabilities' === $data['account_type']) {
+        if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
             $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
             $data['opening_balance_date'] = $this->date('liability_start_date');
-            $data['account_type']         = $this->string('liability_type');
+            $data['account_type_name']         = $this->string('liability_type');
             $data['account_type_id']      = null;
         }
 

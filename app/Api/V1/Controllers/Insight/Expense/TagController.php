@@ -44,9 +44,8 @@ class TagController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $user             = auth()->user();
                 $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }
@@ -128,7 +127,7 @@ class TagController extends Controller
         $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
-        /** @var array $entry */
+        /** @var array $journal */
         foreach ($genericSet as $journal) {
             $currencyId        = (int)$journal['currency_id'];
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];

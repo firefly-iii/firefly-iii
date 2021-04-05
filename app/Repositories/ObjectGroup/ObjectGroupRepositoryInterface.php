@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\ObjectGroup;
 
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -86,6 +87,11 @@ interface ObjectGroupRepositoryInterface
      * @return ObjectGroup
      */
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup;
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param ObjectGroup $objectGroup

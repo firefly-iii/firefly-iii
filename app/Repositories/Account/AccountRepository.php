@@ -504,12 +504,12 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $data = [
-            'account_type_id' => null,
-            'account_type'    => AccountType::RECONCILIATION,
-            'active'          => true,
-            'name'            => $name,
-            'currency_id'     => $currency->id,
-            'currency_code'   => $currency->code,
+            'account_type_id'   => null,
+            'account_type_name' => AccountType::RECONCILIATION,
+            'active'            => true,
+            'name'              => $name,
+            'currency_id'       => $currency->id,
+            'currency_code'     => $currency->code,
         ];
 
         /** @var AccountFactory $factory */

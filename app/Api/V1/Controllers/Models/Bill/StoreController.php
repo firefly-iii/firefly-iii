@@ -52,12 +52,8 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $admin */
-                $admin = auth()->user();
-
-                /** @var BillRepositoryInterface repository */
                 $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setUser($admin);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }

@@ -32,6 +32,7 @@ use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA as LegacyRSA;
 use phpseclib3\Crypt\RSA;
+
 /**
  * Trait CreateStuff
  *
@@ -54,7 +55,7 @@ trait CreateStuff
         $assetAccount = [
             'name'                 => $request->get('bank_name'),
             'iban'                 => null,
-            'account_type'         => 'asset',
+            'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
@@ -84,7 +85,7 @@ trait CreateStuff
         $assetAccount = [
             'name'                 => (string)trans('firefly.cash_wallet', [], $language),
             'iban'                 => null,
-            'account_type'         => 'asset',
+            'account_type_name'         => 'asset',
             'virtual_balance'      => 0,
             'account_type_id'      => null,
             'active'               => true,
@@ -151,7 +152,7 @@ trait CreateStuff
         $savingsAccount = [
             'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
             'iban'                 => null,
-            'account_type'         => 'asset',
+            'account_type_name'         => 'asset',
             'account_type_id'      => null,
             'virtual_balance'      => 0,
             'active'               => true,

@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Controllers\Data\Export;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Support\Export\ExportDataGenerator;
-use FireflyIII\User;
 use Illuminate\Http\Response as LaravelResponse;
 use League\Csv\CannotInsertRecord;
 
@@ -44,11 +43,8 @@ class ExportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-                /** @var ExportDataGenerator $exporter */
                 $this->exporter = app(ExportDataGenerator::class);
-                $this->exporter->setUser($user);
+                $this->exporter->setUser(auth()->user());
 
                 return $next($request);
             }
@@ -92,7 +88,7 @@ class ExportController extends Controller
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', strlen($data[$key]));
+            ->header('Content-Length', (string)strlen($data[$key]));
 
         return $response;
     }

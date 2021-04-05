@@ -49,12 +49,8 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user = auth()->user();
-
-                /** @var RecurringRepositoryInterface repository */
                 $this->repository = app(RecurringRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }

@@ -85,13 +85,13 @@ class AccountFactory
             Log::debug('Found nothing. Will create a new one.');
             $return = $this->create(
                 [
-                    'user_id'         => $this->user->id,
-                    'name'            => $accountName,
-                    'account_type_id' => $type->id,
-                    'account_type'    => null,
-                    'virtual_balance' => '0',
-                    'iban'            => null,
-                    'active'          => true,
+                    'user_id'           => $this->user->id,
+                    'name'              => $accountName,
+                    'account_type_id'   => $type->id,
+                    'account_type_name' => null,
+                    'virtual_balance'   => '0',
+                    'iban'              => null,
+                    'active'            => true,
                 ]
             );
         }

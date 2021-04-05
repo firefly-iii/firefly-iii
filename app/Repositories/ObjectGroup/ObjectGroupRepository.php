@@ -181,6 +181,14 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
     }
 
     /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
      * @inheritDoc
      */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
@@ -196,13 +204,5 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         $objectGroup->save();
 
         return $objectGroup;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 }
