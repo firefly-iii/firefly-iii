@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
+
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;

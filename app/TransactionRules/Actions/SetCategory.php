@@ -50,7 +50,7 @@ class SetCategory implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $user = User::find($journal['user_id']);
+        $user   = User::find($journal['user_id']);
         $search = $this->action->action_value;
         if (null === $user) {
             Log::error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);

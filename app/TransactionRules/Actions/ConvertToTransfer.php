@@ -22,11 +22,11 @@
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
+
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -55,8 +55,8 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $type    = $journal['transaction_type_type'];
-        $user    = User::find($journal['user_id']);
+        $type = $journal['transaction_type_type'];
+        $user = User::find($journal['user_id']);
         if (TransactionType::TRANSFER === $type) {
             Log::error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id)

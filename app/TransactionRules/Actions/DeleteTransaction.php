@@ -58,7 +58,7 @@ class DeleteTransaction implements ActionInterface
                     $journal['transaction_journal_id'], $journal['description']
                 )
             );
-            $group = TransactionGroup::find($journal['transaction_group_id']);
+            $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
 

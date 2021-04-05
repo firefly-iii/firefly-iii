@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use DB;
 use FireflyIII\Models\RuleAction;
 use Log;
+
 /**
  * Class RemoveAllTags.
  */
