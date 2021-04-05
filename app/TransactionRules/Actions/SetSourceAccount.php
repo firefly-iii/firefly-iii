@@ -55,32 +55,32 @@ class SetSourceAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $user = User::find($journal['user_id']);
-        $type = $journal['transaction_type_type'];
-        /** @var TransactionJournal $journal */
-        $journal = TransactionJournal::find((int)$journal['transaction_journal_id']);
+        /** @var TransactionJournal $object */
         /** @var AccountRepositoryInterface repository */
+        /** @var Transaction $destination */
+
+        $user             = User::find($journal['user_id']);
+        $type             = $journal['transaction_type_type'];
+        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
+
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount = $this->findAssetAccount($type);
         if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
-                sprintf(
-                    'Cannot change source account of journal #%d because no asset account with name "%s" exists.', $journal['transaction_journal_id'],
-                    $this->action->action_value
-                )
+                sprintf('Cant change src account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
             );
 
             return false;
         }
+
         // new source account must be different from the current destination:
         $destinationId = (int)$journal['destination_account_id'];
-        /** @var Transaction $source */
-        $source = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null !== $source) {
-            $destinationId = $source->account ? (int)$source->account->id : $destinationId;
+        $destination        = $object->transactions()->where('amount', '>', 0)->first();
+        if (null !== $destination) {
+            $destinationId = $destination->account ? (int)$destination->account->id : $destinationId;
         }
         if (TransactionType::TRANSFER === $type && null !== $newAccount && (int)$newAccount->id === $destinationId) {
             Log::error(
@@ -92,6 +92,7 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
+
         // if this is a deposit, the new source account must be a revenue account and may be created:
         if (TransactionType::DEPOSIT === $type) {
             $newAccount = $this->findRevenueAccount();
@@ -107,11 +108,11 @@ class SetSourceAccount implements ActionInterface
         // update source transaction with new source account:
         // get source transaction:
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
+          ->where('transaction_journal_id', '=', $object->id)
           ->where('amount', '<', 0)
           ->update(['account_id' => $newAccount->id]);
 
-        Log::debug(sprintf('Updated journal #%d and gave it new source account ID.', $journal['transaction_journal_id']));
+        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }
@@ -141,12 +142,12 @@ class SetSourceAccount implements ActionInterface
         if (null === $account) {
             // create new revenue account with this name:
             $data    = [
-                'name'            => $this->action->action_value,
-                'account_type'    => 'revenue',
-                'account_type_id' => null,
-                'virtual_balance' => 0,
-                'active'          => true,
-                'iban'            => null,
+                'name'              => $this->action->action_value,
+                'account_type_name' => 'revenue',
+                'account_type_id'   => null,
+                'virtual_balance'   => 0,
+                'active'            => true,
+                'iban'              => null,
             ];
             $account = $this->repository->store($data);
         }
