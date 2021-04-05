@@ -107,7 +107,7 @@ class Steam
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
@@ -493,6 +493,9 @@ class Steam
      */
     public function negative(string $amount): string
     {
+        if ('' === $amount) {
+            return '0';
+        }
         if (1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
@@ -554,6 +557,9 @@ class Steam
      */
     public function positive(string $amount): string
     {
+        if ('' === $amount) {
+            return '0';
+        }
         if (bccomp($amount, '0') === -1) {
             $amount = bcmul($amount, '-1');
         }

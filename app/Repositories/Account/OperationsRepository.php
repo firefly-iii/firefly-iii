@@ -203,7 +203,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->$direction($journal['amount']),
+                'amount'                   => app('steam')->$direction((string)$journal['amount']),
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -364,7 +364,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method($journal['amount']));
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['amount']));
 
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
@@ -379,7 +379,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                         'currency_code'           => $journal['foreign_currency_code'],
                         'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                     ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method($journal['foreign_amount']));
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['foreign_amount']));
             }
         }
 
