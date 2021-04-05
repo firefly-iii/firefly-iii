@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Șterge contul de venituri ":name"',
     'delete_liabilities_account'                => 'Șterge provizionul ":name"',
     'asset_deleted'                             => 'Contul de active ":name" a fost șters cu succes',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Contul de cheltuieli ":name" a fost șters cu succes',
     'revenue_deleted'                           => 'Contul de venituri ":name" a fost șters cu succes',
     'update_asset_account'                      => 'Actualizați contul de active',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III a încercat să vă redirecționeze, dar nu a putut. Îmi pare rău pentru asta. Înapoi la index.',
     'account_type'                              => 'Tip cont',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Cont nou ":name" salvat!',
     'updated_account'                           => 'Contul ":name" actualizat',
     'credit_card_options'                       => 'Opțiuni pentru carduri de credit',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Edit group ":title"',
     'delete_object_group'                => 'Delete group ":title"',
     'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Group',
 
 

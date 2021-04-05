@@ -30,6 +30,7 @@
         "notes": "Noteringar",
         "yourAccounts": "Dina konton",
         "go_to_asset_accounts": "Visa dina tillg\u00e5ngskonton",
+        "delete_account": "Ta bort konto",
         "transaction_table_description": "En tabell som inneh\u00e5ller dina transaktioner",
         "account": "Konto",
         "description": "Beskrivning",
@@ -58,7 +59,7 @@
         "spent": "Spenderat",
         "Default asset account": "F\u00f6rvalt tillg\u00e5ngskonto",
         "search_results": "S\u00f6kresultat",
-        "include": "Include?",
+        "include": "Inkludera?",
         "transaction": "Transaktion",
         "account_role_defaultAsset": "F\u00f6rvalt tillg\u00e5ngskonto",
         "account_role_savingAsset": "Sparkonto",
@@ -107,7 +108,9 @@
         "actions": "\u00c5tg\u00e4rder",
         "edit": "Redigera",
         "delete": "Ta bort",
-        "reconcile_this_account": "St\u00e4m av detta konto"
+        "reconcile_this_account": "St\u00e4m av detta konto",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(Ingen)"
     },
     "list": {
         "piggy_bank": "Spargris",
@@ -126,6 +129,10 @@
         "foreign_amount": "Utl\u00e4ndskt belopp",
         "interest_date": "R\u00e4ntedatum",
         "book_date": "Bokf\u00f6ringsdatum",
+        "permDeleteWarning": "Att ta bort saker fr\u00e5n Firefly III \u00e4r permanent och kan inte \u00e5ngras.",
+        "account_areYouSure_js": "\u00c4r du s\u00e4ker du vill ta bort kontot \"{name}\"?",
+        "also_delete_piggyBanks_js": "Inga spargrisar|Den enda spargrisen som \u00e4r ansluten till detta konto kommer ocks\u00e5 att tas bort.|Alla {count} spargrisar anslutna till detta konto kommer ocks\u00e5 att tas bort.",
+        "also_delete_transactions_js": "Inga transaktioner|Den enda transaktionen som \u00e4r ansluten till detta konto kommer ocks\u00e5 att tas bort.|Alla {count} transaktioner som \u00e4r kopplade till detta konto kommer ocks\u00e5 att tas bort.",
         "process_date": "Behandlingsdatum",
         "due_date": "F\u00f6rfallodatum",
         "payment_date": "Betalningsdatum",

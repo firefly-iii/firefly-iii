@@ -30,6 +30,7 @@
         "notes": "Ghi ch\u00fa",
         "yourAccounts": "T\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n",
         "go_to_asset_accounts": "Xem t\u00e0i kho\u1ea3n c\u1ee7a b\u1ea1n",
+        "delete_account": "X\u00f3a t\u00e0i kho\u1ea3n",
         "transaction_table_description": "A table containing your transactions",
         "account": "T\u00e0i kho\u1ea3n",
         "description": "S\u1ef1 mi\u00eau t\u1ea3",
@@ -107,7 +108,9 @@
         "actions": "H\u00e0nh \u0111\u1ed9ng",
         "edit": "S\u1eeda",
         "delete": "X\u00f3a",
-        "reconcile_this_account": "\u0110i\u1ec1u ch\u1ec9nh t\u00e0i kho\u1ea3n n\u00e0y"
+        "reconcile_this_account": "\u0110i\u1ec1u ch\u1ec9nh t\u00e0i kho\u1ea3n n\u00e0y",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(Tr\u1ed1ng)"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",
@@ -126,6 +129,10 @@
         "foreign_amount": "Ngo\u1ea1i t\u1ec7",
         "interest_date": "Ng\u00e0y l\u00e3i",
         "book_date": "Ng\u00e0y \u0111\u1eb7t s\u00e1ch",
+        "permDeleteWarning": "X\u00f3a n\u1ed9i dung kh\u1ecfi Firefly III l\u00e0 v\u0129nh vi\u1ec5n v\u00e0 kh\u00f4ng th\u1ec3 ho\u00e0n t\u00e1c.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Ng\u00e0y x\u1eed l\u00fd",
         "due_date": "Ng\u00e0y \u0111\u00e1o h\u1ea1n",
         "payment_date": "Ng\u00e0y thanh to\u00e1n",

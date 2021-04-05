@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Poista tuottotili ":name"',
     'delete_liabilities_account'                => 'Poista vastuu ":name"',
     'asset_deleted'                             => 'Poistettiin onnistuneesti omaisuustili ":name"',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Poistettiin onnistuneesti kulutustili ":name"',
     'revenue_deleted'                           => 'Poistettiin onnistuneesti tuottotili ":name"',
     'update_asset_account'                      => 'Päivitä omaisuustili',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III yritti tehdä pyytämääsi uudelleenohjausta mutta epäonnistui. Pahoittelut siitä. Takaisin valikkoon.',
     'account_type'                              => 'Tilin tyyppi',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Uusi tili ":name" tallennettiin!',
     'updated_account'                           => 'Tiliä ":name" päivitettiin',
     'credit_card_options'                       => 'Luottokorttivalinnat',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Muokkaa ryhmää ":title"',
     'delete_object_group'                => 'Delete group ":title"',
     'update_object_group'                => 'Päivitä ryhmä',
-    'updated_object_group'               => 'Ryhmän ":title" päivitys onnistui',
-    'deleted_object_group'               => 'Ryhmän ":title" poistaminen onnistui',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Ryhmä',
 
 

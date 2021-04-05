@@ -3864,10 +3864,10 @@ fs-extra@^9.0.1, fs-extra@^9.1.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
-fs-monkey@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/fs-monkey/-/fs-monkey-1.0.1.tgz#4a82f36944365e619f4454d9fff106553067b781"
-  integrity sha512-fcSa+wyTqZa46iWweI7/ZiUfegOZl0SG8+dltIwFXo7+zYU9J9kpS3NB6pZcSlJdhvIwp81Adx2XhZorncxiaA==
+fs-monkey@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/fs-monkey/-/fs-monkey-1.0.3.tgz#ae3ac92d53bb328efe0e9a1d9541f6ad8d48e2d3"
+  integrity sha512-cybjIfiiE+pTWicSCLFHSrXZ6EilF30oh91FDP9S2B051prEa7QWfrVTQm10/dDpswBDXZugPa1Ogu8Yh+HV0Q==
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -5176,11 +5176,11 @@ mem@^8.0.0:
     mimic-fn "^3.1.0"
 
 memfs@^3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.2.1.tgz#12301801a14eb3daa9f7491aa0ff09ffec519dd0"
-  integrity sha512-Y5vcpQzWTime4fBTr/fEnxXUxEYUgKbDlty1WX0gaa4ae14I6KmvK1S8HtXOX0elKAE6ENZJctkGtbTFYcRIUw==
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.2.2.tgz#5de461389d596e3f23d48bb7c2afb6161f4df40e"
+  integrity sha512-RE0CwmIM3CEvpcdK3rZ19BC4E6hv9kADkMN5rPduRak58cNArWLi/9jFLsa4rhsjfVxMP3v0jO7FHXq7SvFY5Q==
   dependencies:
-    fs-monkey "1.0.1"
+    fs-monkey "1.0.3"
 
 merge-descriptors@1.0.1:
   version "1.0.1"
@@ -5847,10 +5847,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pdfkit@>=0.8.1, pdfkit@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/pdfkit/-/pdfkit-0.11.0.tgz#9cdb2fc42bd2913587fe3ddf48cc5bbb3c36f7de"
-  integrity sha512-1s9gaumXkYxcVF1iRtSmLiISF2r4nHtsTgpwXiK8Swe+xwk/1pm8FJjYqN7L3x13NsWnGyUFntWcO8vfqq+wwA==
+pdfkit@>=0.8.1, pdfkit@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/pdfkit/-/pdfkit-0.12.0.tgz#0681f84d83fd08fa0a1f3237338c8b9a27bdaa4c"
+  integrity sha512-DnfNzX4WKfnxuk90V+focyck01QEmfSc0VBm2g9ElPKVWLcJEg66dd+t1TdaEPL3TKgDFXQOpIquEh6in6UWoA==
   dependencies:
     crypto-js "^3.1.9-1"
     fontkit "^1.8.0"
@@ -5858,13 +5858,13 @@ pdfkit@>=0.8.1, pdfkit@^0.11.0:
     png-js "^1.0.0"
 
 pdfmake@^0.1.70:
-  version "0.1.70"
-  resolved "https://registry.yarnpkg.com/pdfmake/-/pdfmake-0.1.70.tgz#b5102799deef264defa675dbb2dbf12ad49a9bae"
-  integrity sha512-xPhkblaQ71U97qhRTPj/1HknAHHFZ3cPRmRdrqEWD2xXBcEjEM3Yw0MIjML8DRy9Dt9n6QRjHVf662f0eLtd7Q==
+  version "0.1.71"
+  resolved "https://registry.yarnpkg.com/pdfmake/-/pdfmake-0.1.71.tgz#9cb20032cfed534f1bb5aa95026343fd7b4a5953"
+  integrity sha512-uXUy+NZ8R5pwJ6rYLJRu7VRw/w5ogBScNk440CHpMZ6Z0+E1uc1XvwK4I1U5ry0UZQ3qPD0dpSvbzAkRBKYoJA==
   dependencies:
     iconv-lite "^0.6.2"
     linebreak "^1.0.2"
-    pdfkit "^0.11.0"
+    pdfkit "^0.12.0"
     svg-to-pdfkit "^0.1.8"
     xmldoc "^1.1.2"
 
@@ -8017,9 +8017,9 @@ xtend@^4.0.0, xtend@^4.0.2, xtend@~4.0.1:
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
 
 y18n@^5.0.5:
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.5.tgz#8769ec08d03b1ea2df2500acef561743bbb9ab18"
-  integrity sha512-hsRUr4FFrvhhRH12wOdfs38Gy7k2FFzB9qgN9v3aLykRq0dRcdcpz5C9FxdS2NuhOrI/628b/KSTJ3rwHysYSg==
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.6.tgz#8236b05cfc5af6a409f41326a4847c68989bb04f"
+  integrity sha512-PlVX4Y0lDTN6E2V4ES2tEdyvXkeKzxa8c/vo0pxPr/TqbztddTP0yn7zZylIyiAuxerqj0Q5GhpJ1YJCP8LaZQ==
 
 yallist@^2.1.2:
   version "2.1.2"

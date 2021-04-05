@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => '删除收入账户“:name”',
     'delete_liabilities_account'                => '删除债务账户“:name”',
     'asset_deleted'                             => '已成功删除资产账户“:name”',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => '已成功删除支出账户“:name”',
     'revenue_deleted'                           => '已成功删除收入账户“:name”',
     'update_asset_account'                      => '更新资产账户',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => '很抱歉，Firefly III 无法跳转。正在返回主页...',
     'account_type'                              => '账户类型',
     'save_transactions_by_moving'               => '将此交易移动到另一个账户并保存：|将这些交易移动到另一个账户并保存：',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => '新账户“:name”已保存！',
     'updated_account'                           => '账户“:name”已更新',
     'credit_card_options'                       => '信用卡选项',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => '编辑组“:title”',
     'delete_object_group'                => '删除组“:title”',
     'update_object_group'                => '更新组',
-    'updated_object_group'               => '成功更新组“:title”',
-    'deleted_object_group'               => '成功删除组“:title”',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => '组',
 
 

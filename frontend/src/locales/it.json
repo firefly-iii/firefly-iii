@@ -30,6 +30,7 @@
         "notes": "Note",
         "yourAccounts": "I tuoi conti",
         "go_to_asset_accounts": "Visualizza i tuoi conti attivit\u00e0",
+        "delete_account": "Elimina account",
         "transaction_table_description": "Una tabella contenente le tue transazioni",
         "account": "Conto",
         "description": "Descrizione",
@@ -107,7 +108,9 @@
         "actions": "Azioni",
         "edit": "Modifica",
         "delete": "Elimina",
-        "reconcile_this_account": "Riconcilia questo conto"
+        "reconcile_this_account": "Riconcilia questo conto",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(nessuna)"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
@@ -126,6 +129,10 @@
         "foreign_amount": "Importo estero",
         "interest_date": "Data di valuta",
         "book_date": "Data contabile",
+        "permDeleteWarning": "L'eliminazione dei dati da Firefly III \u00e8 definitiva e non pu\u00f2 essere annullata.",
+        "account_areYouSure_js": "Sei sicuro di voler eliminare il conto \"{name}\"?",
+        "also_delete_piggyBanks_js": "Nessun salvadanaio|Anche l'unico salvadanaio collegato a questo conto verr\u00e0 eliminato.|Anche tutti i {count} salvadanai collegati a questo conto verranno eliminati.",
+        "also_delete_transactions_js": "Nessuna transazioni|Anche l'unica transazione collegata al conto verr\u00e0 eliminata.|Anche tutte le {count} transazioni collegati a questo conto verranno eliminate.",
         "process_date": "Data elaborazione",
         "due_date": "Data scadenza",
         "payment_date": "Data pagamento",

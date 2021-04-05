@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => '刪除收入帳戶 ":name"',
     'delete_liabilities_account'                => '刪除債務 ":name"',
     'asset_deleted'                             => '已成功刪除資產帳戶 ":name"',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => '已成功刪除支出帳戶 ":name"',
     'revenue_deleted'                           => '已成功刪除收入帳戶 ":name"',
     'update_asset_account'                      => '更新資產帳戶',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III tried to redirect you but couldn\'t. Sorry about that. Back to the index.',
     'account_type'                              => '帳戶類型',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => '新帳戶 ":name" 已儲存！',
     'updated_account'                           => '帳戶 ":name" 已更新',
     'credit_card_options'                       => '信用卡選項',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Edit group ":title"',
     'delete_object_group'                => 'Delete group ":title"',
     'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Group',
 
 

@@ -30,6 +30,7 @@
         "notes": "Pozn\u00e1mky",
         "yourAccounts": "Va\u0161e \u00fa\u010dty",
         "go_to_asset_accounts": "Zobrazit \u00fa\u010dty s aktivy",
+        "delete_account": "Smazat \u00fa\u010det",
         "transaction_table_description": "A table containing your transactions",
         "account": "\u00da\u010det",
         "description": "Popis",
@@ -107,7 +108,9 @@
         "actions": "Akce",
         "edit": "Upravit",
         "delete": "Odstranit",
-        "reconcile_this_account": "Vy\u00fa\u010dtovat tento \u00fa\u010det"
+        "reconcile_this_account": "Vy\u00fa\u010dtovat tento \u00fa\u010det",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(\u017e\u00e1dn\u00e9)"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -126,6 +129,10 @@
         "foreign_amount": "\u010c\u00e1stka v ciz\u00ed m\u011bn\u011b",
         "interest_date": "\u00darokov\u00e9 datum",
         "book_date": "Datum rezervace",
+        "permDeleteWarning": "Odstran\u011bn\u00ed v\u011bc\u00ed z Firefly III je trval\u00e9 a nelze vr\u00e1tit zp\u011bt.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Datum zpracov\u00e1n\u00ed",
         "due_date": "Datum splatnosti",
         "payment_date": "Datum zaplacen\u00ed",

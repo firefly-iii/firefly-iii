@@ -30,6 +30,7 @@
         "notes": "Megjegyz\u00e9sek",
         "yourAccounts": "Banksz\u00e1ml\u00e1k",
         "go_to_asset_accounts": "Eszk\u00f6zsz\u00e1ml\u00e1k megtekint\u00e9se",
+        "delete_account": "Fi\u00f3k t\u00f6rl\u00e9se",
         "transaction_table_description": "Tranzakci\u00f3kat tartalmaz\u00f3 t\u00e1bl\u00e1zat",
         "account": "Banksz\u00e1mla",
         "description": "Le\u00edr\u00e1s",
@@ -107,7 +108,9 @@
         "actions": "M\u0171veletek",
         "edit": "Szerkeszt\u00e9s",
         "delete": "T\u00f6rl\u00e9s",
-        "reconcile_this_account": "Sz\u00e1mla egyeztet\u00e9se"
+        "reconcile_this_account": "Sz\u00e1mla egyeztet\u00e9se",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(nincs)"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -126,6 +129,10 @@
         "foreign_amount": "K\u00fclf\u00f6ldi \u00f6sszeg",
         "interest_date": "Kamatfizet\u00e9si id\u0151pont",
         "book_date": "K\u00f6nyvel\u00e9s d\u00e1tuma",
+        "permDeleteWarning": "A Firefly III-b\u00f3l t\u00f6rt\u00e9n\u0151 t\u00f6rl\u00e9s v\u00e9gleges \u00e9s nem vonhat\u00f3 vissza.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
         "due_date": "Lej\u00e1rati id\u0151pont",
         "payment_date": "Fizet\u00e9s d\u00e1tuma",

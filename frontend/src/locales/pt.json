@@ -30,6 +30,7 @@
         "notes": "Notas",
         "yourAccounts": "As suas contas",
         "go_to_asset_accounts": "Ver as contas de activos",
+        "delete_account": "Apagar conta de utilizador",
         "transaction_table_description": "Uma tabela com as suas transac\u00e7\u00f5es",
         "account": "Conta",
         "description": "Descricao",
@@ -107,7 +108,9 @@
         "actions": "A\u00e7\u00f5es",
         "edit": "Alterar",
         "delete": "Apagar",
-        "reconcile_this_account": "Reconciliar esta conta"
+        "reconcile_this_account": "Reconciliar esta conta",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(nenhum)"
     },
     "list": {
         "piggy_bank": "Mealheiro",
@@ -126,6 +129,10 @@
         "foreign_amount": "Montante estrangeiro",
         "interest_date": "Data de juros",
         "book_date": "Data de registo",
+        "permDeleteWarning": "Apagar as tuas coisas do Firefly III e permanente e nao pode ser desfeito.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",
         "payment_date": "Data de pagamento",

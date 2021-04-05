@@ -134,8 +134,8 @@ return [
     'starts_with'                    => 'Värdet måste börja med :values.',
     'unique_webhook'                 => 'Du har redan en webhook med dessa värden.',
     'unique_existing_webhook'        => 'Du har redan en annan webhook med dessa värden.',
-    'same_account_type'              => 'Both accounts must be of the same account type',
-    'same_account_currency'          => 'Both accounts must have the same currency setting',
+    'same_account_type'              => 'Båda kontona måste vara samma kontotyp',
+    'same_account_currency'          => 'Båda kontona måste ha samma valutainställning',
 
     'secure_password'             => 'Detta lösenord är inte säkert. Vänligen försök igen. För mer info se https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Ogiltig repetitionstyp får återkommande transaktioner.',

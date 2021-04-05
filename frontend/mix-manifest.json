@@ -1,6 +1,7 @@
 {
     "/public/js/dashboard.js": "/public/js/dashboard.js",
     "/public/js/accounts/index.js": "/public/js/accounts/index.js",
+    "/public/js/accounts/delete.js": "/public/js/accounts/delete.js",
     "/public/js/accounts/show.js": "/public/js/accounts/show.js",
     "/public/js/transactions/create.js": "/public/js/transactions/create.js",
     "/public/js/transactions/edit.js": "/public/js/transactions/edit.js",

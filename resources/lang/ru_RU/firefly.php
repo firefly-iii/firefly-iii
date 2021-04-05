@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Удалить счёт доходов ":name"',
     'delete_liabilities_account'                => 'Удалить долговой счёт ":name"',
     'asset_deleted'                             => 'Основной счёт ":name" успешно удалён',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Счёт расхода ":name" успешно удалён',
     'revenue_deleted'                           => 'Счёт дохода ":name" успешно удалён',
     'update_asset_account'                      => 'Обновить основной счёт',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III попытался перенаправить вас, но не смог. Извините. Вернуться на главную страницу.',
     'account_type'                              => 'Тип счёта',
     'save_transactions_by_moving'               => 'Сохраните эту транзакцию, переместив её на другой счёт:|Сохраните эти транзакции, переместив их на другой счёт:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Новый счёт ":name" сохранён!',
     'updated_account'                           => 'Обновить счёт ":name"',
     'credit_card_options'                       => 'Параметры кредитной карты',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Изменить группу ":title"',
     'delete_object_group'                => 'Удалить группу ":title"',
     'update_object_group'                => 'Обновить группу',
-    'updated_object_group'               => 'Группа ":title" успешно обновлена',
-    'deleted_object_group'               => 'Группа ":title" успешно удалена',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Группа',
 
 

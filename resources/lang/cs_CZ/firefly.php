@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Delete revenue account ":name"',
     'delete_liabilities_account'                => 'Smazat závazek „:name“',
     'asset_deleted'                             => 'Successfully deleted asset account ":name"',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Successfully deleted expense account ":name"',
     'revenue_deleted'                           => 'Successfully deleted revenue account ":name"',
     'update_asset_account'                      => 'Aktualizovat výdajový účet',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III tried to redirect you but couldn\'t. Sorry about that. Back to the index.',
     'account_type'                              => 'Typ účtu',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Nový účet „:name“ uložen!',
     'updated_account'                           => 'Aktualizován účet „:name“',
     'credit_card_options'                       => 'Předvolby kreditní karty',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Upravit skupinu „:title“',
     'delete_object_group'                => 'Odstranit skupinu „:title“',
     'update_object_group'                => 'Aktualizovat skupinu',
-    'updated_object_group'               => 'Skupina „:title“ byla úspěšně aktualizována',
-    'deleted_object_group'               => 'Skupina „:title“ byla úspěšně odstraněna',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Skupina',
 
 

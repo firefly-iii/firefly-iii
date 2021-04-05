@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Hapus akun pendapatan ":name"',
     'delete_liabilities_account'                => 'Delete liability ":name"',
     'asset_deleted'                             => 'Berhasil menghapus akun aset ":name"',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Akun pengeluaran yang berhasil dihapus ":name"',
     'revenue_deleted'                           => 'Berhasil menghapus akun pendapatan ":name"',
     'update_asset_account'                      => 'Perbarui akun aset',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III tried to redirect you but couldn\'t. Sorry about that. Back to the index.',
     'account_type'                              => 'Jenis akun',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Akun baru ":name" disimpan!',
     'updated_account'                           => 'Memperbarui akun ":name"',
     'credit_card_options'                       => 'Pilihan kartu kredit',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Edit group ":title"',
     'delete_object_group'                => 'Delete group ":title"',
     'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Group',
 
 

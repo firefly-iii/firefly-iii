@@ -30,6 +30,7 @@
         "notes": "Notes",
         "yourAccounts": "Vos comptes",
         "go_to_asset_accounts": "Afficher vos comptes d'actifs",
+        "delete_account": "Supprimer le compte",
         "transaction_table_description": "Une table contenant vos op\u00e9rations",
         "account": "Compte",
         "description": "Description",
@@ -107,7 +108,9 @@
         "actions": "Actions",
         "edit": "Modifier",
         "delete": "Supprimer",
-        "reconcile_this_account": "Rapprocher ce compte"
+        "reconcile_this_account": "Rapprocher ce compte",
+        "save_transactions_by_moving_js": "Aucune op\u00e9ration|Conserver cette op\u00e9ration en la d\u00e9pla\u00e7ant vers un autre compte. |Conserver ces op\u00e9rations en les d\u00e9pla\u00e7ant vers un autre compte.",
+        "none_in_select_list": "(aucun)"
     },
     "list": {
         "piggy_bank": "Tirelire",
@@ -126,6 +129,10 @@
         "foreign_amount": "Montant en devise \u00e9trang\u00e8re",
         "interest_date": "Date de valeur (int\u00e9r\u00eats)",
         "book_date": "Date de r\u00e9servation",
+        "permDeleteWarning": "Supprimer quelque chose dans Firefly est permanent et ne peut pas \u00eatre annul\u00e9.",
+        "account_areYouSure_js": "\u00cates-vous s\u00fbr de vouloir supprimer le compte nomm\u00e9 \"{name}\" ?",
+        "also_delete_piggyBanks_js": "Aucune tirelire|La seule tirelire li\u00e9e \u00e0 ce compte sera aussi supprim\u00e9e.|Les {count} tirelires li\u00e9es \u00e0 ce compte seront aussi supprim\u00e9es.",
+        "also_delete_transactions_js": "Aucune op\u00e9ration|La seule op\u00e9ration li\u00e9e \u00e0 ce compte sera aussi supprim\u00e9e.|Les {count} op\u00e9rations li\u00e9es \u00e0 ce compte seront aussi supprim\u00e9es.",
         "process_date": "Date de traitement",
         "due_date": "\u00c9ch\u00e9ance",
         "payment_date": "Date de paiement",

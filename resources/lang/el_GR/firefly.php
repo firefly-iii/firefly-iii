@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Διαγραφή λογαριασμού εσόδων ":name"',
     'delete_liabilities_account'                => 'Διαγραφή υποχρέωσης ":name"',
     'asset_deleted'                             => 'Επιτυχής διαγραφή του κεφαλαιακού λογαριασμού ":name"',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Επιτυχής διαγραφή του λογαριασμού δαπανών ":name"',
     'revenue_deleted'                           => 'Επιτυχής διαγραφή του λογαριασμού εσόδων ":name"',
     'update_asset_account'                      => 'Ενημέρωση λογαριασμού κεφαλαίου',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Το Firefly III προσπάθησε να σας ανακατευθύνει αλλά δεν κατάφερε. Συγνώμη για αυτό. Πίσω στην αρχική.',
     'account_type'                              => 'Τύπος λογαριασμού',
     'save_transactions_by_moving'               => 'Αποθηκεύστε αυτή τη συναλλαγή μετακινώντας την σε ένα άλλο λογαριασμό:|Αποθηκεύστε αυτές τις συναλλαγές μετακινώντας τις σε ένα άλλο λογαριασμό:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Ο νέος λογαριασμός ":name" αποθηκεύτηκε!',
     'updated_account'                           => 'Ενημερώθηκε ο λογαριασμός ":name"',
     'credit_card_options'                       => 'Επιλογές πιστωτικής κάρτας',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Επεξεργασία ομάδας ":title"',
     'delete_object_group'                => 'Διαγραφή ομάδας ":title"',
     'update_object_group'                => 'Ενημέρωση ομάδας',
-    'updated_object_group'               => 'Επιτυχής ενημέρωση της ομάδας ":title"',
-    'deleted_object_group'               => 'Επιτυχής διαγραφή της ομάδας ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Ομάδα',
 
 

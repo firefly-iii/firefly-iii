@@ -30,6 +30,7 @@
         "notes": "Notater",
         "yourAccounts": "Dine kontoer",
         "go_to_asset_accounts": "Se aktivakontoene dine",
+        "delete_account": "Slett konto",
         "transaction_table_description": "A table containing your transactions",
         "account": "Konto",
         "description": "Beskrivelse",
@@ -107,7 +108,9 @@
         "actions": "Handlinger",
         "edit": "Rediger",
         "delete": "Slett",
-        "reconcile_this_account": "Avstem denne kontoen"
+        "reconcile_this_account": "Avstem denne kontoen",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(ingen)"
     },
     "list": {
         "piggy_bank": "Sparegris",
@@ -126,6 +129,10 @@
         "foreign_amount": "Utenlandske bel\u00f8p",
         "interest_date": "Rentedato",
         "book_date": "Bokf\u00f8ringsdato",
+        "permDeleteWarning": "Sletting av data fra Firefly III er permanent, og kan ikke angres.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Prosesseringsdato",
         "due_date": "Forfallsdato",
         "payment_date": "Betalingsdato",

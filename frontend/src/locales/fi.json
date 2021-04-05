@@ -30,6 +30,7 @@
         "notes": "Muistiinpanot",
         "yourAccounts": "Omat tilisi",
         "go_to_asset_accounts": "Tarkastele omaisuustilej\u00e4si",
+        "delete_account": "Poista k\u00e4ytt\u00e4j\u00e4tili",
         "transaction_table_description": "A table containing your transactions",
         "account": "Tili",
         "description": "Kuvaus",
@@ -107,7 +108,9 @@
         "actions": "Toiminnot",
         "edit": "Muokkaa",
         "delete": "Poista",
-        "reconcile_this_account": "T\u00e4sm\u00e4yt\u00e4 t\u00e4m\u00e4 tili"
+        "reconcile_this_account": "T\u00e4sm\u00e4yt\u00e4 t\u00e4m\u00e4 tili",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(ei mit\u00e4\u00e4n)"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
@@ -126,6 +129,10 @@
         "foreign_amount": "Ulkomaan summa",
         "interest_date": "Korkop\u00e4iv\u00e4",
         "book_date": "Kirjausp\u00e4iv\u00e4",
+        "permDeleteWarning": "Asioiden poistaminen Firefly III:sta on lopullista eik\u00e4 poistoa pysty perumaan.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
         "due_date": "Er\u00e4p\u00e4iv\u00e4",
         "payment_date": "Maksup\u00e4iv\u00e4",

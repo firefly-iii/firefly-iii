@@ -30,6 +30,7 @@
         "notes": "Notities",
         "yourAccounts": "Je betaalrekeningen",
         "go_to_asset_accounts": "Bekijk je betaalrekeningen",
+        "delete_account": "Verwijder je account",
         "transaction_table_description": "Een tabel met je transacties",
         "account": "Rekening",
         "description": "Omschrijving",
@@ -107,7 +108,9 @@
         "actions": "Acties",
         "edit": "Wijzig",
         "delete": "Verwijder",
-        "reconcile_this_account": "Stem deze rekening af"
+        "reconcile_this_account": "Stem deze rekening af",
+        "save_transactions_by_moving_js": "Geen transacties|Bewaar deze transactie door ze aan een andere rekening te koppelen.|Bewaar deze transacties door ze aan een andere rekening te koppelen.",
+        "none_in_select_list": "(geen)"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
@@ -126,6 +129,10 @@
         "foreign_amount": "Bedrag in vreemde valuta",
         "interest_date": "Rentedatum",
         "book_date": "Boekdatum",
+        "permDeleteWarning": "Dingen verwijderen uit Firefly III is permanent en kan niet ongedaan gemaakt worden.",
+        "account_areYouSure_js": "Weet je zeker dat je de rekening met naam \"{name}\" wilt verwijderen?",
+        "also_delete_piggyBanks_js": "Geen spaarpotjes|Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle {count} spaarpotjes verbonden aan deze rekening worden verwijderd.",
+        "also_delete_transactions_js": "Geen transacties|Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle {count} transacties verbonden aan deze rekening worden verwijderd.",
         "process_date": "Verwerkingsdatum",
         "due_date": "Vervaldatum",
         "payment_date": "Betalingsdatum",

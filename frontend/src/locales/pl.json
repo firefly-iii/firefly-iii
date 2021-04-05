@@ -30,6 +30,7 @@
         "notes": "Notatki",
         "yourAccounts": "Twoje konta",
         "go_to_asset_accounts": "Zobacz swoje konta aktyw\u00f3w",
+        "delete_account": "Usu\u0144 konto",
         "transaction_table_description": "Tabela zawieraj\u0105ca Twoje transakcje",
         "account": "Konto",
         "description": "Opis",
@@ -107,7 +108,9 @@
         "actions": "Akcje",
         "edit": "Modyfikuj",
         "delete": "Usu\u0144",
-        "reconcile_this_account": "Uzgodnij to konto"
+        "reconcile_this_account": "Uzgodnij to konto",
+        "save_transactions_by_moving_js": "Brak transakcji|Zapisz t\u0119 transakcj\u0119, przenosz\u0105c j\u0105 na inne konto.|Zapisz te transakcje przenosz\u0105c je na inne konto.",
+        "none_in_select_list": "(\u017cadne)"
     },
     "list": {
         "piggy_bank": "Skarbonka",
@@ -126,6 +129,10 @@
         "foreign_amount": "Kwota zagraniczna",
         "interest_date": "Data odsetek",
         "book_date": "Data ksi\u0119gowania",
+        "permDeleteWarning": "Usuwanie rzeczy z Firefly III jest trwa\u0142e i nie mo\u017cna tego cofn\u0105\u0107.",
+        "account_areYouSure_js": "Czy na pewno chcesz usun\u0105\u0107 konto o nazwie \"{name}\"?",
+        "also_delete_piggyBanks_js": "Brak skarbonek|Jedyna skarbonka po\u0142\u0105czona z tym kontem r\u00f3wnie\u017c zostanie usuni\u0119ta.|Wszystkie {count} skarbonki po\u0142\u0105czone z tym kontem zostan\u0105 r\u00f3wnie\u017c usuni\u0119te.",
+        "also_delete_transactions_js": "Brak transakcji|Jedyna transakcja po\u0142\u0105czona z tym kontem r\u00f3wnie\u017c zostanie usuni\u0119ta.|Wszystkie {count} transakcje po\u0142\u0105czone z tym kontem r\u00f3wnie\u017c zostan\u0105 usuni\u0119te.",
         "process_date": "Data przetworzenia",
         "due_date": "Termin realizacji",
         "payment_date": "Data p\u0142atno\u015bci",

@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => '":name" jövedelemszámla törlése',
     'delete_liabilities_account'                => '":name" kötelezettség törlése',
     'asset_deleted'                             => '":name" eszközszámla sikeresen törölve',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => '":name" költségszámla sikeresen törölve',
     'revenue_deleted'                           => '":name" jövedelemszámla sikeresen törölve',
     'update_asset_account'                      => 'Eszközszámla frissítése',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'A Firefly III megpróbálkozott az átirányítással de az nem sikerült. Elnézést kérünk. Vissza a kezdőlapra.',
     'account_type'                              => 'Bankszámla típusa',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => '":name" új számla letárolva!',
     'updated_account'                           => '":name" számla frissítve',
     'credit_card_options'                       => 'Hitelkártya opciók',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => '":title" csoport szerkesztése',
     'delete_object_group'                => '":title" csoport törlése',
     'update_object_group'                => 'Csoport frissítése',
-    'updated_object_group'               => '":title" csoport sikeresen frissítve',
-    'deleted_object_group'               => '":title" csoport sikeresen törölve',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Csoport',
 
 

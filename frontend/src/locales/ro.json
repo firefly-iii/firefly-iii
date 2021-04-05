@@ -30,6 +30,7 @@
         "notes": "Noti\u021be",
         "yourAccounts": "Conturile dvs.",
         "go_to_asset_accounts": "Vizualiza\u021bi conturile de active",
+        "delete_account": "\u0218terge account",
         "transaction_table_description": "A table containing your transactions",
         "account": "Cont",
         "description": "Descriere",
@@ -107,7 +108,9 @@
         "actions": "Ac\u021biuni",
         "edit": "Editeaz\u0103",
         "delete": "\u0218terge",
-        "reconcile_this_account": "Reconcilia\u021bi acest cont"
+        "reconcile_this_account": "Reconcilia\u021bi acest cont",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(nici unul)"
     },
     "list": {
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
@@ -126,6 +129,10 @@
         "foreign_amount": "Sum\u0103 str\u0103in\u0103",
         "interest_date": "Data de interes",
         "book_date": "Rezerv\u0103 dat\u0103",
+        "permDeleteWarning": "\u0218tergerea este permanent\u0103 \u0219i nu poate fi anulat\u0103.",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "Data proces\u0103rii",
         "due_date": "Data scadent\u0103",
         "payment_date": "Data de plat\u0103",

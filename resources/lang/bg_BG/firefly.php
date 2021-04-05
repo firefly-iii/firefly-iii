@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Изтрий сметка за приходи ":name"',
     'delete_liabilities_account'                => 'Изтрий задължение ":name"',
     'asset_deleted'                             => 'Сметка за активи ":name" е успешно изтрита',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Сметка за разходи ":name" е успешно изтрита',
     'revenue_deleted'                           => 'Сметка за приходи ":name" е успешно изтрита',
     'update_asset_account'                      => 'Редактирай сметка за активи',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III се опита да ви пренасочи, но не успя. Съжалявам за това. Обратно към началото.',
     'account_type'                              => 'Вид на сметка',
     'save_transactions_by_moving'               => 'Запазете тази транзакция, като я преместите в друг акаунт:|Запазете тези транзакции, като ги преместите в друг акаунт:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Новата сметка ":name" бе запаметена!',
     'updated_account'                           => 'Сметка ":name" бе обновена',
     'credit_card_options'                       => 'Настройки за кредитни карти',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Редактирай група ":title"',
     'delete_object_group'                => 'Изтрий група ":title"',
     'update_object_group'                => 'Обнови група',
-    'updated_object_group'               => 'Успешно обновена група ":title"',
-    'deleted_object_group'               => 'Успешно изтрита група ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Група',
 
 

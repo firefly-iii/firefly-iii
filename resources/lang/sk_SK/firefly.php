@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Odstrániť výnosový účet ":name"',
     'delete_liabilities_account'                => 'Odstrániť záväzok „:name“',
     'asset_deleted'                             => 'Majetkový účet ":name" bol odstránený',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Výdavkový účet ":name" bol odstránený',
     'revenue_deleted'                           => 'Výnosový účet ":name" bol odstránený',
     'update_asset_account'                      => 'Upraviť výdajový účet',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III sa vás pokúsil presmerovať, ale nepodarilo sa. Prepáčte. Späť na úvod.',
     'account_type'                              => 'Typ účtu',
     'save_transactions_by_moving'               => 'Uložte túto transakciu presunutím do iného účtu:|Uložte tieto transakcie presunutím do iného účtu:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Nový účet „:name“ bol uložený!',
     'updated_account'                           => 'Účet „:name“ upravený',
     'credit_card_options'                       => 'Možnosti kreditnej karty',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Upraviť skupinu „:title“',
     'delete_object_group'                => 'Odstrániť skupinu ":title"',
     'update_object_group'                => 'Aktualizovať skupinu',
-    'updated_object_group'               => 'Skupina pravidiel „:title“ bola upravená',
-    'deleted_object_group'               => 'Skupina „:title“ bola odstránená',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Skupina',
 
 

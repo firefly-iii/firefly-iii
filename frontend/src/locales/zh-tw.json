@@ -30,6 +30,7 @@
         "notes": "\u5099\u8a3b",
         "yourAccounts": "\u60a8\u7684\u5e33\u6236",
         "go_to_asset_accounts": "\u6aa2\u8996\u60a8\u7684\u8cc7\u7522\u5e33\u6236",
+        "delete_account": "\u79fb\u9664\u5e33\u865f",
         "transaction_table_description": "A table containing your transactions",
         "account": "\u5e33\u6236",
         "description": "\u63cf\u8ff0",
@@ -107,7 +108,9 @@
         "actions": "\u64cd\u4f5c",
         "edit": "\u7de8\u8f2f",
         "delete": "\u522a\u9664",
-        "reconcile_this_account": "\u5c0d\u5e33\u6b64\u5e33\u6236"
+        "reconcile_this_account": "\u5c0d\u5e33\u6b64\u5e33\u6236",
+        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "none_in_select_list": "(\u7a7a)"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
@@ -126,6 +129,10 @@
         "foreign_amount": "\u5916\u5e63\u91d1\u984d",
         "interest_date": "\u5229\u7387\u65e5\u671f",
         "book_date": "\u767b\u8a18\u65e5\u671f",
+        "permDeleteWarning": "\u81ea Firefly III \u522a\u9664\u9805\u76ee\u662f\u6c38\u4e45\u4e14\u4e0d\u53ef\u64a4\u92b7\u7684\u3002",
+        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
+        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
+        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
         "process_date": "\u8655\u7406\u65e5\u671f",
         "due_date": "\u5230\u671f\u65e5",
         "payment_date": "\u4ed8\u6b3e\u65e5\u671f",

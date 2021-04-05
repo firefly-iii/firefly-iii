@@ -45,8 +45,10 @@ mix.webpackConfig({
 
 // dashboard and empty page
 mix.js('src/pages/dashboard.js', 'public/js').vue({version: 2});
+
 // accounts.
 mix.js('src/pages/accounts/index.js', 'public/js/accounts').vue({version: 2});
+mix.js('src/pages/accounts/delete.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
 
 

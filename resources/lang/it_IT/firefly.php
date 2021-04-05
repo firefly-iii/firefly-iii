@@ -1048,6 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Elimina conto entrate ":name"',
     'delete_liabilities_account'                => 'Elimina passività ":name"',
     'asset_deleted'                             => 'Conto attività ":name" eliminato correttamente',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => 'Conto uscite ":name" eliminato correttamente',
     'revenue_deleted'                           => 'Conto entrate ":name" eliminato correttamente',
     'update_asset_account'                      => 'Aggiorna conto attività',
@@ -1094,6 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III ha provato a reindirizzare ma non è riuscito. Ci dispiace. Torna all\'indice.',
     'account_type'                              => 'Tipo conto',
     'save_transactions_by_moving'               => 'Salva questa transazione spostandola in un altro conto:|Salva queste transazioni spostandole in un altro conto:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Nuovo conto ":name" stored!',
     'updated_account'                           => 'Aggiorna conto ":name"',
     'credit_card_options'                       => 'Opzioni carta di credito',
@@ -1847,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Modifica gruppo ":title"',
     'delete_object_group'                => 'Elimina gruppo ":title"',
     'update_object_group'                => 'Aggiorna gruppo',
-    'updated_object_group'               => 'Gruppo ":title" aggiornato con successo',
-    'deleted_object_group'               => 'Gruppo ":title" eliminato con successo',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Gruppo',
 
 

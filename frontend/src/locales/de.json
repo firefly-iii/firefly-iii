@@ -30,6 +30,7 @@
         "notes": "Notizen",
         "yourAccounts": "Deine Konten",
         "go_to_asset_accounts": "Bestandskonten anzeigen",
+        "delete_account": "Konto l\u00f6schen",
         "transaction_table_description": "Eine Tabelle mit Ihren Buchungen",
         "account": "Konto",
         "description": "Beschreibung",
@@ -107,7 +108,9 @@
         "actions": "Aktionen",
         "edit": "Bearbeiten",
         "delete": "L\u00f6schen",
-        "reconcile_this_account": "Dieses Konto abgleichen"
+        "reconcile_this_account": "Dieses Konto abgleichen",
+        "save_transactions_by_moving_js": "Keine Buchungen|Speichern Sie diese Buchung, indem Sie sie auf ein anderes Konto verschieben. |Speichern Sie diese Buchungen, indem Sie sie auf ein anderes Konto verschieben.",
+        "none_in_select_list": "(Keine)"
     },
     "list": {
         "piggy_bank": "Sparschwein",
@@ -126,6 +129,10 @@
         "foreign_amount": "Ausl\u00e4ndischer Betrag",
         "interest_date": "Zinstermin",
         "book_date": "Buchungsdatum",
+        "permDeleteWarning": "Das L\u00f6schen von Dingen in Firefly III ist dauerhaft und kann nicht r\u00fcckg\u00e4ngig gemacht werden.",
+        "account_areYouSure_js": "M\u00f6chten Sie das Konto \u201e{name}\u201d wirklich l\u00f6schen?",
+        "also_delete_piggyBanks_js": "Keine Sparschweine|Das einzige Sparschwein, welches mit diesem Konto verbunden ist, wird ebenfalls gel\u00f6scht.|Alle {count} Sparschweine, welche mit diesem Konto verbunden sind, werden ebenfalls gel\u00f6scht.",
+        "also_delete_transactions_js": "Keine Buchungen|Die einzige Buchung, die mit diesem Konto verbunden ist, wird ebenfalls gel\u00f6scht.|Alle {count} Buchungen, die mit diesem Konto verbunden sind, werden ebenfalls gel\u00f6scht.",
         "process_date": "Bearbeitungsdatum",
         "due_date": "F\u00e4lligkeitstermin",
         "payment_date": "Zahlungsdatum",

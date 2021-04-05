@@ -1049,6 +1049,7 @@ return [
     'delete_revenue_account'                    => '":name" Gelir hesabını sil',
     'delete_liabilities_account'                => 'Delete liability ":name"',
     'asset_deleted'                             => '":name" Adlı varlık hesabı başarıyla silindi',
+    'account_deleted'                           => 'Successfully deleted account ":name"',
     'expense_deleted'                           => '":name" gider hesabı başarıyla silindi',
     'revenue_deleted'                           => '":name" gelir hesabı başarıyla silindi',
     'update_asset_account'                      => 'Varlık hesabını güncelle',
@@ -1095,6 +1096,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III tried to redirect you but couldn\'t. Sorry about that. Back to the index.',
     'account_type'                              => 'Hesap Türü',
     'save_transactions_by_moving'               => 'Save this transaction by moving it to another account:|Save these transactions by moving them to another account:',
+    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
     'stored_new_account'                        => 'Yeni hesap ":name" kaydedildi!',
     'updated_account'                           => 'Güncellenmiş hesap ismi ":name"',
     'credit_card_options'                       => 'Kredi kart seçenekleri',
@@ -1848,8 +1850,8 @@ return [
     'edit_object_group'                  => 'Edit group ":title"',
     'delete_object_group'                => 'Delete group ":title"',
     'update_object_group'                => 'Update group',
-    'updated_object_group'               => 'Succesfully updated group ":title"',
-    'deleted_object_group'               => 'Succesfully deleted group ":title"',
+    'updated_object_group'               => 'Successfully updated group ":title"',
+    'deleted_object_group'               => 'Successfully deleted group ":title"',
     'object_group'                       => 'Group',
 
 
