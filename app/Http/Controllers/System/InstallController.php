@@ -36,6 +36,7 @@ use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use Log;
+use phpseclib\Crypt\RSA as LegacyRSA;
 use phpseclib3\Crypt\RSA;
 
 /**
@@ -217,18 +218,18 @@ class InstallController extends Controller
     public function keys(): void
     {
         // switch on PHP version.
-        $result = version_compare(phpversion(), '8.0');
-        Log::info(sprintf('PHP version is %s', $result));
-        if (-1 === $result) {
-            Log::info('Will run PHP7 code.');
+
+        // switch on class existence.
+        Log::info(sprintf('PHP version is %s', phpversion()));
+        if (class_exists(LegacyRSA::class)) {
             // PHP 7
-            $rsa  = new \phpseclib\Crypt\RSA;
-            $keys = $rsa->createKey(4096);
+            Log::info('Will run PHP7 code.');
+            $keys = (new LegacyRSA)->createKey(4096);
         }
 
-        if ($result >= 0) {
-            Log::info('Will run PHP8 code.');
+        if (!class_exists(LegacyRSA::class)) {
             // PHP 8
+            Log::info('Will run PHP8 code.');
             $keys = RSA::createKey(4096);
         }
 
