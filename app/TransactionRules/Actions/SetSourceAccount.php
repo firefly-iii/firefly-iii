@@ -64,29 +64,42 @@ class SetSourceAccount implements ActionInterface
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
+        if (null === $object) {
+            Log::error('Could not find journal.');
+
+            return false;
+        }
+
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount = $this->findAssetAccount($type);
         if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
-                sprintf('Cant change src account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
+                sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
             );
 
             return false;
         }
 
-        // new source account must be different from the current destination:
-        $destinationId = (int)$journal['destination_account_id'];
-        $destination        = $object->transactions()->where('amount', '>', 0)->first();
-        if (null !== $destination) {
-            $destinationId = $destination->account ? (int)$destination->account->id : $destinationId;
+        // new source account must be different from the current destination account:
+        $destination = $object->transactions()->where('amount', '>', 0)->first();
+        if (null === $destination) {
+            Log::error('Could not find destination transaction.');
+
+            return false;
         }
-        if (TransactionType::TRANSFER === $type && null !== $newAccount && (int)$newAccount->id === $destinationId) {
+        // account must not be deleted (in the mean time):
+        if (null === $destination->account) {
+            Log::error('Could not find destination transaction account.');
+
+            return false;
+        }
+        if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
             Log::error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.', $newAccount->id,
-                    $destinationId
+                    $destination->account_id
                 )
             );
 
@@ -106,7 +119,6 @@ class SetSourceAccount implements ActionInterface
         Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
         // update source transaction with new source account:
-        // get source transaction:
         DB::table('transactions')
           ->where('transaction_journal_id', '=', $object->id)
           ->where('amount', '<', 0)

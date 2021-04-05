@@ -327,6 +327,7 @@ class AccountFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->accountRepository->setUser($user);
     }
 
 

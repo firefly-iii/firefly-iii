@@ -26,6 +26,9 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Log;
@@ -53,65 +56,97 @@ class SetDestinationAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var TransactionJournal $object */
+        /** @var AccountRepositoryInterface repository */
+        /** @var Transaction $source */
+
         $user             = User::find($journal['user_id']);
         $type             = $journal['transaction_type_type'];
+        $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
+
+        if (null === $object) {
+            Log::error('Could not find journal.');
+
+            return false;
+        }
+
         $this->repository->setUser($user);
 
-        // it depends on the type what kind of destination account is expected.
-        $expectedTypes = config(sprintf('firefly.source_dests.%s.%s', $type, $journal['source_account_type']));
-        if (null === $expectedTypes) {
+        // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
+        $newAccount = $this->findAssetAccount($type);
+        if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             Log::error(
                 sprintf(
-                    'Configuration line "%s" is unexpectedly empty. Stopped.', sprintf('firefly.source_dests.%s.%s', $type, $journal['source_account_type'])
+                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value
                 )
             );
 
             return false;
         }
-        // try to find an account with the destination name and these types:
-        $destination = $this->findAccount($expectedTypes);
-        if (null !== $destination) {
-            // update account of destination transaction.
-            DB::table('transactions')
-              ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
-              ->where('amount', '>', 0)
-              ->update(['account_id' => $destination->id]);
-            Log::debug(sprintf('Updated journal #%d and gave it new account ID.', $journal['transaction_journal_id']));
 
-            return true;
+        // new destination account must be different from the current source account:
+        $source = $object->transactions()->where('amount', '<', 0)->first();
+        if (null === $source) {
+            Log::error('Could not find source transaction.');
+
+            return false;
         }
-        Log::info(sprintf('Expected destination account "%s" not found.', $this->action->action_value));
+        // account must not be deleted (in the mean time):
+        if (null === $source->account) {
+            Log::error('Could not find source transaction account.');
 
-        if (in_array(AccountType::EXPENSE, $expectedTypes)) {
-            // does not exist, but can be created.
-            Log::debug('Expected type is expense, lets create it.');
-            $expense = $this->findExpenseAccount();
-            if (null === $expense) {
-                Log::error('Could not create expense account.');
+            return false;
+        }
+        if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
+            Log::error(
+                sprintf(
+                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.', $newAccount->id,
+                    $source->account_id
+                )
+            );
 
-                return false;
-            }
-            DB::table('transactions')
-              ->where('transaction_journal_id', '=', $journal['transaction_journal_id'])
-              ->where('amount', '>', 0)
-              ->update(['account_id' => $expense->id]);
-            Log::debug(sprintf('Updated journal #%d and gave it new account ID.', $journal['transaction_journal_id']));
-
-            return true;
+            return false;
         }
 
-        return false;
+        // if this is a withdrawal, the new destination account must be a expense account and may be created:
+        if (TransactionType::WITHDRAWAL === $type) {
+            $newAccount = $this->findExpenseAccount();
+        }
+        if (null === $newAccount) {
+            Log::error('New expense account is NULL');
+
+            return false;
+        }
+
+        Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
+
+        // update destination transaction with new destination account:
+        DB::table('transactions')
+          ->where('transaction_journal_id', '=', $object->id)
+          ->where('amount', '>', 0)
+          ->update(['account_id' => $newAccount->id]);
+
+        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
+
+        return true;
+
+
     }
 
     /**
-     * @param array $types
+     * @param string $type
      *
      * @return Account|null
      */
-    private function findAccount(array $types): ?Account
+    private function findAssetAccount(string $type): ?Account
     {
-        return $this->repository->findByName($this->action->action_value, $types);
+        // switch on type:
+        $allowed = config(sprintf('firefly.expected_source_types.destination.%s', $type));
+        $allowed = is_array($allowed) ? $allowed : [];
+        Log::debug(sprintf('Check config for expected_source_types.destination.%s, result is', $type), $allowed);
+
+        return $this->repository->findByName($this->action->action_value, $allowed);
     }
 
     /**
@@ -122,12 +157,12 @@ class SetDestinationAccount implements ActionInterface
         $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
         if (null === $account) {
             $data    = [
-                'name'            => $this->action->action_value,
-                'account_type'    => 'expense',
-                'account_type_id' => null,
-                'virtual_balance' => 0,
-                'active'          => true,
-                'iban'            => null,
+                'name'              => $this->action->action_value,
+                'account_type_name' => 'expense',
+                'account_type_id'   => null,
+                'virtual_balance'   => 0,
+                'active'            => true,
+                'iban'              => null,
             ];
             $account = $this->repository->store($data);
         }
@@ -135,4 +170,6 @@ class SetDestinationAccount implements ActionInterface
 
         return $account;
     }
+
+
 }
