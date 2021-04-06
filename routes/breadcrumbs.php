@@ -1143,7 +1143,7 @@ try {
     Breadcrumbs::register(
         'transactions.mass.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (!empty($journals)) {
+            if (count($journals) > 0) {
                 $objectType = strtolower(reset($journals)['transaction_type_type']);
                 $breadcrumbs->parent('transactions.index', $objectType);
                 $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', ['']));
@@ -1167,7 +1167,7 @@ try {
     Breadcrumbs::register(
         'transactions.bulk.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (!empty($journals)) {
+            if (count($journals) > 0) {
                 $ids   = Arr::pluck($journals, 'transaction_journal_id');
                 $first = reset($journals);
                 $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
