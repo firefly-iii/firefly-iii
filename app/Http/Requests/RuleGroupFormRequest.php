@@ -49,7 +49,7 @@ class RuleGroupFormRequest extends FormRequest
 
         return [
             'title'       => $this->string('title'),
-            'description' => $this->nlString('description'),
+            'description' => $this->stringWithNewlines('description'),
             'active'      => $active,
         ];
     }

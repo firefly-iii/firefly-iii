@@ -58,7 +58,7 @@ class StoreRequest extends FormRequest
             'nr_of_repetitions' => ['nr_of_repetitions', 'integer'],
             'apply_rules'       => ['apply_rules', 'boolean'],
             'active'            => ['active', 'boolean'],
-            'notes'             => ['notes', 'nlString'],
+            'notes'             => ['notes', 'stringWithNewlines'],
         ];
         $recurrence = $this->getAllData($fields);
 

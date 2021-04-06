@@ -58,7 +58,7 @@ class AccountFormRequest extends FormRequest
             'opening_balance_date'    => $this->date('opening_balance_date'),
             'cc_type'                 => $this->string('cc_type'),
             'cc_monthly_payment_date' => $this->string('cc_monthly_payment_date'),
-            'notes'                   => $this->nlString('notes'),
+            'notes'                   => $this->stringWithNewlines('notes'),
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',

@@ -304,7 +304,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id));
+            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
         }
 
         // do something else.

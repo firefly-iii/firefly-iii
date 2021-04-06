@@ -149,7 +149,6 @@ class ConvertToDeposit implements ActionInterface
         $revenue     = $factory->findOrCreate($revenueName, AccountType::REVENUE);
 
         Log::debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $journal['source_account_name']));
-        unset($source);
 
         // update source transaction(s) to be revenue account
         DB::table('transactions')

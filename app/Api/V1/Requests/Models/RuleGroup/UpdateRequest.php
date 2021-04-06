@@ -46,7 +46,7 @@ class UpdateRequest extends FormRequest
         // This is the way.
         $fields = [
             'title'       => ['title', 'string'],
-            'description' => ['description', 'nlString'],
+            'description' => ['description', 'stringWithNewlines'],
             'active'      => ['active', 'boolean'],
             'order'       => ['order', 'integer'],
         ];

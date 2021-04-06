@@ -206,8 +206,6 @@ class AccountTransformer extends AbstractTransformer
      * @param Account $account
      * @param string  $accountType
      *
-     * @param int     $decimalPlaces
-     *
      * @return array
      *
      * TODO refactor call to getOpeningBalanceAmount / Date because its extra queries.

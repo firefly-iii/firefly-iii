@@ -212,7 +212,7 @@ class BillTransformer extends AbstractTransformer
             return $default; // @codeCoverageIgnore
         }
         $latest = $dates->first()->date;
-        /** @var TransactionJournal $date */
+        /** @var TransactionJournal $journal */
         foreach ($dates as $journal) {
             if ($journal->date->gte($latest)) {
                 $latest = $journal->date;

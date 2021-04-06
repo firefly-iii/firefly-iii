@@ -48,7 +48,7 @@ class RuleFormRequest extends FormRequest
             'rule_group_id'   => $this->integer('rule_group_id'),
             'active'          => $this->boolean('active'),
             'trigger'         => $this->string('trigger'),
-            'description'     => $this->nlString('description'),
+            'description'     => $this->stringWithNewlines('description'),
             'stop_processing' => $this->boolean('stop_processing'),
             'strict'          => $this->boolean('strict'),
             'triggers'        => $this->getRuleTriggerData(),

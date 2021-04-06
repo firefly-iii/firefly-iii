@@ -50,7 +50,7 @@ class StoreRequest extends FormRequest
             'link_type_name' => $this->string('link_type_name'),
             'inward_id'      => $this->integer('inward_id'),
             'outward_id'     => $this->integer('outward_id'),
-            'notes'          => $this->nlString('notes'),
+            'notes'          => $this->stringWithNewlines('notes'),
         ];
     }
 

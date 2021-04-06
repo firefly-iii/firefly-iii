@@ -137,7 +137,7 @@ class EditController extends Controller
     {
         $data = [
             'title'       => $request->string('title'),
-            'description' => $request->nlString('description'),
+            'description' => $request->stringWithNewlines('description'),
             'active'      => 1 === (int)$request->input('active'),
         ];
 

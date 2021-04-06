@@ -390,7 +390,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $result      = $actionClass->actOnArray($transaction);
         $journalId   = $transaction['transaction_journal_id'] ?? 0;
         if (true === $result) {
-            $this->resultCount[$journalId] = isset($this->resultCount[$journalId]) ? $this->resultCount[$journalId]++ : 1;
+            $this->resultCount[$journalId] = array_key_exists($journalId, $this->resultCount) ? $this->resultCount[$journalId]++ : 1;
             Log::debug(
                 sprintf(
                     'Action "%s" on journal #%d was executed, so count a result. Updated transaction journal count is now %d.',
@@ -514,7 +514,7 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         $all = false;
         Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
-        /** @var  $rule */
+        /** @var Rule $rule */
         foreach ($group->rules as $rule) {
             Log::debug(sprintf('Going to fire rule #%d from group #%d', $rule->id, $group->id));
             $result = $this->fireRule($rule);

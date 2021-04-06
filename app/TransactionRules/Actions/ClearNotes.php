@@ -33,15 +33,6 @@ use Log;
 class ClearNotes implements ActionInterface
 {
     /**
-     * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
-     */
-    public function __construct(RuleAction $action)
-    {
-    }
-
-    /**
      * @inheritDoc
      */
     public function actOnArray(array $journal): bool

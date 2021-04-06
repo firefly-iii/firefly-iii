@@ -37,7 +37,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     /**
      * @return ParameterBag
      */
-    public function getParameters(): ParameterBag
+    final public function getParameters(): ParameterBag
     {
         return $this->parameters;
     }
@@ -45,7 +45,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     /**
      * @param ParameterBag $parameters
      */
-    public function setParameters(ParameterBag $parameters): void
+    final public function setParameters(ParameterBag $parameters): void
     {
         $this->parameters = $parameters;
     }

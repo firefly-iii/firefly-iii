@@ -56,12 +56,9 @@ class SetDestinationAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $object */
-        /** @var AccountRepositoryInterface repository */
-        /** @var Transaction $source */
-
         $user             = User::find($journal['user_id']);
         $type             = $journal['transaction_type_type'];
+        /** @var TransactionJournal|null $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
@@ -86,6 +83,7 @@ class SetDestinationAccount implements ActionInterface
         }
 
         // new destination account must be different from the current source account:
+        /** @var Transaction|null $source */
         $source = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             Log::error('Could not find source transaction.');
@@ -112,11 +110,6 @@ class SetDestinationAccount implements ActionInterface
         // if this is a withdrawal, the new destination account must be a expense account and may be created:
         if (TransactionType::WITHDRAWAL === $type) {
             $newAccount = $this->findExpenseAccount();
-        }
-        if (null === $newAccount) {
-            Log::error('New expense account is NULL');
-
-            return false;
         }
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -150,9 +143,9 @@ class SetDestinationAccount implements ActionInterface
     }
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    private function findExpenseAccount(): ?Account
+    private function findExpenseAccount(): Account
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
         if (null === $account) {

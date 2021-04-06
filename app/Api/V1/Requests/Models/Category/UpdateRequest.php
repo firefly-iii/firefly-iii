@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
     {
         $fields = [
             'name'  => ['name', 'string'],
-            'notes' => ['notes', 'nlString'],
+            'notes' => ['notes', 'stringWithNewlines'],
         ];
 
         return $this->getAllData($fields);

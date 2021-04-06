@@ -57,7 +57,7 @@ class UpdateRequest extends FormRequest
             'skip'               => ['skip', 'integer'],
             'active'             => ['active', 'boolean'],
             'order'              => ['order', 'integer'],
-            'notes'              => ['notes', 'nlString'],
+            'notes'              => ['notes', 'stringWithNewlines'],
             'object_group_id'    => ['object_group_id', 'integer'],
             'object_group_title' => ['object_group_title', 'string'],
         ];

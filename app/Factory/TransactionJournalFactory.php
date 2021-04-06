@@ -161,7 +161,7 @@ class TransactionJournalFactory
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
         $bill            = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
         $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-        $description     = app('steam')->cleanString((string)$row['description']);
+        $description     = (string)$row['description'];
 
         /** Manipulate basic fields */
         $carbon->setTimezone(config('app.timezone'));

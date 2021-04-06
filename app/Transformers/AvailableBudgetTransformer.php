@@ -22,11 +22,11 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use Illuminate\Support\Collection;
 
 /**
  * Class AvailableBudgetTransformer
@@ -97,11 +97,9 @@ class AvailableBudgetTransformer extends AbstractTransformer
     private function getSpentInBudgets(): array
     {
         $allActive = $this->repository->getActiveBudgets();
+        $sums = $this->opsRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'), null, $allActive);
 
-        return $this->opsRepository->spentInPeriodMc(
-            $allActive, new Collection, $this->parameters->get('start'), $this->parameters->get('end')
-        );
-
+        return array_values($sums);
     }
 
     /**
@@ -109,7 +107,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     private function spentOutsideBudgets(): array
     {
-        return $this->noBudgetRepository->spentInPeriodWoBudgetMc(new Collection, $this->parameters->get('start'), $this->parameters->get('end'));
-    }
+        $sums = $this->noBudgetRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'));
 
+        return array_values($sums);
+    }
 }

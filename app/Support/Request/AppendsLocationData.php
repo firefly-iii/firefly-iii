@@ -249,13 +249,4 @@ trait AppendsLocationData
 
     }
 
-    /**
-     * Abstract method to ensure filling later.
-     *
-     * @param string $field
-     *
-     * @return string|null
-     */
-    abstract protected function nullableString(string $field): ?string;
-
 }

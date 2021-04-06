@@ -55,12 +55,9 @@ class SetSourceAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $object */
-        /** @var AccountRepositoryInterface repository */
-        /** @var Transaction $destination */
-
         $user             = User::find($journal['user_id']);
         $type             = $journal['transaction_type_type'];
+        /** @var TransactionJournal|null $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
 
@@ -83,6 +80,7 @@ class SetSourceAccount implements ActionInterface
         }
 
         // new source account must be different from the current destination account:
+        /** @var Transaction|null $destination */
         $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             Log::error('Could not find destination transaction.');
@@ -109,11 +107,6 @@ class SetSourceAccount implements ActionInterface
         // if this is a deposit, the new source account must be a revenue account and may be created:
         if (TransactionType::DEPOSIT === $type) {
             $newAccount = $this->findRevenueAccount();
-        }
-        if (null === $newAccount) {
-            Log::error('New account is NULL');
-
-            return false;
         }
 
         Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -145,9 +138,9 @@ class SetSourceAccount implements ActionInterface
     }
 
     /**
-     * @return Account|null
+     * @return Account
      */
-    private function findRevenueAccount(): ?Account
+    private function findRevenueAccount(): Account
     {
         $allowed = config('firefly.expected_source_types.source.Deposit');
         $account = $this->repository->findByName($this->action->action_value, $allowed);

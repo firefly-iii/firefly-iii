@@ -67,17 +67,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property int                                                                  $id
  * @property string                                                               $email
- * @property bool                                                                 $isAdmin used in admin user
- *           controller.
- * @property bool                                                                 $has2FA  used in admin user
- *           controller.
- * @property array                                                                $prefs   used in admin user
- *           controller.
- * @property string                                                               password
+ * @property bool                                                                 $isAdmin
+ * @property bool                                                                 $has2FA
+ * @property array                                                                $prefs
+ * @property string                                                               $password
  * @property string                                                               $mfa_secret
- * @property Collection                                                           roles
- * @property string                                                               blocked_code
- * @property bool                                                                 blocked
+ * @property Collection                                                           $roles
+ * @property string                                                               $blocked_code
+ * @property bool                                                                 $blocked
  * @property Carbon|null                                                          $created_at
  * @property Carbon|null                                                          $updated_at
  * @property string|null                                                          $remember_token
