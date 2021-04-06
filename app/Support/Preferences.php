@@ -275,6 +275,9 @@ class Preferences
         if (null === $value) {
             return new Preference;
         }
+        if(null === $pref) {
+            $pref = new Preference;
+        }
         $pref->data = $value;
         $pref->save();
         Cache::forever($fullName, $pref);

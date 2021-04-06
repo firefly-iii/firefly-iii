@@ -153,7 +153,7 @@ class CategoryUpdateService
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
+                } catch (Exception $e) { // @phpstan-ignore-line
                     // @ignoreException
                 }
             }

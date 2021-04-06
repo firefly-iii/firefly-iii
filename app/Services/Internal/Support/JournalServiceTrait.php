@@ -185,7 +185,7 @@ trait JournalServiceTrait
 
             // final attempt, create it.
             if (AccountType::ASSET === $preferredType) {
-                throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
+                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s',json_encode($data)));
             }
             // fix name of account if only IBAN is given:
             if ('' === (string)$data['name'] && '' !== (string)$data['iban']) {
@@ -358,11 +358,9 @@ trait JournalServiceTrait
             // try to delete existing notes.
             try {
                 $note->delete();
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete journal notes: %s', $e->getMessage()));
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
-            // @codeCoverageIgnoreEnd
         }
     }
 

@@ -66,6 +66,7 @@ trait AccountServiceTrait
 
             return null;
         }
+
         return $iban;
     }
 
@@ -132,7 +133,7 @@ trait AccountServiceTrait
         foreach ($fields as $field) {
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
-            if (isset($data[$field]) && null !== $data[$field]) {
+            if (array_key_exists($field, $data) && null !== $data[$field]) {
 
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
@@ -192,7 +193,7 @@ trait AccountServiceTrait
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
             $data['opening_balance'] = ''; // @codeCoverageIgnore
         }
-        if ('' !== $data['opening_balance'] && isset($data['opening_balance'], $data['opening_balance_date'])) {
+        if ('' !== $data['opening_balance'] && array_key_exists('opening_balance_date', $data) && '' !== $data['opening_balance_date']) {
             Log::debug('Array has valid opening balance data.');
 
             return true;
@@ -244,7 +245,7 @@ trait AccountServiceTrait
         // find currency, or use default currency instead.
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = $factory->find($currencyId, $currencyCode);
 
         if (null === $currency) {
