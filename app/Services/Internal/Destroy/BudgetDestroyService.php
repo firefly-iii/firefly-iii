@@ -43,8 +43,8 @@ class BudgetDestroyService
 
         try {
             $budget->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete budget: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
         // also delete auto budget:

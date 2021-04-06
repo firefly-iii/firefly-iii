@@ -27,7 +27,8 @@ namespace FireflyIII\Scopes;
 use Adldap\Laravel\Scopes\ScopeInterface;
 use Adldap\Query\Builder;
 
-class LdapFilterScope implements ScopeInterface
+// @phpstan-ignore-next-line
+class LdapFilterScope implements ScopeInterface // @phpstan-ignore-line
 {
     /**
      * If the ADLDAP_AUTH_FILTER is provided, apply the filter to the LDAP query.

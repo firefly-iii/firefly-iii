@@ -260,7 +260,7 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
-        /** @var Preference $pref */
+        /** @var Preference|null $pref */
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
@@ -277,6 +277,8 @@ class Preferences
         }
         if(null === $pref) {
             $pref = new Preference;
+            $pref->user_id = $user->id;
+            $pref->name = $name;
         }
         $pref->data = $value;
         $pref->save();

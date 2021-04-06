@@ -96,7 +96,7 @@ class UserRepository implements UserRepositoryInterface
         // update user
 
         $user->email        = $newEmail;
-        $user->blocked      = 1;
+        $user->blocked      = true;
         $user->blocked_code = 'email_changed';
         $user->save();
 
@@ -215,7 +215,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getRoleByUser(User $user): ?string
     {
-        /** @var Role $role */
+        /** @var Role|null $role */
         $role = $user->roles()->first();
         if (null !== $role) {
             return $role->name;
@@ -252,10 +252,13 @@ class UserRepository implements UserRepositoryInterface
                                                     ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                                                     ->where('amount', '>', 0)
                                                     ->whereNull('budgets.deleted_at')
-                                                    ->where('budgets.user_id', $user->id)->get(['budget_limits.budget_id'])->count();
+                                                    ->where('budgets.user_id', $user->id)
+                                                    ->get(['budget_limits.budget_id'])
+                                                    ->count();
         $return['rule_groups']         = $user->ruleGroups()->count();
         $return['rules']               = $user->rules()->count();
         $return['tags']                = $user->tags()->count();
+        var_dump($return);exit;
 
         return $return;
     }

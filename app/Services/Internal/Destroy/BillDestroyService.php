@@ -40,8 +40,8 @@ class BillDestroyService
     {
         try {
             $bill->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 

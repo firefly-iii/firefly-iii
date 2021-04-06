@@ -69,8 +69,8 @@ class AccountDestroyService
         // delete account.
         try {
             $account->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete account: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 
@@ -122,7 +122,7 @@ class AccountDestroyService
 
         $collection = Transaction::groupBy('transaction_journal_id', 'account_id')
                                  ->where('account_id', $moveTo->id)
-                                 ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]);
+                                 ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]); // @phpstan-ignore-line
         if (0 === $collection->count()) {
             return;
         }
