@@ -63,7 +63,7 @@ class LinkTypeSeeder extends Seeder
             try {
                 LinkType::create($type);
             } catch (PDOException $e) {
-                // dont care
+                // @ignoreException
             }
         }
     }

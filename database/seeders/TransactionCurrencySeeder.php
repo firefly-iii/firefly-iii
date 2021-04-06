@@ -81,7 +81,7 @@ class TransactionCurrencySeeder extends Seeder
             try {
                 TransactionCurrency::create($currency);
             } catch (PDOException $e) {
-                // dont care
+                // @ignoreException
             }
         }
     }

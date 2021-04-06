@@ -117,12 +117,6 @@ class UpdateRequest extends FormRequest
             $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
         }
 
-        if (null === $inward) {
-            $validator->errors()->add('inward_id', 'This is not a valid inward journal.');
-        }
-        if (null === $outward) {
-            $validator->errors()->add('inward_id', 'This is not a valid outward journal.');
-        }
         $inDB = $repository->findSpecificLink($existing->linkType, $inward, $outward);
         if (null === $inDB) {
             return;

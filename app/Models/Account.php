@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -33,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -53,7 +51,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                                                                            $order
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
  * @property-read int|null                                                                  $account_meta_count
- * @property-read \FireflyIII\Models\AccountType                                            $accountType
+ * @property \FireflyIII\Models\AccountType                                                 $accountType
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]  $attachments
  * @property-read int|null                                                                  $attachments_count
  * @property-read string                                                                    $account_number

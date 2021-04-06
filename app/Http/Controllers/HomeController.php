@@ -39,6 +39,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Log;
+use DB;
 
 /**
  * Class HomeController.

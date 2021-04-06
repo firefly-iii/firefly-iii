@@ -59,7 +59,7 @@ trait RecurrenceValidation
             if (null !== $recurrence) {
                 Log::debug('There is a recurrence in the route.');
                 // ok so we have a recurrence should be able to extract type somehow.
-                /** @var RecurrenceTransaction $first */
+                /** @var RecurrenceTransaction|null $first */
                 $first = $recurrence->recurrenceTransactions()->first();
                 if (null !== $first) {
                     $transactionType = $first->transactionType ? $first->transactionType->type : 'withdrawal';
@@ -91,7 +91,7 @@ trait RecurrenceValidation
                 continue;
             }
             // validate source account.
-            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
+            $sourceId    = array_key_exists('source_id', $transaction) ? (int)$transaction['source_id'] : null;
             $sourceName  = $transaction['source_name'] ?? null;
             $validSource = $accountValidator->validateSource($sourceId, $sourceName, null);
 
@@ -103,7 +103,7 @@ trait RecurrenceValidation
                 return;
             }
             // validate destination account
-            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
+            $destinationId    = array_key_exists('destination_id', $transaction) ? (int)$transaction['destination_id'] : null;
             $destinationName  = $transaction['destination_name'] ?? null;
             $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, null);
             // do something with result:

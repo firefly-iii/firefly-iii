@@ -54,7 +54,6 @@ class UserController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var UserRepositoryInterface repository */
                 $this->repository = app(UserRepositoryInterface::class);
 
                 return $next($request);

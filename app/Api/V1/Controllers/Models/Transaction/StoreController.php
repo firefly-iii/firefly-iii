@@ -94,13 +94,13 @@ class StoreController extends Controller
             $validator = Validator::make(
                 ['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction]
             );
-            throw new ValidationException($validator);
+            throw new ValidationException($validator,0, $e);
         } catch (FireflyException $e) {
             Log::warning('Caught an exception. Return error message.');
             Log::error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction]);
-            throw new ValidationException($validator);
+            throw new ValidationException($validator,0, $e);
         }
         app('preferences')->mark();
         event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));

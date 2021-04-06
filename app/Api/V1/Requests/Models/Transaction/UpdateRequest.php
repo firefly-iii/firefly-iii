@@ -150,10 +150,7 @@ class UpdateRequest extends FormRequest
             return $return;
         }
 
-        /**
-         * @var int   $index
-         * @var array $transaction
-         */
+        /** @var array $transaction */
         foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
             $current  = [];

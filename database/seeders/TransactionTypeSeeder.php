@@ -46,7 +46,7 @@ class TransactionTypeSeeder extends Seeder
             try {
                 TransactionType::create(['type' => $type]);
             } catch (PDOException $e) {
-                // dont care
+                // @ignoreException
             }
         }
     }

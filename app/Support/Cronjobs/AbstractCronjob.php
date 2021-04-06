@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class AbstractCronjob
@@ -45,8 +46,6 @@ abstract class AbstractCronjob
 
     /**
      * AbstractCronjob constructor.
-     *
-     * @throws Exception
      */
     public function __construct()
     {

@@ -52,14 +52,14 @@ use function is_string;
 class FireflyValidator extends Validator
 {
     /**
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!is_string($value) || null === $value || 6 !== strlen($value)) {
+        if (null === $value || !is_string($value) || 6 !== strlen($value)) {
             return false;
         }
 
@@ -69,9 +69,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -88,8 +88,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
@@ -108,14 +108,14 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
     public function validateIban($attribute, $value): bool
     {
-        if (!is_string($value) || null === $value || strlen($value) < 6) {
+        if (null === $value || !is_string($value) || strlen($value) < 6) {
             return false;
         }
         // strip spaces
@@ -186,9 +186,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -201,9 +201,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -216,9 +216,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -235,9 +235,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param string $attribute
+     * @param string      $attribute
      *
-     * @param string $value
+     * @param string|null $value
      *
      * @return bool
      */
@@ -309,8 +309,8 @@ class FireflyValidator extends Validator
     /**
      * $attribute has the format triggers.%d.value.
      *
-     * @param string $attribute
-     * @param string $value
+     * @param string      $attribute
+     * @param string|null $value
      *
      * @return bool
      */
@@ -375,15 +375,15 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param mixed $attribute
+     * @param mixed $value
      *
      * @return bool
      */
     public function validateSecurePassword($attribute, $value): bool
     {
         $verify = false;
-        if (isset($this->data['verify_password'])) {
+        if (array_key_exists('verify_password', $this->data)) {
             $verify = 1 === (int)$this->data['verify_password'];
         }
         if ($verify) {
@@ -397,9 +397,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -410,21 +410,20 @@ class FireflyValidator extends Validator
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
-        if (isset($this->data['objectType'])) {
-
+        if (array_key_exists('objectType', $this->data)) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['objectType']);
         }
-        if (isset($this->data['type'])) {
+        if (array_key_exists('type', $this->data)) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['type']);
         }
-        if (isset($this->data['account_type_id'])) {
+        if (array_key_exists('account_type_id', $this->data)) {
             return $this->validateByAccountTypeId($value, $parameters);
         }
         $parameterId = $parameters[0] ?? null;
         if (null !== $parameterId) {
             return $this->validateByParameterId((int)$parameterId, $value);
         }
-        if (isset($this->data['id'])) {
+        if (array_key_exists('id', $this->data)) {
             return $this->validateByAccountId($value);
         }
 
@@ -437,7 +436,7 @@ class FireflyValidator extends Validator
      */
     private function validateAccountAnonymously(): bool
     {
-        if (!isset($this->data['user_id'])) {
+        if (!array_key_exists('user_id',$this->data)) {
             return false;
         }
 
@@ -466,7 +465,7 @@ class FireflyValidator extends Validator
      */
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
-        /** @var array $search */
+        /** @var array|null $search */
         $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
 
         if (null === $search) {
@@ -491,8 +490,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
-     * @param $parameters
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -516,7 +515,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
+     * @param int   $accountId
+     * @param mixed $value
      *
      * @return bool
      */
@@ -528,7 +528,6 @@ class FireflyValidator extends Validator
         $type   = $existingAccount->accountType;
         $ignore = $existingAccount->id;
 
-        /** @var Collection $set */
         $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
                        ->where('name', $value)
                        ->first();
@@ -537,7 +536,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @return bool
      */
@@ -549,7 +548,6 @@ class FireflyValidator extends Validator
         $type   = $existingAccount->accountType;
         $ignore = $existingAccount->id;
 
-        /** @var Collection $set */
         $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
                        ->where('name', $value)
                        ->first();
@@ -568,9 +566,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -602,6 +600,13 @@ class FireflyValidator extends Validator
         return true;
     }
 
+    /**
+     * @param mixed $value
+     * @param mixed $parameters
+     * @param mixed $something
+     *
+     * @return bool
+     */
     public function validateUniqueExistingWebhook($value, $parameters, $something): bool
     {
         $existingId = (int)($something[0] ?? 0);
@@ -614,7 +619,7 @@ class FireflyValidator extends Validator
         if (auth()->check()) {
             // get existing webhook value:
             if (0 !== $existingId) {
-                /** @var Webhook $webhook */
+                /** @var Webhook|null $webhook */
                 $webhook = auth()->user()->webhooks()->find($existingId);
                 if (null === $webhook) {
                     return false;
@@ -645,15 +650,15 @@ class FireflyValidator extends Validator
 
     /**
      *
-     * Validate an object and its unicity. Checks for encryption / encrypted values as well.
+     * Validate an object and its uniqueness. Checks for encryption / encrypted values as well.
      *
      * parameter 0: the table
      * parameter 1: the field
      * parameter 2: an id to ignore (when editing)
      *
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -667,7 +672,7 @@ class FireflyValidator extends Validator
          * ID field, set that field to be the $exclude.
          */
         $data = $this->getData();
-        if (!isset($parameters[2]) && isset($data['id']) && (int)$data['id'] > 0) {
+        if (!array_key_exists(2, $parameters) && array_key_exists('id', $data) && (int)$data['id'] > 0) {
             $exclude = (int)$data['id'];
         }
         // get entries from table
@@ -686,9 +691,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */
@@ -707,11 +712,11 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
+     * @param mixed $attribute
+     * @param mixed $value
+     * @param mixed $parameters
      *
-     *                   TODO this method does not need a for loop
+     * TODO this method does not need a for loop
      *
      * @return bool
      */
@@ -738,8 +743,8 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $value
-     * @param $parameters
+     * @param mixed $value
+     * @param mixed $parameters
      *
      * @return bool
      */

@@ -66,7 +66,7 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param null   $default
+     * @param bool|string|int|null   $default
      *
      * @return Configuration|null
      * @throws FireflyException

@@ -64,7 +64,7 @@ class ConfigurationController extends Controller
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException('200030: Could not load config variables.');
+            throw new FireflyException('200030: Could not load config variables.', 0, $e);
         }
         $staticData = $this->getStaticConfiguration();
         $return     = [];
