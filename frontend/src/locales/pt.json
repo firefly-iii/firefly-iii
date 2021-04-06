@@ -109,7 +109,7 @@
         "edit": "Alterar",
         "delete": "Apagar",
         "reconcile_this_account": "Reconciliar esta conta",
-        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "save_transactions_by_moving_js": "Nenhuma transa\u00e7\u00e3o| Guarde esta transa\u00e7\u00e3o movendo-a para outra conta| Guarde estas transa\u00e7\u00f5es movendo-as para outra conta.",
         "none_in_select_list": "(nenhum)"
     },
     "list": {
@@ -130,9 +130,9 @@
         "interest_date": "Data de juros",
         "book_date": "Data de registo",
         "permDeleteWarning": "Apagar as tuas coisas do Firefly III e permanente e nao pode ser desfeito.",
-        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
-        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
-        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
+        "account_areYouSure_js": "Tem a certeza que deseja eliminar a conta denominada por \"{name}?",
+        "also_delete_piggyBanks_js": "Nenhum mealheiro|O \u00fanico mealheiro ligado a esta conta ser\u00e1 tamb\u00e9m eliminado.|Todos os {count} mealheiros ligados a esta conta ser\u00e3o tamb\u00e9m eliminados.",
+        "also_delete_transactions_js": "Nenhuma transa\u00e7\u00e3o| A \u00fanica transa\u00e7\u00e3o ligada a esta conta ser\u00e1 tamb\u00e9m exclu\u00edda.|Todas as {count} transa\u00e7\u00f5es ligadas a esta conta ser\u00e3o tamb\u00e9m exclu\u00eddas.",
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",
         "payment_date": "Data de pagamento",

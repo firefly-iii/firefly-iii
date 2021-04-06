@@ -1048,7 +1048,7 @@ return [
     'delete_revenue_account'                    => 'Excluir conta de receitas ":name"',
     'delete_liabilities_account'                => 'Apagar passivo ":name"',
     'asset_deleted'                             => 'Conta de ativo ":name" excluído com sucesso',
-    'account_deleted'                           => 'Successfully deleted account ":name"',
+    'account_deleted'                           => 'Conta ":name" deletada com sucesso',
     'expense_deleted'                           => 'Conta de despesa ":name" excluída com sucesso',
     'revenue_deleted'                           => 'Conta de receitas ":name" excluída com sucesso',
     'update_asset_account'                      => 'Atualizar de conta de ativo',
@@ -1095,7 +1095,7 @@ return [
     'cant_find_redirect_account'                => 'Firefly III tentou te redirecionar mas não conseguiu. Desculpe por isso. De volta ao índice.',
     'account_type'                              => 'Tipo de conta',
     'save_transactions_by_moving'               => 'Salve esta transação movendo-a para outra conta:|Salve essas transações movendo-as para outra conta:',
-    'save_transactions_by_moving_js'            => 'No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.',
+    'save_transactions_by_moving_js'            => 'Nenhuma transação.|Salve esta transação movendo-a para outra conta.|Salve essas transações movendo-as para outra conta.',
     'stored_new_account'                        => 'Nova conta ":name" armazenado!',
     'updated_account'                           => 'Conta ":name" atualizada',
     'credit_card_options'                       => 'Opções de cartão de crédito',
@@ -1849,8 +1849,8 @@ return [
     'edit_object_group'                  => 'Editar grupo ":title"',
     'delete_object_group'                => 'Excluir grupo ":title"',
     'update_object_group'                => 'Atualizar grupo',
-    'updated_object_group'               => 'Successfully updated group ":title"',
-    'deleted_object_group'               => 'Successfully deleted group ":title"',
+    'updated_object_group'               => 'O grupo ":title" foi atualizado com sucesso',
+    'deleted_object_group'               => 'O grupo ":title" foi deletado com sucesso',
     'object_group'                       => 'Grupo',
 
 

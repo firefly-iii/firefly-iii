@@ -109,7 +109,7 @@
         "edit": "Editar",
         "delete": "Apagar",
         "reconcile_this_account": "Concilie esta conta",
-        "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
+        "save_transactions_by_moving_js": "Nenhuma transa\u00e7\u00e3o.|Salve esta transa\u00e7\u00e3o movendo-a para outra conta.|Salve essas transa\u00e7\u00f5es movendo-as para outra conta.",
         "none_in_select_list": "(nenhum)"
     },
     "list": {
@@ -130,9 +130,9 @@
         "interest_date": "Data de interesse",
         "book_date": "Data reserva",
         "permDeleteWarning": "Exclus\u00e3o de dados do Firefly III s\u00e3o permanentes e n\u00e3o podem ser desfeitos.",
-        "account_areYouSure_js": "Are you sure you want to delete the account named \"{name}\"?",
-        "also_delete_piggyBanks_js": "No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.",
-        "also_delete_transactions_js": "No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.",
+        "account_areYouSure_js": "Tem certeza que deseja excluir a conta \"{name}\"?",
+        "also_delete_piggyBanks_js": "Sem cofrinhos|O \u00fanico cofrinho conectado a esta conta tamb\u00e9m ser\u00e1 exclu\u00eddo.|Todos os {count} cofrinhos conectados a esta conta tamb\u00e9m ser\u00e3o exclu\u00eddos.",
+        "also_delete_transactions_js": "Sem transa\u00e7\u00f5es|A \u00fanica transa\u00e7\u00e3o conectada a esta conta tamb\u00e9m ser\u00e1 exclu\u00edda.|Todas as {count} transa\u00e7\u00f5es conectadas a essa conta tamb\u00e9m ser\u00e3o exclu\u00eddas.",
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",
         "payment_date": "Data de pagamento",
