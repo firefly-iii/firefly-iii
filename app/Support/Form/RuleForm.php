@@ -36,9 +36,9 @@ class RuleForm
     use FormSupport;
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
@@ -79,7 +79,7 @@ class RuleForm
         ];
         /** @var RuleGroup $group */
         foreach ($list as $group) {
-            if (isset($options['hidden']) && (int)$options['hidden'] !== $group->id) {
+            if (array_key_exists('hidden', $options) && (int)$options['hidden'] !== $group->id) {
                 $array[$group->id] = $group->title;
             }
         }

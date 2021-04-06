@@ -200,7 +200,7 @@ class Steam
                        ->orderBy('transaction_journals.date', 'ASC')
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
-                           [
+                           [  // @phpstan-ignore-line
                                'transaction_journals.date',
                                'transactions.transaction_currency_id',
                                DB::raw('SUM(transactions.amount) AS modified'),
@@ -256,7 +256,7 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
@@ -343,7 +343,7 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
 
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, 'UTC');

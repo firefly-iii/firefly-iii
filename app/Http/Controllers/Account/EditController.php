@@ -30,7 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,7 +42,7 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    use ModelInformation, UserNavigation;
+    use ModelInformation;
 
     private AttachmentHelperInterface $attachments;
     /** @var CurrencyRepositoryInterface The currency repository */

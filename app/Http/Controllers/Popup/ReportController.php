@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Controllers\Popup;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,7 +33,7 @@ use Illuminate\Http\Request;
  */
 class ReportController extends Controller
 {
-    use RequestInformation, RenderPartialViews;
+    use RenderPartialViews;
 
     /**
      * Generate popup view.

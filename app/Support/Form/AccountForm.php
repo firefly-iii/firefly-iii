@@ -43,9 +43,9 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
@@ -94,9 +94,9 @@ class AccountForm
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
@@ -116,11 +116,10 @@ class AccountForm
     /**
      * Check list of asset accounts.
      *
-     * @param string $name
-     * @param array  $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function assetAccountCheckList(string $name, array $options = null): string
     {
@@ -137,7 +136,7 @@ class AccountForm
         unset($options['class']);
         try {
             $html = prefixView('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
         }
@@ -148,9 +147,9 @@ class AccountForm
     /**
      * Basic list of asset accounts.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
@@ -164,9 +163,9 @@ class AccountForm
     /**
      * Same list but all liabilities as well.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */

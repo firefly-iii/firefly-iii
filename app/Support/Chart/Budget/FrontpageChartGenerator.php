@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+
 /**
  * Class FrontpageChartGenerator
  */
@@ -97,12 +98,7 @@ class FrontpageChartGenerator
             return $this->noBudgetLimits($data, $budget);
         }
 
-        // if limits:
-        if (0 !== $limits->count()) {
-            return $this->budgetLimits($data, $budget, $limits);
-        }
-
-        return $data;
+        return $this->budgetLimits($data, $budget, $limits);
     }
 
     /**

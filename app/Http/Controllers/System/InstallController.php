@@ -218,7 +218,7 @@ class InstallController extends Controller
     public function keys(): void
     {
         // switch on PHP version.
-
+        $keys = [];
         // switch on class existence.
         Log::info(sprintf('PHP version is %s', phpversion()));
         if (class_exists(LegacyRSA::class)) {
@@ -242,7 +242,7 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, Arr::get($keys, 'publickey'));
-        file_put_contents($privateKey, Arr::get($keys, 'privatekey'));
+        file_put_contents($publicKey, $keys['publickey']);
+        file_put_contents($privateKey, $keys['privatekey']);
     }
 }

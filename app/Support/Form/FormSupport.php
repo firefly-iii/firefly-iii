@@ -37,10 +37,10 @@ use Throwable;
 trait FormSupport
 {
     /**
-     * @param string $name
-     * @param array  $list
-     * @param mixed  $selected
-     * @param array  $options
+     * @param string     $name
+     * @param array|null $list
+     * @param mixed      $selected
+     * @param array|null $options
      *
      * @return string
      */
@@ -54,7 +54,7 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
         try {
             $html = prefixView('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
@@ -63,15 +63,15 @@ trait FormSupport
     }
 
     /**
-     * @param $name
-     * @param $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
      */
     protected function label(string $name, array $options = null): string
     {
         $options = $options ?? [];
-        if (isset($options['label'])) {
+        if (array_key_exists('label', $options)) {
             return $options['label'];
         }
         $name = str_replace('[]', '', $name);
@@ -80,9 +80,9 @@ trait FormSupport
     }
 
     /**
-     * @param       $name
-     * @param       $label
-     * @param array $options
+     * @param string     $name
+     * @param mixed      $label
+     * @param array|null $options
      *
      * @return array
      */
@@ -99,7 +99,7 @@ trait FormSupport
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return string
      */
@@ -118,8 +118,8 @@ trait FormSupport
     }
 
     /**
-     * @param string $name
-     * @param        $value
+     * @param string     $name
+     * @param mixed|null $value
      *
      * @return mixed
      */
@@ -127,14 +127,14 @@ trait FormSupport
     {
         if (app('session')->has('preFilled')) {
             $preFilled = session('preFilled');
-            $value     = isset($preFilled[$name]) && null === $value ? $preFilled[$name] : $value;
+            $value     = array_key_exists($name, $preFilled) && null === $value ? $preFilled[$name] : $value;
         }
 
         try {
             if (null !== request()->old($name)) {
                 $value = request()->old($name);
             }
-        } catch (RuntimeException $e) {
+        } catch (RuntimeException $e) { // @phpstan-ignore-line
             // don't care about session errors.
             Log::debug(sprintf('Run time: %s', $e->getMessage()));
         }
@@ -163,8 +163,8 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (Exception $e) {
-            $e->getMessage();
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
         return $date;

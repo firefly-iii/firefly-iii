@@ -31,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +44,7 @@ use Illuminate\View\View;
  */
 class ShowController extends Controller
 {
-    use UserNavigation, PeriodOverview;
+    use PeriodOverview;
 
     private CurrencyRepositoryInterface $currencyRepos;
     private AccountRepositoryInterface  $repository;

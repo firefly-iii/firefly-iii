@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Request;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use Log;
 
@@ -134,7 +135,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param $array
+     * @param mixed $array
      *
      * @return array|null
      */
@@ -172,13 +173,7 @@ trait ConvertsDataTypes
         if ('yes' === $value) {
             return true;
         }
-        if (1 === $value) {
-            return true;
-        }
         if ('1' === $value) {
-            return true;
-        }
-        if (true === $value) {
             return true;
         }
 
@@ -197,8 +192,11 @@ trait ConvertsDataTypes
         $result = null;
         try {
             $result = $this->get($field) ? new Carbon($this->get($field)) : null;
-        } catch (Exception $e) {
-            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        } catch (InvalidFormatException $e) {
+            // @ignoreException
+        }
+        if (null === $result) {
+            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
 
         return $result;
@@ -217,10 +215,14 @@ trait ConvertsDataTypes
         if ('' === $string) {
             return null;
         }
+        $carbon = null;
         try {
             $carbon = new Carbon($string);
-        } catch (Exception $e) {
-            Log::debug(sprintf('Invalid date: %s: %s', $string, $e->getMessage()));
+        } catch (InvalidFormatException $e) {
+            // @ignoreException
+        }
+        if (null === $carbon) {
+            Log::debug(sprintf('Invalid date: %s', $string));
 
             return null;
         }

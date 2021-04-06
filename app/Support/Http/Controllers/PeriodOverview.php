@@ -29,6 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -63,15 +64,16 @@ use Log;
  */
 trait PeriodOverview
 {
+    protected JournalRepositoryInterface $journalRepos;
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account The account involved
-     * @param Carbon  $date    The start date.
-     * @param Carbon  $end     The end date.
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return array
      */
@@ -220,7 +222,7 @@ trait PeriodOverview
         foreach ($journals as $journal) {
             $currencyId        = (int)$journal['currency_id'];
             $foreignCurrencyId = $journal['foreign_currency_id'];
-            if (!isset($return[$currencyId])) {
+            if (!array_key_exists($currencyId, $return)) {
                 $return[$currencyId] = [
                     'amount'                  => '0',
                     'count'                   => 0,
@@ -235,7 +237,7 @@ trait PeriodOverview
             $return[$currencyId]['count']++;
 
             if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
-                if (!isset($return[$foreignCurrencyId])) {
+                if (!array_key_exists($foreignCurrencyId, $return)) {
                     $return[$foreignCurrencyId] = [
                         'amount'                  => '0',
                         'count'                   => 0,
@@ -338,7 +340,7 @@ trait PeriodOverview
      * This method has been refactored recently.
      *
      * @param Carbon $start
-     * @param Carbon $date
+     * @param Carbon $end
      *
      * @return array
      */
@@ -469,10 +471,11 @@ trait PeriodOverview
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
      * @param Tag    $tag
-     *
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
@@ -542,9 +545,11 @@ trait PeriodOverview
 
     /**
      * @param string $transactionType
-     * @param Carbon $endDate
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {

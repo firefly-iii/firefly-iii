@@ -41,19 +41,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * FireflyIII\Models\TransactionJournal
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
  * @property int $user_id
  * @property int $transaction_type_id
  * @property int|null $transaction_group_id
  * @property int|null $bill_id
  * @property int|null $transaction_currency_id
  * @property string $description
- * @property \Illuminate\Support\Carbon $date
- * @property \Illuminate\Support\Carbon|null $interest_date
- * @property \Illuminate\Support\Carbon|null $book_date
- * @property \Illuminate\Support\Carbon|null $process_date
+ * @property \Carbon\Carbon $date
+ * @property \Carbon\Carbon|null $interest_date
+ * @property \Carbon\Carbon|null $book_date
+ * @property \Carbon\Carbon|null $process_date
  * @property int $order
  * @property int $tag_count
  * @property bool $encrypted

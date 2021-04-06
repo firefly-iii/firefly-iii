@@ -35,7 +35,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\View\Factory;
@@ -52,7 +51,7 @@ use Log;
  */
 class ConvertController extends Controller
 {
-    use ModelInformation, UserNavigation;
+    use ModelInformation;
 
     private AccountRepositoryInterface $accountRepository;
     private JournalRepositoryInterface $repository;

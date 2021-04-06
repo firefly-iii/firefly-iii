@@ -34,8 +34,8 @@ class Navigation
 {
     /**
      * @param \Carbon\Carbon $theDate
-     * @param                $repeatFreq
-     * @param                $skip
+     * @param string         $repeatFreq
+     * @param int            $skip
      *
      * @return \Carbon\Carbon
      */
@@ -71,12 +71,12 @@ class Navigation
             'half-year' => 6,
         ];
 
-        if (!isset($functionMap[$repeatFreq])) {
+        if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
 
             return $theDate;
         }
-        if (isset($modifierMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $modifierMap)) {
             $add *= $modifierMap[$repeatFreq];
         }
         $function = $functionMap[$repeatFreq];
@@ -156,12 +156,13 @@ class Navigation
                 $loopCount++;
             }
         }
+
         return $periods;
     }
 
     /**
      * @param \Carbon\Carbon $end
-     * @param                $repeatFreq
+     * @param string         $repeatFreq
      *
      * @return \Carbon\Carbon
      */
@@ -212,14 +213,14 @@ class Navigation
 
             return $currentEnd;
         }
-        if (!isset($functionMap[$repeatFreq])) {
+        if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
             return $end;
         }
         $function = $functionMap[$repeatFreq];
 
-        if (isset($modifierMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $modifierMap)) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
             if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
@@ -265,7 +266,7 @@ class Navigation
 
         $currentEnd = clone $theCurrentEnd;
 
-        if (isset($functionMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
             $currentEnd->$function();
         }
@@ -338,7 +339,7 @@ class Navigation
             '6M'      => (string)trans('config.half_year'),
         ];
 
-        if (isset($formatMap[$repeatFrequency])) {
+        if (array_key_exists($repeatFrequency, $formatMap)) {
             return $date->formatLocalized((string)$formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
@@ -472,7 +473,7 @@ class Navigation
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param                $repeatFreq
+     * @param string         $repeatFreq
      *
      * @return \Carbon\Carbon
      */
@@ -496,7 +497,7 @@ class Navigation
             'yearly'    => 'startOfYear',
             '1Y'        => 'startOfYear',
         ];
-        if (isset($functionMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
             $date->$function();
 
@@ -523,7 +524,7 @@ class Navigation
 
     /**
      * @param \Carbon\Carbon $theDate
-     * @param                $repeatFreq
+     * @param string         $repeatFreq
      * @param int            $subtract
      *
      * @return \Carbon\Carbon
@@ -555,13 +556,13 @@ class Navigation
             'half-year' => 6,
             '6M'        => 6,
         ];
-        if (isset($functionMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
             $date->$function($subtract);
 
             return $date;
         }
-        if (isset($modifierMap[$repeatFreq])) {
+        if (array_key_exists($repeatFreq, $modifierMap)) {
             $subtract *= $modifierMap[$repeatFreq];
             $date->subMonths($subtract);
 
@@ -577,6 +578,7 @@ class Navigation
             $tEnd       = session('end', Carbon::now()->endOfMonth());
             $diffInDays = $tStart->diffInDays($tEnd);
             $date->subDays($diffInDays * $subtract);
+
             return $date;
         }
 
@@ -584,7 +586,7 @@ class Navigation
     }
 
     /**
-     * @param                $range
+     * @param string         $range
      * @param \Carbon\Carbon $start
      *
      * @return \Carbon\Carbon
@@ -602,7 +604,7 @@ class Navigation
         ];
         $end         = clone $start;
 
-        if (isset($functionMap[$range])) {
+        if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
             $end->$function();
 
@@ -630,7 +632,7 @@ class Navigation
     }
 
     /**
-     * @param                $range
+     * @param string         $range
      * @param \Carbon\Carbon $start
      *
      * @return \Carbon\Carbon
@@ -646,7 +648,7 @@ class Navigation
             '3M'     => 'firstOfQuarter',
             'custom' => 'startOfMonth', // this only happens in test situations.
         ];
-        if (isset($functionMap[$range])) {
+        if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
             $start->$function();
 

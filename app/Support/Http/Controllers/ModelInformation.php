@@ -57,14 +57,11 @@ trait ModelInformation
                     'count'      => 1,
                 ]
             )->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
         }
-
-        // @codeCoverageIgnoreEnd
 
         return [$result];
     }
@@ -149,13 +146,11 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
+            } catch (Throwable $e) { // @phpstan-ignore-line
 
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
-                // @codeCoverageIgnoreEnd
             }
             if ('' !== $string) {
                 $result[] = $string;
@@ -189,9 +184,9 @@ trait ModelInformation
         $index           = 0;
         // amount, description, category, budget, tags, source, destination, notes, currency type
         //,type
-        /** @var Transaction $source */
+        /** @var Transaction|null $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction $destination */
+        /** @var Transaction|null $destination */
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
         if (null === $destination || null === $source) {
             return $result;
@@ -267,13 +262,11 @@ trait ModelInformation
                         'triggers'   => $triggers,
                     ]
                 )->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
+            } catch (Throwable $e) { // @phpstan-ignore-line
 
                 Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
-                // @codeCoverageIgnoreEnd
             }
             if ('' !== $string) {
                 $result[] = $string;

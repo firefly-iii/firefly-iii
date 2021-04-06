@@ -96,7 +96,7 @@ class CacheProperties
                 $content .= json_encode($property, JSON_THROW_ON_ERROR, 512);
             } catch (JsonException $e) {
                 // @ignoreException
-                $content .= md5(time());
+                $content .= hash('sha256', (string)time());
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);

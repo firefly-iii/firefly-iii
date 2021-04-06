@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
@@ -48,7 +47,7 @@ use Throwable;
  */
 class SelectController extends Controller
 {
-    use RuleManagement, RequestInformation;
+    use RuleManagement;
 
     /**
      * RuleController constructor.

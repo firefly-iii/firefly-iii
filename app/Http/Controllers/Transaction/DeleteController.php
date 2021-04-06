@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Log;
@@ -38,8 +37,6 @@ use URL;
  */
 class DeleteController extends Controller
 {
-    use UserNavigation;
-
     /** @var TransactionGroupRepositoryInterface */
     private $repository;
 

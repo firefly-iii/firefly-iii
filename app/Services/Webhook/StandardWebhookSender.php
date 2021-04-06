@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Webhook;
 
-use Exception;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 use JsonException;
 use Log;
 
@@ -92,7 +91,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         try {
             $res                 = $client->request('POST', $this->message->webhook->url, $options);
             $this->message->sent = true;
-        } catch (ClientException | Exception $e) {
+        } catch (RequestException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
 
@@ -104,7 +103,7 @@ class StandardWebhookSender implements WebhookSenderInterface
 
             $attempt = new WebhookAttempt;
             $attempt->webhookMessage()->associate($this->message);
-            $attempt->status_code = $e->getResponse() ? $e->getResponse()->getStatusCode() : 0;
+            $attempt->status_code = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
             $attempt->logs        = $logs;
             $attempt->save();
 

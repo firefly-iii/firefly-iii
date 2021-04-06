@@ -51,12 +51,11 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        // TODO move to configuration.
-        $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $this->canHaveVirtual    = config('firefly.can_have_virtual_amounts');
+        $this->validAssetFields  = config('firefly.valid_asset_fields');
+        $this->validCCFields     = config('firefly.valid_cc_fields');
+        $this->validFields       = config('firefly.valid_account_fields');
         $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->validAssetFields  = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-        $this->validCCFields     = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-        $this->validFields       = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
     }
 
     /**
@@ -100,7 +99,7 @@ class AccountUpdateService
         $this->updateOpeningBalance($account, $data);
 
         // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
+        if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->updateNote($account, (string)$data['notes']);
         }
 

@@ -46,7 +46,7 @@ class ShowController extends Controller
 {
     use PeriodOverview, AugumentData;
 
-    private JournalRepositoryInterface $journalRepos;
+    protected JournalRepositoryInterface $journalRepos;
     private BudgetRepositoryInterface  $repository;
 
     /**

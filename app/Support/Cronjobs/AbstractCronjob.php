@@ -65,7 +65,7 @@ abstract class AbstractCronjob
     /**
      * @param Carbon $date
      */
-    public function setDate(Carbon $date): void
+    final public function setDate(Carbon $date): void
     {
         $newDate = clone $date;
         $this->date = $newDate;
@@ -74,7 +74,7 @@ abstract class AbstractCronjob
     /**
      * @param bool $force
      */
-    public function setForce(bool $force): void
+    final public function setForce(bool $force): void
     {
         $this->force = $force;
     }

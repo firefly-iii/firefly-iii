@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,8 +37,6 @@ use Illuminate\View\View;
  */
 class DeleteController extends Controller
 {
-    use UserNavigation;
-
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 

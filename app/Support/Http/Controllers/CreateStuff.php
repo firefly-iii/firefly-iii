@@ -115,7 +115,7 @@ trait CreateStuff
         }
 
         // switch on class existence.
-
+        $keys= [];
         Log::info(sprintf('PHP version is %s', phpversion()));
         if (class_exists(LegacyRSA::class)) {
             // PHP 7
@@ -132,8 +132,8 @@ trait CreateStuff
         // @codeCoverageIgnoreStart
         Log::alert('NO OAuth keys were found. They have been created.');
 
-        file_put_contents($publicKey, array_get($keys, 'publickey'));
-        file_put_contents($privateKey, array_get($keys, 'privatekey'));
+        file_put_contents($publicKey, $keys['publickey']);
+        file_put_contents($privateKey, $keys['privatekey']);
     }
 
     /**

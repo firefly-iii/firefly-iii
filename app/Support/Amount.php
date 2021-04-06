@@ -164,7 +164,7 @@ class Amount
         if (strlen($currencyCode) > 3) {
             $currencyCode = json_decode($currencyCode, true, 512, JSON_THROW_ON_ERROR) ?? 'EUR';
         }
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (null === $currency) {
             // get EUR
@@ -185,7 +185,7 @@ class Amount
         try {
             $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
-            // ignore decryption error.
+            // @ignoreException
         }
 
         return $value;

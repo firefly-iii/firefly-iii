@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
 use Log;
@@ -29,7 +30,7 @@ use Log;
 /**
  * Class IntroController.
  */
-class IntroController
+class IntroController extends Controller
 {
     use GetConfigurationData;
 

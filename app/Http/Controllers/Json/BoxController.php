@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -45,8 +44,6 @@ use Log;
  */
 class BoxController extends Controller
 {
-    use RequestInformation;
-
     /**
      * This box has three types of info to display:
      * 0) If the user has available amount this period and has overspent: overspent box.

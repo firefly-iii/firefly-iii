@@ -245,10 +245,8 @@ class OperatorQuerySearch implements SearchInterface
                 Log::error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
-                /** @var Subquery $searchNode */
                 // loop all notes in subquery:
-                /** @var Node $subNode */
-                foreach ($searchNode->getNodes() as $subNode) {
+                foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
                     $this->handleSearchNode($subNode); // lets hope its not too recursive!
                 }
                 break;

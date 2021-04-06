@@ -154,7 +154,7 @@ class CategoryUpdateService
                 try {
                     $dbNote->delete();
                 } catch (Exception $e) {
-                    Log::debug($e->getMessage());
+                    // @ignoreException
                 }
             }
 

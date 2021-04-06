@@ -133,11 +133,10 @@ class RecurrenceUpdateService
         if (null !== $dbNote && '' === $text) {
             try {
                 $dbNote->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
         }
-
     }
 
     /**
@@ -252,7 +251,7 @@ class RecurrenceUpdateService
                     $currency = $currencyFactory->find($current['currency_id'] ?? null, $currency['currency_code'] ?? null);
                 }
                 if (null === $currency) {
-                    unset($current['currency_id'], $currency['currency_code']);
+                    unset($current['currency_id'], $current['currency_code']);
                 }
                 if (null !== $currency) {
                     $current['currency_id'] = (int)$currency->id;
