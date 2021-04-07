@@ -37,7 +37,8 @@ class EitherConfigKey
         'firefly.allowed_opposing_types',
         'firefly.accountRoles',
         'firefly.valid_liabilities',
-        'firefly.interest_periods'
+        'firefly.interest_periods',
+        'firefly.enable_external_map'
     ];
     /**
      * @param string $value

@@ -99,8 +99,8 @@ return [
         'webhooks'  => false,
     ],
 
-    'version'                      => '5.5.3',
-    'api_version'                  => '1.5.1',
+    'version'                      => '5.5.4',
+    'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -113,6 +113,7 @@ return [
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
+    'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
     'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
@@ -209,7 +210,9 @@ return [
     ],
     'list_length'                  => 10,
     'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
+    'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
     'ccTypes'                      => [
         'monthlyFull' => 'Full payment every month',
     ],
