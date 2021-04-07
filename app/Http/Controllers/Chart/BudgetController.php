@@ -304,7 +304,6 @@ class BudgetController extends Controller
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
                     'currency_code'   => $journal['currency_code'],
-                    'currency_symbol' => $journal['currency_symbol'],
                     'currency_name'   => $journal['currency_name'],
                 ];
             $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);

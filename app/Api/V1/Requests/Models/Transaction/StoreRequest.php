@@ -83,7 +83,7 @@ class StoreRequest extends FormRequest
                 'order' => $this->integerFromValue((string)$object['order']),
 
                 'currency_id'           => $this->integerFromValue((string)$object['currency_id']),
-                'currency_code'         => $this->clearString($object['currency_code'], false),
+                'currency_code'         => $this->clearString((string)$object['currency_code'], false),
 
                 // foreign currency info:
                 'foreign_currency_id'   => $this->integerFromValue((string)$object['foreign_currency_id']),
@@ -132,21 +132,21 @@ class StoreRequest extends FormRequest
                 'tags'                  => $this->arrayFromValue($object['tags']),
 
                 // all custom fields:
-                'internal_reference'    => $this->clearString((string)$object['internal_reference'],false),
+                'internal_reference'    => $this->clearString((string)$object['internal_reference'], false),
                 'external_id'           => $this->clearString((string)$object['external_id'], false),
                 'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
                 'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
-                'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id'],false),
+                'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id'], false),
                 'external_uri'          => $this->clearString((string)$object['external_uri'], false),
 
-                'sepa_cc'       => $this->clearString($object['sepa_cc'],false),
-                'sepa_ct_op'    => $this->clearString($object['sepa_ct_op'],false),
-                'sepa_ct_id'    => $this->clearString($object['sepa_ct_id'],false),
-                'sepa_db'       => $this->clearString($object['sepa_db'],false),
-                'sepa_country'  => $this->clearString($object['sepa_country'],false),
-                'sepa_ep'       => $this->clearString($object['sepa_ep'],false),
-                'sepa_ci'       => $this->clearString($object['sepa_ci'],false),
-                'sepa_batch_id' => $this->clearString($object['sepa_batch_id'],false),
+                'sepa_cc'       => $this->clearString($object['sepa_cc'], false),
+                'sepa_ct_op'    => $this->clearString($object['sepa_ct_op'], false),
+                'sepa_ct_id'    => $this->clearString($object['sepa_ct_id'], false),
+                'sepa_db'       => $this->clearString($object['sepa_db'], false),
+                'sepa_country'  => $this->clearString($object['sepa_country'], false),
+                'sepa_ep'       => $this->clearString($object['sepa_ep'], false),
+                'sepa_ci'       => $this->clearString($object['sepa_ci'], false),
+                'sepa_batch_id' => $this->clearString($object['sepa_batch_id'], false),
                 // custom date fields. Must be Carbon objects. Presence is optional.
                 'interest_date' => $this->dateFromValue($object['interest_date']),
                 'book_date'     => $this->dateFromValue($object['book_date']),

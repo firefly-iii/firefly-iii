@@ -29,6 +29,7 @@ use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -150,12 +151,12 @@ class TagRepository implements TagRepositoryInterface
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) {
-                $notes                   = $attachment->notes()->first();
+            static function (Attachment $attachment, int $index) use ($disk) {
+                /** @var Note $note */
+                $note = $attachment->notes()->first();
+                // only used in v1 view of tags
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
-
-                return $attachment;
+                $attachment->notes_text  = null === $note ? '' : $note->text;
             }
         );
     }
@@ -171,7 +172,7 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param int|null $year
      *
-     * @return Collection
+     * @return array
      */
     public function getTagsInYear(?int $year): array
     {
@@ -385,57 +386,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * Generates a tag cloud.
-     *
-     * @param int|null $year
-     *
-     * @return array
-     * @deprecated
-     */
-    public function tagCloud(?int $year): array
-    {
-        // Some vars
-        $tags = $this->getTagsInYear($year);
-
-        $max           = $this->getMaxAmount($tags);
-        $min           = $this->getMinAmount($tags);
-        $diff          = bcsub($max, $min);
-        $return        = [];
-        $minimumFont   = '12'; // default scale is from 12 to 24, so 12 points.
-        $maxPoints     = '12';
-        $pointsPerCoin = '0';
-
-        Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
-
-        if (0 !== bccomp($diff, '0')) { // for each full coin in tag, add so many points
-            // minus the smallest tag.
-            $pointsPerCoin = bcdiv($maxPoints, $diff);
-        }
-
-        Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $amount       = (string)$tag->amount_sum;
-            $amount       = '' === $amount ? '0' : $amount;
-            $amountMin    = bcsub($amount, $min);
-            $pointsForTag = bcmul($amountMin, $pointsPerCoin);
-            $fontSize     = bcadd($minimumFont, $pointsForTag);
-            Log::debug(sprintf('Tag "%s": Amount is %s, so points is %s', $tag->tag, $amount, $fontSize));
-
-            // return value for tag cloud:
-            $return[$tag->id] = [
-                'size'       => $fontSize,
-                'tag'        => $tag->tag,
-                'id'         => $tag->id,
-                'created_at' => $tag->created_at,
-                'location'   => $this->getLocation($tag),
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
@@ -507,51 +457,4 @@ class TagRepository implements TagRepositoryInterface
         return $tag;
     }
 
-    /**
-     * @param Collection $tags
-     *
-     * @return string
-     */
-    private function getMaxAmount(Collection $tags): string
-    {
-        $max = '0';
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $amount = (string)$tag->amount_sum;
-            $amount = '' === $amount ? '0' : $amount;
-            $max    = 1 === bccomp($amount, $max) ? $amount : $max;
-
-        }
-        Log::debug(sprintf('Maximum is %s.', $max));
-
-        return $max;
-    }
-
-    /**
-     * @param Collection $tags
-     *
-     * @return string
-     *
-     */
-    private function getMinAmount(Collection $tags): string
-    {
-        $min = null;
-
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $amount = (string)$tag->amount_sum;
-            $amount = '' === $amount ? '0' : $amount;
-
-            if (null === $min) {
-                $min = $amount;
-            }
-            $min = -1 === bccomp($amount, $min) ? $amount : $min;
-        }
-        if (null === $min) {
-            $min = '0';
-        }
-        Log::debug(sprintf('Minimum is %s.', $min));
-
-        return $min;
-    }
 }

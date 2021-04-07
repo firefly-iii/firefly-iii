@@ -23,7 +23,8 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Telemetry;
-use Illuminate\Pagination\LengthAwarePaginator;
+
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Interface TelemetryRepositoryInterface

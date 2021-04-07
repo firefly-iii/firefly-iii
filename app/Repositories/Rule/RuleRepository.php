@@ -502,7 +502,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     private function setRuleTrigger(string $moment, Rule $rule): void
     {
-        /** @var RuleTrigger $trigger */
+        /** @var RuleTrigger|null $trigger */
         $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
         if (null !== $trigger) {
             $trigger->trigger_value = $moment;

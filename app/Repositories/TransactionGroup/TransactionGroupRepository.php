@@ -112,7 +112,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $result[$journalId]       = $result[$journalId] ?? [];
             $current                  = $attachment->toArray();
             $current['file_exists']   = true;
-            $current['journal_title'] = $attachment->attachable->description;
+            $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
 
         }
@@ -246,7 +246,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function getNoteText(int $journalId): ?string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = Note
             ::where('noteable_id', $journalId)
             ->where('noteable_type', TransactionJournal::class)
@@ -269,6 +269,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
+        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         $data     = PiggyBankEvent
             ::whereIn('transaction_journal_id', $journals)
             ->with('piggyBank', 'piggyBank.account')
@@ -357,12 +358,12 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             return $factory->create($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Group repository caught group factory with a duplicate exception!');
-            throw new DuplicateTransactionException($e->getMessage());
+            throw new DuplicateTransactionException($e->getMessage(),0, $e);
         } catch (FireflyException $e) {
             Log::warning('Group repository caught group factory with an exception!');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException($e->getMessage());
+            throw new FireflyException($e->getMessage(),0, $e);
         }
     }
 

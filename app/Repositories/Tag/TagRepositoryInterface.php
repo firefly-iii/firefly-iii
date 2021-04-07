@@ -188,17 +188,6 @@ interface TagRepositoryInterface
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
 
     /**
-     * Generates a tag cloud.
-     *
-     * @param int|null $year
-     *
-     * @return array
-     * @deprecated
-     *
-     */
-    public function tagCloud(?int $year): array;
-
-    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
