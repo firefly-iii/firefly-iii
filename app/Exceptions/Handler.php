@@ -52,6 +52,7 @@ class Handler extends ExceptionHandler
             AuthenticationException::class,
             LaravelValidationException::class,
             NotFoundHttpException::class,
+            OAuthServerException::class
         ];
 
     /**
