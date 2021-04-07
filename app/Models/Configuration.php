@@ -70,9 +70,10 @@ class Configuration extends Model
     protected $table = 'configuration';
 
     /**
+     * TODO can be replaced by native laravel code
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return mixed
      */
@@ -84,7 +85,7 @@ class Configuration extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setDataAttribute($value): void
     {

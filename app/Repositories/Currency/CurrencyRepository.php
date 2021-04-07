@@ -433,25 +433,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Return a list of exchange rates with this currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
-     */
-    public function getExchangeRates(TransactionCurrency $currency): Collection
-    {
-        /** @var CurrencyExchangeRate $rate */
-        return $this->user->currencyExchangeRates()
-                          ->where(
-                              function (Builder $query) use ($currency) {
-                                  $query->where('from_currency_id', $currency->id);
-                                  $query->orWhere('to_currency_id', $currency->id);
-                              }
-                          )->get();
-    }
-
-    /**
      * @inheritDoc
      */
     public function isFallbackCurrency(TransactionCurrency $currency): bool

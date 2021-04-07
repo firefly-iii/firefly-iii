@@ -278,7 +278,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param int $transactionId
+     * @param int $journalId
      */
     public function reconcileById(int $journalId): void
     {

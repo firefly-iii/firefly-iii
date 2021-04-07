@@ -246,7 +246,7 @@ class Account extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      *
      * @codeCoverageIgnore
      */

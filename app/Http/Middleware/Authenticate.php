@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Database\QueryException;
@@ -77,8 +78,8 @@ class Authenticate
     /**
      * Determine if the user is logged in to any of the given guards.
      *
-     * @param        $request
-     * @param array  $guards
+     * @param mixed $request
+     * @param array $guards
      *
      * @return mixed
      * @throws FireflyException
@@ -95,6 +96,7 @@ class Authenticate
 
                     // do an extra check on user object.
                     /** @noinspection PhpUndefinedMethodInspection */
+                    /** @var User $user */
                     $user = $this->auth->authenticate();
                     if (1 === (int)$user->blocked) {
                         $message = (string)trans('firefly.block_account_logout');
@@ -127,7 +129,7 @@ class Authenticate
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                return $this->auth->shouldUse($guard);
+                return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }
 

@@ -192,7 +192,7 @@ class CreateController extends Controller
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
-        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_journal', ['name' => e($journal->name)]));
+        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_journal', ['name' => e($journal->description)]));
 
         $subTitleIcon = 'fa-clone';
         $subTitle     = (string)trans('firefly.make_new_rule_no_group');

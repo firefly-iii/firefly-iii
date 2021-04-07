@@ -220,7 +220,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountsById(array $accountIds): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts();
 
         if (0 !== count($accountIds)) {
@@ -240,7 +239,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
@@ -263,7 +261,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getActiveAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');
@@ -324,7 +321,6 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getInactiveAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');

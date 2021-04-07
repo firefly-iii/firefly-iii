@@ -151,4 +151,13 @@ class RecurrenceFactory
         $this->user = $user;
     }
 
+    /**
+     * @return MessageBag
+     */
+    public function getErrors(): MessageBag
+    {
+        return $this->errors;
+    }
+
+
 }

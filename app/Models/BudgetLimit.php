@@ -84,7 +84,7 @@ class BudgetLimit extends Model
      *
      * @param string $value
      *
-     * @return mixed
+     * @return BudgetLimit
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): BudgetLimit

@@ -120,7 +120,7 @@ class PiggyBankRepetition extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setCurrentamountAttribute($value): void
     {

@@ -81,7 +81,7 @@ class TransactionJournalLink extends Model
      * @param string $value
      *
      * @throws NotFoundHttpException
-     * @return mixed
+     * @return TransactionJournalLink
      *
      */
     public static function routeBinder(string $value): TransactionJournalLink

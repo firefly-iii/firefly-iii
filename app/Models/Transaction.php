@@ -230,7 +230,7 @@ class Transaction extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setAmountAttribute($value): void
     {

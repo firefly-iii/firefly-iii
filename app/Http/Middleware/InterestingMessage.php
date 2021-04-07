@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\Request;
@@ -93,7 +94,7 @@ class InterestingMessage
         $accountId = $request->get('account_id');
         $message            = $request->get('message');
 
-        /** @var TransactionGroup $group */
+        /** @var Account $account */
         $account = auth()->user()->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {

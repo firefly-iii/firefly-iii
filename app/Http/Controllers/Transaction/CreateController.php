@@ -85,9 +85,9 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param string|null objectType
+     * @param string|null $objectType
      *
-     * @return Factory|View
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function create(?string $objectType)
     {

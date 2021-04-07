@@ -81,9 +81,9 @@ class Binder
     /**
      * Do the binding.
      *
-     * @param $key
-     * @param $value
-     * @param $route
+     * @param string $key
+     * @param string $value
+     * @param Route $route
      *
      * @return mixed
      */

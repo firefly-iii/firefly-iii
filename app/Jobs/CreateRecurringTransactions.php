@@ -239,9 +239,9 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
-     * Has the reuccrence started yet.
+     * Has the recurrence started yet?
      *
-     * @param $recurrence
+     * @param Recurrence $recurrence
      *
      * @return bool
      */

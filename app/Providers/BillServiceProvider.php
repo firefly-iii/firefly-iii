@@ -51,7 +51,7 @@ class BillServiceProvider extends ServiceProvider
                 /** @var BillRepositoryInterface $repository */
                 $repository = app(BillRepository::class);
 
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 

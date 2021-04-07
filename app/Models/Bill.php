@@ -176,7 +176,7 @@ class Bill extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setAmountMaxAttribute($value): void
     {
@@ -184,7 +184,7 @@ class Bill extends Model
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @codeCoverageIgnore
      */

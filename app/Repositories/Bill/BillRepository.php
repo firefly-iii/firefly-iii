@@ -29,6 +29,7 @@ use FireflyIII\Factory\BillFactory;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -200,7 +201,6 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBills(): Collection
     {
-        /** @var Collection $set */
         return $this->user->bills()
                           ->orderBy('order', 'ASC')
                           ->orderBy('active', 'DESC')
@@ -549,6 +549,7 @@ class BillRepository implements BillRepositoryInterface
                             ->where('rule_actions.action_type', 'link_to_bill')
                             ->get(['rules.id', 'rules.title', 'rule_actions.action_value', 'rules.active']);
         $array = [];
+        /** @var Rule $rule */
         foreach ($rules as $rule) {
             $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
             $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];

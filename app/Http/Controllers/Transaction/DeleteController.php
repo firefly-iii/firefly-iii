@@ -37,8 +37,7 @@ use URL;
  */
 class DeleteController extends Controller
 {
-    /** @var TransactionGroupRepositoryInterface */
-    private $repository;
+    private TransactionGroupRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -67,7 +66,7 @@ class DeleteController extends Controller
      *
      * @param TransactionGroup $group
      *
-     * @return RedirectResponse|Redirector|View
+     * @return mixed
      */
     public function delete(TransactionGroup $group)
     {

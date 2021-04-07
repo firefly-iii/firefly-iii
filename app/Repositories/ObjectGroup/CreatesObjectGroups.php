@@ -43,7 +43,6 @@ trait CreatesObjectGroups
     }
 
     /**
-     * @param User   $user
      * @param string $title
      *
      * @return ObjectGroup|null

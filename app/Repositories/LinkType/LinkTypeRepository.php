@@ -169,7 +169,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     /**
      * Returns all the journal links (of a specific type).
      *
-     * @param $linkType
+     * @param LinkType|null $linkType
      *
      * @return Collection
      */
