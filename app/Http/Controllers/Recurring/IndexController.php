@@ -122,6 +122,7 @@ class IndexController extends Controller
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
+        $today      = today(config('app.timezone'));
 
         $this->verifyRecurringCronJob();
 
