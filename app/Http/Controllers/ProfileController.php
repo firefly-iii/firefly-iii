@@ -207,6 +207,7 @@ class ProfileController extends Controller
         }
 
         // generate codes if not in session:
+        $recoveryCodes = '';
         if (!session()->has('temp-mfa-codes')) {
             // generate codes + store + flash:
             $recovery      = app(Recovery::class);

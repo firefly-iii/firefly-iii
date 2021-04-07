@@ -56,6 +56,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Carbon\Carbon|null                                                                       $process_date
  * @property int                                                                                       $order
  * @property int                                                                                       $tag_count
+ * @property string                                                                                    $transaction_type_type
  * @property bool                                                                                      $encrypted
  * @property bool                                                                                      $completed
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments

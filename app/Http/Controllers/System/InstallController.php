@@ -32,7 +32,6 @@ use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use Log;
@@ -206,7 +205,7 @@ class InstallController extends Controller
             return false;
         }
         // clear cache as well.
-        Cache::clear();
+        Cache::clear(); // @phpstan-ignore-line
         Preferences::mark();
 
         return true;
