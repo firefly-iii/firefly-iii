@@ -103,7 +103,7 @@ class EditController extends Controller
         $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ',' . $repetition->repetition_moment; // @codeCoverageIgnore
+            $currentRepType .= ',' . $repetition->repetition_moment; 
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -119,10 +119,10 @@ class EditController extends Controller
             'times'      => (string)trans('firefly.repeat_times'),
         ];
         if (null !== $recurrence->repeat_until) {
-            $repetitionEnd = 'until_date'; // @codeCoverageIgnore
+            $repetitionEnd = 'until_date'; 
         }
         if ($recurrence->repetitions > 0) {
-            $repetitionEnd = 'times'; // @codeCoverageIgnore
+            $repetitionEnd = 'times'; 
         }
 
         $weekendResponses = [
@@ -177,7 +177,7 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('recurrences.edit.uri'));

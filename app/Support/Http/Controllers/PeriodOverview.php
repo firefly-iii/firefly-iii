@@ -89,7 +89,7 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -281,7 +281,7 @@ trait PeriodOverview
         $cache->addProperty($category->id);
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -356,7 +356,7 @@ trait PeriodOverview
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         /** @var array $dates */
@@ -415,7 +415,7 @@ trait PeriodOverview
         $cache->addProperty('no-category-period-entries');
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -490,7 +490,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -564,7 +564,7 @@ trait PeriodOverview
         $cache->addProperty('transactions-period-entries');
         $cache->addProperty($transactionType);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);

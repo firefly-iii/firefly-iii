@@ -53,13 +53,13 @@ class RenameAccountMeta extends Command
     public function handle(): int
     {
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
         $array = [
             'accountRole'          => 'account_role',
             'ccType'               => 'cc_type',
@@ -104,7 +104,7 @@ class RenameAccountMeta extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

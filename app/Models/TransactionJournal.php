@@ -35,54 +35,54 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int $id
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property \Carbon\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $transaction_type_id
- * @property int|null $transaction_group_id
- * @property int|null $bill_id
- * @property int|null $transaction_currency_id
- * @property string $description
- * @property \Carbon\Carbon $date
- * @property \Carbon\Carbon|null $interest_date
- * @property \Carbon\Carbon|null $book_date
- * @property \Carbon\Carbon|null $process_date
- * @property int $order
- * @property int $tag_count
- * @property bool $encrypted
- * @property bool $completed
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
- * @property-read int|null $attachments_count
- * @property-read \FireflyIII\Models\Bill|null $bill
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
- * @property-read int|null $budgets_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
- * @property-read int|null $categories_count
+ * @property int                                                                                       $id
+ * @property \Carbon\Carbon|null                                                                       $created_at
+ * @property \Carbon\Carbon|null                                                                       $updated_at
+ * @property \Carbon\Carbon|null                                                                       $deleted_at
+ * @property int                                                                                       $user_id
+ * @property int                                                                                       $transaction_type_id
+ * @property int|null                                                                                  $transaction_group_id
+ * @property int|null                                                                                  $bill_id
+ * @property int|null                                                                                  $transaction_currency_id
+ * @property string                                                                                    $description
+ * @property \Carbon\Carbon                                                                            $date
+ * @property \Carbon\Carbon|null                                                                       $interest_date
+ * @property \Carbon\Carbon|null                                                                       $book_date
+ * @property \Carbon\Carbon|null                                                                       $process_date
+ * @property int                                                                                       $order
+ * @property int                                                                                       $tag_count
+ * @property bool                                                                                      $encrypted
+ * @property bool                                                                                      $completed
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]             $attachments
+ * @property-read int|null                                                                             $attachments_count
+ * @property-read \FireflyIII\Models\Bill|null                                                         $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]                 $budgets
+ * @property-read int|null                                                                             $budgets_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]               $categories
+ * @property-read int|null                                                                             $categories_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $destJournalLinks
- * @property-read int|null $dest_journal_links_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
- * @property-read int|null $notes_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
- * @property-read int|null $piggy_bank_events_count
+ * @property-read int|null                                                                             $dest_journal_links_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]                   $notes
+ * @property-read int|null                                                                             $notes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]         $piggyBankEvents
+ * @property-read int|null                                                                             $piggy_bank_events_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $sourceJournalLinks
- * @property-read int|null $source_journal_links_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags
- * @property-read int|null $tags_count
- * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionGroup|null $transactionGroup
+ * @property-read int|null                                                                             $source_journal_links_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]                    $tags
+ * @property-read int|null                                                                             $tags_count
+ * @property-read \FireflyIII\Models\TransactionCurrency|null                                          $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionGroup|null                                             $transactionGroup
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalMeta[] $transactionJournalMeta
- * @property-read int|null $transaction_journal_meta_count
- * @property-read \FireflyIII\Models\TransactionType $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read int|null $transactions_count
- * @property-read User $user
+ * @property-read int|null                                                                             $transaction_journal_meta_count
+ * @property-read \FireflyIII\Models\TransactionType                                                   $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]            $transactions
+ * @property-read int|null                                                                             $transactions_count
+ * @property-read User                                                                                 $user
  * @method static EloquentBuilder|TransactionJournal after(\Carbon\Carbon $date)
  * @method static EloquentBuilder|TransactionJournal before(\Carbon\Carbon $date)
  * @method static EloquentBuilder|TransactionJournal newModelQuery()
@@ -111,8 +111,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @mixin Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[] $locations
- * @property-read int|null $locations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[]               $locations
+ * @property-read int|null                                                                             $locations_count
  */
 class TransactionJournal extends Model
 {
@@ -175,14 +175,14 @@ class TransactionJournal extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
-     * @throws FireflyException
      * @return TransactionJournal
+     * @throws FireflyException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournal
     {
         if (auth()->check()) {
-            $journalId = (int) $value;
+            $journalId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionJournal $journal */
@@ -317,7 +317,7 @@ class TransactionJournal extends Model
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         }
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->whereIn('transaction_types.type', $types);
         }
     }

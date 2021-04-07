@@ -73,7 +73,7 @@ class UpgradeFireflyInstructions extends Command
         try {
             app('telemetry')->feature('system.users.count', (string)User::count());
         } catch (QueryException $e) {
-            // ignore error.
+            // @ignoreException
         }
 
         return 0;

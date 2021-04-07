@@ -59,8 +59,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $path = $helper->getAttachmentLocation($attachment);
         try {
             Storage::disk('upload')->delete($path);
-        } catch (Exception $e) {
-            Log::error(sprintf('Could not delete file for attachment %d: %s', $attachment->id, $e->getMessage()));
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
         $attachment->delete();
 
@@ -209,8 +209,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
                 }
             }
 

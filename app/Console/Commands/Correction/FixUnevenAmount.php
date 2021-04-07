@@ -91,7 +91,7 @@ class FixUnevenAmount extends Command
         // one of the transactions is bad.
         $journal = TransactionJournal::find($param);
         if (!$journal) {
-            return; // @codeCoverageIgnore
+            return; 
         }
         /** @var Transaction $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();

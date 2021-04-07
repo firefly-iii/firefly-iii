@@ -55,8 +55,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     {
         try {
             $availableBudget->delete();
-        } catch (Exception $e) {
-            Log::error(sprintf('Could not delete available budget: %s', $e->getMessage()));
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 
@@ -262,7 +262,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget
     {
-        if (isset($data['amount'])) {
+        if (array_key_exists('amount', $data)) {
             $availableBudget->amount = $data['amount'];
         }
         $availableBudget->save();

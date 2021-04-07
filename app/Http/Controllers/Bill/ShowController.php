@@ -168,7 +168,7 @@ class ShowController extends Controller
         $collection  = $this->repository->getAttachments($bill);
         $attachments = new Collection;
 
-        // @codeCoverageIgnoreStart
+
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
@@ -179,7 +179,7 @@ class ShowController extends Controller
             );
         }
 
-        // @codeCoverageIgnoreEnd
+
         return prefixView('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 

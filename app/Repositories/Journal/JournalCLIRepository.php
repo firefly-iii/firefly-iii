@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Journal;
+
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -29,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 use stdClass;
 
 /**
@@ -128,9 +128,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         if ($cache->has()) {
             $result = null;
             try {
-                $result = new Carbon($cache->get()); // @codeCoverageIgnore
-            } catch (Exception $e) {
-                $e->getMessage();
+                $result = new Carbon($cache->get()); 
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
 
             return $result;
@@ -143,13 +143,12 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $value = null;
         try {
             $value = new Carbon($entry->data);
-        } catch (Exception $e) {
-            $e->getMessage();
-
-            return null;
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
-
-        $cache->store($entry->data);
+        if (null !== $value) {
+            $cache->store($value);
+        }
 
         return $value;
     }
@@ -170,7 +169,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $cache->addProperty($field);
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
@@ -188,13 +187,11 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         }
 
         // return when something else:
+        $return = (string)$value;
         try {
-            $return = (string)$value;
             $cache->store($return);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-
-            return '';
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
         return $return;

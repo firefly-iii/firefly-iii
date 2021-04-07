@@ -57,7 +57,7 @@ class UpdateRequest extends FormRequest
                 return ['value' => $this->integer('value')];
         }
 
-        return ['value' => $this->string('value')]; // @codeCoverageIgnore
+        return ['value' => $this->string('value')]; 
     }
 
     /**
@@ -80,6 +80,6 @@ class UpdateRequest extends FormRequest
                 return ['value' => 'required|numeric|min:464272080'];
         }
 
-        return ['value' => 'required']; // @codeCoverageIgnore
+        return ['value' => 'required']; 
     }
 }

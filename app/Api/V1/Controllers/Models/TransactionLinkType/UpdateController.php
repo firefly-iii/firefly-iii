@@ -86,7 +86,7 @@ class UpdateController extends Controller
         $admin = auth()->user();
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
+            throw new FireflyException('200005: You need the "owner" role to do this.'); 
         }
 
         $data = $request->getAll();

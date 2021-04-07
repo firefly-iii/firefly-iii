@@ -91,7 +91,7 @@ class ShowController extends Controller
         $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         /** @var Carbon $start */
@@ -100,7 +100,7 @@ class ShowController extends Controller
         $end = $end ?? session('end');
 
         if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+            [$start, $end] = [$end, $start]; 
         }
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
@@ -164,7 +164,7 @@ class ShowController extends Controller
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
         $location     = $this->repository->getLocation($account);
         $isLiability  = $this->repository->isLiability($account);

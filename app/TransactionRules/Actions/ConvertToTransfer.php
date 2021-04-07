@@ -91,7 +91,7 @@ class ConvertToTransfer implements ActionInterface
             return $this->convertDepositArray($journal, $asset);
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

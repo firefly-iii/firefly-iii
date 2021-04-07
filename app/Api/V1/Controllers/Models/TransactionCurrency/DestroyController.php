@@ -75,13 +75,13 @@ class DestroyController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             // access denied:
-            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
+            throw new FireflyException('200005: You need the "owner" role to do this.'); 
         }
         if ($this->repository->currencyInUse($currency)) {
-            throw new FireflyException('200006: Currency in use.'); // @codeCoverageIgnore
+            throw new FireflyException('200006: Currency in use.'); 
         }
         if ($this->repository->isFallbackCurrency($currency)) {
-            throw new FireflyException('200026: Currency is fallback.'); // @codeCoverageIgnore
+            throw new FireflyException('200026: Currency is fallback.'); 
         }
 
         $this->repository->destroy($currency);

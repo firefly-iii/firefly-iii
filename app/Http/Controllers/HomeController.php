@@ -39,7 +39,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Log;
-use DB;
 
 /**
  * Class HomeController.
@@ -108,8 +107,8 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $types  = config('firefly.accountTypesByIdentifier.asset');
-        $count  = $repository->count($types);
+        $types = config('firefly.accountTypesByIdentifier.asset');
+        $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');
 
         if (0 === $count) {

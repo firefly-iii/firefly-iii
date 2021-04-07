@@ -96,11 +96,11 @@ class CreateController extends Controller
 
         $redirect = redirect($this->getPreviousUri('rule-groups.create.uri'));
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('rule-groups.create.fromStore', true);
 
             $redirect = redirect(route('rule-groups.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

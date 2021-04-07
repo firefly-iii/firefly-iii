@@ -75,7 +75,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
                 ];
             $date              = $journal['date']->format($carbonFormat);
 
-            if (!isset($data[$currencyId]['entries'][$date])) {
+            if (!array_key_exists($date, $data[$currencyId]['entries'])) {
                 $data[$currencyId]['entries'][$date] = '0';
             }
             $data[$currencyId]['entries'][$date] = bcadd($data[$currencyId]['entries'][$date], $journal['amount']);
@@ -118,7 +118,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         /** @var array $journal */
         foreach ($journals as $journal) {
             $code = $journal['currency_code'];
-            if (!isset($currencies[$code])) {
+            if (!array_key_exists($code, $currencies)) {
                 $currencies[$code] = [
                     'id'             => $journal['currency_id'],
                     'name'           => $journal['currency_name'],
@@ -126,7 +126,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
                     'decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
+            $total[$code] = array_key_exists($code, $total) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
         }
         foreach ($total as $code => $spent) {
             /** @var TransactionCurrency $currency */

@@ -54,12 +54,12 @@ class BudgetList implements BinderInterface
 
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
-            // @codeCoverageIgnoreStart
+
             if (0 === count($list)) {
                 Log::warning('Budget list count is zero, return 404.');
                 throw new NotFoundHttpException;
             }
-            // @codeCoverageIgnoreEnd
+
 
             /** @var Collection $collection */
             $collection = auth()->user()->budgets()

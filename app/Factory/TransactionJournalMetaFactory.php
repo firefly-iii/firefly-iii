@@ -49,8 +49,8 @@ class TransactionJournalMetaFactory
             Log::debug('Value is empty, delete meta value.');
             try {
                 $entry->delete();
-            } catch (Exception $e) { // @codeCoverageIgnore
-                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+            } catch (Exception $e) { // @phpstan-ignore-line
+                Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); 
             }
 
             return null;
@@ -67,8 +67,8 @@ class TransactionJournalMetaFactory
                 Log::debug('Will not store empty strings, delete meta value');
                 try {
                     $entry->delete();
-                } catch (Exception $e) { // @codeCoverageIgnore
-                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); // @codeCoverageIgnore
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    Log::error(sprintf('Could not delete transaction journal meta: %s', $e->getMessage())); 
                 }
             }
 

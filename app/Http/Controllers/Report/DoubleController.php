@@ -111,8 +111,8 @@ class DoubleController extends Controller
 
         try {
             $result = prefixView('reports.double.partials.avg-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -163,8 +163,8 @@ class DoubleController extends Controller
 
         try {
             $result = prefixView('reports.double.partials.avg-income', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -457,8 +457,8 @@ class DoubleController extends Controller
 
         try {
             $result = prefixView('reports.double.partials.top-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -507,8 +507,8 @@ class DoubleController extends Controller
 
         try {
             $result = prefixView('reports.double.partials.top-income', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }

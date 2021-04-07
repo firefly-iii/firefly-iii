@@ -267,21 +267,21 @@ class CreateController extends Controller
 
         // redirect to show bill.
         if ('true' === $request->get('return_to_bill') && (int)$request->get('bill_id') > 0) {
-            return redirect(route('bills.show', [(int)$request->get('bill_id')])); // @codeCoverageIgnore
+            return redirect(route('bills.show', [(int)$request->get('bill_id')])); 
         }
 
         // redirect to new bill creation.
         if ((int)$request->get('bill_id') > 0) {
-            return redirect($this->getPreviousUri('bills.create.uri')); // @codeCoverageIgnore
+            return redirect($this->getPreviousUri('bills.create.uri')); 
         }
 
         $redirect = redirect($this->getPreviousUri('rules.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('rules.create.fromStore', true);
             $redirect = redirect(route('rules.create', [$data['rule_group_id']]))->withInput();
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

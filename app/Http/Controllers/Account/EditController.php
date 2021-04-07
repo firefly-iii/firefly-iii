@@ -84,7 +84,7 @@ class EditController extends Controller
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -177,7 +177,7 @@ class EditController extends Controller
     public function update(AccountFormRequest $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         $data = $request->getAccountData();
@@ -195,7 +195,7 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
 
         // redirect

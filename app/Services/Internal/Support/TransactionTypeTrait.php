@@ -48,8 +48,8 @@ trait TransactionTypeTrait
         $factory         = app(TransactionTypeFactory::class);
         $transactionType = $factory->find($type);
         if (null === $transactionType) {
-            Log::error(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
-            throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type)); // @codeCoverageIgnore
+            Log::error(sprintf('Could not find transaction type for "%s"', $type)); 
+            throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type)); 
         }
 
         return $transactionType;

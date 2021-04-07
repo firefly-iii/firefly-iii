@@ -72,7 +72,7 @@ class TransactionIdentifier extends Command
     {
         $this->stupidLaravel();
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -83,7 +83,7 @@ class TransactionIdentifier extends Command
         if (!Schema::hasTable('transaction_journals')) {
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
         $journals = $this->cliRepository->getSplitJournals();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -128,7 +128,7 @@ class TransactionIdentifier extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false;
     }
 
     /**
@@ -178,7 +178,7 @@ class TransactionIdentifier extends Command
                                    ->where('amount', $amount)->where('identifier', '=', 0)
                                    ->whereNotIn('id', $exclude)
                                    ->first();
-            // @codeCoverageIgnoreStart
+
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
@@ -189,7 +189,7 @@ class TransactionIdentifier extends Command
             return null;
         }
 
-        // @codeCoverageIgnoreEnd
+
 
         return $opposing;
     }

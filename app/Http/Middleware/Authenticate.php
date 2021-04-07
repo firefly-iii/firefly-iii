@@ -87,7 +87,7 @@ class Authenticate
     protected function authenticate($request, array $guards)
     {
 
-        if (empty($guards)) {
+        if (0 === count($guards)) {
             try {
                 // go for default guard:
                 /** @noinspection PhpUndefinedMethodInspection */
@@ -109,21 +109,21 @@ class Authenticate
                     }
                 }
             } catch (QueryException $e) {
-                // @codeCoverageIgnoreStart
+
                 throw new FireflyException(
                     sprintf(
                         'It seems the database has not yet been initialized. Did you run the correct upgrade or installation commands? Error: %s',
                         $e->getMessage()
-                    )
+                    ), 0, $e
                 );
-                // @codeCoverageIgnoreEnd
+
             }
 
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->auth->authenticate();
         }
 
-        // @codeCoverageIgnoreStart
+
         foreach ($guards as $guard) {
             if ($this->auth->guard($guard)->check()) {
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -132,6 +132,6 @@ class Authenticate
         }
 
         throw new AuthenticationException('Unauthenticated.', $guards);
-        // @codeCoverageIgnoreEnd
+
     }
 }

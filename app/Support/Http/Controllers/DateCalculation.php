@@ -88,13 +88,13 @@ trait DateCalculation
         $step   = '1D';
         $months = $start->diffInMonths($end);
         if ($months > 3) {
-            $step = '1W'; // @codeCoverageIgnore
+            $step = '1W'; 
         }
         if ($months > 24) {
-            $step = '1M'; // @codeCoverageIgnore
+            $step = '1M'; 
         }
         if ($months > 100) {
-            $step = '1Y'; // @codeCoverageIgnore
+            $step = '1Y'; 
         }
 
         return $step;

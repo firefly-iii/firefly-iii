@@ -115,7 +115,7 @@ class Amount
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
@@ -152,7 +152,7 @@ class Amount
         $cache->addProperty('getDefaultCurrency');
         $cache->addProperty($user->id);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
         $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';

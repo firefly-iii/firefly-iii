@@ -124,8 +124,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     {
         try {
             $budgetLimit->delete();
-        } catch (Exception $e) {
-            Log::info(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 
@@ -320,25 +320,25 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // find the budget:
         $budget = $this->user->budgets()->find((int)$data['budget_id']);
         if (null === $budget) {
-            throw new FireflyException('200004: Budget does not exist.'); // @codeCoverageIgnore
+            throw new FireflyException('200004: Budget does not exist.'); 
         }
 
         // find limit with same date range and currency.
         $limit = $budget->budgetlimits()
-                        ->where('budget_limits.start_date', $data['start_date']->format('Y-m-d 00:00:00'))
-                        ->where('budget_limits.end_date', $data['end_date']->format('Y-m-d 23:59:59'))
+                        ->where('budget_limits.start_date', $data['start_date']->format('Y-m-d'))
+                        ->where('budget_limits.end_date', $data['end_date']->format('Y-m-d'))
                         ->where('budget_limits.transaction_currency_id', $currency->id)
-                        ->get(['budget_limits.*'])->first();
+                        ->first(['budget_limits.*']);
         if (null !== $limit) {
-            throw new FireflyException('200027: Budget limit already exists.'); // @codeCoverageIgnore
+            throw new FireflyException('200027: Budget limit already exists.'); 
         }
         Log::debug('No existing budget limit, create a new one');
 
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date              = $data['start_date']->format('Y-m-d 00:00:00');
-        $limit->end_date                = $data['end_date']->format('Y-m-d 23:59:59');
+        $limit->start_date              = $data['start_date']->format('Y-m-d');
+        $limit->end_date                = $data['end_date']->format('Y-m-d');
         $limit->amount                  = $data['amount'];
         $limit->transaction_currency_id = $currency->id;
         $limit->save();
@@ -397,7 +397,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $limits = $budget->budgetlimits()
                          ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
                          ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
-                         ->get(['budget_limits.*'])->count();
+                         ->count(['budget_limits.*']);
         Log::debug(sprintf('Found %d budget limits.', $limits));
 
         // there might be a budget limit for these dates:
@@ -423,8 +423,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
             try {
                 $limit->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete limit: %s', $e->getMessage()));
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
             return null;
         }

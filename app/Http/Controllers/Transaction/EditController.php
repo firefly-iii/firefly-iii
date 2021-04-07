@@ -67,7 +67,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         if (!$this->isEditableGroup($transactionGroup)) {
-            return $this->redirectGroupToAccount($transactionGroup); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($transactionGroup); 
         }
 
         /** @var AccountRepositoryInterface $repository */

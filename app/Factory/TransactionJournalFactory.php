@@ -128,13 +128,13 @@ class TransactionJournalFactory
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
-            throw new DuplicateTransactionException($e->getMessage());
+            throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
             Log::warning('TransactionJournalFactory::create() caught an exception.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
-            throw new FireflyException($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $collection;
@@ -240,7 +240,7 @@ class TransactionJournalFactory
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             $this->forceDeleteOnError(new Collection([$journal]));
-            throw new FireflyException($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         // and the destination one:
@@ -261,7 +261,7 @@ class TransactionJournalFactory
             Log::warning('Delete negative transaction.');
             $this->forceTrDelete($negative);
             $this->forceDeleteOnError(new Collection([$journal]));
-            throw new FireflyException($e->getMessage());
+            throw new FireflyException($e->getMessage(), 0, $e);
         }
         // verify that journal has two transactions. Otherwise, delete and cancel.
         $journal->completed = true;
@@ -302,10 +302,10 @@ class TransactionJournalFactory
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
         $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
         if (false === $json) {
-            // @codeCoverageIgnoreStart
+
             $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR, 512);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
-            // @codeCoverageIgnoreEnd
+
         }
         $hash = hash('sha256', $json);
         Log::debug(sprintf('The hash is: %s', $hash), $dataRow);
@@ -358,7 +358,7 @@ class TransactionJournalFactory
 
         // do something with result:
         if (false === $validSource) {
-            throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('Source: %s', $this->accountValidator->sourceError));
         }
         Log::debug('Source seems valid.');
         // validate destination account
@@ -367,7 +367,7 @@ class TransactionJournalFactory
         $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName, null);
         // do something with result:
         if (false === $validDestination) {
-            throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError));
         }
     }
 
@@ -485,7 +485,7 @@ class TransactionJournalFactory
     {
         try {
             $transaction->delete();
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             Log::error('Could not delete negative transaction.');

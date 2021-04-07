@@ -82,7 +82,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $result = prefixView('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
@@ -254,7 +254,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         return [
             'journals'         => $journals,
             'currency'         => $currency,
-            'exists'           => !empty($journals),
+            'exists'           => 0!==count($journals),
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day', [], $locale)),
             'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day', [], $locale)),

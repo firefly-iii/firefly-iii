@@ -79,7 +79,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 'reports.tag.month',
                 compact('accountIds', 'reportType', 'tagIds')
             )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
         }

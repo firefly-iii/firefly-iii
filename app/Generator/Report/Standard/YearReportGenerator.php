@@ -58,7 +58,7 @@ class YearReportGenerator implements ReportGeneratorInterface
                 'reports.default.year',
                 compact('accountIds', 'reportType')
             )->with('start', $this->start)->with('end', $this->end)->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = 'Could not render report view.';
         }

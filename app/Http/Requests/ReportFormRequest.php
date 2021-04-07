@@ -149,12 +149,12 @@ class ReportFormRequest extends FormRequest
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
-                // @codeCoverageIgnoreStart
+
             } catch (Exception $e) {
                 $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                 Log::error($error);
-                throw new FireflyException($error);
-                // @codeCoverageIgnoreEnd
+                throw new FireflyException($error, 0, $e);
+
             }
 
         }
@@ -177,12 +177,12 @@ class ReportFormRequest extends FormRequest
         if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
-                // @codeCoverageIgnoreStart
+
             } catch (Exception $e) {
                 $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                 Log::error($error);
-                throw new FireflyException($error);
-                // @codeCoverageIgnoreEnd
+                throw new FireflyException($error, 0, $e);
+
             }
         }
 

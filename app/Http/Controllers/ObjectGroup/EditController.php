@@ -92,11 +92,11 @@ class EditController extends Controller
         $redirect = redirect($this->getPreviousUri('object-groups.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('object-groups.edit.fromUpdate', true);
 
             $redirect = redirect(route('object-groups.edit', [$piggyBank->id]));
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

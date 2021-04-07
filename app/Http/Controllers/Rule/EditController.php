@@ -168,7 +168,7 @@ class EditController extends Controller
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) {
+            } catch (Throwable $e) { // @phpstan-ignore-line
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
@@ -195,11 +195,11 @@ class EditController extends Controller
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUri('rules.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('rules.edit.fromUpdate', true);
 
             $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

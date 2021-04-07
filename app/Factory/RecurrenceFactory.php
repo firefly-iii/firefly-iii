@@ -69,7 +69,7 @@ class RecurrenceFactory
             Log::error($message);
             Log::error($e->getTraceAsString());
 
-            throw new FireflyException($message);
+            throw new FireflyException($message, 0, $e);
         }
         $firstDate         = null;
         $repeatUntil       = null;
@@ -129,17 +129,16 @@ class RecurrenceFactory
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
-            // @codeCoverageIgnoreStart
+
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);
-            throw new FireflyException($message);
+            throw new FireflyException($message, 0, $e);
 
         }
 
-        // @codeCoverageIgnoreEnd
 
         return $recurrence;
     }

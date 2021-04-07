@@ -156,11 +156,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $resource = tmpfile();
         if (false === $resource) {
-            // @codeCoverageIgnoreStart
+
             Log::error('Cannot create temp-file for file upload.');
 
             return false;
-            // @codeCoverageIgnoreEnd
+
         }
 
         if ('' === $content) {
@@ -204,7 +204,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
         if (!($model instanceof Model)) {
-            return false; // @codeCoverageIgnore
+            return false; 
         }
 
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
@@ -218,7 +218,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
             Log::debug('Done processing uploads.');
         }
-        if (!is_array($files) || empty($files)) {
+        if (!is_array($files)) {
             Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
         }
 
@@ -263,7 +263,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $fileObject->rewind();
 
             if (0 === $file->getSize()) {
-                throw new FireflyException('Cannot upload empty or non-existent file.'); // @codeCoverageIgnore
+                throw new FireflyException('Cannot upload empty or non-existent file.'); 
             }
 
             $content = $fileObject->fread($file->getSize());
@@ -303,12 +303,12 @@ class AttachmentHelper implements AttachmentHelperInterface
             $result = false;
         }
 
-        // @codeCoverageIgnoreStart
+
         // can't seem to reach this point.
         if (true === $result && !$this->validSize($file)) {
             $result = false;
         }
-        // @codeCoverageIgnoreEnd
+
         if (true === $result && $this->hasFile($file, $model)) {
             $result = false;
         }

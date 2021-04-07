@@ -72,7 +72,7 @@ class DeleteController extends Controller
     public function delete(TransactionGroup $group)
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($group); 
         }
 
         Log::debug(sprintf('Start of delete view for group #%d', $group->id));
@@ -101,7 +101,7 @@ class DeleteController extends Controller
     public function destroy(TransactionGroup $group): RedirectResponse
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($group); 
         }
 
         $journal = $group->transactionJournals->first();

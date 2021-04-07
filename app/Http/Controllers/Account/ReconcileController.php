@@ -91,14 +91,14 @@ class ReconcileController extends Controller
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
         if (AccountType::ASSET !== $account->accountType->type) {
-            // @codeCoverageIgnoreStart
+
             session()->flash('error', (string)trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
-            // @codeCoverageIgnoreEnd
+
         }
         $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -106,7 +106,7 @@ class ReconcileController extends Controller
         $range = app('preferences')->get('viewRange', '1M')->data;
 
         // get start and end
-        // @codeCoverageIgnoreStart
+
         if (null === $start && null === $end) {
 
             /** @var Carbon $start */
@@ -118,7 +118,7 @@ class ReconcileController extends Controller
             /** @var Carbon $end */
             $end = app('navigation')->endOfPeriod($start, $range);
         }
-        // @codeCoverageIgnoreEnd
+
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
@@ -168,7 +168,7 @@ class ReconcileController extends Controller
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         Log::debug('In ReconcileController::submit()');
@@ -217,7 +217,7 @@ class ReconcileController extends Controller
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         $reconciliation = $this->accountRepos->getReconciliation($account);

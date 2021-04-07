@@ -137,7 +137,7 @@ class ShowController extends Controller
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
             $symbol = $transaction['currency_symbol'];
-            if (!isset($amounts[$symbol])) {
+            if (!array_key_exists($symbol, $amounts)) {
                 $amounts[$symbol] = [
                     'amount'         => '0',
                     'symbol'         => $symbol,
@@ -148,7 +148,7 @@ class ShowController extends Controller
             if (null !== $transaction['foreign_amount']) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
-                if (!isset($amounts[$foreignSymbol])) {
+                if (!array_key_exists($foreignSymbol, $amounts)) {
                     $amounts[$foreignSymbol] = [
                         'amount'         => '0',
                         'symbol'         => $foreignSymbol,

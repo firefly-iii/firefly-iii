@@ -257,7 +257,7 @@ class AccountFactory
             $fields = $this->validAssetFields;
         }
         if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
-            $fields = $this->validCCFields; // @codeCoverageIgnore
+            $fields = $this->validCCFields; 
         }
 
         /** @var AccountMetaFactory $factory */
@@ -265,14 +265,14 @@ class AccountFactory
         foreach ($fields as $field) {
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
-            if (isset($data[$field]) && null !== $data[$field]) {
+            if (array_key_exists($field, $data) && null !== $data[$field]) {
 
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
-                    $data[$field] = 0; // @codeCoverageIgnore
+                    $data[$field] = 0; 
                 }
                 if (is_bool($data[$field]) && true === $data[$field]) {
-                    $data[$field] = 1; // @codeCoverageIgnore
+                    $data[$field] = 1; 
                 }
 
                 $factory->crud($account, $field, (string)$data[$field]);

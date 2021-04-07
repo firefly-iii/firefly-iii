@@ -115,16 +115,16 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
         $redirect = redirect($this->getPreviousUri('categories.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             $request->session()->put('categories.edit.fromUpdate', true);
 
             $redirect = redirect(route('categories.edit', [$category->id]));
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

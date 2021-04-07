@@ -91,7 +91,7 @@ class ConvertController extends Controller
     public function index(TransactionType $destinationType, TransactionGroup $group)
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($group); 
         }
 
         /** @var TransactionGroupTransformer $transformer */
@@ -159,21 +159,21 @@ class ConvertController extends Controller
             $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             $name = $account->name;
             if ('' === $role) {
-                $role = 'no_account_type'; // @codeCoverageIgnore
+                $role = 'no_account_type'; 
             }
 
             // maybe it's a liability thing:
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+                $role = 'l_' . $account->accountType->type; 
             }
             if (AccountType::CASH === $account->accountType->type) {
-                // @codeCoverageIgnoreStart
+
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
-                // @codeCoverageIgnoreEnd
+
             }
             if (AccountType::REVENUE === $account->accountType->type) {
-                $role = 'revenue_account'; // @codeCoverageIgnore
+                $role = 'revenue_account'; 
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);
@@ -200,21 +200,21 @@ class ConvertController extends Controller
             $role = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             $name = $account->name;
             if ('' === $role) {
-                $role = 'no_account_type'; // @codeCoverageIgnore
+                $role = 'no_account_type'; 
             }
 
             // maybe it's a liability thing:
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+                $role = 'l_' . $account->accountType->type; 
             }
             if (AccountType::CASH === $account->accountType->type) {
-                // @codeCoverageIgnoreStart
+
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
-                // @codeCoverageIgnoreEnd
+
             }
             if (AccountType::EXPENSE === $account->accountType->type) {
-                $role = 'expense_account'; // @codeCoverageIgnore
+                $role = 'expense_account'; 
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);
@@ -264,7 +264,7 @@ class ConvertController extends Controller
             $currency = $this->accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
             $role     = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
-                $role = 'no_account_type'; // @codeCoverageIgnore
+                $role = 'no_account_type'; 
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);
@@ -288,7 +288,7 @@ class ConvertController extends Controller
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
         if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($group); 
         }
 
         /** @var TransactionJournal $journal */

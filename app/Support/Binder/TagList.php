@@ -52,12 +52,12 @@ class TagList implements BinderInterface
             }
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             Log::debug('List of tags is', $list);
-            // @codeCoverageIgnoreStart
+
             if (0 === count($list)) {
                 Log::error('Tag list is empty.');
                 throw new NotFoundHttpException;
             }
-            // @codeCoverageIgnoreEnd
+
 
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);

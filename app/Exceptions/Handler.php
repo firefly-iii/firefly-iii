@@ -31,6 +31,7 @@ use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -52,7 +53,8 @@ class Handler extends ExceptionHandler
             AuthenticationException::class,
             LaravelValidationException::class,
             NotFoundHttpException::class,
-            OAuthServerException::class
+            OAuthServerException::class,
+            TokenMismatchException::class,
         ];
 
     /**

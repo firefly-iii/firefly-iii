@@ -74,7 +74,7 @@ class BelongsUser implements Rule
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {
-            return true; // @codeCoverageIgnore
+            return true; 
         }
         $attribute = (string)$attribute;
         Log::debug(sprintf('Going to validate %s', $attribute));
@@ -97,7 +97,7 @@ class BelongsUser implements Rule
             case 'destination_id':
                 return $this->validateAccountId((int)$value);
             default:
-                throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)); 
         }
     }
 
@@ -116,7 +116,7 @@ class BelongsUser implements Rule
             return $parts[2];
         }
 
-        return $attribute; // @codeCoverageIgnore
+        return $attribute; 
     }
 
     /**

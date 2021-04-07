@@ -121,12 +121,12 @@ class FixAccountTypes extends Command
         $destAccountType   = $destAccount->accountType->type;
 
         if (!array_key_exists($type, $this->expected)) {
-            // @codeCoverageIgnoreStart
+
             Log::info(sprintf('No source/destination info for transaction type %s.', $type));
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
         if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
             Log::debug(sprintf('Going to fix journal #%d', $journal->id));

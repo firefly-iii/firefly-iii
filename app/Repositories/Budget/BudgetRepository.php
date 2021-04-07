@@ -58,8 +58,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // delete limits with amount 0:
         try {
             BudgetLimit::where('amount', 0)->delete();
-        } catch (Exception $e) {
-            Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
         $budgets = $this->getActiveBudgets();
         /**
@@ -326,7 +326,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException('400002: Could not store budget.');
+            throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
         if (!array_key_exists('auto_budget_type', $data)) {
             return $newBudget;

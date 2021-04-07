@@ -241,9 +241,9 @@ class ProfileController extends Controller
     public function confirmEmailChange(UserRepositoryInterface $repository, string $token)
     {
         if (!$this->internalAuth || !$this->internalIdentity) {
-            // @codeCoverageIgnoreStart
+
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
-            // @codeCoverageIgnoreEnd
+
         }
         // find preference with this token value.
         /** @var Collection $set */

@@ -129,7 +129,7 @@ trait CreateStuff
             $keys = RSA::createKey(4096);
         }
 
-        // @codeCoverageIgnoreStart
+
         Log::alert('NO OAuth keys were found. They have been created.');
 
         file_put_contents($publicKey, $keys['publickey']);

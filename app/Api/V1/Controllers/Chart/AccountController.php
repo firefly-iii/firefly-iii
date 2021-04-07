@@ -86,12 +86,12 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
-        // @codeCoverageIgnoreStart
+
         if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
-        // @codeCoverageIgnoreEnd
+
 
         // get accounts:
         $accounts  = $this->repository->getAccountsById($frontPage->data);
@@ -100,7 +100,7 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default; // @codeCoverageIgnore
+                $currency = $default; 
             }
             $currentSet = [
                 'label'                   => $account->name,

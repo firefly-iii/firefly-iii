@@ -75,13 +75,13 @@ class OtherCurrenciesCorrections extends Command
     {
         $this->stupidLaravel();
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
 
         $this->updateOtherJournalsCurrencies();
         $this->markAsExecuted();
@@ -120,7 +120,7 @@ class OtherCurrenciesCorrections extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**
@@ -154,18 +154,18 @@ class OtherCurrenciesCorrections extends Command
         $leadTransaction = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
-            // @codeCoverageIgnoreStart
+
             $this->error(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
 
         /** @var Account $account */
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {
-            // @codeCoverageIgnoreStart
+
             $this->error(
                 sprintf(
                     'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected', $account->id, $account->name, $journal->id
@@ -174,7 +174,7 @@ class OtherCurrenciesCorrections extends Command
             $this->count++;
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
         // fix each transaction:
         $journal->transactions->each(
@@ -246,18 +246,18 @@ class OtherCurrenciesCorrections extends Command
     {
         $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null; // @codeCoverageIgnore
+            return null; 
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
+            return $this->accountCurrencies[$accountId]; 
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
-            // @codeCoverageIgnoreStart
+
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
-            // @codeCoverageIgnoreEnd
+
         }
         $this->accountCurrencies[$accountId] = $currency;
 

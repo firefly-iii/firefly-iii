@@ -72,13 +72,13 @@ class TransferCurrenciesCorrections extends Command
     {
         $this->stupidLaravel();
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
 
         $this->startUpdateRoutine();
         $this->markAsExecuted();
@@ -140,7 +140,7 @@ class TransferCurrenciesCorrections extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**
@@ -167,27 +167,27 @@ class TransferCurrenciesCorrections extends Command
     {
         $this->resetInformation();
 
-        // @codeCoverageIgnoreStart
+
         if ($this->isSplitJournal($transfer)) {
             $this->line(sprintf(sprintf('Transaction journal #%d is a split journal. Cannot continue.', $transfer->id)));
 
             return;
         }
-        // @codeCoverageIgnoreEnd
+
 
         $this->getSourceInformation($transfer);
         $this->getDestinationInformation($transfer);
 
         // unexpectedly, either one is null:
-        // @codeCoverageIgnoreStart
+
         if ($this->isEmptyTransactions()) {
             $this->error(sprintf('Source or destination information for transaction journal #%d is null. Cannot fix this one.', $transfer->id));
 
             return;
         }
-        // @codeCoverageIgnoreEnd
+
         // both accounts must have currency preference:
-        // @codeCoverageIgnoreStart
+
         if ($this->isNoCurrencyPresent()) {
             $this->error(
                 sprintf('Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.', $transfer->id)
@@ -195,7 +195,7 @@ class TransferCurrenciesCorrections extends Command
 
             return;
         }
-        // @codeCoverageIgnoreEnd
+
 
         // fix source transaction having no currency.
         $this->fixSourceNoCurrency();
@@ -270,18 +270,18 @@ class TransferCurrenciesCorrections extends Command
     {
         $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null; // @codeCoverageIgnore
+            return null; 
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId]; // @codeCoverageIgnore
+            return $this->accountCurrencies[$accountId]; 
         }
         $currency = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
-            // @codeCoverageIgnoreStart
+
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
-            // @codeCoverageIgnoreEnd
+
         }
         $this->accountCurrencies[$accountId] = $currency;
 

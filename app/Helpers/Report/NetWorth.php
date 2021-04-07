@@ -72,7 +72,7 @@ class NetWorth implements NetWorthInterface
         $cache->addProperty('net-worth-by-currency');
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         $netWorth = [];

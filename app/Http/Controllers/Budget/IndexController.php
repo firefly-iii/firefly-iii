@@ -219,7 +219,7 @@ class IndexController extends Controller
             /** @var TransactionCurrency $currency */
             foreach ($currencies as $currency) {
                 $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$current]), $currency);
-                if (isset($spentArr[$currency->id]['sum'])) {
+                if (array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;

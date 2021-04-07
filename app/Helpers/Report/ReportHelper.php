@@ -128,7 +128,7 @@ class ReportHelper implements ReportHelperInterface
 
         while ($start <= $end) {
             $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
-            if (!isset($months[$year])) {
+            if (!array_key_exists($year, $months)) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
                     'fiscal_end'   => $fiscalHelper->endOfFiscalYear($start)->format('Y-m-d'),

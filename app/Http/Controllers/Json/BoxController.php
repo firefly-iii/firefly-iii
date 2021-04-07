@@ -72,7 +72,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
@@ -142,7 +142,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         // prep some arrays:
         $incomes  = [];
@@ -189,7 +189,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (empty($sums)) {
+        if (0===count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);

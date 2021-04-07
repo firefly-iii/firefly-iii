@@ -111,16 +111,16 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
         $redirect = redirect($this->getPreviousUri('piggy-banks.create.uri'));
 
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('piggy-banks.create.fromStore', true);
 
             $redirect = redirect(route('piggy-banks.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

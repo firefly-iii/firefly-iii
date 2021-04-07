@@ -113,7 +113,7 @@ trait RequestInformation
             return $content;
         }
 
-        return '<p>' . trans('firefly.route_has_no_help') . '</p>'; // @codeCoverageIgnore
+        return '<p>' . trans('firefly.route_has_no_help') . '</p>'; 
     }
 
     /**
@@ -180,7 +180,7 @@ trait RequestInformation
             $shownDemo = app('preferences')->get($key, false)->data;
         }
         if (!is_bool($shownDemo)) {
-            $shownDemo = true; // @codeCoverageIgnore
+            $shownDemo = true; 
         }
 
         return $shownDemo;

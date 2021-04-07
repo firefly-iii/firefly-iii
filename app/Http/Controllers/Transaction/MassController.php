@@ -168,7 +168,7 @@ class MassController extends Controller
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
             // TODO something error.
-            throw new FireflyException('This is not an array.'); // @codeCoverageIgnore
+            throw new FireflyException('This is not an array.'); 
         }
         $count = 0;
         /** @var string $journalId */
@@ -177,8 +177,8 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 $count++;
-            } catch (FireflyException $e) {  // @codeCoverageIgnore
-                // do something with error.
+            } catch (FireflyException $e) {  
+                // @ignoreException
             }
         }
 
@@ -199,7 +199,7 @@ class MassController extends Controller
     {
         $journal = $this->repository->findNull($journalId);
         if (null === $journal) {
-            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); // @codeCoverageIgnore
+            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); 
         }
         $service = app(JournalUpdateService::class);
         // for each field, call the update service.
@@ -240,7 +240,7 @@ class MassController extends Controller
         if (!is_array($value)) {
             return null;
         }
-        if (!isset($value[$journalId])) {
+        if (!array_key_exists($journalId, $value)) {
             return null;
         }
         try {
@@ -268,7 +268,7 @@ class MassController extends Controller
         if (!is_array($value)) {
             return null;
         }
-        if (!isset($value[$journalId])) {
+        if (!array_key_exists($journalId, $value)) {
             return null;
         }
 
@@ -289,7 +289,7 @@ class MassController extends Controller
         if (!is_array($value)) {
             return null;
         }
-        if (!isset($value[$journalId])) {
+        if (!array_key_exists($journalId, $value)) {
             return null;
         }
 

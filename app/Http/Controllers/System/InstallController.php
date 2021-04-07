@@ -193,7 +193,7 @@ class InstallController extends Controller
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {

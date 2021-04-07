@@ -73,7 +73,7 @@ class ConvertToWithdrawal implements ActionInterface
             return $this->convertTransferArray($journal);
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     private function convertDepositArray(array $journal): bool

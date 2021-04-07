@@ -87,7 +87,7 @@ class MigrateRecurrenceMeta extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

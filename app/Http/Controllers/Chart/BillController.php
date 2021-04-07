@@ -67,7 +67,7 @@ class BillController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var CurrencyRepositoryInterface $currencyRepository */
         $currencyRepository = app(CurrencyRepositoryInterface::class);
@@ -109,7 +109,7 @@ class BillController extends Controller
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $locale = app('steam')->getLocale();
 
@@ -147,7 +147,7 @@ class BillController extends Controller
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
 
             // append amount because there are more than one per moment:
-            if (!isset($chartData[2]['entries'][$date])) {
+            if (!array_key_exists($date, $chartData[2]['entries'])) {
                 $chartData[2]['entries'][$date] = '0';
             }
             $amount                         = bcmul($journal['amount'], '-1');

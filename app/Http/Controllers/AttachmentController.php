@@ -197,11 +197,11 @@ class AttachmentController extends Controller
 
         $redirect = redirect($this->getPreviousUri('attachments.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             $request->session()->put('attachments.edit.fromUpdate', true);
 
             $redirect = redirect(route('attachments.edit', [$attachment->id]))->withInput(['return_to_edit' => 1]);
-            // @codeCoverageIgnoreEnd
+
         }
 
         // redirect to previous URL.

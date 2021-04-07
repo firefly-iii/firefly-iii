@@ -327,15 +327,15 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
         }
         $redirect = redirect($this->getPreviousUri('tags.create.uri'));
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('tags.create.fromStore', true);
 
             $redirect = redirect(route('tags.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;
@@ -368,15 +368,15 @@ class TagController extends Controller
         }
 
         if (count($this->attachmentsHelper->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachmentsHelper->getMessages()->get('attachments')); 
         }
         $redirect = redirect($this->getPreviousUri('tags.edit.uri'));
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('tags.edit.fromUpdate', true);
 
             $redirect = redirect(route('tags.edit', [$tag->id]))->withInput(['return_to_edit' => 1]);
-            // @codeCoverageIgnoreEnd
+
         }
 
         // redirect to previous URL.
