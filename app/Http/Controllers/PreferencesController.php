@@ -197,7 +197,7 @@ class PreferencesController extends Controller
         }
 
         // optional fields for transactions:
-        $setOptions = $request->get('tj');
+        $setOptions = $request->get('tj') ?? [];
         $optionalTj = [
             'interest_date'      => array_key_exists('interest_date', $setOptions),
             'book_date'          => array_key_exists('book_date', $setOptions),
