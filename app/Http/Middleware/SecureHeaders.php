@@ -98,6 +98,9 @@ class SecureHeaders
         $response->header('X-XSS-Protection', '1; mode=block');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('Referrer-Policy', 'no-referrer');
+        $response->header('X-Download-Options', 'noopen');
+        $response->header('X-Permitted-Cross-Domain-Policies', 'none');
+        $response->header('X-Robots-Tag', 'none');
         $response->header('Feature-Policy', implode('; ', $featurePolicies));
 
         return $response;
