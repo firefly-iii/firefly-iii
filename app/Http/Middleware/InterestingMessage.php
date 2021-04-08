@@ -103,6 +103,9 @@ class InterestingMessage
         if ('deleted' === $message) {
             session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
         }
+        if('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
+        }
     }
     /**
      * @param Request $request
