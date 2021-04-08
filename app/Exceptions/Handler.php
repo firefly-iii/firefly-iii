@@ -37,6 +37,7 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 /**
@@ -57,6 +58,7 @@ class Handler extends ExceptionHandler
             OAuthServerException::class,
             LaravelOAuthException::class,
             TokenMismatchException::class,
+            HttpException::class
         ];
 
     /**
