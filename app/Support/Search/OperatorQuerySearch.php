@@ -476,6 +476,12 @@ class OperatorQuerySearch implements SearchInterface
             //
             // bill
             //
+            case 'has_no_bill':
+                $this->collector->withoutBill();
+                break;
+            case 'has_any_bill':
+                $this->collector->withBill();
+                break;
             case 'bill_is':
                 $result = $this->billRepository->searchBill($value, 25);
                 if ($result->count() > 0) {

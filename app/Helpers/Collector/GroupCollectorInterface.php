@@ -521,6 +521,13 @@ interface GroupCollectorInterface
     public function withTagInformation(): GroupCollectorInterface;
 
     /**
+     * Limit results to transactions without a bill..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBill(): GroupCollectorInterface;
+
+    /**
      * Limit results to a transactions without a bill.
      *
      * @return GroupCollectorInterface
