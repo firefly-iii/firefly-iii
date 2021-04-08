@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-avain',
     'remember_me'                 => 'Muista minut',
     'liability_type_id'           => 'Vastuun tyyppi',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Korko',
     'interest_period'             => 'Korkojakso',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Ainoa tämän toistuvan tapahtuman luoma tapahtuma säästetään.|Kaikki :count tämän toistuvan tapahtuman luomaa tapahtumaa säästetään.',
     'tag_keep_transactions'       => 'Ainoa tähän tägiin linkitetty tapahtuma säästetään.|Kaikki :count tähän tägiin yhdistetyt tapahtumat säästetään.',
     'check_for_updates'           => 'Tarkista päivitykset',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Poista ryhmä ":title"',
 

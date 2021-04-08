@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API 金鑰',
     'remember_me'                 => '記住我',
     'liability_type_id'           => '負債類型',
+    'liability_type'              => 'Liability type',
     'interest'                    => '利率',
     'interest_period'             => '利率期',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => '由此定期交易建立的唯一一筆交易不會被刪除。|由此定期交易建立的 :count 筆交易不會被刪除。',
     'tag_keep_transactions'       => '與此標籤連接的唯一一筆交易不會被刪除。|與此標籤連接的 :count 筆交易不會被刪除。',
     'check_for_updates'           => '檢查更新',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

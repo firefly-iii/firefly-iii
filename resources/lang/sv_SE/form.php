@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-nyckel',
     'remember_me'                 => 'Kom ihåg mig',
     'liability_type_id'           => 'Skuldstyp',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Ränta',
     'interest_period'             => 'Ränteperiod',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Transaktionen skapad av denna återkommande transaktion kommer inte tas bort.|Alla :count transaktioner skapade av denna återkommande transaktion undantas borttagning.',
     'tag_keep_transactions'       => 'Transaktionen kopplad till etiketten kommer inte att tas bort.|Alla :count transaktioner kopplade till etiketten kommer att sparas.',
     'check_for_updates'           => 'Sök efter uppdateringar',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Ta bort groupp ":title"',
 

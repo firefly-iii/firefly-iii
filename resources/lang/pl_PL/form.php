@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Klucz API',
     'remember_me'                 => 'Zapamiętaj mnie',
     'liability_type_id'           => 'Rodzaj zobowiązania',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Odsetki',
     'interest_period'             => 'Okres odsetkowy',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Jedyna transakcja utworzona przez tę cykliczną transakcję nie zostanie usunięta.|Wszystkie transakcje (:count) utworzone przez tę cykliczną transakcję zostaną oszczędzone.',
     'tag_keep_transactions'       => 'Jedyna transakcja związana z tym tagiem nie zostanie usunięta.|Wszystkie transakcje (:count) związane z tym tagiem nie zostaną skasowane.',
     'check_for_updates'           => 'Sprawdź aktualizacje',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Usuń grupę ":title"',
 

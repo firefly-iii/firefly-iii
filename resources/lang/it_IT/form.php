@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Chiave API',
     'remember_me'                 => 'Ricordami',
     'liability_type_id'           => 'Tipo passività',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interesse',
     'interest_period'             => 'Periodo di interesse',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'L\'unica transazione creata da questa transazione ricorrente non verrà eliminata.|Tutte le :count transazioni create da questa transazione ricorrente non verranno eliminate.',
     'tag_keep_transactions'       => 'L\'unica transazione connessa a questa etichetta non verrà eliminata.|Tutte le :count transazioni del conto collegate a questa etichetta non verranno eliminate.',
     'check_for_updates'           => 'Controlla gli aggiornamenti',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Elimina gruppo ":title"',
 

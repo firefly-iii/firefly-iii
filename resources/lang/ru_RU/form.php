@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-ключ',
     'remember_me'                 => 'Запомнить меня',
     'liability_type_id'           => 'Вид ответственности',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Процентная ставка',
     'interest_period'             => 'Период начисления процентов',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Единственная транзакция, связанная с повторяющейся транзакцией, не будет удалена.|Все :count транзакции, связанные с этой категорией, будут сохранены.',
     'tag_keep_transactions'       => 'Только транзакция, связанная с этой меткой, будет удалена.|Все :count транзакций, связанные с этой меткой, будут сохранены.',
     'check_for_updates'           => 'Проверить обновления',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Удалить группу ":title"',
 

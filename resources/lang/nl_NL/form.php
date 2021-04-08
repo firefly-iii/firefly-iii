@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API sleutel',
     'remember_me'                 => 'Aangemeld blijven',
     'liability_type_id'           => 'Passivasoort',
+    'liability_type'              => 'Passivasoort',
     'interest'                    => 'Rente',
     'interest_period'             => 'Renteperiode',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'De enige transactie verbonden aan deze periode transactie blijft bewaard.|De :count transacties verbonden aan deze periode transactie blijven bewaard.',
     'tag_keep_transactions'       => 'De enige transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
     'check_for_updates'           => 'Op updates controleren',
+    'liability_direction'         => 'Passiva in- of uitgaand',
 
     'delete_object_group' => 'Verwijder groep ":title"',
 

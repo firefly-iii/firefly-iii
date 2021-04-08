@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-kulcs',
     'remember_me'                 => 'Emlékezzen rám',
     'liability_type_id'           => 'Kötelezettség típusa',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Kamat',
     'interest_period'             => 'Kamatperiódus',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Az ismétlődő tranzakció által létrehozott egyetlen tranzakció nem lesz törölve.|Az ismétlődő tranzakció által létrehozott :count tranzakció nem lesz törölve.',
     'tag_keep_transactions'       => 'A címkéhez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a címkéhez tartozó :count tranzakció nem lesz törölve.',
     'check_for_updates'           => 'Frissítések ellenőrzése',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => '":title" csoport törlése',
 

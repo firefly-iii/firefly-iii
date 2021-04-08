@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Kunci API',
     'remember_me'                 => 'Remember me',
     'liability_type_id'           => 'Liability type',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interest',
     'interest_period'             => 'Interest period',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

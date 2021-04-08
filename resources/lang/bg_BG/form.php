@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API ключ',
     'remember_me'                 => 'Запомни ме',
     'liability_type_id'           => 'Тип задължение',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Лихва',
     'interest_period'             => 'Лихвен период',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Единствената транзакция, създадена с тази повтаряща се транзакция, няма да бъде изтрита.|Всички :count транзакции, създадени с тази повтаряща се транзакция, няма да бъдат изтрити.',
     'tag_keep_transactions'       => 'Единствената транзакция, свързана с този етикет няма да бъде изтрита.|Всички :count транзакции, свързани с този етикет, няма да бъдат изтрити.',
     'check_for_updates'           => 'Проверка за нова версия',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Изтрии група ":title"',
 

@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API 密钥',
     'remember_me'                 => '自动登录',
     'liability_type_id'           => '债务类型',
+    'liability_type'              => 'Liability type',
     'interest'                    => '利息',
     'interest_period'             => '利息期',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => '由此定期交易建立的唯一一笔交易不会被删除。|由此定期交易建立的 :count 笔交易不会被删除。',
     'tag_keep_transactions'       => '与此标签关联的唯一一笔交易不会被删除。|与此标签关联的 :count 笔交易不会被删除。',
     'check_for_updates'           => '检查更新',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => '删除组“:title”',
 

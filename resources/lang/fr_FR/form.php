@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Clé API',
     'remember_me'                 => 'Se souvenir de moi',
     'liability_type_id'           => 'Type de passif',
+    'liability_type'              => 'Type de passif',
     'interest'                    => 'Intérêt',
     'interest_period'             => 'Période d’intérêt',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'La seule opération liée à cette opération périodique ne sera pas supprimée.|Les :count opérations liées à cette opération périodique ne seront pas supprimées.',
     'tag_keep_transactions'       => 'La seule opération liée à ce tag ne sera pas supprimée.|Les :count opérations liées à ce tag ne seront pas supprimées.',
     'check_for_updates'           => 'Vérifier les mises à jour',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Supprimer le groupe ":title"',
 

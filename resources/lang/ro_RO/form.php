@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Cheie API',
     'remember_me'                 => 'Ține-mă minte',
     'liability_type_id'           => 'Tipul de provizion',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interes',
     'interest_period'             => 'Perioadă de interes',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Singura tranzacție creată de această tranzacție recurentă nu va fi ștearsă.|Toate cele :count tranzacții create de această tranzacție recurente vor fi scutite de ștergere.',
     'tag_keep_transactions'       => 'Singura tranzacție conectată la this tag nu va fi ștearsă.|Toate cele :count tranzacții conectate la această etichetă vor fi scutite de ștergere.',
     'check_for_updates'           => 'Verifică pentru actualizări',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

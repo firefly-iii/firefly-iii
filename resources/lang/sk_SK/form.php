@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Kľúč k API',
     'remember_me'                 => 'Zapamätať si ma',
     'liability_type_id'           => 'Typ záväzku',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Úrok',
     'interest_period'             => 'Úrokové obdobie',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Jediná transakcia spojená s touto opakujúcou sa transakciou nebude odstránená.|:count transakcií prepojených s touto opakujúcou sa transakciou nebude odstránených.',
     'tag_keep_transactions'       => 'Jediná transakcia spojená s týmto účtom nebude odstránená.|:count transakcií prepojených s týmto štítkom nebude odstránených.',
     'check_for_updates'           => 'Zjistit dostupnost případných aktualizací',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Odstrániť skupinu ":title“',
 

@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Khóa API',
     'remember_me'                 => 'Nhớ tôi',
     'liability_type_id'           => 'Loại trách nhiệm pháp lý',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Lãi',
     'interest_period'             => 'Chu kỳ lãi',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Giao dịch duy nhất được tạo bởi giao dịch định kỳ này sẽ không bị xóa. Các giao dịch được tạo bởi giao dịch định kỳ này sẽ được xóa bỏ.',
     'tag_keep_transactions'       => 'Giao dịch duy nhất được kết nối với thẻ này sẽ không bị xóa. :count các giao dịch được kết nối với thẻ này sẽ không bị xóa.',
     'check_for_updates'           => 'Kiểm tra cập nhật',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Xóa nhóm ":title"',
 

@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-nøkkel',
     'remember_me'                 => 'Husk meg',
     'liability_type_id'           => 'Gjeldstype',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Rente',
     'interest_period'             => 'Renteperiode',
 
@@ -169,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Ingen transaksjoner knyttet til denne gjentakende transaksjonen blir slettet.|Ingen av de :count transaksjonene knyttet til denne gjentakende transaksjonen vil bli slettet.',
     'tag_keep_transactions'       => 'Ingen transaksjoner knyttet til denne tag blir slettet.|Ingen av de :count transaksjonene knyttet til denne tag vil bli slettet.',
     'check_for_updates'           => 'Se etter oppdateringer',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 
