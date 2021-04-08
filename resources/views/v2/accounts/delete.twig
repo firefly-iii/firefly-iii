@@ -6,7 +6,7 @@
 <div id="accounts_delete"></div>
 {% endblock %}
 {% block scripts %}
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
         // this is a terrible hack.
         var previousURL = '{{ Session.get('accounts.delete.uri') }}';
     </script>

@@ -22,8 +22,8 @@
   <div class="form-group">
     <div v-if="visible" class="text-xs d-none d-lg-block d-xl-block">
       <span v-if="0 === this.index">{{ $t('firefly.' + this.direction + '_account') }}</span>
-      <span v-if="this.index > 0" class="text-warning">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span><br>
-      <span>{{ selectedAccount }}</span>
+      <span v-if="this.index > 0" class="text-warning">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
+      <!--<br><span>{{ selectedAccount }}</span> -->
     </div>
     <div v-if="!visible" class="text-xs d-none d-lg-block d-xl-block">
       &nbsp;

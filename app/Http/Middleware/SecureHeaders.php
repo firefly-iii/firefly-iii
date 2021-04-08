@@ -51,17 +51,17 @@ class SecureHeaders
         $response          = $next($request);
         $trackingScriptSrc = $this->getTrackingScriptSource();
         $csp               = [
-//            "default-src 'none'",
-//            "object-src 'none'",
-//            "require-trusted-types-for 'script'",
-//            sprintf("script-src 'unsafe-inline' 'strict-dynamic' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
-//            "style-src 'unsafe-inline' 'self'",
-//            "frame-ancestors 'none'",
-//            "base-uri 'self'",
-//            "font-src 'self' data:",
-//            "connect-src 'self'",
-//            sprintf("img-src 'self' data: https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org https://api.tiles.mapbox.com %s", $trackingScriptSrc),
-//            "manifest-src 'self'",
+            "default-src 'none'",
+            "object-src 'none'",
+            "require-trusted-types-for 'script'",
+            //sprintf("script-src 'unsafe-inline' 'strict-dynamic' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
+            sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
+            "style-src 'unsafe-inline' 'self'",
+            "base-uri 'self'",
+            "font-src 'self' data:",
+            "connect-src 'self'",
+            sprintf("img-src data: 'strict-dynamic' 'self' *.tile.openstreetmap.org %s", $trackingScriptSrc),
+            "manifest-src 'self'",
         ];
 
         $route = $request->route();
@@ -79,7 +79,7 @@ class SecureHeaders
             "camera 'none'",
             "magnetometer 'none'",
             "gyroscope 'none'",
-            "speaker 'none'",
+            //"speaker 'none'",
             //"vibrate 'none'",
             "fullscreen 'self'",
             "payment 'none'",

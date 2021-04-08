@@ -33,6 +33,7 @@
           autocomplete="off"
           name="amount[]"
           type="number"
+          step="any"
       >
     </div>
     <span v-if="errors.length > 0">
