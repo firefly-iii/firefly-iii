@@ -53,7 +53,7 @@ class SecureHeaders
         $csp               = [
             "default-src 'none'",
             "object-src 'self'",
-            sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s 'strict-dynamic'", $nonce, $trackingScriptSrc),
+            sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
             "frame-ancestors 'none'",
             "base-uri 'self'",
             "font-src 'self' data:",
