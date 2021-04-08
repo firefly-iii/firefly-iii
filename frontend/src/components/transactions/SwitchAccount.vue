@@ -26,9 +26,11 @@
       </span>
       <span v-if="'any' === this.transactionType" class="text-muted">&nbsp;</span>
     </div>
+    <!--
     <div class="btn-group d-flex">
       <button class="btn btn-light" @click="switchAccounts">&harr;</button>
     </div>
+    -->
   </div>
 </template>
 
@@ -37,9 +39,9 @@ export default {
   name: "SwitchAccount",
   props: ['index', 'transactionType'],
   methods: {
-    switchAccounts() {
-      this.$emit('switch-accounts', this.index);
-    }
+    // switchAccounts() {
+    //   this.$emit('switch-accounts', this.index);
+    // }
   }
 }
 </script>

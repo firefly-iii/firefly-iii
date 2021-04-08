@@ -181,7 +181,7 @@ class TransactionJournalFactory
 
         /** create or get source and destination accounts  */
         $sourceInfo = [
-            'id'          => (int)$row['source_id'],
+            'id'          => $row['source_id'],
             'name'        => $row['source_name'],
             'iban'        => $row['source_iban'],
             'number'      => $row['source_number'],
@@ -190,7 +190,7 @@ class TransactionJournalFactory
         ];
 
         $destInfo = [
-            'id'          => (int)$row['destination_id'],
+            'id'          => $row['destination_id'],
             'name'        => $row['destination_name'],
             'iban'        => $row['destination_iban'],
             'number'      => $row['destination_number'],
@@ -347,6 +347,7 @@ class TransactionJournalFactory
      */
     private function validateAccounts(NullArrayObject $data): void
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $transactionType = $data['type'] ?? 'invalid';
         $this->accountValidator->setUser($this->user);
         $this->accountValidator->setTransactionType($transactionType);

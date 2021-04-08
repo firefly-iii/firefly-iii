@@ -35,7 +35,6 @@
             class="form-control"
             type="date"
             @change="setFieldValue($event, name)"
-            v-on:submit.prevent
         >
       </div>
     </div>

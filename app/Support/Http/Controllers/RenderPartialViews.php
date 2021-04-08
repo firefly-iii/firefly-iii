@@ -72,9 +72,6 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
-
-
-
         return $view;
     }
 
@@ -95,9 +92,6 @@ trait RenderPartialViews
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-
-
-
         return $result;
     }
 
@@ -128,9 +122,6 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
-
-
-
         return $view;
     }
 
@@ -178,9 +169,6 @@ trait RenderPartialViews
             Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-
-
-
         return $result;
     }
 
@@ -221,9 +209,6 @@ trait RenderPartialViews
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-
-
-
         return $result;
     }
 
@@ -256,9 +241,6 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
-
-
-
         return $view;
     }
 
@@ -380,9 +362,6 @@ trait RenderPartialViews
             Log::error(sprintf('Could not render: %s', $e->getMessage()));
             $view = 'Firefly III could not render the view. Please see the log files.';
         }
-
-
-
         return $view;
     }
 
@@ -400,9 +379,6 @@ trait RenderPartialViews
             Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-
-
-
         return $result;
     }
 
@@ -424,9 +400,6 @@ trait RenderPartialViews
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-
-
-
         return $result;
     }
 }

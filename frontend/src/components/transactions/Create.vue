@@ -22,94 +22,96 @@
   <div>
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
-    <SplitPills :transactions="transactions"/>
-    <div class="tab-content">
-      <SplitForm
-          v-for="(transaction, index) in this.transactions"
-          v-bind:key="index"
-          :allowed-opposing-types="allowedOpposingTypes"
-          :count="transactions.length"
-          :custom-fields="customFields"
-          :date="date"
-          :destination-allowed-types="destinationAllowedTypes"
-          :index="index"
-          :source-allowed-types="sourceAllowedTypes"
-          :submitted-transaction="submittedTransaction"
-          :time="time"
-          :transaction="transaction"
-          :transaction-type="transactionType"
-          v-on:uploaded-attachments="uploadedAttachment($event)"
-          v-on:set-marker-location="storeLocation($event)"
-          v-on:set-account="storeAccountValue($event)"
-          v-on:switch-accounts="switchAccounts($event)"
-          v-on:set-date="storeDate($event)"
-          v-on:set-time="storeTime($event)"
-          v-on:set-field="storeField($event)"
-          v-on:remove-transaction="removeTransaction($event)"
-          v-on:set-dest-types="setDestinationAllowedTypes($event)"
-          v-on:set-src-types="setSourceAllowedTypes($event)"
+    <form @submit="submitTransaction">
+      <SplitPills :transactions="transactions"/>
+      <div class="tab-content">
+        <!-- v-on:switch-accounts="switchAccounts($event)" -->
+        <!-- :allowed-opposing-types="allowedOpposingTypes" -->
+        <SplitForm
+            v-for="(transaction, index) in this.transactions"
+            v-bind:key="index"
+            :count="transactions.length"
+            :custom-fields="customFields"
+            :date="date"
+            :destination-allowed-types="destinationAllowedTypes"
+            :index="index"
+            :source-allowed-types="sourceAllowedTypes"
+            :submitted-transaction="submittedTransaction"
+            :time="time"
+            :transaction="transaction"
+            :transaction-type="transactionType"
+            v-on:uploaded-attachments="uploadedAttachment($event)"
+            v-on:set-marker-location="storeLocation($event)"
+            v-on:set-account="storeAccountValue($event)"
+            v-on:set-date="storeDate($event)"
+            v-on:set-time="storeTime($event)"
+            v-on:set-field="storeField($event)"
+            v-on:remove-transaction="removeTransaction($event)"
+            v-on:set-dest-types="setDestinationAllowedTypes($event)"
+            v-on:set-src-types="setSourceAllowedTypes($event)"
 
-      />
-    </div>
-
-    <div class="row">
-      <!-- group title -->
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <div v-if="transactions.length > 1" class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
-              </div>
-            </div>
-          </div>
-        </div>
+        />
       </div>
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <!-- buttons -->
-        <div class="card card-primary">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
-                </button>
-              </div>
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button :disabled="!enableSubmit" class="btn btn-success btn-block" @click="submitTransaction">
-                  <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                  <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                &nbsp;
-              </div>
-              <div class="col">
-                <div class="form-check">
-                  <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
-                  <label class="form-check-label" for="createAnother">
-                    <span class="small">{{ $t('firefly.create_another') }}</span>
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input id="resetFormAfter" v-model="resetFormAfter" :disabled="!createAnother" class="form-check-input" type="checkbox">
-                  <label class="form-check-label" for="resetFormAfter">
-                    <span class="small">{{ $t('firefly.reset_after') }}</span>
-                  </label>
+
+      <div class="row">
+        <!-- group title -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <div v-if="transactions.length > 1" class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <!-- buttons -->
+          <div class="card card-primary">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  </button>
+                </div>
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button :disabled="!enableSubmit" class="btn btn-success btn-block" @click="submitTransaction">
+                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
+                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  &nbsp;
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input id="createAnother" v-model="createAnother" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="createAnother">
+                      <span class="small">{{ $t('firefly.create_another') }}</span>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input id="resetFormAfter" v-model="resetFormAfter" :disabled="!createAnother" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="resetFormAfter">
+                      <span class="small">{{ $t('firefly.reset_after') }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -119,7 +121,7 @@ import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
-import {toW3CString} from '../shared/transactions';
+import {toW3CString} from '../../shared/transactions';
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
 
@@ -135,7 +137,15 @@ export default {
    * Grab some stuff from the API, add the first transaction.
    */
   created() {
-    this.getAllowedOpposingTypes();
+    // set transaction type:
+    let pathName = window.location.pathname;
+    let parts = pathName.split('/');
+    let type = parts[parts.length - 1];
+    console.log('Set transaction type to ' + type);
+
+    this.setTransactionType(type[0].toUpperCase() + type.substring(1));
+    //this.getAllowedOpposingTypes();
+    this.getExpectedSourceTypes();
     this.getAccountToTransaction();
     this.getCustomFields();
     this.addTransaction();
@@ -291,7 +301,8 @@ export default {
      * Actually submit the transaction to Firefly III. This is a fairly complex beast of a thing because multiple things
      * need to happen in the right order.
      */
-    submitTransaction: function () {
+    submitTransaction: function (event) {
+      event.preventDefault();
       // console.log('submitTransaction()');
       // disable the submit button:
       this.enableSubmit = false;
@@ -398,7 +409,7 @@ export default {
       this.updateField({index: payload.index, field: payload.direction + '_account_currency_code', value: payload.currency_code});
       this.updateField({index: payload.index, field: payload.direction + '_account_currency_symbol', value: payload.currency_symbol});
 
-      this.calculateTransactionType(payload.index);
+      //this.calculateTransactionType(payload.index);
     },
     storeField: function (payload) {
       this.updateField(payload);
@@ -414,60 +425,60 @@ export default {
       this.setGroupTitle({groupTitle: value});
     },
 
-    /**
-     * Calculate the transaction type based on what's currently in the store.
-     */
-    calculateTransactionType: function (index) {
-      //console.log('calculateTransactionType(' + index + ')');
-      if (0 === index) {
-        let source = this.transactions[0].source_account_type;
-        let dest = this.transactions[0].destination_account_type;
-        if (null === source || null === dest) {
-          //console.log('transactionType any');
-          this.setTransactionType('any');
-          //this.$store.commit('setTransactionType', 'any');
-          //console.log('calculateTransactionType: either type is NULL so no dice.');
-          return;
-        }
-        if ('' === source || '' === dest) {
-          //console.log('transactionType any');
-          this.setTransactionType('any');
-          //this.$store.commit('setTransactionType', 'any');
-          //console.log('calculateTransactionType: either type is empty so no dice.');
-          return;
-        }
-        // ok so type is set on both:
-        let expectedDestinationTypes = this.accountToTransaction[source];
-        if ('undefined' !== typeof expectedDestinationTypes) {
-          let transactionType = expectedDestinationTypes[dest];
-          if ('undefined' !== typeof expectedDestinationTypes[dest]) {
-            //console.log('Found a type: ' + transactionType);
-            this.setTransactionType(transactionType);
-            //this.$store.commit('setTransactionType', transactionType);
-            //console.log('calculateTransactionType: ' + source + ' --> ' + dest + ' = ' + transactionType);
-            return;
-          }
-        }
-        //console.log('Found no type for ' + source + ' --> ' + dest);
-        if ('Asset account' !== source) {
-          //console.log('Drop ID from destination.');
-          this.updateField({index: 0, field: 'destination_account_id', value: null});
-          //console.log('calculateTransactionType: drop ID from destination.');
-          // source.id =null
-          // context.commit('updateField', {field: 'source_account',index: })
-          // context.state.transactions[0].source_account.id = null;
-        }
-        if ('Asset account' !== dest) {
-          //console.log('Drop ID from source.');
-          this.updateField({index: 0, field: 'source_account_id', value: null});
-          //console.log('calculateTransactionType: drop ID from source.');
-          //context.state.transactions[0].destination_account.id = null;
-        }
-        //console.log('calculateTransactionType: fallback, type to any.');
-        this.setTransactionType('any');
-        //this.$store.commit('setTransactionType', 'any');
-      }
-    },
+    // /**
+    //  * Calculate the transaction type based on what's currently in the store.
+    //  */
+    // calculateTransactionType: function (index) {
+    //   //console.log('calculateTransactionType(' + index + ')');
+    //   if (0 === index) {
+    //     let source = this.transactions[0].source_account_type;
+    //     let dest = this.transactions[0].destination_account_type;
+    //     if (null === source || null === dest) {
+    //       //console.log('transactionType any');
+    //       this.setTransactionType('any');
+    //       //this.$store.commit('setTransactionType', 'any');
+    //       //console.log('calculateTransactionType: either type is NULL so no dice.');
+    //       return;
+    //     }
+    //     if ('' === source || '' === dest) {
+    //       //console.log('transactionType any');
+    //       this.setTransactionType('any');
+    //       //this.$store.commit('setTransactionType', 'any');
+    //       //console.log('calculateTransactionType: either type is empty so no dice.');
+    //       return;
+    //     }
+    //     // ok so type is set on both:
+    //     let expectedDestinationTypes = this.accountToTransaction[source];
+    //     if ('undefined' !== typeof expectedDestinationTypes) {
+    //       let transactionType = expectedDestinationTypes[dest];
+    //       if ('undefined' !== typeof expectedDestinationTypes[dest]) {
+    //         //console.log('Found a type: ' + transactionType);
+    //         this.setTransactionType(transactionType);
+    //         //this.$store.commit('setTransactionType', transactionType);
+    //         //console.log('calculateTransactionType: ' + source + ' --> ' + dest + ' = ' + transactionType);
+    //         return;
+    //       }
+    //     }
+    //     //console.log('Found no type for ' + source + ' --> ' + dest);
+    //     if ('Asset account' !== source) {
+    //       //console.log('Drop ID from destination.');
+    //       this.updateField({index: 0, field: 'destination_account_id', value: null});
+    //       //console.log('calculateTransactionType: drop ID from destination.');
+    //       // source.id =null
+    //       // context.commit('updateField', {field: 'source_account',index: })
+    //       // context.state.transactions[0].source_account.id = null;
+    //     }
+    //     if ('Asset account' !== dest) {
+    //       //console.log('Drop ID from source.');
+    //       this.updateField({index: 0, field: 'source_account_id', value: null});
+    //       //console.log('calculateTransactionType: drop ID from source.');
+    //       //context.state.transactions[0].destination_account.id = null;
+    //     }
+    //     //console.log('calculateTransactionType: fallback, type to any.');
+    //     this.setTransactionType('any');
+    //     //this.$store.commit('setTransactionType', 'any');
+    //   }
+    // },
     /**
      * Submit transaction links.
      */
@@ -669,25 +680,25 @@ export default {
 
     },
 
-    switchAccounts: function (index) {
-      // console.log('user wants to switch Accounts');
-      let origSourceId = this.transactions[index].source_account_id;
-      let origSourceName = this.transactions[index].source_account_name;
-      let origSourceType = this.transactions[index].source_account_type;
-
-      let origDestId = this.transactions[index].destination_account_id;
-      let origDestName = this.transactions[index].destination_account_name;
-      let origDestType = this.transactions[index].destination_account_type;
-
-      this.updateField({index: 0, field: 'source_account_id', value: origDestId});
-      this.updateField({index: 0, field: 'source_account_name', value: origDestName});
-      this.updateField({index: 0, field: 'source_account_type', value: origDestType});
-
-      this.updateField({index: 0, field: 'destination_account_id', value: origSourceId});
-      this.updateField({index: 0, field: 'destination_account_name', value: origSourceName});
-      this.updateField({index: 0, field: 'destination_account_type', value: origSourceType});
-      this.calculateTransactionType(0);
-    },
+    // switchAccounts: function (index) {
+    //   // console.log('user wants to switch Accounts');
+    //   let origSourceId = this.transactions[index].source_account_id;
+    //   let origSourceName = this.transactions[index].source_account_name;
+    //   let origSourceType = this.transactions[index].source_account_type;
+    //
+    //   let origDestId = this.transactions[index].destination_account_id;
+    //   let origDestName = this.transactions[index].destination_account_name;
+    //   let origDestType = this.transactions[index].destination_account_type;
+    //
+    //   this.updateField({index: 0, field: 'source_account_id', value: origDestId});
+    //   this.updateField({index: 0, field: 'source_account_name', value: origDestName});
+    //   this.updateField({index: 0, field: 'source_account_type', value: origDestType});
+    //
+    //   this.updateField({index: 0, field: 'destination_account_id', value: origSourceId});
+    //   this.updateField({index: 0, field: 'destination_account_name', value: origSourceName});
+    //   this.updateField({index: 0, field: 'destination_account_type', value: origSourceType});
+    //   this.calculateTransactionType(0);
+    // },
 
 
     /**
@@ -703,19 +714,34 @@ export default {
       ) {
         let theDate = new Date(this.date);
         // update time in date object.
-        theDate.setHours(this.time.getHours());
-        theDate.setMinutes(this.time.getMinutes());
-        theDate.setSeconds(this.time.getSeconds());
+        //theDate.setHours(this.time.getHours());
+        //theDate.setMinutes(this.time.getMinutes());
+        //theDate.setSeconds(this.time.getSeconds());
         dateStr = toW3CString(theDate);
       }
+      console.log('Date is now ' + dateStr);
+      console.log(dateStr);
 
       // console.log('dateStr = ' + dateStr);
+      if ('' === array.destination_account_name) {
+        array.destination_account_name = null;
+      }
+      if (0 === array.destination_account_id) {
+        array.destination_account_name = null;
+      }
+
+      if ('' === array.source_account_name) {
+        array.source_account_name = null;
+      }
+      if (0 === array.source_account_id) {
+        array.source_account_id = null;
+      }
 
       let currentSplit = {
         // basic
         description: array.description,
         date: dateStr,
-        type: this.transactionType,
+        type: this.transactionType.toLowerCase(),
 
         // account
         source_id: array.source_account_id ?? null,
@@ -761,10 +787,10 @@ export default {
           if (array.tags.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             // array.tags
             let current = array.tags[i];
-            if(typeof current === 'object' && null !== current) {
+            if (typeof current === 'object' && null !== current) {
               currentSplit.tags.push(current.text);
             }
-            if(typeof current === 'string') {
+            if (typeof current === 'string') {
               currentSplit.tags.push(current);
             }
           }
@@ -788,17 +814,17 @@ export default {
       }
 
       // do transaction type
-      let transactionType;
-      let firstSource;
-      let firstDestination;
+      // let transactionType;
+      // let firstSource;
+      // let firstDestination;
 
       // get transaction type from first transaction
-      transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'any';
+      //transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'any';
       //console.log('Transaction type is now ' + transactionType);
       // if the transaction type is invalid, might just be that we can deduce it from
       // the presence of a source or destination account
-      firstSource = this.transactions[0].source_account_type;
-      firstDestination = this.transactions[0].destination_account_type;
+      //firstSource = this.transactions[0].source_account_type;
+      //firstDestination = this.transactions[0].destination_account_type;
       //console.log(this.transactions[0].source_account);
       //console.log(this.transactions[0].destination_account);
       //console.log('Type of first source is  ' + firstSource);
@@ -806,15 +832,15 @@ export default {
 
       // default to source:
       currentSplit.currency_id = array.source_account_currency_id;
-      if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
-        transactionType = 'withdrawal';
-      }
+      // if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+      //   transactionType = 'withdrawal';
+      // }
 
-      if ('any' === transactionType && ['asset', 'Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
-        transactionType = 'deposit';
+      if ('Deposit' === this.transactionType) {
+        //   transactionType = 'deposit';
         currentSplit.currency_id = array.destination_account_currency_id;
       }
-      currentSplit.type = transactionType;
+      //currentSplit.type = transactionType;
       //console.log('Final type is ' + transactionType);
 
       let links = [];
@@ -833,6 +859,21 @@ export default {
         }
       }
       currentSplit.links = links;
+      if (null === currentSplit.source_id) {
+        delete currentSplit.source_id;
+      }
+      if (null === currentSplit.source_name) {
+        delete currentSplit.source_name;
+      }
+      if (null === currentSplit.destination_id) {
+        delete currentSplit.destination_id;
+      }
+      if (null === currentSplit.destination_name) {
+        delete currentSplit.destination_name;
+      }
+
+      console.log('Current split is: ');
+      console.log(currentSplit);
 
       // return it.
       return currentSplit;
@@ -843,7 +884,19 @@ export default {
     getAllowedOpposingTypes: function () {
       axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
+            console.log('opposing types things.');
+            console.log(response.data.data.value);
             this.allowedOpposingTypes = response.data.data.value;
+          });
+    },
+    getExpectedSourceTypes: function() {
+      axios.get('./api/v1/configuration/firefly.expected_source_types')
+          .then(response => {
+            console.log('getExpectedSourceTypes.');
+            this.sourceAllowedTypes = response.data.data.value.source[this.transactionType];
+            this.destinationAllowedTypes = response.data.data.value.destination[this.transactionType];
+
+            //this.allowedOpposingTypes = response.data.data.value;
           });
     },
     /**

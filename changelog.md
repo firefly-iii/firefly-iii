@@ -2,19 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.5.4 (API 1.5.2) 2021-04-xx (unreleased)
+## 5.5.4 (API 1.5.2) 2021-04-09
 
 ### Added
-- Nothing (yet)
-
-### Changed
-- Nothing (yet)
-
-### Deprecated
-- Nothing (yet)
-
-### Removed
-- Nothing (yet)
+- The new + experimental v2 also has the ability to create accounts.
 
 ### Fixed
 - [Issue 4589](https://github.com/firefly-iii/firefly-iii/issues/4589) It was not possible to change accounts in layout v2.
@@ -22,10 +13,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4593](https://github.com/firefly-iii/firefly-iii/issues/4593) Could not change or update recurring repetition data.
 - [Issue 4596](https://github.com/firefly-iii/firefly-iii/issues/4596) The error handler mailer mails about too many things.
 - [Issue 4603](https://github.com/firefly-iii/firefly-iii/issues/4603) Call to bad RSA method.
-- #4607 Bad code in set source / set destination rule actions meant that it would not fire in some cases.
+- [Issue 4607](https://github.com/firefly-iii/firefly-iii/issues/4607) Bad code in set source / set destination rule actions meant that it would not fire in some cases.
 
 ### Security
-- Nothing (yet)
+- [Issue 4616](https://github.com/firefly-iii/firefly-iii/issues/4616) The base image has some extra security-related Apache headers.
+
+### Layout
+
+Firefly III features a new *experimental* layout that I'm currently building. You can enable it by setting environment variable `FIREFLY_III_LAYOUT=v2`. Check out [GitHub](https://github.com/firefly-iii/firefly-iii/issues) for the announcement and status updates.
 
 ### API
 

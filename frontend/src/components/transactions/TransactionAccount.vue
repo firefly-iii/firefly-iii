@@ -92,10 +92,6 @@ export default {
       type: Array,
       default: () => ([])
     },
-    allowedOpposingTypes: {
-      type: Object,
-      default: () => ({})
-    },
     transactionType: {
       type: String,
       default: 'any'
@@ -161,9 +157,6 @@ export default {
     }
   },
   watch: {
-    // allowedOpposingTypes: function () {
-    //   console.log(this.direction + ' account noticed change in allowedOpposingTypes');
-    // },
     sourceAllowedTypes: function (value) {
       // console.log(this.direction + ' account noticed change in sourceAllowedTypes');
       // console.log(value);
@@ -193,7 +186,15 @@ export default {
       this.accountName = this.account.name_with_balance;
     },
     accountName: function (value) {
+
+      if('source' === this.direction && 'Deposit' !== this.transactionType) {
+        return;
+      }
+      if('destination' === this.direction && 'Withdrawal' !== this.transactionType) {
+        return;
+      }
       if (false === this.selectedAccountTrigger) {
+        console.log('User submitted manual thing.');
         // console.log('Save to change name!');
         this.$emit('set-account',
                    {
@@ -211,22 +212,6 @@ export default {
         this.account = {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null};
       }
       this.selectedAccountTrigger = false;
-    },
-    account: function (value) {
-      let opposingAccounts = [];
-      let type = value.type ? value.type : 'no_type';
-      if ('undefined' !== typeof this.allowedOpposingTypes[this.direction]) {
-        if ('undefined' !== typeof this.allowedOpposingTypes[this.direction][type]) {
-          opposingAccounts = this.allowedOpposingTypes[this.direction][type];
-        }
-      }
-
-      if ('source' === this.direction) {
-        this.$emit('set-dest-types', opposingAccounts);
-      }
-      if ('destination' === this.direction) {
-        this.$emit('set-src-types', opposingAccounts);
-      }
     },
     value: function (value) {
       // console.log('Index ' + this.index + ' nwAct: ', value);

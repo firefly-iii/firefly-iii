@@ -181,9 +181,6 @@ class SelectController extends Controller
             Log::error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
         }
-
-
-
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
 
@@ -225,9 +222,6 @@ class SelectController extends Controller
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
-
-
-
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
 }

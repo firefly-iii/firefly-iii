@@ -35,6 +35,7 @@
           name="date[]"
           type="date"
       >
+      <!--
       <input
           ref="time"
           v-model="timeStr"
@@ -46,6 +47,7 @@
           name="time[]"
           type="time"
       >
+      -->
     </div>
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>

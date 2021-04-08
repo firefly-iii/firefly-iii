@@ -47,7 +47,7 @@
                      :sort-desc.sync="sortDesc"
             >
               <template #cell(title)="data">
-                <a :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
               </template>
               <template #cell(number)="data">
                 <span v-if="null !== data.item.iban && null === data.item.account_number">{{ data.item.iban }}</span>

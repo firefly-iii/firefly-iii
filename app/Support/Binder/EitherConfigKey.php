@@ -38,7 +38,8 @@ class EitherConfigKey
         'firefly.accountRoles',
         'firefly.valid_liabilities',
         'firefly.interest_periods',
-        'firefly.enable_external_map'
+        'firefly.enable_external_map',
+        'firefly.expected_source_types'
     ];
     /**
      * @param string $value

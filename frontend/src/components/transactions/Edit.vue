@@ -23,88 +23,90 @@
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
     <Alert :message="warningMessage" type="warning"/>
-    <SplitPills :transactions="transactions"/>
+    <form @submit="submitTransaction">
+      <SplitPills :transactions="transactions"/>
 
-    <div class="tab-content">
-      <SplitForm
-          v-for="(transaction, index) in this.transactions"
-          v-bind:key="index"
-          :count="transactions.length"
-          :transaction="transaction"
-          :allowed-opposing-types="allowedOpposingTypes"
-          :custom-fields="customFields"
-          :date="date"
-          :time="time"
-          :index="index"
-          :transaction-type="transactionType"
-          :destination-allowed-types="destinationAllowedTypes"
-          :source-allowed-types="sourceAllowedTypes"
-          :allow-switch="false"
-          :submitted-transaction="submittedTransaction"
-          v-on:uploaded-attachments="uploadedAttachment($event)"
-          v-on:set-marker-location="storeLocation($event)"
-          v-on:set-account="storeAccountValue($event)"
-          v-on:set-date="storeDate($event)"
-          v-on:set-time="storeTime($event)"
-          v-on:set-field="storeField($event)"
-          v-on:remove-transaction="removeTransaction($event)"
-          v-on:selected-attachments="selectedAttachments($event)"
-      />
-    </div>
-
-    <!-- bottom buttons etc -->
-    <div class="row">
-      <!-- group title -->
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <div v-if="transactions.length > 1" class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="tab-content">
+        <SplitForm
+            v-for="(transaction, index) in this.transactions"
+            v-bind:key="index"
+            :count="transactions.length"
+            :transaction="transaction"
+            :allowed-opposing-types="allowedOpposingTypes"
+            :custom-fields="customFields"
+            :date="date"
+            :time="time"
+            :index="index"
+            :transaction-type="transactionType"
+            :destination-allowed-types="destinationAllowedTypes"
+            :source-allowed-types="sourceAllowedTypes"
+            :allow-switch="false"
+            :submitted-transaction="submittedTransaction"
+            v-on:uploaded-attachments="uploadedAttachment($event)"
+            v-on:set-marker-location="storeLocation($event)"
+            v-on:set-account="storeAccountValue($event)"
+            v-on:set-date="storeDate($event)"
+            v-on:set-time="storeTime($event)"
+            v-on:set-field="storeField($event)"
+            v-on:remove-transaction="removeTransaction($event)"
+            v-on:selected-attachments="selectedAttachments($event)"
+        />
       </div>
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <!-- buttons -->
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
-                </button>
-              </div>
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
-                  <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
-                  <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                &nbsp;
-              </div>
-              <div class="col">
-                <div class="form-check">
-                  <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
-                  <label class="form-check-label" for="stayHere">
-                    <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
-                  </label>
+
+      <!-- bottom buttons etc -->
+      <div class="row">
+        <!-- group title -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <div v-if="transactions.length > 1" class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <!-- buttons -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  </button>
+                </div>
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
+                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
+                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  &nbsp;
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="stayHere">
+                      <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -114,7 +116,7 @@ import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import SplitForm from "./SplitForm";
 import TransactionGroupTitle from "./TransactionGroupTitle";
-import {getDefaultErrors, getDefaultTransaction, toW3CString} from '../shared/transactions';
+import {getDefaultErrors, getDefaultTransaction, toW3CString} from '../../shared/transactions';
 
 export default {
   name: "Edit",
@@ -463,7 +465,7 @@ export default {
       let newTransactionCount = this.transactions.length;
       console.log('Found ' + this.transactions.length + ' split(s).');
 
-      if(newTransactionCount > 1 && typeof submission.group_title === 'undefined' && (null === this.originalGroupTitle || '' === this.originalGroupTitle)) {
+      if (newTransactionCount > 1 && typeof submission.group_title === 'undefined' && (null === this.originalGroupTitle || '' === this.originalGroupTitle)) {
         submission.group_title = this.transactions[0].description;
       }
 

@@ -51,7 +51,6 @@
                 <TransactionAccount
                     v-model="sourceAccount"
                     v-on="$listeners"
-                    :allowed-opposing-types="allowedOpposingTypes"
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.source"
                     :index="index"
@@ -76,7 +75,6 @@
                 <TransactionAccount
                     v-model="destinationAccount"
                     v-on="$listeners"
-                    :allowed-opposing-types="allowedOpposingTypes"
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.destination"
                     :index="index"
@@ -369,11 +367,6 @@ export default {
       required: false,
       default: []
     },
-    allowedOpposingTypes: {
-      type: Object,
-      required: false,
-      default: {}
-    },
     // allow switch?
     allowSwitch: {
       type: Boolean,
@@ -382,11 +375,6 @@ export default {
     }
 
   },
-  // watch: {
-  //   allowedOpposingTypes: function() {
-  //     console.log('SplitForm noticed change in allowedOpposingTypes');
-  //   }
-  // },
   methods: {
     removeTransaction: function () {
       // console.log('Will remove transaction ' + this.index);

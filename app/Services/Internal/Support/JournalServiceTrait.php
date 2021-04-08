@@ -168,7 +168,7 @@ trait JournalServiceTrait
      * @return Account
      * @throws FireflyException
      */
-    private function createAccount(?Account $account, array $data, string $preferredType): Account
+    private function createAccount(?Account $account, array $data, string $preferredType): ?Account
     {
         Log::debug('Now in createAccount()', $data);
         // return new account.
@@ -192,7 +192,15 @@ trait JournalServiceTrait
                 Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
                 $data['name'] = $data['iban'];
             }
-
+            // fix name of account if only number is given:
+            if ('' === (string)$data['name'] && '' !== (string)$data['number']) {
+                Log::debug(sprintf('Account name is now account number ("%s")', $data['number']));
+                $data['name'] = $data['number'];
+            }
+            // if name is still NULL, return NULL.
+            if(null === $data['name']) {
+                return null;
+            }
             $data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(

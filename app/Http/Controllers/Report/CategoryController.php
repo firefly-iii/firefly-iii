@@ -676,9 +676,6 @@ class CategoryController extends Controller
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
-
-
-
         return $result;
     }
 

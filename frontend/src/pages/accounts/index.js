@@ -25,11 +25,13 @@ import store from "../../components/store";
 import {BPagination, BTable} from 'bootstrap-vue';
 import Calendar from "../../components/dashboard/Calendar";
 import IndexOptions from "../../components/accounts/IndexOptions";
-//import Vuex from "vuex";
 
 // i18n
 let i18n = require('../../i18n');
 let props = {};
+
+// TODO: long lists are slow to load. Fix this.
+// TODO add interest for liabilities
 
 Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);

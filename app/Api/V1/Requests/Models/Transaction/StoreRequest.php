@@ -98,17 +98,17 @@ class StoreRequest extends FormRequest
 
                 // source of transaction. If everything is null, assume cash account.
                 'source_id'             => $this->integerFromValue((string)$object['source_id']),
-                'source_name'           => $this->clearString((string)$object['source_name'], false),
-                'source_iban'           => $this->clearString((string)$object['source_iban'], false),
-                'source_number'         => $this->clearString((string)$object['source_number'], false),
-                'source_bic'            => $this->clearString((string)$object['source_bic'], false),
+                'source_name'           => $this->clearString($object['source_name'], false),
+                'source_iban'           => $this->clearString($object['source_iban'], false),
+                'source_number'         => $this->clearString($object['source_number'], false),
+                'source_bic'            => $this->clearString($object['source_bic'], false),
 
                 // destination of transaction. If everything is null, assume cash account.
                 'destination_id'        => $this->integerFromValue((string)$object['destination_id']),
-                'destination_name'      => $this->clearString((string)$object['destination_name'], false),
-                'destination_iban'      => $this->clearString((string)$object['destination_iban'], false),
-                'destination_number'    => $this->clearString((string)$object['destination_number'], false),
-                'destination_bic'       => $this->clearString((string)$object['destination_bic'], false),
+                'destination_name'      => $this->clearString($object['destination_name'], false),
+                'destination_iban'      => $this->clearString($object['destination_iban'], false),
+                'destination_number'    => $this->clearString($object['destination_number'], false),
+                'destination_bic'       => $this->clearString($object['destination_bic'], false),
 
                 // budget info
                 'budget_id'             => $this->integerFromValue((string)$object['budget_id']),

@@ -186,9 +186,6 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
-
-
-
         return true;
     }
 
@@ -214,9 +211,6 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
-
-
-
         return true;
     }
 
@@ -242,9 +236,6 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
-
-
-
         return true;
     }
 

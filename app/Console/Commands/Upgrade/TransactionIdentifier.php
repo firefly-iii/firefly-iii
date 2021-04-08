@@ -188,9 +188,6 @@ class TransactionIdentifier extends Command
 
             return null;
         }
-
-
-
         return $opposing;
     }
 

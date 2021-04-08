@@ -34,15 +34,16 @@ use Log;
 trait ConvertsDataTypes
 {
     /**
-     * Remove weird chars from strings.
+     * @param string|null $string
+     * @param bool        $keepNewlines
      *
-     * @param string $string
-     * @param bool   $keepNewlines
-     *
-     * @return string
+     * @return string|null
      */
-    public function clearString(string $string, bool $keepNewlines = true): string
+    public function clearString(?string $string, bool $keepNewlines = true): ?string
     {
+        if(null === $string) {
+            return null;
+        }
         $search       = [
             "\u{0001}", // start of heading
             "\u{0002}", // start of text

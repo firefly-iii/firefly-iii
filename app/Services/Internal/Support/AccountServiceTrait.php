@@ -407,9 +407,6 @@ trait AccountServiceTrait
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
-
-
-
         return $group;
     }
 }
