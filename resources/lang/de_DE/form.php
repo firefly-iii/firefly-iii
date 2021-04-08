@@ -80,7 +80,7 @@ return [
     'api_key'                     => 'API-Schlüssel',
     'remember_me'                 => 'Angemeldet bleiben',
     'liability_type_id'           => 'Haftungsart',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => 'Art der Verbindlichkeit',
     'interest'                    => 'Zinsen',
     'interest_period'             => 'Verzinsungszeitraum',
 
@@ -170,7 +170,7 @@ return [
     'recurring_keep_transactions' => 'Die einzige Buchung, die durch diesen Dauerauftrag erstellt wurde, wird nicht gelöscht. | Keine der :count Buchungen, die durch diesen Dauerauftrag erstellt wurden, wird gelöscht.',
     'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Keines der :count Schlagwörter, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'check_for_updates'           => 'Nach Updates suchen',
-    'liability_direction'         => 'Liability in/out',
+    'liability_direction'         => 'Verbindlichkeit Ein/Aus',
 
     'delete_object_group' => 'Gruppe „:title” löschen',
 

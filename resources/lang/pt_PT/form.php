@@ -80,7 +80,7 @@ return [
     'api_key'                     => 'Chave API',
     'remember_me'                 => 'Lembrar-me',
     'liability_type_id'           => 'Tipo de responsabilidade',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => 'Tipo de responsabilidade',
     'interest'                    => 'Juro',
     'interest_period'             => 'Periodo de juros',
 
@@ -170,7 +170,7 @@ return [
     'recurring_keep_transactions' => 'A única transação criada a partir desta transação recorrente não vai ser apagada.|Todas as :count transações criadas a partir desta transação recorrente não vão ser apagadas.',
     'tag_keep_transactions'       => 'A única transação vinculada a esta etiqueta não vai ser apagada.|Todas as :count transações vinculadas a esta etiqueta não vão ser apagadas.',
     'check_for_updates'           => 'Procurar actualizacoes',
-    'liability_direction'         => 'Liability in/out',
+    'liability_direction'         => 'Responsabilidade entrada/saída',
 
     'delete_object_group' => 'Apagar grupo ":title"',
 

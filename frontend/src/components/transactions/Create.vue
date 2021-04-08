@@ -47,9 +47,6 @@
             v-on:set-time="storeTime($event)"
             v-on:set-field="storeField($event)"
             v-on:remove-transaction="removeTransaction($event)"
-            v-on:set-dest-types="setDestinationAllowedTypes($event)"
-            v-on:set-src-types="setSourceAllowedTypes($event)"
-
         />
       </div>
 
@@ -187,8 +184,6 @@ export default {
       // meta data for accounts
       accountToTransaction: {},
       allowedOpposingTypes: {},
-      defaultSourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
-      defaultDestinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
       sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
       destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
 
@@ -719,8 +714,8 @@ export default {
         //theDate.setSeconds(this.time.getSeconds());
         dateStr = toW3CString(theDate);
       }
-      console.log('Date is now ' + dateStr);
-      console.log(dateStr);
+      // console.log('Date is now ' + dateStr);
+      // console.log(dateStr);
 
       // console.log('dateStr = ' + dateStr);
       if ('' === array.destination_account_name) {
@@ -872,8 +867,8 @@ export default {
         delete currentSplit.destination_name;
       }
 
-      console.log('Current split is: ');
-      console.log(currentSplit);
+      // console.log('Current split is: ');
+      // console.log(currentSplit);
 
       // return it.
       return currentSplit;
@@ -895,6 +890,11 @@ export default {
             console.log('getExpectedSourceTypes.');
             this.sourceAllowedTypes = response.data.data.value.source[this.transactionType];
             this.destinationAllowedTypes = response.data.data.value.destination[this.transactionType];
+            // console.log('Source allowed types for ' + this.transactionType + ' is: ');
+            // console.log(this.sourceAllowedTypes);
+
+            // console.log('Destination allowed types for ' + this.transactionType + ' is: ');
+            // console.log(this.destinationAllowedTypes);
 
             //this.allowedOpposingTypes = response.data.data.value;
           });

@@ -1097,7 +1097,7 @@ return [
     'save_transactions_by_moving'               => 'Speichern Sie diese Transaktion, indem Sie sie auf ein anderes Konto verschieben:|Speichern Sie diese Transaktionen, indem Sie sie auf ein anderes Konto verschieben:',
     'save_transactions_by_moving_js'            => 'Keine Buchungen|Speichern Sie diese Buchung, indem Sie sie auf ein anderes Konto verschieben. |Speichern Sie diese Buchungen, indem Sie sie auf ein anderes Konto verschieben.',
     'stored_new_account'                        => 'Neues Konto „:name” gespeichert!',
-    'stored_new_account_js'                     => 'New account "<a href="accounts/show/{ID}">{name}</a>" stored!',
+    'stored_new_account_js'                     => 'Neues Konto "<a href="accounts/show/{ID}">„{name}”</a>" gespeichert!',
     'updated_account'                           => 'Konto „:name” aktualisiert',
     'credit_card_options'                       => 'Kreditkartenoptionen',
     'no_transactions_account'                   => 'Es liegen (in diesem Zeitraum) keine Buchungen für das Bestandskonto „:name” vor.',
