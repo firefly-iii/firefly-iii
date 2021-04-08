@@ -447,7 +447,8 @@ export default {
         }
       }
     },
-    addTransaction: function () {
+    addTransaction: function (event) {
+      event.preventDefault();
       let newTransaction = getDefaultTransaction();
       newTransaction.errors = getDefaultErrors();
       this.transactions.push(newTransaction);
