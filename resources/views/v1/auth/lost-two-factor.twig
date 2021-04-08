@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
-    <link rel="stylesheet" href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
-    <link rel="stylesheet" href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
-    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" type="text/css" media="all" nonce="{{ JS_NONCE }}">
+    <link rel="stylesheet" href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" type="text/css" media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
 
     {# favicons #}
     {% include('v1.partials.favicons') %}
