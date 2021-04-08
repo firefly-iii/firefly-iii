@@ -54,7 +54,7 @@ class SecureHeaders
             "default-src 'none'",
             "object-src 'self'",
             sprintf("script-src 'unsafe-inline' 'nonce-%1s' %2s 'strict-dynamic'", $nonce, $trackingScriptSrc),
-            "style-src 'self'",
+            "style-src 'unsafe-inline' 'self'",
             "frame-ancestors 'none'",
             "base-uri 'self'",
             "font-src 'self' data:",
