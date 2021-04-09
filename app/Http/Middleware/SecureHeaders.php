@@ -53,8 +53,6 @@ class SecureHeaders
         $csp               = [
             "default-src 'none'",
             "object-src 'none'",
-            "require-trusted-types-for 'script'",
-            //sprintf("script-src 'unsafe-inline' 'strict-dynamic' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
             "style-src 'unsafe-inline' 'self'",
             "base-uri 'self'",
