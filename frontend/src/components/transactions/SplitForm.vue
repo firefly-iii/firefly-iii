@@ -139,7 +139,6 @@
                     :date="splitDate"
                     :errors="transaction.errors.date"
                     :index="index"
-                    :time="splitTime"
                 />
               </div>
 
@@ -341,11 +340,7 @@ export default {
       required: true
     },
     date: {
-      type: Date,
-      required: true
-    },
-    time: {
-      type: Date,
+      type: String,
       required: true
     },
     transactionType: {
@@ -385,15 +380,15 @@ export default {
     splitDate: function () {
       return this.date;
     },
-    splitTime: function () {
-      return this.time;
-    },
     sourceAccount: function () {
-      return {
+      console.log('computed::sourceAccount');
+      let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
+      console.log(JSON.stringify(value));
+      return value;
     },
     destinationAccount: function () {
       return {

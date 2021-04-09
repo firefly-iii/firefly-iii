@@ -22,6 +22,7 @@
 const state = () => (
     {
         listPageSize: 33,
+        // timezone: ''
     }
 )
 
@@ -29,20 +30,18 @@ const state = () => (
 // getters
 const getters = {
     listPageSize: state => {
-        // console.log('Wil return ' + state.listPageSize);
         return state.listPageSize;
     },
+    // timezone: state => {
+    //     // console.log('Wil return ' + state.listPageSize);
+    //     return state.timezone;
+    // },
 }
 
 // actions
 const actions = {
     initialiseStore(context) {
-        // console.log('Now in root initialiseStore');
-        // if list length in local storage:
         if (localStorage.listPageSize) {
-            // console.log('listPageSize is in localStorage')
-            // console.log('Init list page size with value ');
-            // console.log(localStorage.listPageSize);
             state.listPageSize = localStorage.listPageSize;
             context.commit('setListPageSize', {length: localStorage.listPageSize});
         }
@@ -54,6 +53,17 @@ const actions = {
                       }
                 );
         }
+        // if (localStorage.timezone) {
+        //     state.timezone = localStorage.timezone;
+        //     context.commit('setTimezone', {timezone: localStorage.timezone});
+        // }
+        // if (!localStorage.timezone) {
+        //     axios.get('./api/v1/configuration/app.timezone')
+        //         .then(response => {
+        //                   context.commit('setTimezone', {timezone: response.data.data.value});
+        //               }
+        //         );
+        // }
     }
 }
 
@@ -65,9 +75,17 @@ const mutations = {
         let number = parseInt(payload.length);
         if (0 !== number) {
             state.listPageSize = number;
+            localStorage.listPageSize = number;
 
         }
     },
+    // setTimezone(state, payload) {
+    //
+    //     if ('' !== payload.timezone) {
+    //         state.timezone = payload.timezone;
+    //         localStorage.timezone = payload.timezone;
+    //     }
+    // },
 }
 
 export default {

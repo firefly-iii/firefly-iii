@@ -42,6 +42,7 @@ new Vue({
                 return createElement(Create, {props: props});
             },
             beforeCreate() {
+                this.$store.dispatch('root/initialiseStore');
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
             },

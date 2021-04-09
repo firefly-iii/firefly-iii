@@ -35,7 +35,6 @@
             :allowed-opposing-types="allowedOpposingTypes"
             :custom-fields="customFields"
             :date="date"
-            :time="time"
             :index="index"
             :transaction-type="transactionType"
             :destination-allowed-types="destinationAllowedTypes"
@@ -46,7 +45,6 @@
             v-on:set-marker-location="storeLocation($event)"
             v-on:set-account="storeAccountValue($event)"
             v-on:set-date="storeDate($event)"
-            v-on:set-time="storeTime($event)"
             v-on:set-field="storeField($event)"
             v-on:remove-transaction="removeTransaction($event)"
             v-on:selected-attachments="selectedAttachments($event)"
@@ -153,10 +151,8 @@ export default {
       returnedGroupTitle: '',
 
       // date and time of the transaction,
-      date: new Date,
-      time: new Date,
-      originalDate: new Date,
-      originalTime: new Date,
+      date: '',
+      originalDate: '',
 
       // things the process is done working on (3 phases):
       submittedTransaction: false,
@@ -245,10 +241,8 @@ export default {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
-        this.date = new Date(array.date);
-        this.time = new Date(array.date);
-        this.originalDate = new Date(array.date);
-        this.originalTime = new Date(array.date);
+        this.date = array.date.substring(0, 16);
+        this.originalDate = array.date.substring(0, 16);
       }
       let result = getDefaultTransaction();
       // parsing here:
@@ -453,7 +447,8 @@ export default {
       newTransaction.errors = getDefaultErrors();
       this.transactions.push(newTransaction);
     },
-    submitTransaction: function () {
+    submitTransaction: function (event) {
+      event.preventDefault();
       let submission = {transactions: []};
       let shouldSubmit = false;
       let shouldLinks = false;
@@ -598,21 +593,13 @@ export default {
             shouldUpload = true;
           }
 
-          let dateStr = 'invalid';
           if (
-              this.date.toISOString() !== this.originalDate.toISOString() ||
-              this.time.toISOString() !== this.originalTime.toISOString()
+              this.date !== this.originalDate
           ) {
             console.log('Date and/or time is changed');
             // set date and time!
             shouldSubmit = true;
-            let theDate = this.date;
-            // update time in date object.
-            theDate.setHours(this.time.getHours());
-            theDate.setMinutes(this.time.getMinutes());
-            theDate.setSeconds(this.time.getSeconds());
-            dateStr = toW3CString(theDate);
-            diff.date = dateStr;
+            diff.date = this.date;
           }
           console.log('Now at index ' + i);
           console.log(Object.keys(diff).length);

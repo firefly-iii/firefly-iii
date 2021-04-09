@@ -39,7 +39,8 @@ class EitherConfigKey
         'firefly.valid_liabilities',
         'firefly.interest_periods',
         'firefly.enable_external_map',
-        'firefly.expected_source_types'
+        'firefly.expected_source_types',
+        'app.timezone',
     ];
     /**
      * @param string $value

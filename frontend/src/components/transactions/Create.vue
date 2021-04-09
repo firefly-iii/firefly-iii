@@ -37,14 +37,12 @@
             :index="index"
             :source-allowed-types="sourceAllowedTypes"
             :submitted-transaction="submittedTransaction"
-            :time="time"
             :transaction="transaction"
             :transaction-type="transactionType"
             v-on:uploaded-attachments="uploadedAttachment($event)"
             v-on:set-marker-location="storeLocation($event)"
             v-on:set-account="storeAccountValue($event)"
             v-on:set-date="storeDate($event)"
-            v-on:set-time="storeTime($event)"
             v-on:set-field="storeField($event)"
             v-on:remove-transaction="removeTransaction($event)"
         />
@@ -113,14 +111,11 @@
 </template>
 
 <script>
-import {createNamespacedHelpers} from 'vuex'
 import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
-import {toW3CString} from '../../shared/transactions';
-
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('transactions/create')
+import {mapGetters, mapMutations} from "vuex";
 
 export default {
   name: "Create",
@@ -138,10 +133,12 @@ export default {
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     let type = parts[parts.length - 1];
-    console.log('Set transaction type to ' + type);
+
+    // set a basic date-time string:
+    this.date = format(new Date, "yyyy-MM-dd'T'00:00");
+    console.log('Date is set to "' + this.date + '"');
 
     this.setTransactionType(type[0].toUpperCase() + type.substring(1));
-    //this.getAllowedOpposingTypes();
     this.getExpectedSourceTypes();
     this.getAccountToTransaction();
     this.getCustomFields();
@@ -187,32 +184,25 @@ export default {
       sourceAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'],
       destinationAllowedTypes: ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Expense account'],
 
-      // date and time not in the store because it was buggy
-      date: new Date,
-      time: new Date,
+      // date not in the store because it was buggy
+      date: ''
     }
   },
   computed: {
     /**
      * Grabbed from the store.
      */
-    ...mapGetters([
-                    'transactionType',
-                    'transactions',
-                    'groupTitle'
-                  ])
+    ...mapGetters('transactions/create', ['transactionType', 'transactions', 'groupTitle']),
+    ...mapGetters('root', ['listPageSize'])
   },
   watch: {
     submittedTransaction: function () {
-      // see finalizeSubmit()
       this.finalizeSubmit();
     },
     submittedLinks: function () {
-      // see finalizeSubmit()
       this.finalizeSubmit();
     },
     submittedAttachments: function () {
-      // see finalizeSubmit()
       this.finalizeSubmit();
     }
   },
@@ -220,17 +210,17 @@ export default {
     /**
      * Store related mutators used by this component.
      */
-    ...mapMutations(
-        [
-          'setGroupTitle',
-          'addTransaction',
-          'deleteTransaction',
-          'setTransactionError',
-          'setTransactionType',
-          'resetErrors',
-          'updateField',
-          'resetTransactions',
-        ],
+    ...mapMutations('transactions/create',
+                    [
+                      'setGroupTitle',
+                      'addTransaction',
+                      'deleteTransaction',
+                      'setTransactionError',
+                      'setTransactionType',
+                      'resetErrors',
+                      'updateField',
+                      'resetTransactions',
+                    ]
     ),
     /**
      * Removes a split from the array.
@@ -412,68 +402,11 @@ export default {
     storeDate: function (payload) {
       this.date = payload.date;
     },
-    storeTime: function (payload) {
-      this.time = payload.time;
-    },
     storeGroupTitle: function (value) {
       // console.log('set group title: ' + value);
       this.setGroupTitle({groupTitle: value});
     },
 
-    // /**
-    //  * Calculate the transaction type based on what's currently in the store.
-    //  */
-    // calculateTransactionType: function (index) {
-    //   //console.log('calculateTransactionType(' + index + ')');
-    //   if (0 === index) {
-    //     let source = this.transactions[0].source_account_type;
-    //     let dest = this.transactions[0].destination_account_type;
-    //     if (null === source || null === dest) {
-    //       //console.log('transactionType any');
-    //       this.setTransactionType('any');
-    //       //this.$store.commit('setTransactionType', 'any');
-    //       //console.log('calculateTransactionType: either type is NULL so no dice.');
-    //       return;
-    //     }
-    //     if ('' === source || '' === dest) {
-    //       //console.log('transactionType any');
-    //       this.setTransactionType('any');
-    //       //this.$store.commit('setTransactionType', 'any');
-    //       //console.log('calculateTransactionType: either type is empty so no dice.');
-    //       return;
-    //     }
-    //     // ok so type is set on both:
-    //     let expectedDestinationTypes = this.accountToTransaction[source];
-    //     if ('undefined' !== typeof expectedDestinationTypes) {
-    //       let transactionType = expectedDestinationTypes[dest];
-    //       if ('undefined' !== typeof expectedDestinationTypes[dest]) {
-    //         //console.log('Found a type: ' + transactionType);
-    //         this.setTransactionType(transactionType);
-    //         //this.$store.commit('setTransactionType', transactionType);
-    //         //console.log('calculateTransactionType: ' + source + ' --> ' + dest + ' = ' + transactionType);
-    //         return;
-    //       }
-    //     }
-    //     //console.log('Found no type for ' + source + ' --> ' + dest);
-    //     if ('Asset account' !== source) {
-    //       //console.log('Drop ID from destination.');
-    //       this.updateField({index: 0, field: 'destination_account_id', value: null});
-    //       //console.log('calculateTransactionType: drop ID from destination.');
-    //       // source.id =null
-    //       // context.commit('updateField', {field: 'source_account',index: })
-    //       // context.state.transactions[0].source_account.id = null;
-    //     }
-    //     if ('Asset account' !== dest) {
-    //       //console.log('Drop ID from source.');
-    //       this.updateField({index: 0, field: 'source_account_id', value: null});
-    //       //console.log('calculateTransactionType: drop ID from source.');
-    //       //context.state.transactions[0].destination_account.id = null;
-    //     }
-    //     //console.log('calculateTransactionType: fallback, type to any.');
-    //     this.setTransactionType('any');
-    //     //this.$store.commit('setTransactionType', 'any');
-    //   }
-    // },
     /**
      * Submit transaction links.
      */
@@ -702,22 +635,6 @@ export default {
      * @param array
      */
     convertSplit: function (key, array) {
-      let dateStr = 'invalid';
-      if (
-          this.time instanceof Date && !isNaN(this.time) &&
-          this.date instanceof Date && !isNaN(this.date)
-      ) {
-        let theDate = new Date(this.date);
-        // update time in date object.
-        //theDate.setHours(this.time.getHours());
-        //theDate.setMinutes(this.time.getMinutes());
-        //theDate.setSeconds(this.time.getSeconds());
-        dateStr = toW3CString(theDate);
-      }
-      // console.log('Date is now ' + dateStr);
-      // console.log(dateStr);
-
-      // console.log('dateStr = ' + dateStr);
       if ('' === array.destination_account_name) {
         array.destination_account_name = null;
       }
@@ -735,7 +652,7 @@ export default {
       let currentSplit = {
         // basic
         description: array.description,
-        date: dateStr,
+        date: this.date,
         type: this.transactionType.toLowerCase(),
 
         // account
@@ -884,10 +801,10 @@ export default {
             this.allowedOpposingTypes = response.data.data.value;
           });
     },
-    getExpectedSourceTypes: function() {
+    getExpectedSourceTypes: function () {
       axios.get('./api/v1/configuration/firefly.expected_source_types')
           .then(response => {
-            console.log('getExpectedSourceTypes.');
+            //console.log('getExpectedSourceTypes.');
             this.sourceAllowedTypes = response.data.data.value.source[this.transactionType];
             this.destinationAllowedTypes = response.data.data.value.destination[this.transactionType];
             // console.log('Source allowed types for ' + this.transactionType + ' is: ');

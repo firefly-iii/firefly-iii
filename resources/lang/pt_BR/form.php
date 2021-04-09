@@ -80,7 +80,7 @@ return [
     'api_key'                     => 'Chave da API',
     'remember_me'                 => 'Lembrar-me',
     'liability_type_id'           => 'Tipo de passivo',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => 'Tipo de passivo',
     'interest'                    => 'Juros',
     'interest_period'             => 'Período de juros',
 
