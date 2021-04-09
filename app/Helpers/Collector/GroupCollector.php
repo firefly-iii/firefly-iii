@@ -338,7 +338,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (0!==count($journalIds)) {
+        if (0 !== count($journalIds)) {
             $this->query->whereIn('transaction_journals.id', $journalIds);
         }
 
@@ -718,10 +718,12 @@ class GroupCollector implements GroupCollectorInterface
 
         // also merge attachments:
         if (array_key_exists('attachment_id', $result)) {
-            $attachmentId                         = (int)$augumentedJournal['attachment_id'];
-            $result['attachments'][$attachmentId] = [
-                'id' => $attachmentId,
-            ];
+            $attachmentId = (int)$augumentedJournal['attachment_id'];
+            if (0 !== $attachmentId) {
+                $result['attachments'][$attachmentId] = [
+                    'id' => $attachmentId,
+                ];
+            }
         }
 
         return $result;
