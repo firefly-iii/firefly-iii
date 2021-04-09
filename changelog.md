@@ -4,29 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 5.5.4 (API 1.5.2) 2021-04-09
 
-### Added
-- The new + experimental v2 also has the ability to create accounts.
+Firefly III features a new *experimental* layout that I'm currently building. You can enable it by setting environment variable `FIREFLY_III_LAYOUT=v2`. Check out [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618) for the announcement and status updates. This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.1...1.5.2).
 
 ### Fixed
-- [Issue 4589](https://github.com/firefly-iii/firefly-iii/issues/4589) It was not possible to change accounts in layout v2.
-- [Issue 4591](https://github.com/firefly-iii/firefly-iii/issues/4591) It was not possible to create splits in layout v2.
 - [Issue 4593](https://github.com/firefly-iii/firefly-iii/issues/4593) Could not change or update recurring repetition data.
 - [Issue 4596](https://github.com/firefly-iii/firefly-iii/issues/4596) The error handler mailer mails about too many things.
 - [Issue 4603](https://github.com/firefly-iii/firefly-iii/issues/4603) Call to bad RSA method.
 - [Issue 4607](https://github.com/firefly-iii/firefly-iii/issues/4607) Bad code in set source / set destination rule actions meant that it would not fire in some cases.
 
 ### Security
-- [Issue 4616](https://github.com/firefly-iii/firefly-iii/issues/4616) The base image has some extra security-related Apache headers.
-
-### Layout
-
-Firefly III features a new *experimental* layout that I'm currently building. You can enable it by setting environment variable `FIREFLY_III_LAYOUT=v2`. Check out [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618) for the announcement and status updates.
+- [Issue 4616](https://github.com/firefly-iii/firefly-iii/issues/4616) Firefly III has some extra security-related headers.
 
 ### API
-
-This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.1...1.5.2).
-
-
 - [Issue 4600](https://github.com/firefly-iii/firefly-iii/issues/4600) Sometimes empty amounts would not be properly picked up by the API.
 - New endpoint to bulk update transactions.
 - The chart API endpoint includes the time in the labels.
