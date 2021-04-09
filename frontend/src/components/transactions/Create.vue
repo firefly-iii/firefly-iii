@@ -117,6 +117,7 @@ import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
 import {mapGetters, mapMutations} from "vuex";
 
+
 export default {
   name: "Create",
   components: {
@@ -135,8 +136,9 @@ export default {
     let type = parts[parts.length - 1];
 
     // set a basic date-time string:
-    this.date = format(new Date, "yyyy-MM-dd'T'00:00");
-    console.log('Date is set to "' + this.date + '"');
+
+    this.date = (new Date).toISOString().split('T')[0] + 'T00:00';
+    //console.log('Date is set to "' + this.date + '"');
 
     this.setTransactionType(type[0].toUpperCase() + type.substring(1));
     this.getExpectedSourceTypes();
