@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Aja sääntöryhmä ":title" valituille tapahtumille',
     'apply_rule_group_selection_intro'                    => 'Sääntöryhmät kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan kaikki ryhmän säännöt myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun olet päivittänyt ryhmän sääntöjä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',
     'applied_rule_group_selection'                        => 'Sääntöryhmä ":title" on ajettu valituille tapahtumille.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Käyttäjän toiminto on ":trigger_value"',

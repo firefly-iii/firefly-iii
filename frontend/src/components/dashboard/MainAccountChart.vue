@@ -20,7 +20,10 @@
 
 <script>
 
-import {Line, mixins} from 'vue-chartjs'
+//import {Line, mixins} from 'vue-chartjs'
+
+
+import { Chart, LineController, LineElement, PointElement, LinearScale, Title } from 'chart.js'
 
 const {reactiveProp} = mixins
 

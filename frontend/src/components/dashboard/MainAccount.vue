@@ -24,14 +24,17 @@
       <h3 class="card-title">{{ $t('firefly.yourAccounts') }}</h3>
     </div>
     <div class="card-body">
-      <div v-if="!loading">
-        <MainAccountChart v-if="!loading && !error" :chart-data="dataCollection" :options="chartOptions"/>
+      <div>
+        <canvas id="canvas" ref="canvas" width="400" height="400"></canvas>
       </div>
       <div v-if="loading && !error" class="text-center">
         <i class="fas fa-spinner fa-spin"></i>
       </div>
       <div v-if="error" class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
+      </div>
+      <div v-if="timezoneDifference" class="text-muted small">
+        {{ $t('firefly.timezone_difference', {local: localTimeZone, system: systemTimeZone}) }}
       </div>
     </div>
     <div class="card-footer">
@@ -44,35 +47,43 @@
 
 import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
+import {mapGetters} from "vuex";
+import * as ChartJs from 'chart.js'
+ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass) => (chartClass.id)));
 
-import {createNamespacedHelpers} from "vuex";
-import MainAccountChart from "./MainAccountChart";
 
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+
+
 
 export default {
   name: "MainAccount",
-  components: {MainAccountChart},
+  components: {},  // MainAccountChart
   data() {
     return {
       loading: true,
       error: false,
       ready: false,
       dataCollection: {},
-      chartOptions: {}
+      chartOptions: {},
+      _chart: null,
+      localTimeZone: '',
+      systemTimeZone: '',
     }
   },
   created() {
     this.ready = true;
     this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
+    this.localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.systemTimeZone = this.timezone;
   },
   computed: {
-    ...mapGetters([
-                    'start',
-                    'end'
-                  ]),
+    ...mapGetters('dashboard/index',['start', 'end']),
+    ...mapGetters('root',['timezone']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
+    },
+    timezoneDifference: function() {
+      return this.localTimeZone !== this.systemTimeZone;
     }
   },
   watch: {
@@ -82,10 +93,10 @@ export default {
       }
     },
     start: function () {
-      this.initialiseChart();
+      //this.initialiseChart();
     },
     end: function () {
-      this.initialiseChart();
+      //this.initialiseChart();
     },
   },
   methods: {
@@ -95,20 +106,28 @@ export default {
       let startStr = this.start.toISOString().split('T')[0];
       let endStr = this.end.toISOString().split('T')[0];
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;
-      // console.log('URL is ' + url);
       axios.get(url)
           .then(response => {
             let chartData = DataConverter.methods.convertChart(response.data);
             chartData = DataConverter.methods.colorizeLineData(chartData);
+
             this.dataCollection = chartData;
             this.loading = false;
+            this.drawChart();
           })
           .catch(error => {
-            // console.log('Has error!');
-            // console.log(error);
+            console.log('Has error!');
+            console.log(error);
             this.error = true;
-            // console.error(error);
           });
+    },
+    drawChart: function () {
+      this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
+                                        type: 'line',
+                                        data: this.dataCollection,
+                                        options: this.chartOptions
+                                      }
+      );
     }
   },
 }

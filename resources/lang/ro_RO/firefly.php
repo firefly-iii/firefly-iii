@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Aplicați grupul de reguli ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_group_selection_intro'                    => 'Grupul de reguli precum ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, însă puteți spune aplicației că rulează toate regulile din acest grup cu privire la o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat un grup de reguli și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',
     'applied_rule_group_selection'                        => 'Grupul de reguli ":title" a fost aplicat selecției dvs..',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Acțiunea utilizatorului este ":trigger_value"',

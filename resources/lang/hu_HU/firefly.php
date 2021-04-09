@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => '":title" szabálycsoport alkalmazása a tranzakciók egy csoportján',
     'apply_rule_group_selection_intro'                    => 'Az olyan szabálycsoportok mint a ":title" normális esetben csak az új vagy a frissített tranzakciókon lesznek alkalmazva, de meg lehet mondani a Firefly III-nak, hogy futtassa le a csoportban lévő összes szabályt a már létező tranzakciókon. Ez hasznos lehet, ha egy szabálycsoport frissítve lett és a módosításokat az összes tranzakción alkalmazni kell.',
     'applied_rule_group_selection'                        => '":title" szabálycsoport alkalmazva a kiválasztásra.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'A felhasználói művelet ":trigger_value"',

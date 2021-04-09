@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Áp dụng nhóm quy tắc ":title" để lựa chọn các giao dịch của bạn',
     'apply_rule_group_selection_intro'                    => 'Các nhóm quy tắc như ":title" thường chỉ được áp dụng cho các giao dịch mới hoặc được cập nhật, nhưng bạn có thể yêu cầu Firefly III chạy tất cả các quy tắc trong nhóm này trên một lựa chọn các giao dịch hiện tại của bạn. Điều này có thể hữu ích khi bạn đã cập nhật một nhóm quy tắc và bạn cần thay đổi để áp dụng cho tất cả các giao dịch khác của mình.',
     'applied_rule_group_selection'                        => 'Nhóm quy tắc ":title" đã được áp dụng cho lựa chọn của bạn.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Hành động của người dùng là ":trigger_value"',

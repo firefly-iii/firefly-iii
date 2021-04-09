@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Terapkan grup aturan ":title" ke pilihan transaksi Anda',
     'apply_rule_group_selection_intro'                    => 'Kelompok aturan seperti ":title" biasanya hanya diterapkan pada transaksi baru atau yang diperbarui, namun Anda dapat memberi tahu Firefly III untuk menjalankan semua aturan dalam grup ini pada pilihan transaksi Anda saat ini. Ini bisa berguna bila Anda telah memperbarui sekumpulan aturan dan Anda memerlukan perubahan yang akan diterapkan pada semua transaksi Anda yang lain.',
     'applied_rule_group_selection'                        => 'Rule group ":title" telah diterapkan pada pilihan Anda.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Tindakan pengguna adalah ":trigger_value"',

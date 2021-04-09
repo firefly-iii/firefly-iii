@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Uplatnit skupinu pravidel „:title“ na vybrané transakce',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
     'applied_rule_group_selection'                        => 'Skupina pravidel „:title“ byla uplatněna na váš výběr.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Uživatelská akce je „:trigger_value“',

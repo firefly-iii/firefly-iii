@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Uplatniť skupinu pravidiel „:title“ na vybrané transakcie',
     'apply_rule_group_selection_intro'                    => 'Skupiny pravidiel ako „:title“ sa zvyčajne používajú iba na nové alebo aktualizované transakcie, ale môžete Firefly III povedať, aby pri výbere vašich existujúcich transakcií spustil všetky pravidlá v tejto skupine. To môže byť užitočné, keď ste aktualizovali skupinu pravidiel a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
     'applied_rule_group_selection'                        => 'Skupina pravidiel „:title“ bola uplatnená na váš výber.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Použivateľská akcia je „:trigger_value“',

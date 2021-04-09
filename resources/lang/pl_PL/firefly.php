@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Zastosuj grupę reguł ":title" do niektórych swoich transakcji',
     'apply_rule_group_selection_intro'                    => 'GRupy reguł takie jak ":title" są zwykle stosowane tylko do nowych lub modyfikowanych transakcji, ale możesz powiedzieć Firefly III aby uruchomił ją dla istniejących transakcji. Może to być przydatne, gdy zmodyfikowałeś grupę reguł i potrzebujesz zastosować zmiany dla wszystkich pozostałych transakcji.',
     'applied_rule_group_selection'                        => 'Grupa reguł ":title" została zastosowana do Twojego wyboru.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Akcją użytkownika jest ":trigger_value"',

@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_group_selection_intro'                    => 'Regelgruppen wie „:title” werden in der Regel nur auf neue oder aktualisierte Buchungen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'applied_rule_group_selection'                        => 'Regelgruppe ":title" wurde auf Ihre Auswahl angewendet.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Die Nutzeraktion ist ":trigger_value"',

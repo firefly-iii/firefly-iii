@@ -429,6 +429,7 @@ return [
     'apply_rule_group_selection'                          => '將規則群組 ":title" 套用至您所選的交易',
     'apply_rule_group_selection_intro'                    => '規則群組如 ":title" 一般僅套用至新的或更新後的交易，但您可要求 Firefly III 針對既有的單筆或多筆交易執行規則群組內的規則。在您更新一則規則群組後，且必須套用該群組至其他交易時，即可使用此功能。',
     'applied_rule_group_selection'                        => '規則群組 ":title" 已套用至您選擇的交易。',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => '使用者動作為 ":trigger_value"',

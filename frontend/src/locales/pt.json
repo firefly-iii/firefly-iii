@@ -109,6 +109,7 @@
         "edit": "Alterar",
         "account_type_Loan": "Emprestimo",
         "account_type_Mortgage": "Hipoteca",
+        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
         "stored_new_account_js": "Nova conta \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" armazenada!",
         "account_type_Debt": "Debito",
         "delete": "Apagar",
