@@ -70,7 +70,9 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><i class="far fa-clone"></i> {{
+                      $t('firefly.add_another_split')
+                    }}
                   </button>
                 </div>
                 <div class="col">
@@ -224,6 +226,10 @@ export default {
                       'resetTransactions',
                     ]
     ),
+    addTransactionArray: function (event) {
+      event.preventDefault();
+      this.addTransaction();
+    },
     /**
      * Removes a split from the array.
      */

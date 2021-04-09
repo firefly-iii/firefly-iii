@@ -29,7 +29,7 @@
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
             <div v-if="count>1" class="card-tools">
-              <button class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
           <div class="card-body">
