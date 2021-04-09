@@ -132,16 +132,16 @@ class EditController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
         $redirect = redirect($this->getPreviousUri('piggy-banks.edit.uri'));
 
         if (1 === (int)$request->get('return_to_edit')) {
-            // @codeCoverageIgnoreStart
+
             session()->put('piggy-banks.edit.fromUpdate', true);
 
             $redirect = redirect(route('piggy-banks.edit', [$piggyBank->id]));
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

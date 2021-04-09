@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
         return [
             'filename'        => $this->string('filename'),
             'title'           => $this->string('title'),
-            'notes'           => $this->nlString('notes'),
+            'notes'           => $this->stringWithNewlines('notes'),
             'attachable_type' => $this->string('attachable_type'),
             'attachable_id'   => $this->integer('attachable_id'),
         ];

@@ -64,7 +64,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepository::class);
 
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -78,7 +78,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -98,7 +98,7 @@ class AccountServiceProvider extends ServiceProvider
                 /** @var AccountTaskerInterface $tasker */
                 $tasker = app(AccountTasker::class);
 
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $tasker->setUser(auth()->user());
                 }
 

@@ -214,14 +214,6 @@ class ApplyRules extends Command
         $finalList   = new Collection;
         $accountList = explode(',', $accountString);
 
-        // @codeCoverageIgnoreStart
-        if (0 === count($accountList)) {
-            $this->error('Please use the --accounts option to indicate the accounts to apply rules to.');
-
-            return false;
-        }
-        // @codeCoverageIgnoreEnd
-
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
@@ -255,12 +247,7 @@ class ApplyRules extends Command
             return true;
         }
         $ruleGroupList = explode(',', $ruleGroupString);
-        // @codeCoverageIgnoreStart
-        if (0 === count($ruleGroupList)) {
-            // can be empty.
-            return true;
-        }
-        // @codeCoverageIgnoreEnd
+
         foreach ($ruleGroupList as $ruleGroupId) {
             $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
             if ($ruleGroup->active) {
@@ -285,14 +272,6 @@ class ApplyRules extends Command
             return true;
         }
         $ruleList = explode(',', $ruleString);
-
-        // @codeCoverageIgnoreStart
-        if (0 === count($ruleList)) {
-            // can be empty.
-
-            return true;
-        }
-        // @codeCoverageIgnoreEnd
 
         foreach ($ruleList as $ruleId) {
             $rule = $this->ruleRepository->find((int)$ruleId);

@@ -60,8 +60,8 @@ class RecurrenceDestroyService
         try {
             // delete all meta data
             $recurrence->recurrenceMeta()->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::info(sprintf('Could not delete recurrence meta: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
         // delete all transactions.
         /** @var RecurrenceTransaction $transaction */
@@ -69,8 +69,8 @@ class RecurrenceDestroyService
             $transaction->recurrenceTransactionMeta()->delete();
             try {
                 $transaction->delete();
-            } catch (Exception $e) { // @codeCoverageIgnore
-                Log::info(sprintf('Could not delete recurrence transaction: %s', $e->getMessage())); // @codeCoverageIgnore
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
         }
         // delete all repetitions
@@ -79,8 +79,8 @@ class RecurrenceDestroyService
         // delete recurrence
         try {
             $recurrence->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::info(sprintf('Could not delete recurrence: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 

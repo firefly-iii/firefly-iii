@@ -54,14 +54,14 @@ class MigrateAttachments extends Command
      */
     public function handle(): int
     {
-        // @codeCoverageIgnoreStart
+
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
 
         $attachments = Attachment::get();
         $count       = 0;
@@ -113,7 +113,7 @@ class MigrateAttachments extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

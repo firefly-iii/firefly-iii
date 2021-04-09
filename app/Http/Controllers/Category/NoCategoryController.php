@@ -43,8 +43,7 @@ class NoCategoryController extends Controller
 {
     use PeriodOverview;
 
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $journalRepos;
+    protected JournalRepositoryInterface $journalRepos;
 
     /**
      * CategoryController constructor.

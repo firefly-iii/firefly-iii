@@ -41,6 +41,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use Log;
+
 /**
  * Trait RecurringTransactionTrait
  *
@@ -60,8 +61,8 @@ trait RecurringTransactionTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Error deleting note: %s', $e->getMessage()));
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
                 }
             }
 
@@ -135,11 +136,11 @@ trait RecurringTransactionTrait
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
             if (!$validator->validateSource($source->id, null, null)) {
-                throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); 
             }
 
             if (!$validator->validateDestination($destination->id, null, null)) {
-                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); 
             }
             if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
                 unset($array['foreign_amount']);
@@ -179,10 +180,9 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param array        $expectedTypes
-     * @param Account|null $account
-     * @param int|null     $accountId
-     * @param string|null  $accountName
+     * @param array       $expectedTypes
+     * @param int|null    $accountId
+     * @param string|null $accountName
      *
      * @return Account
      */
@@ -212,6 +212,7 @@ trait RecurringTransactionTrait
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user);
+        /** @var string $expectedType */
         foreach ($expectedTypes as $expectedType) {
             if (in_array($expectedType, $cannotCreate, true)) {
                 continue;
@@ -219,11 +220,11 @@ trait RecurringTransactionTrait
             if (!in_array($expectedType, $cannotCreate, true)) {
                 try {
                     $result = $factory->findOrCreate($accountName, $expectedType);
-                    // @codeCoverageIgnoreStart
+
                 } catch (FireflyException $e) {
                     Log::error($e->getMessage());
                 }
-                // @codeCoverageIgnoreEnd
+
             }
         }
 
@@ -287,7 +288,7 @@ trait RecurringTransactionTrait
         $factory->setUser($transaction->recurrence->user);
         $piggyBank = $factory->find($piggyId, null);
         if (null !== $piggyBank) {
-            /** @var RecurrenceMeta $entry */
+            /** @var RecurrenceMeta|null $entry */
             $entry = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
             if (null === $entry) {
                 $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
@@ -307,8 +308,8 @@ trait RecurringTransactionTrait
      */
     protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
     {
-        if (!empty($tags)) {
-            /** @var RecurrenceMeta $entry */
+        if (count($tags) > 0) {
+            /** @var RecurrenceMeta|null $entry */
             $entry = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
                 $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
@@ -316,7 +317,7 @@ trait RecurringTransactionTrait
             $entry->value = json_encode($tags);
             $entry->save();
         }
-        if (empty($tags)) {
+        if (0 === count($tags)) {
             // delete if present
             $transaction->recurrenceTransactionMeta()->where('name', 'tags')->delete();
         }
@@ -345,8 +346,8 @@ trait RecurringTransactionTrait
             $transaction->recurrenceTransactionMeta()->delete();
             try {
                 $transaction->delete();
-            } catch (Exception $e) {
-                Log::debug($e->getMessage());
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
         }
     }

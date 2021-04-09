@@ -137,7 +137,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($journal->id);
         $cache->addProperty('destination-account-list');
         if ($useCache && $cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
@@ -165,7 +165,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($journal->id);
         $cache->addProperty('source-account-list');
         if ($useCache && $cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
         $list         = new Collection;
@@ -192,7 +192,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         // saves on queries:
@@ -250,7 +250,7 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->addProperty($field);
 
         if ($cache->has()) {
-            return new Carbon($cache->get()); // @codeCoverageIgnore
+            return new Carbon($cache->get()); 
         }
         $entry = TransactionJournalMeta::where('transaction_journal_id', $journalId)
                                        ->where('name', $field)->first();
@@ -278,7 +278,7 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param int $transactionId
+     * @param int $journalId
      */
     public function reconcileById(int $journalId): void
     {

@@ -54,7 +54,7 @@ class CategoryServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var CategoryRepository $repository */
                 $repository = app(CategoryRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -67,7 +67,7 @@ class CategoryServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -80,7 +80,7 @@ class CategoryServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var NoCategoryRepository $repository */
                 $repository = app(NoCategoryRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 

@@ -188,7 +188,7 @@ class DecryptDatabase extends Command
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
-                throw new FireflyException($e->getMessage()); // @codeCoverageIgnore
+                throw new FireflyException($e->getMessage(), 0, $e);
             }
         }
 

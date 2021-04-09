@@ -1,0 +1,14 @@
+{% extends './v2/layout/default' %}
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+<div id="accounts_create"></div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        // this is a terrible hack.
+        var previousURL = '{{ Session.get('accounts.create.uri') }}';
+    </script>
+    <script src="v2/js/accounts/create.js" nonce="{{ JS_NONCE }}"></script>
+{% endblock %}

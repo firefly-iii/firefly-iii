@@ -87,10 +87,10 @@ class UniqueAccountNumber implements Rule
     public function passes($attribute, $value): bool
     {
         if (!auth()->check()) {
-            return true; // @codeCoverageIgnore
+            return true; 
         }
         if (null === $this->expectedType) {
-            return true; // @codeCoverageIgnore
+            return true; 
         }
         $maxCounts = $this->getMaxOccurrences();
 

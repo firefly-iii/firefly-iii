@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class AbstractCronjob
@@ -45,8 +46,6 @@ abstract class AbstractCronjob
 
     /**
      * AbstractCronjob constructor.
-     *
-     * @throws Exception
      */
     public function __construct()
     {
@@ -66,7 +65,7 @@ abstract class AbstractCronjob
     /**
      * @param Carbon $date
      */
-    public function setDate(Carbon $date): void
+    final public function setDate(Carbon $date): void
     {
         $newDate = clone $date;
         $this->date = $newDate;
@@ -75,7 +74,7 @@ abstract class AbstractCronjob
     /**
      * @param bool $force
      */
-    public function setForce(bool $force): void
+    final public function setForce(bool $force): void
     {
         $this->force = $force;
     }

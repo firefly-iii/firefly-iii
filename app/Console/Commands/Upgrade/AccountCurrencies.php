@@ -114,7 +114,7 @@ class AccountCurrencies extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false;
     }
 
     /**
@@ -148,7 +148,7 @@ class AccountCurrencies extends Command
         }
         Log::debug(sprintf('Users currency pref is %s', $defaultCurrencyCode));
 
-        /** @var TransactionCurrency $defaultCurrency */
+        /** @var TransactionCurrency|null $defaultCurrency */
         $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
 
         if (null === $defaultCurrency) {

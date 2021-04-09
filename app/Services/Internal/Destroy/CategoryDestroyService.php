@@ -42,8 +42,8 @@ class CategoryDestroyService
     {
         try {
             $category->delete();
-        } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete category: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
         // also delete all relations between categories and transaction journals:

@@ -62,7 +62,7 @@ class Date implements BinderInterface
             'previousFiscalYearStart' => $fiscalHelper->startOfFiscalYear(Carbon::now())->subYear(),
             'previousFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now())->subYear(),
         ];
-        if (isset($magicWords[$value])) {
+        if (array_key_exists($value, $magicWords)) {
             $return = $magicWords[$value];
             Log::debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
 
@@ -71,7 +71,7 @@ class Date implements BinderInterface
 
         try {
             $result = new Carbon($value);
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage()));
             throw new NotFoundHttpException;
         }

@@ -276,7 +276,6 @@ class RecurrenceTransformer extends AbstractTransformer
                         $array['category_name'] = $category->name;
                     }
                     break;
-                    break;
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {

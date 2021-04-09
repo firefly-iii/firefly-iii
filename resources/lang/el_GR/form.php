@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Κλειδί API',
     'remember_me'                 => 'Να με θυμάσαι',
     'liability_type_id'           => 'Τύπος υποχρέωσης',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Τόκος',
     'interest_period'             => 'Τοκιζόμενη περίοδος',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Εάν διαγράψετε το χρήστη ":email", θα χαθούν όλα. Δεν υπάρχει αναίρεση, επαναφορά ή κάτι άλλο. Εάν διαγράψετε τον εαυτό σας, θα χάσετε την πρόσβαση στο Firefly III.',
     'attachment_areYouSure'       => 'Είστε σίγουροι ότι θέλετε να διαγράψετε το συνημμένο με όνομα ":name";',
     'account_areYouSure'          => 'Είστε σίγουροι ότι θέλετε να διαγράψετε το λογαριασμό με όνομα ":name";',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => 'Είστε σίγουροι ότι θέλετε να διαγράψετε το πάγιο έξοδο με όνομα ":name";',
     'rule_areYouSure'             => 'Είστε σίγουροι ότι θέλετε να διαγράψετε τον κανόνα με τίτλο ":title";',
     'object_group_areYouSure'     => 'Είστε σίγουροι ότι θέλετε να διαγράψετε την ομάδα με τίτλο ":title";',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Μόνιμη διαγραφή επιλεγμένων',
     'update_all_journals'         => 'Ανανέωση αυτών των συναλλαγών',
     'also_delete_transactions'    => 'Η μόνη συναλλαγή που συνδέεται με αυτό το λογαριασμό θα διαγραφεί επίσης.| Και οι :count συναλλαγές που συνδέονται με αυτό το λογαριασμό θα διαγραφούν επίσης.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'Η μόνη συνδεδεμένη συναλλαγή με αυτό τον τύπο σύνδεσης θα αποσυνδεθεί.|Όλες οι :count συνδεδεμένες συναλλαγές με αυτό τον τύπο σύνδεσης θα αποσυνδεθούν.',
     'also_delete_rules'           => 'Η μόνη συναλλαγή που συνδέεται με αυτό το λογαριασμό θα διαγραφεί επίσης.| Όλες οι :count συναλλαγές που συνδέονται με αυτό το λογαριασμό θα διαγραφούν επίσης.',
     'also_delete_piggyBanks'      => 'Ο μόνος συνδεδεμένος κουμπαράς σε αυτό τον λογαριασμό θα διαγραφή επίσης.|Όλες οι :count συνδεδεμένοι κουμπαράδες με αυτό τον λογαριασμό θα διαγραφούν επίσης.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'Ο κουμπαράς που είναι συνδεδεμένος σε αυτή την ομάδα δε θα διαγραφεί.| Οι :count κουμπαράδες που είναι συνδεδεμένοι σε αυτή την ομάδα δε θα διαγραφούν.',
     'bill_keep_transactions'      => 'Η μόνη συνδεδεμένη συναλλαγή με αυτό το λογαριασμό δε θα διαγραφεί.|\'Ολες οι :count συνδεδεμένες συναλλαγές με αυτό τον λογαριασμό θα γλυτώσουν από τη διαγραφή.',
     'budget_keep_transactions'    => 'Η μόνη συνδεδεμένη συναλλαγή με αυτό τον προϋπολογισμό δε θα διαγραφεί.|Όλες οι :count συνδεδεμένες συναλλαγές με αυτό τον προϋπολογισμό θα γλυτώσουν από τη διαγραφή.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Η μόνη συναλλαγή που δημιουργήθηκε από αυτή την επαναλαμβανόμενη συναλλαγή δε θα διαγραφεί.| \'Ολες οι :count συναλλαγές που δημιουργήθηκαν από αυτή την επαναλαμβανόμενη συναλλαγή θα γλυτώσουν από τη διαγραφή.',
     'tag_keep_transactions'       => 'Η μόνη συνδεδεμένη συναλλαγή με αυτή την ετικέτα δε θα διαγραφεί.|Όλες οι :count συνδεδεμένες συναλλαγές με αυτή την ετικέτα θα γλυτώσουν από τη διαγραφή.',
     'check_for_updates'           => 'Έλεγχος ενημερώσεων',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Διαγραφή ομάδας ":title"',
 

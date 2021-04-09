@@ -112,7 +112,7 @@ class IndexController extends Controller
             $account              = $accountTransformer->transform($piggy->account);
             $accountId            = (int)$account['id'];
             $array['attachments'] = $this->piggyRepos->getAttachments($piggy);
-            if (!isset($accounts[$accountId])) {
+            if (!array_key_exists($accountId, $accounts)) {
                 // create new:
                 $accounts[$accountId] = $account;
 

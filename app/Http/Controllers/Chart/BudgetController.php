@@ -98,7 +98,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); 
         }
         $step           = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
         $collection     = new Collection([$budget]);
@@ -169,7 +169,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $locale           = app('steam')->getLocale();
         $entries          = [];
@@ -224,7 +224,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget);
@@ -291,7 +291,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $collector->setRange($start, $end);
         $collector->setBudget($budget)->withCategoryInformation();
@@ -304,7 +304,6 @@ class BudgetController extends Controller
                     'amount'          => '0',
                     'currency_symbol' => $journal['currency_symbol'],
                     'currency_code'   => $journal['currency_code'],
-                    'currency_symbol' => $journal['currency_symbol'],
                     'currency_name'   => $journal['currency_name'],
                 ];
             $result[$key]['amount'] = bcadd($journal['amount'], $result[$key]['amount']);
@@ -356,7 +355,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
 
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
@@ -411,7 +410,7 @@ class BudgetController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         $chartGenerator = app(FrontpageChartGenerator::class);
@@ -448,7 +447,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.period');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -522,7 +521,7 @@ class BudgetController extends Controller
         $cache->addProperty($currency->id);
         $cache->addProperty('chart.budget.no-budget');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         // the expenses:

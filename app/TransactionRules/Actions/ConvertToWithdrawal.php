@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
+
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
@@ -72,7 +73,7 @@ class ConvertToWithdrawal implements ActionInterface
             return $this->convertTransferArray($journal);
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     private function convertDepositArray(array $journal): bool

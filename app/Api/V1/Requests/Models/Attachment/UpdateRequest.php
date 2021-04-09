@@ -47,7 +47,7 @@ class UpdateRequest extends FormRequest
         $fields = [
             'filename'        => ['filename', 'string'],
             'title'           => ['title', 'string'],
-            'notes'           => ['notes', 'nlString'],
+            'notes'           => ['notes', 'stringWithNewlines'],
             'attachable_type' => ['attachable_type', 'string'],
             'attachable_id'   => ['attachable_id', 'integer'],
         ];

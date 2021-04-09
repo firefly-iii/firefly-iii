@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Khóa API',
     'remember_me'                 => 'Nhớ tôi',
     'liability_type_id'           => 'Loại trách nhiệm pháp lý',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Lãi',
     'interest_period'             => 'Chu kỳ lãi',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Nếu bạn xóa người dùng ":email", mọi thứ sẽ biến mất không thể phục hồi. Nếu bạn tự xóa tài khoản của mình bạn sẽ không truy cập bằng tài khoản này được.',
     'attachment_areYouSure'       => 'Bạn có chắc chắn muốn xóa tệp đính kèm có tên ":name"?',
     'account_areYouSure'          => 'Bạn có chắc chắn muốn xóa tài khoản có tên ":name"?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => 'Bạn có chắc chắn muốn xóa hóa đơn có tên ":name"?',
     'rule_areYouSure'             => 'Bạn có chắc chắn muốn xóa quy tắc có tiêu đề ":title"?',
     'object_group_areYouSure'     => 'Bạn có chắc chắn muốn xóa nhóm có tiêu đề ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Xóa các mục đã chọn vĩnh viễn',
     'update_all_journals'         => 'Cập nhật những giao dịch này',
     'also_delete_transactions'    => 'Giao dịch duy nhất được kết nối với tài khoản này sẽ bị xóa. Số giao dịch được kết nối với tài khoản này cũng sẽ bị xóa.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'Giao dịch duy nhất được liên kết với loại liên kết này sẽ mất kết nối. Số giao dịch được liên kết với loại liên kết này sẽ mất kết nối.',
     'also_delete_rules'           => 'Quy tắc duy nhất được kết nối với nhóm quy tắc này cũng sẽ bị xóa. Quy tắc đếm được kết nối với nhóm quy tắc này cũng sẽ bị xóa.',
     'also_delete_piggyBanks'      => 'Heo đất duy nhất được kết nối với tài khoản này cũng sẽ bị xóa. Heo đất được kết nối với tài khoản này cũng sẽ bị xóa.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'Ống heo được kết nối với nhóm này sẽ không bị xóa. :count ống heo được kết nối với nhóm này sẽ không bị xóa.',
     'bill_keep_transactions'      => 'Giao dịch duy nhất được kết nối với hóa đơn này sẽ không bị xóa. Số giao dịch được kết nối với hóa đơn này sẽ bị xóa.',
     'budget_keep_transactions'    => 'Giao dịch duy nhất được kết nối với ngân sách này sẽ không bị xóa. Các giao dịch được kết nối với ngân sách này sẽ không bị xóa.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Giao dịch duy nhất được tạo bởi giao dịch định kỳ này sẽ không bị xóa. Các giao dịch được tạo bởi giao dịch định kỳ này sẽ được xóa bỏ.',
     'tag_keep_transactions'       => 'Giao dịch duy nhất được kết nối với thẻ này sẽ không bị xóa. :count các giao dịch được kết nối với thẻ này sẽ không bị xóa.',
     'check_for_updates'           => 'Kiểm tra cập nhật',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Xóa nhóm ":title"',
 

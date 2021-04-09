@@ -106,7 +106,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug(sprintf('Left after filtering is %d', $filtered->count()));
         /** @var Recurrence $recurrence */
         foreach ($filtered as $recurrence) {
-            if (!isset($result[$recurrence->user_id])) {
+            if (!array_key_exists($recurrence->user_id, $result)) {
                 $result[$recurrence->user_id] = new Collection;
             }
             $this->repository->setUser($recurrence->user);
@@ -239,9 +239,9 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
-     * Has the reuccrence started yet.
+     * Has the recurrence started yet?
      *
-     * @param $recurrence
+     * @param Recurrence $recurrence
      *
      * @return bool
      */
@@ -373,10 +373,10 @@ class CreateRecurringTransactions implements ShouldQueue
         $groupTitle = null;
         if ($recurrence->recurrenceTransactions->count() > 1) {
             /** @var RecurrenceTransaction $first */
-            // @codeCoverageIgnoreStart
+
             $first      = $recurrence->recurrenceTransactions()->first();
             $groupTitle = $first->description;
-            // @codeCoverageIgnoreEnd
+
         }
 
         $array = [

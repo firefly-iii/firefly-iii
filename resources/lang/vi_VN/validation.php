@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Giá trị phải bắt đầu bằng :values.',
     'unique_webhook'                 => 'You already have a webhook with these values.',
     'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Đây không phải là một mật khẩu an toàn. Vui lòng thử lại. Để biết thêm thông tin, hãy truy cập https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Loại lặp lại không hợp lệ cho các giao dịch định kỳ.',

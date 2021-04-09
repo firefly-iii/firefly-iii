@@ -55,6 +55,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     use CalculateRangeOccurrences, CalculateXOccurrences, CalculateXOccurrencesSince, FiltersWeekends;
 
     private User $user;
+
     /**
      * Destroy a recurring transaction.
      *
@@ -169,7 +170,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
 
-        return $query->get(['transaction_journals.*'])->count();
+        return $query->count(['transaction_journals.id']);
     }
 
     /**
@@ -240,6 +241,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         if ('yearly' === $repetition->repetition_type) {
             $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
         }
+
         // filter out all the weekend days:
         return $this->filterWeekends($repetition, $occurrences);
     }
@@ -332,7 +334,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = (int)$journalId;
         }
-        if (empty($search)) {
+        if (0 === count($search)) {
 
             return new Collection;
         }

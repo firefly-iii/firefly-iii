@@ -66,6 +66,7 @@ trait AccountServiceTrait
 
             return null;
         }
+
         return $iban;
     }
 
@@ -84,7 +85,7 @@ trait AccountServiceTrait
             // not set, so false.
             return false;
         }
-        // if isset, but is empty:
+        // if is set, but is empty:
         if (
             (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
             || (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date'])
@@ -125,21 +126,21 @@ trait AccountServiceTrait
         }
 
         if ($account->accountType->type === AccountType::ASSET && array_key_exists('account_role', $data) && 'ccAsset' === $data['account_role']) {
-            $fields = $this->validCCFields; // @codeCoverageIgnore
+            $fields = $this->validCCFields; 
         }
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
             // if the field is set but NULL, skip it.
             // if the field is set but "", update it.
-            if (isset($data[$field]) && null !== $data[$field]) {
+            if (array_key_exists($field, $data) && null !== $data[$field]) {
 
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
-                    $data[$field] = 0; // @codeCoverageIgnore
+                    $data[$field] = 0; 
                 }
                 if (is_bool($data[$field]) && true === $data[$field]) {
-                    $data[$field] = 1; // @codeCoverageIgnore
+                    $data[$field] = 1; 
                 }
 
                 $factory->crud($account, $field, (string)$data[$field]);
@@ -161,8 +162,8 @@ trait AccountServiceTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug($e->getMessage());
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
                 }
             }
 
@@ -190,9 +191,9 @@ trait AccountServiceTrait
     {
         $data['opening_balance'] = (string)($data['opening_balance'] ?? '');
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
-            $data['opening_balance'] = ''; // @codeCoverageIgnore
+            $data['opening_balance'] = ''; 
         }
-        if ('' !== $data['opening_balance'] && isset($data['opening_balance'], $data['opening_balance_date'])) {
+        if ('' !== $data['opening_balance'] && array_key_exists('opening_balance_date', $data) && '' !== $data['opening_balance_date']) {
             Log::debug('Array has valid opening balance data.');
 
             return true;
@@ -244,7 +245,7 @@ trait AccountServiceTrait
         // find currency, or use default currency instead.
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = $factory->find($currencyId, $currencyCode);
 
         if (null === $currency) {
@@ -349,11 +350,11 @@ trait AccountServiceTrait
             $sourceId = $account->id;
         }
         if (0 === bccomp($amount, '0')) {
-            // @codeCoverageIgnoreStart
+
             Log::debug('Amount is zero, so will not make an OB group.');
 
             return null;
-            // @codeCoverageIgnoreEnd
+
         }
         $amount = app('steam')->positive($amount);
         if (!array_key_exists('currency_id', $data)) {
@@ -401,14 +402,11 @@ trait AccountServiceTrait
 
         try {
             $group = $factory->create($submission);
-            // @codeCoverageIgnoreStart
+
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
-
-        // @codeCoverageIgnoreEnd
-
         return $group;
     }
 }

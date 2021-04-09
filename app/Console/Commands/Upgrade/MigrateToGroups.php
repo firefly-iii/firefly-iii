@@ -75,7 +75,7 @@ class MigrateToGroups extends Command
     {
         $this->stupidLaravel();
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isMigrated() && true !== $this->option('force')) {
             $this->info('Database already seems to be migrated.');
 
@@ -85,7 +85,7 @@ class MigrateToGroups extends Command
         if (true === $this->option('force')) {
             $this->warn('Forcing the migration.');
         }
-        // @codeCoverageIgnoreEnd
+
 
         Log::debug('---- start group migration ----');
         $this->makeGroupsFromSplitJournals();
@@ -135,7 +135,7 @@ class MigrateToGroups extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**
@@ -165,11 +165,11 @@ class MigrateToGroups extends Command
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
-            // @codeCoverageIgnoreStart
+
             Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or less transactions.', $journal->id));
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
         Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
@@ -217,7 +217,7 @@ class MigrateToGroups extends Command
             $opposingTr = $this->findOpposingTransaction($journal, $transaction);
 
             if (null === $opposingTr) {
-                // @codeCoverageIgnoreStart
+
                 $this->error(
                     sprintf(
                         'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
@@ -226,7 +226,7 @@ class MigrateToGroups extends Command
                     )
                 );
                 continue;
-                // @codeCoverageIgnoreEnd
+
             }
 
             // overrule journal category with transaction category.

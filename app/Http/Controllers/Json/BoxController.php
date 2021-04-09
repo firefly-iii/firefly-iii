@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -45,8 +44,6 @@ use Log;
  */
 class BoxController extends Controller
 {
-    use RequestInformation;
-
     /**
      * This box has three types of info to display:
      * 0) If the user has available amount this period and has overspent: overspent box.
@@ -75,7 +72,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
@@ -145,7 +142,7 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         // prep some arrays:
         $incomes  = [];
@@ -192,7 +189,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (empty($sums)) {
+        if (0===count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);

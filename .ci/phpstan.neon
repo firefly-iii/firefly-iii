@@ -10,6 +10,19 @@ parameters:
     - '#is neither abstract nor final#'
     - '#Control structures using switch should not be used\.#'
     - '#has a nullable return type declaration#'
+    - '#with a nullable type declaration#'
+    - '#with null as default value#'
+    - '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
+    -
+        message: '#Function compact\(\) should not be used.#'
+        paths:
+            - ../app/Http/Controllers
+            - ../app/Support/Http/Controllers/RenderPartialViews.php
+            - ../app/Support/Form/FormSupport.php
+            - ../app/Support/Form/CurrencyForm.php
+            - ../app/Support/Form/AccountForm.php
+            - ../app/Support/ExpandedForm.php
+            - ../app/Generator/Report
   paths:
     - ../app
     - ../database
@@ -17,4 +30,4 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 5
+  level: 2

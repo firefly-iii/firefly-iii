@@ -50,7 +50,7 @@ class AttachmentServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var AttachmentRepositoryInterface $repository */
                 $repository = app(AttachmentRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 

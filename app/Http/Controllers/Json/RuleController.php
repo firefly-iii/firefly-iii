@@ -51,14 +51,11 @@ class RuleController extends Controller
         }
         try {
             $view = prefixView('rules.partials.action', compact('actions', 'count'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
-
-        // @codeCoverageIgnoreEnd
-
         return response()->json(['html' => $view]);
     }
 
@@ -84,7 +81,7 @@ class RuleController extends Controller
 
         try {
             $view = prefixView('rules.partials.trigger', compact('triggers', 'count'))->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }

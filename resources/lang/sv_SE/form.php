@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-nyckel',
     'remember_me'                 => 'Kom ihåg mig',
     'liability_type_id'           => 'Skuldstyp',
+    'liability_type'              => 'Typ av ansvar',
     'interest'                    => 'Ränta',
     'interest_period'             => 'Ränteperiod',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Om du tar bort användare ":email", tas allting bort. Det går inte att ångra, återta eller något. Om du tar bort dig själv, tappar du åtkomst till denna installation av Firefly III.',
     'attachment_areYouSure'       => 'Är du säker du vill ta bort bilagan ":name"?',
     'account_areYouSure'          => 'Är du säker du vill ta bort kontot ":name"?',
+    'account_areYouSure_js'       => 'Är du säker du vill ta bort kontot "{name}"?',
     'bill_areYouSure'             => 'Är du säker du vill ta bort räkningen ":name"?',
     'rule_areYouSure'             => 'Är du säker du vill ta bort regeln ":title"?',
     'object_group_areYouSure'     => 'Är du säker på att du vill ta bort gruppen ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Ta bort valt permanent',
     'update_all_journals'         => 'Uppdatera dessa transaktioner',
     'also_delete_transactions'    => 'Transaktionen kopplad till detta konto kommer också att tas bort.|Alla :count transaktioner kopplade till detta konto kommer också att tas bort.',
+    'also_delete_transactions_js' => 'Inga transaktioner|Den enda transaktionen som är ansluten till detta konto kommer också att tas bort.|Alla {count} transaktioner som är kopplade till detta konto kommer också att tas bort.',
     'also_delete_connections'     => 'Den transaktion som är länkad med denna länktyp kommer att mista sin koppling.|Alla :count transaktioner länkade med denna länktyp kommer att mista sin koppling.',
     'also_delete_rules'           => 'Regeln kopplad till denna regelgrupp tas också bort. Alla :count regler kopplade till denna regelgrupp tas också bort.',
     'also_delete_piggyBanks'      => 'Spargrisen kopplad till detta konto tas också bort.|Alla :count spargrisar kopplade till detta konto kommer också att tas bort.',
+    'also_delete_piggyBanks_js'   => 'Inga spargrisar|Den enda spargrisen som är ansluten till detta konto kommer också att tas bort.|Alla {count} spargrisar anslutna till detta konto kommer också att tas bort.',
     'not_delete_piggy_banks'      => 'Den sparbank som är ansluten till denna grupp tas ej bort.|De :count sparbanker anslutna till denna grupp kommer inte att tas bort.',
     'bill_keep_transactions'      => 'Transaktionen kopplad till räkningen kommer inte att tas bort.|Alla :count transaktioner kopplade till denna räkning tas inte bort.',
     'budget_keep_transactions'    => 'Transaktionen kopplad till budgeten kommer att sparas.|Alla :count transaktioner kopplade till budgeten kommer att sparas.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Transaktionen skapad av denna återkommande transaktion kommer inte tas bort.|Alla :count transaktioner skapade av denna återkommande transaktion undantas borttagning.',
     'tag_keep_transactions'       => 'Transaktionen kopplad till etiketten kommer inte att tas bort.|Alla :count transaktioner kopplade till etiketten kommer att sparas.',
     'check_for_updates'           => 'Sök efter uppdateringar',
+    'liability_direction'         => 'Ansvar in/ut',
 
     'delete_object_group' => 'Ta bort groupp ":title"',
 

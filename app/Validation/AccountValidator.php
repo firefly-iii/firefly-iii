@@ -58,14 +58,12 @@ class AccountValidator
      */
     public function __construct()
     {
-        $this->createMode   = false;
-        $this->destError    = 'No error yet.';
-        $this->sourceError  = 'No error yet.';
-        $this->combinations = config('firefly.source_dests');
-        $this->source       = null;
-        $this->destination  = null;
-
-        /** @var AccountRepositoryInterface accountRepository */
+        $this->createMode        = false;
+        $this->destError         = 'No error yet.';
+        $this->sourceError       = 'No error yet.';
+        $this->combinations      = config('firefly.source_dests');
+        $this->source            = null;
+        $this->destination       = null;
         $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 

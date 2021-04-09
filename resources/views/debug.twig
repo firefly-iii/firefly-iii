@@ -10,7 +10,7 @@
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
     <strong>{{ trans('firefly.debug_pretty_table') }}</strong>
 </p>
-<textarea rows="30" cols="100" name="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
+<textarea rows="30" cols="100" name="debug_info" id="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
 Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
 
 | Scope | Version |
@@ -26,6 +26,8 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Using docker? | {% if isDocker %}true{% else %}false{% endif %} |
 | Telemetry | {% if telemetry %}true{% else%}false{% endif%} |
 | Layout | {{ layout }} |
+| System TZ | {{ tz }} |
+| Browser TZ | [BrowserTZ] |
 | App environment | {{ appEnv }} |
 | App debug mode | {{ appDebug }} |
 | App cache driver | {{ cacheDriver }} |
@@ -55,6 +57,13 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 {% endfor %}
 | User agent | {{ userAgent }} |
 </textarea>
+<script type="text/javascript">
+    var textArea = document.getElementById('debug_info');
+    var text = textArea.value;
+    var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    text = text.replace('[BrowserTZ]', timeZone);
+    textArea.value = text;
+</script>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
     <a href="{{ route('index') }}">{{ trans('firefly.back_to_index') }}</a>

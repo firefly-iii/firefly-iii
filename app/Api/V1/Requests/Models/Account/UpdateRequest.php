@@ -51,7 +51,7 @@ class UpdateRequest extends FormRequest
             'name'                    => ['name', 'string'],
             'active'                  => ['active', 'boolean'],
             'include_net_worth'       => ['include_net_worth', 'boolean'],
-            'account_type'            => ['type', 'string'],
+            'account_type_name'       => ['type', 'string'],
             'virtual_balance'         => ['virtual_balance', 'string'],
             'iban'                    => ['iban', 'string'],
             'BIC'                     => ['bic', 'string'],
@@ -62,7 +62,7 @@ class UpdateRequest extends FormRequest
             'opening_balance_date'    => ['opening_balance_date', 'date'],
             'cc_type'                 => ['credit_card_type', 'string'],
             'cc_monthly_payment_date' => ['monthly_payment_date', 'string'],
-            'notes'                   => ['notes', 'nlString'],
+            'notes'                   => ['notes', 'stringWithNewlines'],
             'interest'                => ['interest', 'string'],
             'interest_period'         => ['interest_period', 'string'],
             'order'                   => ['order', 'integer'],
@@ -72,10 +72,10 @@ class UpdateRequest extends FormRequest
         $data   = $this->getAllData($fields);
         $data   = $this->appendLocationData($data, null);
 
-        if (array_key_exists('account_type', $data) && 'liability' === $data['account_type']) {
-            $data['opening_balance']      = bcmul($this->nullableString('liability_amount'), '-1');
+        if (array_key_exists('account_type_name', $data) && 'liability' === $data['account_type_name']) {
+            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
             $data['opening_balance_date'] = $this->date('liability_start_date');
-            $data['account_type']         = $this->nullableString('liability_type');
+            $data['account_type_name']    = $this->string('liability_type');
             $data['account_type_id']      = null;
         }
 
@@ -97,9 +97,9 @@ class UpdateRequest extends FormRequest
         $rules = [
             'name'                 => sprintf('min:1|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
-            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->nullableString('type'))],
+            'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->string('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->nullableString('type'))],
+            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->string('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',

@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API 密钥',
     'remember_me'                 => '自动登录',
     'liability_type_id'           => '债务类型',
+    'liability_type'              => 'Liability type',
     'interest'                    => '利息',
     'interest_period'             => '利息期',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => '如果您删除用户“:email”，此用户的所有数据都会被删除，且无法恢复。如果您删除自己，您将无法进入此 Firefly III 站点。',
     'attachment_areYouSure'       => '您确定要删除附件“:name”吗？',
     'account_areYouSure'          => '您确定要删除账户“:name”吗？',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => '您确定要删除账单“:name”吗？',
     'rule_areYouSure'             => '您确定要删除规则“:title”吗？',
     'object_group_areYouSure'     => '您确定要删除组“:title”吗？',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => '永久删除已选项目',
     'update_all_journals'         => '更新这些交易',
     'also_delete_transactions'    => '与此账户关联的唯一一笔交易也会被删除。|与此账户关联的 :count 笔交易也会被删除。',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => '与此关联类型相关联的唯一一笔交易会遗失连接。|与此关联类型相关联的 :count 笔交易会遗失连接。',
     'also_delete_rules'           => '与此规则组关联的唯一一条规则也会被删除。|与此规则组关联的 :count 条规则也会被删除。',
     'also_delete_piggyBanks'      => '与此账户关联的唯一一个存钱罐也会被删除。|与此账户关联的 :count 个存钱罐也会被删除。',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => '关联至此组的存钱罐将不会被删除。|关联至此组的 :count 个存钱罐将不会被删除。',
     'bill_keep_transactions'      => '与此账单关联的唯一一笔交易不会被删除。|与此账单关联的 :count 笔交易不会被删除。',
     'budget_keep_transactions'    => '与此预算关联的唯一一笔交易不会被删除。|与此预算关联的 :count 笔交易不会被删除。',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => '由此定期交易建立的唯一一笔交易不会被删除。|由此定期交易建立的 :count 笔交易不会被删除。',
     'tag_keep_transactions'       => '与此标签关联的唯一一笔交易不会被删除。|与此标签关联的 :count 笔交易不会被删除。',
     'check_for_updates'           => '检查更新',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => '删除组“:title”',
 

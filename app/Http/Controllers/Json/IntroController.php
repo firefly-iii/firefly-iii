@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
 use Log;
@@ -29,7 +30,7 @@ use Log;
 /**
  * Class IntroController.
  */
-class IntroController
+class IntroController extends Controller
 {
     use GetConfigurationData;
 
@@ -53,7 +54,7 @@ class IntroController
             return response()->json($steps);
         }
         if ($this->hasOutroStep($route)) {
-            // @codeCoverageIgnoreStart
+
             // save last step:
             $lastStep = $steps[count($steps) - 1];
             // remove last step:
@@ -61,7 +62,7 @@ class IntroController
             // merge arrays and add last step again
             $steps   = array_merge($steps, $specificSteps);
             $steps[] = $lastStep;
-            // @codeCoverageIgnoreEnd
+
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);

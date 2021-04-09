@@ -45,7 +45,7 @@ class ReconciliationStoreRequest extends FormRequest
     {
         $transactions = $this->get('journals');
         if (!is_array($transactions)) {
-            $transactions = []; // @codeCoverageIgnore
+            $transactions = []; 
         }
         $data = [
             'start'         => $this->date('start'),

@@ -64,15 +64,15 @@ class FrontpageController extends Controller
             }
         }
         $html = '';
-        if (!empty($info)) {
+        if (0!==count($info)) {
             try {
                 $html = prefixView('json.piggy-banks', compact('info'))->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
+
+            } catch (Throwable $e) { // @phpstan-ignore-line
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 $html = 'Could not render view.';
             }
-            // @codeCoverageIgnoreEnd
+
         }
 
         return response()->json(['html' => $html]);

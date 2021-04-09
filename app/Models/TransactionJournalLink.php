@@ -46,6 +46,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection|\FireflyIII\Models\Note[] $notes
  * @property-read int|null $notes_count
  * @property-read \FireflyIII\Models\TransactionJournal $source
+ * @property-read string $inward
+ * @property-read string $outward
  * @method static Builder|TransactionJournalLink newModelQuery()
  * @method static Builder|TransactionJournalLink newQuery()
  * @method static Builder|TransactionJournalLink query()
@@ -79,7 +81,7 @@ class TransactionJournalLink extends Model
      * @param string $value
      *
      * @throws NotFoundHttpException
-     * @return mixed
+     * @return TransactionJournalLink
      *
      */
     public static function routeBinder(string $value): TransactionJournalLink

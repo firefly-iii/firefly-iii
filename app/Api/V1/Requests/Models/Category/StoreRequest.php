@@ -46,7 +46,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name'  => $this->string('name'),
-            'notes' => $this->nlString('notes'),
+            'notes' => $this->stringWithNewlines('notes'),
         ];
     }
 

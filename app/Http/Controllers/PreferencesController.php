@@ -32,6 +32,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use JsonException;
+use Log;
 
 /**
  * Class PreferencesController.
@@ -196,20 +197,20 @@ class PreferencesController extends Controller
         }
 
         // optional fields for transactions:
-        $setOptions = $request->get('tj');
+        $setOptions = $request->get('tj') ?? [];
         $optionalTj = [
-            'interest_date'      => isset($setOptions['interest_date']),
-            'book_date'          => isset($setOptions['book_date']),
-            'process_date'       => isset($setOptions['process_date']),
-            'due_date'           => isset($setOptions['due_date']),
-            'payment_date'       => isset($setOptions['payment_date']),
-            'invoice_date'       => isset($setOptions['invoice_date']),
-            'internal_reference' => isset($setOptions['internal_reference']),
-            'notes'              => isset($setOptions['notes']),
-            'attachments'        => isset($setOptions['attachments']),
-            'external_uri'       => isset($setOptions['external_uri']),
-            'location'           => isset($setOptions['location']),
-            'links'              => isset($setOptions['links']),
+            'interest_date'      => array_key_exists('interest_date', $setOptions),
+            'book_date'          => array_key_exists('book_date', $setOptions),
+            'process_date'       => array_key_exists('process_date', $setOptions),
+            'due_date'           => array_key_exists('due_date', $setOptions),
+            'payment_date'       => array_key_exists('payment_date', $setOptions),
+            'invoice_date'       => array_key_exists('invoice_date', $setOptions),
+            'internal_reference' => array_key_exists('internal_reference', $setOptions),
+            'notes'              => array_key_exists('notes', $setOptions),
+            'attachments'        => array_key_exists('attachments', $setOptions),
+            'external_uri'       => array_key_exists('external_uri', $setOptions),
+            'location'           => array_key_exists('location', $setOptions),
+            'links'              => array_key_exists('links', $setOptions),
         ];
         app('preferences')->set('transaction_journal_optional_fields', $optionalTj);
 

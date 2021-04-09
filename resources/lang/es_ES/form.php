@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Clave de API',
     'remember_me'                 => 'Recordarme',
     'liability_type_id'           => 'Tipo de pasivo',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interés',
     'interest_period'             => 'Período de interés',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Si elimina usuario ":email", todo desaparecerá. No hay deshacer, recuperar ni nada. Si te eliminas, perderás el acceso a esta instancia de Firefly III.',
     'attachment_areYouSure'       => '¿Seguro que quieres eliminar el archivo adjunto llamado "name"?',
     'account_areYouSure'          => '¿Seguro que quieres eliminar la cuenta llamada ":name"?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => '¿Seguro que quieres eliminar la factura llamada ":name"?',
     'rule_areYouSure'             => '¿Seguro que quieres eliminar la regla titulada ":title"?',
     'object_group_areYouSure'     => '¿Seguro que quieres eliminar el grupo titulado ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Eliminar selección permanentemente',
     'update_all_journals'         => 'Actualiza estas transacciones',
     'also_delete_transactions'    => 'La única transacción conectada a esta cuenta también se eliminará. | Todas las :count transacciones conectadas a esta cuenta también se eliminarán.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'La única transacción vinculada con este tipo de enlace perderá esta conexión. | Todas las :count transacciones vinculadas con este tipo de enlace perderán su conexión.',
     'also_delete_rules'           => 'La única regla conectada a este grupo de reglas también se eliminará. | Todas las :count reglas conectadas a este grupo de reglas también se eliminarán.',
     'also_delete_piggyBanks'      => 'La hucha conectada a esta cuenta también se eliminará.|Las :count huchas conectadas a esta cuenta también se eliminarán.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'La alcancía conectada a este grupo no será eliminada.|Las :count alcancías conectados a este grupo no serán eliminados.',
     'bill_keep_transactions'      => 'La transacción conectada a esta factura no será eliminada.|Las :count transacciones conectadas a esta factura serán eliminadas.',
     'budget_keep_transactions'    => 'La transacción conectada a este presupuesto no se eliminará.|Las :count transacciones conectadas a este presupuesto no serán eliminadas.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'La transacción conectada a esta transacción recurrente no se eliminará.|Las :count transacciones conectadas a esta transacción recurrente no serán eliminadas.',
     'tag_keep_transactions'       => 'La transacción conectada a esta etiqueta no se eliminará.|Las :count transacciones conectadas a esta etiqueta no serán eliminadas.',
     'check_for_updates'           => 'Ver actualizaciones',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Eliminar grupo ":title"',
 

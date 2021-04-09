@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Стойността трябва да започва с :values.',
     'unique_webhook'                 => 'Вече имате уеб кука с тези стойности.',
     'unique_existing_webhook'        => 'Вече имате друга уеб кука с тези стойности.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Това не е сигурна парола. Моля, опитайте отново. За повече информация посетете https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Невалиден тип повторение за повтарящи се транзакции.',

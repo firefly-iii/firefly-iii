@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $user_id
  * @property string $name
- * @property array|null $data
+ * @property int|string|array|null $data
  * @property-read User $user
  * @method static Builder|Preference newModelQuery()
  * @method static Builder|Preference newQuery()

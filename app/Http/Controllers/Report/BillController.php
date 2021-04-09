@@ -49,19 +49,19 @@ class BillController extends Controller
         $cache->addProperty('bill-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var ReportHelperInterface $helper */
         $helper = app(ReportHelperInterface::class);
         $report = $helper->getBillReport($accounts, $start, $end);
         try {
             $result = prefixView('reports.partials.bills', compact('report'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-        // @codeCoverageIgnoreEnd
+
         $cache->store($result);
 
         return $result;

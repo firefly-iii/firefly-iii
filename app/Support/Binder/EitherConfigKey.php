@@ -35,6 +35,12 @@ class EitherConfigKey
         'firefly.default_location',
         'firefly.account_to_transaction',
         'firefly.allowed_opposing_types',
+        'firefly.accountRoles',
+        'firefly.valid_liabilities',
+        'firefly.interest_periods',
+        'firefly.enable_external_map',
+        'firefly.expected_source_types',
+        'app.timezone',
     ];
     /**
      * @param string $value

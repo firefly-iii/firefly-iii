@@ -48,10 +48,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool                          $active
  * @property bool                          $stop_processing
  * @property bool                          $strict
+ * @property-read string $action_value
  * @property-read Collection|RuleAction[]  $ruleActions
  * @property-read int|null                 $rule_actions_count
  * @property-read RuleGroup                $ruleGroup
- * @property-read Collection|RuleTrigger[] $ruleTriggers
+ * @property Collection|RuleTrigger[] $ruleTriggers
  * @property-read int|null                 $rule_triggers_count
  * @property-read User                     $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
@@ -148,7 +149,7 @@ class Rule extends Model
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @codeCoverageIgnore
      */

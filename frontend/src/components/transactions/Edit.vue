@@ -23,88 +23,88 @@
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
     <Alert :message="warningMessage" type="warning"/>
-    <SplitPills :transactions="transactions"/>
+    <form @submit="submitTransaction">
+      <SplitPills :transactions="transactions"/>
 
-    <div class="tab-content">
-      <SplitForm
-          v-for="(transaction, index) in this.transactions"
-          v-bind:key="index"
-          :count="transactions.length"
-          :transaction="transaction"
-          :allowed-opposing-types="allowedOpposingTypes"
-          :custom-fields="customFields"
-          :date="date"
-          :time="time"
-          :index="index"
-          :transaction-type="transactionType"
-          :destination-allowed-types="destinationAllowedTypes"
-          :source-allowed-types="sourceAllowedTypes"
-          :allow-switch="false"
-          :submitted-transaction="submittedTransaction"
-          v-on:uploaded-attachments="uploadedAttachment($event)"
-          v-on:set-marker-location="storeLocation($event)"
-          v-on:set-account="storeAccountValue($event)"
-          v-on:set-date="storeDate($event)"
-          v-on:set-time="storeTime($event)"
-          v-on:set-field="storeField($event)"
-          v-on:remove-transaction="removeTransaction($event)"
-          v-on:selected-attachments="selectedAttachments($event)"
-      />
-    </div>
-
-    <!-- bottom buttons etc -->
-    <div class="row">
-      <!-- group title -->
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <div v-if="transactions.length > 1" class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="tab-content">
+        <SplitForm
+            v-for="(transaction, index) in this.transactions"
+            v-bind:key="index"
+            :count="transactions.length"
+            :transaction="transaction"
+            :allowed-opposing-types="allowedOpposingTypes"
+            :custom-fields="customFields"
+            :date="date"
+            :index="index"
+            :transaction-type="transactionType"
+            :destination-allowed-types="destinationAllowedTypes"
+            :source-allowed-types="sourceAllowedTypes"
+            :allow-switch="false"
+            :submitted-transaction="submittedTransaction"
+            v-on:uploaded-attachments="uploadedAttachment($event)"
+            v-on:set-marker-location="storeLocation($event)"
+            v-on:set-account="storeAccountValue($event)"
+            v-on:set-date="storeDate($event)"
+            v-on:set-field="storeField($event)"
+            v-on:remove-transaction="removeTransaction($event)"
+            v-on:selected-attachments="selectedAttachments($event)"
+        />
       </div>
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-        <!-- buttons -->
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
-                </button>
-              </div>
-              <div class="col">
-                <div class="text-xs d-none d-lg-block d-xl-block">
-                  &nbsp;
-                </div>
-                <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
-                  <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
-                  <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                &nbsp;
-              </div>
-              <div class="col">
-                <div class="form-check">
-                  <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
-                  <label class="form-check-label" for="stayHere">
-                    <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
-                  </label>
+
+      <!-- bottom buttons etc -->
+      <div class="row">
+        <!-- group title -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <div v-if="transactions.length > 1" class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <TransactionGroupTitle v-model="this.groupTitle" :errors="this.groupTitleErrors" v-on:set-group-title="storeGroupTitle($event)"/>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <!-- buttons -->
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  </button>
+                </div>
+                <div class="col">
+                  <div class="text-xs d-none d-lg-block d-xl-block">
+                    &nbsp;
+                  </div>
+                  <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
+                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
+                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  &nbsp;
+                </div>
+                <div class="col">
+                  <div class="form-check">
+                    <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="stayHere">
+                      <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -114,7 +114,7 @@ import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import SplitForm from "./SplitForm";
 import TransactionGroupTitle from "./TransactionGroupTitle";
-import {getDefaultErrors, getDefaultTransaction, toW3CString} from '../shared/transactions';
+import {getDefaultErrors, getDefaultTransaction, toW3CString} from '../../shared/transactions';
 
 export default {
   name: "Edit",
@@ -151,10 +151,8 @@ export default {
       returnedGroupTitle: '',
 
       // date and time of the transaction,
-      date: new Date,
-      time: new Date,
-      originalDate: new Date,
-      originalTime: new Date,
+      date: '',
+      originalDate: '',
 
       // things the process is done working on (3 phases):
       submittedTransaction: false,
@@ -243,10 +241,8 @@ export default {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
-        this.date = new Date(array.date);
-        this.time = new Date(array.date);
-        this.originalDate = new Date(array.date);
-        this.originalTime = new Date(array.date);
+        this.date = array.date.substring(0, 16);
+        this.originalDate = array.date.substring(0, 16);
       }
       let result = getDefaultTransaction();
       // parsing here:
@@ -445,12 +441,14 @@ export default {
         }
       }
     },
-    addTransaction: function () {
+    addTransaction: function (event) {
+      event.preventDefault();
       let newTransaction = getDefaultTransaction();
       newTransaction.errors = getDefaultErrors();
       this.transactions.push(newTransaction);
     },
-    submitTransaction: function () {
+    submitTransaction: function (event) {
+      event.preventDefault();
       let submission = {transactions: []};
       let shouldSubmit = false;
       let shouldLinks = false;
@@ -460,6 +458,13 @@ export default {
         shouldSubmit = true;
       }
       let transactionCount = this.originalTransactions.length;
+      let newTransactionCount = this.transactions.length;
+      console.log('Found ' + this.transactions.length + ' split(s).');
+
+      if (newTransactionCount > 1 && typeof submission.group_title === 'undefined' && (null === this.originalGroupTitle || '' === this.originalGroupTitle)) {
+        submission.group_title = this.transactions[0].description;
+      }
+
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // original transaction present?
@@ -480,14 +485,62 @@ export default {
             'zoom_level', 'longitude', 'latitude'
           ];
 
+          // source and destination may be overruled:
+          if (i > 0) {
+            diff.type = this.transactionType.toLowerCase();
+            if ('Deposit' === this.transactionType || 'Transfer' === this.transactionType) {
+              // set destination to be whatever is in transaction zero:
+              currentTransaction.destination_account_name = this.originalTransactions[0].destination_account_name;
+              currentTransaction.destination_account_id = this.originalTransactions[0].destination_account_id;
+            }
+            if ('Withdrawal' === this.transactionType || 'Transfer' === this.transactionType) {
+              currentTransaction.source_account_name = this.originalTransactions[0].source_account_name;
+              currentTransaction.source_account_id = this.originalTransactions[0].source_account_id;
+            }
+            console.log('Will overrule accounts for split ' + i);
+          }
+
           for (let ii in basicFields) {
             if (basicFields.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
               let fieldName = basicFields[ii];
+              let submissionFieldName = fieldName;
+
+              // if the original is undefined and the new one is null, just skip it.
+              if (currentTransaction[fieldName] === null && 'undefined' === typeof originalTransaction[fieldName]) {
+                continue;
+              }
+
               if (currentTransaction[fieldName] !== originalTransaction[fieldName]) {
+                // some fields are ignored:
+                if ('foreign_amount' === submissionFieldName && '' === currentTransaction[fieldName]) {
+                  continue;
+                }
+                if ('foreign_currency_id' === submissionFieldName && 0 === currentTransaction[fieldName]) {
+                  continue;
+                }
+
+
                 // console.log('Index ' + i + ': Field ' + fieldName + ' updated ("' + originalTransaction[fieldName] + '" > "' + currentTransaction[fieldName] + '")');
                 // console.log(originalTransaction[fieldName]);
                 // console.log(currentTransaction[fieldName]);
-                diff[fieldName] = currentTransaction[fieldName];
+
+                // some field names may need to be different. little basic but it works:
+                // console.log('pre:  ' + submissionFieldName);
+                if ('source_account_id' === submissionFieldName) {
+                  submissionFieldName = 'source_id';
+                }
+                if ('source_account_name' === submissionFieldName) {
+                  submissionFieldName = 'source_name';
+                }
+                if ('destination_account_id' === submissionFieldName) {
+                  submissionFieldName = 'destination_id';
+                }
+                if ('destination_account_name' === submissionFieldName) {
+                  submissionFieldName = 'destination_name';
+                }
+
+
+                diff[submissionFieldName] = currentTransaction[fieldName];
                 shouldSubmit = true;
               }
             }
@@ -507,10 +560,10 @@ export default {
                 if (currentTransaction.tags.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
                   // array.tags
                   let currentTag = currentTransaction.tags[ii];
-                  if(typeof currentTag === 'object' && null !== currentTag) {
+                  if (typeof currentTag === 'object' && null !== currentTag) {
                     diff.tags.push(currentTag.text);
                   }
-                  if(typeof currentTag === 'string') {
+                  if (typeof currentTag === 'string') {
                     diff.tags.push(currentTag);
                   }
                 }
@@ -540,28 +593,23 @@ export default {
             shouldUpload = true;
           }
 
-          let dateStr = 'invalid';
           if (
-              this.date.toISOString() !== this.originalDate.toISOString() ||
-              this.time.toISOString() !== this.originalTime.toISOString()
+              this.date !== this.originalDate
           ) {
             console.log('Date and/or time is changed');
             // set date and time!
             shouldSubmit = true;
-            let theDate = this.date;
-            // update time in date object.
-            theDate.setHours(this.time.getHours());
-            theDate.setMinutes(this.time.getMinutes());
-            theDate.setSeconds(this.time.getSeconds());
-            dateStr = toW3CString(theDate);
-            diff.date = dateStr;
+            diff.date = this.date;
           }
-          if (Object.keys(diff).length === 0 && transactionCount > 1) {
+          console.log('Now at index ' + i);
+          console.log(Object.keys(diff).length);
+          if (Object.keys(diff).length === 0 && newTransactionCount > 1) {
+            console.log('Will submit just the ID!');
             diff.transaction_journal_id = originalTransaction.transaction_journal_id;
             submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
           } else if (Object.keys(diff).length !== 0) {
-            diff.transaction_journal_id = originalTransaction.transaction_journal_id;
+            diff.transaction_journal_id = originalTransaction.transaction_journal_id ?? 0;
             submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
           }
@@ -619,6 +667,7 @@ export default {
       console.log('submitUpdate');
       this.inError = false;
       const url = './api/v1/transactions/' + this.groupId;
+      console.log(JSON.stringify(submission));
       console.log(submission);
       axios.put(url, submission)
           .then(response => {

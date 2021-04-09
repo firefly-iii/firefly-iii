@@ -27,7 +27,6 @@ use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -48,7 +47,7 @@ use Log;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers, RequestInformation, CreateStuff;
+    use RegistersUsers, CreateStuff;
 
     /**
      * Where to redirect users after registration.

@@ -208,15 +208,6 @@ interface CurrencyRepositoryInterface
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
     /**
-     * Return a list of exchange rates with this currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return Collection
-     */
-    public function getExchangeRates(TransactionCurrency $currency): Collection;
-
-    /**
      * @param TransactionCurrency $currency
      *
      * @return bool

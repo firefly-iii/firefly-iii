@@ -76,7 +76,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -102,8 +102,8 @@ class CategoryController extends Controller
         $carbon = null;
         try {
             $carbon = today(config('app.timezone'));
-        } catch (Exception $e) {
-            $e->getMessage();
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
         return $carbon;
@@ -125,7 +125,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         $frontPageGenerator = new FrontpageChartGenerator($start, $end);
@@ -156,7 +156,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            return response()->json($cache->get());// @codeCoverageIgnore
+            return response()->json($cache->get());
         }
         $data = $this->reportPeriodChart($accounts, $start, $end, $category);
 
@@ -270,7 +270,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $data = $this->reportPeriodChart($accounts, $start, $end, null);
 
@@ -294,7 +294,7 @@ class CategoryController extends Controller
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = session()->get('end');
         if ($end < $start) {
-            [$end, $start] = [$start, $end]; // @codeCoverageIgnore
+            [$end, $start] = [$start, $end]; 
         }
 
         $cache = new CacheProperties;
@@ -303,7 +303,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
         $cache->addProperty('chart.category.period-chart');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         /** @var WholePeriodChartGenerator $chartGenerator */

@@ -86,9 +86,6 @@ class GenericRequest extends FormRequest
      */
     private function parseAccounts(): void
     {
-        if (null === $this->accounts) {
-            $this->accounts = new Collection;
-        }
         if (0 !== $this->accounts->count()) {
             return;
         }
@@ -121,9 +118,6 @@ class GenericRequest extends FormRequest
      */
     private function parseBills(): void
     {
-        if (null === $this->bills) {
-            $this->bills = new Collection;
-        }
         if (0 !== $this->bills->count()) {
             return;
         }
@@ -156,9 +150,6 @@ class GenericRequest extends FormRequest
      */
     private function parseBudgets(): void
     {
-        if (null === $this->budgets) {
-            $this->budgets = new Collection;
-        }
         if (0 !== $this->budgets->count()) {
             return;
         }
@@ -191,9 +182,6 @@ class GenericRequest extends FormRequest
      */
     private function parseCategories(): void
     {
-        if (null === $this->categories) {
-            $this->categories = new Collection;
-        }
         if (0 !== $this->categories->count()) {
             return;
         }
@@ -284,9 +272,6 @@ class GenericRequest extends FormRequest
      */
     private function parseTags(): void
     {
-        if (null === $this->tags) {
-            $this->tags = new Collection;
-        }
         if (0 !== $this->tags->count()) {
             return;
         }
@@ -311,7 +296,7 @@ class GenericRequest extends FormRequest
      */
     public function rules(): array
     {
-        // this is cheating but it works:
+        // this is cheating but it works to initialize the collections.
         $this->accounts   = new Collection;
         $this->budgets    = new Collection;
         $this->categories = new Collection;

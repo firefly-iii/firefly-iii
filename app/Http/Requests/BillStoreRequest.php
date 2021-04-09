@@ -49,7 +49,7 @@ class BillStoreRequest extends FormRequest
             'date'               => $this->date('date'),
             'repeat_freq'        => $this->string('repeat_freq'),
             'skip'               => $this->integer('skip'),
-            'notes'              => $this->nlString('notes'),
+            'notes'              => $this->stringWithNewlines('notes'),
             'active'             => $this->boolean('active'),
             'object_group_title' => $this->string('object_group'),
         ];

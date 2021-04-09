@@ -66,7 +66,7 @@ class TransactionController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.transactions.budgets');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -111,7 +111,7 @@ class TransactionController extends Controller
         $cache->addProperty($objectType);
         $cache->addProperty('chart.transactions.categories');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -169,7 +169,7 @@ class TransactionController extends Controller
         $cache->addProperty($objectType);
         $cache->addProperty('chart.transactions.destinations');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -226,7 +226,7 @@ class TransactionController extends Controller
         $cache->addProperty($objectType);
         $cache->addProperty('chart.transactions.sources');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

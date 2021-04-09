@@ -73,13 +73,13 @@ class MigrateToRules extends Command
         $this->stupidLaravel();
         $start = microtime(true);
 
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
 
         $users = $this->userRepository->all();
         /** @var User $user */
@@ -127,7 +127,7 @@ class MigrateToRules extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

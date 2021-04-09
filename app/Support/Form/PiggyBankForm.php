@@ -37,9 +37,9 @@ class PiggyBankForm
     /**
      * TODO cleanup and describe.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */

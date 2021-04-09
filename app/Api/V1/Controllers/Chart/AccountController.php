@@ -86,12 +86,12 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
-        // @codeCoverageIgnoreStart
+
         if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
-        // @codeCoverageIgnoreEnd
+
 
         // get accounts:
         $accounts  = $this->repository->getAccountsById($frontPage->data);
@@ -100,7 +100,7 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default; // @codeCoverageIgnore
+                $currency = $default; 
             }
             $currentSet = [
                 'label'                   => $account->name,
@@ -108,8 +108,8 @@ class AccountController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'start_date'              => $start->format('Y-m-d'),
-                'end_date'                => $end->format('Y-m-d'),
+                'start_date'              => $start->toAtomString(),
+                'end_date'                => $end->toAtomString(),
                 'type'                    => 'line', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
@@ -120,7 +120,7 @@ class AccountController extends Controller
             $previous     = round((float)array_values($range)[0], 12);
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->format('Y-m-d');
+                $label    = $currentStart->toAtomString();
                 $balance  = array_key_exists($format, $range) ? round((float)$range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();

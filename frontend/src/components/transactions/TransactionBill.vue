@@ -31,7 +31,6 @@
           :title="$t('firefly.bill')"
           autocomplete="off"
           name="bill_id[]"
-          v-on:submit.prevent
       >
         <option v-for="bill in this.billList" :label="bill.name" :value="bill.id">{{ bill.name }}</option>
 

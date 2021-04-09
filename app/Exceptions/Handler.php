@@ -27,15 +27,17 @@ declare(strict_types=1);
 namespace FireflyIII\Exceptions;
 
 use ErrorException;
-use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 /**
@@ -52,6 +54,11 @@ class Handler extends ExceptionHandler
         = [
             AuthenticationException::class,
             LaravelValidationException::class,
+            NotFoundHttpException::class,
+            OAuthServerException::class,
+            LaravelOAuthException::class,
+            TokenMismatchException::class,
+            HttpException::class
         ];
 
     /**

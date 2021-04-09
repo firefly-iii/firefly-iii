@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API key',
     'remember_me'                 => 'Remember me',
     'liability_type_id'           => 'Liability type',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interest',
     'interest_period'             => 'Interest period',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'If you delete user ":email", everything will be gone. There is no undo, undelete or anything. If you delete yourself, you will lose access to this instance of Firefly III.',
     'attachment_areYouSure'       => 'Are you sure you want to delete the attachment named ":name"?',
     'account_areYouSure'          => 'Are you sure you want to delete the account named ":name"?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => 'Are you sure you want to delete the bill named ":name"?',
     'rule_areYouSure'             => 'Are you sure you want to delete the rule titled ":title"?',
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Delete selected permanently',
     'update_all_journals'         => 'Update these transactions',
     'also_delete_transactions'    => 'The only transaction connected to this account will be deleted as well.|All :count transactions connected to this account will be deleted as well.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'The only transaction linked with this link type will lose this connection.|All :count transactions linked with this link type will lose their connection.',
     'also_delete_rules'           => 'The only rule connected to this rule group will be deleted as well.|All :count rules connected to this rule group will be deleted as well.',
     'also_delete_piggyBanks'      => 'The only piggy bank connected to this account will be deleted as well.|All :count piggy bank connected to this account will be deleted as well.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will be spared deletion.',
     'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will be spared deletion.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

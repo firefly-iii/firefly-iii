@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Chave da API',
     'remember_me'                 => 'Lembrar-me',
     'liability_type_id'           => 'Tipo de passivo',
+    'liability_type'              => 'Tipo de passivo',
     'interest'                    => 'Juros',
     'interest_period'             => 'Período de juros',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Se você excluir o usuário ":email", tudo desaparecerá. Não será possível desfazer a ação. Se excluir você mesmo, você perderá acesso total a essa instância do Firefly III.',
     'attachment_areYouSure'       => 'Tem certeza que deseja excluir o anexo denominado ":name"?',
     'account_areYouSure'          => 'Tem certeza que deseja excluir a conta denominada ":name"?',
+    'account_areYouSure_js'       => 'Tem certeza que deseja excluir a conta "{name}"?',
     'bill_areYouSure'             => 'Você tem certeza que quer apagar a fatura ":name"?',
     'rule_areYouSure'             => 'Tem certeza que deseja excluir a regra intitulada ":title"?',
     'object_group_areYouSure'     => 'Você tem certeza que deseja excluir a regra intitulada ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Exclua os selecionados permanentemente',
     'update_all_journals'         => 'Atualizar essas transações',
     'also_delete_transactions'    => 'A única transação ligada a essa conta será excluída também.|Todas as :count transações ligadas a esta conta serão excluídas também.',
+    'also_delete_transactions_js' => 'Sem transações|A única transação conectada a esta conta também será excluída.|Todas as {count} transações conectadas a essa conta também serão excluídas.',
     'also_delete_connections'     => 'A única transação relacionada com este tipo de link vai perder a conexão. | Todas as transações de :count ligadas com este tipo de link vão perder sua conexão.',
     'also_delete_rules'           => 'A única regra que ligado a este grupo de regras será excluída também.|Todos as :count regras ligadas a este grupo de regras serão excluídas também.',
     'also_delete_piggyBanks'      => 'O único cofrinho conectado a essa conta será excluído também.|Todos os :count cofrinhos conectados a esta conta serão excluídos também.',
+    'also_delete_piggyBanks_js'   => 'Sem cofrinhos|O único cofrinho conectado a esta conta também será excluído.|Todos os {count} cofrinhos conectados a esta conta também serão excluídos.',
     'not_delete_piggy_banks'      => 'O cofrinho conectado a este grupo não será excluído.|Os :count cofrinhos conectados a este grupo não serão excluídos.',
     'bill_keep_transactions'      => 'A única transação conectada a esta conta não será excluída.|Todas as :count transações conectadas a esta conta não serão excluídas.',
     'budget_keep_transactions'    => 'A única transação conectada a este orçamento não será excluída.|Todas as :count transações conectadas a este orçamento não serão excluídas.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'A única transação criada por esta transação recorrente não será excluída.|Todas as :count transações criadas por esta transação recorrente não serão excluídas.',
     'tag_keep_transactions'       => 'A única transação conectada a esta tag não será excluída.|Todas as :count transações conectadas a esta tag não serão excluídas.',
     'check_for_updates'           => 'Buscar atualizações',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Excluir grupo ":title"',
 

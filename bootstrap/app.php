@@ -33,7 +33,7 @@ use Illuminate\Contracts\View\Factory as ViewFactory;
 |
 */
 
-bcscale(12);
+bcscale(24);
 
 if (!function_exists('envNonEmpty')) {
     /**

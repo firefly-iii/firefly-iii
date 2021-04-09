@@ -31,7 +31,6 @@
           :title="$t('firefly.piggy_bank')"
           autocomplete="off"
           name="piggy_bank_id[]"
-          v-on:submit.prevent
       >
         <option v-for="piggy in this.piggyList" :label="piggy.name_with_balance" :value="piggy.id">{{ piggy.name_with_balance }}</option>
 

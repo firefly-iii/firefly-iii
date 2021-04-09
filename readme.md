@@ -23,7 +23,7 @@
     <a href="https://github.com/firefly-iii/firefly-iii/issues">Report a bug</a>
     ·
     <a href="https://github.com/firefly-iii/firefly-iii/issues">Request a feature</a>
-    .
+    ·
     <a href="https://github.com/firefly-iii/firefly-iii/discussions">Ask questions</a>
   </p>
 
@@ -154,6 +154,8 @@ You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you
 ## Acknowledgements
 
 Over time, [many people have contributed to Firefly III](https://github.com/firefly-iii/firefly-iii/graphs/contributors). I'm grateful for their your support and code contributions.
+
+The Firefly III logo is made by the excellent Cherie Woo.
 
 [packagist-shield]: https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square
 [packagist-url]: https://packagist.org/packages/grumpydictator/firefly-iii

@@ -73,7 +73,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
                 ->render();
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = sprintf('Could not render report view: %s', $e->getMessage());
         }

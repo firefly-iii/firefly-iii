@@ -209,10 +209,10 @@ class BillTransformer extends AbstractTransformer
     protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
         if (0 === $dates->count()) {
-            return $default; // @codeCoverageIgnore
+            return $default; 
         }
         $latest = $dates->first()->date;
-        /** @var TransactionJournal $date */
+        /** @var TransactionJournal $journal */
         foreach ($dates as $journal) {
             if ($journal->date->gte($latest)) {
                 $latest = $journal->date;

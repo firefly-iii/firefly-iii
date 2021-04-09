@@ -304,7 +304,7 @@ trait ModifiesPiggyBanks
             $piggyBank = PiggyBank::create($piggyData);
         } catch (QueryException $e) {
             Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
-            throw new FireflyException('400005: Could not store new piggy bank.');
+            throw new FireflyException('400005: Could not store new piggy bank.',0,$e);
         }
 
         // reset order then set order:
@@ -315,7 +315,7 @@ trait ModifiesPiggyBanks
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && isset($data['current_amount']) && '' !== $data['current_amount']) {
+        if (null !== $repetition && array_key_exists('current_amount',$data) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
         }
@@ -422,8 +422,8 @@ trait ModifiesPiggyBanks
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
                 }
             }
 

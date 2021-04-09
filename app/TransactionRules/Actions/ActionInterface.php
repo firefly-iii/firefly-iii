@@ -22,20 +22,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\RuleAction;
-
 /**
  * Interface ActionInterface.
  */
 interface ActionInterface
 {
-    /**
-     * ActionInterface constructor.
-     *
-     * @param RuleAction $action
-     */
-    public function __construct(RuleAction $action);
-
     /**
      * Execute the action on an array. Returns "true" if the action was a success and the action
      * was applied. Returns false if otherwise.

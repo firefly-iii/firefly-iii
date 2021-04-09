@@ -105,16 +105,16 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
 
         $redirect = redirect(route('categories.index'));
         if (1 === (int)$request->get('create_another')) {
-            // @codeCoverageIgnoreStart
+
             $request->session()->put('categories.create.fromStore', true);
 
             $redirect = redirect(route('categories.create'))->withInput();
-            // @codeCoverageIgnoreEnd
+
         }
 
         return $redirect;

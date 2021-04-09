@@ -84,7 +84,7 @@ class UpdateRequest extends FormRequest
     {
         $return = [];
         // repetition data:
-        /** @var array $repetitions */
+        /** @var array|null $repetitions */
         $repetitions = $this->get('repetitions');
         if (null === $repetitions) {
             return null;
@@ -126,7 +126,7 @@ class UpdateRequest extends FormRequest
     {
         $return = [];
         // transaction data:
-        /** @var array $transactions */
+        /** @var array|null $transactions */
         $transactions = $this->get('transactions');
         if (null === $transactions) {
             return null;

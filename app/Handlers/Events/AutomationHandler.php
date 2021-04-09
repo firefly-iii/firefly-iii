@@ -48,7 +48,7 @@ class AutomationHandler
         $sendReport = config('firefly.send_report_journals');
 
         if (false === $sendReport) {
-            return true; // @codeCoverageIgnore
+            return true; 
         }
 
         Log::debug('In reportJournals.');
@@ -73,13 +73,13 @@ class AutomationHandler
             try {
                 Log::debug('Trying to mail...');
                 Mail::to($user->email)->send(new ReportNewJournalsMail($email, '127.0.0.1', $event->groups));
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
+
+            } catch (Exception $e) { // @phpstan-ignore-line
                 Log::debug('Send message failed! :(');
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-            // @codeCoverageIgnoreEnd
+
             Log::debug('Done!');
         }
 

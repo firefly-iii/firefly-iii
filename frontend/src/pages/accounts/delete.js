@@ -1,8 +1,6 @@
-<?php
-
 /*
- * EmptyFactory.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * index.js
+ * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,14 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Faker\Generator as Faker;
-use FireflyIII\User;
+require('../../bootstrap');
 
-$factory->define(User::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+import Delete from "../../components/accounts/Delete";
+
+// i18n
+let i18n = require('../../i18n');
+
+// get page name?
+
+
+let props = {
+
+};
+new Vue({
+            i18n,
+            render(createElement) {
+                return createElement(Delete, {props: props});
+            }
+        }).$mount('#accounts_delete');

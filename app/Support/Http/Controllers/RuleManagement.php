@@ -108,7 +108,7 @@ trait RuleManagement
                             'count'      => $index + 1,
                         ]
                     )->render();
-                } catch (Throwable $e) {
+                } catch (Throwable $e) { // @phpstan-ignore-line
                     Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
                 }
@@ -154,7 +154,7 @@ trait RuleManagement
                             'triggers'   => $triggers,
                         ]
                     )->render();
-                } catch (Throwable $e) {
+                } catch (Throwable $e) { // @phpstan-ignore-line
                     Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
                 }
@@ -197,7 +197,7 @@ trait RuleManagement
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) {
+            } catch (Throwable $e) { // @phpstan-ignore-line
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }

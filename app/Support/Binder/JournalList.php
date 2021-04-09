@@ -69,7 +69,7 @@ class JournalList implements BinderInterface
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));
         if (0 === count($list)) {
-            throw new NotFoundHttpException; // @codeCoverageIgnore
+            throw new NotFoundHttpException; 
         }
 
         return $list;

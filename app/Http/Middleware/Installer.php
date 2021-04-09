@@ -95,7 +95,9 @@ class Installer
             $message = $e->getMessage();
             Log::error(sprintf('Error message trying to access users-table: %s', $message));
             if ($this->isAccessDenied($message)) {
-                throw new FireflyException('It seems your database configuration is not correct. Please verify the username and password in your .env file.');
+                throw new FireflyException(
+                    'It seems your database configuration is not correct. Please verify the username and password in your .env file.', 0, $e
+                );
             }
             if ($this->noTablesExist($message)) {
                 // redirect to UpdateController
@@ -103,7 +105,7 @@ class Installer
 
                 return true;
             }
-            throw new FireflyException(sprintf('Could not access the database: %s', $message));
+            throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
         Log::debug('Everything seems OK with the tables.');
 

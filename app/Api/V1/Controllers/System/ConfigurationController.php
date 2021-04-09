@@ -64,7 +64,7 @@ class ConfigurationController extends Controller
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException('200030: Could not load config variables.');
+            throw new FireflyException('200030: Could not load config variables.', 0, $e);
         }
         $staticData = $this->getStaticConfiguration();
         $return     = [];
@@ -161,7 +161,7 @@ class ConfigurationController extends Controller
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
-            throw new FireflyException('200005: You need the "owner" role to do this.'); // @codeCoverageIgnore
+            throw new FireflyException('200005: You need the "owner" role to do this.'); 
         }
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);

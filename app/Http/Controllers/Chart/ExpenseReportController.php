@@ -88,7 +88,7 @@ class ExpenseReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -184,11 +184,11 @@ class ExpenseReportController extends Controller
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key]; // @codeCoverageIgnore
+                $newSet[$key] = $chartData[$key]; 
             }
         }
-        if (empty($newSet)) {
-            $newSet = $chartData; // @codeCoverageIgnore
+        if (0===count($newSet)) {
+            $newSet = $chartData; 
         }
         $data = $this->generator->multiSet($newSet);
         $cache->store($data);

@@ -68,7 +68,7 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var JournalRepositoryInterface $repository */
                 $repository = app(JournalRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -82,7 +82,7 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var JournalAPIRepositoryInterface $repository */
                 $repository = app(JournalAPIRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -96,7 +96,7 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var JournalCLIRepositoryInterface $repository */
                 $repository = app(JournalCLIRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -115,7 +115,7 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var TransactionGroupRepositoryInterface $repository */
                 $repository = app(TransactionGroupRepository::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
 
@@ -134,7 +134,7 @@ class JournalServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var GroupCollectorInterface $collector */
                 $collector = app(GroupCollector::class);
-                if ($app->auth->check()) {
+                if ($app->auth->check()) { // @phpstan-ignore-line
                     $collector->setUser(auth()->user());
                 }
 

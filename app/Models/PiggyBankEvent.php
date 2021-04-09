@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $transaction_journal_id
  * @property \Illuminate\Support\Carbon $date
  * @property string $amount
- * @property-read \FireflyIII\Models\PiggyBank $piggyBank
+ * @property \FireflyIII\Models\PiggyBank $piggyBank
  * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
@@ -81,7 +81,7 @@ class PiggyBankEvent extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setAmountAttribute($value): void
     {

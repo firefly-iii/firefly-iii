@@ -51,7 +51,7 @@ class AccountTypeSeeder extends Seeder
             try {
                 AccountType::create(['type' => $type]);
             } catch (PDOException $e) {
-                // dont care.
+                // @ignoreException
             }
         }
     }

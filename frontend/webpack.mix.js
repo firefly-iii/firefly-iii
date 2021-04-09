@@ -35,6 +35,9 @@ const mix = require('laravel-mix');
 // production
 // require('laravel-mix-bundle-analyzer');
 mix.webpackConfig({
+                      stats: {
+                          children: true
+                      },
                       resolve: {
                           alias: {
                               'vue$': 'vue/dist/vue.runtime.common.js'
@@ -45,10 +48,12 @@ mix.webpackConfig({
 
 // dashboard and empty page
 mix.js('src/pages/dashboard.js', 'public/js').vue({version: 2});
+
 // accounts.
 mix.js('src/pages/accounts/index.js', 'public/js/accounts').vue({version: 2});
+mix.js('src/pages/accounts/delete.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
-
+mix.js('src/pages/accounts/create.js', 'public/js/accounts').vue({version: 2});
 
 // transactions.
 mix.js('src/pages/transactions/create.js', 'public/js/transactions').vue({version: 2});

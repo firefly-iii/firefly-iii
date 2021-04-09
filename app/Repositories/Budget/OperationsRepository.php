@@ -237,7 +237,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
                 $code = $transaction['currency_code'];
-                if (!isset($currencies[$code])) {
+                if (!array_key_exists($code, $currencies)) {
                     $currencies[$code] = [
                         'id'             => $transaction['currency_id'],
                         'decimal_places' => $transaction['currency_decimal_places'],
@@ -246,7 +246,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                         'symbol'         => $transaction['currency_symbol'],
                     ];
                 }
-                $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction['amount']) : $transaction['amount'];
+                $total[$code] = array_key_exists($code, $total) ? bcadd($total[$code], $transaction['amount']) : $transaction['amount'];
             }
         }
         /**

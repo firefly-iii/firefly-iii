@@ -91,7 +91,7 @@ class UpdateRequest implements UpdateRequestInterface
                 'timeout' => 3.1415,
             ];
             $res     = $client->request('GET', $uri, $options);
-        } catch (GuzzleException | Exception $e) {
+        } catch (GuzzleException $e) {
             Log::error('Ran into Guzzle error.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -111,7 +111,7 @@ class UpdateRequest implements UpdateRequestInterface
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
-        } catch (JsonException | Exception $e) {
+        } catch (JsonException $e) {
             Log::error('Body is not valid JSON');
             Log::error($body);
             $return['message'] = 'Invalid JSON :(';
@@ -119,7 +119,7 @@ class UpdateRequest implements UpdateRequestInterface
             return $return;
         }
 
-        if (!isset($json['firefly_iii'][$channel])) {
+        if (!array_key_exists($channel, $json['firefly_iii'])) {
             Log::error(sprintf('No valid update channel "%s"', $channel));
             Log::error($body);
             $return['message'] = sprintf('Unknown update channel "%s" :(', $channel);

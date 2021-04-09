@@ -268,7 +268,7 @@ class AccountTasker implements AccountTaskerInterface
             $sourceId   = (int)$journal['source_account_id'];
             $currencyId = (int)$journal['currency_id'];
             $key        = sprintf('%s-%s', $sourceId, $currencyId);
-            if (!isset($report['accounts'][$key])) {
+            if (!array_key_exists($key, $report['accounts'])) {
                 $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
                 $report['accounts'][$key] = [
                     'id'                      => $sourceId,

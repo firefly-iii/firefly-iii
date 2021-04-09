@@ -51,7 +51,6 @@
                 <TransactionAccount
                     v-model="sourceAccount"
                     v-on="$listeners"
-                    :allowed-opposing-types="allowedOpposingTypes"
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.source"
                     :index="index"
@@ -76,7 +75,6 @@
                 <TransactionAccount
                     v-model="destinationAccount"
                     v-on="$listeners"
-                    :allowed-opposing-types="allowedOpposingTypes"
                     :destination-allowed-types="destinationAllowedTypes"
                     :errors="transaction.errors.destination"
                     :index="index"
@@ -141,7 +139,6 @@
                     :date="splitDate"
                     :errors="transaction.errors.date"
                     :index="index"
-                    :time="splitTime"
                 />
               </div>
 
@@ -343,11 +340,7 @@ export default {
       required: true
     },
     date: {
-      type: Date,
-      required: true
-    },
-    time: {
-      type: Date,
+      type: String,
       required: true
     },
     transactionType: {
@@ -369,11 +362,6 @@ export default {
       required: false,
       default: []
     },
-    allowedOpposingTypes: {
-      type: Object,
-      required: false,
-      default: {}
-    },
     // allow switch?
     allowSwitch: {
       type: Boolean,
@@ -382,11 +370,6 @@ export default {
     }
 
   },
-  // watch: {
-  //   allowedOpposingTypes: function() {
-  //     console.log('SplitForm noticed change in allowedOpposingTypes');
-  //   }
-  // },
   methods: {
     removeTransaction: function () {
       // console.log('Will remove transaction ' + this.index);
@@ -397,15 +380,15 @@ export default {
     splitDate: function () {
       return this.date;
     },
-    splitTime: function () {
-      return this.time;
-    },
     sourceAccount: function () {
-      return {
+      console.log('computed::sourceAccount');
+      let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
+      console.log(JSON.stringify(value));
+      return value;
     },
     destinationAccount: function () {
       return {

@@ -197,8 +197,8 @@ class BudgetController extends Controller
 
         try {
             $result = prefixView('reports.budget.partials.avg-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -316,7 +316,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         $periods   = app('navigation')->listOfPeriods($start, $end);
@@ -352,12 +352,12 @@ class BudgetController extends Controller
         }
         try {
             $result = prefixView('reports.partials.budget-period', compact('report', 'periods'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
-        // @codeCoverageIgnoreEnd
+
         $cache->store($result);
 
         return $result;
@@ -404,8 +404,8 @@ class BudgetController extends Controller
 
         try {
             $result = prefixView('reports.budget.partials.top-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }

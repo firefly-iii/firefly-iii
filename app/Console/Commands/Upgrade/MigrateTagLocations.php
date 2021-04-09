@@ -80,7 +80,7 @@ class MigrateTagLocations extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     private function migrateTagLocations(): void

@@ -46,7 +46,7 @@ class PiggyBankStoreRequest extends FormRequest
             'account_id'         => $this->integer('account_id'),
             'targetamount'       => $this->string('targetamount'),
             'targetdate'         => $this->date('targetdate'),
-            'notes'              => $this->nlString('notes'),
+            'notes'              => $this->stringWithNewlines('notes'),
             'object_group_title' => $this->string('object_group'),
         ];
     }

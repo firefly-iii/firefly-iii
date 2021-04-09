@@ -338,7 +338,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (!empty($journalIds)) {
+        if (0!==count($journalIds)) {
             $this->query->whereIn('transaction_journals.id', $journalIds);
         }
 
@@ -691,7 +691,7 @@ class GroupCollector implements GroupCollectorInterface
             $result['date']->setTimezone(config('app.timezone'));
             $result['created_at']->setTimezone(config('app.timezone'));
             $result['updated_at']->setTimezone(config('app.timezone'));
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
 
@@ -699,7 +699,7 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->convertToInteger($result);
 
         $result['reconciled'] = 1 === (int)$result['reconciled'];
-        if (isset($augumentedJournal['tag_id'])) { // assume the other fields are present as well.
+        if (array_key_exists('tag_id', $result)) { // assume the other fields are present as well.
             $tagId   = (int)$augumentedJournal['tag_id'];
             $tagDate = null;
             try {
@@ -717,7 +717,7 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         // also merge attachments:
-        if (isset($augumentedJournal['attachment_id'])) {
+        if (array_key_exists('attachment_id', $result)) {
             $attachmentId                         = (int)$augumentedJournal['attachment_id'];
             $result['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
@@ -744,7 +744,7 @@ class GroupCollector implements GroupCollectorInterface
                 $currencyId = (int)$transaction['currency_id'];
 
                 // set default:
-                if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
                     $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
                     $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
                     $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
@@ -757,7 +757,7 @@ class GroupCollector implements GroupCollectorInterface
                     $currencyId = (int)$transaction['foreign_currency_id'];
 
                     // set default:
-                    if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                    if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
                         $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
                         $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
                         $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];

@@ -31,7 +31,6 @@
           :title="$t('firefly.budget')"
           autocomplete="off"
           name="budget_id[]"
-          v-on:submit.prevent
       >
         <option v-for="budget in this.budgetList" :label="budget.name" :value="budget.id">{{ budget.name }}</option>
       </select>

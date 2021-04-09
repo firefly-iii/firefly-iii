@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API sleutel',
     'remember_me'                 => 'Aangemeld blijven',
     'liability_type_id'           => 'Passivasoort',
+    'liability_type'              => 'Passivasoort',
     'interest'                    => 'Rente',
     'interest_period'             => 'Renteperiode',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Als je gebruiker ":email" verwijdert is alles weg. Je kan dit niet ongedaan maken of ont-verwijderen of wat dan ook. Als je jezelf verwijdert ben je ook je toegang tot deze installatie van Firefly III kwijt.',
     'attachment_areYouSure'       => 'Weet je zeker dat je de bijlage met naam ":name" wilt verwijderen?',
     'account_areYouSure'          => 'Weet je zeker dat je de rekening met naam ":name" wilt verwijderen?',
+    'account_areYouSure_js'       => 'Weet je zeker dat je de rekening met naam "{name}" wilt verwijderen?',
     'bill_areYouSure'             => 'Weet je zeker dat je het contract met naam ":name" wilt verwijderen?',
     'rule_areYouSure'             => 'Weet je zeker dat je regel ":title" wilt verwijderen?',
     'object_group_areYouSure'     => 'Weet je zeker dat je groep ":title" wilt verwijderen?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Verwijder geselecteerde items permanent',
     'update_all_journals'         => 'Wijzig deze transacties',
     'also_delete_transactions'    => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
+    'also_delete_transactions_js' => 'Geen transacties|Ook de enige transactie verbonden aan deze rekening wordt verwijderd.|Ook alle {count} transacties verbonden aan deze rekening worden verwijderd.',
     'also_delete_connections'     => 'De enige transactie gelinkt met dit linktype zal deze verbinding verliezen. | Alle :count transacties met dit linktype zullen deze verbinding verliezen.',
     'also_delete_rules'           => 'De enige regel in deze regelgroep wordt ook verwijderd.|Alle :count regels in deze regelgroep worden ook verwijderd.',
     'also_delete_piggyBanks'      => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
+    'also_delete_piggyBanks_js'   => 'Geen spaarpotjes|Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.|Ook alle {count} spaarpotjes verbonden aan deze rekening worden verwijderd.',
     'not_delete_piggy_banks'      => 'Het spaarpotje gelinkt aan deze groep wordt niet verwijderd.|De :count spaarpotjes gelinkt aan deze groep worden niet verwijderd.',
     'bill_keep_transactions'      => 'De enige transactie verbonden aan dit contract blijft bewaard.|De :count transacties verbonden aan dit contract blijven bewaard.',
     'budget_keep_transactions'    => 'De enige transactie verbonden aan dit budget blijft bewaard.|De :count transacties verbonden aan dit budget blijven bewaard.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'De enige transactie verbonden aan deze periode transactie blijft bewaard.|De :count transacties verbonden aan deze periode transactie blijven bewaard.',
     'tag_keep_transactions'       => 'De enige transactie verbonden aan deze tag blijft bewaard.|De :count transacties verbonden aan deze tag blijven bewaard.',
     'check_for_updates'           => 'Op updates controleren',
+    'liability_direction'         => 'Passiva in- of uitgaand',
 
     'delete_object_group' => 'Verwijder groep ":title"',
 

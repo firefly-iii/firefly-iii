@@ -181,7 +181,7 @@ class PiggyBank extends Model
     /**
      * @codeCoverageIgnore
      *
-     * @param $value
+     * @param mixed $value
      */
     public function setTargetamountAttribute($value): void
     {

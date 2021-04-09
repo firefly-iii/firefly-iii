@@ -52,7 +52,7 @@ class UpdateRequest extends FormRequest
             'current_amount'     => ['current_amount', 'string'],
             'startdate'          => ['start_date', 'date'],
             'targetdate'         => ['target_date', 'string'],
-            'notes'              => ['notes', 'nlString'],
+            'notes'              => ['notes', 'stringWithNewlines'],
             'order'              => ['order', 'integer'],
             'object_group_title' => ['object_group_title', 'string'],
             'object_group_id'    => ['object_group_id', 'integer'],

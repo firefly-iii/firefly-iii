@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-kulcs',
     'remember_me'                 => 'Emlékezzen rám',
     'liability_type_id'           => 'Kötelezettség típusa',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Kamat',
     'interest_period'             => 'Kamatperiódus',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => '":email" felhasználó törlésével minden el fog veszni. Nincs visszavonás, helyreállítás vagy ezekhez hasonló. A saját felhasználó törlésével elveszik a hozzáférés a Firefly III ezen példányához.',
     'attachment_areYouSure'       => '":name" melléklet biztosan törölhető?',
     'account_areYouSure'          => '":name" bankszámla biztosan törölhető?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => '":name" számla biztosan törölhető?',
     'rule_areYouSure'             => '":title" szabály biztosan törölhető?',
     'object_group_areYouSure'     => 'Biztosan törölni szeretné a ":title" csoportot?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Kijelöltek végleges törlése',
     'update_all_journals'         => 'A tranzakciók frissítése',
     'also_delete_transactions'    => 'A bankszámlához tartozó egyetlen tranzakció is törölve lesz. | Az ehhez a bankszámlához tartozó :count tranzakció is törölve lesz.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'A csak ezzel a kapcsolattípussal rendelkező tranzakciók elveszítik az összerendelésüket. | Mind a :count tranzakció, amely ezzel a hivatkozástípussal kapcsolódik elveszíti az összrendelését.',
     'also_delete_rules'           => 'A szabálycsoporthoz tartozó egyetlen szabály is törölve lesz. | Az ezen szabálycsoporthoz tartozó :count szabály is törölve lesz.',
     'also_delete_piggyBanks'      => 'A bankszámlához tartozó egyetlen malacpersely is törölve lesz. | Az ehhez a bankszámlához tartozó :count malacpersely is törölve lesz.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'A csoporthoz tartozó malacpersely nem lesz törölve. | Az ehhez a csoporthoz tartozó :count malacpersely nem lesz törölve.',
     'bill_keep_transactions'      => 'A számlához tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a számlához tartozó :count tranzakció nem lesz törölve.',
     'budget_keep_transactions'    => 'A költségkerethez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a költségkerethez tartozó :count tranzakció nem lesz törölve.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Az ismétlődő tranzakció által létrehozott egyetlen tranzakció nem lesz törölve.|Az ismétlődő tranzakció által létrehozott :count tranzakció nem lesz törölve.',
     'tag_keep_transactions'       => 'A címkéhez tartozó egyetlen tranzakció nem lesz törölve.|Az ehhez a címkéhez tartozó :count tranzakció nem lesz törölve.',
     'check_for_updates'           => 'Frissítések ellenőrzése',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => '":title" csoport törlése',
 

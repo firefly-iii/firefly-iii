@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'The value must start with :values.',
     'unique_webhook'                 => 'You already have a webhook with these values.',
     'unique_existing_webhook'        => 'You already have another webhook with these values.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => '此密碼不安全，請再試一遍。如需更多資訊，請瀏覽 https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => '定期重複交易的重複類型無效。',

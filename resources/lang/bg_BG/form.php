@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API ключ',
     'remember_me'                 => 'Запомни ме',
     'liability_type_id'           => 'Тип задължение',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Лихва',
     'interest_period'             => 'Лихвен период',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Ако изтриете потребител ":email", всичко ще изчезне. Няма отмяна, възстановяване или нещо друго. Ако изтриете себе си, ще загубите достъп до този екземпляр на Firefly III.',
     'attachment_areYouSure'       => 'Наистина ли искате да изтриете прикачения файл ":name"?',
     'account_areYouSure'          => 'Наистина ли искате да изтриете сметка ":name"?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => 'Наистина ли искате да изтриете сметка ":name"?',
     'rule_areYouSure'             => 'Наистина ли искате да изтриете правило ":title"?',
     'object_group_areYouSure'     => 'Наистина ли искате да изтриете групата ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Изтрии избраните необратимо',
     'update_all_journals'         => 'Обнови тези транзакции',
     'also_delete_transactions'    => 'Ще бъде изтрита и единствената транзакция, свързана с тази сметка.|Всички :count транзакции, свързани с тази сметка, също ще бъдат изтрити.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'Единствената транзакция, свързана с този тип връзки, ще загуби тази връзка.|Всички :count транзакции, свързани с този тип връзки, ще загубят връзката си.',
     'also_delete_rules'           => 'Ще бъде изтрито и единственото правило, свързана с тази група правила.|Всички :count правила, свързани с тази група правила, също ще бъдат изтрити.',
     'also_delete_piggyBanks'      => 'Ще бъде изтрита и единствената касичнка, свързана с тази сметка.|Всички :count касички, свързани с тази сметка, също ще бъдат изтрити.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'Касичката свързана с тази група няма да бъде изтрита.|Всички :count касички свързани с тази група няма да бъдат изтрити.',
     'bill_keep_transactions'      => 'Единствената транзакция, свързана с тази сметка няма да бъде изтрита.|Всички :count транзакции, свързани с тази сметка, няма да бъдат изтрити.',
     'budget_keep_transactions'    => 'Единствената транзакция, свързана с този бюджет няма да бъде изтрита.|Всички :count транзакции, свързани с този бюджет, няма да бъдат изтрити.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Единствената транзакция, създадена с тази повтаряща се транзакция, няма да бъде изтрита.|Всички :count транзакции, създадени с тази повтаряща се транзакция, няма да бъдат изтрити.',
     'tag_keep_transactions'       => 'Единствената транзакция, свързана с този етикет няма да бъде изтрита.|Всички :count транзакции, свързани с този етикет, няма да бъдат изтрити.',
     'check_for_updates'           => 'Проверка за нова версия',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Изтрии група ":title"',
 

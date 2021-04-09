@@ -96,8 +96,8 @@ class JournalDestroyService
                 }
             }
 
-        } catch (Exception $e) {
-            Log::error(sprintf('Could not delete bill: %s', $e->getMessage())); // @codeCoverageIgnore
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
 
     }

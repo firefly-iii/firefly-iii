@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Значение должно начинаться с :values.',
     'unique_webhook'                 => 'У вас уже есть webhook с таким именем.',
     'unique_existing_webhook'        => 'У вас уже есть другой webhook с таким именем.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Это не безопасный пароль. Попробуйте еще раз. Подробнее можно узнать по ссылке https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Недопустимый тип для повторяющихся транзакций.',

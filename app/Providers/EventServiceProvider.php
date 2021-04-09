@@ -169,8 +169,7 @@ class EventServiceProvider extends ServiceProvider
                 try {
                     Log::debug('Trying to send message...');
                     Mail::to($email)->send(new OAuthTokenCreatedMail($email, $ipAddress, $oauthClient));
-                    // @codeCoverageIgnoreStart
-                } catch (Exception $e) {
+                } catch (Exception $e) { // @phpstan-ignore-line
                     Log::debug('Send message failed! :(');
                     Log::error($e->getMessage());
                     Log::error($e->getTraceAsString());

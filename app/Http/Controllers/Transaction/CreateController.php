@@ -77,7 +77,7 @@ class CreateController extends Controller
         $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
         $link  = route('transactions.show', [$newGroup->id]);
         session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
-        session()->flash('success_uri', $link);
+        session()->flash('success_url', $link);
 
         return redirect(route('transactions.show', [$newGroup->id]));
     }
@@ -85,9 +85,9 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param string|null objectType
+     * @param string|null $objectType
      *
-     * @return Factory|View
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function create(?string $objectType)
     {

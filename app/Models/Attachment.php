@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,24 +36,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Attachment
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $attachable_id
- * @property string $attachable_type
- * @property string $md5
- * @property string $filename
- * @property string|null $title
- * @property string|null $description
- * @property string $mime
- * @property int $size
- * @property bool $uploaded
- * @property-read Model|\Eloquent $attachable
+ * @property int                                  $id
+ * @property \Illuminate\Support\Carbon|null      $created_at
+ * @property \Illuminate\Support\Carbon|null      $updated_at
+ * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property int                                  $user_id
+ * @property int                                  $attachable_id
+ * @property string                               $attachable_type
+ * @property bool                                 $file_exists
+ * @property string                               $md5
+ * @property string                               $filename
+ * @property string|null                          $title
+ * @property string|null                          $description
+ * @property string                               $mime
+ * @property int                                  $size
+ * @property bool                                 $uploaded
+ * @property string                               $notes_text
+ * @property-read Model|\Eloquent                 $attachable
  * @property Collection|\FireflyIII\Models\Note[] $notes
- * @property-read int|null $notes_count
- * @property-read User $user
+ * @property-read int|null                        $notes_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
  * @method static Builder|Attachment onlyTrashed()
@@ -101,13 +102,13 @@ class Attachment extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Attachment
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Attachment
     {
         if (auth()->check()) {
-            $attachmentId = (int) $value;
+            $attachmentId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Attachment $attachment */
@@ -139,7 +140,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string) $this->id);
+        return sprintf('at-%s.data', (string)$this->id);
     }
 
     /**

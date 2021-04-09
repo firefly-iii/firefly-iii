@@ -100,9 +100,9 @@ trait TransactionValidation
         $accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : null;
-        $sourceName  = isset($transaction['source_name']) ? (string)$transaction['source_name'] : null;
-        $sourceIban  = isset($transaction['source_iban']) ? (string)$transaction['source_iban'] : null;
+        $sourceId    = array_key_exists('source_id', $transaction) ? (int)$transaction['source_id'] : null;
+        $sourceName  = array_key_exists('source_name', $transaction) ? (string)$transaction['source_name'] : null;
+        $sourceIban  = array_key_exists('source_iban', $transaction) ? (string)$transaction['source_iban'] : null;
         $validSource = $accountValidator->validateSource($sourceId, $sourceName, $sourceIban);
 
         // do something with result:
@@ -113,9 +113,9 @@ trait TransactionValidation
             return;
         }
         // validate destination account
-        $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null;
-        $destinationName  = isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null;
-        $destinationIban  = isset($transaction['destination_iban']) ? (string)$transaction['destination_iban'] : null;
+        $destinationId    = array_key_exists('destination_id', $transaction) ? (int)$transaction['destination_id'] : null;
+        $destinationName  = array_key_exists('destination_name', $transaction) ? (string)$transaction['destination_name'] : null;
+        $destinationIban  = array_key_exists('destination_iban', $transaction) ? (string)$transaction['destination_iban'] : null;
         $validDestination = $accountValidator->validateDestination($destinationId, $destinationName, $destinationIban);
         // do something with result:
         if (false === $validDestination) {
@@ -155,10 +155,11 @@ trait TransactionValidation
         Log::debug('Now validating single account update in validateSingleUpdate()');
 
         // if no account types are given, just skip the check.
-        if (!isset($transaction['source_id'])
-            && !isset($transaction['source_name'])
-            && !isset($transaction['destination_id'])
-            && !isset($transaction['destination_name'])) {
+        if (
+            !array_key_exists('source_id', $transaction)
+            && !array_key_exists('source_name', $transaction)
+            && !array_key_exists('destination_id', $transaction)
+            && !array_key_exists('destination_name', $transaction)) {
             Log::debug('No account data has been submitted so will not validating account info.');
 
             return;
@@ -362,7 +363,7 @@ trait TransactionValidation
         if (0 === $journalId) {
             return 'invalid';
         }
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = TransactionJournal::with(['transactionType'])->find($journalId);
         if (null !== $journal) {
             return strtolower($journal->transactionType->type);

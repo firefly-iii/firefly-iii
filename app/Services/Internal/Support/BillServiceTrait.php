@@ -74,8 +74,8 @@ trait BillServiceTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Error deleting note: %s', $e->getMessage()));
+                } catch (Exception $e) { // @phpstan-ignore-line
+                    // @ignoreException
                 }
             }
 

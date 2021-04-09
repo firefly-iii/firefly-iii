@@ -79,7 +79,7 @@ class TransactionType extends Model
      * @param string $type
      *
      * @throws NotFoundHttpException
-     * @return Model|null|static
+     * @return TransactionType
      */
     public static function routeBinder(string $type): TransactionType
     {

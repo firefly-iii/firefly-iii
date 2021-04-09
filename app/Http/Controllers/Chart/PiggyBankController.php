@@ -73,7 +73,7 @@ class PiggyBankController extends Controller
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $set    = $repository->getEvents($piggyBank);
         $set    = $set->reverse();

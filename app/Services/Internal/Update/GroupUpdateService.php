@@ -130,15 +130,15 @@ class GroupUpdateService
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
             $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
                 Log::debug('This entry has no existing journal: make a new split.');
                 // force the transaction type on the transaction data.
                 // by plucking it from another journal in the group:
-                if (!isset($transaction['type'])) {
+                if (!array_key_exists('type', $transaction)) {
                     Log::debug('No transaction type is indicated.');
-                    /** @var TransactionJournal $randomJournal */
+                    /** @var TransactionJournal|null $randomJournal */
                     $randomJournal = $transactionGroup->transactionJournals()->inRandomOrder()->with(['transactionType'])->first();
                     if (null !== $randomJournal) {
                         $transaction['type'] = $randomJournal->transactionType->type;
@@ -182,7 +182,7 @@ class GroupUpdateService
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()));
+            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()), 0, $e);
         }
         $collection->each(
             function (TransactionJournal $journal) use ($transactionGroup) {

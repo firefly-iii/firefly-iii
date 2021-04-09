@@ -246,6 +246,6 @@
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
-    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}

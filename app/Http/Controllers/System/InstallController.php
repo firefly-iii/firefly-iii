@@ -32,10 +32,10 @@ use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use Log;
+use phpseclib\Crypt\RSA as LegacyRSA;
 use phpseclib3\Crypt\RSA;
 
 /**
@@ -192,7 +192,7 @@ class InstallController extends Controller
                 Artisan::call($command, $args);
                 Log::debug(Artisan::output());
             }
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
@@ -205,7 +205,7 @@ class InstallController extends Controller
             return false;
         }
         // clear cache as well.
-        Cache::clear();
+        Cache::clear(); // @phpstan-ignore-line
         Preferences::mark();
 
         return true;
@@ -217,18 +217,18 @@ class InstallController extends Controller
     public function keys(): void
     {
         // switch on PHP version.
-        $result = version_compare(phpversion(), '8.0');
-        Log::info(sprintf('PHP version is %s', $result));
-        if (-1 === $result) {
-            Log::info('Will run PHP7 code.');
+        $keys = [];
+        // switch on class existence.
+        Log::info(sprintf('PHP version is %s', phpversion()));
+        if (class_exists(LegacyRSA::class)) {
             // PHP 7
-            $rsa  = new \phpseclib\Crypt\RSA;
-            $keys = $rsa->createKey(4096);
+            Log::info('Will run PHP7 code.');
+            $keys = (new LegacyRSA)->createKey(4096);
         }
 
-        if ($result >= 0) {
-            Log::info('Will run PHP8 code.');
+        if (!class_exists(LegacyRSA::class)) {
             // PHP 8
+            Log::info('Will run PHP8 code.');
             $keys = RSA::createKey(4096);
         }
 
@@ -241,7 +241,7 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, Arr::get($keys, 'publickey'));
-        file_put_contents($privateKey, Arr::get($keys, 'privatekey'));
+        file_put_contents($publicKey, $keys['publickey']);
+        file_put_contents($privateKey, $keys['privatekey']);
     }
 }

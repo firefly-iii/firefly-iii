@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\Request;
@@ -52,6 +53,10 @@ class InterestingMessage
         if ($this->groupMessage($request)) {
             Preferences::mark();
             $this->handleGroupMessage($request);
+        }
+        if ($this->accountMessage($request)) {
+            Preferences::mark();
+            $this->handleAccountMessage($request);
         }
 
         return $next($request);
@@ -83,6 +88,28 @@ class InterestingMessage
     /**
      * @param Request $request
      */
+    private function handleAccountMessage(Request $request): void {
+
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message            = $request->get('message');
+
+        /** @var Account $account */
+        $account = auth()->user()->accounts()->withTrashed()->find($accountId);
+
+        if (null === $account) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
+        }
+        if('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
+        }
+    }
+    /**
+     * @param Request $request
+     */
     private function handleGroupMessage(Request $request): void
     {
 
@@ -107,18 +134,32 @@ class InterestingMessage
         }
         $title = $count > 1 ? $group->title : $journal->description;
         if ('created' === $message) {
-            session()->flash('success_uri', route('transactions.show', [$transactionGroupId]));
+            session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $title]));
         }
         if ('updated' === $message) {
             $type = strtolower($journal->transactionType->type);
-            session()->flash('success_uri', route('transactions.show', [$transactionGroupId]));
+            session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string)trans(sprintf('firefly.updated_%s', $type), ['description' => $title]));
         }
         if ('no_change' === $message) {
             $type = strtolower($journal->transactionType->type);
-            session()->flash('warning_uri', route('transactions.show', [$transactionGroupId]));
+            session()->flash('warning_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('warning', (string)trans(sprintf('firefly.no_changes_%s', $type), ['description' => $title]));
         }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function accountMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        return null !== $accountId && null !== $message;
     }
 }

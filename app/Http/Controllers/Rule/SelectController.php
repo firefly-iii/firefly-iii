@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
@@ -48,7 +47,7 @@ use Throwable;
  */
 class SelectController extends Controller
 {
-    use RuleManagement, RequestInformation;
+    use RuleManagement;
 
     /**
      * RuleController constructor.
@@ -146,7 +145,7 @@ class SelectController extends Controller
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
-            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); 
         }
 
         foreach ($textTriggers as $textTrigger) {
@@ -169,22 +168,19 @@ class SelectController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string)trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions'); 
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
             $view = prefixView('list.journals-array-tiny', ['groups' => $collection])->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $exception) {
+
+        } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
         }
-
-        // @codeCoverageIgnoreEnd
-
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
 
@@ -202,7 +198,7 @@ class SelectController extends Controller
         $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); 
         }
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
@@ -214,21 +210,18 @@ class SelectController extends Controller
 
         $warning = '';
         if (0 === count($collection)) {
-            $warning = (string)trans('firefly.warning_no_matching_transactions'); // @codeCoverageIgnore
+            $warning = (string)trans('firefly.warning_no_matching_transactions'); 
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
             $view = prefixView('list.journals-array-tiny', ['groups' => $collection])->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $exception) {
+
+        } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
         }
-
-        // @codeCoverageIgnoreEnd
-
         return response()->json(['html' => $view, 'warning' => $warning]);
     }
 }

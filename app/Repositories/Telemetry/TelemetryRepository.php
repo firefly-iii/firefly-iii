@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Telemetry;
 
 use FireflyIII\Models\Telemetry;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
  * Class TelemetryRepository

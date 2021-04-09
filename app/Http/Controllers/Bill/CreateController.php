@@ -34,6 +34,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Log;
 
 /**
  * Class CreateController
@@ -124,7 +125,7 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
 
         return redirect(route('rules.create-from-bill', [$bill->id]));

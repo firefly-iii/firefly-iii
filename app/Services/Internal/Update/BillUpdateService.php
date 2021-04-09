@@ -144,20 +144,20 @@ class BillUpdateService
      */
     private function updateBillProperties(Bill $bill, array $data): Bill
     {
-        if (isset($data['name']) && '' !== (string)$data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
             $bill->name = $data['name'];
         }
 
-        if (isset($data['amount_min']) && '' !== (string)$data['amount_min']) {
+        if (array_key_exists('amount_min', $data) && '' !== (string)$data['amount_min']) {
             $bill->amount_min = $data['amount_min'];
         }
-        if (isset($data['amount_max']) && '' !== (string)$data['amount_max']) {
+        if (array_key_exists('amount_max', $data) && '' !== (string)$data['amount_max']) {
             $bill->amount_max = $data['amount_max'];
         }
-        if (isset($data['date']) && '' !== (string)$data['date']) {
+        if (array_key_exists('date', $data) && '' !== (string)$data['date']) {
             $bill->date = $data['date'];
         }
-        if (isset($data['repeat_freq']) && '' !== (string)$data['repeat_freq']) {
+        if (array_key_exists('repeat_freq', $data) && '' !== (string)$data['repeat_freq']) {
             $bill->repeat_freq = $data['repeat_freq'];
         }
         if (array_key_exists('skip', $data)) {

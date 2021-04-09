@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API-Schlüssel',
     'remember_me'                 => 'Angemeldet bleiben',
     'liability_type_id'           => 'Haftungsart',
+    'liability_type'              => 'Art der Verbindlichkeit',
     'interest'                    => 'Zinsen',
     'interest_period'             => 'Verzinsungszeitraum',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Wenn Sie den Benutzer ":email" löschen, ist alles weg. Es gibt keine Sicherung, Wiederherstellung oder ähnliches. Wenn Sie sich selbst löschen, verlieren Sie den Zugriff auf diese Instanz von Firefly III.',
     'attachment_areYouSure'       => 'Möchten Sie den Anhang „:name” wirklich löschen?',
     'account_areYouSure'          => 'Möchten Sie das Konto „:name” wirklich löschen?',
+    'account_areYouSure_js'       => 'Möchten Sie das Konto „{name}” wirklich löschen?',
     'bill_areYouSure'             => 'Möchten Sie die Rechnung „:name” wirklich löschen?',
     'rule_areYouSure'             => 'Sind Sie sicher, dass Sie die Regel mit dem Titel ":title" löschen möchten?',
     'object_group_areYouSure'     => 'Möchten Sie die Gruppe „:title” wirklich löschen?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Ausgewähltes dauerhaft löschen',
     'update_all_journals'         => 'Diese Transaktionen aktualisieren',
     'also_delete_transactions'    => 'Die einzige Überweisung, die mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Überweisungen, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
+    'also_delete_transactions_js' => 'Keine Buchungen|Die einzige Buchung, die mit diesem Konto verbunden ist, wird ebenfalls gelöscht.|Alle {count} Buchungen, die mit diesem Konto verbunden sind, werden ebenfalls gelöscht.',
     'also_delete_connections'     => 'Die einzige Transaktion, die mit diesem Verknüpfungstyp verknüpft ist, verliert diese Verbindung. • Alle :count Buchungen, die mit diesem Verknüpfungstyp verknüpft sind, verlieren ihre Verbindung.',
     'also_delete_rules'           => 'Die einzige Regel, die mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Regeln, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
     'also_delete_piggyBanks'      => 'Das einzige Sparschwein, das mit diesem Konto verknüpft ist, wird ebenfalls gelöscht. | Alle :count Sparschweine, die mit diesem Konto verknüpft sind, werden ebenfalls gelöscht.',
+    'also_delete_piggyBanks_js'   => 'Keine Sparschweine|Das einzige Sparschwein, welches mit diesem Konto verbunden ist, wird ebenfalls gelöscht.|Alle {count} Sparschweine, welche mit diesem Konto verbunden sind, werden ebenfalls gelöscht.',
     'not_delete_piggy_banks'      => 'Die mit dieser Gruppe verbundene Spardose wird nicht gelöscht.| Die mit dieser Gruppe verbundenen :count Spardosen werden nicht gelöscht.',
     'bill_keep_transactions'      => 'Die einzige mit dieser Rechnung verbundene Buchung wird nicht gelöscht. | Keine der :count Buchungen, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'budget_keep_transactions'    => 'Die einzige diesem Budget zugeordnete Buchung wird nicht gelöscht. | Keine der :count Buchungen, die diesem Budget zugeordnet sind, wird gelöscht.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Die einzige Buchung, die durch diesen Dauerauftrag erstellt wurde, wird nicht gelöscht. | Keine der :count Buchungen, die durch diesen Dauerauftrag erstellt wurden, wird gelöscht.',
     'tag_keep_transactions'       => 'Das einzige mit dieser Rechnung verbundene Schlagwort wird nicht gelöscht. | Keines der :count Schlagwörter, die mit dieser Rechnung verbunden sind, wird gelöscht.',
     'check_for_updates'           => 'Nach Updates suchen',
+    'liability_direction'         => 'Verbindlichkeit Ein/Aus',
 
     'delete_object_group' => 'Gruppe „:title” löschen',
 

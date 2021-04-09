@@ -95,7 +95,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $start->subDay();
 
@@ -203,7 +203,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-budget');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -217,7 +217,7 @@ class AccountController extends Controller
             $budgetId    = (int)$journal['budget_id'];
             $key         = sprintf('%d-%d', $budgetId, $journal['currency_id']);
             $budgetIds[] = $budgetId;
-            if (!isset($result[$key])) {
+            if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
                     'budget_id'       => $budgetId,
@@ -277,7 +277,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.expense-category');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -290,7 +290,7 @@ class AccountController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
-            if (!isset($result[$key])) {
+            if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
                     'category_id'     => (int)$journal['category_id'],
@@ -373,7 +373,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.income-category');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
 
         // grab all journals:
@@ -387,7 +387,7 @@ class AccountController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
-            if (!isset($result[$key])) {
+            if (!array_key_exists($key, $result)) {
                 $result[$key] = [
                     'total'           => '0',
                     'category_id'     => $journal['category_id'],
@@ -431,7 +431,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $currencies = $this->accountRepository->getUsedCurrencies($account);
 
@@ -488,7 +488,7 @@ class AccountController extends Controller
                     $current->addDay();
                 }
                 break;
-            // @codeCoverageIgnoreStart
+
             case '1W':
             case '1M':
             case '1Y':
@@ -499,7 +499,7 @@ class AccountController extends Controller
                     $current         = app('navigation')->addPeriod($current, $step, 0);
                 }
                 break;
-            // @codeCoverageIgnoreEnd
+
         }
         $result['entries'] = $entries;
 
@@ -540,7 +540,7 @@ class AccountController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $start->subDay();
 

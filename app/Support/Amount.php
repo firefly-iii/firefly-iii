@@ -115,7 +115,7 @@ class Amount
         $cache = new CacheProperties;
         $cache->addProperty('getCurrencyCode');
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
 
@@ -152,7 +152,7 @@ class Amount
         $cache->addProperty('getDefaultCurrency');
         $cache->addProperty($user->id);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
         $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
@@ -164,7 +164,7 @@ class Amount
         if (strlen($currencyCode) > 3) {
             $currencyCode = json_decode($currencyCode, true, 512, JSON_THROW_ON_ERROR) ?? 'EUR';
         }
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (null === $currency) {
             // get EUR
@@ -185,7 +185,7 @@ class Amount
         try {
             $value = Crypt::decrypt($value); // verified
         } catch (DecryptException $e) {
-            // ignore decryption error.
+            // @ignoreException
         }
 
         return $value;

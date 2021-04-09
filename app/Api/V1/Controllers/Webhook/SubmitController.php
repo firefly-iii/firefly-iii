@@ -27,7 +27,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -45,12 +44,8 @@ class SubmitController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $admin */
-                $admin = auth()->user();
-
-                /** @var WebhookRepositoryInterface repository */
                 $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser($admin);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }

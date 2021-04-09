@@ -58,7 +58,7 @@ class BackToJournals extends Command
      */
     public function handle(): int
     {
-        // @codeCoverageIgnoreStart
+
         $start = microtime(true);
         if (!$this->isMigrated()) {
             $this->error('Please run firefly-iii:migrate-to-groups first.');
@@ -71,7 +71,7 @@ class BackToJournals extends Command
         if (true === $this->option('force')) {
             $this->warn('Forcing the command.');
         }
-        // @codeCoverageIgnoreEnd
+
 
         $this->migrateAll();
         $end = round(microtime(true) - $start, 2);
@@ -87,11 +87,8 @@ class BackToJournals extends Command
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(MigrateToGroups::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
 
-        return false; // @codeCoverageIgnore
+        return (bool)$configVar->data;
     }
 
     /**
@@ -100,11 +97,8 @@ class BackToJournals extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool)$configVar->data;
-        }
 
-        return false; // @codeCoverageIgnore
+        return (bool)$configVar->data;
     }
 
     /**
@@ -145,15 +139,13 @@ class BackToJournals extends Command
      */
     private function getIdsForBudgets(): array
     {
-        $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
+        $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions')
-                     ->whereIn('transactions.id', $chunk)
+            $set = DB::table('transactions')->whereIn('transactions.id', $chunk)
                      ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-            /** @noinspection SlowArrayOperationsInLoopInspection */
             $array = array_merge($array, $set);
         }
 
@@ -170,11 +162,11 @@ class BackToJournals extends Command
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-            // @codeCoverageIgnoreStart
+
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
         /** @var Budget $budget */
         $budget = $transaction->budgets->first();
@@ -225,12 +217,12 @@ class BackToJournals extends Command
      */
     private function getIdsForCategories(): array
     {
-        $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
+        $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray(); // @phpstan-ignore-line
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions')
+            $set = DB::table('transactions') // @phpstan-ignore-line
                      ->whereIn('transactions.id', $chunk)
                      ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
             /** @noinspection SlowArrayOperationsInLoopInspection */
@@ -249,11 +241,11 @@ class BackToJournals extends Command
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
-            // @codeCoverageIgnoreStart
+
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
-            // @codeCoverageIgnoreEnd
+
         }
         /** @var Category $category */
         $category = $transaction->categories->first();

@@ -49,7 +49,7 @@ class PermissionSeeder extends Seeder
             try {
                 Role::create($role);
             } catch (PDOException $e) {
-                // dont care
+                // @ignoreException
             }
         }
     }

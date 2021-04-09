@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,8 +37,6 @@ use Illuminate\View\View;
  */
 class DeleteController extends Controller
 {
-    use UserNavigation;
-
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -75,7 +72,7 @@ class DeleteController extends Controller
     public function delete(Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         $typeName    = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
@@ -101,7 +98,7 @@ class DeleteController extends Controller
     public function destroy(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account); // @codeCoverageIgnore
+            return $this->redirectAccountToAccount($account); 
         }
 
         $type     = $account->accountType->type;

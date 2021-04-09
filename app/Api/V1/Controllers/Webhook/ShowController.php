@@ -50,12 +50,8 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $admin */
-                $admin = auth()->user();
-
-                /** @var WebhookRepositoryInterface repository */
                 $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser($admin);
+                $this->repository->setUser(auth()->user());
 
                 return $next($request);
             }

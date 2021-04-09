@@ -53,14 +53,14 @@ trait UserNavigation
      *
      * @return string
      */
-    protected function getPreviousUri(string $identifier): string
+    final protected function getPreviousUri(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $uri = (string)session($identifier);
         Log::debug(sprintf('The URI is %s', $uri));
 
         if (false !== strpos($uri, 'jscript')) {
-            $uri = $this->redirectUri; // @codeCoverageIgnore
+            $uri = $this->redirectUri; 
             Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
 
@@ -76,7 +76,7 @@ trait UserNavigation
      *
      * @return bool
      */
-    protected function isEditableAccount(Account $account): bool
+    final protected function isEditableAccount(Account $account): bool
     {
         $editable = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         $type     = $account->accountType->type;
@@ -89,9 +89,9 @@ trait UserNavigation
      *
      * @return bool
      */
-    protected function isEditableGroup(TransactionGroup $group): bool
+    final protected function isEditableGroup(TransactionGroup $group): bool
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
             return false;
@@ -107,13 +107,13 @@ trait UserNavigation
      *
      * @return RedirectResponse|Redirector
      */
-    protected function redirectAccountToAccount(Account $account)
+    final protected function redirectAccountToAccount(Account $account)
     {
         $type = $account->accountType->type;
         if (AccountType::RECONCILIATION === $type || AccountType::INITIAL_BALANCE === $type) {
             // reconciliation must be stored somewhere in this account's transactions.
 
-            /** @var Transaction $transaction */
+            /** @var Transaction|null $transaction */
             $transaction = $account->transactions()->first();
             if (null === $transaction) {
                 Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
@@ -122,7 +122,7 @@ trait UserNavigation
                 return redirect(route('index'));
             }
             $journal = $transaction->transactionJournal;
-            /** @var Transaction $other */
+            /** @var Transaction|null $other */
             $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
                 Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
@@ -142,9 +142,9 @@ trait UserNavigation
      *
      * @return RedirectResponse|Redirector
      */
-    protected function redirectGroupToAccount(TransactionGroup $group)
+    final protected function redirectGroupToAccount(TransactionGroup $group)
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
             Log::error(sprintf('No journals in group #%d', $group->id));
@@ -170,13 +170,13 @@ trait UserNavigation
      *
      * @return string|null
      */
-    protected function rememberPreviousUri(string $identifier): ?string
+    final protected function rememberPreviousUri(string $identifier): ?string
     {
         $return = app('url')->previous();
-        /** @var ViewErrorBag $errors */
+        /** @var ViewErrorBag|null $errors */
         $errors    = session()->get('errors');
         $forbidden = ['json', 'debug'];
-        if ((null === $errors || (null !== $errors && 0 === $errors->count())) && !Str::contains($return, $forbidden)) {
+        if ((null === $errors || (0 === $errors->count())) && !Str::contains($return, $forbidden)) {
             Log::debug(sprintf('Saving URL %s under key %s', $return, $identifier));
             session()->put($identifier, $return);
         }

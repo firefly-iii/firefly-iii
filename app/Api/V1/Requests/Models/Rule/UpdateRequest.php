@@ -47,7 +47,7 @@ class UpdateRequest extends FormRequest
     {
         $fields = [
             'title'           => ['title', 'string'],
-            'description'     => ['description', 'nlString'],
+            'description'     => ['description', 'stringWithNewlines'],
             'rule_group_id'   => ['rule_group_id', 'integer'],
             'trigger'         => ['trigger', 'string'],
             'strict'          => ['strict', 'boolean'],

@@ -81,7 +81,7 @@ class LinkType extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param $value
+     * @param string $value
      *
      * @throws NotFoundHttpException
      * @return LinkType

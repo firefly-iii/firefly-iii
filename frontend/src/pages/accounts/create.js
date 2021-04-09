@@ -1,7 +1,6 @@
-<?php
 /*
- * TransactionFactory.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * create.js
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,35 +18,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
-namespace Database\Factories\FireflyIII\Models;
-use FireflyIII\Models\Transaction;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * Class TransactionFactory
- */
-class TransactionFactory extends Factory
-{
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
-    protected $model = Transaction::class;
+require('../../bootstrap');
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
-    {
-        return [
-            'transaction_journal_id' => 0,
-            'account_id'             => 0,
-            'amount'                 => 5,
-        ];
-    }
-}
+import Create from "../../components/accounts/Create";
+
+// i18n
+let i18n = require('../../i18n');
+
+let props = {};
+new Vue({
+            i18n,
+            render(createElement) {
+                return createElement(Create, {props: props});
+            }
+        }).$mount('#accounts_create');

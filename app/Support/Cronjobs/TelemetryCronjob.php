@@ -54,7 +54,7 @@ class TelemetryCronjob extends AbstractCronjob
         $config        = app('fireflyconfig')->get('last_tm_job', 0);
         $lastTime      = (int)$config->data;
         $diff          = time() - $lastTime;
-        $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), true);
+        $diffForHumans = Carbon::now()->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
         if (0 === $lastTime) {
             Log::info('Telemetry cron-job has never fired before.');
         }

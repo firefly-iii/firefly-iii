@@ -125,7 +125,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (!empty($types)) {
+        if (0!==count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -153,7 +153,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts();
 
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -210,7 +210,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountTypeByType(string $type): ?AccountType
     {
-        return AccountType::whereType($type)->first();
+        return AccountType::whereType(ucfirst($type))->first();
     }
 
     /**
@@ -220,10 +220,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountsById(array $accountIds): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts();
 
-        if (!empty($accountIds)) {
+        if (0 !== count($accountIds)) {
             $query->whereIn('accounts.id', $accountIds);
         }
         $query->orderBy('accounts.order', 'ASC');
@@ -240,9 +239,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts();
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
         $res = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
@@ -263,13 +261,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getActiveAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');
             }, 'attachments']
         );
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);
@@ -324,13 +321,12 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getInactiveAccountsByType(array $types): Collection
     {
-        /** @var Collection $result */
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'account_role');
             }]
         );
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 0);
@@ -504,12 +500,12 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $data = [
-            'account_type_id' => null,
-            'account_type'    => AccountType::RECONCILIATION,
-            'active'          => true,
-            'name'            => $name,
-            'currency_id'     => $currency->id,
-            'currency_code'   => $currency->code,
+            'account_type_id'   => null,
+            'account_type_name' => AccountType::RECONCILIATION,
+            'active'            => true,
+            'name'              => $name,
+            'currency_id'       => $currency->id,
+            'currency_code'     => $currency->code,
         ];
 
         /** @var AccountFactory $factory */
@@ -668,7 +664,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
 
         }
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
@@ -706,7 +702,7 @@ class AccountRepository implements AccountRepositoryInterface
                 );
             }
         }
-        if (!empty($types)) {
+        if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }

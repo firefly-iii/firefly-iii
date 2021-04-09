@@ -20,7 +20,7 @@
 
 const lodashClonedeep = require('lodash.clonedeep');
 
-import {getDefaultTransaction, getDefaultErrors} from '../../../shared/transactions';
+import {getDefaultTransaction, getDefaultErrors} from '../../../../shared/transactions';
 
 // initial state
 const state = () => ({

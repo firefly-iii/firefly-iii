@@ -70,14 +70,14 @@ class FixPiggies extends Command
             }
             /** @var TransactionJournal $journal */
             $journal = $event->transactionJournal;
-            // @codeCoverageIgnoreStart
+
             if (null === $journal) {
                 $event->transaction_journal_id = null;
                 $event->save();
                 $this->count++;
                 continue;
             }
-            // @codeCoverageIgnoreEnd
+
 
             $type = $journal->transactionType->type;
             if (TransactionType::TRANSFER !== $type) {

@@ -97,7 +97,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
-        /** @var Collection $set */
+        /** @var Collection $events */
         $events = $journal->piggyBankEvents()->get();
         $events->each(
             function (PiggyBankEvent $event) {

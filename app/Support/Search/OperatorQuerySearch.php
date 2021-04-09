@@ -70,14 +70,14 @@ class OperatorQuerySearch implements SearchInterface
     private CurrencyRepositoryInterface        $currencyRepository;
     private Carbon                             $date;
     private int                                $limit;
-private Collection                         $modifiers;
+    private Collection                         $modifiers;
     private Collection                         $operators;
     private string                             $originalQuery;
     private int                                $page;
     private ParsedQuery                        $query;
     private float                              $startTime;
     private TagRepositoryInterface             $tagRepository;
-        private TransactionTypeRepositoryInterface $typeRepository; // obsolete
+    private TransactionTypeRepositoryInterface $typeRepository; // obsolete
     private User                               $user;
     private array                              $validOperators;
     private array                              $words;
@@ -179,7 +179,7 @@ private Collection                         $modifiers;
     public function searchTransactions(): LengthAwarePaginator
     {
         if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            return new LengthAwarePaginator;
+            return new LengthAwarePaginator([],0,5,1);
         }
 
         return $this->collector->getPaginatedGroups();
@@ -246,7 +246,7 @@ private Collection                         $modifiers;
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
                 // loop all notes in subquery:
-                foreach ($searchNode->getNodes() as $subNode) {
+                foreach ($searchNode->getNodes() as $subNode) { // @phpstan-ignore-line
                     $this->handleSearchNode($subNode); // lets hope its not too recursive!
                 }
                 break;

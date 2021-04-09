@@ -43,6 +43,8 @@ import store from '../components/store';
  * vue, uiv and vuei18n are in app_vue.js
  */
 
+// TODO pretty sure not all categories, budgets and other objects are picked up because they're paginated.
+
 require('../bootstrap');
 require('chart.js');
 

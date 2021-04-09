@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Cheie API',
     'remember_me'                 => 'Ține-mă minte',
     'liability_type_id'           => 'Tipul de provizion',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interes',
     'interest_period'             => 'Perioadă de interes',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Dacă ștergeți utilizatorul ":email", totul va dispărea. Nu există nici o undo (anulare), anulare ștergere sau orice altceva. Dacă vă ștergeți, veți pierde accesul la aplicație.',
     'attachment_areYouSure'       => 'Sunteți sigur că doriți să ștergeți atașamentul ":name"?',
     'account_areYouSure'          => 'Sunteți sigur că doriți să ștergeți contul ":name"?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => 'Sunteți sigur că doriți să ștergeți factura ":name"?',
     'rule_areYouSure'             => 'Sunteți sigur că doriți să ștergeți regula ":title"?',
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Ștergeți selectat definitiv',
     'update_all_journals'         => 'Actualizați aceste tranzacții',
     'also_delete_transactions'    => 'Singura tranzacție conectată la acest cont va fi, de asemenea, ștearsă.|Toate cele :count tranzacții conectate la acest cont vor fi șterse.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'Singura tranzacție legată de acest tip de legătură va pierde această conexiune.|Toate cele :count tranzacții legate de acest tip de legătură vor pierde conexiunea.',
     'also_delete_rules'           => 'Singura regulă legată de acest grup de reguli va fi ștersă, de asemenea.|Toate cele :count reguli conectate la acest grup de reguli vor fi șterse, de asemenea.',
     'also_delete_piggyBanks'      => 'Singura pușculita conectată la acest cont va fi ștersă.|Toate cele :count pușculițe conectate la acest cont vor fi șterse, de asemenea.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'Singura tranzacție conectată la această factură nu va fi ștearsă.|Toate cele :count tranzacții conectate la această factură vor fi scutite de ștergere.',
     'budget_keep_transactions'    => 'Singura tranzacție conectată la acest buget nu va fi ștearsă.|Toate cele :count tranzacții conectate la acest budet vor fi scutite de ștergere.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Singura tranzacție creată de această tranzacție recurentă nu va fi ștearsă.|Toate cele :count tranzacții create de această tranzacție recurente vor fi scutite de ștergere.',
     'tag_keep_transactions'       => 'Singura tranzacție conectată la this tag nu va fi ștearsă.|Toate cele :count tranzacții conectate la această etichetă vor fi scutite de ștergere.',
     'check_for_updates'           => 'Verifică pentru actualizări',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

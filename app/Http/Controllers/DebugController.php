@@ -98,12 +98,11 @@ class DebugController extends Controller
         Log::debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
-            // @codeCoverageIgnoreStart
-        } catch (Exception $e) {
-            // don't care
-            Log::debug(sprintf('Called twig:clean: %s', $e->getMessage()));
+
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
-        // @codeCoverageIgnoreEnd
+
         Log::debug('Call view:clear...');
         Artisan::call('view:clear');
         Log::debug('Done! Redirecting...');
@@ -179,12 +178,11 @@ class DebugController extends Controller
                 if (null !== $logFile) {
                     try {
                         $logContent = file_get_contents($logFile);
-                        // @codeCoverageIgnoreStart
-                    } catch (Exception $e) {
-                        // don't care
-                        Log::debug(sprintf('Could not read log file. %s', $e->getMessage()));
+
+                    } catch (Exception $e) { // @phpstan-ignore-line
+                        // @ignoreException
                     }
-                    // @codeCoverageIgnoreEnd
+
                 }
             }
         }
@@ -193,7 +191,7 @@ class DebugController extends Controller
             $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
         }
 
-        return prefixView(
+        return view(
             'debug',
             compact(
                 'phpVersion',

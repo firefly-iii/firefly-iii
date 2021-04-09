@@ -110,7 +110,7 @@ class IsValidAttachmentModel implements Rule
             Transaction::class        => 'validateTransaction',
             TransactionJournal::class => 'validateJournal',
         ];
-        if (!isset($methods[$this->model])) {
+        if (!array_key_exists($this->model, $methods)) {
             Log::error(sprintf('Cannot validate model "%s" in %s.', $this->model, __METHOD__));
 
             return false;

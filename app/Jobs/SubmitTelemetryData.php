@@ -46,10 +46,8 @@ class SubmitTelemetryData implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var Carbon The current date */
-    private $date;
-    /** @var bool Force the transaction to be created no matter what. */
-    private $force;
+    private Carbon $date;
+    private bool   $force;
 
     /**
      * Create a new job instance.
@@ -86,7 +84,7 @@ class SubmitTelemetryData implements ShouldQueue
         } catch (JsonException $e) {
             Log::error($e->getMessage());
             Log::error('Could not parse JSON.');
-            throw new FireflyException(sprintf('Could not parse telemetry JSON: %s', $e->getMessage()));
+            throw new FireflyException(sprintf('Could not parse telemetry JSON: %s', $e->getMessage()), 0, $e);
         }
 
         $client  = new Client;
@@ -105,7 +103,7 @@ class SubmitTelemetryData implements ShouldQueue
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             Log::error('Could not submit telemetry.');
-            throw new FireflyException(sprintf('Could not submit telemetry: %s', $e->getMessage()));
+            throw new FireflyException(sprintf('Could not submit telemetry: %s', $e->getMessage()), 0, $e);
         }
         $body       = (string)$result->getBody();
         $statusCode = $result->getStatusCode();

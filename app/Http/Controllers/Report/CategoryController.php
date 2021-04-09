@@ -311,8 +311,8 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.category.partials.avg-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -363,8 +363,8 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.category.partials.avg-income', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -497,7 +497,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-expenses-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -547,12 +547,12 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.partials.category-period', compact('report', 'periods'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
-        // @codeCoverageIgnoreEnd
+
 
         $cache->store($result);
 
@@ -577,7 +577,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-period-income-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         // depending on the carbon format (a reliable way to determine the general date difference)
@@ -626,12 +626,12 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.partials.category-period', compact('report', 'periods'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
-        // @codeCoverageIgnoreEnd
+
 
         $cache->store($result);
 
@@ -657,7 +657,7 @@ class CategoryController extends Controller
         $cache->addProperty('category-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         /** @var CategoryReportGenerator $generator */
@@ -668,17 +668,14 @@ class CategoryController extends Controller
         $generator->operations();
         $report = $generator->getReport();
 
-        // @codeCoverageIgnoreStart
+
         try {
             $result = prefixView('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
-        } catch (Throwable $e) {
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
-
-        // @codeCoverageIgnoreEnd
-
         return $result;
     }
 
@@ -723,8 +720,8 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.category.partials.top-expenses', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }
@@ -773,8 +770,8 @@ class CategoryController extends Controller
 
         try {
             $result = prefixView('reports.category.partials.top-income', compact('result'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
         }

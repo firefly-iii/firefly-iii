@@ -83,7 +83,7 @@ class LoginController extends Controller
         Log::info(sprintf('User is trying to login.'));
         if ('ldap' === config('auth.providers.users.driver')) {
             /** @var Adldap\Connections\Provider $provider */
-            Adldap::getProvider('default');
+            Adldap::getProvider('default'); // @phpstan-ignore-line
         }
 
         $this->validateLogin($request);
@@ -96,7 +96,7 @@ class LoginController extends Controller
             Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
             $this->fireLockoutEvent($request);
 
-            return $this->sendLockoutResponse($request);
+            $this->sendLockoutResponse($request);
         }
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
@@ -190,7 +190,7 @@ class LoginController extends Controller
         $loginProvider = config('firefly.login_provider');
         $title         = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
-            return redirect(route('register')); // @codeCoverageIgnore
+            return redirect(route('register')); 
         }
 
         // is allowed to?

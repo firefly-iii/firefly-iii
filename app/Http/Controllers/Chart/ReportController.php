@@ -78,7 +78,7 @@ class ReportController extends Controller
         $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         $locale    = app('steam')->getLocale();
         $current   = clone $start;
@@ -113,7 +113,7 @@ class ReportController extends Controller
             foreach ($result as $netWorthItem) {
                 $currencyId = $netWorthItem['currency']->id;
                 $label      = $current->formatLocalized((string)trans('config.month_and_day', [], $locale));
-                if (!isset($chartData[$currencyId])) {
+                if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
                         'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
                         'type'            => 'line',
@@ -152,7 +152,7 @@ class ReportController extends Controller
         $cache->addProperty($accounts);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); 
         }
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format         = app('navigation')->preferredCarbonFormat($start, $end);

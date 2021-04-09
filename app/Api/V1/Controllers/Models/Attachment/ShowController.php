@@ -100,7 +100,7 @@ class ShowController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', strlen($content));
+                ->header('Content-Length', (string)strlen($content));
 
             return $response;
         }

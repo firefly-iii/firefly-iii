@@ -240,7 +240,7 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
         }
 
         $redirect = redirect($this->getPreviousUri('recurring.create.uri'));

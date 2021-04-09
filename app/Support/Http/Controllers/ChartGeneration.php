@@ -57,7 +57,7 @@ trait ChartGeneration
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale = app('steam')->getLocale();

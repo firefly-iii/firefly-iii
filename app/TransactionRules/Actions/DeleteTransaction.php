@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
@@ -34,15 +33,6 @@ use Log;
  */
 class DeleteTransaction implements ActionInterface
 {
-    /**
-     * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
-     */
-    public function __construct(RuleAction $action)
-    {
-    }
-
     /**
      * @inheritDoc
      */
@@ -58,7 +48,7 @@ class DeleteTransaction implements ActionInterface
                     $journal['transaction_journal_id'], $journal['description']
                 )
             );
-            $group = TransactionGroup::find($journal['transaction_group_id']);
+            $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
 

@@ -76,7 +76,7 @@ class AccountMeta extends Model
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @codeCoverageIgnore
      * @return mixed
@@ -87,7 +87,7 @@ class AccountMeta extends Model
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      *
      * @codeCoverageIgnore
      */

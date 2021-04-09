@@ -54,7 +54,6 @@ class UserController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var UserRepositoryInterface repository */
                 $this->repository = app(UserRepositoryInterface::class);
 
                 return $next($request);
@@ -84,7 +83,7 @@ class UserController extends Controller
 
             return response()->json([], 204);
         }
-        throw new FireflyException('200025: No access to function.'); // @codeCoverageIgnore
+        throw new FireflyException('200025: No access to function.'); 
     }
 
     /**

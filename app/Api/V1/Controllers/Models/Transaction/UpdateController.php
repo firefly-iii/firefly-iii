@@ -96,7 +96,7 @@ class UpdateController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException(); // @codeCoverageIgnore
+            throw new NotFoundHttpException(); 
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);

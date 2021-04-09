@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-
-// Firefly III colors (?)
 $blue: #1E6581;
 $green: #64B624;
 $red: #CD5029;
@@ -63,7 +60,7 @@ $red: #CD5029;
 @import '~admin-lte/build/scss/modals';
 //@import '../toasts';
 @import '~admin-lte/build/scss/buttons';
-//@import '../callout';
+@import '~admin-lte/build/scss/callout';
 @import '~admin-lte/build/scss/alerts';
 @import '~admin-lte/build/scss/table';
 //@import '../carousel';

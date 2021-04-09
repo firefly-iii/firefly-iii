@@ -27,7 +27,6 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
-use Log;
 
 /**
  * Class FireflyConfig.
@@ -48,9 +47,8 @@ class FireflyConfig
         }
         try {
             Configuration::where('name', $name)->delete();
-        } catch (Exception $e) {
-            Log::debug(sprintf('Could not delete config value: %s', $e->getMessage()));
-
+        } catch (Exception $e) { // @phpstan-ignore-line
+            // @ignoreException
         }
     }
 
@@ -65,8 +63,8 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param null   $default
+     * @param string               $name
+     * @param bool|string|int|null $default
      *
      * @return Configuration|null
      * @throws FireflyException
@@ -79,13 +77,13 @@ class FireflyConfig
         }
 
         try {
-            /** @var Configuration $config */
+            /** @var Configuration|null $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException | Exception $e) {
+        } catch (QueryException | Exception $e) { // @phpstan-ignore-line
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()));
         }
 
-        if ($config) {
+        if (null !== $config) {
             Cache::forever($fullName, $config);
 
             return $config;
@@ -122,29 +120,26 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param        $value
+     * @param mixed  $value
      *
      * @return Configuration
      */
     public function put(string $name, $value): Configuration
     {
-
         return $this->set($name, $value);
     }
 
     /**
-     * @param string          $name
-     * @param                 $value
-     * @param int|string|true $value
+     * @param string $name
+     * @param mixed  $value
      *
      * @return Configuration
      */
     public function set(string $name, $value): Configuration
     {
-        /** @var Configuration $config */
         try {
             $config = Configuration::whereName($name)->first();
-        } catch (QueryException | Exception $e) {
+        } catch (QueryException | Exception $e) { // @phpstan-ignore-line
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;

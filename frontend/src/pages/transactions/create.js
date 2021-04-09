@@ -28,6 +28,12 @@ Vue.config.productionTip = false;
 // i18n
 let i18n = require('../../i18n');
 
+// TODO take transaction type from URL. Simplifies a lot of code.
+// TODO make sure the enter button works.
+// TODO add preferences in sidebar
+// TODO If I change the date box at all even if you just type over it with the current date, it posts back a day.
+// TODO Cash accounts do not work
+
 let props = {};
 new Vue({
             i18n,
@@ -36,6 +42,7 @@ new Vue({
                 return createElement(Create, {props: props});
             },
             beforeCreate() {
+                this.$store.dispatch('root/initialiseStore');
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
             },

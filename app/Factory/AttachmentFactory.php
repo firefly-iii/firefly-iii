@@ -54,7 +54,7 @@ class AttachmentFactory
             /** @var Transaction $transaction */
             $transaction = $this->user->transactions()->find((int)$data['attachable_id']);
             if (null === $transaction) {
-                throw new FireflyException('Unexpectedly could not find transaction'); // @codeCoverageIgnore
+                throw new FireflyException('Unexpectedly could not find transaction'); 
             }
             $data['attachable_id'] = $transaction->transaction_journal_id;
             $model                 = TransactionJournal::class;

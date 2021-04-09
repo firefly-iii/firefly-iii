@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Chave API',
     'remember_me'                 => 'Lembrar-me',
     'liability_type_id'           => 'Tipo de responsabilidade',
+    'liability_type'              => 'Tipo de responsabilidade',
     'interest'                    => 'Juro',
     'interest_period'             => 'Periodo de juros',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Se apagares o utilizador ":email", tudo em relacao a ele vai desaparecer. Nao existe retorno. Se apagares a tua propria conta, vais perder o acesso a esta instancia do Firefly III.',
     'attachment_areYouSure'       => 'Tens a certeza que pretendes apagar o anexo chamado ":name"?',
     'account_areYouSure'          => 'Tens a certeza que pretendes apagar a conta chamada ":name"?',
+    'account_areYouSure_js'       => 'Tem a certeza que deseja eliminar a conta denominada por "{name}?',
     'bill_areYouSure'             => 'Tens a certeza que pretendes apagar a factura chamada ":name"?',
     'rule_areYouSure'             => 'Tens a certeza que pretendes apagar a regra com titulo ":title"?',
     'object_group_areYouSure'     => 'Tem certeza que quer apagar o grupo ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Apagar os seleccionados, permanentemente',
     'update_all_journals'         => 'Atualizar estas transações',
     'also_delete_transactions'    => 'A transação vinculada a esta conta vai ser também apagada.|As :count transações vinculadas a esta conta serão também apagadas.',
+    'also_delete_transactions_js' => 'Nenhuma transação| A única transação ligada a esta conta será também excluída.|Todas as {count} transações ligadas a esta conta serão também excluídas.',
     'also_delete_connections'     => 'A transação vinculada a este tipo de ligação irá perder a conexão.|As :count transações vinculadas a este tipo de ligação irão perder as suas conexões.',
     'also_delete_rules'           => 'A unica regra vinculada a este grupo de regras vai ser apagada tambem.|Todas as :count regras vinculadas a este grupo de regras vao ser apagadas tambem.',
     'also_delete_piggyBanks'      => 'O unico mealheiro vinculado a esta conta vai ser apagado tambem.|Todos os :count mealheiros vinculados a esta conta vao ser apagados tambem.',
+    'also_delete_piggyBanks_js'   => 'Nenhum mealheiro|O único mealheiro ligado a esta conta será também eliminado.|Todos os {count} mealheiros ligados a esta conta serão também eliminados.',
     'not_delete_piggy_banks'      => 'O mealheiro ligado a este grupo não vai ser apagado. Os :count mealheiros ligados a este grupo não vão ser apagados.',
     'bill_keep_transactions'      => 'A única transação vinculada a esta fatura não vai ser apagada.|Todas as :count transações vinculadas a esta fatura não vão ser apagadas.',
     'budget_keep_transactions'    => 'A única transação vinculada a este orçamento não vai ser apagada.|Todas as :count transações vinculadas a este orçamento não vão ser apagadas.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'A única transação criada a partir desta transação recorrente não vai ser apagada.|Todas as :count transações criadas a partir desta transação recorrente não vão ser apagadas.',
     'tag_keep_transactions'       => 'A única transação vinculada a esta etiqueta não vai ser apagada.|Todas as :count transações vinculadas a esta etiqueta não vão ser apagadas.',
     'check_for_updates'           => 'Procurar actualizacoes',
+    'liability_direction'         => 'Responsabilidade entrada/saída',
 
     'delete_object_group' => 'Apagar grupo ":title"',
 

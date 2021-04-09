@@ -69,14 +69,14 @@ class APIEventHandler
             try {
                 Log::debug('Trying to send message...');
                 Mail::to($email)->send(new AccessTokenCreatedMail($email, $ipAddress));
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
+
+            } catch (Exception $e) { // @phpstan-ignore-line
                 Log::debug('Send message failed! :(');
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
                 Session::flash('error', 'Possible email error: ' . $e->getMessage());
             }
-            // @codeCoverageIgnoreEnd
+
             Log::debug('If no error above this line, message was sent.');
         }
 

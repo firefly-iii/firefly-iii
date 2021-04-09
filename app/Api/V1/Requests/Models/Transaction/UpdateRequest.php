@@ -150,10 +150,7 @@ class UpdateRequest extends FormRequest
             return $return;
         }
 
-        /**
-         * @var int   $index
-         * @var array $transaction
-         */
+        /** @var array $transaction */
         foreach ($this->get('transactions') as $transaction) {
             // default response is to update nothing in the transaction:
             $current  = [];
@@ -197,7 +194,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName], false);
             }
         }
 
@@ -214,7 +211,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->nlStringFromValue((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
             }
         }
 

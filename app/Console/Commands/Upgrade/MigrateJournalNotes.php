@@ -56,13 +56,13 @@ class MigrateJournalNotes extends Command
     public function handle(): int
     {
         $start = microtime(true);
-        // @codeCoverageIgnoreStart
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-        // @codeCoverageIgnoreEnd
+
         $count = 0;
         /** @noinspection PhpUndefinedMethodInspection */
         $set = TransactionJournalMeta::whereName('notes')->get();
@@ -80,11 +80,11 @@ class MigrateJournalNotes extends Command
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             try {
                 $meta->delete();
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
+
+            } catch (Exception $e) { // @phpstan-ignore-line
                 Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
             }
-            // @codeCoverageIgnoreEnd
+
             $count++;
         }
 
@@ -112,7 +112,7 @@ class MigrateJournalNotes extends Command
             return (bool)$configVar->data;
         }
 
-        return false; // @codeCoverageIgnore
+        return false; 
     }
 
     /**

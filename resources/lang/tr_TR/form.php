@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API anahtarı',
     'remember_me'                 => 'Remember me',
     'liability_type_id'           => 'Liability type',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Interest',
     'interest_period'             => 'Interest period',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => '":email" kullanıcısını silerseniz her şey gitmiş olacak. Geriye alma, silmeyi iptal etme veya başka bir şey yoktur. Eğer kendinizi silerseniz, bu Firefly III\'e erişiminizi kaybedersiniz.',
     'attachment_areYouSure'       => '":name" isimli eklentiyi silmek istediğinizden emin misiniz?',
     'account_areYouSure'          => '":name" isimli hesabı silmek istediğinizden emin misiniz?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => '":name" isimli faturayı silmek istediğinizden emin misiniz?',
     'rule_areYouSure'             => '":title" başlıklı kuralı silmek istediğinizden emin misiniz?',
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Seçilenleri kalıcı olarak sil',
     'update_all_journals'         => 'Bu işlemleri güncelleyin',
     'also_delete_transactions'    => 'Bu hesaba bağlı olan tek işlem de silinecektir. |Bu hesaba bağlı tüm :count işlemleri de silinecektir.',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => 'Bu bağlantıya bağlı tek işlem bağlantısını kaybedecek.| Bu bağlantı türüne bağlı tüm :count işlemleri bağlantılarını kaybedecek.',
     'also_delete_rules'           => 'Bu hesaba bağlı olan tek kural grubu da silinecektir. |Bu hesaba bağlı tüm :count kuralları da silinecektir.',
     'also_delete_piggyBanks'      => 'Bu hesaba bağlı olan tek kumbara da silinecektir. |Bu hesaba bağlı olan tüm :count kumbaraları da silinecektir.',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => 'The only transaction connected to this bill will not be deleted.|All :count transactions connected to this bill will be spared deletion.',
     'budget_keep_transactions'    => 'The only transaction connected to this budget will not be deleted.|All :count transactions connected to this budget will be spared deletion.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'The only transaction created by this recurring transaction will not be deleted.|All :count transactions created by this recurring transaction will be spared deletion.',
     'tag_keep_transactions'       => 'The only transaction connected to this tag will not be deleted.|All :count transactions connected to this tag will be spared deletion.',
     'check_for_updates'           => 'Check for updates',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

@@ -168,7 +168,7 @@ trait JournalServiceTrait
      * @return Account
      * @throws FireflyException
      */
-    private function createAccount(?Account $account, array $data, string $preferredType): Account
+    private function createAccount(?Account $account, array $data, string $preferredType): ?Account
     {
         Log::debug('Now in createAccount()', $data);
         // return new account.
@@ -185,26 +185,34 @@ trait JournalServiceTrait
 
             // final attempt, create it.
             if (AccountType::ASSET === $preferredType) {
-                throw new FireflyException('TransactionFactory: Cannot create asset account with these values', $data);
+                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s',json_encode($data)));
             }
             // fix name of account if only IBAN is given:
             if ('' === (string)$data['name'] && '' !== (string)$data['iban']) {
                 Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
                 $data['name'] = $data['iban'];
             }
-
+            // fix name of account if only number is given:
+            if ('' === (string)$data['name'] && '' !== (string)$data['number']) {
+                Log::debug(sprintf('Account name is now account number ("%s")', $data['number']));
+                $data['name'] = $data['number'];
+            }
+            // if name is still NULL, return NULL.
+            if(null === $data['name']) {
+                return null;
+            }
             $data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(
                 [
-                    'account_type_id' => null,
-                    'account_type'    => $preferredType,
-                    'name'            => $data['name'],
-                    'virtual_balance' => null,
-                    'active'          => true,
-                    'iban'            => $data['iban'],
-                    'currency_id'     => $data['currency_id'] ?? null,
-                    'order'           => $this->accountRepository->maxOrder($preferredType),
+                    'account_type_id'   => null,
+                    'account_type_name' => $preferredType,
+                    'name'              => $data['name'],
+                    'virtual_balance'   => null,
+                    'active'            => true,
+                    'iban'              => $data['iban'],
+                    'currency_id'       => $data['currency_id'] ?? null,
+                    'order'             => $this->accountRepository->maxOrder($preferredType),
                 ]
             );
             // store BIC
@@ -358,11 +366,9 @@ trait JournalServiceTrait
             // try to delete existing notes.
             try {
                 $note->delete();
-                // @codeCoverageIgnoreStart
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete journal notes: %s', $e->getMessage()));
+            } catch (Exception $e) { // @phpstan-ignore-line
+                // @ignoreException
             }
-            // @codeCoverageIgnoreEnd
         }
     }
 

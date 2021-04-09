@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'Η τιμή πρέπει να ξεκινά με :values.',
     'unique_webhook'                 => 'Έχετε ήδη ένα webhook με αυτές τις τιμές.',
     'unique_existing_webhook'        => 'Έχετε ήδη ένα άλλο webhook με αυτές τις τιμές.',
+    'same_account_type'              => 'Both accounts must be of the same account type',
+    'same_account_currency'          => 'Both accounts must have the same currency setting',
 
     'secure_password'             => 'Αυτό δεν είναι ασφαλές συνθηματικό. Παρακαλώ δοκιμάστε ξανά. Για περισσότερες πληροφορίες επισκεφτείτε https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Μη έγκυρος τύπος επανάληψης για επαναλαμβανόμενες συναλλαγές.',

@@ -56,7 +56,7 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($currency ? $currency->id : 0);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -101,13 +101,13 @@ class Steam
         $cache->addProperty('balance-no-virtual');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
         $transactions  = $account->transactions()
                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
@@ -170,7 +170,7 @@ class Steam
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         $start->subDay();
@@ -178,8 +178,6 @@ class Steam
         $balances     = [];
         $formatted    = $start->format('Y-m-d');
         $startBalance = $this->balance($account, $start, $currency);
-
-        /** @var AccountRepositoryInterface $repository */
 
         $balances[$formatted] = $startBalance;
         if (null === $currency) {
@@ -202,7 +200,7 @@ class Steam
                        ->orderBy('transaction_journals.date', 'ASC')
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
-                           [
+                           [  // @phpstan-ignore-line
                                'transaction_journals.date',
                                'transactions.transaction_currency_id',
                                DB::raw('SUM(transactions.amount) AS modified'),
@@ -252,13 +250,13 @@ class Steam
         $cache->addProperty('balance-per-currency');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
         $query    = $account->transactions()
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
@@ -286,7 +284,7 @@ class Steam
         $cache->addProperty('balances');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         // need to do this per account.
@@ -318,7 +316,7 @@ class Steam
         $cache->addProperty('balances-per-currency');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); 
         }
 
         // need to do this per account.
@@ -334,136 +332,6 @@ class Steam
     }
 
     /**
-     * Remove weird chars from strings.
-     *
-     * @param string $string
-     * TODO migrate to trait.
-     *
-     * @return string
-     * @deprecated
-     */
-    public function cleanString(string $string): string
-    {
-        $search  = [
-            "\u{0001}", // start of heading
-            "\u{0002}", // start of text
-            "\u{0003}", // end of text
-            "\u{0004}", // end of transmission
-            "\u{0005}", // enquiry
-            "\u{0006}", // ACK
-            "\u{0007}", // BEL
-            "\u{0008}", // backspace
-            "\u{000E}", // shift out
-            "\u{000F}", // shift in
-            "\u{0010}", // data link escape
-            "\u{0011}", // DC1
-            "\u{0012}", // DC2
-            "\u{0013}", // DC3
-            "\u{0014}", // DC4
-            "\u{0015}", // NAK
-            "\u{0016}", // SYN
-            "\u{0017}", // ETB
-            "\u{0018}", // CAN
-            "\u{0019}", // EM
-            "\u{001A}", // SUB
-            "\u{001B}", // escape
-            "\u{001C}", // file separator
-            "\u{001D}", // group separator
-            "\u{001E}", // record separator
-            "\u{001F}", // unit separator
-            "\u{007F}", // DEL
-            "\u{00A0}", // non-breaking space
-            "\u{1680}", // ogham space mark
-            "\u{180E}", // mongolian vowel separator
-            "\u{2000}", // en quad
-            "\u{2001}", // em quad
-            "\u{2002}", // en space
-            "\u{2003}", // em space
-            "\u{2004}", // three-per-em space
-            "\u{2005}", // four-per-em space
-            "\u{2006}", // six-per-em space
-            "\u{2007}", // figure space
-            "\u{2008}", // punctuation space
-            "\u{2009}", // thin space
-            "\u{200A}", // hair space
-            "\u{200B}", // zero width space
-            "\u{202F}", // narrow no-break space
-            "\u{3000}", // ideographic space
-            "\u{FEFF}", // zero width no -break space
-        ];
-        $replace = "\x20"; // plain old normal space
-        $string  = str_replace($search, $replace, $string);
-        $string  = str_replace(["\n", "\t", "\r"], "\x20", $string);
-
-        return trim($string);
-    }
-
-    /**
-     * Remove weird chars from strings, but keep newlines and tabs.
-     *
-     * @param string $string
-     * TODO migrate to trait.
-     *
-     * @return string
-     * @deprecated
-     */
-    public function nlCleanString(string $string): string
-    {
-        $search  = [
-            "\u{0001}", // start of heading
-            "\u{0002}", // start of text
-            "\u{0003}", // end of text
-            "\u{0004}", // end of transmission
-            "\u{0005}", // enquiry
-            "\u{0006}", // ACK
-            "\u{0007}", // BEL
-            "\u{0008}", // backspace
-            "\u{000E}", // shift out
-            "\u{000F}", // shift in
-            "\u{0010}", // data link escape
-            "\u{0011}", // DC1
-            "\u{0012}", // DC2
-            "\u{0013}", // DC3
-            "\u{0014}", // DC4
-            "\u{0015}", // NAK
-            "\u{0016}", // SYN
-            "\u{0017}", // ETB
-            "\u{0018}", // CAN
-            "\u{0019}", // EM
-            "\u{001A}", // SUB
-            "\u{001B}", // escape
-            "\u{001C}", // file separator
-            "\u{001D}", // group separator
-            "\u{001E}", // record separator
-            "\u{001F}", // unit separator
-            "\u{007F}", // DEL
-            "\u{00A0}", // non-breaking space
-            "\u{1680}", // ogham space mark
-            "\u{180E}", // mongolian vowel separator
-            "\u{2000}", // en quad
-            "\u{2001}", // em quad
-            "\u{2002}", // en space
-            "\u{2003}", // em space
-            "\u{2004}", // three-per-em space
-            "\u{2005}", // four-per-em space
-            "\u{2006}", // six-per-em space
-            "\u{2007}", // figure space
-            "\u{2008}", // punctuation space
-            "\u{2009}", // thin space
-            "\u{200A}", // hair space
-            "\u{200B}", // zero width space
-            "\u{202F}", // narrow no-break space
-            "\u{3000}", // ideographic space
-            "\u{FEFF}", // zero width no -break space
-        ];
-        $replace = "\x20"; // plain old normal space
-        $string  = str_replace($search, $replace, $string);
-        $string  = str_replace("\r", '', $string);
-
-        return trim($string);
-    }
-
-    /**
      * @param array $accounts
      *
      * @return array
@@ -475,7 +343,7 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
 
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, 'UTC');
@@ -493,6 +361,9 @@ class Steam
      */
     public function negative(string $amount): string
     {
+        if ('' === $amount) {
+            return '0';
+        }
         if (1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
@@ -554,6 +425,9 @@ class Steam
      */
     public function positive(string $amount): string
     {
+        if ('' === $amount) {
+            return '0';
+        }
         if (bccomp($amount, '0') === -1) {
             $amount = bcmul($amount, '-1');
         }
@@ -578,7 +452,6 @@ class Steam
      */
     public function getLocale(): string // get preference
     {
-        /** @var string $language */
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         if ('equal' === $locale) {
             $locale = $this->getLanguage();

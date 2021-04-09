@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
@@ -37,8 +36,6 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    use UserNavigation;
-
     /**
      * EditController constructor.
      *
@@ -70,7 +67,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         if (!$this->isEditableGroup($transactionGroup)) {
-            return $this->redirectGroupToAccount($transactionGroup); // @codeCoverageIgnore
+            return $this->redirectGroupToAccount($transactionGroup); 
         }
 
         /** @var AccountRepositoryInterface $repository */

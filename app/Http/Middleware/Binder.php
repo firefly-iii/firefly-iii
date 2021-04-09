@@ -57,7 +57,6 @@ class Binder
         $this->auth    = $auth;
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     /**
      * Handle an incoming request.
      *
@@ -70,7 +69,7 @@ class Binder
     public function handle($request, Closure $next)
     {
         foreach ($request->route()->parameters() as $key => $value) {
-            if (isset($this->binders[$key])) {
+            if (array_key_exists($key, $this->binders)) {
                 $boundObject = $this->performBinding($key, $value, $request->route());
                 $request->route()->setParameter($key, $boundObject);
             }
@@ -82,9 +81,9 @@ class Binder
     /**
      * Do the binding.
      *
-     * @param $key
-     * @param $value
-     * @param $route
+     * @param string $key
+     * @param string $value
+     * @param Route $route
      *
      * @return mixed
      */

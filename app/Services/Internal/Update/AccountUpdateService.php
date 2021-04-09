@@ -51,12 +51,11 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        // TODO move to configuration.
-        $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $this->canHaveVirtual    = config('firefly.can_have_virtual_amounts');
+        $this->validAssetFields  = config('firefly.valid_asset_fields');
+        $this->validCCFields     = config('firefly.valid_cc_fields');
+        $this->validFields       = config('firefly.valid_account_fields');
         $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->validAssetFields  = ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-        $this->validCCFields     = ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'];
-        $this->validFields       = ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
     }
 
     /**
@@ -100,12 +99,12 @@ class AccountUpdateService
         $this->updateOpeningBalance($account, $data);
 
         // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
+        if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->updateNote($account, (string)$data['notes']);
         }
 
         // update preferences if inactive:
-        $this->updatePreferences($account, $data);
+        $this->updatePreferences($account);
 
         return $account;
     }
@@ -290,34 +289,29 @@ class AccountUpdateService
 
     /**
      * @param Account $account
-     * @param array   $data
      */
-    private function updatePreferences(Account $account, array $data): void
+    private function updatePreferences(Account $account): void
     {
-        Log::debug(sprintf('Now in updatePreferences(#%d)', $account->id));
-        if (array_key_exists('active', $data) && (false === $data['active'] || 0 === $data['active'])) {
-            Log::debug('Account was marked as inactive.');
-            $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
-            if (null !== $preference) {
-                $removeAccountId = (int)$account->id;
-                $array           = $preference->data;
-                Log::debug('Current list of accounts: ', $array);
-                Log::debug(sprintf('Going to remove account #%d', $removeAccountId));
-                $filtered = array_filter(
-                    $array, function ($accountId) use ($removeAccountId) {
-                    return (int)$accountId !== $removeAccountId;
-                }
-                );
-                Log::debug('Left with accounts', array_values($filtered));
-                app('preferences')->setForUser($account->user, 'frontpageAccounts', array_values($filtered));
-                app('preferences')->forget($account->user, 'frontpageAccounts');
-
-                return;
-            }
-            Log::debug("Found no frontpageAccounts preference, do nothing.");
-
+        $account->refresh();
+        if (true === $account->active) {
             return;
         }
-        Log::debug('Account was not marked as inactive, do nothing.');
+        $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+        if (null === $preference) {
+            return;
+        }
+        $array = $preference->data;
+        Log::debug('Old array is: ', $array);
+        Log::debug(sprintf('Must remove : %d', $account->id));
+        $removeAccountId = (int)$account->id;
+        $new             = [];
+        foreach ($array as $value) {
+            if ((int)$value !== $removeAccountId) {
+                Log::debug(sprintf('Will include: %d', $value));
+                $new[] = (int)$value;
+            }
+        }
+        Log::debug('Final new array is', $new);
+        app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
     }
 }

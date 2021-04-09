@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'API 金鑰',
     'remember_me'                 => '記住我',
     'liability_type_id'           => '負債類型',
+    'liability_type'              => 'Liability type',
     'interest'                    => '利率',
     'interest_period'             => '利率期',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => '如果您刪除使用者 ":email"，該名使用者的任何資訊均會消失，無法復原。如果您刪除自己，將無法進入此 Firefly III 版本。',
     'attachment_areYouSure'       => '你確定你想要刪除附加檔案 ":name"?',
     'account_areYouSure'          => '你確定你想要刪除名為 ":name" 的帳戶?',
+    'account_areYouSure_js'       => 'Are you sure you want to delete the account named "{name}"?',
     'bill_areYouSure'             => '你確定你想要刪除名為 ":name" 的帳單?',
     'rule_areYouSure'             => '你確定你想要刪除名為 ":title" 的規則?',
     'object_group_areYouSure'     => 'Are you sure you want to delete the group titled ":title"?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => '永久刪除已選項目',
     'update_all_journals'         => '更新這些交易',
     'also_delete_transactions'    => '與此帳戶連接的唯一一筆交易也會被刪除。|與此帳戶連接的 :count 筆交易也會被刪除。',
+    'also_delete_transactions_js' => 'No transactions|The only transaction connected to this account will be deleted as well.|All {count} transactions connected to this account will be deleted as well.',
     'also_delete_connections'     => '與此連結類型連接的唯一一筆交易會遺失連接。|與此連結類型連接的 :count 筆交易會遺失連接。',
     'also_delete_rules'           => '與此規則群組連接的唯一一則規則也會被刪除。|與此規則群組連接的 :count 則規則也會被刪除。',
     'also_delete_piggyBanks'      => '與此帳戶連接的唯一一個小豬撲滿也會被刪除。|與此帳戶連接的 :count 個小豬撲滿也會被刪除。',
+    'also_delete_piggyBanks_js'   => 'No piggy banks|The only piggy bank connected to this account will be deleted as well.|All {count} piggy banks connected to this account will be deleted as well.',
     'not_delete_piggy_banks'      => 'The piggy bank connected to this group will not be deleted.|The :count piggy banks connected to this group will not be deleted.',
     'bill_keep_transactions'      => '與此帳單連接的唯一一筆交易不會被刪除。|與此帳單連接的 :count 筆交易不會被刪除。',
     'budget_keep_transactions'    => '與此預算連接的唯一一筆交易不會被刪除。|與此預算連接的 :count 筆交易不會被刪除。',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => '由此定期交易建立的唯一一筆交易不會被刪除。|由此定期交易建立的 :count 筆交易不會被刪除。',
     'tag_keep_transactions'       => '與此標籤連接的唯一一筆交易不會被刪除。|與此標籤連接的 :count 筆交易不會被刪除。',
     'check_for_updates'           => '檢查更新',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Delete group ":title"',
 

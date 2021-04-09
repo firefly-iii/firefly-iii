@@ -116,14 +116,11 @@ class SearchController extends Controller
 
         try {
             $html = prefixView('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
+
+        } catch (Throwable $e) { // @phpstan-ignore-line
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             $html = 'Could not render view.';
         }
-
-        // @codeCoverageIgnoreEnd
-
         return response()->json(['count' => $groups->count(), 'html' => $html]);
     }
 }

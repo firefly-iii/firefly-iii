@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Illuminate\Support\Carbon $start_date
  * @property \Illuminate\Support\Carbon|null $end_date
  * @property string $amount
+ * @property string $spent
  * @property string|null $period
  * @property int $generated
  * @property-read \FireflyIII\Models\Budget $budget
@@ -83,7 +84,7 @@ class BudgetLimit extends Model
      *
      * @param string $value
      *
-     * @return mixed
+     * @return BudgetLimit
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): BudgetLimit

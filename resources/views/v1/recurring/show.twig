@@ -175,7 +175,7 @@
     {% endblock %}
 
     {% block styles %}
-        <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+        <link rel="stylesheet" href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" media="all" nonce="{{ JS_NONCE }}">
     {% endblock %}
 
     {% block scripts %}

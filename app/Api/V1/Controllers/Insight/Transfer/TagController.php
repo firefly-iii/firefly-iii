@@ -132,7 +132,7 @@ class TagController extends Controller
         $collector->setTypes([TransactionType::TRANSFER])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
-        /** @var array $entry */
+        /** @var array $journal */
         foreach ($genericSet as $journal) {
             $currencyId        = (int)$journal['currency_id'];
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];

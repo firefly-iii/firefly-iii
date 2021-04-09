@@ -80,6 +80,7 @@ return [
     'api_key'                     => 'Klíč k API',
     'remember_me'                 => 'Zapamatovat si mě',
     'liability_type_id'           => 'Typ závazku',
+    'liability_type'              => 'Liability type',
     'interest'                    => 'Úrok',
     'interest_period'             => 'Úrokové období',
 
@@ -137,6 +138,7 @@ return [
     'user_areYouSure'             => 'Pokud odstraníte uživatele „:email“, vše bude pryč. Neexistuje žádná možnost vrácení, obnovení nebo cokoli dalšího. Pokud smažete sami sebe, ztratíte přístup k této instanci Firefly III.',
     'attachment_areYouSure'       => 'Jste si jisti, že chcete odstranit přílohu s názvem „:name“?',
     'account_areYouSure'          => 'Jste si jisti, že chcete odstranit účet s názvem „:name“?',
+    'account_areYouSure_js'       => 'Jste si jisti, že chcete odstranit účet s názvem "{name}"?',
     'bill_areYouSure'             => 'Jste si jisti, že chcete odstranit účet s názvem ":name"?',
     'rule_areYouSure'             => 'Opravdu chcete odstranit pravidlo s názvem „:title“?',
     'object_group_areYouSure'     => 'Jste si jisti, že chcete odstranit skupinu s názvem „:title“?',
@@ -156,9 +158,11 @@ return [
     'delete_all_permanently'      => 'Označené trvale smazat',
     'update_all_journals'         => 'Aktualizovat tyto transakce',
     'also_delete_transactions'    => 'Jediná transakce připojená k tomuto účtu bude také odstraněna.|Všech :count transakcí připojených k tomuto účtu bude také odstraněno.',
+    'also_delete_transactions_js' => 'Žádné transakce|Jediná transakce připojená k tomuto účtu bude také smazána.|Všech {count} transakcí připojených k tomuto účtu bude také odstraněno.',
     'also_delete_connections'     => 'Jediná transakce propojená s tímto typem odkazu ztratí toto spojení.|Všech :count transakcí propojených s tímto typem odkazu ztratí své spojení.',
     'also_delete_rules'           => 'Jediné pravidlo připojené k této skupině pravidel bude také smazáno.|Všech :count pravidel připojených k této skupině pravidel bude také odstraněno.',
     'also_delete_piggyBanks'      => 'Jediná pokladnička připojená k tomuto účtu bude také odstraněna.|Všech :count pokladniček připojených k tomuto účtu bude také odstraněno.',
+    'also_delete_piggyBanks_js'   => 'Žádné pokladničky|Jediná pokladnička připojená k tomuto účtu bude také odstraněna. Všech {count} pokladniček, které jsou připojeny k tomuto účtu, bude také odstraněno.',
     'not_delete_piggy_banks'      => 'Pokladnička připojená k této skupině nebude smazána.|:count pokladniček připojených k této skupině nebude smazáno.',
     'bill_keep_transactions'      => 'Jediná transakce připojená k tomuto účtu nebude smazána.|Všech :count transakcí připojených k tomuto účtu nebude odstraněno.',
     'budget_keep_transactions'    => 'Jediná transakce připojená k tomuto rozpočtu nebude smazána.|Všech :count transakcí připojených k tomuto rozpočtu nebude odstraněno.',
@@ -166,6 +170,7 @@ return [
     'recurring_keep_transactions' => 'Jediná transakce vytvořená touto opakující se transakcí nebude smazána.|Všech :count transakcí vytvořených touto opakující se transakcí nebude odstraněno.',
     'tag_keep_transactions'       => 'Jediná transakce připojená k tomuto štítku nebude smazána.|Všech :count transakcí připojených k tomuto štítku nebudou odstraněno.',
     'check_for_updates'           => 'Zjistit dostupnost případných aktualizací',
+    'liability_direction'         => 'Liability in/out',
 
     'delete_object_group' => 'Odstranit skupinu „:title“',
 

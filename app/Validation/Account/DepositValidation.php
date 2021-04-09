@@ -34,7 +34,7 @@ trait DepositValidation
 {
     /**
      * @param int|null $accountId
-     * @param          $accountName
+     * @param mixed    $accountName
      *
      * @return bool
      */

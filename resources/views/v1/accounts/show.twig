@@ -215,6 +215,6 @@
 
 {% block styles %}
     {% if location %}
-        <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
+        <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"  nonce="{{ JS_NONCE }}">
     {% endif %}
 {% endblock %}

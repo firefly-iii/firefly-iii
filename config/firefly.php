@@ -99,8 +99,8 @@ return [
         'webhooks'  => false,
     ],
 
-    'version'                      => '5.5.3',
-    'api_version'                  => '1.5.1',
+    'version'                      => '5.5.4',
+    'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -113,6 +113,7 @@ return [
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
+    'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
     'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
@@ -122,14 +123,13 @@ return [
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
-    'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
-    'ipinfo_token'                 => env('IPINFO_TOKEN',''),
+    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
     'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
-    'update_minimum_age'           => 6,
+    'update_minimum_age'           => 7,
     'default_location'             => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
@@ -207,9 +207,11 @@ return [
         'application/vnd.oasis.opendocument.database',
         'application/vnd.oasis.opendocument.image',
     ],
-    'list_length'                  => 10,
+    'list_length'                  => 10, // to be removed if v1 is cancelled.
     'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
+    'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
     'ccTypes'                      => [
         'monthlyFull' => 'Full payment every month',
     ],
@@ -329,14 +331,6 @@ return [
         'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
-    ],
-    'transactionTypesByWhat'       => [
-        'expenses'   => ['Withdrawal'],
-        'withdrawal' => ['Withdrawal'],
-        'revenue'    => ['Deposit'],
-        'deposit'    => ['Deposit'],
-        'transfer'   => ['Transfer'],
-        'transfers'  => ['Transfer'],
     ],
     'transactionTypesByType'       => [
         'expenses'   => ['Withdrawal'],
@@ -849,4 +843,8 @@ return [
             Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
         ],
     ],
+    'can_have_virtual_amounts'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
+    'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'],
 ];

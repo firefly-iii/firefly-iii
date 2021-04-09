@@ -57,7 +57,7 @@ trait ValidatesAutoBudgetRequest
         if ('' === $period) {
             $validator->errors()->add('auto_budget_period', (string)trans('validation.auto_budget_period_mandatory'));
         }
-        if (null !== $amount && null !== $currencyId && null !== $currencyCode && '' === $currencyCode && '' === $currencyId) {
+        if (null !== $amount && null !== $currencyId && null !== $currencyCode && '' === $currencyCode && 0 === $currencyId) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.require_currency_info'));
         }
     }

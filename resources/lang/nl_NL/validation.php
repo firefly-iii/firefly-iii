@@ -134,6 +134,8 @@ return [
     'starts_with'                    => 'De waarde moet beginnen met :values.',
     'unique_webhook'                 => 'Je hebt al een webhook met deze waarden.',
     'unique_existing_webhook'        => 'Je hebt al een andere webhook met deze waarden.',
+    'same_account_type'              => 'Beide rekeningen moeten van hetzelfde rekeningtype zijn',
+    'same_account_currency'          => 'Beide rekeningen moeten dezelfde valuta hebben',
 
     'secure_password'             => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Dit is geen geldige herhaling voor periodieke transacties.',

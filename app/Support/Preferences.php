@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 use Cache;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -49,9 +50,10 @@ class Preferences
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
+     * @throws FireflyException
      */
     public function delete(string $name): bool
     {
@@ -62,8 +64,7 @@ class Preferences
         try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
         } catch (Exception $e) {
-            Log::debug(sprintf('Could not delete preference: %s', $e->getMessage()));
-            // don't care.
+            throw new FireflyException(sprintf('Could not delete preference: %s', $e->getMessage()), 0, $e);
         }
 
         return true;
@@ -87,7 +88,7 @@ class Preferences
      */
     public function get(string $name, $default = null): ?Preference
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = auth()->user();
         if (null === $user) {
             $preference       = new Preference;
@@ -107,7 +108,7 @@ class Preferences
      */
     public function getFresh(string $name, $default = null): ?Preference
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = auth()->user();
         if (null === $user) {
             $preference       = new Preference;
@@ -134,7 +135,7 @@ class Preferences
             $result[$preference->name] = $preference->data;
         }
         foreach ($list as $name) {
-            if (!isset($result[$name])) {
+            if (!array_key_exists($name, $result)) {
                 $result[$name] = null;
             }
         }
@@ -143,11 +144,12 @@ class Preferences
     }
 
     /**
-     * @param User        $user
-     * @param string      $name
-     * @param null|string $default
+     * @param User            $user
+     * @param string          $name
+     * @param null|string|int $default
      *
      * @return \FireflyIII\Models\Preference|null
+     * @throws FireflyException
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
@@ -156,7 +158,7 @@ class Preferences
             try {
                 $preference->delete();
             } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()));
+                throw new FireflyException(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()), 0, $e);
             }
             $preference = null;
         }
@@ -252,19 +254,20 @@ class Preferences
      * @param mixed            $value
      *
      * @return Preference
+     * @throws FireflyException
      */
     public function setForUser(User $user, string $name, $value): Preference
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
-        /** @var Preference $pref */
+        /** @var Preference|null $pref */
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
             try {
                 $pref->delete();
             } catch (Exception $e) {
-                Log::error(sprintf('Could not delete preference: %s', $e->getMessage()));
+                throw new FireflyException(sprintf('Could not delete preference: %s', $e->getMessage()), 0, $e);
             }
 
             return new Preference;
@@ -272,20 +275,12 @@ class Preferences
         if (null === $value) {
             return new Preference;
         }
-
-        if (null !== $pref) {
-            $pref->data = $value;
-            $pref->save();
-            Cache::forever($fullName, $pref);
-
-            return $pref;
+        if(null === $pref) {
+            $pref = new Preference;
+            $pref->user_id = $user->id;
+            $pref->name = $name;
         }
-
-        $pref       = new Preference;
-        $pref->name = $name;
         $pref->data = $value;
-        $pref->user()->associate($user);
-
         $pref->save();
         Cache::forever($fullName, $pref);
 
