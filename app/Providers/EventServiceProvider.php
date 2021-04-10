@@ -98,12 +98,14 @@ class EventServiceProvider extends ServiceProvider
             // is a Transaction Journal related event.
             StoredTransactionGroup::class       => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@recalculateCredit',
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerWebhooks',
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionGroup::class      => [
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@recalculateCredit',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@triggerWebhooks',
             ],
             DestroyedTransactionGroup::class    => [
