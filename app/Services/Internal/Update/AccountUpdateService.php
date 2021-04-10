@@ -306,18 +306,23 @@ class AccountUpdateService
      */
     private function updateCreditLiability(Account $account, array $data): void
     {
-        $type = $account->accountType;
+        $type  = $account->accountType;
         $valid = config('firefly.valid_liabilities');
         if (in_array($type->type, $valid, true)) {
+            $direction = array_key_exists('liability_direction', $data) ? $data['liability_direction'] : 'empty';
             // check if is submitted as empty, that makes it valid:
             if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
-
-                $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+                if ('credit' === $data['liability_direction']) {
+                    $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+                }
             }
 
             if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
+                $this->deleteCreditTransaction($account);
+            }
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data) && 'credit' !== $direction) {
                 $this->deleteCreditTransaction($account);
             }
         }

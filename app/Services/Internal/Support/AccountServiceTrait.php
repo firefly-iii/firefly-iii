@@ -227,6 +227,24 @@ trait AccountServiceTrait
     }
 
     /**
+     * Delete TransactionGroup with liability credit in it.
+     *
+     * @param Account $account
+     */
+    protected function deleteCreditTransaction(Account $account): void
+    {
+        Log::debug(sprintf('deleteCreditTransaction() for account #%d', $account->id));
+        $creditGroup = $this->getCreditTransaction($account);
+
+        if (null !== $creditGroup) {
+            Log::debug('Credit journal found, delete journal.');
+            /** @var TransactionGroupDestroyService $service */
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($creditGroup);
+        }
+    }
+
+    /**
      * Returns the opening balance group, or NULL if it does not exist.
      *
      * @param Account $account

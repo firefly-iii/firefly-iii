@@ -45,10 +45,8 @@ class EditController extends Controller
     use ModelInformation;
 
     private AttachmentHelperInterface $attachments;
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepos;
-    /** @var AccountRepositoryInterface The account repository */
-    private $repository;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private AccountRepositoryInterface $repository;
 
     /**
      * EditController constructor.
@@ -106,6 +104,11 @@ class EditController extends Controller
             ],
         ];
 
+        $liabilityDirections = [
+            'debit'  => trans('firefly.liability_direction_debit'),
+            'credit' => trans('firefly.liability_direction_credit'),
+        ];
+
         // interest calculation periods:
         $interestPeriods = [
             'daily'   => (string)trans('firefly.interest_calc_daily'),
@@ -119,7 +122,7 @@ class EditController extends Controller
         }
         $request->session()->forget('accounts.edit.fromUpdate');
 
-        $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
+        $openingBalanceAmount = app('steam')->positive((string)$repository->getOpeningBalanceAmount($account));
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -138,6 +141,7 @@ class EditController extends Controller
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type_id'       => $account->account_type_id,
             'opening_balance'         => $openingBalanceAmount,
+            'liability_direction' => $this->repository->getMetaValue($account, 'liability_direction'),
             'virtual_balance'         => $account->virtual_balance,
             'currency_id'             => $currency->id,
             'include_net_worth'       => $includeNetWorth,
@@ -157,6 +161,7 @@ class EditController extends Controller
                 'subTitle',
                 'subTitleIcon',
                 'locations',
+                'liabilityDirections',
                 'objectType',
                 'roles',
                 'preFilled',

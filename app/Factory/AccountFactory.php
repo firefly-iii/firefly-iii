@@ -331,17 +331,21 @@ class AccountFactory
      */
     private function storeCreditLiability(Account $account, array $data)
     {
+        Log::debug('storeCreditLiability');
         $account->refresh();
         $accountType = $account->accountType->type;
         $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
         $valid       = config('firefly.valid_liabilities');
         if (in_array($accountType, $valid, true) && 'credit' === $direction) {
+            Log::debug('Is a liability with credit direction.');
             if ($this->validOBData($data)) {
+                Log::debug('Has valid CL data.');
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
                 $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
             }
             if (!$this->validOBData($data)) {
+                Log::debug('Has NOT valid CL data.');
                 $this->deleteCreditTransaction($account);
             }
         }
