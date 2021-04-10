@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\UniqueAccountNumber;
@@ -32,6 +33,7 @@ use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Log;
 
 /**
  * Class UpdateRequest
@@ -68,16 +70,23 @@ class UpdateRequest extends FormRequest
             'order'                   => ['order', 'integer'],
             'currency_id'             => ['currency_id', 'integer'],
             'currency_code'           => ['currency_code', 'string'],
-            'liability_direction'     => ['liability_direction', 'string']
+            'liability_direction'     => ['liability_direction', 'string'],
+            'liability_amount'         => ['liability_amount', 'string'],
+            'liability_start_date'    => ['liability_start_date', 'date'],
         ];
-        $data   = $this->getAllData($fields);
-        $data   = $this->appendLocationData($data, null);
+        /** @var Account $account */
+        $account = $this->route()->parameter('account');
+        $data    = $this->getAllData($fields);
+        $data    = $this->appendLocationData($data, null);
+        $valid   = config('firefly.valid_liabilities');
+        if (array_key_exists('liability_amount', $data) && in_array($account->accountType->type, $valid, true)) {
+            $data['opening_balance'] = app('steam')->negative($data['liability_amount']);
+            Log::debug(sprintf('Opening balance for liability is "%s".', $data['opening_balance']));
+        }
 
-        if (array_key_exists('account_type_name', $data) && 'liability' === $data['account_type_name']) {
-            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
-            $data['opening_balance_date'] = $this->date('liability_start_date');
-            $data['account_type_name']    = $this->string('liability_type');
-            $data['account_type_id']      = null;
+        if (array_key_exists('liability_start_date', $data) && in_array($account->accountType->type, $valid, true)) {
+            $data['opening_balance_date'] = $data['liability_start_date'];
+            Log::debug(sprintf('Opening balance date for liability is "%s".', $data['opening_balance_date']));
         }
 
         return $data;

@@ -77,11 +77,11 @@ class StoreRequest extends FormRequest
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
         ];
-        // append Location information.
+        // append location information.
         $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
-            $data['opening_balance']      = bcmul($this->string('liability_amount'), '-1');
+            $data['opening_balance']      = app('steam')->negative($this->string('liability_amount'));
             $data['opening_balance_date'] = $this->date('liability_start_date');
             $data['account_type_name']    = $this->string('liability_type');
             $data['liability_direction']  = $this->string('liability_direction');
@@ -120,11 +120,11 @@ class StoreRequest extends FormRequest
             'credit_card_type'     => sprintf('in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|required_if:type,liabilities|in:loan,debt,mortgage',
-            'liability_amount'     => 'required_if:type,liability|required_if:type,liabilities|min:0|numeric',
+            'liability_amount'     => 'required_with:liability_start_date|min:0|numeric',
+            'liability_start_date' => 'required_with:liability_amount|date',
             'liability_direction'  => 'required_if:type,liability|required_if:type,liabilities|in:credit,debit',
-            'liability_start_date' => 'required_if:type,liability|required_if:type,liabilities|date',
-            'interest'             => 'required_if:type,liability|required_if:type,liabilities|between:0,100|numeric',
-            'interest_period'      => 'required_if:type,liability|required_if:type,liabilities|in:daily,monthly,yearly',
+            'interest'             => 'between:0,100|numeric',
+            'interest_period'      => sprintf('in:%s', join(',', config('firefly.interest_periods'))),
             'notes'                => 'min:0|max:65536',
         ];
 
