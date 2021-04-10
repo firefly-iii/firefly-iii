@@ -28,6 +28,7 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -99,6 +100,18 @@ class StoredGroupEventHandler
 
         // trigger event to send them:
         event(new RequestedSendWebhookMessages);
+    }
+
+    /**
+     * @param StoredTransactionGroup $event
+     */
+    public function recalculateCredit(StoredTransactionGroup $event): void
+    {
+        $group = $event->transactionGroup;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setGroup($group);
+        $object->recalculate();
     }
 
 }
