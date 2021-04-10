@@ -14,7 +14,10 @@
             <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
-        <th>{{ trans('list.currentBalance') }}</th>
+        <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+        {% if objectType == 'liabilities' %}
+            <th>Left to pay off</th>
+        {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
         {% if objectType != 'liabilities' %}
@@ -50,10 +53,8 @@
                 </td>
             {% endif %}
             {% if objectType == 'liabilities' %}
-                <td>{{ account.accountTypeString }}</td>
-            <td>
-                {{ account.interest }}% ({{ account.interestPeriod|lower }})
-            </td>
+            <td>{{ account.accountTypeString }}</td>
+            <td>{{ account.interest }}% ({{ account.interestPeriod|lower }})</td>
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             <td style="text-align: right;">
@@ -61,6 +62,11 @@
                 {{ formatAmountByAccount(account, account.endBalance) }}
                 </span>
             </td>
+            {% if objectType == 'liabilities' %}
+            <td>
+                Test
+            </td>
+            {% endif %}
             <td class="hidden-sm hidden-xs">
                 {% if account.active %}
                     <i class="fa fa-fw fa-check"></i>
