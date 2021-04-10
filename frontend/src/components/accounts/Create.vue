@@ -238,6 +238,7 @@ export default {
 
       axios.post(url, submission)
           .then(response => {
+            this.errors = lodashClonedeep(this.defaultErrors);
             console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
@@ -281,6 +282,9 @@ export default {
         if (errors.errors.hasOwnProperty(i)) {
           this.errors[i] = errors.errors[i];
         }
+        if('liability_start_date' === i) {
+          this.errors.opening_balance_date = errors.errors[i];
+        }
       }
     },
     getSubmission: function () {
@@ -302,13 +306,18 @@ export default {
         submission.liability_type = this.liability_type.toLowerCase();
         submission.interest = this.interest;
         submission.interest_period = this.interest_period;
-        submission.opening_balance = this.liability_amount;
-        submission.opening_balance_date = this.liability_date;
+        submission.liability_amount = this.liability_amount;
+        submission.liability_start_date = this.liability_date;
+        submission.liability_direction = this.liability_direction;
       }
-      if (null !== this.opening_balance && null !== this.opening_balance_date && 'asset' === this.type) {
+      if ((null !== this.opening_balance || null !== this.opening_balance_date) && 'asset' === this.type) {
         submission.opening_balance = this.opening_balance;
         submission.opening_balance_date = this.opening_balance_date;
       }
+      if('' === submission.opening_balance) {
+        delete submission.opening_balance;
+      }
+
       if ('asset' === this.type && 'ccAsset' === this.account_role) {
         submission.credit_card_type = 'monthlyFull';
         submission.monthly_payment_date = '2021-01-01';
