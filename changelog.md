@@ -2,6 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.7 (API 1.5.2) 2021-04-xx
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+- #4625 Old MySQL servers would choke on the migrations.
+- #4628 Every transactions appeared to have attachments.
+
+### Security
+
+### API
+
+
+
+
 ## 5.5.6 (API 1.5.2) 2021-04-09
 
 Firefly III features a new *experimental* layout that I'm currently building. You can enable it by setting environment variable `FIREFLY_III_LAYOUT=v2`. Check out [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618) for the announcement and status updates. This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.1...1.5.2).

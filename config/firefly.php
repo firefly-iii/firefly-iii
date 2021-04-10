@@ -94,13 +94,14 @@ return [
         'is_demo_site'     => false,
     ],
     'feature_flags' => [
-        'export'    => true,
-        'telemetry' => true,
-        'webhooks'  => false,
+        'export'       => true,
+        'telemetry'    => true,
+        'webhooks'     => false,
+        'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.6',
-    'api_version'                  => '1.5.2',
+    'version'                      => '5.5.7',
+    'api_version'                  => '1.5.3',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
@@ -846,5 +847,5 @@ return [
     'can_have_virtual_amounts'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 ];
