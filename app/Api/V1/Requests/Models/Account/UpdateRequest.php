@@ -68,6 +68,7 @@ class UpdateRequest extends FormRequest
             'order'                   => ['order', 'integer'],
             'currency_id'             => ['currency_id', 'integer'],
             'currency_code'           => ['currency_code', 'string'],
+            'liability_direction'     => ['liability_direction', 'string']
         ];
         $data   = $this->getAllData($fields);
         $data   = $this->appendLocationData($data, null);
@@ -112,6 +113,7 @@ class UpdateRequest extends FormRequest
             'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
+            'liability_direction'  => 'required_if:type,liability|in:credit,debit',
             'interest'             => 'required_if:type,liability|between:0,100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
