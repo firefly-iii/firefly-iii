@@ -338,6 +338,8 @@ function updateTriggerInput(selectList) {
         case 'has_any_category':
         case 'has_no_budget':
         case 'has_any_budget':
+        case 'has_no_bill':
+        case 'has_any_bill':
         case 'has_no_tag':
         case 'no_notes':
         case 'any_notes':

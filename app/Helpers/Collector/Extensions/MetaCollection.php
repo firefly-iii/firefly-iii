@@ -270,6 +270,19 @@ trait MetaCollection
     }
 
     /**
+     * Limit results to transactions without a bill..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBill(): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->whereNotNull('transaction_journals.bill_id');
+
+        return $this;
+    }
+
+    /**
      * Will include bill name + ID, if any.
      *
      * @return GroupCollectorInterface

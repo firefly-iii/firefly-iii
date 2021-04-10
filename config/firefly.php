@@ -477,6 +477,8 @@ return [
             'has_any_category'                => ['alias' => false, 'needs_context' => false,],
             'has_no_budget'                   => ['alias' => false, 'needs_context' => false,],
             'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
+            'has_no_bill'                     => ['alias' => false, 'needs_context' => false,],
+            'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
             'has_no_tag'                      => ['alias' => false, 'needs_context' => false,],
             'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],
             'notes_contain'                   => ['alias' => false, 'needs_context' => true,],
