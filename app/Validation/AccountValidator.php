@@ -34,6 +34,7 @@ use FireflyIII\Validation\Account\OBValidation;
 use FireflyIII\Validation\Account\ReconciliationValidation;
 use FireflyIII\Validation\Account\TransferValidation;
 use FireflyIII\Validation\Account\WithdrawalValidation;
+use FireflyIII\Validation\Account\LiabilityValidation;
 use Log;
 
 /**
@@ -41,7 +42,7 @@ use Log;
  */
 class AccountValidator
 {
-    use AccountValidatorProperties, WithdrawalValidation, DepositValidation, TransferValidation, ReconciliationValidation, OBValidation;
+    use AccountValidatorProperties, WithdrawalValidation, DepositValidation, TransferValidation, ReconciliationValidation, OBValidation, LiabilityValidation;
 
     public bool                        $createMode;
     public string                      $destError;
@@ -129,6 +130,9 @@ class AccountValidator
             case TransactionType::OPENING_BALANCE:
                 $result = $this->validateOBDestination($accountId, $accountName);
                 break;
+            case TransactionType::LIABILITY_CREDIT:
+                $result = $this->validateLCDestination($accountId);
+                break;
             case TransactionType::RECONCILIATION:
                 $result = $this->validateReconciliationDestination($accountId);
                 break;
@@ -164,6 +168,10 @@ class AccountValidator
             case TransactionType::OPENING_BALANCE:
                 $result = $this->validateOBSource($accountId, $accountName);
                 break;
+            case TransactionType::LIABILITY_CREDIT:
+                $result = $this->validateLCSource($accountName);
+                break;
+
             case TransactionType::RECONCILIATION:
                 Log::debug('Calling validateReconciliationSource');
                 $result = $this->validateReconciliationSource($accountId);
@@ -201,7 +209,7 @@ class AccountValidator
      */
     protected function canCreateType(string $accountType): bool
     {
-        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE];
+        $canCreate = [AccountType::EXPENSE, AccountType::REVENUE, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT];
         if (in_array($accountType, $canCreate, true)) {
             return true;
         }
