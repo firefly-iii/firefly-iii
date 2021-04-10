@@ -94,9 +94,10 @@ return [
         'is_demo_site'     => false,
     ],
     'feature_flags' => [
-        'export'    => true,
-        'telemetry' => true,
-        'webhooks'  => false,
+        'export'       => true,
+        'telemetry'    => true,
+        'webhooks'     => false,
+        'handle_debts' => true,
     ],
 
     'version'                      => '5.5.6',
