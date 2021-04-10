@@ -31,7 +31,9 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
@@ -119,6 +121,14 @@ class EventServiceProvider extends ServiceProvider
             // Webhook related event:
             RequestedSendWebhookMessages::class => [
                 'FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages',
+            ],
+
+            // account related events:
+            StoredAccount::class => [
+                'FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit',
+                ],
+            UpdatedAccount::class => [
+                'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
             ],
         ];
 
