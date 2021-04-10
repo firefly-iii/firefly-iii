@@ -238,6 +238,10 @@ class AccountFactory
         if ($account->accountType->type !== AccountType::ASSET) {
             $accountRole = '';
         }
+        // only liability may have direction:
+        if (array_key_exists('liability_direction', $data) && !in_array($account->accountType->type, config('firefly.valid_liabilities'), true)) {
+            $data['liability_direction'] = null;
+        }
 
         $data['account_role'] = $accountRole;
         $data['currency_id']  = $currency->id;
@@ -257,7 +261,7 @@ class AccountFactory
             $fields = $this->validAssetFields;
         }
         if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
-            $fields = $this->validCCFields; 
+            $fields = $this->validCCFields;
         }
 
         /** @var AccountMetaFactory $factory */
@@ -269,10 +273,10 @@ class AccountFactory
 
                 // convert boolean value:
                 if (is_bool($data[$field]) && false === $data[$field]) {
-                    $data[$field] = 0; 
+                    $data[$field] = 0;
                 }
                 if (is_bool($data[$field]) && true === $data[$field]) {
-                    $data[$field] = 1; 
+                    $data[$field] = 1;
                 }
 
                 $factory->crud($account, $field, (string)$data[$field]);
