@@ -125,7 +125,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (0!==count($types)) {
+        if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -746,5 +746,22 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup
+    {
+        $journal = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+
+        return $journal->transactionGroup;
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Events\StoredAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -48,6 +49,7 @@ class AccountFactory
     protected array                      $validCCFields;
     protected array                      $validFields;
     private array                        $canHaveVirtual;
+    private array                        $canHaveOpeningBalance;
     private User                         $user;
 
     /**
@@ -57,11 +59,12 @@ class AccountFactory
      */
     public function __construct()
     {
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->canHaveVirtual    = config('firefly.can_have_virtual_amounts');
-        $this->validAssetFields  = config('firefly.valid_asset_fields');
-        $this->validCCFields     = config('firefly.valid_cc_fields');
-        $this->validFields       = config('firefly.valid_account_fields');
+        $this->accountRepository     = app(AccountRepositoryInterface::class);
+        $this->canHaveVirtual        = config('firefly.can_have_virtual_amounts');
+        $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
+        $this->validAssetFields      = config('firefly.valid_asset_fields');
+        $this->validCCFields         = config('firefly.valid_cc_fields');
+        $this->validFields           = config('firefly.valid_account_fields');
     }
 
     /**
@@ -113,9 +116,13 @@ class AccountFactory
         // account may exist already:
         $return = $this->find($data['name'], $type->type);
 
-        if (null === $return) {
-            $return = $this->createAccount($type, $data);
+        if (null !== $return) {
+            return $return;
         }
+
+        $return = $this->createAccount($type, $data);
+
+        event(new StoredAccount($return));
 
         return $return;
     }
@@ -203,7 +210,18 @@ class AccountFactory
         $this->storeMetaData($account, $data);
 
         // create opening balance
-        $this->storeOpeningBalance($account, $data);
+        try {
+            $this->storeOpeningBalance($account, $data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
+
+        // create credit liability data (if relevant)
+        try {
+            $this->storeCreditLiability($account, $data);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
 
         // create notes
         $notes = array_key_exists('notes', $data) ? $data['notes'] : '';
@@ -242,7 +260,6 @@ class AccountFactory
         if (array_key_exists('liability_direction', $data) && !in_array($account->accountType->type, config('firefly.valid_liabilities'), true)) {
             $data['liability_direction'] = null;
         }
-
         $data['account_role'] = $accountRole;
         $data['currency_id']  = $currency->id;
 
@@ -287,18 +304,45 @@ class AccountFactory
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @throws FireflyException
      */
     private function storeOpeningBalance(Account $account, array $data)
     {
         $accountType = $account->accountType->type;
 
-        // if it can have a virtual balance, it can also have an opening balance.
-        if (in_array($accountType, $this->canHaveVirtual, true)) {
+        if (in_array($accountType, $this->canHaveOpeningBalance, true)) {
             if ($this->validOBData($data)) {
-                $this->updateOBGroup($account, $data);
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+                $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
             if (!$this->validOBData($data)) {
                 $this->deleteOBGroup($account);
+            }
+        }
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @throws FireflyException
+     */
+    private function storeCreditLiability(Account $account, array $data)
+    {
+        $account->refresh();
+        $accountType = $account->accountType->type;
+        $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
+        $valid       = config('firefly.valid_liabilities');
+        if (in_array($accountType, $valid, true) && 'credit' === $direction) {
+            if ($this->validOBData($data)) {
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+                $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+            }
+            if (!$this->validOBData($data)) {
+                $this->deleteCreditTransaction($account);
             }
         }
     }

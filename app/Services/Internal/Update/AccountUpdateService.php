@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Events\UpdatedAccount;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
@@ -44,6 +46,7 @@ class AccountUpdateService
     protected array                      $validCCFields;
     protected array                      $validFields;
     private array                        $canHaveVirtual;
+    private array                        $canHaveOpeningBalance;
     private User                         $user;
 
     /**
@@ -51,11 +54,12 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        $this->canHaveVirtual    = config('firefly.can_have_virtual_amounts');
-        $this->validAssetFields  = config('firefly.valid_asset_fields');
-        $this->validCCFields     = config('firefly.valid_cc_fields');
-        $this->validFields       = config('firefly.valid_account_fields');
-        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->canHaveVirtual        = config('firefly.can_have_virtual_amounts');
+        $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
+        $this->validAssetFields      = config('firefly.valid_asset_fields');
+        $this->validCCFields         = config('firefly.valid_cc_fields');
+        $this->validFields           = config('firefly.valid_account_fields');
+        $this->accountRepository     = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -98,6 +102,9 @@ class AccountUpdateService
         // update opening balance.
         $this->updateOpeningBalance($account, $data);
 
+        // update opening balance.
+        $this->updateCreditLiability($account, $data);
+
         // update note:
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->updateNote($account, (string)$data['notes']);
@@ -105,6 +112,8 @@ class AccountUpdateService
 
         // update preferences if inactive:
         $this->updatePreferences($account);
+
+        event(new UpdatedAccount($account));
 
         return $account;
     }
@@ -266,23 +275,50 @@ class AccountUpdateService
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @throws FireflyException
      */
     private function updateOpeningBalance(Account $account, array $data): void
     {
 
         // has valid initial balance (IB) data?
         $type = $account->accountType;
-        // if it can have a virtual balance, it can also have an opening balance.
-
-        if (in_array($type->type, $this->canHaveVirtual, true)) {
-
+        if (in_array($type->type, $this->canHaveOpeningBalance, true)) {
             // check if is submitted as empty, that makes it valid:
             if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
-                $this->updateOBGroup($account, $data);
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+
+                $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
 
             if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
                 $this->deleteOBGroup($account);
+            }
+        }
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @throws FireflyException
+     */
+    private function updateCreditLiability(Account $account, array $data): void
+    {
+        $type = $account->accountType;
+        $valid = config('firefly.valid_liabilities');
+        if (in_array($type->type, $valid, true)) {
+            // check if is submitted as empty, that makes it valid:
+            if ($this->validOBData($data) && !$this->isEmptyOBData($data)) {
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+
+                $this->updateCreditTransaction($account, $openingBalance, $openingBalanceDate);
+            }
+
+            if (!$this->validOBData($data) && $this->isEmptyOBData($data)) {
+                $this->deleteCreditTransaction($account);
             }
         }
     }

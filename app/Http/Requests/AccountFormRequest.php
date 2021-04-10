@@ -62,6 +62,7 @@ class AccountFormRequest extends FormRequest
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
+            'liability_direction'     => $this->string('liability_direction'),
         ];
 
         $data = $this->appendLocationData($data, 'location');
@@ -74,6 +75,7 @@ class AccountFormRequest extends FormRequest
         if ('liabilities' === $data['account_type_name']) {
             $data['account_type_name'] = null;
             $data['account_type_id']   = $this->integer('liability_type_id');
+            $data['opening_balance'] = app('steam')->negative($data['opening_balance']);
         }
 
         return $data;

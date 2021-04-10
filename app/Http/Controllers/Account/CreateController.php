@@ -80,20 +80,24 @@ class CreateController extends Controller
      */
     public function create(Request $request, string $objectType = null)
     {
-        $objectType      = $objectType ?? 'asset';
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $subTitle        = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
-        $roles           = $this->getRoles();
-        $liabilityTypes  = $this->getLiabilityTypes();
-        $hasOldInput     = null !== $request->old('_token');
-        $locations       = [
+        $objectType          = $objectType ?? 'asset';
+        $defaultCurrency     = app('amount')->getDefaultCurrency();
+        $subTitleIcon        = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $subTitle            = (string)trans(sprintf('firefly.make_new_%s_account', $objectType));
+        $roles               = $this->getRoles();
+        $liabilityTypes      = $this->getLiabilityTypes();
+        $hasOldInput         = null !== $request->old('_token');
+        $locations           = [
             'location' => [
                 'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
                 'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
                 'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
                 'has_location' => $hasOldInput ? 'true' === old('location_has_location') : false,
             ],
+        ];
+        $liabilityDirections = [
+            'debit'  => trans('firefly.liability_direction_debit'),
+            'credit' => trans('firefly.liability_direction_credit'),
         ];
 
         // interest calculation periods:
@@ -119,7 +123,10 @@ class CreateController extends Controller
         $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Creating new account.');
 
-        return prefixView('accounts.create', compact('subTitleIcon', 'locations', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
+        return prefixView(
+            'accounts.create',
+            compact('subTitleIcon', 'liabilityDirections', 'locations', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes')
+        );
     }
 
     /**
@@ -156,7 +163,7 @@ class CreateController extends Controller
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
-            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); 
+            $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
         // redirect to previous URL.
