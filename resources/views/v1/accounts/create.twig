@@ -27,7 +27,8 @@
                         {% endif %}
                         {% if objectType == 'liabilities' %}
                             {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
-                            {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                            {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_}) }}
+                            {{ ExpandedForm.select('liability_direction', liabilityDirections) }}
                             {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
                             {{ ExpandedForm.percentage('interest') }}
                             {{ ExpandedForm.select('interest_period', interestPeriods, null, {helpText: 'interest_period_help'|_}) }}

@@ -118,6 +118,9 @@
                     {% if transaction.transaction_type_type == 'Opening balance' %}
                         <i class="object-handle fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                     {% endif %}
+                    {% if transaction.transaction_type_type == 'Liability credit' %}
+                        <i class="object-handle fa-fw fa fa-star-o" title="{{ trans('firefly.Liability credit') }}"></i>
+                    {% endif %}
 
                 </td>
                 <td style=" {{ style|raw }}">
