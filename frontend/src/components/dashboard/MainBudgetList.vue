@@ -164,7 +164,7 @@ export default {
                         spent: spentData.sum
                       }
                   );
-                  console.log('Added budget ' + current.attributes.name + ' (' + spentData.currency_code + ')');
+                  //console.log('Added budget ' + current.attributes.name + ' (' + spentData.currency_code + ')');
                 }
               }
             }
@@ -192,7 +192,7 @@ export default {
                     id: currentId,
                     name: current.attributes.name,
                   };
-              console.log('Collected meta data: budget #' + currentId + ' is named ' + current.attributes.name);
+              //console.log('Collected meta data: budget #' + currentId + ' is named ' + current.attributes.name);
             }
           }
 
@@ -250,7 +250,7 @@ export default {
           for (let i in this.rawBudgets) {
             if (this.rawBudgets.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
               if (this.rawBudgets[i].currency_id === currencyId && this.rawBudgets[i].id === budgetId) {
-                console.log('Budget ' + this.rawBudgets[i].name + ' with currency ' + this.rawBudgets[i].currency_code + ' will be removed in favor of a budget limit.');
+                //console.log('Budget ' + this.rawBudgets[i].name + ' with currency ' + this.rawBudgets[i].currency_code + ' will be removed in favor of a budget limit.');
                 this.rawBudgets.splice(parseInt(i), 1);
               }
             }

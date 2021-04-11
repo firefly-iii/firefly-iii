@@ -381,13 +381,13 @@ export default {
       return this.date;
     },
     sourceAccount: function () {
-      console.log('computed::sourceAccount');
+      // console.log('computed::sourceAccount');
       let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
-      console.log(JSON.stringify(value));
+      // console.log(JSON.stringify(value));
       return value;
     },
     destinationAccount: function () {

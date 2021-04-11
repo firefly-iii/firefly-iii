@@ -116,8 +116,8 @@ export default {
             this.drawChart();
           })
           .catch(error => {
-            console.log('Has error!');
-            console.log(error);
+            // console.log('Has error!');
+            // console.log(error);
             this.error = true;
           });
     },

@@ -136,7 +136,7 @@ export default {
   },
   methods:
       {
-        getCategories() {
+        getCategories: function () {
           this.categories = [];
           this.sortedList = [];
           this.spent = 0;
@@ -144,19 +144,32 @@ export default {
           this.loading = true;
           let startStr = this.start.toISOString().split('T')[0];
           let endStr = this.end.toISOString().split('T')[0];
-          axios.get('./api/v1/categories?start=' + startStr + '&end=' + endStr)
+          this.getCategoryPage(startStr, endStr, 1);
+        },
+        getCategoryPage: function (start, end, page) {
+          axios.get('./api/v1/categories?start=' + start + '&end=' + end + '&page=' + page)
               .then(response => {
-                      this.parseCategories(response.data);
-                      this.loading = false;
+                      let categories = response.data.data;
+                      let currentPage = parseInt(response.data.meta.pagination.current_page);
+                      let totalPages = parseInt(response.data.meta.pagination.total_pages);
+                      this.parseCategories(categories);
+                      if (currentPage < totalPages) {
+                        let nextPage = currentPage + 1;
+                        this.getCategoryPage(start, end, nextPage);
+                      }
+                      if (currentPage === totalPages) {
+                        this.loading = false;
+                        this.sortCategories();
+                      }
                     }
               ).catch(error => {
             this.error = true;
           });
         },
         parseCategories(data) {
-          for (let i in data.data) {
-            if (data.data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-              let current = data.data[i];
+          for (let i in data) {
+            if (data.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+              let current = data[i];
               let entryKey = null;
               let categoryId = parseInt(current.id);
 
@@ -207,7 +220,6 @@ export default {
               }
             }
           }
-          this.sortCategories();
         },
         sortCategories() {
           // no longer care about keys:

@@ -91,7 +91,7 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <form v-on:submit.prevent="search">
+                  <form v-on:submit.prevent="search" autocomplete="off">
                     <div class="input-group">
                       <input id="query" v-model="query" autocomplete="off" class="form-control" maxlength="255" name="search"
                              placeholder="Search query" type="text">

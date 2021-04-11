@@ -23,7 +23,7 @@
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
     <Alert :message="warningMessage" type="warning"/>
-    <form @submit="submitTransaction">
+    <form @submit="submitTransaction" autocomplete="off">
       <SplitPills :transactions="transactions"/>
 
       <div class="tab-content">
@@ -389,8 +389,8 @@ export default {
       });
     },
     uploadedAttachment: function (payload) {
-      console.log('event: uploadedAttachment');
-      console.log(payload);
+      // console.log('event: uploadedAttachment');
+      // console.log(payload);
     },
     storeLocation: function (payload) {
       this.transactions[payload.index].zoom_level = payload.zoomLevel;
@@ -459,7 +459,7 @@ export default {
       }
       let transactionCount = this.originalTransactions.length;
       let newTransactionCount = this.transactions.length;
-      console.log('Found ' + this.transactions.length + ' split(s).');
+      // console.log('Found ' + this.transactions.length + ' split(s).');
 
       if (newTransactionCount > 1 && typeof submission.group_title === 'undefined' && (null === this.originalGroupTitle || '' === this.originalGroupTitle)) {
         submission.group_title = this.transactions[0].description;
@@ -497,7 +497,7 @@ export default {
               currentTransaction.source_account_name = this.originalTransactions[0].source_account_name;
               currentTransaction.source_account_id = this.originalTransactions[0].source_account_id;
             }
-            console.log('Will overrule accounts for split ' + i);
+            // console.log('Will overrule accounts for split ' + i);
           }
 
           for (let ii in basicFields) {
@@ -596,15 +596,15 @@ export default {
           if (
               this.date !== this.originalDate
           ) {
-            console.log('Date and/or time is changed');
+            // console.log('Date and/or time is changed');
             // set date and time!
             shouldSubmit = true;
             diff.date = this.date;
           }
-          console.log('Now at index ' + i);
-          console.log(Object.keys(diff).length);
+          // console.log('Now at index ' + i);
+          // console.log(Object.keys(diff).length);
           if (Object.keys(diff).length === 0 && newTransactionCount > 1) {
-            console.log('Will submit just the ID!');
+            // console.log('Will submit just the ID!');
             diff.transaction_journal_id = originalTransaction.transaction_journal_id;
             submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
@@ -616,10 +616,10 @@ export default {
         }
       }
 
-      console.log('submitTransaction');
-      console.log('shouldUpload : ' + shouldUpload);
-      console.log('shouldLinks  : ' + shouldLinks);
-      console.log('shouldSubmit : ' + shouldSubmit);
+      // console.log('submitTransaction');
+      // console.log('shouldUpload : ' + shouldUpload);
+      // console.log('shouldLinks  : ' + shouldLinks);
+      // console.log('shouldSubmit : ' + shouldSubmit);
       if (shouldSubmit) {
         this.submitUpdate(submission, shouldLinks, shouldUpload);
       }
@@ -640,7 +640,7 @@ export default {
         // TODO
         //this.submittedAttachments();
       }
-      console.log('Done with submit methd.');
+      // console.log('Done with submit methd.');
       //console.log(submission);
     },
     compareLinks: function (array) {
@@ -664,24 +664,24 @@ export default {
       return JSON.stringify(compare);
     },
     submitUpdate: function (submission, shouldLinks, shouldUpload) {
-      console.log('submitUpdate');
+      // console.log('submitUpdate');
       this.inError = false;
       const url = './api/v1/transactions/' + this.groupId;
-      console.log(JSON.stringify(submission));
-      console.log(submission);
+      // console.log(JSON.stringify(submission));
+      // console.log(submission);
       axios.put(url, submission)
           .then(response => {
-                  console.log('Response is OK!');
+                  // console.log('Response is OK!');
                   // report the transaction is submitted.
                   this.submittedTransaction = true;
 
                   // submit links and attachments (can only be done when the transaction is created)
                   if (shouldLinks) {
-                    console.log('Need to update links.');
+                    // console.log('Need to update links.');
                     this.submitTransactionLinks();
                   }
                   if (!shouldLinks) {
-                    console.log('No need to update links.');
+                    // console.log('No need to update links.');
                   }
                   // TODO attachments:
                   // this.submitAttachments(data, response);
@@ -800,7 +800,7 @@ export default {
     },
 
     deleteOriginalLinks: function (transaction) {
-      console.log(transaction.links);
+      // console.log(transaction.links);
       for (let i in transaction.links) {
         if (transaction.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = transaction.links[i];
@@ -820,7 +820,7 @@ export default {
       let total = 0;
       let promises = [];
 
-      console.log('submitTransactionLinks()');
+      // console.log('submitTransactionLinks()');
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // original transaction present?
@@ -834,7 +834,7 @@ export default {
               this.deleteOriginalLinks(originalTransaction);
             }
 
-            console.log('links are different!');
+            // console.log('links are different!');
             // console.log(newLinks);
             // console.log(originalLinks);
             for (let ii in currentTransaction.links) {
@@ -855,7 +855,7 @@ export default {
                   linkObject.outward_id = currentLink.transaction_journal_id;
                 }
 
-                console.log(linkObject);
+                // console.log(linkObject);
                 total++;
                 // submit transaction link:
                 promises.push(axios.post('./api/v1/transaction_links', linkObject).then(response => {
@@ -877,20 +877,20 @@ export default {
       });
     },
     finalizeSubmit: function () {
-      console.log('now in finalizeSubmit()');
-      console.log('submittedTransaction : ' + this.submittedTransaction);
-      console.log('submittedLinks       : ' + this.submittedLinks);
-      console.log('submittedAttachments : ' + this.submittedAttachments);
+      // console.log('now in finalizeSubmit()');
+      // console.log('submittedTransaction : ' + this.submittedTransaction);
+      // console.log('submittedLinks       : ' + this.submittedLinks);
+      // console.log('submittedAttachments : ' + this.submittedAttachments);
 
       if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
-        console.log('all true');
-        console.log('inError         = ' + this.inError);
-        console.log('stayHere        = ' + this.stayHere);
-        console.log('returnedGroupId = ' + this.returnedGroupId);
+        // console.log('all true');
+        // console.log('inError         = ' + this.inError);
+        // console.log('stayHere        = ' + this.stayHere);
+        // console.log('returnedGroupId = ' + this.returnedGroupId);
 
         // no error + no changes + no redirect
         if (true === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
-          console.log('no error + no changes + no redirect');
+          // console.log('no error + no changes + no redirect');
           // show message:
           this.errorMessage = '';
           this.successMessage = '';
@@ -900,12 +900,12 @@ export default {
 
         // no error + no changes + redirect
         if (false === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
-          console.log('no error + no changes + redirect');
+          // console.log('no error + no changes + redirect');
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=no_change';
         }
         // no error + changes + no redirect
         if (true === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
-          console.log('no error + changes + redirect');
+          // console.log('no error + changes + redirect');
           // show message:
           this.errorMessage = '';
           this.warningMessage = '';
@@ -915,10 +915,10 @@ export default {
 
         // no error + changes + redirect
         if (false === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
-          console.log('no error + changes + redirect');
+          // console.log('no error + changes + redirect');
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=updated';
         }
-        console.log('end of the line');
+        // console.log('end of the line');
         // enable flags:
         this.enableSubmit = true;
         this.submittedTransaction = false;

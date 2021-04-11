@@ -22,7 +22,7 @@
   <div>
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
-    <form @submit="submitTransaction">
+    <form @submit="submitTransaction" autocomplete="off">
       <SplitPills :transactions="transactions"/>
       <div class="tab-content">
         <!-- v-on:switch-accounts="switchAccounts($event)" -->
@@ -804,8 +804,8 @@ export default {
     getAllowedOpposingTypes: function () {
       axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
-            console.log('opposing types things.');
-            console.log(response.data.data.value);
+            // console.log('opposing types things.');
+            // console.log(response.data.data.value);
             this.allowedOpposingTypes = response.data.data.value;
           });
     },
