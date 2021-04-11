@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
@@ -101,13 +102,18 @@ class CreditRecalculateService
         // get opening balance (if present)
         $this->repository->setUser($account->user);
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
-
+        $leftOfDebt  = app('steam')->positive($startOfDebt);
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         $factory->crud($account, 'start_of_debt', $startOfDebt);
-        $factory->crud($account, 'current_debt', $startOfDebt);
 
-        // update meta data:
+        // now loop all transactions (except opening balance and credit thing)
+        $transactions = $account->transactions()->get();
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $leftOfDebt = $this->processTransaction($transaction, $leftOfDebt);
+        }
+        $factory->crud($account, 'current_debt', $leftOfDebt);
 
 
         Log::debug(sprintf('Done with %s(#%d)', __METHOD__, $account->id));
@@ -228,6 +234,23 @@ class CreditRecalculateService
     public function setGroup(TransactionGroup $group): void
     {
         $this->group = $group;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param string      $amount
+     *
+     * @return string
+     */
+    private function processTransaction(Transaction $transaction, string $amount): string
+    {
+        $journal = $transaction->transactionJournal;
+        $type    = $journal->transactionType->type;
+        if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
+            $amount = bcadd($amount, bcmul($transaction->amount, '-1'));
+        }
+
+        return $amount;
     }
 
 
