@@ -2,26 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.5.7 (API 1.5.2) 2021-04-xx
+## 5.5.7 (API 1.5.2) 2021-04-11
 
 ### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
+- [Issue 4627](https://github.com/firefly-iii/firefly-iii/issues/4627) The search and rule engine can search for any transaction with any bill or with no bill at all. Thanks, @devfaz! 
 
 ### Fixed
-- #4625 Old MySQL servers would choke on the migrations.
-- #4628 Every transactions appeared to have attachments.
-
-### Security
-
-### API
-
-
-
+- [Issue 4625](https://github.com/firefly-iii/firefly-iii/issues/4625) Old MySQL servers would choke on the migrations.
+- [Issue 4625](https://github.com/firefly-iii/firefly-iii/issues/4625) Some arrays are null when Firefly III starts for the first time.
+- [Issue 4628](https://github.com/firefly-iii/firefly-iii/issues/4628) Every transaction appeared to have attachments.
+- [Issue 4635](https://github.com/firefly-iii/firefly-iii/issues/4635) Export command ignores your dates. Thanks for the suggested fix, @urquilla!
 
 ## 5.5.6 (API 1.5.2) 2021-04-09
 
