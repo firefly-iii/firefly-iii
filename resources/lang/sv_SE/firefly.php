@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Transaktionen måste ha (valfri) kategori',
     'search_modifier_has_no_budget'                       => 'Transaktionen får inte ha någon budget',
     'search_modifier_has_any_budget'                      => 'Transaktionen måste ha (valfri) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'Transaktionen får inte ha några taggar',
     'search_modifier_has_any_tag'                         => 'Transaktionen måste ha en (valfri) tagg',
     'search_modifier_notes_contain'                       => 'Transaktionsnoteringar innehåller ":value"',
@@ -429,7 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Tillämpa regel grupp ":title" till dit val av transaktioner',
     'apply_rule_group_selection_intro'                    => 'Regelgrupper som ":title" används normalt bara för nya eller uppdaterade transaktioner, men du kan få Firefly III att köra alla regler i gruppen på ett utval av nuvarande transaktioner. Detta är användbart när du har uppdaterat en grupp med regler och dessa förändringar behöver göras på alla dina andra transaktioner.',
     'applied_rule_group_selection'                        => 'Regelgrupp ":title" har tillämpats på ditt val.',
-    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
+    'timezone_difference'                                 => 'Din webbläsare rapporterar tidszonen "{local}". Firefly III är konfigurerad för tidszonen "{system}". Detta diagram kan glida.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Användaråtgärd är ":trigger_value"',
@@ -525,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transaktion saknar budget',
     'rule_trigger_has_any_budget_choice'                  => 'Har (valfri) budget',
     'rule_trigger_has_any_budget'                         => 'Transaktion har (valfri) budget',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Saknar etikett(er)',
     'rule_trigger_has_no_tag'                             => 'Transaktion saknar etikett(er)',
     'rule_trigger_has_any_tag_choice'                     => 'Har en eller flera (valfria) etiketter',

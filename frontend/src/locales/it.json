@@ -109,7 +109,7 @@
         "edit": "Modifica",
         "account_type_Loan": "Prestito",
         "account_type_Mortgage": "Mutuo",
-        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
+        "timezone_difference": "Il browser segnala \"{local}\" come fuso orario. Firefly III \u00e8 configurato con il fuso orario \"{system}\". Questo grafico potrebbe non \u00e8 essere corretto.",
         "stored_new_account_js": "Nuovo conto \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" salvato!",
         "account_type_Debt": "Debito",
         "delete": "Elimina",

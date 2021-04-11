@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'La transazione deve avere una (qualsiasi) categoria',
     'search_modifier_has_no_budget'                       => 'La transazione non deve avere un budget',
     'search_modifier_has_any_budget'                      => 'La transazione deve avere un budget (qualsiasi)',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'La transazione non deve avere etichette',
     'search_modifier_has_any_tag'                         => 'La transazione deve avere una (qualsiasi) etichetta',
     'search_modifier_notes_contain'                       => 'Le note della transazione contengono ":value"',
@@ -429,7 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Applica il gruppo di regole ":title" a una selezione delle tue transazioni',
     'apply_rule_group_selection_intro'                    => 'Gruppi di regole come ":title" sono normalmente applicati solo a transazioni nuove o aggiornate, ma puoi dire a Firefly III di eseguire tutte le regole in questo gruppo su una selezione delle tue transazioni esistenti. Questo può essere utile quando hai aggiornato un gruppo di regole e hai bisogno delle modifiche da applicare a tutte le tue altre transazioni.',
     'applied_rule_group_selection'                        => 'Il gruppo di regole ":title" è stato applicato alla selezione.',
-    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
+    'timezone_difference'                                 => 'Il browser segnala "{local}" come fuso orario. Firefly III è configurato con il fuso orario "{system}". Questo grafico potrebbe non è essere corretto.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'L\'azione dell\'utente è ":trigger_value"',
@@ -525,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'La transazione non ha un budget',
     'rule_trigger_has_any_budget_choice'                  => 'Ha un (qualsiasi) budget',
     'rule_trigger_has_any_budget'                         => 'La transazione ha un (qualsiasi) budget',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Non ha etichette',
     'rule_trigger_has_no_tag'                             => 'La transazione non ha etichette',
     'rule_trigger_has_any_tag_choice'                     => 'Ha una o più etichette (qualsiasi)',
