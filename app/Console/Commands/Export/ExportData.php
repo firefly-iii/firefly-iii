@@ -124,11 +124,11 @@ class ExportData extends Command
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data = $exporter->export();
-        if (0===count($data)) {
+        if (0 === count($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
         $returnCode = 0;
-        if (0!== count($data)) {
+        if (0 !== count($data)) {
             try {
                 $this->exportData($options, $data);
                 app('telemetry')->feature('system.command.executed', $this->signature);
@@ -162,8 +162,9 @@ class ExportData extends Command
      */
     private function parseOptions(): array
     {
-        $start    = $this->getDateParameter('start');
-        $end      = $this->getDateParameter('end');
+        $start = $this->getDateParameter('start');
+        $end   = $this->getDateParameter('end');
+        exit;
         $accounts = $this->getAccountsParameter();
         $export   = $this->getExportDirectory();
 
@@ -199,24 +200,27 @@ class ExportData extends Command
         $error = false;
         if (null !== $this->option($field)) {
             try {
-                $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
+                $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
                 Log::error($e->getMessage());
                 $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }
         }
-        if (false === $error && 'start' === $field) {
+
+        if (true === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
             $date->startOfDay();
         }
-        if (false === $error && 'end' === $field) {
+        if (true === $error && 'end' === $field) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
         }
+        if ('end' === $field) {
+            $date->endOfDay();
+        }
 
-        // fallback
         return $date;
     }
 
