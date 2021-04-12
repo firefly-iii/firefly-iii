@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'A transacção tem que ter uma categoria (qualquer)',
     'search_modifier_has_no_budget'                       => 'A transacção não deve ter um orçamento',
     'search_modifier_has_any_budget'                      => 'A transacção tem que ter um orçamento (qualquer)',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'A transação não pode ter etiquetas',
     'search_modifier_has_any_tag'                         => 'A transação tem que ter uma etiqueta (qualquer)',
     'search_modifier_notes_contain'                       => 'As notas de transacção contêm ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Aplicar grupo de regras ":title" a uma selecção de transacções',
     'apply_rule_group_selection_intro'                    => 'Regras de grupo como ":title" são normalmente aplicadas a transações novas ou atualizadas, no entanto pode dizer ao Firefly III para executar as mesmas neste grupo em transações selecionadas. Isto pode ser útil quando tiver atualizado regras de grupo e necessite de aplicar as alterações a todas as transações que devem ser afetas.',
     'applied_rule_group_selection'                        => 'As regras de grupo ":title" foram aplicadas à sua seleção.',
+    'timezone_difference'                                 => 'Seu navegador de Internet reporta o fuso horário "{local}". O Firefly III está configurado para o fuso horário "{system}". Esta tabela pode derivar.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'A ação de utilizador é ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'A transacção não tem orçamento',
     'rule_trigger_has_any_budget_choice'                  => 'Tem um orçamento (qualquer)',
     'rule_trigger_has_any_budget'                         => 'A transacção tem um orçamento (qualquer)',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Não tem etiquetas',
     'rule_trigger_has_no_tag'                             => 'A transação não tem etiqueta(s)',
     'rule_trigger_has_any_tag_choice'                     => 'Tem uma ou mais etiquetas (quaisquer)',

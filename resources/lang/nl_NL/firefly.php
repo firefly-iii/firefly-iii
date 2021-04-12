@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Transactie heeft een (welke dan ook) categorie',
     'search_modifier_has_no_budget'                       => 'De transactie heeft geen budget',
     'search_modifier_has_any_budget'                      => 'Transactie heeft een (welke dan ook) budget',
+    'search_modifier_has_no_bill'                         => 'De transactie heeft geen contract',
+    'search_modifier_has_any_bill'                        => 'Transactie heeft een (welke dan ook) contract',
     'search_modifier_has_no_tag'                          => 'De transactie heeft geen tags',
     'search_modifier_has_any_tag'                         => 'Transactie heeft een (welke dan ook) tag',
     'search_modifier_notes_contain'                       => 'De transactienotities bevatten ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Pas regelgroep ":title" toe op een selectie van je transacties',
     'apply_rule_group_selection_intro'                    => 'Regelgroepen zoals ":title" worden normaal alleen op nieuwe of geüpdate transacties toegepast, maar Firefly III kan ze ook toepassen op (een selectie van) je bestaande transacties. Dit kan praktisch zijn als je regels in de groep hebt veranderd en je wilt de veranderingen toepassen op al je transacties.',
     'applied_rule_group_selection'                        => 'Regelgroep ":title" is toegepast op je selectie.',
+    'timezone_difference'                                 => 'Je browser is in tijdzone "{local}". Firefly III is in tijdzone "{system}". Deze grafiek kan afwijken.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Gebruikersactie is ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transactie heeft geen budget',
     'rule_trigger_has_any_budget_choice'                  => 'Heeft een (welke dan ook) budget',
     'rule_trigger_has_any_budget'                         => 'Transactie heeft een (welke dan ook) budget',
+    'rule_trigger_has_no_bill_choice'                     => 'Heeft geen contract',
+    'rule_trigger_has_no_bill'                            => 'Transactie heeft geen contract',
+    'rule_trigger_has_any_bill_choice'                    => 'Heeft een (welke dan ook) contract',
+    'rule_trigger_has_any_bill'                           => 'Transactie heeft een (welke dan ook) contract',
     'rule_trigger_has_no_tag_choice'                      => 'Heeft geen tag(s)',
     'rule_trigger_has_no_tag'                             => 'Transactie heeft geen tag(s)',
     'rule_trigger_has_any_tag_choice'                     => 'Heeft een of meer tags',

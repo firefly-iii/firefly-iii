@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => '交易必须有分类',
     'search_modifier_has_no_budget'                       => '交易不能有预算',
     'search_modifier_has_any_budget'                      => '交易必须有预算',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => '交易不能有标签',
     'search_modifier_has_any_tag'                         => '交易必须有标签',
     'search_modifier_notes_contain'                       => '交易备注包含“:value”',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => '选取交易并应用规则组“:title”',
     'apply_rule_group_selection_intro'                    => '规则组如“:title”一般仅应用于新增的或更新后的交易，但您可要求 Firefly III 针对已有的单笔或多笔交易执行规则组内的规则。在您更新一个规则组后，且必须应用此组至其他交易时，即可使用此功能。',
     'applied_rule_group_selection'                        => '规则组“:title”已应用至所选交易',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => '用户动作为“:trigger_value”',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => '交易没有预算',
     'rule_trigger_has_any_budget_choice'                  => '有一个 (任何) 预算',
     'rule_trigger_has_any_budget'                         => '交易有一个 (任何) 预算',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => '没有标签',
     'rule_trigger_has_no_tag'                             => '交易没有标签',
     'rule_trigger_has_any_tag_choice'                     => '有一个或多个 (任何) 标签',

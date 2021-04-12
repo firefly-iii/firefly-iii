@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Bruk regelgruppe ":title" til et utvalg av dine transaksjoner',
     'apply_rule_group_selection_intro'                    => 'Regelgrupper som ":title" brukes normalt bare til nye eller oppdaterte transaksjoner, men du kan få Firefly III til å kjøre dem på et utvalg av dine eksisterende transaksjoner. Dette kan være nyttig når du har oppdatert en regelgruppe, og du trenger at endringene blir brukt på alle dine tidligere transaksjoner.',
     'applied_rule_group_selection'                        => 'Regelgruppe ":title" har blitt brukt på ditt utvalg.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Brukerhandling er ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transaksjonen har ikke noe budsjett',
     'rule_trigger_has_any_budget_choice'                  => 'Har et (hvilket som helst) budsjett',
     'rule_trigger_has_any_budget'                         => 'Transaksjonen har et (hvilket som helst) budsjett',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Har ingen tagg(er)',
     'rule_trigger_has_no_tag'                             => 'Transaksjonen har ingen tagger',
     'rule_trigger_has_any_tag_choice'                     => 'Har en eller flere tagger',

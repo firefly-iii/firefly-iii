@@ -32,20 +32,20 @@ export default {
     convertChart(dataSet) {
       this.dataSet = dataSet;
       this.newDataSet = {
-        count: 0,
+        //count: 0,
         labels: [],
         datasets: []
       }
       this.getLabels();
       this.getDataSets();
-      this.newDataSet.count = this.newDataSet.datasets.length;
+      //this.newDataSet.count = this.newDataSet.datasets.length;
       return this.newDataSet;
     },
 
     colorizeBarData(dataSet) {
       this.dataSet = dataSet;
       this.newDataSet = {
-        count: 0,
+        //count: 0,
         labels: [],
         datasets: []
       };
@@ -79,7 +79,7 @@ export default {
         //strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
       }
       this.newDataSet.labels = this.dataSet.labels;
-      this.newDataSet.count = this.dataSet.count;
+      //this.newDataSet.count = this.dataSet.count;
       for (let setKey in this.dataSet.datasets) {
         if (this.dataSet.datasets.hasOwnProperty(setKey)) {
           var dataset = this.dataSet.datasets[setKey];
@@ -94,7 +94,7 @@ export default {
     colorizeLineData(dataSet) {
       this.dataSet = dataSet;
       this.newDataSet = {
-        count: 0,
+        //count: 0,
         labels: [],
         datasets: []
       };
@@ -128,10 +128,10 @@ export default {
         //strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
       }
       this.newDataSet.labels = this.dataSet.labels;
-      this.newDataSet.count = this.dataSet.count;
+      //this.newDataSet.count = this.dataSet.count;
       for (let setKey in this.dataSet.datasets) {
         if (this.dataSet.datasets.hasOwnProperty(setKey)) {
-          var dataset = this.dataSet.datasets[setKey];
+          let dataset = this.dataSet.datasets[setKey];
           dataset.fill = false;
           dataset.backgroundColor = dataset.borderColor = fillColors[setKey];
           this.newDataSet.datasets.push(dataset);
@@ -168,7 +168,7 @@ export default {
             newSet.type = oldSet.type;
             newSet.currency_symbol = oldSet.currency_symbol;
             newSet.currency_code = oldSet.currency_code;
-            newSet.yAxisID = oldSet.yAxisID;
+            //newSet.yAxisID = oldSet.yAxisID;
             newSet.data = [];
             for (const entryLabel in oldSet.entries) {
               if (oldSet.entries.hasOwnProperty(entryLabel)) {

@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Transakcia má (ľubovoľnú) kategóriu',
     'search_modifier_has_no_budget'                       => 'Transakcia nesmie mať rozpočet',
     'search_modifier_has_any_budget'                      => 'Transakcia má (ľubovoľný) rozpočet',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'Transakcia nesmie mať štítky',
     'search_modifier_has_any_tag'                         => 'Transakcia má (ľubovoľné) štítky',
     'search_modifier_notes_contain'                       => 'Poznámky k transakcii obsahujú ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Uplatniť skupinu pravidiel „:title“ na vybrané transakcie',
     'apply_rule_group_selection_intro'                    => 'Skupiny pravidiel ako „:title“ sa zvyčajne používajú iba na nové alebo aktualizované transakcie, ale môžete Firefly III povedať, aby pri výbere vašich existujúcich transakcií spustil všetky pravidlá v tejto skupine. To môže byť užitočné, keď ste aktualizovali skupinu pravidiel a potrebujete zmeny, ktoré sa majú uplatniť na všetky vaše ďalšie transakcie.',
     'applied_rule_group_selection'                        => 'Skupina pravidiel „:title“ bola uplatnená na váš výber.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Použivateľská akcia je „:trigger_value“',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transakcia nemá žiadny rozpočet',
     'rule_trigger_has_any_budget_choice'                  => 'Má (ľubovoľný) rozpočet',
     'rule_trigger_has_any_budget'                         => 'Transakcia má (ľubovoľný) rozpočet',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Nemá žiadne štítky',
     'rule_trigger_has_no_tag'                             => 'Transakcia nemá žiadne štítky',
     'rule_trigger_has_any_tag_choice'                     => 'Má jeden alebo viac štítkov',

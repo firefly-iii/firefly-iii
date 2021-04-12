@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'A tranzakciónak van kategóriája',
     'search_modifier_has_no_budget'                       => 'A tranzakcióhoz nincs költségkeret',
     'search_modifier_has_any_budget'                      => 'A tranzakciónak van költségkerete',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'A tranzakcióhoz nincs címke',
     'search_modifier_has_any_tag'                         => 'A tranzakciónak van címkéje',
     'search_modifier_notes_contain'                       => 'Tranzakció megjegyzése tartalmazza ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => '":title" szabálycsoport alkalmazása a tranzakciók egy csoportján',
     'apply_rule_group_selection_intro'                    => 'Az olyan szabálycsoportok mint a ":title" normális esetben csak az új vagy a frissített tranzakciókon lesznek alkalmazva, de meg lehet mondani a Firefly III-nak, hogy futtassa le a csoportban lévő összes szabályt a már létező tranzakciókon. Ez hasznos lehet, ha egy szabálycsoport frissítve lett és a módosításokat az összes tranzakción alkalmazni kell.',
     'applied_rule_group_selection'                        => '":title" szabálycsoport alkalmazva a kiválasztásra.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'A felhasználói művelet ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Költségkeret nélküli tranzakciók',
     'rule_trigger_has_any_budget_choice'                  => 'Van költségkerete',
     'rule_trigger_has_any_budget'                         => 'Költségkerettel rendelkező tranzakció',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Nincsenek címkéi',
     'rule_trigger_has_no_tag'                             => 'Címke nélküli tranzakció',
     'rule_trigger_has_any_tag_choice'                     => 'Van legalább egy címkéje',

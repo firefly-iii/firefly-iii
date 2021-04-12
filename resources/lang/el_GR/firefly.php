@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) κατηγορία',
     'search_modifier_has_no_budget'                       => 'Η συναλλαγή δεν πρέπει να έχει προϋπολογισμό',
     'search_modifier_has_any_budget'                      => 'Η συναλλαγή πρέπει να έχει έναν (οποιοδήποτε) προϋπολογισμό',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'Η συναλλαγή δεν πρέπει να έχει καμία ετικέτα',
     'search_modifier_has_any_tag'                         => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) ετικέτα',
     'search_modifier_notes_contain'                       => 'Οι σημειώσεις της συναλλαγής περιέχουν ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Εφαρμογή ομάδας κανόνων ":title" σε μία επιλογή των συναλλαγών σας',
     'apply_rule_group_selection_intro'                    => 'Ομάδες κανόνων όπως ":title" συνήθως εφαρμόζονται σε νέες ή ενημερωμένες συναλλαγές, αλλά μπορείτε να πείτε στο Firefly III να εκτελέσει όλους τους κανόνες σε αυτή την ομάδα σε μία επιλογή των υπαρχόντων συναλλαγών σας. Αυτό μπορεί να είναι χρήσιμο εάν ενημερώσατε μια ομάδα κανόνων και θέλετε οι αλλαγές να εφαρμοστούν σε όλες τις άλλες συναλλαγές σας.',
     'applied_rule_group_selection'                        => 'Η ομάδα κανόνων ":title" έχει εφαρμοστεί στην επιλογή σας.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Η ενέργεια χρήστη είναι ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Η συναλλαγή δεν έχει προϋπολογισμό',
     'rule_trigger_has_any_budget_choice'                  => 'Έχει έναν (οποιοδήποτε) προϋπολογισμό',
     'rule_trigger_has_any_budget'                         => 'Η συναλλαγή έχει έναν (οποιοδήποτε) προϋπολογισμό',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Δεν έχει ετικέτα(ες)',
     'rule_trigger_has_no_tag'                             => 'Η συναλλαγή δεν έχει ετικέτα(ες)',
     'rule_trigger_has_any_tag_choice'                     => 'Έχει περισσότερες από μία (οποιεσδήποτε) ετικέτες',

@@ -299,6 +299,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -430,6 +432,7 @@ return [
     'apply_rule_group_selection'                          => 'İşlemlerinizin bir bölümüne ":title" kural grubunu uygulayın',
     'apply_rule_group_selection_intro'                    => '":title" gibi kural grupları normalde sadece yeni ve güncellenen işlemlerde geçerlidir ama Firefly III\'e onları mevcut işlemlerinizin istediğiniz bölümlerinde uygulanmasını söyleyebilirsiniz. Bu bir kural grubunu değiştirdiğinizde ve bunun diğer tüm işlemlerde uygulanmasını istediğinizde yararlı olabilir.',
     'applied_rule_group_selection'                        => 'Seçeneğinize ":title" kuralı uygulandı.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Kullanıcı işlemi ":trigger_value"',
@@ -525,6 +528,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'İşlem bütçesi yok',
     'rule_trigger_has_any_budget_choice'                  => 'Bir bütçesi var',
     'rule_trigger_has_any_budget'                         => 'İşlemin bir bütçesi var',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Etiket yok',
     'rule_trigger_has_no_tag'                             => 'İşlemin etiketi yok',
     'rule_trigger_has_any_tag_choice'                     => 'Bir veya birçok etiketleri var',

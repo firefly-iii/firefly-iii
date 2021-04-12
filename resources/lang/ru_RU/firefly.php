@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Транзакция должна быть связана с (любой) категорией',
     'search_modifier_has_no_budget'                       => 'Транзакция не должна быть связана с бюджетом',
     'search_modifier_has_any_budget'                      => 'Транзакция должна быть связана с (любым) бюджетом',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'У транзакции не должно быть меток',
     'search_modifier_has_any_tag'                         => 'Транзакция должна иметь (любую) метку',
     'search_modifier_notes_contain'                       => 'Заметки транзакции содержат ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Применить группу правил":title" к выбранным вами транзакциям',
     'apply_rule_group_selection_intro'                    => 'Такие группы правил, как ":title", обычно применяются только к новым или обновлённым транзакциям, но Firefly III может применить все правила из этой группы для выбранных вами существующих транзакций. Это может быть полезно, если вы обновили одно или несколько правил в группе и вам нужно изменить ранее созданные транзакции в соответствии с новыми условиями.',
     'applied_rule_group_selection'                        => 'Группа правил ":title" была применена к выбранным вами транзакциям.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Действие пользователя = ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Транзакция не связана ни с одним бюджетом',
     'rule_trigger_has_any_budget_choice'                  => 'Связана с (любым) бюджетом',
     'rule_trigger_has_any_budget'                         => 'Транзакция связана с (любым) бюджетом',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Нет меток',
     'rule_trigger_has_no_tag'                             => 'У транзакции ни одной метки',
     'rule_trigger_has_any_tag_choice'                     => 'Есть одна или несколько (любых) меток',

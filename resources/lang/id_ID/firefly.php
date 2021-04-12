@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Terapkan grup aturan ":title" ke pilihan transaksi Anda',
     'apply_rule_group_selection_intro'                    => 'Kelompok aturan seperti ":title" biasanya hanya diterapkan pada transaksi baru atau yang diperbarui, namun Anda dapat memberi tahu Firefly III untuk menjalankan semua aturan dalam grup ini pada pilihan transaksi Anda saat ini. Ini bisa berguna bila Anda telah memperbarui sekumpulan aturan dan Anda memerlukan perubahan yang akan diterapkan pada semua transaksi Anda yang lain.',
     'applied_rule_group_selection'                        => 'Rule group ":title" telah diterapkan pada pilihan Anda.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Tindakan pengguna adalah ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transaksi tidak memiliki anggaran',
     'rule_trigger_has_any_budget_choice'                  => 'Memiliki anggaran (apapun)',
     'rule_trigger_has_any_budget'                         => 'Transaksi memiliki anggaran (apapun)',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Tidak memiliki tag',
     'rule_trigger_has_no_tag'                             => 'Transaksi tidak memiliki tag(s)',
     'rule_trigger_has_any_tag_choice'                     => 'Memiliki satu atau beberapa tag (apapun)',

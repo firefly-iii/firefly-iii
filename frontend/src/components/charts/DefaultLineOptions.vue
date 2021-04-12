@@ -79,67 +79,95 @@ export default {
       return sections;
     },
     getDefaultOptions() {
-      var self = this;
       return {
-        legend: {
-          display: false,
-        },
-        animation: {
-          duration: 0,
-        },
         responsive: true,
         maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        animations: false,
+
         elements: {
           line: {
             cubicInterpolationMode: 'monotone'
           }
         },
         scales: {
-          xAxes: [
-            {
-              gridLines: {
-                display: false
-              },
-              ticks: {
-                // break ticks when too long
-                callback: function (value, index, values) {
-                  // date format
-                  let dateObj = new Date(value);
-                  let options = {year: 'numeric', month: 'long', day: 'numeric'};
-                  let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
-                  //console.log();
-                  //return self.formatLabel(value, 20);
-                  return self.formatLabel(str, 20);
-                }
+          x: {
+            //type: 'linear'
+            grid: {
+              display: false,
+            },
+            ticks: {
+              callback: function (value, index, values) {
+                //return this.getLabelForValue(value);
+                let dateObj = new Date(this.getLabelForValue(value));
+                let options = {year: 'numeric', month: 'long', day: 'numeric'};
+                let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
+                return str;
+                //           // //console.log();
+                //           // //return self.formatLabel(value, 20);
+                //           // return self.formatLabel(str, 20);
               }
             }
-          ],
-          yAxes: [{
-            display: true,
-            ticks: {
-              callback: function (tickValue) {
-                "use strict";
-                let currencyCode = this.chart.data.datasets[0].currency_code ? this.chart.data.datasets[0].currency_code : 'EUR';
-                return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
-              },
-              beginAtZero: true
-            }
+          },
+          y: {
+            suggestedMin: 0
 
-          }]
-        },
-        tooltips: {
-          mode: 'index',
-          callbacks: {
-            label: function (tooltipItem, data) {
-              "use strict";
-              let currencyCode = data.datasets[tooltipItem.datasetIndex].currency_code ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
-              let nrString =
-                  new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tooltipItem.yLabel)
-
-              return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
-            }
+            //type: 'linear'
           }
-        }
+        },
+
+        // scales: {
+        //   xAxes: [
+        //     {
+        //       gridLines: {
+        //         display: false
+        //       },
+        //       ticks: {
+        //         // break ticks when too long
+        //         callback: function (value, index, values) {
+        //           return value;
+        //           // date format
+        //           // let dateObj = new Date(value);
+        //           // let options = {year: 'numeric', month: 'long', day: 'numeric'};
+        //           // let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
+        //           // //console.log();
+        //           // //return self.formatLabel(value, 20);
+        //           // return self.formatLabel(str, 20);
+        //         }
+        //       }
+        //     }
+        //   ],
+        //   yAxes: [{
+        //     display: true,
+        //     ticks: {
+        //       callback: function (tickValue) {
+        //         "use strict";
+        //         return tickValue;
+        //         // let currencyCode = this.chart.data.datasets[0].currency_code ? this.chart.data.datasets[0].currency_code : 'EUR';
+        //         // return new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tickValue);
+        //       },
+        //       beginAtZero: true
+        //     }
+        //
+        //   }]
+        // },
+        // tooltips: {
+        //   mode: 'index',
+        //   // callbacks: {
+        //   //   label: function (tooltipItem, data) {
+        //   //     "use strict";
+        //   //     let currencyCode = data.datasets[tooltipItem.datasetIndex].currency_code ? data.datasets[tooltipItem.datasetIndex].currency_code : 'EUR';
+        //   //     let nrString =
+        //   //         new Intl.NumberFormat(localStorage.locale, {style: 'currency', currency: currencyCode}).format(tooltipItem.yLabel)
+        //   //
+        //   //     return data.datasets[tooltipItem.datasetIndex].label + ': ' + nrString;
+        //   //   }
+        //   // }
+        // }
       };
     }
 

@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => '將規則群組 ":title" 套用至您所選的交易',
     'apply_rule_group_selection_intro'                    => '規則群組如 ":title" 一般僅套用至新的或更新後的交易，但您可要求 Firefly III 針對既有的單筆或多筆交易執行規則群組內的規則。在您更新一則規則群組後，且必須套用該群組至其他交易時，即可使用此功能。',
     'applied_rule_group_selection'                        => '規則群組 ":title" 已套用至您選擇的交易。',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => '使用者動作為 ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => '交易沒有預算',
     'rule_trigger_has_any_budget_choice'                  => '有一個 (任何) 預算',
     'rule_trigger_has_any_budget'                         => '交易有一個 (任何) 預算',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => '沒有標籤',
     'rule_trigger_has_no_tag'                             => '交易沒有標籤',
     'rule_trigger_has_any_tag_choice'                     => '有一個或多個 (任何) 標籤',

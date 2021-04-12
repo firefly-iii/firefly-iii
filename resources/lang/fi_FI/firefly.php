@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Aja sääntöryhmä ":title" valituille tapahtumille',
     'apply_rule_group_selection_intro'                    => 'Sääntöryhmät kuten ":title" ajetaan normaalisti ainoastaan uusille tai päivitetyille tapahtumille, mutta voit pyytää Firefly III:a ajamaan kaikki ryhmän säännöt myös sinun valitsemillesi, jo olemassa oleville tapahtumille. Tämä voi olla kätevää kun olet päivittänyt ryhmän sääntöjä ja haluat muutosten vaikuttavan jo olemassaoleviin tapahtumiin.',
     'applied_rule_group_selection'                        => 'Sääntöryhmä ":title" on ajettu valituille tapahtumille.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Käyttäjän toiminto on ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Tapahtumalla ei ole budjettia',
     'rule_trigger_has_any_budget_choice'                  => 'On budjetti (mikä tahansa)',
     'rule_trigger_has_any_budget'                         => 'Tapahtumalla on budjetti (mikä tahansa)',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Ei tägejä',
     'rule_trigger_has_no_tag'                             => 'Tapahtumalla ei ole tägejä',
     'rule_trigger_has_any_tag_choice'                     => 'On tägi/tägejä (mitä tahansa)',

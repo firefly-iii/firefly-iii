@@ -109,6 +109,7 @@
         "edit": "Editeaz\u0103",
         "account_type_Loan": "\u00cemprumut",
         "account_type_Mortgage": "Credit ipotecar",
+        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "Datorie",
         "delete": "\u0218terge",

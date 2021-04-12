@@ -78,7 +78,7 @@ export default {
       this.tagList = value;
     },
     tagList: function (value) {
-      console.log('watch tagList');
+      // console.log('watch tagList');
       if (true === this.emitEvent) {
         this.$emit('set-field', {field: 'tags', index: this.index, value: value});
       }

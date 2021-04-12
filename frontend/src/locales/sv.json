@@ -109,6 +109,7 @@
         "edit": "Redigera",
         "account_type_Loan": "L\u00e5n",
         "account_type_Mortgage": "Bol\u00e5n",
+        "timezone_difference": "Din webbl\u00e4sare rapporterar tidszonen \"{local}\". Firefly III \u00e4r konfigurerad f\u00f6r tidszonen \"{system}\". Detta diagram kan glida.",
         "stored_new_account_js": "Nytt konto \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" lagrat!",
         "account_type_Debt": "Skuld",
         "delete": "Ta bort",

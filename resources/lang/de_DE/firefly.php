@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Die Buchung muss einer Kategorie zugeordnet werden',
     'search_modifier_has_no_budget'                       => 'Der Buchung darf kein Budget zugeordnet werden',
     'search_modifier_has_any_budget'                      => 'Die Buchung muss einem Budget zugeordnet werden',
+    'search_modifier_has_no_bill'                         => 'Der Buchung darf keine Rechnung zugeordnet sein',
+    'search_modifier_has_any_bill'                        => 'Der Buchung muss eine (beliebige) Rechnung zugeordnet werden',
     'search_modifier_has_no_tag'                          => 'Der Buchung darf keine Schlagworte zugeordnet werden',
     'search_modifier_has_any_tag'                         => 'Die Buchung muss ein Schlagwort zugeordnet werden',
     'search_modifier_notes_contain'                       => 'Die Buchungsnotiz enthält „:value”',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Regelgruppe „:title” auf eine Auswahl Ihrer Buchungen anwenden',
     'apply_rule_group_selection_intro'                    => 'Regelgruppen wie „:title” werden in der Regel nur auf neue oder aktualisierte Buchungen angewandt, aber Sie können die Gruppe auch auf eine Auswahl Ihrer bestehenden Transaktionen anwenden. Dies kann nützlich sein, wenn Sie eine Gruppe aktualisiert haben und Sie die Änderungen auf andere Buchungen übertragen möchten.',
     'applied_rule_group_selection'                        => 'Regelgruppe ":title" wurde auf Ihre Auswahl angewendet.',
+    'timezone_difference'                                 => 'Ihr Browser meldet die Zeitzone „{local}”. Firefly III ist aber für die Zeitzone „{system}” konfiguriert. Diese Karte kann deshalb abweichen.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Die Nutzeraktion ist ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Buchung ohne Budget',
     'rule_trigger_has_any_budget_choice'                  => 'Enthält ein (beliebiges) Budget',
     'rule_trigger_has_any_budget'                         => 'Buchung enthält ein (beliebiges) Budget',
+    'rule_trigger_has_no_bill_choice'                     => 'Keine Rechnung zugeordnet',
+    'rule_trigger_has_no_bill'                            => 'Buchung ohne Rechnung',
+    'rule_trigger_has_any_bill_choice'                    => 'Hat eine (beliebige) Rechnung',
+    'rule_trigger_has_any_bill'                           => 'Buchung hat eine (beliebige) Rechnung',
     'rule_trigger_has_no_tag_choice'                      => 'Enthält keine Schlagwörter',
     'rule_trigger_has_no_tag'                             => 'Transaktion enthält keine Schlagwörter',
     'rule_trigger_has_any_tag_choice'                     => 'Enthält einen oder mehrere (beliebige) Schlagwörter',

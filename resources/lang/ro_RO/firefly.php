@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Tranzacția trebuie să aibă o (orice) categorie',
     'search_modifier_has_no_budget'                       => 'Tranzacția nu trebuie să aibă un buget',
     'search_modifier_has_any_budget'                      => 'Tranzacția trebuie să aibă un (orice) buget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'Tranzacția nu trebuie să aibă etichete',
     'search_modifier_has_any_tag'                         => 'Tranzacția trebuie să aibă o (orice) etichetă',
     'search_modifier_notes_contain'                       => 'Notele tranzacției conțin ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Aplicați grupul de reguli ":title" la o selecție a tranzacțiilor dvs.',
     'apply_rule_group_selection_intro'                    => 'Grupul de reguli precum ":title" se aplică, în mod normal, tranzacțiilor noi sau actualizate, însă puteți spune aplicației că rulează toate regulile din acest grup cu privire la o selecție a tranzacțiilor existente. Acest lucru poate fi util atunci când ați actualizat un grup de reguli și aveți nevoie de modificările care vor fi aplicate tuturor celorlalte tranzacții.',
     'applied_rule_group_selection'                        => 'Grupul de reguli ":title" a fost aplicat selecției dvs..',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Acțiunea utilizatorului este ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Tranzacția nu are niciun buget',
     'rule_trigger_has_any_budget_choice'                  => 'Are un (orice) buget',
     'rule_trigger_has_any_budget'                         => 'Tranzacția are un (orice) buget',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Nu are etichetă (e)',
     'rule_trigger_has_no_tag'                             => 'Tranzacția nu are etichetă (e)',
     'rule_trigger_has_any_tag_choice'                     => 'Are una sau mai multe etichete',

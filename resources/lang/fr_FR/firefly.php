@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'L\'opération doit avoir une catégorie',
     'search_modifier_has_no_budget'                       => 'L\'opération ne doit pas avoir de budget',
     'search_modifier_has_any_budget'                      => 'L\'opération doit avoir un budget',
+    'search_modifier_has_no_bill'                         => 'L\'opération ne doit pas avoir de facture',
+    'search_modifier_has_any_bill'                        => 'L\'opération doit avoir (au moins) une facture',
     'search_modifier_has_no_tag'                          => 'L\'opération ne doit pas avoir de tags',
     'search_modifier_has_any_tag'                         => 'L\'opération doit avoir un tag (n\'importe lequel)',
     'search_modifier_notes_contain'                       => 'Les notes de l\'opération contiennent ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Appliquer le groupe de règles ":title" à une sélection de vos opérations',
     'apply_rule_group_selection_intro'                    => 'Les groupes de règles comme ":title" ne s\'appliquent normalement qu\'aux opérations nouvelles ou mises à jour, mais vous pouvez dire à Firefly III d\'exécuter toutes les règles de ce groupe sur une sélection de vos opérations existantes. Cela peut être utile lorsque vous avez mis à jour un groupe de règles et avez besoin que les modifications soient appliquées à l’ensemble de vos autres opérations.',
     'applied_rule_group_selection'                        => 'Le groupe de règles ":title" a été appliqué à votre sélection.',
+    'timezone_difference'                                 => 'Votre navigateur signale le fuseau horaire "{local}". Firefly III est configuré pour le fuseau horaire "{system}". Ce graphique peut être décalé.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'L\'action de l’utilisateur est ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'L\'opération n\'a pas de budget',
     'rule_trigger_has_any_budget_choice'                  => 'A un (des) budget',
     'rule_trigger_has_any_budget'                         => 'L\'opération a un(des) budget(s)',
+    'rule_trigger_has_no_bill_choice'                     => 'N\'a pas de facture',
+    'rule_trigger_has_no_bill'                            => 'L\'opération n\'a pas de facture',
+    'rule_trigger_has_any_bill_choice'                    => 'A (au moins) une facture',
+    'rule_trigger_has_any_bill'                           => 'L\'opération transaction a (au moins) une facture',
     'rule_trigger_has_no_tag_choice'                      => 'N\'a pas de tag(s)',
     'rule_trigger_has_no_tag'                             => 'L\'opération n\'a pas de tag·s',
     'rule_trigger_has_any_tag_choice'                     => 'Dispose d\'un ou de plusieurs tags',

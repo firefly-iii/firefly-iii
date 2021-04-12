@@ -109,6 +109,7 @@
         "edit": "\u7de8\u8f2f",
         "account_type_Loan": "\u8cb8\u6b3e",
         "account_type_Mortgage": "\u62b5\u62bc",
+        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "\u8ca0\u50b5",
         "delete": "\u522a\u9664",

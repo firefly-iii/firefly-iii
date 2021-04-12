@@ -22,7 +22,7 @@
 const state = () => (
     {
         listPageSize: 33,
-        // timezone: ''
+        timezone: ''
     }
 )
 
@@ -32,10 +32,10 @@ const getters = {
     listPageSize: state => {
         return state.listPageSize;
     },
-    // timezone: state => {
-    //     // console.log('Wil return ' + state.listPageSize);
-    //     return state.timezone;
-    // },
+    timezone: state => {
+        // console.log('Wil return ' + state.listPageSize);
+        return state.timezone;
+    },
 }
 
 // actions
@@ -53,17 +53,17 @@ const actions = {
                       }
                 );
         }
-        // if (localStorage.timezone) {
-        //     state.timezone = localStorage.timezone;
-        //     context.commit('setTimezone', {timezone: localStorage.timezone});
-        // }
-        // if (!localStorage.timezone) {
-        //     axios.get('./api/v1/configuration/app.timezone')
-        //         .then(response => {
-        //                   context.commit('setTimezone', {timezone: response.data.data.value});
-        //               }
-        //         );
-        // }
+        if (localStorage.timezone) {
+            state.timezone = localStorage.timezone;
+            context.commit('setTimezone', {timezone: localStorage.timezone});
+        }
+        if (!localStorage.timezone) {
+            axios.get('./api/v1/configuration/app.timezone')
+                .then(response => {
+                          context.commit('setTimezone', {timezone: response.data.data.value});
+                      }
+                );
+        }
     }
 }
 
@@ -79,13 +79,13 @@ const mutations = {
 
         }
     },
-    // setTimezone(state, payload) {
-    //
-    //     if ('' !== payload.timezone) {
-    //         state.timezone = payload.timezone;
-    //         localStorage.timezone = payload.timezone;
-    //     }
-    // },
+    setTimezone(state, payload) {
+
+        if ('' !== payload.timezone) {
+            state.timezone = payload.timezone;
+            localStorage.timezone = payload.timezone;
+        }
+    },
 }
 
 export default {

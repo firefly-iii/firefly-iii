@@ -64,7 +64,7 @@ export default {
   created() {
     this.localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.systemTimeZone = this.timezone;
-    console.log('TransactionDate: ' + this.date);
+    // console.log('TransactionDate: ' + this.date);
     // split date and time:
     let parts = this.date.split('T');
     this.dateStr = parts[0];

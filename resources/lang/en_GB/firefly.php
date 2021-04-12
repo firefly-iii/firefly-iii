@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'The transaction must have a (any) category',
     'search_modifier_has_no_budget'                       => 'The transaction must have no budget',
     'search_modifier_has_any_budget'                      => 'The transaction must have a (any) budget',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'The transaction must have no tags',
     'search_modifier_has_any_tag'                         => 'The transaction must have a (any) tag',
     'search_modifier_notes_contain'                       => 'The transaction notes contain ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
     'applied_rule_group_selection'                        => 'Rule group ":title" has been applied to your selection.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'User action is ":trigger_value"',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Transaction has no budget',
     'rule_trigger_has_any_budget_choice'                  => 'Has a (any) budget',
     'rule_trigger_has_any_budget'                         => 'Transaction has a (any) budget',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Has no tag(s)',
     'rule_trigger_has_no_tag'                             => 'Transaction has no tag(s)',
     'rule_trigger_has_any_tag_choice'                     => 'Has one or more (any) tags',

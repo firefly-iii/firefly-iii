@@ -27,7 +27,7 @@
       <div class="row">
         <div class="col">
           <p v-if="links.length === 0">
-            <button class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
+            <button type="button" class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
           </p>
           <ul v-if="links.length > 0" class="list-group">
             <li v-for="(transaction, index) in links" class="list-group-item" v-bind:key="index">
@@ -59,12 +59,12 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <button class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><i class="far fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><i class="far fa-trash-alt"></i></button>
               </div>
             </li>
           </ul>
           <div v-if="links.length > 0" class="form-text">
-            <button class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
+            <button type="button" class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <form v-on:submit.prevent="search">
+                  <form v-on:submit.prevent="search" autocomplete="off">
                     <div class="input-group">
                       <input id="query" v-model="query" autocomplete="off" class="form-control" maxlength="255" name="search"
                              placeholder="Search query" type="text">

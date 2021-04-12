@@ -23,7 +23,7 @@
     <div v-if="visible" class="text-xs d-none d-lg-block d-xl-block">
       <span v-if="0 === this.index">{{ $t('firefly.' + this.direction + '_account') }}</span>
       <span v-if="this.index > 0" class="text-warning">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
-      <br><span>{{ selectedAccount }}</span>
+      <!-- <br><span>{{ selectedAccount }}</span> -->
     </div>
     <div v-if="!visible" class="text-xs d-none d-lg-block d-xl-block">
       &nbsp;
@@ -192,10 +192,10 @@ export default {
      * @param value
      */
     selectedAccount: function (value) {
-      console.log('TransactionAccount::watch selectedAccount()');
-      console.log(value);
+      // console.log('TransactionAccount::watch selectedAccount()');
+      // console.log(value);
       if (true === this.selectedAccountTrigger) {
-        console.log('$emit alles!');
+        // console.log('$emit alles!');
         this.$emit('set-account',
                    {
                      index: this.index,
@@ -208,18 +208,18 @@ export default {
                      currency_symbol: value.currency_symbol,
                    }
         );
-        console.log('watch::selectedAccount() will now set accountName because selectedAccountTrigger = true');
+        // console.log('watch::selectedAccount() will now set accountName because selectedAccountTrigger = true');
         this.accountName = value.name;
       }
     },
     accountName: function (value) {
-      console.log('now at watch accountName("' + value + '")');
-      console.log(this.selectedAccountTrigger);
+      // console.log('now at watch accountName("' + value + '")');
+      // console.log(this.selectedAccountTrigger);
       if (true === this.selectedAccountTrigger) {
-        console.log('Do nothing because selectedAccountTrigger = true');
+        // console.log('Do nothing because selectedAccountTrigger = true');
       }
       if (false === this.selectedAccountTrigger) {
-        console.log('$emit name from watch::accountName() because selectedAccountTrigger = false');
+        // console.log('$emit name from watch::accountName() because selectedAccountTrigger = false');
         this.$emit('set-account',
                    {
                      index: this.index,
@@ -234,11 +234,11 @@ export default {
         );
         // this.account = {name: value, type: null, id: null, currency_id: null, currency_code: null, currency_symbol: null};
       }
-      console.log('set selectedAccountTrigger to be FALSE');
+      // console.log('set selectedAccountTrigger to be FALSE');
       this.selectedAccountTrigger = false;
     },
     value: function (value) {
-      console.log('TransactionAccount::watch value(' + JSON.stringify(value) + ')');
+      // console.log('TransactionAccount::watch value(' + JSON.stringify(value) + ')');
       this.systemReturnedAccount(value);
 
       // // console.log('Index ' + this.index + ' nwAct: ', value);

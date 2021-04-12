@@ -22,7 +22,7 @@
   <div>
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
-    <form @submit="submitTransaction">
+    <form @submit="submitTransaction" autocomplete="off">
       <SplitPills :transactions="transactions"/>
       <div class="tab-content">
         <!-- v-on:switch-accounts="switchAccounts($event)" -->
@@ -70,7 +70,9 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><i class="far fa-clone"></i> {{
+                      $t('firefly.add_another_split')
+                    }}
                   </button>
                 </div>
                 <div class="col">
@@ -224,6 +226,10 @@ export default {
                       'resetTransactions',
                     ]
     ),
+    addTransactionArray: function (event) {
+      event.preventDefault();
+      this.addTransaction();
+    },
     /**
      * Removes a split from the array.
      */
@@ -798,8 +804,8 @@ export default {
     getAllowedOpposingTypes: function () {
       axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
-            console.log('opposing types things.');
-            console.log(response.data.data.value);
+            // console.log('opposing types things.');
+            // console.log(response.data.data.value);
             this.allowedOpposingTypes = response.data.data.value;
           });
     },

@@ -80,7 +80,7 @@ return [
     'api_key'                     => 'Klucz API',
     'remember_me'                 => 'Zapamiętaj mnie',
     'liability_type_id'           => 'Rodzaj zobowiązania',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => 'Rodzaj zobowiązania',
     'interest'                    => 'Odsetki',
     'interest_period'             => 'Okres odsetkowy',
 

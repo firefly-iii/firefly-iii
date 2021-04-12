@@ -150,7 +150,7 @@ class ChangesForV550 extends Migration
                     $table->timestamps();
                     $table->softDeletes();
                     $table->integer('user_id', false, true);
-                    $table->string('title', 512)->index();
+                    $table->string('title', 255)->index();
                     $table->string('secret', 32)->index();
                     $table->boolean('active')->default(true);
                     $table->unsignedSmallInteger('trigger', false);

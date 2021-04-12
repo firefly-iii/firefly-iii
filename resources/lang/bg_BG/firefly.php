@@ -298,6 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Транзакцията трябва да има (някаква) категория',
     'search_modifier_has_no_budget'                       => 'Транзакцията трябва да няма бюджет',
     'search_modifier_has_any_budget'                      => 'Транзакцията трябва да има (някакъв) бюджет',
+    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
+    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
     'search_modifier_has_no_tag'                          => 'Транзакцията трябва да няма етикет',
     'search_modifier_has_any_tag'                         => 'Транзакцията трябва да има (някакъв) етикет',
     'search_modifier_notes_contain'                       => 'Бележките към транзакцията съдържа ":value"',
@@ -429,6 +431,7 @@ return [
     'apply_rule_group_selection'                          => 'Приложете групата правила ":title" към селекция от вашите транзакции',
     'apply_rule_group_selection_intro'                    => 'Групи правила като ":title" обикновено се прилагат само за нови или актуализирани транзакции, но можете да кажете на Firefly III да го стартира върху селекция от вашите съществуващи транзакции. Това може да бъде полезно, когато сте актуализирали група правила и се нуждаете промените, да се отразят на всички останали транзакции.',
     'applied_rule_group_selection'                        => 'Групата правила ":title" е приложена към вашия избор.',
+    'timezone_difference'                                 => 'Your browser reports time zone "{local}". Firefly III is configured for time zone "{system}". This chart may drift.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Действието на потребителя е „:trigger_value“',
@@ -524,6 +527,10 @@ return [
     'rule_trigger_has_no_budget'                          => 'Транзакцията няма бюджет',
     'rule_trigger_has_any_budget_choice'                  => 'Има (някакъв) бюджет',
     'rule_trigger_has_any_budget'                         => 'Транзакцията има (някакъв) бюджет',
+    'rule_trigger_has_no_bill_choice'                     => 'Has no bill',
+    'rule_trigger_has_no_bill'                            => 'Transaction has no bill',
+    'rule_trigger_has_any_bill_choice'                    => 'Has a (any) bill',
+    'rule_trigger_has_any_bill'                           => 'Transaction has a (any) bill',
     'rule_trigger_has_no_tag_choice'                      => 'Няма етикет(и)',
     'rule_trigger_has_no_tag'                             => 'Транзакцията няма етикет(и)',
     'rule_trigger_has_any_tag_choice'                     => 'Има един или повече (някакви) етикети',

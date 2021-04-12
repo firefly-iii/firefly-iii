@@ -22,7 +22,7 @@
   <div>
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
-    <form @submit="submitForm">
+    <form @submit="submitForm" autocomplete="off">
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
           <div class="card card-primary">
@@ -217,7 +217,7 @@ export default {
   },
   methods: {
     storeField: function (payload) {
-      console.log(payload);
+      // console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.location = payload.value;
@@ -232,13 +232,13 @@ export default {
       e.preventDefault();
       this.submitting = true;
       let submission = this.getSubmission();
-      console.log('Will submit:');
-      console.log(submission);
+      // console.log('Will submit:');
+      // console.log(submission);
       let url = './api/v1/accounts';
 
       axios.post(url, submission)
           .then(response => {
-            console.log('success!');
+            // console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
             this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});
@@ -249,7 +249,7 @@ export default {
             }
             this.submitting = false;
             if (this.resetFormAfter) {
-              console.log('reset!');
+              // console.log('reset!');
               this.name = '';
               this.liability_type = 'Loan';
               this.liability_direction = 'debit';
@@ -276,7 +276,7 @@ export default {
     },
     parseErrors: function (errors) {
       this.errors = lodashClonedeep(this.defaultErrors);
-      console.log(errors);
+      // console.log(errors);
       for (let i in errors.errors) {
         if (errors.errors.hasOwnProperty(i)) {
           this.errors[i] = errors.errors[i];

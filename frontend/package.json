@@ -29,13 +29,13 @@
         "admin-lte": "^3.1.0",
         "bootstrap": "^4.6.0",
         "bootstrap-vue": "^2.21.2",
+        "chart.js": "^3.0.2",
         "icheck-bootstrap": "^3.0.1",
         "jquery-ui": "^1.12.1",
         "leaflet": "^1.7.1",
         "overlayscrollbars": "^1.13.1",
         "sortablejs": "^1.13.0",
         "v-calendar": "^2.3.0",
-        "vue-chartjs": "^3.5.1",
         "vue-typeahead-bootstrap": "^2.8.0",
         "vue2-leaflet": "^2.7.0"
     }

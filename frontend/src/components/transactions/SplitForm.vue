@@ -29,7 +29,7 @@
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
             <div v-if="count>1" class="card-tools">
-              <button class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
           <div class="card-body">
@@ -381,13 +381,13 @@ export default {
       return this.date;
     },
     sourceAccount: function () {
-      console.log('computed::sourceAccount');
+      // console.log('computed::sourceAccount');
       let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
-      console.log(JSON.stringify(value));
+      // console.log(JSON.stringify(value));
       return value;
     },
     destinationAccount: function () {

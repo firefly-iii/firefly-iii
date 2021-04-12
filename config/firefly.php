@@ -94,12 +94,13 @@ return [
         'is_demo_site'     => false,
     ],
     'feature_flags' => [
-        'export'    => true,
-        'telemetry' => true,
-        'webhooks'  => false,
+        'export'       => true,
+        'telemetry'    => true,
+        'webhooks'     => false,
+        'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.6',
+    'version'                      => '5.5.7',
     'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -476,6 +477,8 @@ return [
             'has_any_category'                => ['alias' => false, 'needs_context' => false,],
             'has_no_budget'                   => ['alias' => false, 'needs_context' => false,],
             'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
+            'has_no_bill'                     => ['alias' => false, 'needs_context' => false,],
+            'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
             'has_no_tag'                      => ['alias' => false, 'needs_context' => false,],
             'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],
             'notes_contain'                   => ['alias' => false, 'needs_context' => true,],
@@ -846,5 +849,5 @@ return [
     'can_have_virtual_amounts'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 ];

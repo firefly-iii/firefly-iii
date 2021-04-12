@@ -16,9 +16,9 @@
  */
 
 /*!
- * Chart.js v2.9.4
+ * Chart.js v3.1.0
  * https://www.chartjs.org
- * (c) 2020 Chart.js Contributors
+ * (c) 2021 Chart.js Contributors
  * Released under the MIT License
  */
 
@@ -76,7 +76,7 @@
  */
 
 /*!
- * vue-i18n v8.24.2 
+ * vue-i18n v8.24.3 
  * (c) 2021 kazuya kawaguchi
  * Released under the MIT License.
  */
@@ -127,7 +127,3 @@
  * @author	owenm    <owen23355@gmail.com>
  * @license MIT
  */
-
-//! moment.js
-
-//! moment.js locale configuration
