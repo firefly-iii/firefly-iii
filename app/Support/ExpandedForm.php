@@ -221,16 +221,15 @@ class ExpandedForm
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
             $entryId = (int)$entry->id; // @phpstan-ignore-line
+            $current = $entry->toArray();
             $title   = null;
-
             foreach ($fields as $field) {
-                if (property_exists($entry, $field) && null === $title) {
-                    $title = $entry->$field; // @phpstan-ignore-line
+                if (array_key_exists($field, $current) && null === $title) {
+                    $title = $current[$field]; // @phpstan-ignore-line
                 }
             }
             $selectList[$entryId] = $title;
         }
-
         return $selectList;
     }
 
