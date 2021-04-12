@@ -172,7 +172,7 @@ class IndexController extends Controller
                 $account->location            = $this->repository->getLocation($account);
 
                 $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
-                $account->current_debt = $this->repository->getMetaValue($account, 'current_debt');
+                $account->current_debt = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
             }
         );
         // make paginator:

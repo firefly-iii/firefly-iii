@@ -68,7 +68,9 @@
             </td>
             {% if objectType == 'liabilities' %}
             <td style="text-align: right;">
-                <span class="text-info">{{ formatAmountByAccount(account, account.current_debt, false) }}</span>
+                {% if '-' != account.current_debt %}
+                    <span class="text-info">{{ formatAmountByAccount(account, account.current_debt, false) }}</span>
+                {% endif %}
             </td>
             {% endif %}
             <td class="hidden-sm hidden-xs">
