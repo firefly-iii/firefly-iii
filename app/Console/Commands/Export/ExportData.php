@@ -162,9 +162,8 @@ class ExportData extends Command
      */
     private function parseOptions(): array
     {
-        $start = $this->getDateParameter('start');
-        $end   = $this->getDateParameter('end');
-        exit;
+        $start    = $this->getDateParameter('start');
+        $end      = $this->getDateParameter('end');
         $accounts = $this->getAccountsParameter();
         $export   = $this->getExportDirectory();
 
