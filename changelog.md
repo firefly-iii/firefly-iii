@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 4625](https://github.com/firefly-iii/firefly-iii/issues/4625) Some arrays are null when Firefly III starts for the first time.
 - [Issue 4628](https://github.com/firefly-iii/firefly-iii/issues/4628) Every transaction appeared to have attachments.
 - [Issue 4635](https://github.com/firefly-iii/firefly-iii/issues/4635) Export command ignores your dates. Thanks for the suggested fix, @urquilla!
+- [Issue 4646](https://github.com/firefly-iii/firefly-iii/issues/4646) Empty select list
+
 
 ## 5.5.6 (API 1.5.2) 2021-04-09
 
