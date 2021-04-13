@@ -123,7 +123,7 @@ export default {
     initialiseList: function () {
       this.loading = true;
       this.accounts = [];
-      axios.get('./api/v1/preferences/frontpageAccounts')
+      axios.get('./api/v1/preferences/frontPageAccounts')
           .then(response => {
                   this.loadAccounts(response);
                 }
