@@ -298,8 +298,8 @@ return [
     'search_modifier_has_any_category'                    => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) κατηγορία',
     'search_modifier_has_no_budget'                       => 'Η συναλλαγή δεν πρέπει να έχει προϋπολογισμό',
     'search_modifier_has_any_budget'                      => 'Η συναλλαγή πρέπει να έχει έναν (οποιοδήποτε) προϋπολογισμό',
-    'search_modifier_has_no_bill'                         => 'The transaction must have no bill',
-    'search_modifier_has_any_bill'                        => 'The transaction must have a (any) bill',
+    'search_modifier_has_no_bill'                         => 'Η συναλλαγή δεν πρέπει να έχει λογαριασμό',
+    'search_modifier_has_any_bill'                        => 'Η συναλλαγή πρέπει να έχει έναν (οποιοδήποτε) λογαριασμό',
     'search_modifier_has_no_tag'                          => 'Η συναλλαγή δεν πρέπει να έχει καμία ετικέτα',
     'search_modifier_has_any_tag'                         => 'Η συναλλαγή πρέπει να έχει μία (οποιαδήποτε) ετικέτα',
     'search_modifier_notes_contain'                       => 'Οι σημειώσεις της συναλλαγής περιέχουν ":value"',
@@ -1862,8 +1862,8 @@ return [
     'edit_object_group'                  => 'Επεξεργασία ομάδας ":title"',
     'delete_object_group'                => 'Διαγραφή ομάδας ":title"',
     'update_object_group'                => 'Ενημέρωση ομάδας',
-    'updated_object_group'               => 'Successfully updated group ":title"',
-    'deleted_object_group'               => 'Successfully deleted group ":title"',
+    'updated_object_group'               => 'Επιτυχής ενημέρωση της ομάδας ":title"',
+    'deleted_object_group'               => 'Επιτυχής διαγραφή της ομάδας ":title"',
     'object_group'                       => 'Ομάδα',
 
 
