@@ -138,8 +138,9 @@ export default {
     let type = parts[parts.length - 1];
 
     // set a basic date-time string:
+    let date = new Date;
+    this.date = [date.getFullYear(), ('0' + (date.getMonth() + 1)).slice(-2), ('0' + date.getDate()).slice(-2)].join('-') + 'T00:00';
 
-    this.date = (new Date).toISOString().split('T')[0] + 'T00:00';
     //console.log('Date is set to "' + this.date + '"');
 
     this.setTransactionType(type[0].toUpperCase() + type.substring(1));
