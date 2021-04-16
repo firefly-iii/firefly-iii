@@ -76,10 +76,12 @@
                                             </td>
                                             <td>
                                                 {% for tag in journal.tags %}
+                                                    {% if null != tag.name %}
                                                 <span style="display: inline;"><a class="label label-success" href="{{ route('tags.show', [tag.name]) }}">
                                                         <i class="fa fa-fw fa-tag"></i>
                                                         {{ tag.name }}</a>
                                                 </span>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </td>
                                             <td>
