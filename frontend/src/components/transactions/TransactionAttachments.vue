@@ -39,27 +39,29 @@
 <script>
 export default {
   name: "TransactionAttachments",
-  props: ['transaction_journal_id', 'customFields'],
+  props: ['transaction_journal_id', 'customFields', 'index', 'uploadTrigger', 'clearTrigger'],
   data() {
     return {
-      availableFields: this.customFields
+      availableFields: this.customFields,
+      uploads: 0,
+      created: 0,
+      uploaded: 0,
     }
   },
   watch: {
     customFields: function (value) {
       this.availableFields = value;
     },
+    uploadTrigger: function () {
+      //console.log('uploadTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
+      this.doUpload();
+    },
+    clearTrigger: function () {
+      //console.log('clearTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
+      this.$refs.att.value = null;
+    },
     transaction_journal_id: function (value) {
-      if (!this.showField) {
-        // console.log('Field is hidden. Emit event!');
-        this.$emit('uploaded-attachments', value);
-        return;
-      }
-      // console.log('transaction_journal_id changed to ' + value);
-      // do upload!
-      if (0 !== value) {
-        this.doUpload();
-      }
+      //console.log('watch transaction_journal_id: ' + value + ' (index ' + this.index + ')');
     }
   },
   computed: {
@@ -71,47 +73,65 @@ export default {
     }
   },
   methods: {
-    selectedFile: function() {
-      this.$emit('selected-attachments', this.transaction_journal_id);
+    selectedFile: function () {
+      this.$emit('selected-attachments', {index: this.index, id: this.transaction_journal_id});
+    },
+    createAttachment: function (name) {
+      // console.log('Now in createAttachment()');
+      const uri = './api/v1/attachments';
+      const data = {
+        filename: name,
+        attachable_type: 'TransactionJournal',
+        attachable_id: this.transaction_journal_id,
+      };
+      // create new attachment:
+      return axios.post(uri, data);
+    },
+    uploadAttachment: function (attachmentId, data) {
+      this.created++;
+      // console.log('Now in uploadAttachment()');
+      const uploadUri = './api/v1/attachments/' + attachmentId + '/upload';
+      return axios.post(uploadUri, data)
+    },
+    countAttachment: function () {
+      this.uploaded++;
+      //console.log('Uploaded ' + this.uploaded + ' / ' + this.uploads);
+      if (this.uploaded >= this.uploads) {
+        //console.log('All files uploaded. Emit event for ' + this.transaction_journal_id + '(' + this.index + ')');
+        this.$emit('uploaded-attachments', this.transaction_journal_id);
+      }
     },
     doUpload: function () {
-      // console.log('Now in doUpload() for ' + this.$refs.att.files.length + ' files.');
-      for (let i in this.$refs.att.files) {
-        if (this.$refs.att.files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          let current = this.$refs.att.files[i];
+      let files = this.$refs.att.files;
+      this.uploads = files.length;
+      // loop all files and create attachments.
+      for (let i in files) {
+        if (files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          // console.log('Now at file ' + (parseInt(i) + 1) + ' / ' + files.length);
+          // read file into file reader:
+          let current = files[i];
           let fileReader = new FileReader();
           let theParent = this; // dont ask me why i need to do this.
-          fileReader.onloadend = function (evt) {
+          fileReader.onloadend = evt => {
             if (evt.target.readyState === FileReader.DONE) {
-              // do upload here
-              const uri = './api/v1/attachments';
-              const data = {
-                filename: current.name,
-                attachable_type: 'TransactionJournal',
-                attachable_id: theParent.transaction_journal_id,
-              };
-              // create new attachment:
-              axios.post(uri, data).then(response => {
-                // upload actual file:
-                const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
-                axios
-                    .post(uploadUri, new Blob([evt.target.result]))
-                    .then(attachmentResponse => {
-                      // TODO feedback etc.
-                      // console.log('Uploaded a file. Emit event!');
-                      // console.log(attachmentResponse);
-                      theParent.$emit('uploaded-attachments', this.transaction_journal_id);
-                    });
-              });
+              // console.log('I am done reading file ' + (parseInt(i) + 1));
+              this.createAttachment(current.name).then(response => {
+                // console.log('Created attachment. Now upload (1)');
+                return theParent.uploadAttachment(response.data.data.id, new Blob([evt.target.result]));
+              }).then(theParent.countAttachment);
             }
           }
           fileReader.readAsArrayBuffer(current);
         }
       }
-      if (0 === this.$refs.att.files.length) {
-        // console.log('No files to upload. Emit event!');
+      if (0 === files.length) {
+        //console.log('No files to upload. Emit event!');
         this.$emit('uploaded-attachments', this.transaction_journal_id);
       }
+      // Promise.all(promises).then(response => {
+      //   console.log('All files uploaded. Emit event!');
+      //   this.$emit('uploaded-attachments', this.transaction_journal_id);
+      // });
     }
   }
 

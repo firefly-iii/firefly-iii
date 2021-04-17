@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div class="form-group">
+  <div class="form-group" v-if="0===index">
     <div class="text-xs d-none d-lg-block d-xl-block">
       {{ $t('firefly.date_and_time') }}
     </div>
@@ -28,7 +28,6 @@
           ref="date"
           v-model="dateStr"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
-          :disabled="index > 0"
           :placeholder="dateStr"
           :title="$t('firefly.date')"
           autocomplete="off"
@@ -39,7 +38,6 @@
           ref="time"
           v-model="timeStr"
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
-          :disabled="index > 0"
           :placeholder="timeStr"
           :title="$t('firefly.time')"
           autocomplete="off"

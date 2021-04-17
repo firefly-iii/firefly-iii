@@ -40,6 +40,7 @@
             :transaction="transaction"
             :transaction-type="transactionType"
             v-on:uploaded-attachments="uploadedAttachment($event)"
+            v-on:selected-attachments="selectedAttachment($event)"
             v-on:set-marker-location="storeLocation($event)"
             v-on:set-account="storeAccountValue($event)"
             v-on:set-date="storeDate($event)"
@@ -166,7 +167,7 @@ export default {
       // things the process is done working on (3 phases):
       submittedTransaction: false,
       submittedLinks: false,
-      submittedAttachments: false,
+      submittedAttachments: -1, // -1 (no attachments), 0 = uploading, 1 = uploaded
 
       // transaction was actually submitted?
       inError: false,
@@ -201,14 +202,10 @@ export default {
     ...mapGetters('root', ['listPageSize'])
   },
   watch: {
-    submittedTransaction: function () {
-      this.finalizeSubmit();
-    },
-    submittedLinks: function () {
-      this.finalizeSubmit();
-    },
     submittedAttachments: function () {
-      this.finalizeSubmit();
+      // console.log('Watch submittedAttachments');
+
+      this.finaliseSubmission();
     }
   },
   methods: {
@@ -243,7 +240,7 @@ export default {
      * and creating links. Only once all three steps are executed may the message be shown or the user be
      * forwarded.
      */
-    finalizeSubmit() {
+    finalizeSubmitXX() {
       // console.log('finalizeSubmit (' + this.submittedTransaction + ', ' + this.submittedAttachments + ', ' + this.submittedLinks + ')');
       if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
         // console.log('all true');
@@ -265,7 +262,7 @@ export default {
         this.enableSubmit = true;
         this.submittedTransaction = false;
         this.submittedLinks = false;
-        this.submittedAttachments = false;
+        //this.submittedAttachments = false;
         this.inError = false;
 
 
@@ -273,8 +270,7 @@ export default {
         for (let i in this.transactions) {
           if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             if (this.transactions.hasOwnProperty(i)) {
-              // console.log('Reset attachment #' + i);
-              this.updateField({index: i, field: 'transaction_journal_id', value: 0});
+              this.updateField({index: i, field: 'clearTrigger', value: true});
             }
           }
         }
@@ -291,6 +287,148 @@ export default {
       }
       // console.log('Did nothing in finalizeSubmit');
     },
+
+    submitData: function (url, data) {
+      return axios.post(url, data);
+    },
+    handleSubmissionResponse: function (response) {
+      // save some meta data:
+      this.returnedGroupId = parseInt(response.data.data.id);
+      this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+      let journals = [];
+
+      // save separate journal ID's (useful ahead in the process):
+      let result = response.data.data.attributes.transactions
+      for (let i in result) {
+        if (result.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          journals.push(parseInt(result[i].transaction_journal_id));
+        }
+      }
+
+      return new Promise((resolve) => {
+        resolve(
+            {
+              journals: journals,
+            }
+        );
+      });
+    },
+    submitLinks: function (response, submission) {
+      let promises = [];
+      // for
+      for (let i in response.journals) {
+        if (response.journals.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let journalId = response.journals[i];
+          let links = submission.transactions[i].links;
+          for (let ii in links) {
+            if (links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+              let currentLink = links[ii];
+              if (0 === currentLink.outward_id) {
+                currentLink.outward_id = journalId;
+              }
+              if (0 === currentLink.inward_id) {
+                currentLink.inward_id = journalId;
+              }
+              promises.push(axios.post('./api/v1/transaction_links', currentLink));
+            }
+          }
+        }
+      }
+      if (0 === promises.length) {
+        return new Promise((resolve) => {
+          resolve(
+              {
+                response: 'from submitLinks'
+              }
+          );
+        });
+      }
+      return Promise.all(promises);
+    },
+    submitAttachments: function (response, submission) {
+      let anyAttachments = false;
+      for (let i in response.journals) {
+        if (response.journals.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let journalId = response.journals[i];
+          let hasAttachments = submission.transactions[i].attachments;
+          // console.log('Decided that ' + journalId);
+          // console.log(hasAttachments);
+          if (hasAttachments) {
+            // console.log('upload!');
+            this.updateField({index: i, field: 'transaction_journal_id', value: journalId});
+            anyAttachments = true;
+          }
+        }
+      }
+
+      if (true === anyAttachments) {
+        this.submittedAttachments = 0;
+      }
+
+      return new Promise((resolve) => {
+        resolve(
+            {
+              response: 'from submitAttachments'
+            }
+        );
+      });
+    },
+    selectedAttachment: function (payload) {
+      this.updateField({index: payload.index, field: 'attachments', value: true});
+    },
+    finaliseSubmission: function () {
+      if (0 === this.submittedAttachments) {
+        // console.log('submittedAttachments = ' + this.submittedAttachments);
+        return;
+      }
+      // console.log('finaliseSubmission');
+      if (false === this.createAnother) {
+        window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
+        return;
+      }
+      if (false === this.inError) {
+        // show message:
+        this.errorMessage = '';
+        this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
+      }
+
+      // enable flags:
+      this.enableSubmit = true;
+      this.submittedTransaction = false;
+      this.submittedAttachments = -1;
+
+      // reset attachments
+      if (!this.resetFormAfter) {
+        for (let i in this.transactions) {
+          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            if (this.transactions.hasOwnProperty(i)) {
+              // console.log('Reset attachment #' + i);
+              this.updateField({index: i, field: 'transaction_journal_id', value: 0});
+            }
+          }
+        }
+      }
+      // reset the form:
+      if (this.resetFormAfter) {
+        this.resetTransactions();
+        this.addTransaction();
+      }
+      return new Promise((resolve) => {
+        resolve(
+            {
+              response: 'from finaliseSubmission'
+            }
+        );
+      });
+    },
+    handleSubmissionError: function (error) {
+      // oh noes Firefly III has something to bitch about.
+      this.enableSubmit = true;
+
+      // but report an error because error:
+      this.inError = true;
+      this.parseErrors(error.response.data);
+    },
     /**
      * Actually submit the transaction to Firefly III. This is a fairly complex beast of a thing because multiple things
      * need to happen in the right order.
@@ -305,40 +443,50 @@ export default {
       const url = './api/v1/transactions';
       const data = this.convertData();
 
-      // console.log('Will submit:');
-      // console.log(data);
-
-      // POST the transaction.
-      axios.post(url, data)
+      this.submitData(url, data)
+          .then(this.handleSubmissionResponse)
           .then(response => {
-            // console.log('Response is OK!');
-            // report the transaction is submitted.
-            this.submittedTransaction = true;
+                  return Promise.all([this.submitLinks(response, data), this.submitAttachments(response, data)]);
+                }
+          )
+          .then(this.finaliseSubmission)
+          .catch(this.handleSubmissionError);
 
-            // submit links and attachments (can only be done when the transaction is created)
-            this.submitTransactionLinks(data, response);
-            this.submitAttachments(data, response);
-
-            // meanwhile, store the ID and the title in some easy to access variables.
-            this.returnedGroupId = parseInt(response.data.data.id);
-            this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
-            // console.log('Group title is now "' + this.groupTitle + '"');
-          })
-          .catch(error => {
-            // oh noes Firefly III has something to bitch about.
-            this.enableSubmit = true;
-            // console.log('enable submit = true');
-            // report the transaction is submitted.
-            this.submittedTransaction = true;
-            // also report attachments and links are submitted:
-            this.submittedAttachments = true;
-            this.submittedLinks = true;
-
-            // but report an error because error:
-            this.inError = true;
-            this.parseErrors(error.response.data);
-          });
-    },
+      // // console.log('Will submit:');
+      // // console.log(data);
+      //
+      // // POST the transaction.
+      // axios.post(url, data)
+      //     .then(response => {
+      //       // console.log('Response is OK!');
+      //       // report the transaction is submitted.
+      //       this.submittedTransaction = true;
+      //
+      //       // submit links and attachments (can only be done when the transaction is created)
+      //       this.submitTransactionLinks(data, response);
+      //       this.submitAttachments(data, response);
+      //
+      //       // meanwhile, store the ID and the title in some easy to access variables.
+      //       this.returnedGroupId = parseInt(response.data.data.id);
+      //       this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+      //       // console.log('Group title is now "' + this.groupTitle + '"');
+      //     })
+      //     .catch(error => {
+      //       // oh noes Firefly III has something to bitch about.
+      //       this.enableSubmit = true;
+      //       // console.log('enable submit = true');
+      //       // report the transaction is submitted.
+      //       this.submittedTransaction = true;
+      //       // also report attachments and links are submitted:
+      //       this.submittedAttachments = true;
+      //       this.submittedLinks = true;
+      //
+      //       // but report an error because error:
+      //       this.inError = true;
+      //       this.parseErrors(error.response.data);
+      //     });
+    }
+    ,
 
     /**
      * Submitting transactions means we will give each TransactionAttachment component
@@ -348,7 +496,7 @@ export default {
      *
      * The ID is set via the store.
      */
-    submitAttachments: function (data, response) {
+    submitAttachmentsX: function (data, response) {
       // console.log('submitAttachments()');
       let result = response.data.data.attributes.transactions
       for (let i in data.transactions) {
@@ -359,7 +507,8 @@ export default {
           }
         }
       }
-    },
+    }
+    ,
     /**
      * When a attachment component is done uploading it ends up here. We create an object where we count how many
      * attachment components have reported back they're done uploading. Of course if they have nothing to upload
@@ -368,6 +517,7 @@ export default {
      * Once the number of components matches the number of splits we know all attachments have been uploaded.
      */
     uploadedAttachment: function (journalId) {
+      this.submittedAttachments = 0;
       // console.log('Triggered uploadedAttachment(' + journalId + ')');
       let key = 'str' + journalId;
       this.submittedAttCount[key] = 1;
@@ -375,11 +525,12 @@ export default {
       // console.log('Count is now ' + count);
       // console.log('Length is ' + this.transactions.length);
       if (count === this.transactions.length) {
-        // mark the attachments as stored:
-        this.submittedAttachments = true;
         // console.log('Got them all!');
+        // mark the attachments as stored:
+        this.submittedAttachments = 1;
       }
-    },
+    }
+    ,
     /**
      * Responds to changed location.
      */
@@ -458,11 +609,13 @@ export default {
         this.submittedLinks = true;
       });
     },
-
     parseErrors: function (errors) {
       for (let i in this.transactions) {
-        this.resetErrors({index: i});
+        if (this.transactions.hasOwnProperty(i)) {
+          this.resetErrors({index: i});
+        }
       }
+
       this.successMessage = '';
       this.errorMessage = this.$t('firefly.errors_submission');
       if (typeof errors.errors === 'undefined') {
@@ -471,12 +624,6 @@ export default {
       }
 
       let payload;
-      //payload = {index: 0, field: 'description', errors: ['Test error index 0']};
-      //this.setTransactionError(payload);
-
-      //payload = {index: 1, field: 'description', errors: ['Test error index 1']};
-      //this.setTransactionError(payload);
-
       let transactionIndex;
       let fieldName;
 
@@ -701,6 +848,7 @@ export default {
         // from thing:
         order: 0,
         reconciled: false,
+        attachments: array.attachments,
       };
 
       if (0 !== array.tags.length) {

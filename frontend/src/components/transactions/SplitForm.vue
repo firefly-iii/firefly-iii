@@ -267,8 +267,9 @@
                     v-on="$listeners"
                     :custom-fields.sync="customFields"
                     :index="index"
-                    :submitted_transaction="submittedTransaction"
                     :transaction_journal_id="transaction.transaction_journal_id"
+                    :upload-trigger="transaction.uploadTrigger"
+                    :clear-trigger="transaction.clearTrigger"
                 />
                 <TransactionLocation
                     v-model="transaction.location"
@@ -347,11 +348,6 @@ export default {
       type: String,
       required: true
     },
-    submittedTransaction: {
-      type: Boolean,
-      required: false,
-      default: false
-    }, // need to know if transaction is submitted.
     sourceAllowedTypes: {
       type: Array,
       required: false,
@@ -381,21 +377,24 @@ export default {
       return this.date;
     },
     sourceAccount: function () {
-      // console.log('computed::sourceAccount');
+      //console.log('computed::sourceAccount(' + this.index + ')');
       let value = {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
-      // console.log(JSON.stringify(value));
+      //console.log(JSON.stringify(value));
       return value;
     },
     destinationAccount: function () {
-      return {
+      //console.log('computed::destinationAccount(' + this.index + ')');
+      let value = {
         id: this.transaction.destination_account_id,
         name: this.transaction.destination_account_name,
         type: this.transaction.destination_account_type,
       };
+      //console.log(JSON.stringify(value));
+      return value;
     },
     hasMetaFields: function () {
       let requiredFields = [
