@@ -73,12 +73,10 @@ class IndexController extends Controller
      */
     public function index()
     {
-        /** @var User $user */
-        $user = auth()->user();
         $this->createDefaultRuleGroup();
         $this->createDefaultRule();
         $this->ruleGroupRepos->resetOrder();
-        $ruleGroups = $this->ruleGroupRepos->getRuleGroupsWithRules(null);
+        $ruleGroups = $this->ruleGroupRepos->getAllRuleGroupsWithRules(null);
 
         return prefixView('rules.index', compact('ruleGroups'));
     }
