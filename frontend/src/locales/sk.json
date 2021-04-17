@@ -141,7 +141,10 @@
         "next_expected_match": "\u010eal\u0161ia o\u010dak\u00e1van\u00e1 zhoda"
     },
     "config": {
-        "html_language": "sk"
+        "html_language": "sk",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Suma v cudzej mene",

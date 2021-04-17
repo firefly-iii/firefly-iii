@@ -141,7 +141,10 @@
         "next_expected_match": "Prossimo abbinamento previsto"
     },
     "config": {
-        "html_language": "it"
+        "html_language": "it",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Importo estero",

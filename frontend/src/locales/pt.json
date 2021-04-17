@@ -141,7 +141,10 @@
         "next_expected_match": "Proxima correspondencia esperada"
     },
     "config": {
-        "html_language": "pt"
+        "html_language": "pt",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Montante estrangeiro",

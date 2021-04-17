@@ -141,7 +141,10 @@
         "next_expected_match": "\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03b1\u03bc\u03b5\u03bd\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03c4\u03b9\u03c3\u03c4\u03bf\u03af\u03c7\u03b9\u03c3\u03b7"
     },
     "config": {
-        "html_language": "el"
+        "html_language": "el",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "\u03a0\u03bf\u03c3\u03cc \u03c3\u03b5 \u03be\u03ad\u03bd\u03bf \u03bd\u03cc\u03bc\u03b9\u03c3\u03bc\u03b1",

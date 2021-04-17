@@ -141,7 +141,10 @@
         "next_expected_match": "Neste forventede treff"
     },
     "config": {
-        "html_language": "nb"
+        "html_language": "nb",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Utenlandske bel\u00f8p",

@@ -141,7 +141,10 @@
         "next_expected_match": "N\u00e4sta f\u00f6rv\u00e4ntade tr\u00e4ff"
     },
     "config": {
-        "html_language": "sv"
+        "html_language": "sv",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Utl\u00e4ndskt belopp",

@@ -141,7 +141,10 @@
         "next_expected_match": "Nast\u0119pne oczekiwane dopasowanie"
     },
     "config": {
-        "html_language": "pl"
+        "html_language": "pl",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Kwota zagraniczna",

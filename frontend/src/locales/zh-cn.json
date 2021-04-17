@@ -141,7 +141,10 @@
         "next_expected_match": "\u9884\u671f\u4e0b\u6b21\u652f\u4ed8"
     },
     "config": {
-        "html_language": "zh-cn"
+        "html_language": "zh-cn",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "\u5916\u5e01\u91d1\u989d",
