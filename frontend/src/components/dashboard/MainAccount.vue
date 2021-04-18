@@ -49,10 +49,8 @@ import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 import {mapGetters} from "vuex";
 import * as ChartJs from 'chart.js'
+
 ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass) => (chartClass.id)));
-
-
-
 
 
 export default {
@@ -63,6 +61,7 @@ export default {
       loading: true,
       error: false,
       ready: false,
+      initialised: false,
       dataCollection: {},
       chartOptions: {},
       _chart: null,
@@ -71,18 +70,18 @@ export default {
     }
   },
   created() {
-    this.ready = true;
     this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
     this.localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.systemTimeZone = this.timezone;
+    this.ready = true;
   },
   computed: {
-    ...mapGetters('dashboard/index',['start', 'end']),
-    ...mapGetters('root',['timezone']),
+    ...mapGetters('dashboard/index', ['start', 'end']),
+    ...mapGetters('root', ['timezone']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
     },
-    timezoneDifference: function() {
+    timezoneDifference: function () {
       return this.localTimeZone !== this.systemTimeZone;
     }
   },
@@ -93,10 +92,10 @@ export default {
       }
     },
     start: function () {
-      //this.initialiseChart();
+      this.updateChart();
     },
     end: function () {
-      //this.initialiseChart();
+      this.updateChart();
     },
   },
   methods: {
@@ -116,18 +115,38 @@ export default {
             this.drawChart();
           })
           .catch(error => {
-            // console.log('Has error!');
-            // console.log(error);
+            console.log('Has error!');
+            console.log(error);
             this.error = true;
           });
     },
     drawChart: function () {
-      this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
-                                        type: 'line',
-                                        data: this.dataCollection,
-                                        options: this.chartOptions
-                                      }
-      );
+      //console.log('drawChart');
+      if ('undefined' !== typeof this._chart) {
+        //console.log('destroy or update!');
+        this._chart.data = this.dataCollection;
+        this._chart.update();
+      }
+
+      if ('undefined' === typeof this._chart) {
+        //console.log('new!');
+        this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
+                                          type: 'line',
+                                          data: this.dataCollection,
+                                          options: this.chartOptions
+                                        }
+        );
+        this.initialised = true;
+      }
+    },
+    updateChart: function () {
+      //console.log('updateChart');
+      if (this.initialised) {
+        //console.log('MUST Update chart!');
+        // reset some vars so it wont trigger again:
+        this.initialised = false;
+        this.initialiseChart();
+      }
     }
   },
 }

@@ -142,7 +142,7 @@
     },
     "config": {
         "html_language": "nl",
-        "week_in_year_fns": "'Week' I, yyyy",
+        "week_in_year_fns": "'week' l, yyyy",
         "quarter_fns": "'Q'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },

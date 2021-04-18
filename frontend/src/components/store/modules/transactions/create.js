@@ -46,6 +46,9 @@ const getters = {
     transactions: state => {
         return state.transactions;
     },
+    defaultErrors: state => {
+        return state.defaultErrors;
+    },
     groupTitle: state => {
         return state.groupTitle;
     },
