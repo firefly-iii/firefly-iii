@@ -1056,7 +1056,7 @@ try {
         'transactions.create',
         static function (Generator $breadcrumbs, string $objectType) {
             $breadcrumbs->parent('transactions.index', $objectType);
-            $breadcrumbs->push(trans('breadcrumbs.create_new_transaction'), route('transactions.create', [$objectType]));
+            $breadcrumbs->push(trans(sprintf('breadcrumbs.create_%s', strtolower($objectType))), route('transactions.create', [$objectType]));
         }
     );
 

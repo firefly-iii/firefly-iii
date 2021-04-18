@@ -24,7 +24,6 @@ const state = () => (
         viewRange: 'default',
         start: null,
         end: null,
-        // default range:
         defaultStart: null,
         defaultEnd: null,
     }
@@ -53,24 +52,32 @@ const getters = {
 // actions
 const actions = {
     initialiseStore(context) {
-        if ('default' === context.state.viewRange) {
-            axios.get('./api/v1/preferences/viewRange')
-                .then(response => {
-                          let viewRange = response.data.data.attributes.data;
-                          context.commit('setViewRange', viewRange);
-                          // call another action:
+        // console.log('initialiseStore');
+
+        // restore from local storage:
+        context.dispatch('restoreViewRange');
+
+        axios.get('./api/v1/preferences/viewRange')
+            .then(response => {
+                      let viewRange = response.data.data.attributes.data;
+                      let oldViewRange = context.getters.viewRange;
+                      context.commit('setViewRange', viewRange);
+                      if (viewRange !== oldViewRange) {
+                          // console.log('View range changed from "' + oldViewRange + '" to "' + viewRange + '"');
                           context.dispatch('setDatesFromViewRange');
                       }
-                ).catch(error => {
-                // console.log(error);
-                context.commit('setViewRange', '1M');
-                // call another action:
-                context.dispatch('setDatesFromViewRange');
-            });
-        }
+                      if(viewRange === oldViewRange) {
+                          // console.log('Restore view range dates');
+                          context.dispatch('restoreViewRangeDates');
+                      }
+                  }
+            ).catch(() => {
+            context.commit('setViewRange', '1M');
+            context.dispatch('setDatesFromViewRange');
+        });
+
     },
-    setDatesFromViewRange(context) {
-        // console.log('Must set dates from viewRange "' + context.state.viewRange + '"');
+    restoreViewRangeDates: function(context) {
         // check local storage first?
         if (localStorage.viewRangeStart) {
             // console.log('view range start set from local storage.');
@@ -91,10 +98,16 @@ const actions = {
             // console.log(localStorage.viewRangeDefaultEnd);
             context.commit('setDefaultEnd', new Date(localStorage.viewRangeDefaultEnd));
         }
-
-        if (null !== context.getters.end && null !== context.getters.start) {
-            return;
+    },
+    restoreViewRange: function (context) {
+        // console.log('restoreViewRange');
+        let viewRange = localStorage.getItem('viewRange');
+        if (null !== viewRange) {
+            // console.log('restored restoreViewRange ' + viewRange );
+            context.commit('setViewRange', viewRange);
         }
+    },
+    setDatesFromViewRange(context) {
         let start;
         let end;
         let viewRange = context.getters.viewRange;
@@ -206,6 +219,7 @@ const mutations = {
     },
     setViewRange(state, range) {
         state.viewRange = range;
+        window.localStorage.setItem('viewRange', range);
     }
 }
 

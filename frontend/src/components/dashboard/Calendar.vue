@@ -46,7 +46,8 @@
                       class="btn btn-secondary"
                       @click="resetDate"
               ><i class="fas fa-history"></i></button>
-              <button id="dropdownMenuButton" :title="$t('firefly.select_period')" aria-expanded="false" aria-haspopup="true" class="btn btn-secondary dropdown-toggle"
+              <button id="dropdownMenuButton" :title="$t('firefly.select_period')" aria-expanded="false" aria-haspopup="true"
+                      class="btn btn-secondary dropdown-toggle"
                       data-toggle="dropdown"
                       type="button">
                 <i class="fas fa-list"></i>
@@ -78,8 +79,19 @@
 import {createNamespacedHelpers} from "vuex";
 import Vue from "vue";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
-const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
+import subDays from 'date-fns/subDays'
+import addDays from 'date-fns/addDays'
+import startOfDay from 'date-fns/startOfDay'
+import endOfDay from 'date-fns/endOfDay'
+import startOfWeek from 'date-fns/startOfWeek'
+import endOfWeek from 'date-fns/endOfWeek'
+import format from 'date-fns/format'
+import startOfQuarter from 'date-fns/startOfQuarter';
+import endOfQuarter from 'date-fns/endOfQuarter';
+import subQuarters from 'date-fns/subQuarters';
+import addQuarters from 'date-fns/addQuarters';
 
+const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
 Vue.component('date-picker', DatePicker)
 
@@ -130,16 +142,89 @@ export default {
       this.generatePeriods()
       return false;
     },
-    generatePeriods: function () {
-      this.periods = [];
-      // create periods.
-      let today;
-      let end;
+    generateDaily: function () {
+      let today = new Date(this.range.start);
+      // yesterday
+      this.periods.push(
+          {
+            start: startOfDay(subDays(today, 1)).toDateString(),
+            end: endOfDay(subDays(today, 1)).toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(subDays(today, 1))
+          }
+      );
 
-      today = new Date(this.range.start);
+      // today
+      this.periods.push(
+          {
+            start: startOfDay(today).toDateString(),
+            end: endOfDay(today).toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(today)
+          }
+      );
 
+      // tomorrow:
+      this.periods.push(
+          {
+            start: startOfDay(addDays(today, 1)).toDateString(),
+            end: endOfDay(addDays(today, 1)).toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(addDays(today, 1))
+          }
+      );
+
+      // The Day After Tomorrow dun-dun-dun!
+      this.periods.push(
+          {
+            start: startOfDay(addDays(today, 2)).toDateString(),
+            end: endOfDay(addDays(today, 2)).toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(addDays(today, 2))
+          }
+      );
+    },
+
+    generateWeekly: function () {
+      let today = new Date(this.range.start);
+      let start = startOfDay(startOfWeek(subDays(today, 7), {weekStartsOn: 1}));
+      let end = endOfDay(endOfWeek(subDays(today, 7), {weekStartsOn: 1}));
+      let dateFormat = this.$t('config.week_in_year_fns');
+      let title = format(start, dateFormat);
+
+      // last week
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+
+      // this week
+      start = startOfDay(startOfWeek(today, {weekStartsOn: 1}));
+      end = endOfDay(endOfWeek(today, {weekStartsOn: 1}));
+      title = format(start, dateFormat);
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+
+      // next week
+      start = startOfDay(startOfWeek(addDays(today, 7), {weekStartsOn: 1}));
+      end = endOfDay(endOfWeek(addDays(today, 7), {weekStartsOn: 1}));
+      title = format(start, dateFormat);
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+    },
+    generateMonthly: function () {
+      let today = new Date(this.range.start);
       // previous month
-      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth()-1, 1);
+      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
       lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
       this.periods.push(
           {
@@ -151,7 +236,7 @@ export default {
 
       // this month
       firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
       this.periods.push(
           {
             start: firstDayOfMonth.toDateString(),
@@ -161,8 +246,8 @@ export default {
       );
 
       // next month
-      let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 1);
-      let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth()+2, 0);
+      let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+      let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
       this.periods.push(
           {
             start: firstDayOfMonth.toDateString(),
@@ -171,9 +256,271 @@ export default {
           }
       );
 
+    },
+    generateQuarterly: function () {
+      let today = new Date(this.range.start);
+
+      // last quarter
+      let start = startOfDay(startOfQuarter(subQuarters(today, 1)));
+      let end = endOfDay(endOfQuarter(subQuarters(today, 1)));
+      let dateFormat = this.$t('config.quarter_fns');
+      let title = format(start, dateFormat);
+
+      // last week
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+
+
+      // this quarter
+      start = startOfDay(startOfQuarter(today));
+      end = endOfDay(endOfQuarter(today));
+      title = format(start, dateFormat);
+
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+      // next quarter
+      start = startOfDay(startOfQuarter(addQuarters(today, 1)));
+      end = endOfDay(endOfQuarter(addQuarters(today, 1)));
+      title = format(start, dateFormat);
+
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+    },
+    generateHalfYearly: function () {
+      let today = new Date(this.range.start);
+      let start;
+      let end;
+      let title = 'todo';
+      let half = 1;
+
+
+      // its currently first half of year:
+      if (today.getMonth() <= 5) {
+        // previous year, last half:
+        start = today;
+        start.setFullYear(start.getFullYear() - 1);
+        start.setMonth(6);
+        start.setDate(1);
+        start = startOfDay(start);
+        end = start;
+        end.setMonth(11);
+        end.setDate(31);
+        end = endOfDay(end);
+        half = 2;
+        title = format(start, this.$t('config.half_year_fns', {half: half}));
+        this.periods.push(
+            {
+              start: start.toDateString(),
+              end: end.toDateString(),
+              title: title
+            }
+        );
+
+        // this year, first half:
+        start = today;
+        start.setMonth(0);
+        start.setDate(1);
+        start = startOfDay(start);
+        end = today;
+        end.setMonth(5);
+        end.setDate(30);
+        end = endOfDay(start);
+        half = 1;
+        title = format(start, this.$t('config.half_year_fns', {half: half}));
+        this.periods.push(
+            {
+              start: start.toDateString(),
+              end: end.toDateString(),
+              title: title
+            }
+        );
+
+        // this year, second half:
+        start = today;
+        start.setMonth(6);
+        start.setDate(1);
+        start = startOfDay(start);
+        end = start;
+        end.setMonth(11);
+        end.setDate(31);
+        end = endOfDay(end);
+        half = 2;
+        title = format(start, this.$t('config.half_year_fns', {half: half}));
+        this.periods.push(
+            {
+              start: start.toDateString(),
+              end: end.toDateString(),
+              title: title
+            }
+        );
+        return;
+      }
+      // this year, first half:
+      start = today;
+      start.setMonth(0);
+      start.setDate(1);
+      start = startOfDay(start);
+      end = start;
+      end.setMonth(5);
+      end.setDate(30);
+      end = endOfDay(end);
+      half = 1;
+      title = format(start, this.$t('config.half_year_fns', {half: half}));
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+
+      // this year, second half:
+      start = today;
+      start.setMonth(6);
+      start.setDate(1);
+      start = startOfDay(start);
+      end = today;
+      end.setMonth(11);
+      end.setDate(31);
+      end = endOfDay(start);
+      half = 2;
+      title = format(start, this.$t('config.half_year_fns', {half: half}));
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+
+      // next year, first half:
+      start = today;
+      start.setMonth(0);
+      start.setDate(1);
+      start = startOfDay(start);
+      end = start;
+      end.setMonth(5);
+      end.setDate(30);
+      end = endOfDay(end);
+      half = 1;
+      title = format(start, this.$t('config.half_year_fns', {half: half}));
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: title
+          }
+      );
+    },
+    generateYearly: function () {
+      let today = new Date(this.range.start);
+      let start;
+      let end;
+      let title;
+
+      // last year
+      start = new Date(today);
+      start.setFullYear(start.getFullYear() - 1);
+      start.setMonth(0);
+      start.setDate(1);
+      start = startOfDay(start);
+
+      end = new Date(today);
+      end.setFullYear(end.getFullYear() - 1);
+      end.setMonth(11);
+      end.setDate(31);
+      end = endOfDay(end);
+
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: start.getFullYear()
+          }
+      );
+
+      // this year
+      start = new Date(today);
+      start.setMonth(0);
+      start.setDate(1);
+      start = startOfDay(start);
+
+      end = new Date(today);
+      end.setMonth(11);
+      end.setDate(31);
+      end = endOfDay(end);
+
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: start.getFullYear()
+          }
+      );
+      // next year
+      start = new Date(today);
+      start.setFullYear(start.getFullYear() + 1);
+      start.setMonth(0);
+      start.setDate(1);
+      start = startOfDay(start);
+
+      end = new Date(today);
+      end.setFullYear(end.getFullYear() + 1);
+      end.setMonth(11);
+      end.setDate(31);
+      end = endOfDay(end);
+
+      this.periods.push(
+          {
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: start.getFullYear()
+          }
+      );
+    },
+    generatePeriods: function () {
+      this.periods = [];
+      //console.log('The view range is "' + this.viewRange + '".');
+      switch (this.viewRange) {
+        case '1D':
+          this.generateDaily();
+          break;
+        case '1W':
+          this.generateWeekly();
+          break;
+        case '1M':
+          this.generateMonthly();
+          break;
+        case '3M':
+          this.generateQuarterly();
+          break;
+        case '6M':
+          this.generateHalfYearly();
+          break;
+        case '1Y':
+          this.generateYearly();
+          break;
+      }
+
+
       // last 7 days
-      today = new Date;
-      end = new Date;
+      let today = new Date;
+      let end = new Date;
       end.setDate(end.getDate() - 7);
       this.periods.push(
           {

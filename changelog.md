@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.8 (API 1.5.2) 2021-04-17
+
+This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.
+
+### Fixed
+- [Issue 4656](https://github.com/firefly-iii/firefly-iii/issues/4656) [issue 4660](https://github.com/firefly-iii/firefly-iii/issues/4660) Various fixes in the v2 layout.
+- [Issue 4663](https://github.com/firefly-iii/firefly-iii/issues/4663) It was possible to assign a budget to a transfer.
+- [Issue 4664](https://github.com/firefly-iii/firefly-iii/issues/4664) Null pointer in bulk editor
+- [Issue 4668](https://github.com/firefly-iii/firefly-iii/issues/4668) Inactive rule groups would not be listed.
+
 ## 5.5.7 (API 1.5.2) 2021-04-11
 
 ### Added

@@ -19,5 +19,5 @@
         // this is a terrible hack.
         var previousURL = '{{ previousUri }}';
     </script>
-    <script src="v2/js/transactions/create.js" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/transactions/create.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

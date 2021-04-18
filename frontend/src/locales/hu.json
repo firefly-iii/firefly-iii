@@ -141,7 +141,10 @@
         "next_expected_match": "K\u00f6vetkez\u0151 v\u00e1rhat\u00f3 egyez\u00e9s"
     },
     "config": {
-        "html_language": "hu"
+        "html_language": "hu",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "K\u00fclf\u00f6ldi \u00f6sszeg",

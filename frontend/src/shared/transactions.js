@@ -62,6 +62,10 @@ export function getDefaultTransaction() {
         destination_account_currency_id: null,
         destination_account_currency_code: null,
         destination_account_currency_symbol: null,
+        attachments: false,
+        selectedAttachments: false,
+        uploadTrigger: false,
+        clearTrigger: false,
 
         source_account: {
             id: 0,
@@ -112,7 +116,6 @@ export function getDefaultTransaction() {
 
         // transaction links:
         links: [],
-        attachments: [],
         // location:
         zoom_level: null,
         longitude: null,

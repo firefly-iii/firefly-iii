@@ -141,7 +141,10 @@
         "next_expected_match": "Urm\u0103toarea potrivire a\u0219teptat\u0103"
     },
     "config": {
-        "html_language": "ro"
+        "html_language": "ro",
+        "week_in_year_fns": "'Week' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Sum\u0103 str\u0103in\u0103",

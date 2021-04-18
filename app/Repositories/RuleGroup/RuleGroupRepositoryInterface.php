@@ -115,6 +115,15 @@ interface RuleGroupRepositoryInterface
     public function getRuleGroupsWithRules(?string $filter): Collection;
 
     /**
+     * Also inactive groups.
+     *
+     * @param string|null $filter
+     *
+     * @return Collection
+     */
+    public function getAllRuleGroupsWithRules(?string $filter): Collection;
+
+    /**
      * @param RuleGroup $group
      *
      * @return Collection

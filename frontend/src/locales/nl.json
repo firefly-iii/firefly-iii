@@ -141,7 +141,10 @@
         "next_expected_match": "Volgende verwachte match"
     },
     "config": {
-        "html_language": "nl"
+        "html_language": "nl",
+        "week_in_year_fns": "'week' l, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Bedrag in vreemde valuta",

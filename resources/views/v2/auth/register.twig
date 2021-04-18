@@ -107,7 +107,7 @@
     <!-- /.login-box -->
 {% endblock %}
 {% block scripts %}
-    <script src="v2/js/manifest.js" nonce="{{ JS_NONCE }}"></script>
-    <script src="v2/js/vendor.js" nonce="{{ JS_NONCE }}"></script>
-    <script src="v2/js/register.js" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/manifest.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/vendor.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/register.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

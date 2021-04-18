@@ -141,7 +141,10 @@
         "next_expected_match": "Prochaine association attendue"
     },
     "config": {
-        "html_language": "fr"
+        "html_language": "fr",
+        "week_in_year_fns": "'Semaine' I, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Montant en devise \u00e9trang\u00e8re",

@@ -23,7 +23,7 @@
     <div v-if="visible" class="text-xs d-none d-lg-block d-xl-block">
       <span v-if="0 === this.index">{{ $t('firefly.' + this.direction + '_account') }}</span>
       <span v-if="this.index > 0" class="text-warning">{{ $t('firefly.first_split_overrules_' + this.direction) }}</span>
-      <!-- <br><span>{{ selectedAccount }}</span> -->
+      <!--<br><span>{{ selectedAccount }}</span>-->
     </div>
     <div v-if="!visible" class="text-xs d-none d-lg-block d-xl-block">
       &nbsp;
@@ -127,8 +127,8 @@ export default {
       this.selectedAccount = event;
     },
     systemReturnedAccount: function (event) {
-      // console.log('systemReturnedAccount!');
-      // console.log('To prevent invalid propogation, set selectedAccountTrigger = false');
+      //console.log('systemReturnedAccount!');
+      //console.log('To prevent invalid propogation, set selectedAccountTrigger = false');
       this.selectedAccountTrigger = false;
       this.selectedAccount = event;
     },
@@ -192,7 +192,7 @@ export default {
      * @param value
      */
     selectedAccount: function (value) {
-      // console.log('TransactionAccount::watch selectedAccount()');
+      //console.log('TransactionAccount::watch selectedAccount()');
       // console.log(value);
       if (true === this.selectedAccountTrigger) {
         // console.log('$emit alles!');
@@ -208,9 +208,18 @@ export default {
                      currency_symbol: value.currency_symbol,
                    }
         );
-        // console.log('watch::selectedAccount() will now set accountName because selectedAccountTrigger = true');
+        //console.log('watch::selectedAccount() will now set accountName because selectedAccountTrigger = true');
         this.accountName = value.name;
       }
+      if (false === this.selectedAccountTrigger) {
+        //console.log('watch::selectedAccount() will NOT set accountName because selectedAccountTrigger = false');
+      }
+      if (false === this.selectedAccountTrigger && this.accountName !== value.name && null !== value.name) {
+        //console.log('watch::selectedAccount() will set accountName. selectedAccountTrigger = false but name is different ("' + this.accountName + '" > "' + value.name + '")');
+        this.selectedAccountTrigger = true;
+        this.accountName = value.name;
+      }
+
     },
     accountName: function (value) {
       // console.log('now at watch accountName("' + value + '")');
@@ -238,7 +247,7 @@ export default {
       this.selectedAccountTrigger = false;
     },
     value: function (value) {
-      // console.log('TransactionAccount::watch value(' + JSON.stringify(value) + ')');
+      //console.log('TransactionAccount(' + this.index + ')::watch value(' + JSON.stringify(value) + ')');
       this.systemReturnedAccount(value);
 
       // // console.log('Index ' + this.index + ' nwAct: ', value);

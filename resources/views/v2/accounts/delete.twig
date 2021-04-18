@@ -10,5 +10,5 @@
         // this is a terrible hack.
         var previousURL = '{{ Session.get('accounts.delete.uri') }}';
     </script>
-    <script src="v2/js/accounts/delete.js" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/accounts/delete.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
