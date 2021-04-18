@@ -40,7 +40,7 @@ return [
     'date_time_js'            => 'YYYY年M月D日 HH:mm:ss',
     'specific_day_js'         => 'YYYY年M月D日',
     'week_in_year_js'         => 'YYYY年 第w周',
-    'week_in_year_fns'        => "'Week' I, yyyy",
+    'week_in_year_fns'        => "'Week' w, yyyy",
     'year_js'                 => 'YYYY',
     'half_year_js'            => 'YYYY年 第Q季度',
     'quarter_fns'             => "'Q'Q, yyyy",

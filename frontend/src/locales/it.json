@@ -142,7 +142,7 @@
     },
     "config": {
         "html_language": "it",
-        "week_in_year_fns": "'Week' I, yyyy",
+        "week_in_year_fns": "'Week' w, yyyy",
         "quarter_fns": "'Q'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },

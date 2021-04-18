@@ -19,6 +19,15 @@
  */
 
 // initial state
+import startOfDay from "date-fns/startOfDay";
+import endOfDay from 'date-fns/endOfDay'
+import startOfWeek from 'date-fns/startOfWeek'
+import endOfWeek from 'date-fns/endOfWeek'
+import startOfQuarter from 'date-fns/startOfQuarter';
+import endOfQuarter from 'date-fns/endOfQuarter';
+import endOfMonth from "date-fns/endOfMonth";
+import startOfMonth from 'date-fns/startOfMonth';
+
 const state = () => (
     {
         viewRange: 'default',
@@ -66,7 +75,7 @@ const actions = {
                           // console.log('View range changed from "' + oldViewRange + '" to "' + viewRange + '"');
                           context.dispatch('setDatesFromViewRange');
                       }
-                      if(viewRange === oldViewRange) {
+                      if (viewRange === oldViewRange) {
                           // console.log('Restore view range dates');
                           context.dispatch('restoreViewRangeDates');
                       }
@@ -77,7 +86,7 @@ const actions = {
         });
 
     },
-    restoreViewRangeDates: function(context) {
+    restoreViewRangeDates: function (context) {
         // check local storage first?
         if (localStorage.viewRangeStart) {
             // console.log('view range start set from local storage.');
@@ -111,87 +120,68 @@ const actions = {
         let start;
         let end;
         let viewRange = context.getters.viewRange;
+        let today = new Date;
         // console.log('Will recreate view range on ' + viewRange);
         switch (viewRange) {
             case '1D':
-                // one day:
-                start = new Date;
-                end = new Date(start.getTime());
-                start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999);
+                // today:
+                start = startOfDay(today);
+                end = endOfDay(today);
                 break;
             case '1W':
                 // this week:
-                start = new Date;
-                end = new Date(start.getTime());
-                // start of week
-                let diff = start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1);
-                start.setDate(diff);
-                start.setHours(0, 0, 0, 0);
-
-                // end of week
-                let lastday = end.getDate() - (end.getDay() - 1) + 6;
-                end.setDate(lastday);
-                end.setHours(23, 59, 59, 999);
+                start = startOfDay(startOfWeek(today, {weekStartsOn: 1}));
+                end = endOfDay(endOfWeek(today, {weekStartsOn: 1}));
                 break;
             case '1M':
                 // this month:
-                start = new Date;
-                start = new Date(start.getFullYear(), start.getMonth(), 1);
-                start.setHours(0, 0, 0, 0);
-                end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
-                end.setHours(23, 59, 59, 999);
+                start = startOfDay(startOfMonth(today));
+                end = endOfDay(endOfMonth(today));
                 break;
             case '3M':
                 // this quarter
-                start = new Date;
-                end = new Date;
-                let quarter = Math.floor((start.getMonth() + 3) / 3) - 1;
-                // start and end months? I'm sure this could be better:
-                let startMonths = [0, 3, 6, 9];
-                let endMonths = [2, 5, 8, 11];
-                // set start to the correct month, day one:
-                start = new Date(start.getFullYear(), startMonths[quarter], 1);
-                start.setHours(0, 0, 0, 0);
-
-                // set end to the correct month, day one
-                end = new Date(end.getFullYear(), endMonths[quarter], 1);
-                // then to the last day of the month:
-                end = new Date(end.getFullYear(), end.getMonth() + 1, 0);
-                end.setHours(23, 59, 59, 999);
+                start = startOfDay(startOfQuarter(today));
+                end = endOfDay(endOfQuarter(today));
                 break;
             case '6M':
                 // this half-year
-                start = new Date;
-                end = new Date;
-                let half = start.getMonth() <= 5 ? 0 : 1;
-
-                let startHalf = [0, 6];
-                let endHalf = [5, 11];
-                // set start to the correct month, day one:
-                start = new Date(start.getFullYear(), startHalf[half], 1);
-                start.setHours(0, 0, 0, 0);
-
-                // set end to the correct month, day one
-                end = new Date(end.getFullYear(), endHalf[half], 1);
-                // then to the last day of the month:
-                end = new Date(end.getFullYear(), end.getMonth() + 1, 0);
-                end.setHours(23, 59, 59, 999);
+                if (today.getMonth() <= 5) {
+                    start = new Date(today);
+                    start.setMonth(0);
+                    start.setDate(1);
+                    start = startOfDay(start);
+                    end = new Date(today);
+                    end.setMonth(5);
+                    end.setDate(30);
+                    end = endOfDay(start);
+                }
+                if (today.getMonth() > 5) {
+                    start = new Date(today);
+                    start.setMonth(6);
+                    start.setDate(1);
+                    start = startOfDay(start);
+                    end = new Date(today);
+                    end.setMonth(11);
+                    end.setDate(31);
+                    end = endOfDay(start);
+                }
                 break;
             case '1Y':
                 // this year
-                start = new Date;
-                end = new Date;
-                start = new Date(start.getFullYear(), 0, 1);
+                start = new Date(today);
+                start.setMonth(0);
+                start.setDate(1);
+                start = startOfDay(start);
 
-                end = new Date(end.getFullYear(), 11, 31);
-                start.setHours(0, 0, 0, 0);
-                end.setHours(23, 59, 59, 999);
+                end = new Date(today);
+                end.setMonth(11);
+                end.setDate(31);
+                end = endOfDay(end);
                 break;
         }
-        // console.log('Range is ' + viewRange);
-        // console.log('Start is ' + start);
-        // console.log('End is   ' + end);
+        console.log('Range is ' + viewRange);
+        console.log('Start is ' + start);
+        console.log('End is   ' + end);
         context.commit('setStart', start);
         context.commit('setEnd', end);
         context.commit('setDefaultStart', start);
