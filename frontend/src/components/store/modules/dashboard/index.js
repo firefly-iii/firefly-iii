@@ -179,9 +179,9 @@ const actions = {
                 end = endOfDay(end);
                 break;
         }
-        console.log('Range is ' + viewRange);
-        console.log('Start is ' + start);
-        console.log('End is   ' + end);
+        // console.log('Range is ' + viewRange);
+        // console.log('Start is ' + start);
+        // console.log('End is   ' + end);
         context.commit('setStart', start);
         context.commit('setEnd', end);
         context.commit('setDefaultStart', start);

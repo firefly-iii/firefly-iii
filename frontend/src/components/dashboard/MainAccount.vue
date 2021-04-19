@@ -123,13 +123,14 @@ export default {
     drawChart: function () {
       //console.log('drawChart');
       if ('undefined' !== typeof this._chart) {
-        //console.log('destroy or update!');
+        // console.log('update!');
         this._chart.data = this.dataCollection;
         this._chart.update();
+        this.initialised = true;
       }
 
       if ('undefined' === typeof this._chart) {
-        //console.log('new!');
+        // console.log('new!');
         this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
                                           type: 'line',
                                           data: this.dataCollection,
@@ -140,9 +141,9 @@ export default {
       }
     },
     updateChart: function () {
-      //console.log('updateChart');
+      // console.log('updateChart');
       if (this.initialised) {
-        //console.log('MUST Update chart!');
+        // console.log('MUST Update chart!');
         // reset some vars so it wont trigger again:
         this.initialised = false;
         this.initialiseChart();

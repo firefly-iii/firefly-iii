@@ -186,20 +186,20 @@ export default {
     },
 
     generateWeekly: function () {
-      console.log('weekly');
+      //console.log('weekly');
       let today = new Date(this.range.start);
-      console.log('Today is ' + today);
+      //console.log('Today is ' + today);
       let start = startOfDay(startOfWeek(subDays(today, 7), {weekStartsOn: 1}));
       let end = endOfDay(endOfWeek(subDays(today, 7), {weekStartsOn: 1}));
       let dateFormat = this.$t('config.week_in_year_fns');
-      console.log('Date format: "'+dateFormat+'"');
+      //console.log('Date format: "'+dateFormat+'"');
       let title = format(start, dateFormat);
 
       // last week
-      console.log('Last week');
-      console.log(start);
-      console.log(end);
-      console.log(title);
+      // console.log('Last week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
@@ -212,10 +212,10 @@ export default {
       start = startOfDay(startOfWeek(today, {weekStartsOn: 1}));
       end = endOfDay(endOfWeek(today, {weekStartsOn: 1}));
       title = format(start, dateFormat);
-      console.log('This week');
-      console.log(start);
-      console.log(end);
-      console.log(title);
+      // console.log('This week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
@@ -228,10 +228,10 @@ export default {
       start = startOfDay(startOfWeek(addDays(today, 7), {weekStartsOn: 1}));
       end = endOfDay(endOfWeek(addDays(today, 7), {weekStartsOn: 1}));
       title = format(start, dateFormat);
-      console.log('Next week');
-      console.log(start);
-      console.log(end);
-      console.log(title);
+      // console.log('Next week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
