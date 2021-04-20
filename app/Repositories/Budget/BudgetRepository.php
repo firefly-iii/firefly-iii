@@ -98,10 +98,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', $budget->id)->delete();
-            RuleAction::where('action_type', 'set_budget')->where('action_value', $budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
             $budget->delete();
         }
     }
