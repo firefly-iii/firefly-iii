@@ -699,7 +699,7 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->convertToInteger($result);
 
         $result['reconciled'] = 1 === (int)$result['reconciled'];
-        if (array_key_exists('tag_id', $result)) { // assume the other fields are present as well.
+        if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
             $tagId   = (int)$augumentedJournal['tag_id'];
             $tagDate = null;
             try {
