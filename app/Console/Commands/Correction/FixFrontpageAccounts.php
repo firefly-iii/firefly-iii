@@ -34,6 +34,8 @@ class FixFrontpageAccounts extends Command
      */
     public function handle(): int
     {
+        $start          = microtime(true);
+
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
@@ -42,6 +44,8 @@ class FixFrontpageAccounts extends Command
                 $this->fixPreference($preference);
             }
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verifying account preferences took %s seconds', $end));
 
         return 0;
     }
