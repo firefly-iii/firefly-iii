@@ -79,6 +79,7 @@ trait JournalServiceTrait
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $result = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
         $result = $this->createAccount($result, $data, $expectedTypes[$transactionType][0]);
 
         return $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
@@ -152,6 +153,34 @@ trait JournalServiceTrait
 
             if (null !== $source) {
                 Log::debug(sprintf('Found "account_iban" object: #%d, %s', $source->id, $source->name));
+
+                $account = $source;
+            }
+        }
+
+        return $account;
+    }
+
+    /**
+     * @param Account|null $account
+     * @param array        $data
+     * @param array        $types
+     *
+     * @return Account|null
+     */
+    private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
+    {
+        // third attempt, find by account number
+        if (null === $account && null !== $data['number']) {
+            Log::debug(sprintf('Searching for account number "%s".', $data['number']));
+            // find by preferred type.
+            $source = $this->accountRepository->findByAccountNumber($data['number'], [$types[0]]);
+
+            // or any expected type.
+            $source = $source ?? $this->accountRepository->findByAccountNumber($data['iban'], $types);
+
+            if (null !== $source) {
+                Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
 
                 $account = $source;
             }
