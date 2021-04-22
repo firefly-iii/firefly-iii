@@ -631,8 +631,7 @@ return [
     'expected_source_types'     => [
         'source'      => [
             TransactionTypeModel::WITHDRAWAL      => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
-                                                      AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION,],
+            TransactionTypeModel::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeModel::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
                                                       AccountType::MORTGAGE,],
