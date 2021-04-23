@@ -142,8 +142,8 @@
     },
     "config": {
         "html_language": "sv",
-        "week_in_year_fns": "'Week' w, yyyy",
-        "quarter_fns": "'Q'Q, yyyy",
+        "week_in_year_fns": "'Vecka' w, yyyy",
+        "quarter_fns": "'kvartal'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },
     "form": {

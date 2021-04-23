@@ -100,7 +100,7 @@ return [
         'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.8',
+    'version'                      => '5.5.9',
     'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
