@@ -45,10 +45,10 @@ class UpgradeLiabilities extends Command
         }
         $this->upgradeLiabilities();
 
-        //$this->markAsExecuted();
+        $this->markAsExecuted();
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('in %s seconds.', $end));
+        $this->info(sprintf('Upgraded liabilities in %s seconds.', $end));
 
         return 0;
     }
@@ -110,7 +110,6 @@ class UpgradeLiabilities extends Command
     {
         return $journal->transactions()->where('amount', '>', 0)->first();
     }
-
 
     /**
      *
