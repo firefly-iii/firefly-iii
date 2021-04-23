@@ -328,7 +328,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
-        if (!array_key_exists('auto_budget_type', $data)) {
+        if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
         $type = $data['auto_budget_type'];

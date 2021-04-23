@@ -48,16 +48,21 @@ trait ValidatesAutoBudgetRequest
             return;
         }
         // basic float check:
+        if (!is_numeric($amount)) {
+            $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
+            return;
+        }
+
         if ('' === $amount) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
         }
-        if (null !== $amount && 1 !== bccomp((string)$amount, '0')) {
+        if (1 !== bccomp((string)$amount, '0')) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
         }
         if ('' === $period) {
             $validator->errors()->add('auto_budget_period', (string)trans('validation.auto_budget_period_mandatory'));
         }
-        if (null !== $amount && null !== $currencyId && null !== $currencyCode && '' === $currencyCode && 0 === $currencyId) {
+        if (null !== $currencyId && null !== $currencyCode && '' === $currencyCode && 0 === $currencyId) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.require_currency_info'));
         }
     }
