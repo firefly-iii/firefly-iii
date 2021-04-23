@@ -107,7 +107,7 @@
           <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
           <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
           <span v-for="nw in prefNetWorth" :title="nw.sub_title" class="info-box-number">{{ nw.value_parsed }}</span>
-
+          <span v-if="0===prefNetWorth.length">&nbsp;</span>
           <div class="progress bg-success">
             <div class="progress-bar" style="width: 0"></div>
           </div>
