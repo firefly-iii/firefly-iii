@@ -41,7 +41,7 @@ class TransactionJournalMetaFactory
      */
     public function updateOrCreate(array $data): ?TransactionJournalMeta
     {
-        Log::debug('In updateOrCreate()');
+        //Log::debug('In updateOrCreate()');
         $value = $data['data'];
         /** @var TransactionJournalMeta $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
@@ -61,7 +61,7 @@ class TransactionJournalMetaFactory
             $value = $data['data']->toW3cString();
         }
         if ('' === (string)$value) {
-            Log::debug('Is an empty string.');
+            // Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {
                 Log::debug('Will not store empty strings, delete meta value');

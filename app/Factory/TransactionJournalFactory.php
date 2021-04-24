@@ -543,7 +543,7 @@ class TransactionJournalFactory
             'data'    => (string)($data[$field] ?? ''),
         ];
 
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+        //Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
