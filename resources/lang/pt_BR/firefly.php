@@ -1104,7 +1104,7 @@ return [
     'save_transactions_by_moving'               => 'Salve esta transação movendo-a para outra conta:|Salve essas transações movendo-as para outra conta:',
     'save_transactions_by_moving_js'            => 'Nenhuma transação.|Salve esta transação movendo-a para outra conta.|Salve essas transações movendo-as para outra conta.',
     'stored_new_account'                        => 'Nova conta ":name" armazenado!',
-    'stored_new_account_js'                     => 'New account "<a href="accounts/show/{ID}">{name}</a>" stored!',
+    'stored_new_account_js'                     => 'Nova conta "<a href="accounts/show/{ID}">{name}</a>" armazenada!',
     'updated_account'                           => 'Conta ":name" atualizada',
     'credit_card_options'                       => 'Opções de cartão de crédito',
     'no_transactions_account'                   => 'Não há transações (neste período) para a conta ativa ":name".',

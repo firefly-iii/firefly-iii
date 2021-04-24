@@ -142,7 +142,7 @@
     },
     "config": {
         "html_language": "pt",
-        "week_in_year_fns": "'Semana' I, yyyy",
+        "week_in_year_fns": "'Semana' w, yyyy",
         "quarter_fns": "'Trimestre' Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },

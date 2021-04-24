@@ -153,7 +153,7 @@ class Preferences
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
-        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id','user_id', 'name', 'data', 'updated_at', 'created_at']);
         if (null !== $preference && null === $preference->data) {
             try {
                 $preference->delete();

@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.9 (API 1.5.2) 2021-04-24
+
+This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.
+
+### Fixed
+- Dashboard preferences would some times retain old or bad data.
+
+### API
+- [Issue 4697](https://github.com/firefly-iii/firefly-iii/issues/4697) Submitting an existing account with an account number only would store it as a new account.
+- [Issue 4706](https://github.com/firefly-iii/firefly-iii/issues/4706) Account interest was a float and not a string.
+- Store Budget API call would not properly handle auto budgets.
+
 ## 5.5.8 (API 1.5.2) 2021-04-17
 
 This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.

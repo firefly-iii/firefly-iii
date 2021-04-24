@@ -75,6 +75,7 @@
 <script>
 
 import {createNamespacedHelpers} from "vuex";
+import format from "date-fns/format";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
@@ -126,8 +127,10 @@ export default {
       this.loading = true;
       this.income = [];
       this.error = false;
-      let startStr = this.start.toISOString().split('T')[0];
-      let endStr = this.end.toISOString().split('T')[0];
+      // let startStr = this.start.toISOString().split('T')[0];
+      // let endStr = this.end.toISOString().split('T')[0];
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
       axios.get('./api/v1/insight/income/revenue?start=' + startStr + '&end=' + endStr)
           .then(response => {
             // do something with response.

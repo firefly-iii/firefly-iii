@@ -170,7 +170,7 @@ return [
     'recurring_keep_transactions' => 'A única transação criada por esta transação recorrente não será excluída.|Todas as :count transações criadas por esta transação recorrente não serão excluídas.',
     'tag_keep_transactions'       => 'A única transação conectada a esta tag não será excluída.|Todas as :count transações conectadas a esta tag não serão excluídas.',
     'check_for_updates'           => 'Buscar atualizações',
-    'liability_direction'         => 'Liability in/out',
+    'liability_direction'         => 'Passivo entrada/saída',
 
     'delete_object_group' => 'Excluir grupo ":title"',
 

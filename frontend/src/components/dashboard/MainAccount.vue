@@ -49,6 +49,7 @@ import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 import {mapGetters} from "vuex";
 import * as ChartJs from 'chart.js'
+import format from "date-fns/format";
 
 ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass) => (chartClass.id)));
 
@@ -102,8 +103,10 @@ export default {
     initialiseChart: function () {
       this.loading = true;
       this.error = false;
-      let startStr = this.start.toISOString().split('T')[0];
-      let endStr = this.end.toISOString().split('T')[0];
+      //let startStr = this.start.toISOString().split('T')[0];
+      //let endStr = this.end.toISOString().split('T')[0];
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;
       axios.get(url)
           .then(response => {
@@ -123,13 +126,14 @@ export default {
     drawChart: function () {
       //console.log('drawChart');
       if ('undefined' !== typeof this._chart) {
-        //console.log('destroy or update!');
+        // console.log('update!');
         this._chart.data = this.dataCollection;
         this._chart.update();
+        this.initialised = true;
       }
 
       if ('undefined' === typeof this._chart) {
-        //console.log('new!');
+        // console.log('new!');
         this._chart = new ChartJs.Chart(this.$refs.canvas.getContext('2d'), {
                                           type: 'line',
                                           data: this.dataCollection,
@@ -140,9 +144,9 @@ export default {
       }
     },
     updateChart: function () {
-      //console.log('updateChart');
+      // console.log('updateChart');
       if (this.initialised) {
-        //console.log('MUST Update chart!');
+        // console.log('MUST Update chart!');
         // reset some vars so it wont trigger again:
         this.initialised = false;
         this.initialiseChart();

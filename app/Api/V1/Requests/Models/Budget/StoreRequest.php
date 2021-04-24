@@ -76,8 +76,8 @@ class StoreRequest extends FormRequest
             'currency_code'      => 'exists:transaction_currencies,code',
             // auto budget info
             'auto_budget_type'   => 'in:reset,rollover,none',
-            'auto_budget_amount' => 'min:0|max:1000000000',
-            'auto_budget_period' => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+            'auto_budget_amount' => 'numeric|min:0|max:1000000000|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover',
+            'auto_budget_period' => 'in:daily,weekly,monthly,quarterly,half_year,yearly|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover',
         ];
     }
 

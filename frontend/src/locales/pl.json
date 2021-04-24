@@ -142,9 +142,9 @@
     },
     "config": {
         "html_language": "pl",
-        "week_in_year_fns": "'Week' I, yyyy",
-        "quarter_fns": "'Q'Q, yyyy",
-        "half_year_fns": "'H{half}', yyyy"
+        "week_in_year_fns": "w 'tydzie\u0144' yyyy",
+        "quarter_fns": "Q 'kwarta\u0142' yyyy",
+        "half_year_fns": "'{half} po\u0142owa' yyyy"
     },
     "form": {
         "foreign_amount": "Kwota zagraniczna",

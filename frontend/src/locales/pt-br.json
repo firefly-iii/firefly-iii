@@ -110,7 +110,7 @@
         "account_type_Loan": "Empr\u00e9stimo",
         "account_type_Mortgage": "Hipoteca",
         "timezone_difference": "Seu navegador reporta o fuso hor\u00e1rio \"{local}\". O Firefly III est\u00e1 configurado para o fuso hor\u00e1rio \"{system}\". Este gr\u00e1fico pode variar.",
-        "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
+        "stored_new_account_js": "Nova conta \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" armazenada!",
         "account_type_Debt": "D\u00edvida",
         "delete": "Apagar",
         "store_new_asset_account": "Armazenar nova conta de ativo",
@@ -142,9 +142,9 @@
     },
     "config": {
         "html_language": "pt-br",
-        "week_in_year_fns": "'Semana' I, yyyy",
-        "quarter_fns": "'Q'Q, yyyy",
-        "half_year_fns": "'H{half}', yyyy"
+        "week_in_year_fns": "'Semana' w, yyyy",
+        "quarter_fns": "'T'Q, yyyy",
+        "half_year_fns": "'S{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Montante em moeda estrangeira",
@@ -168,7 +168,7 @@
         "currency_id": "Moeda",
         "liability_type": "Tipo de passivo",
         "account_role": "Fun\u00e7\u00e3o de conta",
-        "liability_direction": "Liability in\/out",
+        "liability_direction": "Passivo entrada\/sa\u00edda",
         "book_date": "Data reserva",
         "permDeleteWarning": "Exclus\u00e3o de dados do Firefly III s\u00e3o permanentes e n\u00e3o podem ser desfeitos.",
         "account_areYouSure_js": "Tem certeza que deseja excluir a conta \"{name}\"?",

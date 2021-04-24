@@ -68,6 +68,7 @@
 <script>
 import BudgetListGroup from "./BudgetListGroup";
 import {createNamespacedHelpers} from "vuex";
+import format from "date-fns/format";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
@@ -136,8 +137,10 @@ export default {
             other: [],
           };
           this.loading = true;
-          let startStr = this.start.toISOString().split('T')[0];
-          let endStr = this.end.toISOString().split('T')[0];
+          // let startStr = this.start.toISOString().split('T')[0];
+          // let endStr = this.end.toISOString().split('T')[0];
+          let startStr = format(this.start, 'y-MM-dd');
+          let endStr = format(this.end, 'y-MM-dd');
           axios.get('./api/v1/budgets?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgets(response.data);
@@ -172,8 +175,10 @@ export default {
           this.getBudgetLimits();
         },
         getBudgetLimits() {
-          let startStr = this.start.toISOString().split('T')[0];
-          let endStr = this.end.toISOString().split('T')[0];
+          // let startStr = this.start.toISOString().split('T')[0];
+          // let endStr = this.end.toISOString().split('T')[0];
+          let startStr = format(this.start, 'y-MM-dd');
+          let endStr = format(this.end, 'y-MM-dd');
           axios.get('./api/v1/budget-limits?start=' + startStr + '&end=' + endStr)
               .then(response => {
                       this.parseBudgetLimits(response.data);

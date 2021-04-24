@@ -79,17 +79,21 @@
 import {createNamespacedHelpers} from "vuex";
 import Vue from "vue";
 import DatePicker from "v-calendar/lib/components/date-picker.umd";
-import subDays from 'date-fns/subDays'
-import addDays from 'date-fns/addDays'
-import startOfDay from 'date-fns/startOfDay'
-import endOfDay from 'date-fns/endOfDay'
-import startOfWeek from 'date-fns/startOfWeek'
-import endOfWeek from 'date-fns/endOfWeek'
-import format from 'date-fns/format'
+import subDays from 'date-fns/subDays';
+import addDays from 'date-fns/addDays';
+import addMonths from 'date-fns/addMonths';
+import startOfDay from 'date-fns/startOfDay';
+import endOfDay from 'date-fns/endOfDay';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
+import endOfMonth from 'date-fns/endOfMonth';
+import format from 'date-fns/format';
 import startOfQuarter from 'date-fns/startOfQuarter';
+import subMonths from 'date-fns/subMonths';
 import endOfQuarter from 'date-fns/endOfQuarter';
 import subQuarters from 'date-fns/subQuarters';
 import addQuarters from 'date-fns/addQuarters';
+import startOfMonth from 'date-fns/startOfMonth';
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
@@ -182,13 +186,20 @@ export default {
     },
 
     generateWeekly: function () {
+      //console.log('weekly');
       let today = new Date(this.range.start);
+      //console.log('Today is ' + today);
       let start = startOfDay(startOfWeek(subDays(today, 7), {weekStartsOn: 1}));
       let end = endOfDay(endOfWeek(subDays(today, 7), {weekStartsOn: 1}));
       let dateFormat = this.$t('config.week_in_year_fns');
+      //console.log('Date format: "'+dateFormat+'"');
       let title = format(start, dateFormat);
 
       // last week
+      // console.log('Last week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
@@ -201,6 +212,10 @@ export default {
       start = startOfDay(startOfWeek(today, {weekStartsOn: 1}));
       end = endOfDay(endOfWeek(today, {weekStartsOn: 1}));
       title = format(start, dateFormat);
+      // console.log('This week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
@@ -213,6 +228,10 @@ export default {
       start = startOfDay(startOfWeek(addDays(today, 7), {weekStartsOn: 1}));
       end = endOfDay(endOfWeek(addDays(today, 7), {weekStartsOn: 1}));
       title = format(start, dateFormat);
+      // console.log('Next week');
+      // console.log(start);
+      // console.log(end);
+      // console.log(title);
       this.periods.push(
           {
             start: start.toDateString(),
@@ -224,35 +243,35 @@ export default {
     generateMonthly: function () {
       let today = new Date(this.range.start);
       // previous month
-      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      let start = startOfDay(startOfMonth(subMonths(today, 1)));
+      let end = endOfDay(endOfMonth(subMonths(today, 1)));
       this.periods.push(
           {
-            start: firstDayOfMonth.toDateString(),
-            end: lastDayOfMonth.toDateString(),
-            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(start)
           }
       );
 
       // this month
-      firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-      lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      start = startOfDay(startOfMonth(today));
+      end = endOfDay(endOfMonth(today));
       this.periods.push(
           {
-            start: firstDayOfMonth.toDateString(),
-            end: lastDayOfMonth.toDateString(),
-            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(start)
           }
       );
 
       // next month
-      let firstDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-      let lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
+      start = startOfDay(startOfMonth(addMonths(today, 1)));
+      end = endOfDay(endOfMonth(addMonths(today, 1)));
       this.periods.push(
           {
-            start: firstDayOfMonth.toDateString(),
-            end: lastDayOfMonth.toDateString(),
-            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(firstDayOfMonth)
+            start: start.toDateString(),
+            end: end.toDateString(),
+            title: new Intl.DateTimeFormat(this.locale, {year: 'numeric', month: 'long'}).format(start)
           }
       );
 
@@ -389,7 +408,7 @@ export default {
           }
       );
 
-      // this year, second half:
+      // this year, current (second) half:
       start = today;
       start.setMonth(6);
       start.setDate(1);

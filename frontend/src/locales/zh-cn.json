@@ -142,7 +142,7 @@
     },
     "config": {
         "html_language": "zh-cn",
-        "week_in_year_fns": "'Week' I, yyyy",
+        "week_in_year_fns": "'\u5468' w\uff0cyyyy",
         "quarter_fns": "'Q'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },

@@ -133,6 +133,7 @@
 
 import {mapGetters} from "vuex";
 import Sortable from "sortablejs";
+import format from "date-fns/format";
 
 export default {
   name: "Index",
@@ -370,9 +371,10 @@ export default {
             }
         );
       }));
-
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + this.start.toISOString().split('T')[0]));
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + this.end.toISOString().split('T')[0]));
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr));
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + endStr));
 
       Promise.all(promises).then(responses => {
         let index = responses[0].index;
