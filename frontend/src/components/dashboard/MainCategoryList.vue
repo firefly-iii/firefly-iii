@@ -90,6 +90,7 @@
 
 <script>
 import {createNamespacedHelpers} from "vuex";
+import format from "date-fns/format";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
@@ -142,8 +143,10 @@ export default {
           this.spent = 0;
           this.earned = 0;
           this.loading = true;
-          let startStr = this.start.toISOString().split('T')[0];
-          let endStr = this.end.toISOString().split('T')[0];
+          // let startStr = this.start.toISOString().split('T')[0];
+          // let endStr = this.end.toISOString().split('T')[0];
+          let startStr = format(this.start, 'y-MM-dd');
+          let endStr = format(this.end, 'y-MM-dd');
           this.getCategoryPage(startStr, endStr, 1);
         },
         getCategoryPage: function (start, end, page) {

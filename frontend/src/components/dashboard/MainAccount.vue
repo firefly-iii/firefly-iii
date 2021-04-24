@@ -49,6 +49,7 @@ import DataConverter from "../charts/DataConverter";
 import DefaultLineOptions from "../charts/DefaultLineOptions";
 import {mapGetters} from "vuex";
 import * as ChartJs from 'chart.js'
+import format from "date-fns/format";
 
 ChartJs.Chart.register.apply(null, Object.values(ChartJs).filter((chartClass) => (chartClass.id)));
 
@@ -102,8 +103,10 @@ export default {
     initialiseChart: function () {
       this.loading = true;
       this.error = false;
-      let startStr = this.start.toISOString().split('T')[0];
-      let endStr = this.end.toISOString().split('T')[0];
+      //let startStr = this.start.toISOString().split('T')[0];
+      //let endStr = this.end.toISOString().split('T')[0];
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
       let url = './api/v1/chart/account/overview?start=' + startStr + '&end=' + endStr;
       axios.get(url)
           .then(response => {
