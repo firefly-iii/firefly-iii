@@ -139,11 +139,13 @@
                     {% endif %}
                 </td>
                 <td style=" {{ style|raw }}">
+                    {#  deposit #}
                     {% if transaction.transaction_type_type == 'Deposit' %}
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
+                    {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info">
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
@@ -151,6 +153,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
                             </span>
+                    {# opening balance #}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
                         {% if transaction.source_account_type == 'Initial balance account' %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -163,6 +166,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                         {% endif %}
+                    {# reconciliation #}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
                         {% if transaction.source_account_type == 'Reconciliation account' %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -175,6 +179,22 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                         {% endif %}
+                    {# liability credit #}
+                    {% elseif transaction.transaction_type_type == 'Liability credit' %}
+                        {% if transaction.source_account_type == 'Liability credit' %}
+                            {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
+                        {% else %}
+                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                            {% if null != transaction.foreign_amount %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
+                            {% endif %}
+                        {% endif %}
+
+
+                        {# THE REST #}
                     {% else %}
                         {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                         {% if null != transaction.foreign_amount %}

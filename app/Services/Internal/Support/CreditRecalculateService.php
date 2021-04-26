@@ -72,11 +72,8 @@ class CreditRecalculateService
 
             return;
         }
-        $this->processWork();
-
-
         Log::debug('Will now do CreditRecalculationService');
-        // do something
+        $this->processWork();
     }
 
     /**
@@ -111,7 +108,7 @@ class CreditRecalculateService
         $transactions = $account->transactions()->get();
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $leftOfDebt = $this->processTransaction($transaction, $leftOfDebt);
+            $leftOfDebt = $this->processTransaction($account, $transaction, $leftOfDebt);
         }
         $factory->crud($account, 'current_debt', $leftOfDebt);
 
@@ -242,13 +239,28 @@ class CreditRecalculateService
      *
      * @return string
      */
-    private function processTransaction(Transaction $transaction, string $amount): string
+    private function processTransaction(Account $account, Transaction $transaction, string $amount): string
     {
+        Log::debug(sprintf('Now in %s(#%d, %s)', __METHOD__, $transaction->id, $amount));
         $journal = $transaction->transactionJournal;
         $type    = $journal->transactionType->type;
+
+        Log::debug(sprintf('Type is "%s"', $type));
+        if (in_array($type, [TransactionType::WITHDRAWAL]) && (int)$account->id === (int)$transaction->account_id && 1 === bccomp($transaction->amount, '0')) {
+            Log::debug(sprintf('Transaction #%d is withdrawal into liability #%d, does not influence the amount left.', $account->id, $transaction->account_id));
+
+            return $amount;
+        }
+        if (in_array($type, [TransactionType::DEPOSIT]) && (int)$account->id === (int)$transaction->account_id && -1 === bccomp($transaction->amount, '0')) {
+            Log::debug(sprintf('Transaction #%d is deposit from liability #%d,does not influence the amount left.', $account->id, $transaction->account_id));
+
+            return $amount;
+        }
+
         if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
             $amount = bcadd($amount, bcmul($transaction->amount, '-1'));
         }
+        Log::debug(sprintf('Amount is now %s', $amount));
 
         return $amount;
     }
