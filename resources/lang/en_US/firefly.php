@@ -1395,7 +1395,7 @@ return [
     'splitByAccount'                            => 'Split by account',
     'coveredWithTags'                           => 'Covered with tags',
     'leftInBudget'                              => 'Left in budget',
-    'left_in_debt'                              => 'Left',
+    'left_in_debt'                              => 'Amount due',
     'sumOfSums'                                 => 'Sum of sums',
     'noCategory'                                => '(no category)',
     'notCharged'                                => 'Not charged (yet)',
