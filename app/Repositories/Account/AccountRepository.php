@@ -764,4 +764,30 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $journal->transactionGroup;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account
+    {
+        $dbQuery = $this->user
+            ->accounts()
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.active', true)
+            ->where(
+                function (EloquentBuilder $q1) use ($number) {
+                    $json = json_encode($number);
+                    $q1->where('account_meta.name', '=', 'account_number');
+                    $q1->where('account_meta.data', '=', $json);
+                }
+            );
+
+        if (0 !== count($types)) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+
+        return $dbQuery->first(['accounts.*']);
+    }
+    
 }
