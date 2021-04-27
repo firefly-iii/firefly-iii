@@ -89,7 +89,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
  * @property Carbon $lastActivityDate
- *
  */
 class Account extends Model
 {
