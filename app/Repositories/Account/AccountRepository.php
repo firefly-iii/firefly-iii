@@ -789,5 +789,5 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $dbQuery->first(['accounts.*']);
     }
-    
+
 }

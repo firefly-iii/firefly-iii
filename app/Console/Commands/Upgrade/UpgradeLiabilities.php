@@ -7,6 +7,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Log;
@@ -145,6 +146,9 @@ class UpgradeLiabilities extends Command
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->upgradeLiability($account);
+            $service = app(CreditRecalculateService::class);
+            $service->setAccount($account);
+            $service->recalculate();
         }
     }
 

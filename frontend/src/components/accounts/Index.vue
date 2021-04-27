@@ -54,6 +54,31 @@
                 <span v-if="null === data.item.iban && null !== data.item.account_number">{{ data.item.account_number }}</span>
                 <span v-if="null !== data.item.iban && null !== data.item.account_number">{{ data.item.iban }} ({{ data.item.account_number }})</span>
               </template>
+              <template #cell(last_activity)="data">
+                <span v-if="'asset' === type && 'loading' === data.item.last_activity">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                <span v-if="'asset' === type && 'none' === data.item.last_activity" class="text-muted">
+                  {{ $t('firefly.never') }}
+                </span>
+                <span v-if="'asset' === type && 'loading' !== data.item.last_activity && 'none' !== data.item.last_activity">
+                  {{ data.item.last_activity }}
+                </span>
+              </template>
+              <template #cell(amount_due)="data">
+                <span class="text-success" v-if="parseFloat(data.item.amount_due) > 0">
+                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                </span>
+
+                <span class="text-danger" v-if="parseFloat(data.item.amount_due) < 0">
+                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                </span>
+
+                <span class="text-muted" v-if="parseFloat(data.item.amount_due) === 0.0">
+                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                </span>
+
+              </template>
               <template #cell(current_balance)="data">
                 <span class="text-success" v-if="parseFloat(data.item.current_balance) > 0">
                   {{
@@ -101,6 +126,9 @@
                     }).format(data.item.balance_diff)
                   }}</span>)
                 </span>
+              </template>
+              <template #cell(interest)="data">
+                {{ parseFloat(data.item.interest) }}% ({{ data.item.interest_period }})
               </template>
               <template #cell(menu)="data">
                 <div class="btn-group btn-group-sm">
@@ -249,14 +277,24 @@ export default {
 
     updateFieldList: function () {
       this.fields = [];
-
       this.fields = [{key: 'title', label: this.$t('list.name'), sortable: !this.orderMode}];
       if ('asset' === this.type) {
         this.fields.push({key: 'role', label: this.$t('list.role'), sortable: !this.orderMode});
       }
+      if ('liabilities' === this.type) {
+        this.fields.push({key: 'liability_type', label: this.$t('list.liability_type'), sortable: !this.orderMode});
+        this.fields.push({key: 'liability_direction', label: this.$t('list.liability_direction'), sortable: !this.orderMode});
+        this.fields.push({key: 'interest', label: this.$t('list.interest') + ' (' + this.$t('list.interest_period') + ')', sortable: !this.orderMode});
+      }
       // add the rest
       this.fields.push({key: 'number', label: this.$t('list.iban'), sortable: !this.orderMode});
       this.fields.push({key: 'current_balance', label: this.$t('list.currentBalance'), sortable: !this.orderMode});
+      if ('liabilities' === this.type) {
+        this.fields.push({key: 'amount_due', label: this.$t('firefly.left_in_debt'), sortable: !this.orderMode});
+      }
+      if ('asset' === this.type || 'liabilities' === this.type) {
+        this.fields.push({key: 'last_activity', label: this.$t('list.lastActivity'), sortable: !this.orderMode});
+      }
       this.fields.push({key: 'menu', label: ' ', sortable: false});
     },
     getAccountList: function () {
@@ -273,7 +311,6 @@ export default {
         // console.log('Index ready, not loading and not downloaded.');
         this.loading = true;
         this.filterAccountList();
-        // TODO filter accounts.
       }
     },
     downloadAccountList: function (page) {
@@ -344,18 +381,44 @@ export default {
           acct.account_number = current.attributes.account_number;
           acct.current_balance = current.attributes.current_balance;
           acct.currency_code = current.attributes.currency_code;
+
+          if ('liabilities' === this.type) {
+            acct.liability_type = this.$t('firefly.account_type_' + current.attributes.liability_type);
+            acct.liability_direction = this.$t('firefly.liability_direction_' + current.attributes.liability_direction + '_short');
+            acct.interest = current.attributes.interest;
+            acct.interest_period = this.$t('firefly.interest_calc_' + current.attributes.interest_period);
+            acct.amount_due = current.attributes.current_debt;
+          }
           acct.balance_diff = 'loading';
+          acct.last_activity = 'loading';
 
           if (null !== current.attributes.iban) {
             acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
+          }
+          if (null === current.attributes.iban) {
+            acct.iban = null;
           }
 
           this.allAccounts.push(acct);
           if ('asset' === this.type) {
             this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
+            this.getAccountLastActivity(this.allAccounts.length - 1, current);
           }
         }
       }
+    },
+    getAccountLastActivity: function (index, acct) {
+      // console.log('getAccountLastActivity(' + index + ')');
+      // get single transaction for account:
+      //  /api/v1/accounts/1/transactions?limit=1
+      axios.get('./api/v1/accounts/' + acct.id + '/transactions?limit=1').then(response => {
+        if (0 === response.data.data.length) {
+          this.allAccounts[index].last_activity = 'none';
+          return;
+        }
+        let date = new Date(response.data.data[0].attributes.transactions[0].date);
+        this.allAccounts[index].last_activity = format(date, this.$t('config.month_and_day_fns'));
+      });
     },
     getAccountBalanceDifference: function (index, acct) {
       // console.log('getAccountBalanceDifference(' + index + ')');

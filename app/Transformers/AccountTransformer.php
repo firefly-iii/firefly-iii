@@ -119,6 +119,7 @@ class AccountTransformer extends AbstractTransformer
             'liability_direction'     => $liabilityDirection,
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
+            'current_debt'            => $this->repository->getMetaValue($account,'current_debt'),
             'include_net_worth'       => $includeNetWorth,
             'longitude'               => $longitude,
             'latitude'                => $latitude,
