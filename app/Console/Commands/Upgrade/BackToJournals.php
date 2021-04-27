@@ -144,8 +144,7 @@ class BackToJournals extends Command
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set = DB::table('transactions')->whereIn('transactions.id', $chunk)
-                     ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
             $array = array_merge($array, $set);
         }
 

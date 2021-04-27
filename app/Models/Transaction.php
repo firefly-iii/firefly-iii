@@ -83,6 +83,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
  * @mixin Eloquent
+ * @property int $the_count
  */
 class Transaction extends Model
 {

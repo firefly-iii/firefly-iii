@@ -549,8 +549,6 @@ interface GroupCollectorInterface
     public function withoutCategory(): GroupCollectorInterface;
 
     /**
-     * @param string $value
-     *
      * @return GroupCollectorInterface
      */
     public function withoutNotes(): GroupCollectorInterface;

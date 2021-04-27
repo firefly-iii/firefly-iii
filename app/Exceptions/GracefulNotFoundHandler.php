@@ -48,38 +48,38 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param Request   $request
-     * @param Exception $exception
+     * @param Throwable $e
      *
      * @return mixed
-     * @throws Exception
+     * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
         $route = $request->route();
         if (null === $route) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
         $name = $route->getName();
         if (!auth()->check()) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
 
         switch ($name) {
             default:
                 Log::warning(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
 
-                return parent::render($request, $exception);
+                return parent::render($request, $e);
             case 'accounts.show':
             case 'accounts.show.all':
-                return $this->handleAccount($request, $exception);
+                return $this->handleAccount($request, $e);
             case 'transactions.show':
-                return $this->handleGroup($request, $exception);
+                return $this->handleGroup($request, $e);
             case 'attachments.show':
             case 'attachments.edit':
             case 'attachments.download':
             case 'attachments.view':
                 // redirect to original attachment holder.
-                return $this->handleAttachment($request, $exception);
+                return $this->handleAttachment($request, $e);
                 break;
             case 'bills.show':
                 $request->session()->reflash();
@@ -131,7 +131,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                     return redirect(route('index'));
                 }
 
-                return parent::render($request, $exception);
+                return parent::render($request, $e);
         }
 
     }
@@ -141,7 +141,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Throwable $exception
      *
      * @return Redirector|Response
-     * @throws Exception
+     * @throws Throwable
      */
     private function handleAccount(Request $request, Throwable $exception)
     {
@@ -165,11 +165,11 @@ class GracefulNotFoundHandler extends ExceptionHandler
     }
 
     /**
-     * @param Throwable $request
-     * @param Exception $exception
+     * @param Request $request
+     * @param Throwable $exception
      *
      * @return RedirectResponse|\Illuminate\Http\Response|Redirector|Response
-     * @throws Exception
+     * @throws Throwable
      */
     private function handleGroup(Request $request, Throwable $exception)
     {
@@ -209,7 +209,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Throwable $exception
      *
      * @return RedirectResponse|Redirector|Response
-     * @throws Exception
+     * @throws Throwable
      */
     private function handleAttachment(Request $request, Throwable $exception)
     {
