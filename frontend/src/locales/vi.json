@@ -141,7 +141,10 @@
         "next_expected_match": "Tr\u1eadn \u0111\u1ea5u d\u1ef1 ki\u1ebfn ti\u1ebfp theo"
     },
     "config": {
-        "html_language": "vi"
+        "html_language": "vi",
+        "week_in_year_fns": "'Week' w, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Ngo\u1ea1i t\u1ec7",

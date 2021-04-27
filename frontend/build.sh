@@ -47,7 +47,7 @@ yarn prod
 # mv public/css ../public/v2
 
 # also copy fonts
-cp -r fonts ../public
+#cp -r fonts ../public/v2/css
 
 # remove built stuff
-rm -rf public
+rm -rf public/

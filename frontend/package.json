@@ -11,6 +11,7 @@
     },
     "devDependencies": {
         "axios": "^0.21",
+        "date-fns": "^2.21.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "lodash.clonedeep": "^4.5.0",
@@ -29,7 +30,7 @@
         "admin-lte": "^3.1.0",
         "bootstrap": "^4.6.0",
         "bootstrap-vue": "^2.21.2",
-        "chart.js": "^3.0.2",
+        "chart.js": "^3.2.0",
         "icheck-bootstrap": "^3.0.1",
         "jquery-ui": "^1.12.1",
         "leaflet": "^1.7.1",

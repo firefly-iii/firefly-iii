@@ -71,6 +71,7 @@ class DeleteEmptyJournals extends Command
             ->groupBy('transactions.transaction_journal_id')
             ->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
         $total = 0;
+        /** @var Transaction $row */
         foreach ($set as $row) {
             $count = (int)$row->the_count;
             if (1 === $count % 2) {

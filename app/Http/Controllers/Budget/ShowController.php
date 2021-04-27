@@ -144,7 +144,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Budget $budget)
     {
-        /** @var Carbon $start */
+        /** @var Carbon $allStart */
         $allStart    = session('first', Carbon::now()->startOfYear());
         $allEnd      = today();
         $page        = (int)$request->get('page');

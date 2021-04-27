@@ -141,7 +141,10 @@
         "next_expected_match": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 shoda"
     },
     "config": {
-        "html_language": "cs"
+        "html_language": "cs",
+        "week_in_year_fns": "'Week' w, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "\u010c\u00e1stka v ciz\u00ed m\u011bn\u011b",

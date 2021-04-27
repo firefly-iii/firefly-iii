@@ -105,8 +105,9 @@ class SetSourceAccount implements ActionInterface
         }
 
         // if this is a deposit, the new source account must be a revenue account and may be created:
+        // or its a liability
         if (TransactionType::DEPOSIT === $type) {
-            $newAccount = $this->findRevenueAccount();
+            $newAccount = $this->findDepositSourceAccount();
         }
 
         Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -140,7 +141,7 @@ class SetSourceAccount implements ActionInterface
     /**
      * @return Account
      */
-    private function findRevenueAccount(): Account
+    private function findDepositSourceAccount(): Account
     {
         $allowed = config('firefly.expected_source_types.source.Deposit');
         $account = $this->repository->findByName($this->action->action_value, $allowed);

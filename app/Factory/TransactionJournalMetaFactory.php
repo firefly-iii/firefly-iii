@@ -61,7 +61,7 @@ class TransactionJournalMetaFactory
             $value = $data['data']->toW3cString();
         }
         if ('' === (string)$value) {
-            //Log::debug('Is an empty string.');
+            // Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {
                 Log::debug('Will not store empty strings, delete meta value');

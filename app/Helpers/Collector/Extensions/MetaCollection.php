@@ -207,7 +207,7 @@ trait MetaCollection
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
         }
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
+        $this->query->where('journal_meta.data', '=', sprintf('%s', $externalId));
 
         return $this;
     }
@@ -265,6 +265,19 @@ trait MetaCollection
     {
         $this->withNotes();
         $this->query->whereNotNull('notes.text');
+
+        return $this;
+    }
+
+    /**
+     * Limit results to transactions without a bill..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBill(): GroupCollectorInterface
+    {
+        $this->withBillInformation();
+        $this->query->whereNotNull('transaction_journals.bill_id');
 
         return $this;
     }

@@ -80,7 +80,7 @@ return [
     'api_key'                     => 'API 密钥',
     'remember_me'                 => '自动登录',
     'liability_type_id'           => '债务类型',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => '债务类型',
     'interest'                    => '利息',
     'interest_period'             => '利息期',
 

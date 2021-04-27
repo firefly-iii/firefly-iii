@@ -140,10 +140,8 @@ class CategoryReportController extends Controller
      * @param Collection $categories
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param string     $others
      *
      * @return JsonResponse
-     *
      */
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {

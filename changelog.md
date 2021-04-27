@@ -2,6 +2,41 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.9 (API 1.5.2) 2021-04-24
+
+This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.
+
+### Fixed
+- Dashboard preferences would some times retain old or bad data.
+
+### API
+- [Issue 4697](https://github.com/firefly-iii/firefly-iii/issues/4697) Submitting an existing account with an account number only would store it as a new account.
+- [Issue 4706](https://github.com/firefly-iii/firefly-iii/issues/4706) Account interest was a float and not a string.
+- Store Budget API call would not properly handle auto budgets.
+
+## 5.5.8 (API 1.5.2) 2021-04-17
+
+This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.
+
+### Fixed
+- [Issue 4656](https://github.com/firefly-iii/firefly-iii/issues/4656) [issue 4660](https://github.com/firefly-iii/firefly-iii/issues/4660) Various fixes in the v2 layout.
+- [Issue 4663](https://github.com/firefly-iii/firefly-iii/issues/4663) It was possible to assign a budget to a transfer.
+- [Issue 4664](https://github.com/firefly-iii/firefly-iii/issues/4664) Null pointer in bulk editor
+- [Issue 4668](https://github.com/firefly-iii/firefly-iii/issues/4668) Inactive rule groups would not be listed.
+
+## 5.5.7 (API 1.5.2) 2021-04-11
+
+### Added
+- [Issue 4627](https://github.com/firefly-iii/firefly-iii/issues/4627) The search and rule engine can search for any transaction with any bill or with no bill at all. Thanks, @devfaz! 
+
+### Fixed
+- [Issue 4625](https://github.com/firefly-iii/firefly-iii/issues/4625) Old MySQL servers would choke on the migrations.
+- [Issue 4625](https://github.com/firefly-iii/firefly-iii/issues/4625) Some arrays are null when Firefly III starts for the first time.
+- [Issue 4628](https://github.com/firefly-iii/firefly-iii/issues/4628) Every transaction appeared to have attachments.
+- [Issue 4635](https://github.com/firefly-iii/firefly-iii/issues/4635) Export command ignores your dates. Thanks for the suggested fix, @urquilla!
+- [Issue 4646](https://github.com/firefly-iii/firefly-iii/issues/4646) Empty select list
+
+
 ## 5.5.6 (API 1.5.2) 2021-04-09
 
 Firefly III features a new *experimental* layout that I'm currently building. You can enable it by setting environment variable `FIREFLY_III_LAYOUT=v2`. Check out [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618) for the announcement and status updates. This release features an update API version. Check out [the difference](https://github.com/firefly-iii/api-docs-generator/compare/1.5.1...1.5.2).

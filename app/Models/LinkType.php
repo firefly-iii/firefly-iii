@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $name
  * @property string $outward
  * @property string $inward
+ * @property int $journalCount
  * @property bool $editable
  * @property-read Collection|\FireflyIII\Models\TransactionJournalLink[] $transactionJournalLinks
  * @property-read int|null $transaction_journal_links_count

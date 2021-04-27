@@ -91,7 +91,7 @@ class ReportHelper implements ReportHelperInterface
                 'paid_moments'            => [],
             ];
 
-            /** @var Carbon $start */
+            /** @var Carbon $expectedStart */
             foreach ($expectedDates as $expectedStart) {
                 $expectedEnd = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
 

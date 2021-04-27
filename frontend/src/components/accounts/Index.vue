@@ -133,6 +133,7 @@
 
 import {mapGetters} from "vuex";
 import Sortable from "sortablejs";
+import format from "date-fns/format";
 
 export default {
   name: "Index",
@@ -259,9 +260,9 @@ export default {
       this.fields.push({key: 'menu', label: ' ', sortable: false});
     },
     getAccountList: function () {
-      console.log('getAccountList()');
+      // console.log('getAccountList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
-        console.log('Index ready, not loading and not already downloaded. Reset.');
+        // console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
         this.accounts = [];
@@ -269,14 +270,14 @@ export default {
         this.downloadAccountList(1);
       }
       if (this.indexReady && !this.loading && this.downloaded) {
-        console.log('Index ready, not loading and not downloaded.');
+        // console.log('Index ready, not loading and not downloaded.');
         this.loading = true;
         this.filterAccountList();
         // TODO filter accounts.
       }
     },
     downloadAccountList: function (page) {
-      console.log('downloadAccountList(' + page + ')');
+      // console.log('downloadAccountList(' + page + ')');
       axios.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
           .then(response => {
                   let currentPage = parseInt(response.data.meta.pagination.current_page);
@@ -288,7 +289,7 @@ export default {
                     this.downloadAccountList(nextPage);
                   }
                   if (currentPage >= totalPage) {
-                    console.log('Looks like all downloaded.');
+                    // console.log('Looks like all downloaded.');
                     this.downloaded = true;
                     this.filterAccountList();
                   }
@@ -296,7 +297,7 @@ export default {
           );
     },
     filterAccountList: function () {
-      console.log('filterAccountList()');
+      // console.log('filterAccountList()');
       this.accounts = [];
       for (let i in this.allAccounts) {
         if (this.allAccounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -304,14 +305,14 @@ export default {
           // 2 = inactive only
           // 3 = both
           if (1 === this.activeFilter && false === this.allAccounts[i].active) {
-            console.log('Skip account #' + this.allAccounts[i].id + ' because not active.');
+            // console.log('Skip account #' + this.allAccounts[i].id + ' because not active.');
             continue;
           }
           if (2 === this.activeFilter && true === this.allAccounts[i].active) {
-            console.log('Skip account #' + this.allAccounts[i].id + ' because active.');
+            // console.log('Skip account #' + this.allAccounts[i].id + ' because active.');
             continue;
           }
-          console.log('Include account #' + this.allAccounts[i].id + '.');
+          // console.log('Include account #' + this.allAccounts[i].id + '.');
 
           this.accounts.push(this.allAccounts[i]);
         }
@@ -330,7 +331,7 @@ export default {
       //console.log('Total is now ' + this.total);
     },
     parseAccounts: function (data) {
-      console.log('In parseAccounts()');
+      // console.log('In parseAccounts()');
       for (let key in data) {
         if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
           let current = data[key];
@@ -357,7 +358,7 @@ export default {
       }
     },
     getAccountBalanceDifference: function (index, acct) {
-      console.log('getAccountBalanceDifference(' + index + ')');
+      // console.log('getAccountBalanceDifference(' + index + ')');
       // get account on day 0
       let promises = [];
 
@@ -370,9 +371,10 @@ export default {
             }
         );
       }));
-
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + this.start.toISOString().split('T')[0]));
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + this.end.toISOString().split('T')[0]));
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr));
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + endStr));
 
       Promise.all(promises).then(responses => {
         let index = responses[0].index;

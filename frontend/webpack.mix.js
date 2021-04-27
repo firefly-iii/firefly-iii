@@ -31,6 +31,7 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.setResourceRoot('./');
 
 // production
 // require('laravel-mix-bundle-analyzer');
@@ -75,7 +76,7 @@ mix.sass('src/app.scss', 'public/css', {
 
 // move to right dir
 mix.copy('public/js', '../public/v2/js')
-    .copy('fonts', '../public/fonts')
+    .copy('fonts', '../public/v2/css/fonts')
     .copy('images', '../public/images')
     .copy('public/css', '../public/v2/css');
 

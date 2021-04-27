@@ -34,7 +34,7 @@ use Illuminate\Http\Request;
 class TrustProxies extends Middleware
 {
     /** @var int The headers to check. */
-    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+    //protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     /**
      * TrustProxies constructor.

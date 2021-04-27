@@ -100,7 +100,7 @@ class CreateController extends Controller
         $repository           = app(AccountRepositoryInterface::class);
         $cash                 = $repository->getCashAccount();
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
+        $subTitle             = (string)trans(sprintf('breadcrumbs.create_%s', strtolower((string)$objectType)));
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');

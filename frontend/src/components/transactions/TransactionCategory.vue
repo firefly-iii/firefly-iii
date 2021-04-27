@@ -61,13 +61,12 @@ export default {
     return {
       categories: [],
       initialSet: [],
-      category: this.value,
-      emitEvent: true
+      category: this.value
     }
   },
 
   created() {
-
+    //console.log('Created category(' + this.index + ') "' + this.value + '"');
     // initial list of accounts:
     axios.get(this.getACURL(''))
         .then(response => {
@@ -82,11 +81,13 @@ export default {
     },
     getACURL: function (query) {
       // update autocomplete URL:
+      // console.log('getACURL("' + query + '")');
       return document.getElementsByTagName('base')[0].href + 'api/v1/autocomplete/categories?query=' + query;
     },
     lookupCategory: debounce(function () {
       // update autocomplete URL:
-      axios.get(this.getACURL(this.value))
+      //console.log('Do a search for "'+this.category+'"');
+      axios.get(this.getACURL(this.category))
           .then(response => {
             this.categories = response.data;
           })
@@ -94,7 +95,6 @@ export default {
   },
   watch: {
     value: function (value) {
-      this.emitEvent = false;
       this.category = value ?? '';
     },
     category: function (value) {

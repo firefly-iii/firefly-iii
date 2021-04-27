@@ -141,7 +141,10 @@
         "next_expected_match": "Seuraava lasku odotettavissa"
     },
     "config": {
-        "html_language": "fi"
+        "html_language": "fi",
+        "week_in_year_fns": "'Week' w, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Ulkomaan summa",

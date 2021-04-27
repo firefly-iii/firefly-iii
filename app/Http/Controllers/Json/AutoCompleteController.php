@@ -30,54 +30,9 @@ use Illuminate\Http\Request;
 
 /**
  * Class AutoCompleteController.
- *
- * TODO autocomplete for transaction types.
- *
  */
 class AutoCompleteController extends Controller
 {
-    /**
-     * Searches in the titles of all transaction journals.
-     * The result is limited to the top 15 unique results.
-     *
-     * If the query is numeric, it will append the journal with that particular ID.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function allJournalsWithID(Request $request): JsonResponse
-    {
-        $search = (string)$request->get('search');
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
 
-        /** @var TransactionGroupRepositoryInterface $groupRepos */
-        $groupRepos = app(TransactionGroupRepositoryInterface::class);
-
-        $result = $repository->searchJournalDescriptions($search);
-        $array  = [];
-        if (is_numeric($search)) {
-            // search for group, not journal.
-            $firstResult = $groupRepos->find((int)$search);
-            if (null !== $firstResult) {
-                // group may contain multiple journals, each a result:
-                foreach ($firstResult->transactionJournals as $journal) {
-                    $array[] = $journal->toArray();
-                }
-            }
-        }
-        // if not numeric, search ahead!
-
-        // limit and unique
-        $limited = $result->slice(0, 15);
-        $array   = array_merge($array, $limited->toArray());
-        foreach ($array as $index => $item) {
-            // give another key for consistency
-            $array[$index]['name'] = sprintf('#%d: %s', $item['transaction_group_id'], $item['description']);
-        }
-
-        return response()->json($array);
-    }
 
 }

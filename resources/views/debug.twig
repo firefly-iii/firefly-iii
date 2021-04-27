@@ -57,7 +57,7 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 {% endfor %}
 | User agent | {{ userAgent }} |
 </textarea>
-<script type="text/javascript">
+<script type="text/javascript" nonce="{{ JS_NONCE }}">
     var textArea = document.getElementById('debug_info');
     var text = textArea.value;
     var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

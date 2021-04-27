@@ -76,7 +76,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -125,7 +125,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         $frontPageGenerator = new FrontpageChartGenerator($start, $end);
@@ -270,7 +270,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
         $data = $this->reportPeriodChart($accounts, $start, $end, null);
 
@@ -283,8 +283,8 @@ class CategoryController extends Controller
      * Chart for a specific period.
      * TODO test method, for category refactor.
      *
-     * @param Category                    $category
-     * @param                             $date
+     * @param Category $category
+     * @param Carbon   $date
      *
      * @return JsonResponse
      */
@@ -294,7 +294,7 @@ class CategoryController extends Controller
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = session()->get('end');
         if ($end < $start) {
-            [$end, $start] = [$start, $end]; 
+            [$end, $start] = [$start, $end];
         }
 
         $cache = new CacheProperties;
@@ -303,7 +303,7 @@ class CategoryController extends Controller
         $cache->addProperty($category->id);
         $cache->addProperty('chart.category.period-chart');
         if ($cache->has()) {
-            return response()->json($cache->get()); 
+            return response()->json($cache->get());
         }
 
         /** @var WholePeriodChartGenerator $chartGenerator */

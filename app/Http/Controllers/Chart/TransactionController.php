@@ -52,12 +52,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function budgets(Carbon $start, Carbon $end)
     {

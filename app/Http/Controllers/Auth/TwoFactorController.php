@@ -59,7 +59,7 @@ class TwoFactorController extends Controller
     {
         /** @var array $mfaHistory */
         $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $mfaCode    = $request->get('one_time_password');
+        $mfaCode    = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {

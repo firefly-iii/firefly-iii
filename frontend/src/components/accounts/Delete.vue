@@ -91,7 +91,7 @@ export default {
   },
   created() {
     let pathName = window.location.pathname;
-    console.log(pathName);
+    // console.log(pathName);
     let parts = pathName.split('/');
     this.accountId = parseInt(parts[parts.length - 1]);
     this.getAccount();
@@ -153,7 +153,7 @@ export default {
                 }
           );
       // get accounts of the same type.
-      console.log('Go for "' + type + '"');
+      // console.log('Go for "' + type + '"');
     },
     getPiggyBankCount: function (type, currencyCode) {
       axios.get('./api/v1/accounts/' + this.accountId + '/piggy_banks')

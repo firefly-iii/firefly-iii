@@ -33,10 +33,10 @@ return [
     'index_cash_account'                              => 'Acestea sunt conturile create până acum. Puteți utiliza contul de numerar pentru a urmări cheltuielile cu numerar, dar nu este obligatoriu, desigur.',
 
     // transactions
-    'transactions_create_basic_info'                  => 'Enter the basic information of your transaction. Source, destination, date and description.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_basic_info'                  => 'Introduceți informațiile de bază ale tranzacției. Sursa, destinația, data și descrierea.',
+    'transactions_create_amount_info'                 => 'Introduceți valoarea tranzacției. Dacă este necesar, câmpurile se vor actualiza automat pentru informațiile din valută.',
+    'transactions_create_optional_info'               => 'Toate aceste câmpuri sunt opționale. Adăugarea de meta-date aici va îmbunătăți organizarea tranzacțiilor.',
+    'transactions_create_split'                       => 'Dacă doriţi să împărţiţi o tranzacţie, adăugaţi mai multe scindări cu acest buton',
 
     // create account:
     'accounts_create_iban'                            => 'Dați conturilor dvs. un IBAN valid. Acest lucru ar putea face ca importul de date să fie foarte ușor în viitor.',

@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -124,11 +125,11 @@ class ExportData extends Command
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data = $exporter->export();
-        if (0===count($data)) {
+        if (0 === count($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
         $returnCode = 0;
-        if (0!== count($data)) {
+        if (0 !== count($data)) {
             try {
                 $this->exportData($options, $data);
                 app('telemetry')->feature('system.command.executed', $this->signature);
@@ -199,24 +200,27 @@ class ExportData extends Command
         $error = false;
         if (null !== $this->option($field)) {
             try {
-                $date = Carbon::createFromFormat('Y-m-d', $this->option($field));
+                $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
                 Log::error($e->getMessage());
                 $this->error(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }
         }
-        if (false === $error && 'start' === $field) {
+
+        if (true === $error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? Carbon::now()->subYear() : $journal->date;
             $date->startOfDay();
         }
-        if (false === $error && 'end' === $field) {
+        if (true === $error && 'end' === $field) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
         }
+        if ('end' === $field) {
+            $date->endOfDay();
+        }
 
-        // fallback
         return $date;
     }
 
@@ -238,7 +242,7 @@ class ExportData extends Command
             $accounts = $this->accountRepository->getAccountsByType($types);
         }
         // filter accounts,
-        /** @var AccountType $account */
+        /** @var Account $account */
         foreach ($accounts as $account) {
             if (in_array($account->accountType->type, $types, true)) {
                 $final->push($account);

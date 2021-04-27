@@ -74,6 +74,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
+ * @property string $email
  */
 class Budget extends Model
 {

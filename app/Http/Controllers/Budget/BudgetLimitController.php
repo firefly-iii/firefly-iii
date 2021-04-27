@@ -135,16 +135,21 @@ class BudgetLimitController extends Controller
         if (null === $currency || null === $budget) {
             throw new FireflyException('No valid currency or budget.');
         }
-        $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end   = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $amount = (string)$request->get('amount');
         $start->startOfDay();
         $end->startOfDay();
+
+        if ('' === $amount) {
+            return response()->json([]);
+        }
 
         Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit = $this->blRepository->find($budget, $currency, $start, $end);
         if (null !== $limit) {
-            $limit->amount = $request->get('amount');
+            $limit->amount = $amount;
             $limit->save();
         }
         if (null === $limit) {
@@ -154,7 +159,7 @@ class BudgetLimitController extends Controller
                     'currency_id' => (int)$request->get('transaction_currency_id'),
                     'start_date'  => $start,
                     'end_date'    => $end,
-                    'amount'      => $request->get('amount'),
+                    'amount'      => $amount,
                 ]
             );
         }
@@ -176,7 +181,7 @@ class BudgetLimitController extends Controller
             return response()->json($array);
         }
 
-        return redirect(route('budgets.index', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
+        return response()->json([]);
     }
 
     /**
@@ -187,7 +192,10 @@ class BudgetLimitController extends Controller
      */
     public function update(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $amount = $request->get('amount');
+        $amount = (string)$request->get('amount');
+        if ('' === $amount) {
+            $amount = '0';
+        }
 
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
         $array = $limit->toArray();

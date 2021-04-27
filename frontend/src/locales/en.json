@@ -141,7 +141,10 @@
         "next_expected_match": "Next expected match"
     },
     "config": {
-        "html_language": "en"
+        "html_language": "en",
+        "week_in_year_fns": "'Week' w, yyyy",
+        "quarter_fns": "'Q'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Foreign amount",

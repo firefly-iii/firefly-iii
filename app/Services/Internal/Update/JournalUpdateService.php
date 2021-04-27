@@ -292,7 +292,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
-        $result = $validator->validateDestination($destId, $destName, null);
+        $result            = $validator->validateDestination($destId, $destName, null);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
@@ -526,6 +526,10 @@ class JournalUpdateService
         if ($this->hasFields(['budget_id', 'budget_name'])) {
             Log::debug('Will update budget.');
             $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
+        }
+        // is transfer? remove budget
+        if (TransactionType::TRANSFER === $this->transactionJournal->transactionType->type) {
+            $this->transactionJournal->budgets()->sync([]);
         }
     }
 

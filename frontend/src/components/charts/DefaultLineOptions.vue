@@ -102,11 +102,9 @@ export default {
             },
             ticks: {
               callback: function (value, index, values) {
-                //return this.getLabelForValue(value);
-                let dateObj = new Date(this.getLabelForValue(value));
-                let options = {year: 'numeric', month: 'long', day: 'numeric'};
-                let str = new Intl.DateTimeFormat(localStorage.locale, options).format(dateObj);
-                return str;
+                let dateObj = new Date(this.getLabelForValue(value).split('T')[0]);
+                return new Intl.DateTimeFormat(localStorage.locale, {year: 'numeric', month: 'long', day: 'numeric'}).format(dateObj);
+                //return str;
                 //           // //console.log();
                 //           // //return self.formatLabel(value, 20);
                 //           // return self.formatLabel(str, 20);

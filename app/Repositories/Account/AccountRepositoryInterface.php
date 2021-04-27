@@ -46,6 +46,7 @@ interface AccountRepositoryInterface
      */
     public function count(array $types): int;
 
+
     /**
      * Moved here from account CRUD.
      *
@@ -64,6 +65,14 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function expandWithDoubles(Collection $accounts): Collection;
+
+    /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account;
 
     /**
      * @param string $iban

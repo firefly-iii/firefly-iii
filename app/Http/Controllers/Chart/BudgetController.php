@@ -108,7 +108,7 @@ class BudgetController extends Controller
         $currencies     = [];
         $defaultEntries = [];
         while ($end >= $loopStart) {
-            /** @var Carbon $currentEnd */
+            /** @var Carbon $loopEnd */
             $loopEnd = app('navigation')->endOfPeriod($loopStart, $step);
             $spent   = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection);
             $label   = trim(app('navigation')->periodShow($loopStart, $step));

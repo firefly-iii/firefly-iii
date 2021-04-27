@@ -109,7 +109,7 @@
         "edit": "Redigera",
         "account_type_Loan": "L\u00e5n",
         "account_type_Mortgage": "Bol\u00e5n",
-        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
+        "timezone_difference": "Din webbl\u00e4sare rapporterar tidszonen \"{local}\". Firefly III \u00e4r konfigurerad f\u00f6r tidszonen \"{system}\". Detta diagram kan glida.",
         "stored_new_account_js": "Nytt konto \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" lagrat!",
         "account_type_Debt": "Skuld",
         "delete": "Ta bort",
@@ -141,7 +141,10 @@
         "next_expected_match": "N\u00e4sta f\u00f6rv\u00e4ntade tr\u00e4ff"
     },
     "config": {
-        "html_language": "sv"
+        "html_language": "sv",
+        "week_in_year_fns": "'Vecka' w, yyyy",
+        "quarter_fns": "'kvartal'Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Utl\u00e4ndskt belopp",

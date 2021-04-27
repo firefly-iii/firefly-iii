@@ -100,7 +100,7 @@ return [
         'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.6',
+    'version'                      => '5.5.9',
     'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -477,6 +477,8 @@ return [
             'has_any_category'                => ['alias' => false, 'needs_context' => false,],
             'has_no_budget'                   => ['alias' => false, 'needs_context' => false,],
             'has_any_budget'                  => ['alias' => false, 'needs_context' => false,],
+            'has_no_bill'                     => ['alias' => false, 'needs_context' => false,],
+            'has_any_bill'                    => ['alias' => false, 'needs_context' => false,],
             'has_no_tag'                      => ['alias' => false, 'needs_context' => false,],
             'has_any_tag'                     => ['alias' => false, 'needs_context' => false,],
             'notes_contain'                   => ['alias' => false, 'needs_context' => true,],
@@ -628,14 +630,12 @@ return [
     // expected source types for each transaction type, in order of preference.
     'expected_source_types'     => [
         'source'      => [
-            TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::DEPOSIT          => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
-                                                       AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION,],
-            TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::OPENING_BALANCE  => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                       AccountType::MORTGAGE,],
-            TransactionTypeModel::RECONCILIATION   => [AccountType::RECONCILIATION, AccountType::ASSET],
-            TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LIABILITY_CREDIT,],
+            TransactionTypeModel::WITHDRAWAL      => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
+                                                      AccountType::MORTGAGE,],
+            TransactionTypeModel::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
             // in case no transaction type is known yet, it could be anything.
             'none'                                 => [
                 AccountType::ASSET,
@@ -866,4 +866,11 @@ return [
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
+    'default_preferences'       => [
+        'frontPageAccounts'  => [],
+        'listPageSize'       => 50,
+        'currencyPreference' => 'EUR',
+        'language'           => 'en_US',
+        'locale'             => 'equal',
+    ],
 ];

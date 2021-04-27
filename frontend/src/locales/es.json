@@ -109,7 +109,7 @@
         "edit": "Editar",
         "account_type_Loan": "Pr\u00e9stamo",
         "account_type_Mortgage": "Hipoteca",
-        "timezone_difference": "Your browser reports time zone \"{local}\". Firefly III is configured for time zone \"{system}\". This chart may drift.",
+        "timezone_difference": "Su navegador reporta la zona horaria \"{local}\". Firefly III est\u00e1 configurado para la zona horaria \"{system}\". Este gr\u00e1fico puede cambiar.",
         "stored_new_account_js": "Nueva cuenta \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" guardada!",
         "account_type_Debt": "Deuda",
         "delete": "Eliminar",
@@ -141,7 +141,10 @@
         "next_expected_match": "Pr\u00f3xima coincidencia esperada"
     },
     "config": {
-        "html_language": "es"
+        "html_language": "es",
+        "week_in_year_fns": "'Semana' w, yyyy",
+        "quarter_fns": "'Trimestre' Q, yyyy",
+        "half_year_fns": "'H{half}', yyyy"
     },
     "form": {
         "foreign_amount": "Cantidad extranjera",

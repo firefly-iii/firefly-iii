@@ -23,7 +23,8 @@
     <Alert :message="errorMessage" type="danger"/>
     <Alert :message="successMessage" type="success"/>
     <Alert :message="warningMessage" type="warning"/>
-    <form @submit="submitTransaction">
+
+    <form @submit="submitTransaction" autocomplete="off">
       <SplitPills :transactions="transactions"/>
 
       <div class="tab-content">
@@ -40,7 +41,6 @@
             :destination-allowed-types="destinationAllowedTypes"
             :source-allowed-types="sourceAllowedTypes"
             :allow-switch="false"
-            :submitted-transaction="submittedTransaction"
             v-on:uploaded-attachments="uploadedAttachment($event)"
             v-on:set-marker-location="storeLocation($event)"
             v-on:set-account="storeAccountValue($event)"
@@ -74,7 +74,8 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i> {{ $t('firefly.add_another_split') }}
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i>
+                    {{ $t('firefly.add_another_split') }}
                   </button>
                 </div>
                 <div class="col">
@@ -109,12 +110,14 @@
 </template>
 
 <script>
-const lodashClonedeep = require('lodash.clonedeep');
+import {mapMutations} from "vuex";
 import Alert from '../partials/Alert';
 import SplitPills from "./SplitPills";
 import SplitForm from "./SplitForm";
 import TransactionGroupTitle from "./TransactionGroupTitle";
-import {getDefaultErrors, getDefaultTransaction, toW3CString} from '../../shared/transactions';
+import {getDefaultErrors, getDefaultTransaction} from '../../shared/transactions';
+
+const lodashClonedeep = require('lodash.clonedeep');
 
 export default {
   name: "Edit",
@@ -156,9 +159,14 @@ export default {
 
       // things the process is done working on (3 phases):
       submittedTransaction: false,
-      submittedLinks: false,
-      submittedAttachments: false,
+      // submittedLinks: false,
+      submittedAttachments: -1, // -1 = no attachments, 0 = uploading, 1 = uploaded
       inError: false,
+
+      // number of uploaded attachments
+      // its an object because we count per transaction journal (which can have multiple attachments)
+      // and array doesn't work right.
+      submittedAttCount: {},
 
       // meta data for accounts
       allowedOpposingTypes: {},
@@ -179,21 +187,13 @@ export default {
   },
 
   watch: {
-    submittedTransaction: function () {
-      // see finalizeSubmit()
-      this.finalizeSubmit();
-    },
-    submittedLinks: function () {
-      // see finalizeSubmit()
-      this.finalizeSubmit();
-    },
     submittedAttachments: function () {
-      // see finalizeSubmit()
-      this.finalizeSubmit();
+      this.finaliseSubmission();
     }
   },
 
   methods: {
+    ...mapMutations('transactions/create', ['updateField',]),
     /**
      * Grap transaction group from URL and submit GET.
      */
@@ -203,8 +203,8 @@ export default {
                   this.parseTransactionGroup(response.data);
                 }
           ).catch(error => {
-        // console.log('I failed :(');
-        // console.log(error);
+        console.log('I failed :(');
+        console.log(error);
       });
     },
     /**
@@ -218,6 +218,10 @@ export default {
       let transactions = attributes.transactions.reverse();
       this.groupTitle = attributes.group_title;
       this.originalGroupTitle = attributes.group_title;
+
+      //this.returnedGroupId = parseInt(response.data.id);
+      this.returnedGroupTitle = null === this.originalGroupTitle ? response.data.attributes.transactions[0].description : this.originalGroupTitle;
+
 
       for (let i in transactions) {
         if (transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -239,6 +243,8 @@ export default {
       //console.log('index: ' + index);
       if (0 === index) {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
+
+        // TODO here you may need to catch stuff like loan/debt/mortgage
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
         this.date = array.date.substring(0, 16);
@@ -292,7 +298,6 @@ export default {
       result.zoom_level = array.zoom_level;
       result.longitude = array.longitude;
       result.latitude = array.latitude;
-
       // error handling
       result.errors = getDefaultErrors();
       return result;
@@ -370,14 +375,12 @@ export default {
       });
     },
     /**
-     * TODO same method as Create
      * Get API value.
      */
     getAllowedOpposingTypes: function () {
       axios.get('./api/v1/configuration/firefly.allowed_opposing_types')
           .then(response => {
             this.allowedOpposingTypes = response.data.data.value;
-            // console.log('Set allowedOpposingTypes');
           });
     },
     /**
@@ -389,8 +392,20 @@ export default {
       });
     },
     uploadedAttachment: function (payload) {
-      console.log('event: uploadedAttachment');
-      console.log(payload);
+      //console.log('event: uploadedAttachment');
+      //console.log(payload);
+      this.submittedAttachments = 0;
+      // console.log('Triggered uploadedAttachment(' + journalId + ')');
+      let key = 'str' + payload;
+      this.submittedAttCount[key] = 1;
+      let count = Object.keys(this.submittedAttCount).length;
+      //console.log('Count is now ' + count);
+      //console.log('Length is ' + this.transactions.length);
+      if (count === this.transactions.length) {
+        //console.log('Got them all!');
+        // mark the attachments as stored:
+        this.submittedAttachments = 1;
+      }
     },
     storeLocation: function (payload) {
       this.transactions[payload.index].zoom_level = payload.zoomLevel;
@@ -405,26 +420,25 @@ export default {
       this.transactions[index][direction + '_account_name'] = payload.name;
     },
     storeDate: function (payload) {
-      // console.log('event: storeDate');
-      // console.log(payload);
       this.date = payload.date;
-    },
-    storeTime: function (payload) {
-      this.time = payload.time;
-      // console.log('event: storeTime');
-      // console.log(payload);
     },
     storeField: function (payload) {
       let field = payload.field;
       if ('category' === field) {
         field = 'category_name';
       }
-      // console.log('event: storeField(' + field + ')');
       this.transactions[payload.index][field] = payload.value;
 
     },
     removeTransaction: function (payload) {
+      //console.log('removeTransaction()');
+      //console.log(payload);
+      //console.log('length: ' + this.transactions.length);
       this.transactions.splice(payload.index, 1);
+      //console.log('length: ' + this.transactions.length);
+
+
+      //this.originalTransactions.splice(payload.index, 1);
       // this kills the original transactions.
       this.originalTransactions = [];
     },
@@ -432,9 +446,12 @@ export default {
       this.groupTitle = payload;
     },
     selectedAttachments: function (payload) {
+      //console.log('Now in selectedAttachments()');
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          if (parseInt(this.transactions[i].transaction_journal_id) === parseInt(payload)) {
+          // console.log('Payload is');
+          // console.log(payload);
+          if (parseInt(this.transactions[i].transaction_journal_id) === parseInt(payload.id)) {
             // console.log('selectedAttachments ' + payload);
             this.transactions[i].selectedAttachments = true;
           }
@@ -450,56 +467,55 @@ export default {
     submitTransaction: function (event) {
       event.preventDefault();
       let submission = {transactions: []};
+
+      // parse data to see if we should submit anything at all:
       let shouldSubmit = false;
       let shouldLinks = false;
       let shouldUpload = false;
+
+      // if the group title has changed, should submit:
       if (this.groupTitle !== this.originalGroupTitle) {
         submission.group_title = this.groupTitle;
         shouldSubmit = true;
       }
-      let transactionCount = this.originalTransactions.length;
-      let newTransactionCount = this.transactions.length;
-      console.log('Found ' + this.transactions.length + ' split(s).');
 
+      // if something with the group title:
+      let newTransactionCount = this.transactions.length;
       if (newTransactionCount > 1 && typeof submission.group_title === 'undefined' && (null === this.originalGroupTitle || '' === this.originalGroupTitle)) {
         submission.group_title = this.transactions[0].description;
+        shouldSubmit = true;
       }
 
+      // loop each transaction (edited by the user):
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-          // original transaction present?
+
+          // original transaction present:
           let currentTransaction = this.transactions[i];
           let originalTransaction = this.originalTransactions.hasOwnProperty(i) ? this.originalTransactions[i] : {};
-
+          // the difference:
           let diff = {};
 
           // compare basic fields:
-          let basicFields = [
-            'description',
-            'source_account_id', 'source_account_name',
-            'destination_account_id', 'destination_account_name',
-            'amount', 'foreign_amount', 'foreign_currency_id',
-            'category_name', 'budget_id', 'bill_id',
-            'interest_date', 'book_date', 'due_date', 'payment_date', 'invoice_date',
-            'external_url', 'internal_reference', 'external_id', 'notes',
-            'zoom_level', 'longitude', 'latitude'
-          ];
+          let basicFields = ['description', 'source_account_id', 'source_account_name', 'destination_account_id', 'destination_account_name', 'amount', 'foreign_amount', 'foreign_currency_id', 'category_name', 'budget_id', 'bill_id', 'interest_date', 'book_date', 'due_date', 'payment_date', 'invoice_date', 'external_url', 'internal_reference', 'external_id', 'notes', 'zoom_level', 'longitude', 'latitude'];
 
-          // source and destination may be overruled:
+          // source and destination are overruled in some cases:
           if (i > 0) {
             diff.type = this.transactionType.toLowerCase();
-            if ('Deposit' === this.transactionType || 'Transfer' === this.transactionType) {
+            if ('deposit' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set destination to be whatever is in transaction zero:
               currentTransaction.destination_account_name = this.originalTransactions[0].destination_account_name;
               currentTransaction.destination_account_id = this.originalTransactions[0].destination_account_id;
             }
-            if ('Withdrawal' === this.transactionType || 'Transfer' === this.transactionType) {
+
+            if ('withdrawal' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
+              // set source to be whatever is in transaction zero:
               currentTransaction.source_account_name = this.originalTransactions[0].source_account_name;
               currentTransaction.source_account_id = this.originalTransactions[0].source_account_id;
             }
-            console.log('Will overrule accounts for split ' + i);
           }
 
+          // loop the basic fields and verify
           for (let ii in basicFields) {
             if (basicFields.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
               let fieldName = basicFields[ii];
@@ -519,13 +535,7 @@ export default {
                   continue;
                 }
 
-
-                // console.log('Index ' + i + ': Field ' + fieldName + ' updated ("' + originalTransaction[fieldName] + '" > "' + currentTransaction[fieldName] + '")');
-                // console.log(originalTransaction[fieldName]);
-                // console.log(currentTransaction[fieldName]);
-
                 // some field names may need to be different. little basic but it works:
-                // console.log('pre:  ' + submissionFieldName);
                 if ('source_account_id' === submissionFieldName) {
                   submissionFieldName = 'source_id';
                 }
@@ -539,26 +549,19 @@ export default {
                   submissionFieldName = 'destination_name';
                 }
 
-
+                // otherwise save them and remember them for submission:
                 diff[submissionFieldName] = currentTransaction[fieldName];
                 shouldSubmit = true;
               }
             }
           }
-          if (0 !== currentTransaction.piggy_bank_id) {
-            diff.piggy_bank_id = currentTransaction.piggy_bank_id;
-            shouldSubmit = true;
-          }
-          if (JSON.stringify(currentTransaction.tags) !== JSON.stringify(originalTransaction.tags)) {
-            // console.log('tags are different');
-            // console.log(currentTransaction.tags);
-            // console.log(originalTransaction.tags);
-            diff.tags = [];//currentTransaction.tags;
 
+          // tags different?
+          if (JSON.stringify(currentTransaction.tags) !== JSON.stringify(originalTransaction.tags)) {
+            diff.tags = [];
             if (0 !== currentTransaction.tags.length) {
               for (let ii in currentTransaction.tags) {
                 if (currentTransaction.tags.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
-                  // array.tags
                   let currentTag = currentTransaction.tags[ii];
                   if (typeof currentTag === 'object' && null !== currentTag) {
                     diff.tags.push(currentTag.text);
@@ -569,79 +572,258 @@ export default {
                 }
               }
             }
-
             shouldSubmit = true;
           }
 
           // compare links:
           let newLinks = this.compareLinks(currentTransaction.links);
           let originalLinks = this.compareLinks(originalTransaction.links);
-          // console.log('links are?');
-          // console.log(newLinks);
-          // console.log(originalLinks);
           if (newLinks !== originalLinks) {
-            // console.log('links are different!');
-            // console.log(newLinks);
-            // console.log(originalLinks);
             shouldLinks = true;
           }
-          // this.transactions[i].selectedAttachments
-          // console.log(typeof currentTransaction.selectedAttachments);
-          // console.log(currentTransaction.selectedAttachments);
           if (typeof currentTransaction.selectedAttachments !== 'undefined' && true === currentTransaction.selectedAttachments) {
-            // must upload!
             shouldUpload = true;
           }
 
-          if (
-              this.date !== this.originalDate
-          ) {
-            console.log('Date and/or time is changed');
-            // set date and time!
+          if (this.date !== this.originalDate) {
             shouldSubmit = true;
             diff.date = this.date;
           }
-          console.log('Now at index ' + i);
-          console.log(Object.keys(diff).length);
+
           if (Object.keys(diff).length === 0 && newTransactionCount > 1) {
-            console.log('Will submit just the ID!');
+            // Will submit just the ID!
             diff.transaction_journal_id = originalTransaction.transaction_journal_id;
             submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
           } else if (Object.keys(diff).length !== 0) {
+            // will submit all:
             diff.transaction_journal_id = originalTransaction.transaction_journal_id ?? 0;
             submission.transactions.push(lodashClonedeep(diff));
             shouldSubmit = true;
           }
         }
       }
+      this.submitUpdate(submission, shouldSubmit, shouldLinks, shouldUpload);
+    },
 
-      console.log('submitTransaction');
-      console.log('shouldUpload : ' + shouldUpload);
-      console.log('shouldLinks  : ' + shouldLinks);
-      console.log('shouldSubmit : ' + shouldSubmit);
-      if (shouldSubmit) {
-        this.submitUpdate(submission, shouldLinks, shouldUpload);
-      }
+    submitData: function (shouldSubmit, submission) {
+      //console.log('submitData');
       if (!shouldSubmit) {
-        this.submittedTransaction = true;
+        //console.log('No need!');
+        return new Promise((resolve) => {
+          resolve({});
+        });
       }
-      if (!shouldLinks) {
-        this.submittedLinks = true;
+      const url = './api/v1/transactions/' + this.groupId;
+      return axios.put(url, submission);
+
+    },
+    handleSubmissionResponse: function (response) {
+      //console.log('handleSubmissionResponse()');
+      // report the transaction is submitted.
+      this.submittedTransaction = true;
+      let journals = [];
+
+      // meanwhile, store the ID and the title in some easy to access variables.
+      if (typeof response.data !== 'undefined') {
+        this.returnedGroupId = parseInt(response.data.data.id) ?? null;
+        this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+
+        let result = response.data.data.attributes.transactions
+        for (let i in result) {
+          if (result.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            journals.push(parseInt(result[i].transaction_journal_id));
+          }
+        }
+      } else {
+        for (let i in this.transactions) {
+          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            journals.push(this.transactions[i].transaction_journal_id);
+          }
+        }
       }
-      if (!shouldUpload) {
-        this.submittedAttachments = true;
+      journals = journals.reverse();
+      return new Promise((resolve) => {
+        resolve(
+            {
+              journals: journals,
+            }
+        );
+      });
+    },
+    submitLinks: function (shouldSubmit) {
+      //console.log('submitLinks()');
+      if (!shouldSubmit) {
+        //console.log('no need!');
+        return new Promise((resolve) => {
+          resolve({});
+        });
       }
-      if (!shouldSubmit && shouldLinks) {
-        this.submitTransactionLinks();
+      return this.deleteAllOriginalLinks().then(() => this.submitNewLinks());
+    },
+    submitAttachments: function (shouldSubmit, response) {
+      //console.log('submitAttachments');
+      if (!shouldSubmit) {
+        //console.log('no need!');
+        return new Promise((resolve) => {
+          resolve({});
+        });
+      }
+      //console.log('Do upload thing!');
+      //console.log(response);
+      let anyAttachments = false;
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let transaction = this.transactions[i];
+          let journalId = transaction.transaction_journal_id;
+          //console.log(journalId);
+          if (typeof response !== 'undefined') {
+            journalId = response.journals[i]
+          }
+
+          let hasAttachments = transaction.selectedAttachments;
+          this.transactions[i].transaction_journal_id = journalId;
+          this.transactions[i].uploadTrigger = true;
+          //console.log('Decided that ' + journalId);
+          //console.log('upload index ' + i);
+          //console.log(hasAttachments);
+          if (hasAttachments) {
+            anyAttachments = true;
+          }
+        }
+      }
+      if (true === anyAttachments) {
+        this.submittedAttachments = 0;
+      }
+    },
+    finaliseSubmission: function () {
+      //console.log('finaliseSubmission');
+      if (0 === this.submittedAttachments) {
+        return;
+      }
+      //console.log('continue (' + this.submittedAttachments + ')');
+      if (true === this.stayHere && false === this.inError) {
+        //console.log('no error + no changes + no redirect');
+        // show message:
+        this.errorMessage = '';
+        this.warningMessage = '';
+        this.successMessage = this.$t('firefly.transaction_updated_link', {ID: this.groupId, title: this.returnedGroupTitle});
+      }
+      // no error + changes + redirect
+      if (false === this.stayHere && false === this.inError) {
+        //console.log('no error + changes + redirect');
+        window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=updated';
       }
 
-      if (!shouldSubmit && shouldLinks) {
-        // TODO
-        //this.submittedAttachments();
+      this.enableSubmit = true;
+      this.submittedAttachments = -1;
+      this.inError = false;
+
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          if (this.transactions.hasOwnProperty(i)) {
+            this.transactions[i].clearTrigger = true;
+          }
+        }
       }
-      console.log('Done with submit methd.');
-      //console.log(submission);
+    },
+    submitUpdate: function (submission, shouldSubmit, shouldLinks, shouldUpload) {
+      //console.log('submitUpdate()');
+      this.inError = false;
+
+      this.submitData(shouldSubmit, submission)
+          .then(this.handleSubmissionResponse) // error or OK
+          .then(response => {
+                  return Promise.all([
+                                       this.submitLinks(shouldLinks, response),
+                                       this.submitAttachments(shouldUpload, response)]);
+                }
+          )
+          .then(this.finaliseSubmission)
+          .catch(this.handleSubmissionError);
+
+
+      // if (shouldLinks) {
+      //   promises.push(this.submitTransactionLinks())
+      // }
+      // if (!shouldLinks) {
+      //   promises.push(new Promise((resolve) => {
+      //     resolve({});
+      //   }));
+      // }
+      // if (shouldUpload) {
+      //   console.log('Attachments = Respond to promise from shouldSubmit/!shouldSubmit');
+      //   promises.push(submissionPromise.then(result => this.uploadAttachments(result)));
+      // }
+      // if (!shouldUpload) {
+      //   promises.push(new Promise((resolve) => {
+      //     resolve({});
+      //   }));
+      // }
+
+      // all promises fulfilled:
+      // console.log('All promises done, process results?');
+      // Promise.all(promises).then(function (responses) {
+      //   console.log('I believe all ' + promises.length + ' promises fulfilled!');
+      // }).catch(function (errors) {
+      //   console.log('Somebody errored?');
+      // });
+
+      //
+      //
+      //
+      // if (shouldSubmit) {
+      //   console.log('shouldSubmit');
+      //   // do submission:
+      //   // console.log(JSON.stringify(submission));
+      //   // console.log(submission);
+      //   axios.put(url, submission)
+      //       .then(response => {
+      //               // console.log('Response is OK!');
+      //               // report the transaction is submitted.
+      //               this.submittedTransaction = true;
+      //
+      //               // submit links and attachments (can only be done when the transaction is created)
+      //               if (shouldLinks) {
+      //                 console.log('Submit links using return from server:');
+      //                 this.submitTransactionLinks();
+      //               }
+      //               if (shouldUpload) {
+      //                 // console.log('Need to upload.');
+      //                 this.submitAttachments(response.data.data.attributes.transactions);
+      //               }
+      //               // meanwhile, store the ID and the title in some easy to access variables.
+      //               this.returnedGroupId = parseInt(response.data.data.id);
+      //               this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
+      //             }
+      //       )
+      //       .catch(error => {
+      //                console.log('error :(');
+      //                console.log(error.response.data);
+      //                // oh noes Firefly III has something to bitch about.
+      //                this.enableSubmit = true;
+      //                // report the transaction is submitted.
+      //                this.submittedTransaction = true;
+      //                // // also report attachments and links are submitted:
+      //                this.submittedAttachments = true;
+      //                this.submittedLinks = true;
+      //                //
+      //                // but report an error because error:
+      //                this.inError = true;
+      //                this.parseErrors(error.response.data);
+      //              }
+      //       );
+      // }
+      // if (!shouldSubmit && shouldLinks) {
+      //   // update links
+      //   console.log('Submit links using whatever is here:');
+      //   this.submitTransactionLinks();
+      // }
+      // if (!shouldSubmit && shouldUpload) {
+      //   // upload
+      //   // console.log('Need to upload.');
+      //   this.submitAttachments(this.transactions);
+      // }
     },
     compareLinks: function (array) {
       let compare = [];
@@ -659,55 +841,26 @@ export default {
           );
         }
       }
-      // console.log('compareLinks');
-      // console.log(compare);
       return JSON.stringify(compare);
     },
-    submitUpdate: function (submission, shouldLinks, shouldUpload) {
-      console.log('submitUpdate');
-      this.inError = false;
-      const url = './api/v1/transactions/' + this.groupId;
-      console.log(JSON.stringify(submission));
-      console.log(submission);
-      axios.put(url, submission)
-          .then(response => {
-                  console.log('Response is OK!');
-                  // report the transaction is submitted.
-                  this.submittedTransaction = true;
+    uploadAttachments: function (result) {
+      //console.log('TODO, upload attachments.');
+      if (0 === Object.keys(result).length) {
 
-                  // submit links and attachments (can only be done when the transaction is created)
-                  if (shouldLinks) {
-                    console.log('Need to update links.');
-                    this.submitTransactionLinks();
-                  }
-                  if (!shouldLinks) {
-                    console.log('No need to update links.');
-                  }
-                  // TODO attachments:
-                  // this.submitAttachments(data, response);
-                  //
-                  // // meanwhile, store the ID and the title in some easy to access variables.
-                  this.returnedGroupId = parseInt(response.data.data.id);
-                  this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
-                }
-          )
-          .catch(error => {
-                   console.log('error :(');
-                   console.log(error.response.data);
-                   // oh noes Firefly III has something to bitch about.
-                   this.enableSubmit = true;
-                   // report the transaction is submitted.
-                   this.submittedTransaction = true;
-                   // // also report attachments and links are submitted:
-                   this.submittedAttachments = true;
-                   this.submittedLinks = true;
-                   //
-                   // but report an error because error:
-                   this.inError = true;
-                   this.parseErrors(error.response.data);
-                 }
-          );
+        for (let i in this.transactions) {
+          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+
+            //console.log('updateField(' + i + ', transaction_journal_id, ' + result[i].transaction_journal_id + ')');
+            this.updateField({index: i, field: 'transaction_journal_id', value: result[i].transaction_journal_id});
+          }
+        }
+        //console.log('Transactions not changed, use original objects.');
+      } else {
+        //console.log('Transactions changed!');
+      }
+      this.submittedAttachments = true;
     },
+
     parseErrors: function (errors) {
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -800,97 +953,92 @@ export default {
     },
 
     deleteOriginalLinks: function (transaction) {
-      console.log(transaction.links);
+      let promises = [];
       for (let i in transaction.links) {
         if (transaction.links.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let current = transaction.links[i];
           let url = '/api/v1/transaction_links/' + current.id;
-          axios.delete(url).then(response => {
-            // TODO response
-          });
+          promises.push(axios.delete(url));
         }
       }
+      return Promise.all(promises);
     },
 
-    /**
-     * Submit transaction links.
-     * TODO same method as CREATE
-     */
-    submitTransactionLinks() {
-      let total = 0;
+    deleteAllOriginalLinks: function () {
+      //console.log('deleteAllOriginalLinks()');
+      // loop to delete old transaction links.
       let promises = [];
-
-      console.log('submitTransactionLinks()');
       for (let i in this.transactions) {
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // original transaction present?
           let currentTransaction = this.transactions[i];
           let originalTransaction = this.originalTransactions.hasOwnProperty(i) ? this.originalTransactions[i] : {};
-          // compare links:
           let newLinks = this.compareLinks(currentTransaction.links);
           let originalLinks = this.compareLinks(originalTransaction.links);
           if (newLinks !== originalLinks) {
             if ('[]' !== originalLinks) {
-              this.deleteOriginalLinks(originalTransaction);
+              promises.push(this.deleteOriginalLinks(originalTransaction));
             }
-
-            console.log('links are different!');
-            // console.log(newLinks);
-            // console.log(originalLinks);
-            for (let ii in currentTransaction.links) {
-              if (currentTransaction.links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
-                let currentLink = currentTransaction.links[ii];
-                let linkObject = {
-                  inward_id: currentTransaction.transaction_journal_id,
-                  outward_id: currentTransaction.transaction_journal_id,
-                  link_type_id: 'something'
-                };
-
-                let parts = currentLink.link_type_id.split('-');
-                linkObject.link_type_id = parts[0];
-                if ('inward' === parts[1]) {
-                  linkObject.inward_id = currentLink.transaction_journal_id;
-                }
-                if ('outward' === parts[1]) {
-                  linkObject.outward_id = currentLink.transaction_journal_id;
-                }
-
-                console.log(linkObject);
-                total++;
-                // submit transaction link:
-                promises.push(axios.post('./api/v1/transaction_links', linkObject).then(response => {
-                  // TODO error handling.
-                }));
-              }
-            }
-            // shouldLinks = true;
+          } else {
+            promises.push(new Promise((resolve) => {
+              resolve({});
+            }));
           }
-
         }
       }
-      if (0 === total) {
-        this.submittedLinks = true;
-        return;
-      }
-      Promise.all(promises).then(function () {
-        this.submittedLinks = true;
-      });
+      return Promise.all(promises);
     },
-    finalizeSubmit: function () {
-      console.log('now in finalizeSubmit()');
-      console.log('submittedTransaction : ' + this.submittedTransaction);
-      console.log('submittedLinks       : ' + this.submittedLinks);
-      console.log('submittedAttachments : ' + this.submittedAttachments);
+    submitNewLinks: function () {
+      //console.log('submitNewLinks()');
+      let promises = [];
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          let currentTransaction = this.transactions[i];
+          for (let ii in currentTransaction.links) {
+            if (currentTransaction.links.hasOwnProperty(ii) && /^0$|^[1-9]\d*$/.test(ii) && ii <= 4294967294) {
+              let currentLink = currentTransaction.links[ii];
+              let linkObject = {
+                inward_id: currentTransaction.transaction_journal_id,
+                outward_id: currentTransaction.transaction_journal_id,
+                link_type_id: 'something'
+              };
+
+              let parts = currentLink.link_type_id.split('-');
+              linkObject.link_type_id = parts[0];
+              if ('inward' === parts[1]) {
+                linkObject.inward_id = currentLink.transaction_journal_id;
+              }
+              if ('outward' === parts[1]) {
+                linkObject.outward_id = currentLink.transaction_journal_id;
+              }
+              promises.push(axios.post('./api/v1/transaction_links', linkObject));
+            }
+          }
+        }
+      }
+      return Promise.all(promises);
+    },
+    /**
+     * Submit transaction links.
+     */
+    submitTransactionLinksX: function () {
+      //return this.deleteAllOriginalLinks().then(() => this.submitNewLinks());
+    },
+    finalizeSubmitX: function () {
+      // console.log('now in finalizeSubmit()');
+      // console.log('submittedTransaction : ' + this.submittedTransaction);
+      // console.log('submittedLinks       : ' + this.submittedLinks);
+      // console.log('submittedAttachments : ' + this.submittedAttachments);
 
       if (this.submittedTransaction && this.submittedAttachments && this.submittedLinks) {
-        console.log('all true');
-        console.log('inError         = ' + this.inError);
-        console.log('stayHere        = ' + this.stayHere);
-        console.log('returnedGroupId = ' + this.returnedGroupId);
+        // console.log('all true');
+        // console.log('inError         = ' + this.inError);
+        // console.log('stayHere        = ' + this.stayHere);
+        // console.log('returnedGroupId = ' + this.returnedGroupId);
 
         // no error + no changes + no redirect
         if (true === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
-          console.log('no error + no changes + no redirect');
+          // console.log('no error + no changes + no redirect');
           // show message:
           this.errorMessage = '';
           this.successMessage = '';
@@ -900,12 +1048,12 @@ export default {
 
         // no error + no changes + redirect
         if (false === this.stayHere && false === this.inError && 0 === this.returnedGroupId) {
-          console.log('no error + no changes + redirect');
+          // console.log('no error + no changes + redirect');
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=no_change';
         }
         // no error + changes + no redirect
         if (true === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
-          console.log('no error + changes + redirect');
+          // console.log('no error + changes + redirect');
           // show message:
           this.errorMessage = '';
           this.warningMessage = '';
@@ -915,10 +1063,10 @@ export default {
 
         // no error + changes + redirect
         if (false === this.stayHere && false === this.inError && 0 !== this.returnedGroupId) {
-          console.log('no error + changes + redirect');
+          // console.log('no error + changes + redirect');
           window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.groupId + '&message=updated';
         }
-        console.log('end of the line');
+        // console.log('end of the line');
         // enable flags:
         this.enableSubmit = true;
         this.submittedTransaction = false;

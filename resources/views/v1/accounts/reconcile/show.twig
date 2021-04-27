@@ -69,10 +69,12 @@
                 <div class="box-body no-padding">
                     <table class="table table-responsive table-hover">
                         <tbody>
+                        {#
                         <tr>
                             <td>{{ 'categories'|_ }}</td>
                             <td>{{ journalCategories(journal)|raw }}</td>
                         </tr>
+                        #}
                         {% if journal.tags|length > 0 %}
                             <tr>
                                 <td>{{ 'tags'|_ }}</td>
