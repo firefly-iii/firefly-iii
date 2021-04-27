@@ -159,7 +159,6 @@ class IndexController extends Controller
                     continue;
                 }
 
-                /** @var TransactionCurrency $currency */
                 $currencyId                     = $bill['currency_id'];
                 $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
                         'currency_id'             => $currencyId,

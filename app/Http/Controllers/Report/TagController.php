@@ -122,7 +122,7 @@ class TagController extends Controller
         foreach ($earned as $currency) {
             $currencyId = $currency['currency_id'];
 
-            /** @var array $category */
+            /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationId                                                                   = $journal['destination_account_id'];

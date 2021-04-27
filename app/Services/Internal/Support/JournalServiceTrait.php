@@ -174,10 +174,10 @@ trait JournalServiceTrait
         if (null === $account && null !== $data['number']) {
             Log::debug(sprintf('Searching for account number "%s".', $data['number']));
             // find by preferred type.
-            $source = $this->accountRepository->findByAccountNumber($data['number'], [$types[0]]);
+            $source = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
 
             // or any expected type.
-            $source = $source ?? $this->accountRepository->findByAccountNumber($data['iban'], $types);
+            $source = $source ?? $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
 
             if (null !== $source) {
                 Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));

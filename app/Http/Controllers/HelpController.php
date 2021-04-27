@@ -32,7 +32,7 @@ class HelpController extends Controller
     /**
      * Show help for a route.
      *
-     * @param   $route
+     * @param string $route
      *
      * @return JsonResponse
      */
