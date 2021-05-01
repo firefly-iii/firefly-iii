@@ -351,18 +351,22 @@ export default {
     sourceAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     }, // allowed source account types.
     destinationAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     },
     // allow switch?
     allowSwitch: {
       type: Boolean,
       required: false,
-      default: true
+      default: false
     }
 
   },
