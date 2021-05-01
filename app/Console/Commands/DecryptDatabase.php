@@ -177,7 +177,7 @@ class DecryptDatabase extends Command
     /**
      * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
      *
-     * @param $value
+     * @param mixed $value
      *
      * @return string
      * @throws FireflyException

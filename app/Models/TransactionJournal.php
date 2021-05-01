@@ -114,6 +114,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @mixin Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[]               $locations
  * @property-read int|null                                                                             $locations_count
+ * @property int $the_count
  */
 class TransactionJournal extends Model
 {

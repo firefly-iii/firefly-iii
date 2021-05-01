@@ -77,6 +77,10 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
+        if('transfers' === $objectType) {
+            $objectType = 'transfer';
+        }
+
         $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
         $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');

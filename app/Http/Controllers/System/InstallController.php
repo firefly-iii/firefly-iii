@@ -64,6 +64,7 @@ class InstallController extends Controller
         $this->upgradeCommands = [
             // there are 3 initial commands
             'migrate'                                  => ['--seed' => true, '--force' => true],
+            'firefly-iii:fix-pgsql-sequences'          => [],
             'firefly-iii:decrypt-all'                  => [],
             'firefly-iii:restore-oauth-keys'           => [],
             'generate-keys'                            => [], // an exception :(

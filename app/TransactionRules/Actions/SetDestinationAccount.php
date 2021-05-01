@@ -56,8 +56,8 @@ class SetDestinationAccount implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $user             = User::find($journal['user_id']);
-        $type             = $journal['transaction_type_type'];
+        $user = User::find($journal['user_id']);
+        $type = $journal['transaction_type_type'];
         /** @var TransactionJournal|null $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
@@ -108,8 +108,9 @@ class SetDestinationAccount implements ActionInterface
         }
 
         // if this is a withdrawal, the new destination account must be a expense account and may be created:
+        // or it is a liability, in which case it must be returned.
         if (TransactionType::WITHDRAWAL === $type) {
-            $newAccount = $this->findExpenseAccount();
+            $newAccount = $this->findWithdrawalDestinationAccount();
         }
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
@@ -145,9 +146,10 @@ class SetDestinationAccount implements ActionInterface
     /**
      * @return Account
      */
-    private function findExpenseAccount(): Account
+    private function findWithdrawalDestinationAccount(): Account
     {
-        $account = $this->repository->findByName($this->action->action_value, [AccountType::EXPENSE]);
+        $allowed = config('firefly.expected_source_types.destination.Withdrawal');
+        $account = $this->repository->findByName($this->action->action_value, $allowed);
         if (null === $account) {
             $data    = [
                 'name'              => $this->action->action_value,

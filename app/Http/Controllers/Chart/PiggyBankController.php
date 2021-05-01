@@ -80,9 +80,9 @@ class PiggyBankController extends Controller
         $locale = app('steam')->getLocale();
 
         // get first event or start date of piggy bank or today
-        $startDate = $piggyBank->start_date ?? today(config('app.timezone'));
+        $startDate = $piggyBank->startdate ?? today(config('app.timezone'));
 
-        /** @var PiggyBankEvent $first */
+        /** @var PiggyBankEvent $firstEvent */
         $firstEvent = $set->first();
         $firstDate  = null === $firstEvent ? new Carbon : $firstEvent->date;
 

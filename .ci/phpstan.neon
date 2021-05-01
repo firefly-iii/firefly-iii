@@ -30,4 +30,4 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 2
+  level: 3

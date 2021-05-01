@@ -46,7 +46,7 @@ class TransactionCurrencyFactory
     public function create(array $data): TransactionCurrency
     {
         try {
-            /** @var TransactionCurrency $currency */
+            /** @var TransactionCurrency $result */
             $result = TransactionCurrency::create(
                 [
                     'name'           => $data['name'],

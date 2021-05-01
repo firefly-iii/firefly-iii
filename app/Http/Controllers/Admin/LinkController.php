@@ -39,9 +39,7 @@ use Log;
  */
 class LinkController extends Controller
 {
-
-    /** @var LinkTypeRepositoryInterface */
-    private $repository;
+    private LinkTypeRepositoryInterface $repository;
 
     /**
      * LinkController constructor.

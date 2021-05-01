@@ -44,6 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $user_id
  * @property string $name
+ * @property Carbon $lastActivity
  * @property bool $encrypted
  * @property-read Collection|\FireflyIII\Models\Attachment[] $attachments
  * @property-read int|null $attachments_count

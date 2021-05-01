@@ -414,7 +414,7 @@ class MigrateToGroups extends Command
         if ($total > 0) {
             Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
             $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $total));
-            /** @var array $journal */
+            /** @var array $array */
             foreach ($orphanedJournals as $array) {
                 $this->giveGroup($array);
             }

@@ -115,8 +115,7 @@
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.2",
     "roave/security-advisories": "dev-master",
-    "thecodingmachine/phpstan-strict-rules": "^0.12.0",
-    "vimeo/psalm": "^4.1"
+    "thecodingmachine/phpstan-strict-rules": "^0.12.0"
   },
   "suggest": {
     "adldap2/adldap2-laravel": "If you want to login using LDAP.",
@@ -155,6 +154,7 @@
     ],
     "post-update-cmd": [
       "@php artisan cache:clear",
+      "@php artisan firefly-iii:fix-pgsql-sequences",
       "@php artisan firefly-iii:decrypt-all",
 
       "@php artisan firefly-iii:transaction-identifiers",

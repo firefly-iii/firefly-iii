@@ -148,13 +148,13 @@ class CreateController extends Controller
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-        /** @var Transaction $source */
-        /** @var Transaction $dest */
 
         // fill prefilled with journal info
         $type = strtolower($journal->transactionType->type);
 
+        /** @var Transaction $source */
         $source      = $journal->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $dest */
         $dest        = $journal->transactions()->where('amount', '>', 0)->first();
         $category    = $journal->categories()->first() ? $journal->categories()->first()->name : '';
         $budget      = $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
