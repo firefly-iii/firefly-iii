@@ -104,6 +104,10 @@ class FixPostgresSequences extends Command
 
             $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
             $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
+            if(null === $nextId) {
+                $this->line(sprintf('nextval is NULL for table "%s"', $tableToCheck));
+                continue;
+            }
 
             if ($nextId->nextval < $highestId->max) {
                 DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
