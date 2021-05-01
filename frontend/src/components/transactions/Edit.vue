@@ -650,6 +650,10 @@ export default {
           if (typeof currentTransaction.selectedAttachments !== 'undefined' && true === currentTransaction.selectedAttachments) {
             shouldUpload = true;
           }
+          if(true === shouldSubmit) {
+            // set the date to whatever the date is:
+            diff.date = this.date;
+          }
 
           if (this.date !== this.originalDate) {
             shouldSubmit = true;
