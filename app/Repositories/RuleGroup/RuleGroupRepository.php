@@ -150,7 +150,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function getActiveGroups(): Collection
     {
-        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', true)->orderBy('order', 'ASC')->get(['rule_groups.*']);
     }
 
     /**
@@ -161,7 +161,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     public function getActiveRules(RuleGroup $group): Collection
     {
         return $group->rules()
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -176,7 +176,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                      ->where('rule_triggers.trigger_type', 'user_action')
                      ->where('rule_triggers.trigger_value', 'store-journal')
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -191,7 +191,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                      ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
                      ->where('rule_triggers.trigger_type', 'user_action')
                      ->where('rule_triggers.trigger_value', 'update-journal')
-                     ->where('rules.active', 1)
+                     ->where('rules.active', true)
                      ->get(['rules.*']);
     }
 
@@ -326,7 +326,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function maxOrder(): int
     {
-        return (int)$this->user->ruleGroups()->where('active', 1)->max('order');
+        return (int)$this->user->ruleGroups()->where('active', true)->max('order');
     }
 
     /**
@@ -337,7 +337,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $this->user->ruleGroups()->where('active', false)->update(['order' => 0]);
         $set   = $this->user
             ->ruleGroups()
-            ->where('active', 1)
+            ->where('active', true)
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')

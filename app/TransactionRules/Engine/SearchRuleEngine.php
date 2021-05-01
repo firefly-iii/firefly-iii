@@ -383,7 +383,7 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
         /** @var RuleAction $ruleAction */
-        foreach ($rule->ruleActions()->where('active', 1)->get() as $ruleAction) {
+        foreach ($rule->ruleActions()->where('active', true)->get() as $ruleAction) {
             $break = $this->processRuleAction($ruleAction, $transaction);
             if (true === $break) {
                 break;
@@ -458,8 +458,15 @@ class SearchRuleEngine implements RuleEngineInterface
         // start a search query for individual each trigger:
         $total = new Collection;
         $count = 0;
+
+        /** @var Collection $triggers */
+        $triggers = $rule->ruleTriggers;
+
         /** @var RuleTrigger $ruleTrigger */
-        foreach ($rule->ruleTriggers()->where('active', 1)->get() as $ruleTrigger) {
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
             if ('user_action' === $ruleTrigger->trigger_type) {
                 Log::debug('Skip trigger type.');
                 continue;

@@ -197,7 +197,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets(): Collection
     {
-        return $this->user->budgets()->where('active', 1)
+        return $this->user->budgets()->where('active', true)
                           ->orderBy('order', 'ASC')
                           ->orderBy('name', 'ASC')
                           ->get();
@@ -282,7 +282,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
-               ->orderBy('name', 'ASC')->where('active', 1);
+               ->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
     }
