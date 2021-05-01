@@ -431,7 +431,6 @@ return [
     'apply_rule_group_selection'                          => 'Tillämpa regel grupp ":title" till dit val av transaktioner',
     'apply_rule_group_selection_intro'                    => 'Regelgrupper som ":title" används normalt bara för nya eller uppdaterade transaktioner, men du kan få Firefly III att köra alla regler i gruppen på ett utval av nuvarande transaktioner. Detta är användbart när du har uppdaterat en grupp med regler och dessa förändringar behöver göras på alla dina andra transaktioner.',
     'applied_rule_group_selection'                        => 'Regelgrupp ":title" har tillämpats på ditt val.',
-    'timezone_difference'                                 => 'Din webbläsare rapporterar tidszonen "{local}". Firefly III är konfigurerad för tidszonen "{system}". Detta diagram kan glida.',
 
     // actions and triggers
     'rule_trigger_user_action'                            => 'Användaråtgärd är ":trigger_value"',

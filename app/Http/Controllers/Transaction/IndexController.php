@@ -80,7 +80,7 @@ class IndexController extends Controller
         if('transfers' === $objectType) {
             $objectType = 'transfer';
         }
-        
+
         $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
         $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');

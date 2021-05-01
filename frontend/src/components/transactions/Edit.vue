@@ -25,21 +25,26 @@
     <Alert :message="warningMessage" type="warning"/>
 
     <form @submit="submitTransaction" autocomplete="off">
-      <SplitPills :transactions="transactions"/>
+      <SplitPills
+          :transactions="transactions"
+          :count="transactions.length"
+
+      />
 
       <div class="tab-content">
         <SplitForm
             v-for="(transaction, index) in this.transactions"
-            v-bind:key="index"
-            :count="transactions.length"
+            :index="index"
+            v-bind:key="transaction.transaction_journal_id"
+            :key="transaction.transaction_journal_id"
             :transaction="transaction"
+            :date="date"
+            :count="transactions.length"
+            :transaction-type="transactionType"
+            :source-allowed-types="sourceAllowedTypes"
             :allowed-opposing-types="allowedOpposingTypes"
             :custom-fields="customFields"
-            :date="date"
-            :index="index"
-            :transaction-type="transactionType"
             :destination-allowed-types="destinationAllowedTypes"
-            :source-allowed-types="sourceAllowedTypes"
             :allow-switch="false"
             v-on:uploaded-attachments="uploadedAttachment($event)"
             v-on:set-marker-location="storeLocation($event)"
@@ -122,56 +127,97 @@ const lodashClonedeep = require('lodash.clonedeep');
 export default {
   name: "Edit",
   created() {
+    // console.log('Created');
     let parts = window.location.pathname.split('/');
     this.groupId = parseInt(parts[parts.length - 1]);
-
+    this.transactions = [];
     this.getTransactionGroup();
     this.getAllowedOpposingTypes();
     this.getCustomFields();
   },
   data() {
     return {
-      successMessage: '',
-      errorMessage: '',
-      warningMessage: '',
+      successMessage: {type: String, default: ''},
+      errorMessage: {type: String, default: ''},
+      warningMessage: {type: String, default: ''},
 
       // transaction props
-      transactions: [],
-      originalTransactions: [],
-      groupTitle: '',
-      originalGroupTitle: '',
-      transactionType: 'any',
-      groupId: 0,
+      transactions: {
+        type: Array,
+        default: function () {
+          return [];
+        }
+      },
+      originalTransactions: {
+        type: Array,
+        default: function () {
+          return [];
+        }
+      },
+      groupTitle: {type: String, default: ''},
+      originalGroupTitle: {type: String, default: ''},
+      transactionType: {type: String, default: 'any'},
+      groupId: {type: Number, default: 0},
 
       // errors in the group title:
-      groupTitleErrors: [],
+      groupTitleErrors: {
+        type: Array,
+        default: function () {
+          return [];
+        }
+      },
 
       // which custom fields to show
-      customFields: {},
+      customFields: {
+        type: Object,
+        default: function () {
+          return {};
+        }
+      },
 
       // group ID + title once submitted:
-      returnedGroupId: 0,
-      returnedGroupTitle: '',
+      returnedGroupId: {type: Number, default: 0},
+      returnedGroupTitle: {type: String, default: ''},
 
       // date and time of the transaction,
-      date: '',
-      originalDate: '',
+      date: {type: String, default: ''},
+      originalDate: {type: String, default: ''},
 
       // things the process is done working on (3 phases):
-      submittedTransaction: false,
+      submittedTransaction: {type: Boolean, default: false},
       // submittedLinks: false,
-      submittedAttachments: -1, // -1 = no attachments, 0 = uploading, 1 = uploaded
-      inError: false,
+      submittedAttachments: {type: Number, default: -1}, // -1 = no attachments, 0 = uploading, 1 = uploaded
+      inError: {type: Boolean, default: false},
 
       // number of uploaded attachments
       // its an object because we count per transaction journal (which can have multiple attachments)
       // and array doesn't work right.
-      submittedAttCount: {},
+      submittedAttCount: {
+        type: Object,
+        default: function () {
+          return {};
+        }
+      },
 
       // meta data for accounts
-      allowedOpposingTypes: {},
-      destinationAllowedTypes: [],
-      sourceAllowedTypes: [],
+      allowedOpposingTypes: {
+        type: Object,
+        default: function () {
+          return {};
+        }
+      },
+      destinationAllowedTypes: {
+        type: Array,
+        default: function () {
+          return [];
+        }
+      },
+      sourceAllowedTypes: {
+        type: Array,
+        default: function () {
+          return [];
+        }
+      },
 
       // states for the form (makes sense right)
       enableSubmit: true,
@@ -195,16 +241,17 @@ export default {
   methods: {
     ...mapMutations('transactions/create', ['updateField',]),
     /**
-     * Grap transaction group from URL and submit GET.
+     * Grab transaction group from URL and submit GET.
      */
     getTransactionGroup: function () {
+      // console.log('getTransactionGroup');
       axios.get('./api/v1/transactions/' + this.groupId)
           .then(response => {
                   this.parseTransactionGroup(response.data);
                 }
           ).catch(error => {
-        console.log('I failed :(');
-        console.log(error);
+        //console.log('I failed :(');
+        //console.log(error);
       });
     },
     /**
@@ -219,12 +266,16 @@ export default {
       this.groupTitle = attributes.group_title;
       this.originalGroupTitle = attributes.group_title;
 
+      this.transactions = [];
+      this.originalTransactions = [];
+
+
       //this.returnedGroupId = parseInt(response.data.id);
       this.returnedGroupTitle = null === this.originalGroupTitle ? response.data.attributes.transactions[0].description : this.originalGroupTitle;
 
-
       for (let i in transactions) {
         if (transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          console.log('Parsing transaction nr ' + i);
           let result = this.parseTransaction(parseInt(i), transactions[i]);
           this.transactions.push(result);
           this.originalTransactions.push(lodashClonedeep(result));
@@ -431,16 +482,30 @@ export default {
 
     },
     removeTransaction: function (payload) {
-      //console.log('removeTransaction()');
-      //console.log(payload);
-      //console.log('length: ' + this.transactions.length);
-      this.transactions.splice(payload.index, 1);
-      //console.log('length: ' + this.transactions.length);
+      // console.log('removeTransaction()');
+      // console.log('length      : ' + this.transactions.length);
+      // console.log('Remove index: ' + payload.index);
 
+      let index = 0;
+      for (let i in this.transactions) {
+        if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          console.log('Now at index: ' + i);
+          if (index === payload.index) {
+            console.log('Delete!');
+            this.transactions.splice(index, 1);
+            //console.log(delete this.transactions[i]);
+          }
+          index++;
+        }
+      }
+      $('#transactionTabs li:first-child a').tab('show');
 
-      //this.originalTransactions.splice(payload.index, 1);
+      // this.transactions.splice(payload.index, 1);
+      // console.log('length: ' + this.transactions.length);
+
+      // this.originalTransactions.splice(payload.index, 1);
       // this kills the original transactions.
-      this.originalTransactions = [];
+      //this.originalTransactions = [];
     },
     storeGroupTitle: function (payload) {
       this.groupTitle = payload;
@@ -466,6 +531,7 @@ export default {
     },
     submitTransaction: function (event) {
       event.preventDefault();
+      this.enableSubmit = false;
       let submission = {transactions: []};
 
       // parse data to see if we should submit anything at all:
@@ -662,9 +728,10 @@ export default {
       return this.deleteAllOriginalLinks().then(() => this.submitNewLinks());
     },
     submitAttachments: function (shouldSubmit, response) {
-      //console.log('submitAttachments');
+      console.log('submitAttachments');
       if (!shouldSubmit) {
-        //console.log('no need!');
+        console.log('no need!');
+        this.submittedAttachments = 1;
         return new Promise((resolve) => {
           resolve({});
         });
@@ -697,17 +764,20 @@ export default {
       }
     },
     finaliseSubmission: function () {
-      //console.log('finaliseSubmission');
+      // console.log('finaliseSubmission (' + this.submittedAttachments + ')');
       if (0 === this.submittedAttachments) {
         return;
       }
-      //console.log('continue (' + this.submittedAttachments + ')');
+      // console.log('continue (' + this.submittedAttachments + ')');
+      // console.log(this.stayHere);
+      // console.log(this.inError);
       if (true === this.stayHere && false === this.inError) {
         //console.log('no error + no changes + no redirect');
         // show message:
         this.errorMessage = '';
         this.warningMessage = '';
         this.successMessage = this.$t('firefly.transaction_updated_link', {ID: this.groupId, title: this.returnedGroupTitle});
+
       }
       // no error + changes + redirect
       if (false === this.stayHere && false === this.inError) {
@@ -843,23 +913,23 @@ export default {
       }
       return JSON.stringify(compare);
     },
-    uploadAttachments: function (result) {
-      //console.log('TODO, upload attachments.');
-      if (0 === Object.keys(result).length) {
-
-        for (let i in this.transactions) {
-          if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-
-            //console.log('updateField(' + i + ', transaction_journal_id, ' + result[i].transaction_journal_id + ')');
-            this.updateField({index: i, field: 'transaction_journal_id', value: result[i].transaction_journal_id});
-          }
-        }
-        //console.log('Transactions not changed, use original objects.');
-      } else {
-        //console.log('Transactions changed!');
-      }
-      this.submittedAttachments = true;
-    },
+    // uploadAttachments: function (result) {
+    //   //console.log('TODO, upload attachments.');
+    //   if (0 === Object.keys(result).length) {
+    //
+    //     for (let i in this.transactions) {
+    //       if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+    //
+    //         //console.log('updateField(' + i + ', transaction_journal_id, ' + result[i].transaction_journal_id + ')');
+    //         this.updateField({index: i, field: 'transaction_journal_id', value: result[i].transaction_journal_id});
+    //       }
+    //     }
+    //     //console.log('Transactions not changed, use original objects.');
+    //   } else {
+    //     //console.log('Transactions changed!');
+    //   }
+    //   this.submittedAttachments = 0;
+    // },
 
     parseErrors: function (errors) {
       for (let i in this.transactions) {

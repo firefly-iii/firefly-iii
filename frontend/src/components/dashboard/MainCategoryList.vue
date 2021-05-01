@@ -42,7 +42,7 @@
         <thead>
         <tr>
           <th scope="col">{{ $t('firefly.category') }}</th>
-          <th scope="col">{{ $t('firefly.spent') }}</th>
+          <th scope="col">{{ $t('firefly.spent') }} / {{ $t('firefly.earned') }}</th>
         </tr>
         </thead>
         <tbody>

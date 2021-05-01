@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## 5.5.10 - 2021-05-01
+
+### Changed
+- [Issue 4708](https://github.com/firefly-iii/firefly-iii/issues/4708) When searching for the external ID, Firefly III will now only return the exact match.
+
+### Fixed
+- [Issue 4545](https://github.com/firefly-iii/firefly-iii/issues/4545) Rare but annoying issue with PostgreSQL increments will be repaired during image boot time. Thanks @jaylenw!
+- [Issue 4710](https://github.com/firefly-iii/firefly-iii/issues/4710) Some rule actions could not handle liabilities.
+- [Issue 4715](https://github.com/firefly-iii/firefly-iii/issues/4715) Fixed some titles.
+- [Issue 4720](https://github.com/firefly-iii/firefly-iii/issues/4720) Could not remove a split in the new layout.
+
 ## 5.5.9 (API 1.5.2) 2021-04-24
 
 This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.
