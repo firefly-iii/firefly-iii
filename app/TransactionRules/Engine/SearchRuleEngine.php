@@ -145,6 +145,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function setRules(Collection $rules): void
     {
+
         Log::debug(__METHOD__);
         foreach ($rules as $rule) {
             if ($rule instanceof Rule) {
@@ -227,8 +228,16 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
         $searchArray = [];
+
+        /** @var Collection $triggers */
+        $triggers = $rule->ruleTriggers;
+
         /** @var RuleTrigger $ruleTrigger */
-        foreach ($rule->ruleTriggers()->where('active', 1)->get() as $ruleTrigger) {
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
+
             // if needs no context, value is different:
             $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
@@ -240,6 +249,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
         }
+
 
         // add local operators:
         foreach ($this->operators as $operator) {
