@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Ini bukan IBAN yang valid.',
     'zero_or_more'                   => 'Nilai tidak bisa negatif.',
-    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
+    'date_or_time'                   => 'Nilainya harus berupa nilai tanggal atau waktu yang valid (ISO 8601).',
     'source_equals_destination'      => 'Akun sumber sama dengan akun tujuan.',
     'unique_account_number_for_user' => 'Sepertinya nomor rekening ini sudah digunakan.',
     'unique_iban_for_user'           => 'Sepertinya nomor rekening ini sudah digunakan.',
@@ -33,7 +33,7 @@ return [
     'rule_trigger_value'             => 'Nilai ini tidak validi untuk trigger yang dipilih.',
     'rule_action_value'              => 'Nilai ini tidak valid untuk tindakan yang dipilih.',
     'file_already_attached'          => 'Upload file ";name" sudah terpasang pada objek ini.',
-    'file_attached'                  => 'Successfully uploaded file ":name".',
+    'file_attached'                  => 'Berhasil mengunggah file ": name".',
     'must_exist'                     => 'ID di bidang :attribute tidak ada di database.',
     'all_accounts_equal'             => 'Semua akun di bidang ini harus sama.',
     'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',

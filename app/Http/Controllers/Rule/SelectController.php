@@ -158,6 +158,7 @@ class SelectController extends Controller
         $rule->ruleTriggers = $triggers;
 
         // create new rule engine:
+        /** @var RuleEngineInterface $newRuleEngine */
         $newRuleEngine = app(RuleEngineInterface::class);
 
         // set rules:

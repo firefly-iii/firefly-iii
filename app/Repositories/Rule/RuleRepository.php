@@ -211,8 +211,8 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $collection = $this->user->rules()
                                  ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-                                 ->where('rules.active', 1)
-                                 ->where('rule_groups.active', 1)
+                                 ->where('rules.active', true)
+                                 ->where('rule_groups.active', true)
                                  ->orderBy('rule_groups.order', 'ASC')
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')
@@ -238,8 +238,8 @@ class RuleRepository implements RuleRepositoryInterface
     {
         $collection = $this->user->rules()
                                  ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
-                                 ->where('rules.active', 1)
-                                 ->where('rule_groups.active', 1)
+                                 ->where('rules.active', true)
+                                 ->where('rule_groups.active', true)
                                  ->orderBy('rule_groups.order', 'ASC')
                                  ->orderBy('rules.order', 'ASC')
                                  ->orderBy('rules.id', 'ASC')

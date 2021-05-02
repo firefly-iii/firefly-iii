@@ -40,7 +40,7 @@ return [
     'date_time_js'            => 'MMMM Do, YYYY, @ HH:mm:ss',
     'specific_day_js'         => 'D MMMM YYYY',
     'week_in_year_js'         => '[Tuần] w, YYYY',
-    'week_in_year_fns'        => "'Week' w, yyyy",
+    'week_in_year_fns'        => "'Tuần' w, yyyy",
     'year_js'                 => 'YYYY',
     'half_year_js'            => 'Q YYYY',
     'quarter_fns'             => "'Q'Q, yyyy",

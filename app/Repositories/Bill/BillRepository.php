@@ -166,7 +166,7 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills(): Collection
     {
         return $this->user->bills()
-                          ->where('active', 1)
+                          ->where('active', true)
                           ->orderBy('bills.name', 'ASC')
                           ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
     }

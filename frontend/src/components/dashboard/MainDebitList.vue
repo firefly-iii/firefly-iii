@@ -41,7 +41,7 @@
         <caption style="display:none;">{{ $t('firefly.expense_accounts') }}</caption>
         <thead>
         <tr>
-          <th scope="col">{{ $t('firefly.category') }}</th>
+          <th scope="col">{{ $t('firefly.account') }}</th>
           <th scope="col">{{ $t('firefly.spent') }}</th>
         </tr>
         </thead>

@@ -1683,16 +1683,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.38.0",
+            "version": "v8.40.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "26a73532c54d2c090692bf2e3e64e449669053ba"
+                "reference": "a654897ad7f97aea9d7ef292803939798c4a02a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/26a73532c54d2c090692bf2e3e64e449669053ba",
-                "reference": "26a73532c54d2c090692bf2e3e64e449669053ba",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a654897ad7f97aea9d7ef292803939798c4a02a4",
+                "reference": "a654897ad7f97aea9d7ef292803939798c4a02a4",
                 "shasum": ""
             },
             "require": {
@@ -1847,7 +1847,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-04-20T13:50:21+00:00"
+            "time": "2021-04-28T14:38:56+00:00"
         },
         {
             "name": "laravel/passport",
@@ -1928,16 +1928,16 @@
         },
         {
             "name": "laravel/ui",
-            "version": "v3.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/ui.git",
-                "reference": "a1f82c6283c8373ea1958b8a27c3d5c98cade351"
+                "reference": "e2478cd0342a92ec1c8c77422553bda8ee004fd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/ui/zipball/a1f82c6283c8373ea1958b8a27c3d5c98cade351",
-                "reference": "a1f82c6283c8373ea1958b8a27c3d5c98cade351",
+                "url": "https://api.github.com/repos/laravel/ui/zipball/e2478cd0342a92ec1c8c77422553bda8ee004fd0",
+                "reference": "e2478cd0342a92ec1c8c77422553bda8ee004fd0",
                 "shasum": ""
             },
             "require": {
@@ -1979,10 +1979,9 @@
                 "ui"
             ],
             "support": {
-                "issues": "https://github.com/laravel/ui/issues",
-                "source": "https://github.com/laravel/ui/tree/v3.2.0"
+                "source": "https://github.com/laravel/ui/tree/v3.2.1"
             },
-            "time": "2021-01-06T19:20:22+00:00"
+            "time": "2021-04-27T18:17:41+00:00"
         },
         {
             "name": "laravelcollective/html",
@@ -7354,20 +7353,21 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.0.12",
+            "version": "2.0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "6c12ce263da71641903e399c3ce8ecb08fd375fb"
+                "reference": "986e8b86b7b570632ad0a905c3726c33dd4c0efb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/6c12ce263da71641903e399c3ce8ecb08fd375fb",
-                "reference": "6c12ce263da71641903e399c3ce8ecb08fd375fb",
+                "url": "https://api.github.com/repos/composer/composer/zipball/986e8b86b7b570632ad0a905c3726c33dd4c0efb",
+                "reference": "986e8b86b7b570632ad0a905c3726c33dd4c0efb",
                 "shasum": ""
             },
             "require": {
                 "composer/ca-bundle": "^1.0",
+                "composer/metadata-minifier": "^1.0",
                 "composer/semver": "^3.0",
                 "composer/spdx-licenses": "^1.2",
                 "composer/xdebug-handler": "^1.1",
@@ -7431,7 +7431,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.0.12"
+                "source": "https://github.com/composer/composer/tree/2.0.13"
             },
             "funding": [
                 {
@@ -7447,7 +7447,76 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-01T08:14:59+00:00"
+            "time": "2021-04-27T11:11:08+00:00"
+        },
+        {
+            "name": "composer/metadata-minifier",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/metadata-minifier.git",
+                "reference": "c549d23829536f0d0e984aaabbf02af91f443207"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/metadata-minifier/zipball/c549d23829536f0d0e984aaabbf02af91f443207",
+                "reference": "c549d23829536f0d0e984aaabbf02af91f443207",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "composer/composer": "^2",
+                "phpstan/phpstan": "^0.12.55",
+                "symfony/phpunit-bridge": "^4.2 || ^5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\MetadataMinifier\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Small utility library that handles metadata minification and expansion.",
+            "keywords": [
+                "composer",
+                "compression"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/metadata-minifier/issues",
+                "source": "https://github.com/composer/metadata-minifier/tree/1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-04-07T13:37:33+00:00"
         },
         {
             "name": "composer/semver",
@@ -8329,16 +8398,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "v0.7.4",
+            "version": "v0.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "0ceef2a39b45be9d7f7dd96192a1721ba5112278"
+                "reference": "ba865c6683552608bc2360a459925abeda45a4cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/0ceef2a39b45be9d7f7dd96192a1721ba5112278",
-                "reference": "0ceef2a39b45be9d7f7dd96192a1721ba5112278",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/ba865c6683552608bc2360a459925abeda45a4cc",
+                "reference": "ba865c6683552608bc2360a459925abeda45a4cc",
                 "shasum": ""
             },
             "require": {
@@ -8402,7 +8471,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nunomaduro/larastan/issues",
-                "source": "https://github.com/nunomaduro/larastan/tree/v0.7.4"
+                "source": "https://github.com/nunomaduro/larastan/tree/v0.7.5"
             },
             "funding": [
                 {
@@ -8422,7 +8491,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-04-16T08:25:31+00:00"
+            "time": "2021-04-29T14:43:35+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -8762,16 +8831,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.84",
+            "version": "0.12.85",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "9c43f15da8798c8f30a4b099e6a94530a558cfd5"
+                "reference": "20e6333c0067875ad7697cd8acdf245c6ef69d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9c43f15da8798c8f30a4b099e6a94530a558cfd5",
-                "reference": "9c43f15da8798c8f30a4b099e6a94530a558cfd5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/20e6333c0067875ad7697cd8acdf245c6ef69d03",
+                "reference": "20e6333c0067875ad7697cd8acdf245c6ef69d03",
                 "shasum": ""
             },
             "require": {
@@ -8802,7 +8871,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.84"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.85"
             },
             "funding": [
                 {
@@ -8818,7 +8887,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-19T17:10:54+00:00"
+            "time": "2021-04-27T14:13:16+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -9348,12 +9417,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3c97c13698c448fdbbda20acb871884a2d8f45b1"
+                "reference": "2da463d475b13cf8c519d862f1a6423ab7a515e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3c97c13698c448fdbbda20acb871884a2d8f45b1",
-                "reference": "3c97c13698c448fdbbda20acb871884a2d8f45b1",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/2da463d475b13cf8c519d862f1a6423ab7a515e3",
+                "reference": "2da463d475b13cf8c519d862f1a6423ab7a515e3",
                 "shasum": ""
             },
             "conflict": {
@@ -9370,6 +9439,7 @@
                 "barrelstrength/sprout-base-email": "<1.2.7",
                 "barrelstrength/sprout-forms": "<3.9",
                 "baserproject/basercms": ">=4,<=4.3.6|>=4.4,<4.4.1",
+                "bk2k/bootstrap-package": ">=7.1,<7.1.2|>=8,<8.0.8|>=9,<9.0.4|>=9.1,<9.1.3|>=10,<10.0.10|>=11,<11.0.3",
                 "bolt/bolt": "<3.7.1",
                 "bolt/core": "<4.1.13",
                 "brightlocal/phpwhois": "<=4.2.5",
@@ -9381,7 +9451,7 @@
                 "centreon/centreon": "<18.10.8|>=19,<19.4.5",
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "codeigniter/framework": "<=3.0.6",
-                "composer/composer": "<=1-alpha.11",
+                "composer/composer": "<1.10.22|>=2-alpha.1,<2.0.13",
                 "contao-components/mediaelement": ">=2.14.2,<2.21.1",
                 "contao/core": ">=2,<3.5.39",
                 "contao/core-bundle": ">=4,<4.4.52|>=4.5,<4.9.6|= 4.10.0",
@@ -9433,7 +9503,7 @@
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "fuel/core": "<1.8.1",
                 "getgrav/grav": "<1.7.11",
-                "getkirby/cms": ">=3,<3.4.5",
+                "getkirby/cms": "<3.5.4",
                 "getkirby/panel": "<2.5.14",
                 "gos/web-socket-bundle": "<1.10.4|>=2,<2.6.1|>=3,<3.3",
                 "gree/jose": "<=2.2",
@@ -9441,7 +9511,7 @@
                 "guzzlehttp/guzzle": ">=4-rc.2,<4.2.4|>=5,<5.3.1|>=6,<6.2.1",
                 "illuminate/auth": ">=4,<4.0.99|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.10",
                 "illuminate/cookie": ">=4,<=4.0.11|>=4.1,<=4.1.99999|>=4.2,<=4.2.99999|>=5,<=5.0.99999|>=5.1,<=5.1.99999|>=5.2,<=5.2.99999|>=5.3,<=5.3.99999|>=5.4,<=5.4.99999|>=5.5,<=5.5.49|>=5.6,<=5.6.99999|>=5.7,<=5.7.99999|>=5.8,<=5.8.99999|>=6,<6.18.31|>=7,<7.22.4",
-                "illuminate/database": "<6.20.14|>=7,<7.30.4|>=8,<8.24",
+                "illuminate/database": "<6.20.26|>=7,<8.40",
                 "illuminate/encryption": ">=4,<=4.0.11|>=4.1,<=4.1.31|>=4.2,<=4.2.22|>=5,<=5.0.35|>=5.1,<=5.1.46|>=5.2,<=5.2.45|>=5.3,<=5.3.31|>=5.4,<=5.4.36|>=5.5,<5.5.40|>=5.6,<5.6.15",
                 "illuminate/view": ">=7,<7.1.2",
                 "impresscms/impresscms": "<=1.4.2",
@@ -9454,7 +9524,7 @@
                 "kitodo/presentation": "<3.1.2",
                 "kreait/firebase-php": ">=3.2,<3.8.1",
                 "la-haute-societe/tcpdf": "<6.2.22",
-                "laravel/framework": "<6.20.14|>=7,<7.30.4|>=8,<8.24",
+                "laravel/framework": "<6.20.26|>=7,<8.40",
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "league/commonmark": "<0.18.3",
                 "librenms/librenms": "<1.53",
@@ -9493,7 +9563,7 @@
                 "paragonie/random_compat": "<2",
                 "passbolt/passbolt_api": "<2.11",
                 "paypal/merchant-sdk-php": "<3.12",
-                "pear/archive_tar": "<1.4.13",
+                "pear/archive_tar": "<1.4.12",
                 "personnummer/personnummer": "<3.0.2",
                 "phpfastcache/phpfastcache": ">=5,<5.0.13",
                 "phpmailer/phpmailer": "<6.1.6",
@@ -9521,6 +9591,7 @@
                 "pusher/pusher-php-server": "<2.2.1",
                 "pwweb/laravel-core": "<=0.3.6-beta",
                 "rainlab/debugbar-plugin": "<3.1",
+                "rmccue/requests": ">=1.6,<1.8",
                 "robrichards/xmlseclibs": "<3.0.4",
                 "sabberworm/php-css-parser": ">=1,<1.0.1|>=2,<2.0.1|>=3,<3.0.1|>=4,<4.0.1|>=5,<5.0.9|>=5.1,<5.1.3|>=5.2,<5.2.1|>=6,<6.0.2|>=7,<7.0.4|>=8,<8.0.1|>=8.1,<8.1.1|>=8.2,<8.2.1|>=8.3,<8.3.1",
                 "sabre/dav": ">=1.6,<1.6.99|>=1.7,<1.7.11|>=1.8,<1.8.9",
@@ -9628,6 +9699,7 @@
                 "yiisoft/yii2-jui": "<2.0.4",
                 "yiisoft/yii2-redis": "<2.0.8",
                 "yourls/yourls": "<1.7.4",
+                "zendesk/zendesk_api_client_php": "<2.2.11",
                 "zendframework/zend-cache": ">=2.4,<2.4.8|>=2.5,<2.5.3",
                 "zendframework/zend-captcha": ">=2,<2.4.9|>=2.5,<2.5.2",
                 "zendframework/zend-crypt": ">=2,<2.4.9|>=2.5,<2.5.2",
@@ -9686,7 +9758,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-04-22T17:19:04+00:00"
+            "time": "2021-04-30T18:08:49+00:00"
         },
         {
             "name": "sebastian/cli-parser",

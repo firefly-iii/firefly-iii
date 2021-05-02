@@ -33,9 +33,6 @@
       <div v-if="error" class="text-center">
         <i class="fas fa-exclamation-triangle text-danger"></i>
       </div>
-      <div v-if="timezoneDifference" class="text-muted small">
-        {{ $t('firefly.timezone_difference', {local: localTimeZone, system: systemTimeZone}) }}
-      </div>
     </div>
     <div class="card-footer">
       <a class="btn btn-default button-sm" href="./accounts/asset"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
@@ -66,24 +63,16 @@ export default {
       dataCollection: {},
       chartOptions: {},
       _chart: null,
-      localTimeZone: '',
-      systemTimeZone: '',
     }
   },
   created() {
     this.chartOptions = DefaultLineOptions.methods.getDefaultOptions();
-    this.localTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    this.systemTimeZone = this.timezone;
     this.ready = true;
   },
   computed: {
     ...mapGetters('dashboard/index', ['start', 'end']),
-    ...mapGetters('root', ['timezone']),
     'datesReady': function () {
       return null !== this.start && null !== this.end && this.ready;
-    },
-    timezoneDifference: function () {
-      return this.localTimeZone !== this.systemTimeZone;
     }
   },
   watch: {

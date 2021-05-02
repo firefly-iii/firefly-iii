@@ -130,6 +130,11 @@ class UpgradeDatabase extends Command
         $result = Artisan::output();
         echo $result;
 
+        $this->line('Fix PostgreSQL sequences.');
+        Artisan::call('firefly-iii:fix-pgsql-sequences');
+        $result = Artisan::output();
+        echo $result;
+
         $this->line('Now decrypting the database (if necessary)...');
         Artisan::call('firefly-iii:decrypt-all');
         $result = Artisan::output();
