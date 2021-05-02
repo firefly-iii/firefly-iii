@@ -81,9 +81,14 @@ class UpdatedGroupEventHandler
      */
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        Log::debug('UpdatedGroupEventHandler:triggerWebhooks');
+        Log::debug(__METHOD__);
         $group = $updatedGroupEvent->transactionGroup;
-        $user  = $group->user;
+        if (false === $updatedGroupEvent->fireWebhooks) {
+            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+
+            return;
+        }
+        $user = $group->user;
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
