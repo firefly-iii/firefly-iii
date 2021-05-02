@@ -80,7 +80,9 @@ class UpdateController extends Controller
         $manager          = $this->getManager();
 
         app('preferences')->mark();
-        event(new UpdatedTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
+        $applyRules = $data['apply_rules'] ?? true;
+        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
         /** @var User $admin */
         $admin = auth()->user();
