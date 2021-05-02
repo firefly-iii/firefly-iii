@@ -1332,6 +1332,7 @@ return [
     'liability_direction_debit'                 => 'I owe this debt to somebody else',
     'liability_direction_credit_short'          => 'Owed this debt',
     'liability_direction_debit_short'           => 'Owe this debt',
+    'liability_direction__short'                => 'Unknown',
     'Liability credit'                          => 'Liability credit',
     'budgets'                                   => 'Budgets',
     'tags'                                      => 'Tags',
