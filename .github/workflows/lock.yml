@@ -13,3 +13,7 @@ jobs:
         with:
           github-token: ${{ github.token }}
           issue-lock-inactive-days: '90'
+          issue-lock-comment: >
+            This issue has been automatically locked since there
+            has not been any recent activity after it was closed.
+            Please open a new issue for related bugs.
