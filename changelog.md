@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.11 - 2021-05-xx
+
+⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
+
+
+
 
 ## 5.5.10 - 2021-05-01
 
