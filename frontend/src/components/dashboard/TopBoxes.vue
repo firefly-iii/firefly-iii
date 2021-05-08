@@ -20,7 +20,7 @@
 
 <template>
   <div class="row">
-    <div class="col" v-if="0 !== prefCurrencyBalances.length && 0 !== notPrefCurrencyBalances.length">
+    <div class="col" v-if="0 !== prefCurrencyBalances.length || 0 !== notPrefCurrencyBalances.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
 
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <div class="col" v-if="0!==prefBillsUnpaid.length && 0 !== notPrefBillsUnpaid.length">
+    <div class="col" v-if="0!==prefBillsUnpaid.length || 0 !== notPrefBillsUnpaid.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
 
@@ -70,7 +70,7 @@
       </div>
     </div>
     <!-- left to spend -->
-    <div class="col" v-if="0 !== prefLeftToSpend.length && 0 !== notPrefLeftToSpend.length">
+    <div class="col" v-if="0 !== prefLeftToSpend.length || 0 !== notPrefLeftToSpend.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 
@@ -97,7 +97,7 @@
     </div>
 
     <!-- net worth -->
-    <div class="col" v-if="0 !== notPrefNetWorth.length && 0 !== prefNetWorth.length">
+    <div class="col" v-if="0 !== notPrefNetWorth.length || 0 !== prefNetWorth.length">
       <div class="info-box">
         <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
 

@@ -259,7 +259,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
-        $query->where('active', 1);
+        $query->where('active', true);
         $query->orderBy('accounts.account_type_id', 'ASC');
         $query->orderBy('accounts.order', 'ASC');
         $query->orderBy('accounts.name', 'ASC');
@@ -640,7 +640,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
-                              ->where('active', 1)
+                              ->where('active', true)
                               ->orderBy('accounts.order', 'ASC')
                               ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')
@@ -669,7 +669,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $dbQuery = $this->user->accounts()->distinct()
                               ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-                              ->where('accounts.active', 1)
+                              ->where('accounts.active', true)
                               ->orderBy('accounts.order', 'ASC')
                               ->orderBy('accounts.account_type_id', 'ASC')
                               ->orderBy('accounts.name', 'ASC')

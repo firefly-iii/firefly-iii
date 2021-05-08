@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.11 - 2021-05-08
+
+⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
+
+### Fixed
+- [Issue 4707](https://github.com/firefly-iii/firefly-iii/issues/4707) [issue 4732](https://github.com/firefly-iii/firefly-iii/issues/4732) Rule tests were broken, and matching transactions were not visible.
+- [Issue 4729](https://github.com/firefly-iii/firefly-iii/issues/4729) Top boxes were no longer visible.
+- [Issue 4730](https://github.com/firefly-iii/firefly-iii/issues/4730) Second split transaction had today's date
+- [Issue 4734](https://github.com/firefly-iii/firefly-iii/issues/4734) Potential fixes for PostgreSQL and PHP 7.4.18.
+- [Issue 4739](https://github.com/firefly-iii/firefly-iii/issues/4739) Was not possible to change liability type.
 
 ## 5.5.10 - 2021-05-01
 

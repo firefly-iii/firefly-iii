@@ -261,6 +261,12 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $collector->setSourceAccounts($opposing);
             }
         }
+        if(TransactionType::TRANSFER === $type) {
+            // supports only accounts, not opposing.
+            if(null !== $accounts) {
+                $collector->setAccounts($accounts);
+            }
+        }
 
         if (null !== $currency) {
             $collector->setCurrency($currency);

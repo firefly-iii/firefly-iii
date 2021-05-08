@@ -61,7 +61,7 @@ trait RuleManagement
                     ],
                     [
                         'type'            => 'from_account_is',
-                        'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
+                        'value'           => (string)trans('firefly.default_rule_trigger_source_account'),
                         'stop_processing' => false,
 
                     ],
