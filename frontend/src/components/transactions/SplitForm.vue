@@ -372,7 +372,7 @@ export default {
 
   },
   created() {
-    console.log('SplitForm(' + this.index + ')');
+    // console.log('SplitForm(' + this.index + ')');
   },
   methods: {
     removeTransaction: function () {
