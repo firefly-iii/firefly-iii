@@ -53,10 +53,10 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                {% if config('firefly.login_provider') == 'eloquent' %}
+                {% if config('firefly.authentication_guard') == 'web' %}
                     <input type="email" autocomplete="email" name="email" value="{% if not IS_DEMO_SITE %}{{ email }}{% else %}{{ DEMO_USERNAME }}{% endif %}" class="form-control" placeholder="{{ trans('form.email') }}"/>
                 {% else %}
-                    <input type="text" autocomplete="username" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
+                    <input type="text" autocomplete="username" name="{{ usernameField }}" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
                 {% endif %}
             </div>
             <div class="form-group has-feedback">
