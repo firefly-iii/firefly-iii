@@ -339,7 +339,11 @@ class GroupCollector implements GroupCollectorInterface
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
         if (0 !== count($journalIds)) {
-            $this->query->whereIn('transaction_journals.id', $journalIds);
+            // make all integers.
+            $integerIDs = array_map('intval', $journalIds);
+
+
+            $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
 
         return $this;
