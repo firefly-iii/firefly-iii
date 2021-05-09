@@ -57,6 +57,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    private string $username;
+
     /**
      * Create a new controller instance.
      *
@@ -65,6 +67,7 @@ class LoginController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->username = 'email';
         $this->middleware('guest')->except('logout');
     }
 
@@ -81,24 +84,27 @@ class LoginController extends Controller
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         Log::info(sprintf('User is trying to login.'));
-        if ('ldap' === config('auth.providers.users.driver')) {
-            /** @var Adldap\Connections\Provider $provider */
-            Adldap::getProvider('default'); // @phpstan-ignore-line
+
+        // switch to LDAP
+        if ('ldap' === config('auth.defaults.guard')) {
+            Log::debug('User wishes to login using LDAP.');
+            $this->username = config('firefly.ldap_auth_field');
         }
 
         $this->validateLogin($request);
+        Log::debug('Login data is valid.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if (method_exists($this, 'hasTooManyLoginAttempts') && $this->hasTooManyLoginAttempts($request)) {
-            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
+            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
             $this->sendLockoutResponse($request);
         }
-
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
@@ -108,6 +114,7 @@ class LoginController extends Controller
 
             return $this->sendLoginResponse($request);
         }
+        Log::warning('Login attempt failed.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -190,7 +197,13 @@ class LoginController extends Controller
         $loginProvider = config('firefly.login_provider');
         $title         = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
-            return redirect(route('register')); 
+            return redirect(route('register'));
+        }
+
+        // switch to LDAP
+        if ('ldap' === config('auth.defaults.guard')) {
+            Log::debug('User wishes to login using LDAP.');
+            $this->username = config('firefly.ldap_auth_field');
         }
 
         // is allowed to?
@@ -215,8 +228,18 @@ class LoginController extends Controller
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
             request()->cookies->set($cookieName, 'invalid');
         }
+        $usernameField = $this->username();
 
-        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
+        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
     }
 
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return $this->username;
+    }
 }
