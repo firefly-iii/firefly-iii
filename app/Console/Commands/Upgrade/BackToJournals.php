@@ -64,7 +64,7 @@ class BackToJournals extends Command
             $this->error('Please run firefly-iii:migrate-to-groups first.');
         }
         if ($this->isExecuted() && true !== $this->option('force')) {
-            $this->info('This command has already been executed.');
+            $this->warn('This command has already been executed.');
 
             return 0;
         }

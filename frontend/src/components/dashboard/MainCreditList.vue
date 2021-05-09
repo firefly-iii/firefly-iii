@@ -41,8 +41,8 @@
         <caption style="display:none;">{{ $t('firefly.revenue_accounts') }}</caption>
         <thead>
         <tr>
-          <th scope="col">{{ $t('firefly.category') }}</th>
-          <th scope="col">{{ $t('firefly.spent') }}</th>
+          <th scope="col">{{ $t('firefly.account') }}</th>
+          <th scope="col">{{ $t('firefly.earned') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -51,7 +51,7 @@
           <td class="align-middle">
             <div v-if="entry.pct > 0" class="progress">
               <div :aria-valuenow="entry.pct" :style="{ width: entry.pct  + '%'}" aria-valuemax="100"
-                   aria-valuemin="0" class="progress-bar progress-bar-striped bg-success"
+                   aria-valuemin="0" class="progress-bar bg-success"
                    role="progressbar">
                 <span v-if="entry.pct > 20">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: entry.currency_code}).format(entry.difference_float) }}

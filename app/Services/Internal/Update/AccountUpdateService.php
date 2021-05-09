@@ -136,6 +136,15 @@ class AccountUpdateService
                 $account->account_type_id = $type->id;
             }
         }
+        // set liability, alternative method used in v1 layout:
+
+        if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
+            $type = AccountType::find((int)$data['account_type_id']);
+
+            if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
+                $account->account_type_id = $type->id;
+            }
+        }
 
         // update virtual balance (could be set to zero if empty string).
         if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {

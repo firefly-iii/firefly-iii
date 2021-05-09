@@ -58,7 +58,7 @@
           <td>
             <div class="progress-group">
               <div class="progress progress-sm">
-                <div v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}" class="progress-bar progress-bar-striped primary"></div>
+                <div v-if="piggy.attributes.pct < 100" :style="{'width': piggy.attributes.pct + '%'}" class="progress-bar primary"></div>
                 <div v-if="100 === piggy.attributes.pct" :style="{'width': piggy.attributes.pct + '%'}"
                      class="progress-bar progress-bar-striped bg-success"></div>
               </div>

@@ -46,7 +46,7 @@ class BudgetList implements BinderInterface
         if (auth()->check()) {
 
             if ('allBudgets' === $value) {
-                return auth()->user()->budgets()->where('active', 1)
+                return auth()->user()->budgets()->where('active', true)
                              ->orderBy('order', 'ASC')
                              ->orderBy('name', 'ASC')
                              ->get();
@@ -63,7 +63,7 @@ class BudgetList implements BinderInterface
 
             /** @var Collection $collection */
             $collection = auth()->user()->budgets()
-                                ->where('active', 1)
+                                ->where('active', true)
                                 ->whereIn('id', $list)
                                 ->get();
 

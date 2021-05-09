@@ -145,6 +145,7 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     public function setRules(Collection $rules): void
     {
+
         Log::debug(__METHOD__);
         foreach ($rules as $rule) {
             if ($rule instanceof Rule) {
@@ -227,8 +228,16 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
         $searchArray = [];
+
+        /** @var Collection $triggers */
+        $triggers = $rule->ruleTriggers;
+
         /** @var RuleTrigger $ruleTrigger */
-        foreach ($rule->ruleTriggers()->where('active', 1)->get() as $ruleTrigger) {
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
+
             // if needs no context, value is different:
             $needsContext = config(sprintf('firefly.search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
@@ -240,6 +249,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
         }
+
 
         // add local operators:
         foreach ($this->operators as $operator) {
@@ -373,7 +383,7 @@ class SearchRuleEngine implements RuleEngineInterface
     {
         Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
         /** @var RuleAction $ruleAction */
-        foreach ($rule->ruleActions()->where('active', 1)->get() as $ruleAction) {
+        foreach ($rule->ruleActions()->where('active', true)->get() as $ruleAction) {
             $break = $this->processRuleAction($ruleAction, $transaction);
             if (true === $break) {
                 break;
@@ -448,8 +458,15 @@ class SearchRuleEngine implements RuleEngineInterface
         // start a search query for individual each trigger:
         $total = new Collection;
         $count = 0;
+
+        /** @var Collection $triggers */
+        $triggers = $rule->ruleTriggers;
+
         /** @var RuleTrigger $ruleTrigger */
-        foreach ($rule->ruleTriggers()->where('active', 1)->get() as $ruleTrigger) {
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
             if ('user_action' === $ruleTrigger->trigger_type) {
                 Log::debug('Skip trigger type.');
                 continue;

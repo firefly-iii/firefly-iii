@@ -155,6 +155,7 @@
     ],
     "post-update-cmd": [
       "@php artisan cache:clear",
+      "@php artisan firefly-iii:fix-pgsql-sequences",
       "@php artisan firefly-iii:decrypt-all",
 
       "@php artisan firefly-iii:transaction-identifiers",

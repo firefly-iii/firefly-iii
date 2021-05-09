@@ -22,9 +22,10 @@
   <div v-if="transactions.length > 1" class="row">
     <div class="col">
       <!-- tabs -->
-      <ul class="nav nav-pills ml-auto p-2">
-        <li v-for="(transaction, index) in this.transactions" class="nav-item"><a :class="'nav-link' + (0===index ? ' active' : '')" :href="'#split_' + index"
-                                                                                  data-toggle="tab">
+      <ul class="nav nav-pills ml-auto p-2" id="transactionTabs">
+        <li v-for="(transaction, index) in this.transactions" class="nav-item"><a :class="'nav-link' + (0 === index ? ' active' : '')"
+                                                                                  :href="'#split_' + index"
+                                                                                  data-toggle="pill">
           <span v-if="'' !== transaction.description">{{ transaction.description }}</span>
           <span v-if="'' === transaction.description">Split {{ index + 1 }}</span>
         </a></li>
@@ -36,6 +37,18 @@
 <script>
 export default {
   name: "SplitPills",
-  props: ['transactions']
+  props: {
+    transactions: {
+      type: Array,
+      required: true,
+      default: function() {
+        return [];
+      }
+    },
+    count: {
+      type: Number,
+      required: true
+    },
+  }
 }
 </script>

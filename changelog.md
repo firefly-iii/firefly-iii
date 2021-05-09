@@ -2,6 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.11 - 2021-05-08
+
+⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
+
+### Fixed
+- [Issue 4707](https://github.com/firefly-iii/firefly-iii/issues/4707) [issue 4732](https://github.com/firefly-iii/firefly-iii/issues/4732) Rule tests were broken, and matching transactions were not visible.
+- [Issue 4729](https://github.com/firefly-iii/firefly-iii/issues/4729) Top boxes were no longer visible.
+- [Issue 4730](https://github.com/firefly-iii/firefly-iii/issues/4730) Second split transaction had today's date
+- [Issue 4734](https://github.com/firefly-iii/firefly-iii/issues/4734) Potential fixes for PostgreSQL and PHP 7.4.18.
+- [Issue 4739](https://github.com/firefly-iii/firefly-iii/issues/4739) Was not possible to change liability type.
+
+## 5.5.10 - 2021-05-01
+
+### Changed
+- [Issue 4708](https://github.com/firefly-iii/firefly-iii/issues/4708) When searching for the external ID, Firefly III will now only return the exact match.
+
+### Fixed
+- [Issue 4545](https://github.com/firefly-iii/firefly-iii/issues/4545) Rare but annoying issue with PostgreSQL increments will be repaired during image boot time. Thanks @jaylenw!
+- [Issue 4710](https://github.com/firefly-iii/firefly-iii/issues/4710) Some rule actions could not handle liabilities.
+- [Issue 4715](https://github.com/firefly-iii/firefly-iii/issues/4715) Fixed some titles.
+- [Issue 4720](https://github.com/firefly-iii/firefly-iii/issues/4720) Could not remove a split in the new layout.
+
 ## 5.5.9 (API 1.5.2) 2021-04-24
 
 This update fixes some of the more annoying issues in the new experimental v2 layout (see also [GitHub](https://github.com/firefly-iii/firefly-iii/issues/4618)), but some minor other issues as well.

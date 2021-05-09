@@ -27,7 +27,7 @@
     <td style="vertical-align: middle">
       <div class="progress progress active">
         <div :aria-valuenow="budgetLimit.pctGreen" :style="'width: '+ budgetLimit.pctGreen + '%;'"
-             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-success progress-bar-striped" role="progressbar">
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-success" role="progressbar">
                       <span v-if="budgetLimit.pctGreen > 35">
                         {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
                         <!--  -->
@@ -37,14 +37,14 @@
         </div>
 
         <div :aria-valuenow="budgetLimit.pctOrange" :style="'width: '+ budgetLimit.pctOrange + '%;'"
-             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-warning progress-bar-striped" role="progressbar">
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-warning" role="progressbar">
                     <span v-if="budgetLimit.pctRed <= 50 && budgetLimit.pctOrange > 35">
                       {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
                       </span>
         </div>
 
         <div :aria-valuenow="budgetLimit.pctRed" :style="'width: '+ budgetLimit.pctRed + '%;'"
-             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-danger progress-bar-striped" role="progressbar">
+             aria-valuemax="100" aria-valuemin="0" class="progress-bar bg-danger" role="progressbar">
                       <span v-if="budgetLimit.pctOrange <= 50 && budgetLimit.pctRed > 35" class="text-muted">
                         {{ $t('firefly.spent_x_of_y', {amount: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.spent), total: Intl.NumberFormat(locale, {style: 'currency', currency: budgetLimit.currency_code}).format(budgetLimit.amount)}) }}
                       </span>

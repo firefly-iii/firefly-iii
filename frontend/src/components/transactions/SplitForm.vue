@@ -19,7 +19,7 @@
   -->
 
 <template>
-  <div :id="'split_' + index" :class="'tab-pane' + (0===index ? ' active' : '')">
+  <div :id="'split_' + index" :class="'tab-pane' + (0 === index ? ' active' : '')">
     <div class="row">
       <div class="col">
         <div class="card">
@@ -32,6 +32,7 @@
               <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
+
           <div class="card-body">
             <!-- start of body -->
             <div class="row">
@@ -330,7 +331,7 @@ export default {
     },
     count: {
       type: Number,
-      required: false
+      required: true
     },
     customFields: {
       type: Object,
@@ -351,20 +352,27 @@ export default {
     sourceAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     }, // allowed source account types.
     destinationAllowedTypes: {
       type: Array,
       required: false,
-      default: []
+      default: function () {
+        return [];
+      }
     },
     // allow switch?
     allowSwitch: {
       type: Boolean,
       required: false,
-      default: true
+      default: false
     }
 
+  },
+  created() {
+    // console.log('SplitForm(' + this.index + ')');
   },
   methods: {
     removeTransaction: function () {
