@@ -157,7 +157,7 @@ class Installer
 
             return true;
         }
-        Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
+        //Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
 
         return false;
     }
@@ -183,7 +183,7 @@ class Installer
 
             return true;
         }
-        Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
+        //Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
 
         return false;
     }
