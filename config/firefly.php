@@ -121,9 +121,14 @@ return [
     'tracker_url'                  => env('TRACKER_URL', ''),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
+
+    // ldap and auth settings
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
+    'ldap_auth_field'              => env('LDAP_AUTH_FIELD', env('ADLDAP_AUTH_FIELD', 'distinguishedname')),
+
+    // other settings
     'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
