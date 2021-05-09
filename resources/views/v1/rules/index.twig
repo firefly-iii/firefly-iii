@@ -12,6 +12,12 @@
         </div>
     </div>
 
+    {% if ruleGroups|length == 1 and ruleGroups[0].rules.count() == 0 %}
+    {% include 'v1.partials.empty' with {objectType: 'default', type: 'rules',route: route('rules.create')} %}
+    {# make FF ignore demo for now. #}
+    {% set shownDemo = true %}
+    {% endif %}
+
     {% for ruleGroup in ruleGroups %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">

@@ -74,7 +74,6 @@ class IndexController extends Controller
     public function index()
     {
         $this->createDefaultRuleGroup();
-        $this->createDefaultRule();
         $this->ruleGroupRepos->resetOrder();
         $ruleGroups = $this->ruleGroupRepos->getAllRuleGroupsWithRules(null);
 

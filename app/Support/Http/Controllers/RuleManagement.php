@@ -36,54 +36,6 @@ use Throwable;
  */
 trait RuleManagement
 {
-    /**
-     *
-     */
-    protected function createDefaultRule(): void
-    {
-        /** @var RuleRepositoryInterface $ruleRepository */
-        $ruleRepository = app(RuleRepositoryInterface::class);
-        if (0 === $ruleRepository->count()) {
-            $data = [
-                'rule_group_id'   => $ruleRepository->getFirstRuleGroup()->id,
-                'stop_processing' => 0,
-                'title'           => (string)trans('firefly.default_rule_name'),
-                'description'     => (string)trans('firefly.default_rule_description'),
-                'trigger'         => 'store-journal',
-                'strict'          => true,
-                'active'          => true,
-                'triggers'        => [
-                    [
-                        'type'            => 'description_is',
-                        'value'           => (string)trans('firefly.default_rule_trigger_description'),
-                        'stop_processing' => false,
-
-                    ],
-                    [
-                        'type'            => 'from_account_is',
-                        'value'           => (string)trans('firefly.default_rule_trigger_source_account'),
-                        'stop_processing' => false,
-
-                    ],
-
-                ],
-                'actions'         => [
-                    [
-                        'type'            => 'prepend_description',
-                        'value'           => (string)trans('firefly.default_rule_action_prepend'),
-                        'stop_processing' => false,
-                    ],
-                    [
-                        'type'            => 'set_category',
-                        'value'           => (string)trans('firefly.default_rule_action_set_category'),
-                        'stop_processing' => false,
-                    ],
-                ],
-            ];
-
-            $ruleRepository->store($data);
-        }
-    }
 
     /**
      * @param Request $request
