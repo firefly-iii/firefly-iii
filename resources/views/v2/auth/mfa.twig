@@ -27,7 +27,7 @@
                 <form action="{{ route('two-factor.submit') }}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="input-group mb-3">
-                        <input type="text" id="oneTimeInput" name="one_time_password" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}"/>
+                        <input type="text" id="oneTimeInput" name="one_time_password" class="form-control" placeholder="{{ 'two_factor_code_here'|_ }}" autocomplete="off"/>
 
                         <div class="input-group-append">
                             <div class="input-group-text">
