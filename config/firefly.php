@@ -100,8 +100,8 @@ return [
         'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.11',
-    'api_version'                  => '1.5.2',
+    'version'                      => '5.6.0-alpha.1',
+    'api_version'                  => '1.5.3',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
