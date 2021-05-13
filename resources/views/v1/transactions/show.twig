@@ -39,6 +39,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ route('transactions.clone', [transactionGroup.id]) }}"><i class="fa fa-copy"></i> {{ 'clone'|_ }}</a></li>
                             {% endif %}
+
                         </ul>
                     </div>
                 </div>
@@ -231,11 +232,16 @@
                                         <a href="{{ route('accounts.show', journal.source_id) }}"
                                            title="{{ journal.source_iban|default(journal.source_name) }}">{{ journal.source_name }}</a> &rarr;
                                     {% endif %}
+
                                     {% if first.transactiontype.type == 'Withdrawal' or first.transactiontype.type == 'Deposit' %}
                                         {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places) }}
                                     {% elseif first.transactiontype.type == 'Transfer' or first.transactiontype.type == 'Opening balance' %}
                                         <span class="text-info">
                                         {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_decimal_places, false) }}
+                                    </span>
+                                    {% elseif first.transactiontype.type == 'Liability credit' %}
+                                        <span class="text-info">
+                                        {{ formatAmountBySymbol(journal.amount*-1, journal.currency_symbol, journal.currency_decimal_places, false) }}
                                     </span>
                                     {% endif %}
 

@@ -88,7 +88,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
- * @property Carbon $lastActivityDate
+ * @property Carbon                                                                         $lastActivityDate
+ * @property string                                                                         $startBalance
+ * @property string                                                                         $endBalance
+ * @property string $difference
+ * @property string $interest
+ * @property string $interestPeriod
+ * @property string $accountTypeString
+ * @property string $location
+ * @property string $liability_direction
+ * @property string $current_debt
  */
 class Account extends Model
 {

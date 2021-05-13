@@ -212,6 +212,13 @@ interface AccountRepositoryInterface
      *
      * @return TransactionGroup|null
      */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
     public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
 
     /**

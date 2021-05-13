@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -56,10 +57,11 @@ class AccountTransformer extends AbstractTransformer
         $this->repository->setUser($account->user);
 
         // get account type:
-        $fullType      = $account->accountType->type;
-        $accountType   = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
-        $liabilityType = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
-        $liabilityType = '' === $liabilityType ? null : strtolower($liabilityType);
+        $fullType           = $account->accountType->type;
+        $accountType        = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $liabilityType      = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
+        $liabilityType      = '' === $liabilityType ? null : strtolower($liabilityType);
+        $liabilityDirection = $this->repository->getMetaValue($account, 'liability_direction');
 
         // get account role (will only work if the type is asset.
         $accountRole = $this->getAccountRole($account, $accountType);
@@ -114,8 +116,10 @@ class AccountTransformer extends AbstractTransformer
             'opening_balance'         => $openingBalance,
             'opening_balance_date'    => $openingBalanceDate,
             'liability_type'          => $liabilityType,
+            'liability_direction'     => $liabilityDirection,
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
+            'current_debt'            => $this->repository->getMetaValue($account,'current_debt'),
             'include_net_worth'       => $includeNetWorth,
             'longitude'               => $longitude,
             'latitude'                => $latitude,
@@ -195,7 +199,7 @@ class AccountTransformer extends AbstractTransformer
             $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
-        if(null !== $monthlyPaymentDate) {
+        if (null !== $monthlyPaymentDate) {
             $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
         }
 
@@ -219,7 +223,7 @@ class AccountTransformer extends AbstractTransformer
             $openingBalance     = $amount;
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
-        if(null !== $openingBalanceDate) {
+        if (null !== $openingBalanceDate) {
             $openingBalanceDate = Carbon::createFromFormat('!Y-m-d', $openingBalanceDate, config('app.timezone'))->toAtomString();
         }
 

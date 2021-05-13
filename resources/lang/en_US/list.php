@@ -130,6 +130,7 @@ return [
     'field'                   => 'Field',
     'value'                   => 'Value',
     'interest'                => 'Interest',
-    'interest_period'         => 'interest period',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Type of liability',
+    'liability_direction'     => 'Liability in/out',
 ];

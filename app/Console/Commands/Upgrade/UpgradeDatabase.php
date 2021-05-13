@@ -74,6 +74,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:migrate-recurrence-meta',
             'firefly-iii:migrate-tag-locations',
             'firefly-iii:migrate-recurrence-type',
+            'firefly-iii:upgrade-liabilities',
 
             // there are 16 verify commands.
             'firefly-iii:fix-piggies',

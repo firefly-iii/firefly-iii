@@ -85,6 +85,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-recurrence-meta'      => [],
             'firefly-iii:migrate-tag-locations'        => [],
             'firefly-iii:migrate-recurrence-type'      => [],
+            'firefly-iii:upgrade-liabilities'          => [],
 
             // verify commands
             'firefly-iii:fix-piggies'                  => [],

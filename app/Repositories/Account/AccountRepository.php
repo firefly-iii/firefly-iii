@@ -123,14 +123,24 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findByIbanNull(string $iban, array $types): ?Account
     {
-        $query = $this->user->accounts()->where('accounts.iban', $iban);
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
 
-        return $query->first(['accounts.*']);
+        // TODO a loop like this is no longer necessary
+
+        $accounts = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->iban === $iban) {
+                return $account;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -741,6 +751,23 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup
+    {
+        $journal = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+
+        return $journal->transactionGroup;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function findByAccountNumber(string $number, array $types): ?Account
     {
         $dbQuery = $this->user
@@ -762,4 +789,5 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $dbQuery->first(['accounts.*']);
     }
+
 }

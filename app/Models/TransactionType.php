@@ -34,13 +34,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionType
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property string $type
+ * @property int                                                     $id
+ * @property Carbon|null                                             $created_at
+ * @property Carbon|null                                             $updated_at
+ * @property Carbon|null                                             $deleted_at
+ * @property string                                                  $type
  * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
+ * @property-read int|null                                           $transaction_journals_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionType newQuery()
  * @method static Builder|TransactionType onlyTrashed()
@@ -57,12 +57,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TransactionType extends Model
 {
     use SoftDeletes;
+
+    /** @var string */
     public const WITHDRAWAL = 'Withdrawal';
+    /** @var string */
     public const DEPOSIT = 'Deposit';
+    /** @var string */
     public const TRANSFER = 'Transfer';
+    /** @var string */
     public const OPENING_BALANCE = 'Opening balance';
+    /** @var string */
     public const RECONCILIATION = 'Reconciliation';
+    /** @var string */
     public const INVALID = 'Invalid';
+    /** @var string */
+    public const LIABILITY_CREDIT = 'Liability credit';
     /** @var string[] */
     protected $casts
         = [
@@ -70,7 +79,7 @@ class TransactionType extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var string[]  */
+    /** @var string[] */
     protected $fillable = ['type'];
 
     /**
@@ -78,8 +87,8 @@ class TransactionType extends Model
      *
      * @param string $type
      *
-     * @throws NotFoundHttpException
      * @return TransactionType
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $type): TransactionType
     {

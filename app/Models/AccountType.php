@@ -74,6 +74,8 @@ class AccountType extends Model
     public const MORTGAGE = 'Mortgage';
     /** @var string */
     public const CREDITCARD = 'Credit card';
+    /** @var string  */
+    public const LIABILITY_CREDIT = 'Liability credit account';
     /**
      * The attributes that should be casted to native types.
      *

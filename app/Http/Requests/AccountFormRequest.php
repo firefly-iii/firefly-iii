@@ -62,6 +62,7 @@ class AccountFormRequest extends FormRequest
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
+            'liability_direction'     => $this->string('liability_direction'),
         ];
 
         $data = $this->appendLocationData($data, 'location');
@@ -74,6 +75,9 @@ class AccountFormRequest extends FormRequest
         if ('liabilities' === $data['account_type_name']) {
             $data['account_type_name'] = null;
             $data['account_type_id']   = $this->integer('liability_type_id');
+            if ('' !== $data['opening_balance']) {
+                $data['opening_balance'] = app('steam')->negative($data['opening_balance']);
+            }
         }
 
         return $data;
@@ -107,11 +111,6 @@ class AccountFormRequest extends FormRequest
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
         $rules          = Location::requestRules($rules);
-
-        if ('liabilities' === $this->get('objectType')) {
-            $rules['opening_balance']      = ['numeric', 'required', 'max:1000000000'];
-            $rules['opening_balance_date'] = 'date|required';
-        }
 
         /** @var Account $account */
         $account = $this->route()->parameter('account');
