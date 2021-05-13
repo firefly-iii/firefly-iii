@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Kaikilla jaetuilla tapahtumilla täytyy olla transaction_journal_id (joko voimassaoleva tunniste tai 0).',
 
     'ob_source_need_data' => 'Tarvitset kelvollisen lähdetilin tunnuksen ja/tai kelvollisen lähdetilin nimen jatkaaksesi.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Tarvitset kelvollisen kohdetilin tunnuksen ja/tai kelvollisen kohdetilin nimen jatkaaksesi.',
     'ob_dest_bad_data'    => 'Kelvollista kohdetiliä ei löytynyt tunnuksella ":id" tai nimellä ":name".',
 

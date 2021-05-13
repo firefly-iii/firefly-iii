@@ -130,6 +130,7 @@ return [
     'field'                   => 'Pole',
     'value'                   => 'Wartość',
     'interest'                => 'Odsetki',
-    'interest_period'         => 'okres odsetkowy',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Rodzaj zobowiązania',
+    'liability_direction'     => 'Liability in/out',
 ];

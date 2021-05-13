@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Elke split moet een transaction_journal_id hebben (een geldig ID of 0).',
 
     'ob_source_need_data' => 'Om door te gaan moet er een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
+    'lc_source_need_data' => 'Er moet een geldig bronrekening-ID zijn om door te gaan.',
     'ob_dest_need_data'   => 'Om door te gaan moet een geldig doelrekening ID en/of geldige doelrekeningnaam worden gevonden.',
     'ob_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 

@@ -130,6 +130,7 @@ return [
     'field'                   => 'Feld',
     'value'                   => 'Wert',
     'interest'                => 'Zinsen',
-    'interest_period'         => 'Verzinsungszeitraum',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Verbindlichkeitsart',
+    'liability_direction'     => 'Liability in/out',
 ];

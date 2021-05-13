@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Fiecare împărțire trebuie să aibă transaction_journal_id (fie ID valid sau 0).',
 
     'ob_source_need_data' => 'Pentru a continua, trebuie să obțineți un ID sursă validă și / sau un nume valid al contului sursă valabil.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
     'ob_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
 

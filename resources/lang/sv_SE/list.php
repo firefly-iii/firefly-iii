@@ -130,6 +130,7 @@ return [
     'field'                   => 'Fält',
     'value'                   => 'Värde',
     'interest'                => 'Ränta',
-    'interest_period'         => 'ränteperiod',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Typ av ansvar',
+    'liability_direction'     => 'Liability in/out',
 ];

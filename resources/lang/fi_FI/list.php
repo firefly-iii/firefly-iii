@@ -130,6 +130,7 @@ return [
     'field'                   => 'Kenttä',
     'value'                   => 'Arvo',
     'interest'                => 'Korko',
-    'interest_period'         => 'korkojakso',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Vastuutyyppi',
+    'liability_direction'     => 'Liability in/out',
 ];

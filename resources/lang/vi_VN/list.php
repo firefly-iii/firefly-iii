@@ -130,6 +130,7 @@ return [
     'field'                   => 'Trường',
     'value'                   => 'Giá trị',
     'interest'                => 'Lãi',
-    'interest_period'         => 'Chu kỳ lãi',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Loại trách nhiệm pháp lý',
+    'liability_direction'     => 'Liability in/out',
 ];

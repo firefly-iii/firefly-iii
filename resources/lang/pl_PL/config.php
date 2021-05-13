@@ -28,6 +28,7 @@ return [
     'month'                   => '%B %Y',
     'month_and_day'           => '%e %B %Y',
     'month_and_day_moment_js' => 'MMM D, YYYY',
+    'month_and_day_fns'       => 'MMMM d, y',
     'month_and_date_day'      => '%A, %e %B %Y',
     'month_and_day_no_year'   => '%e %B',
     'date_time'               => '%e %B %Y o %T',

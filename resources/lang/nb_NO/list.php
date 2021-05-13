@@ -130,6 +130,7 @@ return [
     'field'                   => 'Felt',
     'value'                   => 'Verdi',
     'interest'                => 'Renter',
-    'interest_period'         => 'renteperiode',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Type gjeld',
+    'liability_direction'     => 'Liability in/out',
 ];

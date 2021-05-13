@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
 
     'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 

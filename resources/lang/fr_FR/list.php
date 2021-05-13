@@ -130,6 +130,7 @@ return [
     'field'                   => 'Champ',
     'value'                   => 'Valeur',
     'interest'                => 'Intérêt',
-    'interest_period'         => 'période d’intérêt',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Type de passif',
+    'liability_direction'     => 'Liability in/out',
 ];

@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Każdy podział musi posiadać transaction_journal_id (poprawny identyfikator lub 0).',
 
     'ob_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'ob_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 

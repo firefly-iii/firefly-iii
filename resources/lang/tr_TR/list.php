@@ -131,6 +131,7 @@ return [
     'field'                   => 'Alan',
     'value'                   => 'Değer',
     'interest'                => 'Faiz',
-    'interest_period'         => 'faiz periyodu',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Borç tipi',
+    'liability_direction'     => 'Liability in/out',
 ];

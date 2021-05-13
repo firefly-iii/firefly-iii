@@ -130,6 +130,7 @@ return [
     'field'                   => 'Pole',
     'value'                   => 'Hodnota',
     'interest'                => 'Úrok',
-    'interest_period'         => 'úrokové obdobie',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Typ záväzku',
+    'liability_direction'     => 'Liability in/out',
 ];

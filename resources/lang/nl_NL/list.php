@@ -130,6 +130,7 @@ return [
     'field'                   => 'Veld',
     'value'                   => 'Waarde',
     'interest'                => 'Rente',
-    'interest_period'         => 'renteperiode',
+    'interest_period'         => 'Renteperiode',
     'liability_type'          => 'Type passiva',
+    'liability_direction'     => 'Passiva in- of uitgaand',
 ];

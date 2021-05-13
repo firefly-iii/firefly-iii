@@ -130,6 +130,7 @@ return [
     'field'                   => 'Bidang',
     'value'                   => 'Nilai',
     'interest'                => 'Bunga',
-    'interest_period'         => 'periode bunga',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Jenis kewajiban',
+    'liability_direction'     => 'Liability in/out',
 ];
