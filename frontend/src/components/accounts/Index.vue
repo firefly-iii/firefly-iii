@@ -36,7 +36,7 @@
           <div class="card-header">
           </div>
           <div class="card-body p-0">
-            <b-table id="my-table" striped hover primary-key="id"
+            <b-table id="my-table" striped hover responsive="md" primary-key="id"
                      :items="accounts" :fields="fields"
                      :per-page="perPage"
                      sort-icon-left
