@@ -39,11 +39,8 @@ use Log;
  */
 class CurrencyController extends Controller
 {
-    /** @var CurrencyRepositoryInterface The currency repository */
-    protected $repository;
-
-    /** @var UserRepositoryInterface The user repository */
-    protected $userRepository;
+    protected CurrencyRepositoryInterface $repository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
