@@ -89,48 +89,66 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration' => [
+    // default values for certain things:
+    'configuration'                => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags' => [
+    // some feature flags:
+    'feature_flags'                => [
         'export'       => true,
         'telemetry'    => true,
         'webhooks'     => false,
         'handle_debts' => true,
     ],
 
+    // generic info about Firefly III
     'version'                      => '5.6.0-alpha.1',
     'api_version'                  => '1.5.3',
     'db_version'                   => 16,
+
+    // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
 
-    // send emails?
-    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
-    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
-    'demo_username'                => env('DEMO_USERNAME', ''),
-    'demo_password'                => env('DEMO_PASSWORD', ''),
+    // tokens and keys
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
+    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
+    'static_cron_token'            => envNonEmpty('STATIC_CRON_TOKEN'),
+
+    // flags
     'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
-    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
-    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
-    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
-    'tracker_url'                  => env('TRACKER_URL', ''),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
+    'send_telemetry'               => env('SEND_TELEMETRY', false),
+    'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
+
+    // email flags
+    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
+    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
+    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
+
+    // info for demo site
+    'demo_username'                => env('DEMO_USERNAME', ''),
+    'demo_password'                => env('DEMO_PASSWORD', ''),
+    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
+    'tracker_url'                  => env('TRACKER_URL', ''),
+
+    // login and authentication
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
     'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
-    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
+
+    // static config (cannot be changed by user)
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
-    'send_telemetry'               => env('SEND_TELEMETRY', false),
-    'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
-    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
     'update_minimum_age'           => 7,
+
+    // send emails?
+    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
+    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
     'default_location'             => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
@@ -637,7 +655,7 @@ return [
                                                       AccountType::MORTGAGE,],
             TransactionTypeModel::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
             // in case no transaction type is known yet, it could be anything.
-            'none'                                 => [
+            'none'                                => [
                 AccountType::ASSET,
                 AccountType::EXPENSE,
                 AccountType::REVENUE,
@@ -729,7 +747,7 @@ return [
 
     // having the source + dest will tell you the transaction type.
     'account_to_transaction'    => [
-        AccountType::ASSET           => [
+        AccountType::ASSET            => [
             AccountType::ASSET           => TransactionTypeModel::TRANSFER,
             AccountType::CASH            => TransactionTypeModel::WITHDRAWAL,
             AccountType::DEBT            => TransactionTypeModel::WITHDRAWAL,
@@ -739,10 +757,10 @@ return [
             AccountType::MORTGAGE        => TransactionTypeModel::WITHDRAWAL,
             AccountType::RECONCILIATION  => TransactionTypeModel::RECONCILIATION,
         ],
-        AccountType::CASH            => [
+        AccountType::CASH             => [
             AccountType::ASSET => TransactionTypeModel::DEPOSIT,
         ],
-        AccountType::DEBT            => [
+        AccountType::DEBT             => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -750,13 +768,13 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::INITIAL_BALANCE => [
+        AccountType::INITIAL_BALANCE  => [
             AccountType::ASSET    => TransactionTypeModel::OPENING_BALANCE,
             AccountType::DEBT     => TransactionTypeModel::OPENING_BALANCE,
             AccountType::LOAN     => TransactionTypeModel::OPENING_BALANCE,
             AccountType::MORTGAGE => TransactionTypeModel::OPENING_BALANCE,
         ],
-        AccountType::LOAN            => [
+        AccountType::LOAN             => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -764,7 +782,7 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::MORTGAGE        => [
+        AccountType::MORTGAGE         => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -772,10 +790,10 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::RECONCILIATION  => [
+        AccountType::RECONCILIATION   => [
             AccountType::ASSET => TransactionTypeModel::RECONCILIATION,
         ],
-        AccountType::REVENUE         => [
+        AccountType::REVENUE          => [
             AccountType::ASSET    => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT     => TransactionTypeModel::DEPOSIT,
             AccountType::LOAN     => TransactionTypeModel::DEPOSIT,
