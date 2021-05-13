@@ -1327,6 +1327,7 @@ return [
     'liability_direction_credit_short'          => 'Schuldeiser',
     'liability_direction_debit_short'           => 'Schuldenaar',
     'liability_direction__short'                => 'Onbekend',
+    'liability_direction_null_short'            => 'Onbekend',
     'Liability credit'                          => 'Leningkrediet',
     'budgets'                                   => 'Budgetten',
     'tags'                                      => 'Tags',

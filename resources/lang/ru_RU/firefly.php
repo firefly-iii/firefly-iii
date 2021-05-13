@@ -1327,6 +1327,7 @@ return [
     'liability_direction_credit_short'          => 'Owed this debt',
     'liability_direction_debit_short'           => 'Owe this debt',
     'liability_direction__short'                => 'Unknown',
+    'liability_direction_null_short'            => 'Unknown',
     'Liability credit'                          => 'Liability credit',
     'budgets'                                   => 'Бюджет',
     'tags'                                      => 'Метки',
