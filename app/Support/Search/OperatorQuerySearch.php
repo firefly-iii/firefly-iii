@@ -179,7 +179,7 @@ class OperatorQuerySearch implements SearchInterface
     public function searchTransactions(): LengthAwarePaginator
     {
         if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            return new LengthAwarePaginator([],0,5,1);
+            return new LengthAwarePaginator([], 0, 5, 1);
         }
 
         return $this->collector->getPaginatedGroups();
@@ -259,11 +259,12 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = (string)$searchNode->getValue();
+                $words = (string)$searchNode->getValue();
+                Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $words, $class));
+                $this->words[] = $words;
                 break;
             case Field::class:
-                Log::debug(sprintf('Now handle %s', $class));
+                Log::debug(sprintf('Now handle Node class %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
                 $operator = strtolower($searchNode->getValue());
@@ -545,9 +546,9 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->amountLess($amount);
                 break;
             case 'amount_more':
+                Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
-
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
