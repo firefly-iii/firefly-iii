@@ -264,6 +264,9 @@ trait RecurringTransactionTrait
         $categoryFactory->setUser($transaction->recurrence->user);
         $category = $categoryFactory->findOrCreate($categoryId, null);
         if (null === $category) {
+            // remove category:
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->delete();
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
             return;
         }
 

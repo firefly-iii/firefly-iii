@@ -162,7 +162,6 @@ class EditController extends Controller
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
         $data = $request->getAll();
-
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
