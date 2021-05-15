@@ -101,15 +101,19 @@ class CreditRecalculateService
         $this->repository->setUser($account->user);
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
+
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         $factory->crud($account, 'start_of_debt', $startOfDebt);
+
+        // get direction of liability:
+        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
 
         // now loop all transactions (except opening balance and credit thing)
         $transactions = $account->transactions()->get();
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $leftOfDebt = $this->processTransaction($account, $transaction, $leftOfDebt);
+            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
         }
         $factory->crud($account, 'current_debt', $leftOfDebt);
 
@@ -235,25 +239,49 @@ class CreditRecalculateService
     }
 
     /**
+     * @param Account     $account
+     * @param string      $direction
      * @param Transaction $transaction
      * @param string      $amount
      *
      * @return string
      */
-    private function processTransaction(Account $account, Transaction $transaction, string $amount): string
+    private function processTransaction(Account $account, string $direction, Transaction $transaction, string $amount): string
     {
         Log::debug(sprintf('Now in %s(#%d, %s)', __METHOD__, $transaction->id, $amount));
         $journal = $transaction->transactionJournal;
+        $groupId = $journal->transaction_group_id;
         $type    = $journal->transactionType->type;
-
-        Log::debug(sprintf('Type is "%s"', $type));
-        if (in_array($type, [TransactionType::WITHDRAWAL]) && (int)$account->id === (int)$transaction->account_id && 1 === bccomp($transaction->amount, '0')) {
-            Log::debug(sprintf('Transaction #%d is withdrawal into liability #%d, does not influence the amount left.', $account->id, $transaction->account_id));
+        if ('' === $direction) {
+            Log::debug('Since direction is "", do nothing.');
 
             return $amount;
         }
-        if (in_array($type, [TransactionType::DEPOSIT]) && (int)$account->id === (int)$transaction->account_id && -1 === bccomp($transaction->amount, '0')) {
-            Log::debug(sprintf('Transaction #%d is deposit from liability #%d,does not influence the amount left.', $account->id, $transaction->account_id));
+
+        Log::debug(sprintf('Processing group #%d, journal #%d of type "%s"', $journal->id, $groupId, $type));
+
+        // it's a withdrawal into this liability (from asset).
+        // if it's a credit, we don't care, because sending more money
+        // to a credit-liability doesn't increase the amount (yet)
+        if (
+            in_array($type, [TransactionType::WITHDRAWAL])
+            && (int)$account->id === (int)$transaction->account_id
+            && 1 === bccomp($transaction->amount, '0')
+            && 'credit' === $direction
+        ) {
+            Log::debug(sprintf('Is withdrawal into credit liability #%d, does not influence the amount due.', $transaction->account_id));
+
+            return $amount;
+        }
+
+        // likewise deposit into a credit debt does not change the amount
+        if (
+            in_array($type, [TransactionType::DEPOSIT])
+            && (int)$account->id === (int)$transaction->account_id
+            && -1 === bccomp($transaction->amount, '0')
+            && 'credit' === $direction
+        ) {
+            Log::debug(sprintf('Is deposit from liability #%d,does not influence the amount left.', $transaction->account_id));
 
             return $amount;
         }
