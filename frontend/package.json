@@ -18,7 +18,7 @@
         "postcss": "^8.1.14",
         "resolve-url-loader": "^4.0.0",
         "sass": "^1.32.8",
-        "sass-loader": "^11.0.1",
+        "sass-loader": "^11.1.1",
         "vue-i18n": "^8.24.2",
         "vue-loader": "^15.9.5",
         "vue-template-compiler": "^2.6.12",
