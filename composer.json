@@ -69,7 +69,7 @@
       }
     ],
   "require": {
-    "php": ">=7.4.0",
+    "php": ">=8.0.0",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
