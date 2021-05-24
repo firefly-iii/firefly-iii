@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Boligl\u00e5n",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "Gjeld",
+        "liability_direction_null_short": "Unknown",
         "delete": "Slett",
         "store_new_asset_account": "Lagre ny brukskonto",
         "store_new_expense_account": "Lagre ny utgiftskonto",

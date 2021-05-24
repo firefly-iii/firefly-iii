@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Hypot\u00e9ka",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "Dluh",
+        "liability_direction_null_short": "Unknown",
         "delete": "Odstranit",
         "store_new_asset_account": "Ulo\u017eit nov\u00fd \u00fa\u010det aktiv",
         "store_new_expense_account": "Ulo\u017eit nov\u00fd v\u00fddajov\u00fd \u00fa\u010det",
@@ -147,7 +148,7 @@
         "role": "Role",
         "iban": "IBAN",
         "interest": "\u00darok",
-        "interest_period": "Interest period",
+        "interest_period": "\u00darokov\u00e9 obdob\u00ed",
         "liability_type": "Typ z\u00e1vazku",
         "liability_direction": "Liability in\/out",
         "currentBalance": "Aktu\u00e1ln\u00ed z\u016fstatek",
@@ -155,9 +156,9 @@
     },
     "config": {
         "html_language": "cs",
-        "week_in_year_fns": "'Week' w, yyyy",
-        "month_and_day_fns": "MMMM d, y",
-        "quarter_fns": "'Q'Q, yyyy",
+        "week_in_year_fns": "\"t\u00fdden\" w, yyyy",
+        "month_and_day_fns": "d. MMMM, y",
+        "quarter_fns": "Q'Q, yyyy",
         "half_year_fns": "'H{half}', yyyy"
     },
     "form": {

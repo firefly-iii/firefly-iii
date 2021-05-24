@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Credit ipotecar",
         "stored_new_account_js": "Cont nou \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stocat!",
         "account_type_Debt": "Datorie",
+        "liability_direction_null_short": "Unknown",
         "delete": "\u0218terge",
         "store_new_asset_account": "Salva\u021bi un nou cont de active",
         "store_new_expense_account": "Salva\u021bi un nou cont de cheltuieli",

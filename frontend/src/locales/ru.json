@@ -114,6 +114,7 @@
         "account_type_Mortgage": "\u0418\u043f\u043e\u0442\u0435\u043a\u0430",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "\u0414\u0435\u0431\u0438\u0442",
+        "liability_direction_null_short": "Unknown",
         "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
         "store_new_asset_account": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0441\u0447\u0451\u0442",
         "store_new_expense_account": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u0441\u0447\u0451\u0442 \u0440\u0430\u0441\u0445\u043e\u0434\u0430",

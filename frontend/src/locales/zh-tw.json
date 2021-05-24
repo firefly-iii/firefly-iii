@@ -114,6 +114,7 @@
         "account_type_Mortgage": "\u62b5\u62bc",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "\u8ca0\u50b5",
+        "liability_direction_null_short": "Unknown",
         "delete": "\u522a\u9664",
         "store_new_asset_account": "\u5132\u5b58\u65b0\u8cc7\u7522\u5e33\u6236",
         "store_new_expense_account": "\u5132\u5b58\u65b0\u652f\u51fa\u5e33\u6236",

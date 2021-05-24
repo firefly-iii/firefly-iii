@@ -28,6 +28,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.15.3",
         "admin-lte": "^3.1.0",
+        "axios-cache-adapter": "^2.7.3",
         "bootstrap": "^4.6.0",
         "bootstrap-vue": "^2.21.2",
         "chart.js": "^3.2.0",

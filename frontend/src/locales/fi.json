@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Kiinnelaina",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "Velka",
+        "liability_direction_null_short": "Unknown",
         "delete": "Poista",
         "store_new_asset_account": "Tallenna uusi omaisuustili",
         "store_new_expense_account": "Tallenna uusi kulutustili",

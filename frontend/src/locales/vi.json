@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Th\u1ebf ch\u1ea5p",
         "stored_new_account_js": "New account \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" stored!",
         "account_type_Debt": "M\u00f3n n\u1ee3",
+        "liability_direction_null_short": "Unknown",
         "delete": "X\u00f3a",
         "store_new_asset_account": "L\u01b0u tr\u1eef t\u00e0i kho\u1ea3n m\u1edbi",
         "store_new_expense_account": "L\u01b0u tr\u1eef t\u00e0i kho\u1ea3n chi ph\u00ed m\u1edbi",

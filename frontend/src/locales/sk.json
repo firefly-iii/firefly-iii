@@ -114,6 +114,7 @@
         "account_type_Mortgage": "Hypot\u00e9ka",
         "stored_new_account_js": "Nov\u00fd \u00fa\u010det \"<a href=\"accounts\/show\/{ID}\">{name}<\/a>\" vytvoren\u00fd!",
         "account_type_Debt": "Dlh",
+        "liability_direction_null_short": "Unknown",
         "delete": "Odstr\u00e1ni\u0165",
         "store_new_asset_account": "Ulo\u017ei\u0165 nov\u00fd \u00fa\u010det akt\u00edv",
         "store_new_expense_account": "Ulo\u017ei\u0165 nov\u00fd v\u00fddavkov\u00fd \u00fa\u010det",
