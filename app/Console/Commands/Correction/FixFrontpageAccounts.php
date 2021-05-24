@@ -61,7 +61,7 @@ class FixFrontpageAccounts extends Command
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
-            $preference = Preferences::getForUser($user, 'frontPageAccounts', null);
+            $preference = Preferences::getForUser($user, 'frontPageAccounts');
             if (null !== $preference) {
                 $this->fixPreference($preference);
             }

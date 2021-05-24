@@ -39,7 +39,7 @@ trait GeneratesInstallationId
     protected function generateInstallationId(): void
     {
         try {
-            $config = app('fireflyconfig')->get('installation_id', null);
+            $config = app('fireflyconfig')->get('installation_id');
         } catch (FireflyException $e) {
             Log::info('Could not create or generate installation ID. Do not continue.');
 

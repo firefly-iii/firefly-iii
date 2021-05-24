@@ -146,11 +146,10 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
-     *
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
     {
@@ -216,8 +215,8 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
+     * @param Carbon|null         $start
+     * @param Carbon|null         $end
      *
      * @return Collection
      */
@@ -231,12 +230,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget      $budget
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
-     *
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {

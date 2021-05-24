@@ -43,6 +43,7 @@ class APIEventHandler
      * @param AccessTokenCreated $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function accessTokenCreated(AccessTokenCreated $event): bool
     {
@@ -60,7 +61,7 @@ class APIEventHandler
             $ipAddress = Request::ip();
 
             // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
             if (null !== $pref) {
                 $email = $pref->data;
             }

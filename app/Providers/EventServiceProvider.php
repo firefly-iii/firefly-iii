@@ -172,7 +172,7 @@ class EventServiceProvider extends ServiceProvider
                 $ipAddress = Request::ip();
 
                 // see if user has alternative email address:
-                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
                 if (null !== $pref) {
                     $email = $pref->data;
                 }

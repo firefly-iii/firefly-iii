@@ -23,24 +23,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class WebhookAttempt
  *
- * @property int                                    $id
- * @property \Illuminate\Support\Carbon|null        $created_at
- * @property \Illuminate\Support\Carbon|null        $updated_at
- * @property string|null                            $deleted_at
- * @property int                                    $webhook_message_id
- * @property int                                    $status_code
- * @property string|null                            $logs
- * @property string|null                            $response
- * @property-read \FireflyIII\Models\WebhookMessage $webhookMessage
+ * @property int                 $id
+ * @property Carbon|null         $created_at
+ * @property Carbon|null         $updated_at
+ * @property string|null         $deleted_at
+ * @property int                 $webhook_message_id
+ * @property int                 $status_code
+ * @property string|null         $logs
+ * @property string|null         $response
+ * @property-read WebhookMessage $webhookMessage
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt query()
@@ -52,10 +55,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereStatusCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt whereWebhookMessageId($value)
- * @mixin \Eloquent
- * @method static \Illuminate\Database\Query\Builder|WebhookAttempt onlyTrashed()
- * @method static \Illuminate\Database\Query\Builder|WebhookAttempt withTrashed()
- * @method static \Illuminate\Database\Query\Builder|WebhookAttempt withoutTrashed()
+ * @mixin Eloquent
+ * @method static Builder|WebhookAttempt onlyTrashed()
+ * @method static Builder|WebhookAttempt withTrashed()
+ * @method static Builder|WebhookAttempt withoutTrashed()
  */
 class WebhookAttempt extends Model
 {

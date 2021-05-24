@@ -195,7 +195,7 @@ interface AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return string
+     * @return string|null
      */
     public function getOpeningBalanceAmount(Account $account): ?string;
 

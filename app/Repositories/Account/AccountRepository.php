@@ -417,7 +417,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return string
+     * @return string|null
      */
     public function getOpeningBalanceAmount(Account $account): ?string
     {
@@ -748,7 +748,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
-     * @throws FireflyException
      */
     public function update(Account $account, array $data): Account
     {

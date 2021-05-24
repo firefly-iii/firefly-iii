@@ -53,9 +53,8 @@ class UpdateRequest extends FormRequest
             'description' => ['description', 'string'],
         ];
         $data   = $this->getAllData($fields);
-        $data   = $this->appendLocationData($data, null);
 
-        return $data;
+        return $this->appendLocationData($data, null);
     }
 
     /**

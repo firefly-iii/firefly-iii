@@ -55,6 +55,7 @@ class AccountSearch implements GenericSearchInterface
 
     /**
      * @return Collection
+     * @throws \JsonException
      */
     public function search(): Collection
     {

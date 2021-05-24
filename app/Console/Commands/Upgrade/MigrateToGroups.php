@@ -127,6 +127,7 @@ class MigrateToGroups extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isMigrated(): bool
     {

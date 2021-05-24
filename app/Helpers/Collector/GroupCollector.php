@@ -227,7 +227,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        /** @var Collection $result */
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.

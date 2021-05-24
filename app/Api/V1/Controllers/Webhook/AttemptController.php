@@ -62,9 +62,11 @@ class AttemptController extends Controller
     }
 
     /**
-     * @param Webhook $webhook
+     * @param Webhook        $webhook
+     * @param WebhookMessage $message
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function index(Webhook $webhook, WebhookMessage $message): JsonResponse
     {

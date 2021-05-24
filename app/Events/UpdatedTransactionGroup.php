@@ -40,10 +40,12 @@ class UpdatedTransactionGroup extends Event
     public $applyRules;
     /** @var TransactionGroup The group that was stored. */
     public $transactionGroup;
+
     /**
      * Create a new event instance.
      *
      * @param TransactionGroup $transactionGroup
+     * @param bool             $applyRules
      */
     public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true)
     {

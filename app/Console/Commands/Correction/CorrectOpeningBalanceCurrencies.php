@@ -96,6 +96,7 @@ class CorrectOpeningBalanceCurrencies extends Command
      * @param TransactionJournal $journal
      *
      * @return int
+     * @throws JsonException
      */
     private function correctJournal(TransactionJournal $journal): int
     {
@@ -146,7 +147,6 @@ class CorrectOpeningBalanceCurrencies extends Command
      * @param Account $account
      *
      * @return TransactionCurrency
-     * @throws JsonException
      */
     private function getCurrency(Account $account): TransactionCurrency
     {

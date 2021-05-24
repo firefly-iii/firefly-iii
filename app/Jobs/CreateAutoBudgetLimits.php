@@ -52,7 +52,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon $date
+     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -238,6 +238,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
     /**
      * @param AutoBudget $autoBudget
+     *
+     * @throws FireflyException
      */
     private function createRollover(AutoBudget $autoBudget): void
     {

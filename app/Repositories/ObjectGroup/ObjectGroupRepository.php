@@ -161,7 +161,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         if ($newOrder > $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '<=', $newOrder)->where('object_groups.order', '>', $oldOrder)
                        ->where('object_groups.id', '!=', $objectGroup->id)
-                       ->decrement('object_groups.order', 1);
+                       ->decrement('object_groups.order');
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();
@@ -169,7 +169,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         if ($newOrder < $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '>=', $newOrder)->where('object_groups.order', '<', $oldOrder)
                        ->where('object_groups.id', '!=', $objectGroup->id)
-                       ->increment('object_groups.order', 1);
+                       ->increment('object_groups.order');
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();

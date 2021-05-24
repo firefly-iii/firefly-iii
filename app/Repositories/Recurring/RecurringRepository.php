@@ -290,6 +290,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceTransaction $transaction
      *
      * @return array
+     * @throws \JsonException
      */
     public function getTags(RecurrenceTransaction $transaction): array
     {
@@ -416,7 +417,6 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param int                  $count
      *
      * @return array
-     * @throws FireflyException
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
@@ -454,7 +454,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceRepetition $repetition
      *
      * @return string
-     *
+     * @throws FireflyException
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {

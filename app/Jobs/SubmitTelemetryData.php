@@ -54,7 +54,7 @@ class SubmitTelemetryData implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon $date
+     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -80,7 +80,7 @@ class SubmitTelemetryData implements ShouldQueue
 
         $json = $this->parseJson($telemetry);
         try {
-            $body = json_encode($json, JSON_THROW_ON_ERROR, 512);
+            $body = json_encode($json, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             Log::error($e->getMessage());
             Log::error('Could not parse JSON.');

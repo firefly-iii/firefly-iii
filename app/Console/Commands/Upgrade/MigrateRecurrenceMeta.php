@@ -79,6 +79,7 @@ class MigrateRecurrenceMeta extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {
@@ -92,6 +93,7 @@ class MigrateRecurrenceMeta extends Command
 
     /**
      * @return int
+     * @throws \JsonException
      */
     private function migrateMetaData(): int
     {
@@ -110,6 +112,7 @@ class MigrateRecurrenceMeta extends Command
      * @param RecurrenceMeta $meta
      *
      * @return int
+     * @throws \JsonException
      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
@@ -125,7 +128,7 @@ class MigrateRecurrenceMeta extends Command
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);
-            $value = json_encode($array, JSON_THROW_ON_ERROR, 512);
+            $value = json_encode($array, JSON_THROW_ON_ERROR);
         }
 
         RecurrenceTransactionMeta::create(

@@ -31,13 +31,13 @@ use Illuminate\Support\Carbon;
 /**
  * Class AccountMeta
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int $account_id
- * @property string $name
- * @property mixed $data
- * @property-read \FireflyIII\Models\Account $account
+ * @property int          $id
+ * @property Carbon|null  $created_at
+ * @property Carbon|null  $updated_at
+ * @property int          $account_id
+ * @property string       $name
+ * @property mixed        $data
+ * @property-read Account $account
  * @method static Builder|AccountMeta newModelQuery()
  * @method static Builder|AccountMeta newQuery()
  * @method static Builder|AccountMeta query()
@@ -78,8 +78,9 @@ class AccountMeta extends Model
     /**
      * @param mixed $value
      *
-     * @codeCoverageIgnore
      * @return mixed
+     * @throws \JsonException
+     * @codeCoverageIgnore
      */
     public function getDataAttribute($value)
     {

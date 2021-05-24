@@ -36,23 +36,23 @@ use Illuminate\Support\Collection;
  *
  * @property int $id
  * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property int $transaction_currency_id
- * @property int|null $foreign_currency_id
- * @property int $source_id
- * @property int $destination_id
- * @property string $amount
- * @property string|null $foreign_amount
- * @property string $description
- * @property-read \FireflyIII\Models\Account $destinationAccount
- * @property-read \FireflyIII\Models\TransactionCurrency|null $foreignCurrency
- * @property-read \FireflyIII\Models\Recurrence $recurrence
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RecurrenceTransactionMeta[] $recurrenceTransactionMeta
- * @property-read int|null $recurrence_transaction_meta_count
- * @property-read \FireflyIII\Models\Account $sourceAccount
- * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
+ * @property Carbon|null                                                               $updated_at
+ * @property Carbon|null                                                               $deleted_at
+ * @property int                                                                       $recurrence_id
+ * @property int                                                                       $transaction_currency_id
+ * @property int|null                                                                  $foreign_currency_id
+ * @property int                                                                       $source_id
+ * @property int                                                                       $destination_id
+ * @property string                                                                    $amount
+ * @property string|null                                                               $foreign_amount
+ * @property string                                                                    $description
+ * @property-read Account                                                              $destinationAccount
+ * @property-read TransactionCurrency|null                                             $foreignCurrency
+ * @property-read Recurrence                                                           $recurrence
+ * @property-read \Illuminate\Database\Eloquent\Collection|RecurrenceTransactionMeta[] $recurrenceTransactionMeta
+ * @property-read int|null                                                             $recurrence_transaction_meta_count
+ * @property-read Account                                                              $sourceAccount
+ * @property-read TransactionCurrency                                                  $transactionCurrency
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction newQuery()
  * @method static Builder|RecurrenceTransaction onlyTrashed()
@@ -72,9 +72,9 @@ use Illuminate\Support\Collection;
  * @method static Builder|RecurrenceTransaction withTrashed()
  * @method static Builder|RecurrenceTransaction withoutTrashed()
  * @mixin Eloquent
- * @property int|null $transaction_type_id
+ * @property int|null                                                                  $transaction_type_id
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceTransaction whereTransactionTypeId($value)
- * @property-read \FireflyIII\Models\TransactionType|null $transactionType
+ * @property-read TransactionType|null                                                 $transactionType
  */
 class RecurrenceTransaction extends Model
 {

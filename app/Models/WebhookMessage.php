@@ -23,44 +23,48 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\WebhookMessage
  *
  * @property int                                                                               $id
- * @property \Illuminate\Support\Carbon|null                                                   $created_at
- * @property \Illuminate\Support\Carbon|null                                                   $updated_at
- * @property string|null                                                                       $deleted_at
- * @property int                                                                               $webhook_id
- * @property bool                                                                              $sent
- * @property bool                                                                              $errored
- * @property int                                                                               $attempts
- * @property string                                                                            $uuid
- * @property array                                                                             $message
- * @property array|null                                                                        $logs
- * @property-read \FireflyIII\Models\Webhook                                                   $webhook
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage query()
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereAttempts($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereErrored($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereLogs($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereSent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereWebhookId($value)
- * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookAttempt[] $webhookAttempts
- * @property-read int|null                                                                     $webhook_attempts_count
+ * @property Carbon|null                      $created_at
+ * @property Carbon|null                      $updated_at
+ * @property string|null                      $deleted_at
+ * @property int                              $webhook_id
+ * @property bool                             $sent
+ * @property bool                             $errored
+ * @property int                              $attempts
+ * @property string                           $uuid
+ * @property array                            $message
+ * @property array|null                       $logs
+ * @property-read Webhook                     $webhook
+ * @method static Builder|WebhookMessage newModelQuery()
+ * @method static Builder|WebhookMessage newQuery()
+ * @method static Builder|WebhookMessage query()
+ * @method static Builder|WebhookMessage whereAttempts($value)
+ * @method static Builder|WebhookMessage whereCreatedAt($value)
+ * @method static Builder|WebhookMessage whereDeletedAt($value)
+ * @method static Builder|WebhookMessage whereErrored($value)
+ * @method static Builder|WebhookMessage whereId($value)
+ * @method static Builder|WebhookMessage whereLogs($value)
+ * @method static Builder|WebhookMessage whereMessage($value)
+ * @method static Builder|WebhookMessage whereSent($value)
+ * @method static Builder|WebhookMessage whereUpdatedAt($value)
+ * @method static Builder|WebhookMessage whereUuid($value)
+ * @method static Builder|WebhookMessage whereWebhookId($value)
+ * @mixin Eloquent
+ * @property-read Collection|WebhookAttempt[] $webhookAttempts
+ * @property-read int|null                    $webhook_attempts_count
  */
 class WebhookMessage extends Model
 {

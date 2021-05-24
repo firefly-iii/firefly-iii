@@ -38,6 +38,7 @@ trait UpdateTrait
      * 'level' => 'info' / 'success' / 'error'
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getLatestRelease(): array
     {

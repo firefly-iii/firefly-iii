@@ -31,19 +31,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $piggy_bank_id
+ * @property int                             $piggy_bank_id
  * @property \Illuminate\Support\Carbon|null $startdate
  * @property \Illuminate\Support\Carbon|null $targetdate
- * @property string $currentamount
- * @property-read \FireflyIII\Models\PiggyBank $piggyBank
+ * @property string                          $currentamount
+ * @property-read PiggyBank                  $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
  * @method static EloquentBuilder|PiggyBankRepetition newQuery()
- * @method static EloquentBuilder|PiggyBankRepetition onDates(\Carbon\Carbon $start, \Carbon\Carbon $target)
+ * @method static EloquentBuilder|PiggyBankRepetition onDates(Carbon $start, Carbon $target)
  * @method static EloquentBuilder|PiggyBankRepetition query()
- * @method static EloquentBuilder|PiggyBankRepetition relevantOnDate(\Carbon\Carbon $date)
+ * @method static EloquentBuilder|PiggyBankRepetition relevantOnDate(Carbon $date)
  * @method static EloquentBuilder|PiggyBankRepetition whereCreatedAt($value)
  * @method static EloquentBuilder|PiggyBankRepetition whereCurrentamount($value)
  * @method static EloquentBuilder|PiggyBankRepetition whereId($value)
@@ -99,7 +99,7 @@ class PiggyBankRepetition extends Model
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
-     * @return mixed
+     * @return EloquentBuilder
      */
     public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
     {

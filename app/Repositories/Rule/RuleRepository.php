@@ -327,7 +327,7 @@ class RuleRepository implements RuleRepositoryInterface
                        ->where('rules.order', '<=', $newOrder)
                        ->where('rules.order', '>', $oldOrder)
                        ->where('rules.id', '!=', $rule->id)
-                       ->decrement('rules.order', 1);
+                       ->decrement('rules.order');
             $rule->order = $newOrder;
             Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
             $rule->save();
@@ -340,7 +340,7 @@ class RuleRepository implements RuleRepositoryInterface
                    ->where('rules.order', '>=', $newOrder)
                    ->where('rules.order', '<', $oldOrder)
                    ->where('rules.id', '!=', $rule->id)
-                   ->increment('rules.order', 1);
+                   ->increment('rules.order');
         $rule->order = $newOrder;
         Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
@@ -358,6 +358,7 @@ class RuleRepository implements RuleRepositoryInterface
      * @param array $data
      *
      * @return Rule
+     * @throws FireflyException
      */
     public function store(array $data): Rule
     {

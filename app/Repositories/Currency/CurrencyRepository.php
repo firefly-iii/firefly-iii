@@ -78,6 +78,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param TransactionCurrency $currency
      *
      * @return string|null
+     * @throws FireflyException
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
@@ -244,7 +245,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findByName(string $currencyName): ?TransactionCurrency
     {
@@ -257,7 +258,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      * @deprecated
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency
@@ -270,7 +271,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findBySymbol(string $currencySymbol): ?TransactionCurrency
     {
@@ -283,7 +284,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      * @deprecated
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency

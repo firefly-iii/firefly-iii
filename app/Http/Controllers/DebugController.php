@@ -116,7 +116,7 @@ class DebugController extends Controller
      * @param Request $request
      *
      * @return Factory|View
-     *
+     * @throws FireflyException
      */
     public function index(Request $request)
     {

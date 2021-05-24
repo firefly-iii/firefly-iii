@@ -51,9 +51,8 @@ class StoreRequest extends FormRequest
             'description'  => $this->string('description'),
             'has_location' => true,
         ];
-        $data = $this->appendLocationData($data, null);
 
-        return $data;
+        return $this->appendLocationData($data, null);
     }
 
     /**

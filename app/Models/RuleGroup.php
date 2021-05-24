@@ -35,19 +35,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\RuleGroup
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property string $title
- * @property string|null $description
- * @property int $order
- * @property bool $active
- * @property bool $stop_processing
- * @property \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
- * @property-read int|null $rules_count
- * @property-read User $user
+ * @property int                                             $id
+ * @property \Illuminate\Support\Carbon|null                 $created_at
+ * @property \Illuminate\Support\Carbon|null                 $updated_at
+ * @property \Illuminate\Support\Carbon|null                 $deleted_at
+ * @property int                                             $user_id
+ * @property string                                          $title
+ * @property string|null                                     $description
+ * @property int                                             $order
+ * @property bool                                            $active
+ * @property bool                                            $stop_processing
+ * @property \Illuminate\Database\Eloquent\Collection|Rule[] $rules
+ * @property-read int|null                                   $rules_count
+ * @property-read User                                       $user
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup newQuery()
  * @method static Builder|RuleGroup onlyTrashed()

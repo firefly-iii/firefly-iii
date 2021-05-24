@@ -64,7 +64,6 @@ class MigrateJournalNotes extends Command
         }
 
         $count = 0;
-        /** @noinspection PhpUndefinedMethodInspection */
         $set = TransactionJournalMeta::whereName('notes')->get();
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
@@ -104,6 +103,7 @@ class MigrateJournalNotes extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {

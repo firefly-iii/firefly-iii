@@ -34,17 +34,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\AvailableBudget
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $transaction_currency_id
- * @property string $amount
- * @property \Illuminate\Support\Carbon $start_date
- * @property \Illuminate\Support\Carbon $end_date
- * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency
- * @property-read User $user
+ * @property int                             $user_id
+ * @property int                             $transaction_currency_id
+ * @property string                          $amount
+ * @property \Illuminate\Support\Carbon      $start_date
+ * @property \Illuminate\Support\Carbon      $end_date
+ * @property-read TransactionCurrency        $transactionCurrency
+ * @property-read User                       $user
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
  * @method static Builder|AvailableBudget onlyTrashed()

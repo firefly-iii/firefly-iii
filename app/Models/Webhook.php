@@ -22,50 +22,54 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Webhook
  *
  * @property int                                                                               $id
- * @property \Illuminate\Support\Carbon|null                                                   $created_at
- * @property \Illuminate\Support\Carbon|null                                                   $updated_at
- * @property \Illuminate\Support\Carbon|null                                                   $deleted_at
- * @property int                                                                               $user_id
- * @property bool                                                                              $active
- * @property int                                                                               $trigger
- * @property int                                                                               $response
- * @property int                                                                               $delivery
- * @property string                                                                            $url
- * @property-read User                                                                         $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookMessage[] $webhookMessages
- * @property-read int|null                                                                     $webhook_messages_count
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook newQuery()
+ * @property Carbon|null                      $created_at
+ * @property Carbon|null                      $updated_at
+ * @property Carbon|null                      $deleted_at
+ * @property int                              $user_id
+ * @property bool                             $active
+ * @property int                              $trigger
+ * @property int                              $response
+ * @property int                              $delivery
+ * @property string                           $url
+ * @property-read User                        $user
+ * @property-read Collection|WebhookMessage[] $webhookMessages
+ * @property-read int|null                    $webhook_messages_count
+ * @method static Builder|Webhook newModelQuery()
+ * @method static Builder|Webhook newQuery()
  * @method static \Illuminate\Database\Query\Builder|Webhook onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook query()
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereDelivery($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereResponse($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereTrigger($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUrl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereUserId($value)
+ * @method static Builder|Webhook query()
+ * @method static Builder|Webhook whereActive($value)
+ * @method static Builder|Webhook whereCreatedAt($value)
+ * @method static Builder|Webhook whereDeletedAt($value)
+ * @method static Builder|Webhook whereDelivery($value)
+ * @method static Builder|Webhook whereId($value)
+ * @method static Builder|Webhook whereResponse($value)
+ * @method static Builder|Webhook whereTrigger($value)
+ * @method static Builder|Webhook whereUpdatedAt($value)
+ * @method static Builder|Webhook whereUrl($value)
+ * @method static Builder|Webhook whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
- * @mixin \Eloquent
+ * @mixin Eloquent
  * @property string $title
  * @property string $secret
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Webhook whereTitle($value)
+ * @method static Builder|Webhook whereSecret($value)
+ * @method static Builder|Webhook whereTitle($value)
  */
 class Webhook extends Model
 {

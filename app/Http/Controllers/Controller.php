@@ -51,9 +51,9 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
-        $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false,),);
+        $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false));
         $isDemoSite       = $isDemoSiteConfig ? $isDemoSiteConfig->data : false;
-        app('view')->share('IS_DEMO_SITE', $isDemoSite,);
+        app('view')->share('IS_DEMO_SITE', $isDemoSite);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
         app('view')->share('FF_VERSION', config('firefly.version'));
@@ -76,12 +76,12 @@ abstract class Controller extends BaseController
 
         // share is alpha, is beta
         $isAlpha = false;
-        if (false !== strpos(config('firefly.version'), 'alpha')) {
+        if (str_contains(config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
 
         $isBeta = false;
-        if (false !== strpos(config('firefly.version'), 'beta')) {
+        if (str_contains(config('firefly.version'), 'beta')) {
             $isBeta = true;
         }
 

@@ -57,7 +57,6 @@ class DeleteZeroAmount extends Command
         $start = microtime(true);
         $set   = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
         $set   = array_unique($set);
-        /** @var Collection $journals */
         $journals = TransactionJournal::whereIn('id', $set)->get();
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

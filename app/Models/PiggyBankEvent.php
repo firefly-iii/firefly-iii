@@ -30,15 +30,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $piggy_bank_id
- * @property int|null $transaction_journal_id
- * @property \Illuminate\Support\Carbon $date
- * @property string $amount
- * @property \FireflyIII\Models\PiggyBank $piggyBank
- * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
+ * @property int                             $piggy_bank_id
+ * @property int|null                        $transaction_journal_id
+ * @property \Illuminate\Support\Carbon      $date
+ * @property string                          $amount
+ * @property PiggyBank                       $piggyBank
+ * @property-read TransactionJournal|null    $transactionJournal
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
  * @method static Builder|PiggyBankEvent query()

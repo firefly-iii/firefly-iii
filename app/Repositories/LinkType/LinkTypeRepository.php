@@ -53,11 +53,10 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param LinkType $linkType
-     * @param LinkType $moveTo
+     * @param LinkType      $linkType
+     * @param LinkType|null $moveTo
      *
      * @return bool
-     * @throws Exception
      */
     public function destroy(LinkType $linkType, LinkType $moveTo = null): bool
     {
@@ -244,7 +243,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournal $outward
      *
      * @return TransactionJournalLink|null
-     *
+     * @throws Exception
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
@@ -331,10 +330,11 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param array                  $data
      *
      * @return TransactionJournalLink
+     * @throws Exception
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink
     {
-        $journalLink->source_id      = $data['inward_id'] ? $data['inward_id'] : $journalLink->source_id;
+        $journalLink->source_id      = $data['inward_id'] ?: $journalLink->source_id;
         $journalLink->destination_id = $data['outward_id'] ? $data['outward_id'] : $journalLink->destination_id;
         $journalLink->save();
         if (array_key_exists('link_type_name', $data)) {
@@ -346,7 +346,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             $journalLink->refresh();
         }
 
-        $journalLink->link_type_id = $data['link_type_id'] ? $data['link_type_id'] : $journalLink->link_type_id;
+        $journalLink->link_type_id = $data['link_type_id'] ?: $journalLink->link_type_id;
         $journalLink->save();
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);
@@ -386,9 +386,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
 
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getLink(TransactionJournal $one, TransactionJournal $two): ?TransactionJournalLink
     {
         $left = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->first();

@@ -119,6 +119,7 @@ class MigrateToRules extends Command
 
     /**
      * @return bool
+     * @throws FireflyException
      */
     private function isExecuted(): bool
     {

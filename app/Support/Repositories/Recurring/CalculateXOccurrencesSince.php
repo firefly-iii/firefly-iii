@@ -208,7 +208,7 @@ trait CalculateXOccurrencesSince
         $date->year = $mutator->year;
         if ($mutator > $date) {
             Log::debug(
-                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'),)
+                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'))
             );
             $date->addYear();
             Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
@@ -223,7 +223,7 @@ trait CalculateXOccurrencesSince
                 $return[] = clone $obj;
                 $total++;
             }
-            $obj->addYears(1);
+            $obj->addYears();
             $attempts++;
         }
 

@@ -156,7 +156,7 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      *
      * @return bool
      */

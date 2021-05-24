@@ -42,6 +42,8 @@ class VersionCheckEventHandler
      * Checks with GitHub to see if there is a new version.
      *
      * @param RequestedVersionCheckStatus $event
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
@@ -59,7 +61,6 @@ class VersionCheckEventHandler
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        /** @var User $user */
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
@@ -87,12 +88,12 @@ class VersionCheckEventHandler
 
     /**
      * @param RequestedVersionCheckStatus $event
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        /** @var User $user */
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');

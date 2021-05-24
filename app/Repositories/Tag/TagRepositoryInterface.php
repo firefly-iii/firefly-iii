@@ -79,7 +79,7 @@ interface TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return Carbon
+     * @return Carbon|null
      */
     public function firstUseDate(Tag $tag): ?Carbon;
 

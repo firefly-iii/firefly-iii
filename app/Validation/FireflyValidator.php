@@ -56,6 +56,9 @@ class FireflyValidator extends Validator
      * @param mixed $value
      *
      * @return bool
+     * @throws \PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException
+     * @throws \PragmaRX\Google2FA\Exceptions\InvalidCharactersException
+     * @throws \PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException
      */
     public function validate2faCode($attribute, $value): bool
     {
@@ -472,7 +475,6 @@ class FireflyValidator extends Validator
             return false;
         }
 
-        /** @var Collection $accountTypes */
         $accountTypes   = AccountType::whereIn('type', $search)->get();
         $ignore         = (int)($parameters[0] ?? 0.0);
         $accountTypeIds = $accountTypes->pluck('id')->toArray();

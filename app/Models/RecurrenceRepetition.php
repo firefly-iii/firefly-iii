@@ -32,16 +32,16 @@ use Illuminate\Database\Query\Builder;
 /**
  * FireflyIII\Models\RecurrenceRepetition
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property string $repetition_type
- * @property string $repetition_moment
- * @property int $repetition_skip
- * @property int $weekend
- * @property-read \FireflyIII\Models\Recurrence $recurrence
+ * @property int                             $recurrence_id
+ * @property string                          $repetition_type
+ * @property string                          $repetition_moment
+ * @property int                             $repetition_skip
+ * @property int                             $weekend
+ * @property-read Recurrence                 $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
  * @method static Builder|RecurrenceRepetition onlyTrashed()

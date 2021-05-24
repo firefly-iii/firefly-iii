@@ -41,7 +41,7 @@ class ClearNotes implements ActionInterface
           ->where('noteable_id', $journal['transaction_journal_id'])
           ->where('noteable_type', TransactionJournal::class)
           ->delete();
-        Log::debug(sprintf('RuleAction ClearNotes removed all notes.'));
+        Log::debug('RuleAction ClearNotes removed all notes.');
 
         return true;
     }

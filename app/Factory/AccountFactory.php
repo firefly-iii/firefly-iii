@@ -131,6 +131,7 @@ class AccountFactory
      * @param array $data
      *
      * @return AccountType|null
+     * @throws FireflyException
      */
     protected function getAccountType(array $data): ?AccountType
     {
@@ -175,9 +176,11 @@ class AccountFactory
     }
 
     /**
-     * @param array $data
+     * @param AccountType $type
+     * @param array       $data
      *
      * @return Account
+     * @throws \JsonException
      */
     private function createAccount(AccountType $type, array $data): Account
     {
@@ -244,6 +247,7 @@ class AccountFactory
      * @param array   $data
      *
      * @return array
+     * @throws \JsonException
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {

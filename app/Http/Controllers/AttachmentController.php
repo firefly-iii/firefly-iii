@@ -106,7 +106,7 @@ class AttachmentController extends Controller
      *
      * @param Attachment $attachment
      *
-     * @return mixed
+     * @return LaravelResponse
      *
      * @throws FireflyException
      */
@@ -211,10 +211,12 @@ class AttachmentController extends Controller
     /**
      * View attachment in browser.
      *
+     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return LaravelResponse
      * @throws FireflyException
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function view(Request $request, Attachment $attachment): LaravelResponse
     {

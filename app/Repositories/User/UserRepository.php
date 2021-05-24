@@ -377,8 +377,8 @@ class UserRepository implements UserRepositoryInterface
      * @param string $newEmail
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @see changeEmail
-     *
      */
     public function updateEmail(User $user, string $newEmail): bool
     {

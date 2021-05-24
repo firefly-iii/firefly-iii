@@ -32,14 +32,14 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\RecurrenceMeta
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $recurrence_id
- * @property string $name
- * @property mixed $value
- * @property-read \FireflyIII\Models\Recurrence $recurrence
+ * @property int             $id
+ * @property Carbon|null     $created_at
+ * @property Carbon|null     $updated_at
+ * @property Carbon|null     $deleted_at
+ * @property int             $recurrence_id
+ * @property string          $name
+ * @property mixed           $value
+ * @property-read Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newQuery()
  * @method static Builder|RecurrenceMeta onlyTrashed()

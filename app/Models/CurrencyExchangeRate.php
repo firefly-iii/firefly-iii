@@ -32,19 +32,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\CurrencyExchangeRate
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $user_id
- * @property int $from_currency_id
- * @property int $to_currency_id
- * @property \Illuminate\Support\Carbon $date
- * @property string $rate
- * @property string|null $user_rate
- * @property-read \FireflyIII\Models\TransactionCurrency $fromCurrency
- * @property-read \FireflyIII\Models\TransactionCurrency $toCurrency
- * @property-read User $user
+ * @property string|null                     $deleted_at
+ * @property int                             $user_id
+ * @property int                             $from_currency_id
+ * @property int                             $to_currency_id
+ * @property \Illuminate\Support\Carbon      $date
+ * @property string                          $rate
+ * @property string|null                     $user_rate
+ * @property-read TransactionCurrency        $fromCurrency
+ * @property-read TransactionCurrency        $toCurrency
+ * @property-read User                       $user
  * @method static Builder|CurrencyExchangeRate newModelQuery()
  * @method static Builder|CurrencyExchangeRate newQuery()
  * @method static Builder|CurrencyExchangeRate query()

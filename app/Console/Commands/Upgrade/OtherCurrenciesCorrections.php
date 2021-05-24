@@ -112,6 +112,7 @@ class OtherCurrenciesCorrections extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {
@@ -161,7 +162,6 @@ class OtherCurrenciesCorrections extends Command
 
         }
 
-        /** @var Account $account */
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {

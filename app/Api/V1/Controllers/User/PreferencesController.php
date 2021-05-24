@@ -47,6 +47,7 @@ class PreferencesController extends Controller
      * List all of them.
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
@@ -115,8 +116,10 @@ class PreferencesController extends Controller
 
     /**
      * @param PreferenceUpdateRequest $request
+     * @param Preference              $preference
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {

@@ -123,7 +123,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @param Attachment $attachment
      *
-     * @return string
+     * @return string|null
      */
     public function getNoteText(Attachment $attachment): ?string
     {
@@ -167,6 +167,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param array      $data
      *
      * @return Attachment
+     * @throws Exception
      */
     public function update(Attachment $attachment, array $data): Attachment
     {

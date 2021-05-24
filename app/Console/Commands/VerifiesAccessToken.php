@@ -67,6 +67,7 @@ trait VerifiesAccessToken
      * Returns false when given token does not match given user token.
      *
      * @return bool
+     * @throws FireflyException
      */
     protected function verifyAccessToken(): bool
     {
@@ -81,7 +82,7 @@ trait VerifiesAccessToken
 
             return false;
         }
-        $accessToken = app('preferences')->getForUser($user, 'access_token', null);
+        $accessToken = app('preferences')->getForUser($user, 'access_token');
         if (null === $accessToken) {
             Log::error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
 

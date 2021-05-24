@@ -41,8 +41,8 @@ interface LinkTypeRepositoryInterface
     public function countJournals(LinkType $linkType): int;
 
     /**
-     * @param LinkType $linkType
-     * @param LinkType $moveTo
+     * @param LinkType      $linkType
+     * @param LinkType|null $moveTo
      *
      * @return bool
      */

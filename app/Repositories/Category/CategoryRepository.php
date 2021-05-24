@@ -105,6 +105,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param string|null $categoryName
      *
      * @return Category|null
+     * @throws FireflyException
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
@@ -228,7 +229,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Collection $accounts
      *
      * @return Carbon|null
-     *
+     * @throws Exception
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {

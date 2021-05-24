@@ -160,7 +160,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * Find a budget or return NULL
      *
-     * @param int $budgetId |null
+     * @param int|null $budgetId |null
      *
      * @return Budget|null
      */
@@ -179,8 +179,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @param Budget $budget
      *
-     * @return Carbon
-     *
+     * @return Carbon|null
      */
     public function firstUseDate(Budget $budget): ?Carbon
     {

@@ -188,14 +188,13 @@ class BillTransformer extends AbstractTransformer
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }
-        $result = [
-            'paid_dates'          => $result,
-            'next_expected_match' => $nextMatch->format('Y-m-d'),
-        ];
 
         //Log::debug('Result', $result);
 
-        return $result;
+        return [
+            'paid_dates'          => $result,
+            'next_expected_match' => $nextMatch->format('Y-m-d'),
+        ];
     }
 
     /**

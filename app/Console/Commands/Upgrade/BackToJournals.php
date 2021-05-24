@@ -83,6 +83,7 @@ class BackToJournals extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isMigrated(): bool
     {
@@ -93,6 +94,7 @@ class BackToJournals extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {

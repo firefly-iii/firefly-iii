@@ -41,6 +41,7 @@ class AdminEventHandler
      * @param AdminRequestedTestMessage $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): bool
     {
@@ -58,7 +59,7 @@ class AdminEventHandler
             }
 
             // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email', null);
+            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
             if (null !== $pref) {
                 $email = $pref->data;
             }

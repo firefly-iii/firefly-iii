@@ -264,6 +264,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * @param TransactionGroup $group
      *
      * @return array
+     * @throws FireflyException
      */
     public function getPiggyEvents(TransactionGroup $group): array
     {

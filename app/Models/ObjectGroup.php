@@ -23,38 +23,43 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\ObjectGroup
  *
- * @property int $id
- * @property int $user_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property string $title
- * @property int $order
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
- * @property-read int|null $accounts_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Bill[] $bills
- * @property-read int|null $bills_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
- * @property-read int|null $piggy_banks_count
- * @property-read User $user
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup query()
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereOrder($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ObjectGroup whereUserId($value)
- * @mixin \Eloquent
+ * @property int                         $id
+ * @property int                         $user_id
+ * @property Carbon|null                 $created_at
+ * @property Carbon|null                 $updated_at
+ * @property Carbon|null                 $deleted_at
+ * @property string                      $title
+ * @property int                         $order
+ * @property-read Collection|Account[]   $accounts
+ * @property-read int|null               $accounts_count
+ * @property-read Collection|Bill[]      $bills
+ * @property-read int|null               $bills_count
+ * @property-read Collection|PiggyBank[] $piggyBanks
+ * @property-read int|null               $piggy_banks_count
+ * @property-read User                   $user
+ * @method static Builder|ObjectGroup newModelQuery()
+ * @method static Builder|ObjectGroup newQuery()
+ * @method static Builder|ObjectGroup query()
+ * @method static Builder|ObjectGroup whereCreatedAt($value)
+ * @method static Builder|ObjectGroup whereDeletedAt($value)
+ * @method static Builder|ObjectGroup whereId($value)
+ * @method static Builder|ObjectGroup whereOrder($value)
+ * @method static Builder|ObjectGroup whereTitle($value)
+ * @method static Builder|ObjectGroup whereUpdatedAt($value)
+ * @method static Builder|ObjectGroup whereUserId($value)
+ * @mixin Eloquent
  */
 class ObjectGroup extends Model
 {
@@ -74,7 +79,7 @@ class ObjectGroup extends Model
         ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return MorphToMany
      */
     public function piggyBanks()
     {
@@ -82,7 +87,7 @@ class ObjectGroup extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return MorphToMany
      */
     public function bills()
     {
@@ -90,7 +95,7 @@ class ObjectGroup extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     * @return MorphToMany
      */
     public function accounts()
     {

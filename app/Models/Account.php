@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,34 +41,34 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property int                                                                            $id
  * @property \Illuminate\Support\Carbon|null                                                $created_at
- * @property \Illuminate\Support\Carbon|null                                                $updated_at
- * @property \Illuminate\Support\Carbon|null                                                $deleted_at
- * @property int                                                                            $user_id
- * @property int                                                                            $account_type_id
- * @property string                                                                         $name
- * @property string|null                                                                    $virtual_balance
- * @property string|null                                                                    $iban
- * @property bool                                                                           $active
- * @property bool                                                                           $encrypted
- * @property int                                                                            $order
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read int|null                                                                  $account_meta_count
- * @property \FireflyIII\Models\AccountType                                                 $accountType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[]  $attachments
- * @property-read int|null                                                                  $attachments_count
- * @property-read string                                                                    $account_number
- * @property-read string                                                                    $edit_name
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Location[]    $locations
- * @property-read int|null                                                                  $locations_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]        $notes
- * @property-read int|null                                                                  $notes_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ObjectGroup[] $objectGroups
- * @property-read int|null                                                                  $object_groups_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
- * @property-read int|null                                                                  $piggy_banks_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read int|null                                                                  $transactions_count
- * @property-read User                                                                      $user
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int                             $user_id
+ * @property int                             $account_type_id
+ * @property string                          $name
+ * @property string|null                     $virtual_balance
+ * @property string|null                     $iban
+ * @property bool                            $active
+ * @property bool                            $encrypted
+ * @property int                             $order
+ * @property-read Collection|AccountMeta[]   $accountMeta
+ * @property-read int|null                   $account_meta_count
+ * @property AccountType                     $accountType
+ * @property-read Collection|Attachment[]    $attachments
+ * @property-read int|null                   $attachments_count
+ * @property-read string                     $account_number
+ * @property-read string                     $edit_name
+ * @property-read Collection|Location[]      $locations
+ * @property-read int|null                   $locations_count
+ * @property-read Collection|Note[]          $notes
+ * @property-read int|null                   $notes_count
+ * @property-read Collection|ObjectGroup[]   $objectGroups
+ * @property-read int|null                   $object_groups_count
+ * @property-read Collection|PiggyBank[]     $piggyBanks
+ * @property-read int|null                   $piggy_banks_count
+ * @property-read Collection|Transaction[]   $transactions
+ * @property-read int|null                   $transactions_count
+ * @property-read User                       $user
  * @method static EloquentBuilder|Account accountTypeIn($types)
  * @method static EloquentBuilder|Account newModelQuery()
  * @method static EloquentBuilder|Account newQuery()

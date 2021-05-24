@@ -71,6 +71,7 @@ class Help implements HelpInterface
      * @param string $language
      *
      * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getFromGitHub(string $route, string $language): string
     {

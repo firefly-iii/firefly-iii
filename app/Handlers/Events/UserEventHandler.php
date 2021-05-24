@@ -110,6 +110,7 @@ class UserEventHandler
      * @param Login $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function demoUserBackToEnglish(Login $event): bool
     {
@@ -130,6 +131,8 @@ class UserEventHandler
 
     /**
      * @param DetectedNewIPAddress $event
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -144,7 +147,7 @@ class UserEventHandler
         $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
 
         // see if user has alternative email address:
-        $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+        $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
         if (null !== $pref) {
             $email = $pref->data;
         }
@@ -171,6 +174,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
     {
@@ -195,6 +199,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
     {
@@ -246,6 +251,7 @@ class UserEventHandler
      * @param RegisteredUser $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function sendRegistrationMail(RegisteredUser $event): bool
     {
@@ -257,7 +263,7 @@ class UserEventHandler
             $ipAddress = $event->ipAddress;
 
             // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email', null);
+            $pref = app('preferences')->getForUser($event->user, 'remote_guard_alt_email');
             if (null !== $pref) {
                 $email = $pref->data;
             }
@@ -277,6 +283,7 @@ class UserEventHandler
 
     /**
      * @param Login $event
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeUserIPAddress(Login $event): void
     {

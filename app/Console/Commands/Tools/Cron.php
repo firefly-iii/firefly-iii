@@ -142,7 +142,6 @@ class Cron extends Command
      * @param bool        $force
      * @param Carbon|null $date
      *
-     * @throws FireflyException
      */
     private function autoBudgetCronJob(bool $force, ?Carbon $date): void
     {

@@ -31,16 +31,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\RuleTrigger
  *
- * @property int $id
+ * @property int                             $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $rule_id
- * @property string $trigger_type
- * @property string $trigger_value
- * @property int $order
- * @property bool $active
- * @property bool $stop_processing
- * @property-read \FireflyIII\Models\Rule $rule
+ * @property int                             $rule_id
+ * @property string                          $trigger_type
+ * @property string                          $trigger_value
+ * @property int                             $order
+ * @property bool                            $active
+ * @property bool                            $stop_processing
+ * @property-read Rule                       $rule
  * @method static Builder|RuleTrigger newModelQuery()
  * @method static Builder|RuleTrigger newQuery()
  * @method static Builder|RuleTrigger query()

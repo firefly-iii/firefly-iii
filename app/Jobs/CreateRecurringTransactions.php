@@ -64,7 +64,7 @@ class CreateRecurringTransactions implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon $date
+     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -347,6 +347,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon               $date
      *
      * @return TransactionGroup|null
+     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
     {

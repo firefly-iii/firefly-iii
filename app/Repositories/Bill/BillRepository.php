@@ -99,7 +99,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param int $billId
      *
-     * @return Bill
+     * @return Bill|null
      */
     public function find(int $billId): ?Bill
     {
@@ -142,7 +142,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param string $name
      *
-     * @return Bill
+     * @return Bill|null
      */
     public function findByName(string $name): ?Bill
     {

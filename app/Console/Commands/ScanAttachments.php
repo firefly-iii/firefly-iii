@@ -19,8 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;

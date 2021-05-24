@@ -19,8 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
-/** @noinspection PhpUndefinedMethodInspection */
 /** @noinspection MultipleReturnStatementsInspection */
 
 declare(strict_types=1);

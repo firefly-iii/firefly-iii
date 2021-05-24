@@ -72,6 +72,7 @@ class MigrateTagLocations extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {

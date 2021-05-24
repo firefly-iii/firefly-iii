@@ -74,8 +74,8 @@ interface BudgetLimitRepositoryInterface
     /**
      * TODO this method is not multi-currency aware.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      */
@@ -83,17 +83,17 @@ interface BudgetLimitRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
+     * @param Carbon|null         $start
+     * @param Carbon|null         $end
      *
      * @return Collection
      */
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, Carbon $start = null, Carbon $end = null): Collection;
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget      $budget
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return Collection
      */

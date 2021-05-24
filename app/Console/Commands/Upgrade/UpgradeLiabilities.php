@@ -57,6 +57,7 @@ class UpgradeLiabilities extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {
@@ -96,7 +97,7 @@ class UpgradeLiabilities extends Command
     /**
      * @param TransactionJournal $journal
      *
-     * @return Transaction
+     * @return Transaction|null
      */
     private function getSourceTransaction(TransactionJournal $journal): ?Transaction
     {
@@ -106,7 +107,7 @@ class UpgradeLiabilities extends Command
     /**
      * @param TransactionJournal $journal
      *
-     * @return Transaction
+     * @return Transaction|null
      */
     private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
     {

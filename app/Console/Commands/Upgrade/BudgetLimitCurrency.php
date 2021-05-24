@@ -67,7 +67,6 @@ class BudgetLimitCurrency extends Command
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             if (null === $budgetLimit->transaction_currency_id) {
-                /** @var Budget $budget */
                 $budget = $budgetLimit->budget;
                 if (null !== $budget) {
                     $user = $budget->user;
@@ -96,6 +95,7 @@ class BudgetLimitCurrency extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {

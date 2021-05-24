@@ -90,7 +90,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (0 === strpos($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }
@@ -119,9 +119,7 @@ class UpgradeFireflyInstructions extends Command
     private function showLine(): void
     {
         $line = '+';
-        for ($i = 0; $i < 78; ++$i) {
-            $line .= '-';
-        }
+        $line .= str_repeat('-', 78);
         $line .= '+';
         $this->line($line);
     }
@@ -163,7 +161,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (0 === strpos($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }

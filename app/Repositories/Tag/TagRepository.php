@@ -250,7 +250,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @return Tag
+     * @return Tag|null
      */
     public function oldestTag(): ?Tag
     {
