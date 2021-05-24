@@ -165,6 +165,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
+    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
