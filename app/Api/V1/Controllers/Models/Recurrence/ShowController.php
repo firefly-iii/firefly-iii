@@ -63,6 +63,7 @@ class ShowController extends Controller
      * List all of them.
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

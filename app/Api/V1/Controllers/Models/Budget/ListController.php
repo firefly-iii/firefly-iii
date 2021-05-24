@@ -73,6 +73,7 @@ class ListController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(Budget $budget): JsonResponse
@@ -104,6 +105,7 @@ class ListController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function budgetLimits(Budget $budget): JsonResponse
@@ -134,6 +136,7 @@ class ListController extends Controller
      * @param Budget  $budget
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Budget $budget): JsonResponse

@@ -132,10 +132,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                                        $transaction_groups_count
  * @property-read int|null                                                        $transaction_journals_count
  * @property-read int|null                                                        $transactions_count
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
+ * @method static Builder|User whereMfaSecret($value)
+ * @method static Builder|User whereObjectguid($value)
  * @property string|null                                                          $provider
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
+ * @method static Builder|User whereProvider($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
  * @property-read int|null $object_groups_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[] $webhooks

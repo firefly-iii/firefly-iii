@@ -71,6 +71,7 @@ class ListController extends Controller
      * @param Tag $tag
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(Tag $tag): JsonResponse
@@ -103,6 +104,7 @@ class ListController extends Controller
      * @param Tag     $tag
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Tag $tag): JsonResponse

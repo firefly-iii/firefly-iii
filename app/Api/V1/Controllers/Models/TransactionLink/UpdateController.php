@@ -71,7 +71,6 @@ class UpdateController extends Controller
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
-     * @throws FireflyException
      *
      * TODO generates query exception when link exists.
      */

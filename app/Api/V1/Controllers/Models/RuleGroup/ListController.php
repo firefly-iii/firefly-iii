@@ -65,6 +65,7 @@ class ListController extends Controller
      * @param RuleGroup $group
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function rules(RuleGroup $group): JsonResponse

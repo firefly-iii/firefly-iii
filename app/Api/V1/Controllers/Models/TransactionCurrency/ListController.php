@@ -93,6 +93,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
@@ -143,6 +144,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
@@ -178,6 +180,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function bills(TransactionCurrency $currency): JsonResponse
@@ -218,6 +221,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
@@ -249,6 +253,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
@@ -299,6 +304,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function rules(TransactionCurrency $currency): JsonResponse
@@ -350,6 +356,7 @@ class ListController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse

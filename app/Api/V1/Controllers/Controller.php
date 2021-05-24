@@ -109,9 +109,7 @@ abstract class Controller extends BaseController
         }
 
         // sort fields:
-        $bag = $this->getSortParameters($bag);
-
-        return $bag;
+        return $this->getSortParameters($bag);
     }
 
     /**

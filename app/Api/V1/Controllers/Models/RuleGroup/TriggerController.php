@@ -77,7 +77,6 @@ class TriggerController extends Controller
      */
     public function testGroup(TestRequest $request, RuleGroup $group): JsonResponse
     {
-        /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('200023: No rules in this rule group.');
@@ -132,7 +131,6 @@ class TriggerController extends Controller
      */
     public function triggerGroup(TriggerRequest $request, RuleGroup $group): JsonResponse
     {
-        /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('200023: No rules in this rule group.');

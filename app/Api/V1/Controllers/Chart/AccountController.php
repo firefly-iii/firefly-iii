@@ -114,7 +114,6 @@ class AccountController extends Controller
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
             ];
-            /** @var Carbon $currentStart */
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = round((float)array_values($range)[0], 12);

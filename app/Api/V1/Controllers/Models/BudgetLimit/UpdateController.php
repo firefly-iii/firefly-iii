@@ -69,6 +69,7 @@ class UpdateController extends Controller
      * @param BudgetLimit   $budgetLimit
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function update(UpdateRequest $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

@@ -69,6 +69,7 @@ class ListController extends Controller
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse

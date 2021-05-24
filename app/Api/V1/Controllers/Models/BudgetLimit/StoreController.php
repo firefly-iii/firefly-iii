@@ -64,10 +64,9 @@ class StoreController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreRequest $request
+     * @param Budget       $budget
      *
      * @return JsonResponse
-     * @throws FireflyException
-     *
      */
     public function store(StoreRequest $request, Budget $budget): JsonResponse
     {

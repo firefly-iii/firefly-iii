@@ -71,6 +71,7 @@ class ListController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(Bill $bill): JsonResponse
@@ -102,6 +103,7 @@ class ListController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function rules(Bill $bill): JsonResponse
@@ -138,6 +140,7 @@ class ListController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Bill $bill): JsonResponse

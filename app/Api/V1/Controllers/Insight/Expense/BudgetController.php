@@ -81,7 +81,7 @@ class BudgetController extends Controller
         }
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $expenses = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, new Collection([$budget]), null);
+            $expenses = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, new Collection([$budget]));
             /** @var array $expense */
             foreach ($expenses as $expense) {
                 $result[] = [
@@ -109,7 +109,7 @@ class BudgetController extends Controller
         $end           = $request->getEnd();
         $assetAccounts = $request->getAssetAccounts();
         $result        = [];
-        $expenses      = $this->noRepository->sumExpenses($start, $end, $assetAccounts, null);
+        $expenses      = $this->noRepository->sumExpenses($start, $end, $assetAccounts);
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [

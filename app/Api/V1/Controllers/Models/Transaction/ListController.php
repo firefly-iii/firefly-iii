@@ -69,6 +69,7 @@ class ListController extends Controller
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
@@ -101,6 +102,7 @@ class ListController extends Controller
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
@@ -136,6 +138,7 @@ class ListController extends Controller
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse

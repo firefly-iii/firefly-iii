@@ -75,6 +75,7 @@ class ListController extends Controller
      * @param LinkType $linkType
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse

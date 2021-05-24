@@ -67,8 +67,9 @@ class ShowController extends Controller
      *
      * @param Request $request
      *
-     * @codeCoverageIgnore
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
