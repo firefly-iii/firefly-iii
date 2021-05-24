@@ -257,6 +257,8 @@ trait RecurringTransactionTrait
     /**
      * @param RecurrenceTransaction $transaction
      * @param int                   $categoryId
+     *
+     * @throws FireflyException
      */
     private function setCategory(RecurrenceTransaction $transaction, int $categoryId): void
     {

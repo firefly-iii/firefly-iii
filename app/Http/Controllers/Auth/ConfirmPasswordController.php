@@ -57,7 +57,7 @@ class ConfirmPasswordController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
+     * @throws FireflyException
      */
     public function __construct()
     {

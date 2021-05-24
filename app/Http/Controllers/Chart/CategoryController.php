@@ -168,10 +168,10 @@ class CategoryController extends Controller
     /**
      * Generate report chart for either with or without category.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Category   $category
+     * @param Collection    $accounts
+     * @param Carbon        $start
+     * @param Carbon        $end
+     * @param Category|null $category
      *
      * @return array
      */

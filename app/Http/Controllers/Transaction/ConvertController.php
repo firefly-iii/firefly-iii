@@ -283,7 +283,6 @@ class ConvertController extends Controller
      *
      * @return RedirectResponse|Redirector
      *
-     * @throws FireflyException
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {

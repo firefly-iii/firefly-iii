@@ -39,6 +39,7 @@ use FireflyIII\User;
 use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -105,7 +106,8 @@ class ProfileController extends Controller
     /**
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|RedirectResponse|Redirector
+     * @return Application|RedirectResponse|Redirector
+     * @throws \Illuminate\Auth\AuthenticationException
      */
     public function postLogoutOtherSessions(Request $request)
     {
@@ -181,6 +183,9 @@ class ProfileController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws \PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException
+     * @throws \PragmaRX\Google2FA\Exceptions\InvalidCharactersException
+     * @throws \PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException
      */
     public function code(Request $request)
     {
@@ -273,7 +278,7 @@ class ProfileController extends Controller
      *
      * @param Request $request
      *
-     * @return \Illuminate\Contracts\Foundation\Application|RedirectResponse|Redirector
+     * @return Application|RedirectResponse|Redirector
      */
     public function deleteAccount(Request $request)
     {
@@ -347,6 +352,7 @@ class ProfileController extends Controller
      * Index for profile.
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function index()
     {
@@ -367,7 +373,7 @@ class ProfileController extends Controller
             $repository->createPersonalAccessClient(null, config('app.name') . ' Personal Access Client', 'http://localhost');
         }
 
-        $accessToken = app('preferences')->get('access_token', null);
+        $accessToken = app('preferences')->get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
             $accessToken = app('preferences')->set('access_token', $token);
@@ -490,7 +496,6 @@ class ProfileController extends Controller
         return redirect(route('profile.index'));
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     /**
      * Submit 2FA for the first time.
      *
@@ -570,7 +575,10 @@ class ProfileController extends Controller
     /**
      * Regenerate access token.
      *
+     * @param Request $request
+     *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function regenerate(Request $request)
     {

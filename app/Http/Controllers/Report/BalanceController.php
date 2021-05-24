@@ -64,7 +64,7 @@ class BalanceController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return mixed|string
+     * @return string
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

@@ -49,7 +49,6 @@ trait BillServiceTrait
             return;
         }
         $ruleIds = $bill->user->rules()->get(['id'])->pluck('id')->toArray();
-        /** @var Collection $set */
         $set = RuleAction::whereIn('rule_id', $ruleIds)
                          ->where('action_type', 'link_to_bill')
                          ->where('action_value', $oldName)->get();

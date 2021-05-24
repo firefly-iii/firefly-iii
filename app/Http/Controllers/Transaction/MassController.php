@@ -91,7 +91,7 @@ class MassController extends Controller
      *
      * @param MassDeleteJournalRequest $request
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\Foundation\Application|Redirector|RedirectResponse
      *
      */
     public function destroy(MassDeleteJournalRequest $request)

@@ -187,6 +187,8 @@ class CreateController extends Controller
     /**
      * @param Request            $request
      * @param TransactionJournal $journal
+     *
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
@@ -239,7 +241,6 @@ class CreateController extends Controller
      */
     public function duplicate(Rule $rule): RedirectResponse
     {
-        /** @var Rule $newRule */
         $newRule = $this->ruleRepos->duplicate($rule);
 
         session()->flash('success', trans('firefly.duplicated_rule', ['title' => $rule->title, 'newTitle' => $newRule->title]));

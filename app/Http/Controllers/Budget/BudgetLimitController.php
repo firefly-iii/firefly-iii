@@ -123,7 +123,7 @@ class BudgetLimitController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse|RedirectResponse|Redirector
+     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(Request $request)

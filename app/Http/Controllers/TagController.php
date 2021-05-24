@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -229,7 +228,7 @@ class TagController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {

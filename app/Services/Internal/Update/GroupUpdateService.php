@@ -165,6 +165,7 @@ class GroupUpdateService
      * @param array            $data
      *
      * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
     {

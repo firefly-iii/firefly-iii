@@ -70,7 +70,7 @@ class EditController extends Controller
      * @param Request $request
      * @param Bill    $bill
      *
-     * @return Application|Factory|View
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function edit(Request $request, Bill $bill)
     {

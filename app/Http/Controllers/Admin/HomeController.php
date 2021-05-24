@@ -60,7 +60,7 @@ class HomeController extends Controller
         $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
-        $pref          = app('preferences')->get('remote_guard_alt_email', null);
+        $pref          = app('preferences')->get('remote_guard_alt_email');
         if (null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }

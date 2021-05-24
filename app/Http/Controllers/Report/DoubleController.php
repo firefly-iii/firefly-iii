@@ -74,7 +74,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -126,7 +126,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -422,7 +422,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -472,7 +472,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {

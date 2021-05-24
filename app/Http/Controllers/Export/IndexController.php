@@ -66,6 +66,8 @@ class IndexController extends Controller
     /**
      * @return LaravelResponse
      * @throws CannotInsertRecord
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \League\Csv\Exception
      */
     public function export(): LaravelResponse
     {
@@ -89,7 +91,7 @@ class IndexController extends Controller
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
         // headers for CSV file.
         /** @var LaravelResponse $response */
-        $response = response($result['transactions'], 200);
+        $response = response($result['transactions']);
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')

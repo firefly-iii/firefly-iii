@@ -66,7 +66,7 @@ class DeleteController extends Controller
      *
      * @param TransactionGroup $group
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
      */
     public function delete(TransactionGroup $group)
     {

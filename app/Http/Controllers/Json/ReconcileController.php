@@ -214,7 +214,7 @@ class ReconcileController extends Controller
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return mixed
+     * @return JsonResponse
      *
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)

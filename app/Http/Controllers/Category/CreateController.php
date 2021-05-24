@@ -86,6 +86,7 @@ class CreateController extends Controller
      * @param CategoryFormRequest $request
      *
      * @return $this|RedirectResponse|Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(CategoryFormRequest $request)
     {

@@ -193,7 +193,7 @@ trait CalculateRangeOccurrences
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $obj;
             }
-            $obj->addYears(1);
+            $obj->addYears();
             $count++;
             $attempts++;
         }

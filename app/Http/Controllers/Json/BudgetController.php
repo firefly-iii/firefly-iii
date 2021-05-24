@@ -79,11 +79,15 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param TransactionCurrency $currency
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
      * @return JsonResponse
      */
     public function getBudgetInformation(TransactionCurrency $currency, Carbon $start, Carbon $end): JsonResponse
     {
-        $budgeted        = $this->blRepository->budgeted($start, $end, $currency,);
+        $budgeted        = $this->blRepository->budgeted($start, $end, $currency);
         $availableBudget = $this->abRepository->getByCurrencyDate($start, $end, $currency);
         $available       = '0';
         $percentage      = '0';

@@ -73,14 +73,14 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return RedirectResponse|\Illuminate\Http\Response|JsonResponse
+     * @return JsonResponse|RedirectResponse
      *
      * @throws ValidationException
      */
     public function login(Request $request)
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
-        Log::info(sprintf('User is trying to login.'));
+        Log::info('User is trying to login.');
         if ('ldap' === config('auth.providers.users.driver')) {
             /** @var Adldap\Connections\Provider $provider */
             Adldap::getProvider('default'); // @phpstan-ignore-line
@@ -161,7 +161,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return Response
+     * @return void
      *
      * @throws ValidationException
      */
@@ -180,7 +180,10 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
+     * @param Request $request
+     *
      * @return Factory|\Illuminate\Http\Response|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function showLoginForm(Request $request)
     {

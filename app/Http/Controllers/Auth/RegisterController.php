@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -78,6 +77,8 @@ class RegisterController extends Controller
      * @param Request $request
      *
      * @return Factory|RedirectResponse|Redirector|View
+     * @throws FireflyException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function register(Request $request)
     {
@@ -123,6 +124,7 @@ class RegisterController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function showRegistrationForm(Request $request)
     {

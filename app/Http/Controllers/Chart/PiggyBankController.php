@@ -94,7 +94,6 @@ class PiggyBankController extends Controller
 
         $chartData = [];
         while ($oldest <= $today) {
-            /** @var Collection $filtered */
             $filtered          = $set->filter(
                 function (PiggyBankEvent $event) use ($oldest) {
                     return $event->date->lte($oldest);
@@ -105,7 +104,6 @@ class PiggyBankController extends Controller
             $chartData[$label] = $currentSum;
             $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
         }
-        /** @var Collection $finalFiltered */
         $finalFiltered          = $set->filter(
             function (PiggyBankEvent $event) use ($today) {
                 return $event->date->lte($today);

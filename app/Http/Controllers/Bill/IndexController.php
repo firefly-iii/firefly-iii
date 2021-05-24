@@ -116,7 +116,7 @@ class IndexController extends Controller
             }
             $current = $array['pay_dates'][0] ?? null;
             if (null !== $current && !$nextExpectedMatch->isToday()) {
-                $currentExpectedMatch              = Carbon::createFromFormat(Carbon::ATOM, $current);
+                $currentExpectedMatch              = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
                 $array['next_expected_match_diff'] = $currentExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
             }
 
@@ -195,7 +195,7 @@ class IndexController extends Controller
         $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
 
         Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
-        Log::debug(sprintf(sprintf('Average is %s', $avg)));
+        Log::debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
         $multiplies = [
             'yearly'    => '1',

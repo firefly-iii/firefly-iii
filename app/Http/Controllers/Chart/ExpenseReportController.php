@@ -184,7 +184,7 @@ class ExpenseReportController extends Controller
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key]; 
+                $newSet[$key] = $entry;
             }
         }
         if (0===count($newSet)) {

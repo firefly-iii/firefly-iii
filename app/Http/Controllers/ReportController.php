@@ -227,7 +227,7 @@ class ReportController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return Factory|View|string
+     * @return string
      * @throws FireflyException
      */
     public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -299,7 +299,7 @@ class ReportController extends Controller
      *
      * @param string $reportType
      *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      *
      */
     public function options(string $reportType)

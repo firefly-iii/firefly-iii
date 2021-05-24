@@ -99,7 +99,6 @@ class IndexController extends Controller
      * @param Rule $rule
      *
      * @return RedirectResponse
-     * @throws FireflyException
      */
     public function search(Rule $rule): RedirectResponse
     {

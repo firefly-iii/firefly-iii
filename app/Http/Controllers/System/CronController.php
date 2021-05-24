@@ -31,7 +31,7 @@ use Log;
 class CronController
 {
     /**
-     * @return string
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function cron()
     {

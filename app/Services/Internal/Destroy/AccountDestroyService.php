@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
 use Log;
+use stdClass;
 
 /**
  * Class AccountDestroyService
@@ -130,7 +131,7 @@ class AccountDestroyService
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         $user    = $account->user;
-        /** @var \stdClass $row */
+        /** @var stdClass $row */
         foreach ($collection as $row) {
             if ((int)$row->the_count > 1) {
                 $journalId = (int)$row->transaction_journal_id;

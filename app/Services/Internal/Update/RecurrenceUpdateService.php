@@ -143,6 +143,8 @@ class RecurrenceUpdateService
      *
      * @param Recurrence $recurrence
      * @param array      $repetitions
+     *
+     * @throws FireflyException
      */
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
     {
@@ -184,7 +186,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param array $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return RecurrenceRepetition|null
      */
@@ -308,7 +311,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param array $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return RecurrenceTransaction|null
      */

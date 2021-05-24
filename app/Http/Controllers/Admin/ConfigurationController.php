@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpUndefinedClassInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
@@ -60,6 +59,7 @@ class ConfigurationController extends Controller
      * Show configuration index.
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index()
     {

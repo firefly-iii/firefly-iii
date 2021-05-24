@@ -77,6 +77,8 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function update(Account $account, array $data): Account
     {
@@ -179,6 +181,8 @@ class AccountUpdateService
 
     /**
      * @param string $type
+     *
+     * @return AccountType
      */
     private function getAccountType(string $type): AccountType
     {
@@ -219,7 +223,7 @@ class AccountUpdateService
             $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
                        ->where('accounts.id', '!=', $account->id)
                        ->whereIn('accounts.account_type_id', $list)
-                       ->decrement('order', 1);
+                       ->decrement('order');
             $account->order = $newOrder;
             Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
             $account->save();
@@ -230,7 +234,7 @@ class AccountUpdateService
         $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
                    ->where('accounts.id', '!=', $account->id)
                    ->whereIn('accounts.account_type_id', $list)
-                   ->increment('order', 1);
+                   ->increment('order');
         $account->order = $newOrder;
         Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
         $account->save();
@@ -339,6 +343,8 @@ class AccountUpdateService
 
     /**
      * @param Account $account
+     *
+     * @throws FireflyException
      */
     private function updatePreferences(Account $account): void
     {

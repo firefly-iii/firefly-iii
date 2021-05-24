@@ -90,7 +90,7 @@ class BulkController extends Controller
      *
      * @param BulkEditJournalRequest $request
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(BulkEditJournalRequest $request)
     {

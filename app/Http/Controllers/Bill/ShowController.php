@@ -80,7 +80,6 @@ class ShowController extends Controller
      * @param Bill    $bill
      *
      * @return RedirectResponse|Redirector
-     * @throws FireflyException
      */
     public function rescan(Request $request, Bill $bill)
     {
