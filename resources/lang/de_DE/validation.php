@@ -200,7 +200,7 @@ return [
     'need_id_in_edit'           => 'Jeder Aufteilungen muss eine transaction_journal_id (entweder gültige ID oder 0) aufweisen.',
 
     'ob_source_need_data' => 'Sie benötigen eine gültige Quellkontonummer und/oder einen gültigen Quellkontonamen, um fortzufahren.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'Zum Fortfahren wird eine gültige Quellkonto-ID benötigt.',
     'ob_dest_need_data'   => 'Sie benötigen eine gültige Zielkontennummer und/oder einen gültigen Zielkontonamen, um fortzufahren.',
     'ob_dest_bad_data'    => 'Bei der Suche nach der ID ":id" oder dem Namen ":name" konnte kein gültiges Zielkonto gefunden werden.',
 

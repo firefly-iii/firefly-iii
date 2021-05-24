@@ -39,7 +39,7 @@ return [
     'everything'                                          => 'Her şey',
     'today'                                               => 'bugün',
     'customRange'                                         => 'Özel menzil',
-    'date_range'                                          => 'Date range',
+    'date_range'                                          => 'Tarih Aralığı',
     'apply'                                               => 'Uygula',
     'select_date'                                         => 'Tarih Seç..',
     'cancel'                                              => 'İptal',
@@ -56,8 +56,8 @@ return [
     'Opening balance'                                     => 'Açılış bakiyesi',
     'create_new_stuff'                                    => 'Yeni bir şey oluştur',
     'new_withdrawal'                                      => 'Yeni para çekme',
-    'create_new_transaction'                              => 'Create a new transaction',
-    'sidebar_frontpage_create'                            => 'Create',
+    'create_new_transaction'                              => 'Yeni Transfer Oluştur',
+    'sidebar_frontpage_create'                            => 'Yeni',
     'new_transaction'                                     => 'Yeni işlem',
     'no_rules_for_bill'                                   => 'Bu faturaya bağlı bir kural yok.',
     'go_to_asset_accounts'                                => 'Varlık hesaplarınızı görüntüleyin
@@ -222,7 +222,7 @@ return [
     'expected_total'                                      => 'beklenen toplam',
     'reconciliation_account_name'                         => ':name reconciliation (:currency)',
     'saved'                                               => 'Saved',
-    'advanced_options'                                    => 'Advanced options',
+    'advanced_options'                                    => 'Gelişmiş Ayarlar',
     'advanced_options_explain'                            => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                                     => 'Hic sunt dracones',
 
@@ -242,11 +242,11 @@ return [
     'is_alpha_warning'                                    => 'You are running an ALPHA version. Be wary of bugs and issues.',
     'is_beta_warning'                                     => 'You are running an BETA version. Be wary of bugs and issues.',
     'all_destination_accounts'                            => 'Destination accounts',
-    'all_source_accounts'                                 => 'Source accounts',
+    'all_source_accounts'                                 => 'Kaynak Hesap',
     'back_to_index'                                       => 'Back to the index',
     'cant_logout_guard'                                   => 'Firefly III can\'t log you out.',
-    'external_url'                                        => 'External URL',
-    'internal_reference'                                  => 'Internal reference',
+    'external_url'                                        => 'Harici URL',
+    'internal_reference'                                  => 'Dahili referans',
 
     // check for updates:
     'update_check_title'                                  => 'Güncellemeleri kontrol et',
@@ -280,8 +280,8 @@ return [
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III şu kelimelerin hepsini içeren hareketleri arıyor: <span class="text-info">:query</span>',
-    'search_modifier_date_is'                             => 'Transaction date is ":value"',
-    'search_modifier_id'                                  => 'Transaction ID is ":value"',
+    'search_modifier_date_is'                             => 'Transfer tarihi ":value"',
+    'search_modifier_id'                                  => 'Transfer Kimliği ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',
     'search_modifier_date_after'                          => 'Transaction date is after or on ":value"',
     'search_modifier_created_on'                          => 'Transaction was created on ":value"',
@@ -551,7 +551,7 @@ return [
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
 
     // actions
-    'rule_action_delete_transaction_choice'               => 'DELETE transaction (!)',
+    'rule_action_delete_transaction_choice'               => 'Transferi Sil (!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction (!)',
     'rule_action_set_category'                            => 'Kategoriyi ":action_value" olarak ayarla',
     'rule_action_clear_category'                          => 'Kategoriyi temizle',
@@ -1026,7 +1026,7 @@ return [
     'list_inactive_rule'                        => 'Etkin Olmayan Kurallar',
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
-    'bill_paid_on'                              => 'Paid on {date}',
+    'bill_paid_on'                              => 'Ödeme Tarihi {date}',
 
     // accounts:
     'inactive_account_link'                     => 'You have :count inactive (archived) account, which you can view on this separate page.|You have :count inactive (archived) accounts, which you can view on this separate page.',
