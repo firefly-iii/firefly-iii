@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "17977fe8178506d2f5e55cda4c726b14",
+    "content-hash": "7d0ff7fbff6ae782e001466487cfaf27",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4315,22 +4315,25 @@
         },
         {
             "name": "spatie/data-transfer-object",
-            "version": "2.8.3",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/data-transfer-object.git",
-                "reference": "2625a59566804ec63f01947d85947336237cbda6"
+                "reference": "a16ed4916f13c916107f692bd9a5d52d2c9daaa6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/2625a59566804ec63f01947d85947336237cbda6",
-                "reference": "2625a59566804ec63f01947d85947336237cbda6",
+                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/a16ed4916f13c916107f692bd9a5d52d2c9daaa6",
+                "reference": "a16ed4916f13c916107f692bd9a5d52d2c9daaa6",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4|^8.0"
+                "php": "^8.0"
             },
             "require-dev": {
+                "illuminate/collections": "^8.36",
+                "jetbrains/phpstorm-attributes": "^1.0",
+                "larapack/dd": "^1.1",
                 "phpunit/phpunit": "^9.0"
             },
             "suggest": {
@@ -4362,15 +4365,19 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/data-transfer-object/issues",
-                "source": "https://github.com/spatie/data-transfer-object/tree/2.8.3"
+                "source": "https://github.com/spatie/data-transfer-object/tree/3.1.1"
             },
             "funding": [
                 {
-                    "url": "https://www.patreon.com/spatie",
-                    "type": "patreon"
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
                 }
             ],
-            "time": "2021-02-12T08:46:52+00:00"
+            "time": "2021-04-26T03:32:41+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
