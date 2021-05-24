@@ -98,9 +98,7 @@ class RemoteUserGuard implements Guard
      */
     public function check(): bool
     {
-        $result = !is_null($this->user());
-
-        return $result;
+        return !is_null($this->user());
     }
 
     /**

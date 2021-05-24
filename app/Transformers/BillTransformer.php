@@ -255,9 +255,7 @@ class BillTransformer extends AbstractTransformer
                 return $date->format('Y-m-d');
             }
         );
-        $array  = $simple->toArray();
-
-        return $array;
+        return $simple->toArray();
     }
 
     /**

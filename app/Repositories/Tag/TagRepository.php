@@ -151,7 +151,7 @@ class TagRepository implements TagRepositoryInterface
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment, int $index) use ($disk) {
+            static function (Attachment $attachment) use ($disk) {
                 /** @var Note $note */
                 $note = $attachment->notes()->first();
                 // only used in v1 view of tags

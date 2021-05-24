@@ -121,11 +121,12 @@ interface AccountRepositoryInterface
     public function getAccountsById(array $accountIds): Collection;
 
     /**
-     * @param array $types
+     * @param array      $types
+     * @param array|null $sort
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types): Collection;
+    public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
     /**
      * @param array $types

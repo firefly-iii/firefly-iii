@@ -141,9 +141,9 @@ export default {
       });
     },
     parseIncome(data) {
-      for (let mainKey in data) {
-        if (data.hasOwnProperty(mainKey)) {
-          mainKey = parseInt(mainKey);
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
+          let mainKey = parseInt(i);
           // contains currency info and entries.
           let current = data[mainKey];
           current.pct = 0;

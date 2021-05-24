@@ -366,7 +366,7 @@ class UpdateRequest extends FormRequest
                 $this->validateJournalIds($validator, $transactionGroup);
 
                 // all transaction types must be equal:
-                $this->validateTransactionTypesForUpdate($validator, $transactionGroup);
+                $this->validateTransactionTypesForUpdate($validator);
 
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);

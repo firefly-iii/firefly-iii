@@ -182,8 +182,6 @@ trait RecurrenceValidation
         if ($reps > 0 && null !== $repeatUntil) {
             $validator->errors()->add('nr_of_repetitions', trans('validation.require_repeat_until'));
             $validator->errors()->add('repeat_until', trans('validation.require_repeat_until'));
-
-            return;
         }
     }
 

@@ -65,8 +65,6 @@ export default {
     liability_direction: function (value) {
       this.$emit('set-field', {field: 'liability_direction', value: value});
     },
-  },
-  created() {
   }
 }
 </script>

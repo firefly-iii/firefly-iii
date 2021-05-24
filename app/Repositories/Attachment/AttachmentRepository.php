@@ -174,10 +174,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             $attachment->title = $data['title'];
         }
 
-        if (array_key_exists('filename', $data)) {
-            if ('' !== (string)$data['filename'] && $data['filename'] !== $attachment->filename) {
-                $attachment->filename = $data['filename'];
-            }
+        if (array_key_exists('filename', $data) && '' !== (string)$data['filename'] && $data['filename'] !== $attachment->filename) {
+            $attachment->filename = $data['filename'];
         }
         // update model (move attachment)
         // should be validated already:

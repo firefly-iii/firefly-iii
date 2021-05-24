@@ -522,7 +522,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission', $submission);
+        Log::debug('Going for submission in createOBGroupV2', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
@@ -595,7 +595,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission', $submission);
+        Log::debug('Going for submission in createCreditTransaction', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
@@ -688,7 +688,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission', $submission);
+        Log::debug('Going for submission in createOBGroup', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);

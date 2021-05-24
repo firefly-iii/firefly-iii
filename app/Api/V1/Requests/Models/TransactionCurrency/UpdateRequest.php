@@ -54,10 +54,8 @@ class UpdateRequest extends FormRequest
             'enabled'        => ['enabled', 'boolean'],
         ];
 
-        $return = $this->getAllData($fields);
-
-        return $return;
-
+        return $this->getAllData($fields);
+//        return $return;
     }
 
     /**

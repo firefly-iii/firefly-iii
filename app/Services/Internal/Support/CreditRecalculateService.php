@@ -55,7 +55,6 @@ class CreditRecalculateService
      */
     public function recalculate(): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         if (true !== config('firefly.feature_flags.handle_debts')) {
             Log::debug('handle_debts is disabled.');
 
@@ -83,7 +82,6 @@ class CreditRecalculateService
     private function processWork(): void
     {
         $this->repository = app(AccountRepositoryInterface::class);
-        Log::debug(sprintf('Now in %s', __METHOD__));
         foreach ($this->work as $account) {
             $this->processWorkAccount($account);
         }
@@ -127,7 +125,6 @@ class CreditRecalculateService
      */
     private function processGroup(): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var TransactionJournal $journal */
         foreach ($this->group->transactionJournals as $journal) {
             if (0 === count($this->work)) {
@@ -149,7 +146,6 @@ class CreditRecalculateService
      */
     private function findByJournal(TransactionJournal $journal): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         $source      = $this->getSourceAccount($journal);
         $destination = $this->getDestinationAccount($journal);
 
@@ -190,12 +186,12 @@ class CreditRecalculateService
         if (null === $transaction) {
             throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
         }
-        $account = $transaction->account;
-        if (null === $account) {
+        $foundAccount = $transaction->account;
+        if (null === $foundAccount) {
             throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));
         }
 
-        return $account;
+        return $foundAccount;
     }
 
     /**
@@ -214,7 +210,6 @@ class CreditRecalculateService
      */
     private function processAccount(): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
         $valid = config('firefly.valid_liabilities');
         if (in_array($this->account->accountType->type, $valid)) {
             Log::debug(sprintf('Account type is "%s", include it.', $this->account->accountType->type));

@@ -167,8 +167,6 @@ class CategoryUpdateService
         }
         $dbNote->text = trim($note);
         $dbNote->save();
-
-        return;
     }
 
 }

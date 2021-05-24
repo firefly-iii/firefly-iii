@@ -327,7 +327,6 @@ export default {
       let title = 'todo';
       let half = 1;
 
-
       // its currently first half of year:
       if (today.getMonth() <= 5) {
         // previous year, last half:
@@ -398,7 +397,6 @@ export default {
       end.setMonth(5);
       end.setDate(30);
       end = endOfDay(end);
-      half = 1;
       title = format(start, this.$t('config.half_year_fns', {half: half}));
       this.periods.push(
           {
@@ -450,7 +448,6 @@ export default {
       let today = new Date(this.range.start);
       let start;
       let end;
-      let title;
 
       // last year
       start = new Date(today);

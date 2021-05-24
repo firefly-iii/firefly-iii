@@ -331,9 +331,8 @@ trait TransactionValidation
      * All types of splits must be equal.
      *
      * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
      */
-    public function validateTransactionTypesForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
+    public function validateTransactionTypesForUpdate(Validator $validator): void
     {
         Log::debug('Now in validateTransactionTypesForUpdate()');
         $transactions = $this->getTransactionsArray($validator);

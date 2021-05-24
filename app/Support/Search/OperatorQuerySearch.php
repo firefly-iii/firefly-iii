@@ -259,9 +259,9 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                $words = (string)$searchNode->getValue();
-                Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $words, $class));
-                $this->words[] = $words;
+                $allWords = (string)$searchNode->getValue();
+                Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
+                $this->words[] = $allWords;
                 break;
             case Field::class:
                 Log::debug(sprintf('Now handle Node class %s', $class));
@@ -836,11 +836,11 @@ class OperatorQuerySearch implements SearchInterface
         if ($parser->isDateRange($value)) {
             return $parser->parseRange($value, $this->date);
         }
-        $date = $parser->parseDate($value);
+        $parsedDate = $parser->parseDate($value);
 
         return [
-            'start' => $date,
-            'end'   => $date,
+            'start' => $parsedDate,
+            'end'   => $parsedDate,
         ];
     }
 

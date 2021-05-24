@@ -76,8 +76,6 @@ class MoveTransactionsRequest extends FormRequest
                     }
                     if ($originalCurrency->code !== $destinationCurrency->code) {
                         $validator->errors()->add('title', (string)trans('validation.same_account_currency'));
-
-                        return;
                     }
                 }
             }

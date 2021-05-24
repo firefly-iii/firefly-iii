@@ -46,6 +46,7 @@ abstract class Controller extends BaseController
 
     protected const CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
+    protected array        $allowedSort;
 
     /**
      * Controller constructor.
@@ -53,7 +54,8 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // get global parameters
-        $this->parameters = $this->getParameters();
+        $this->allowedSort = config('firefly.allowed_sort_parameters');
+        $this->parameters  = $this->getParameters();
         $this->middleware(
             function ($request, $next) {
                 if (auth()->check()) {
@@ -106,9 +108,41 @@ abstract class Controller extends BaseController
             }
         }
 
-        return $bag;
+        // sort fields:
+        $bag = $this->getSortParameters($bag);
 
+        return $bag;
     }
+
+    /**
+     * @param ParameterBag $bag
+     *
+     * @return ParameterBag
+     */
+    private function getSortParameters(ParameterBag $bag): ParameterBag
+    {
+        $sortParameters = [];
+        $param          = (string)request()->query->get('sort');
+        if ('' === $param) {
+            return $bag;
+        }
+        $parts = explode(',', $param);
+        foreach ($parts as $part) {
+            $part      = trim($part);
+            $direction = 'asc';
+            if ('-' === $part[0]) {
+                $part      = substr($part, 1);
+                $direction = 'desc';
+            }
+            if (in_array($part, $this->allowedSort, true)) {
+                $sortParameters[] = [$part, $direction];
+            }
+        }
+        $bag->set('sort', $sortParameters);
+
+        return $bag;
+    }
+
 
     /**
      * Method to help build URI's.

@@ -36,8 +36,8 @@
           <div class="card-header">
           </div>
           <div class="card-body p-0">
-            <b-table id="my-table" striped hover responsive="md" primary-key="id"
-                     :items="accounts" :fields="fields"
+            <b-table id="my-table" striped hover responsive="md" primary-key="id" :no-local-sorting="true"
+                     :items="itemsProvider" :fields="fields"
                      :per-page="perPage"
                      sort-icon-left
                      ref="table"
@@ -46,7 +46,7 @@
                      :sort-by.sync="sortBy"
                      :sort-desc.sync="sortDesc"
             >
-              <template #cell(title)="data">
+              <template #cell(name)="data">
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
               </template>
               <template #cell(number)="data">
@@ -162,6 +162,10 @@
 import {mapGetters} from "vuex";
 import Sortable from "sortablejs";
 import format from "date-fns/format";
+import {setup} from 'axios-cache-adapter'
+// import {cacheAdapterEnhancer} from 'axios-extensions';
+// pas wat teruggeven als die pagina ook gevraagd wordt, anders een empty array
+// van X lang?
 
 export default {
   name: "Index",
@@ -179,9 +183,10 @@ export default {
       fields: [],
       currentPage: 1,
       perPage: 5,
-      total: 0,
+      total: 1,
       sortBy: 'order',
       sortDesc: false,
+      api: null,
       sortableOptions: {
         disabled: false,
         chosenClass: 'is-selected',
@@ -192,13 +197,13 @@ export default {
   },
   watch: {
     storeReady: function () {
-      this.getAccountList();
+      //this.getAccountList();
     },
     start: function () {
-      this.getAccountList();
+      //this.getAccountList();
     },
     end: function () {
-      this.getAccountList();
+      //this.getAccountList();
     },
     orderMode: function (value) {
       // update the table headers
@@ -229,14 +234,55 @@ export default {
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
+    this.perPage = this.listPageSize ?? 51;
+    console.log('Per page: ' + this.perPage);
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
     this.updateFieldList();
     this.ready = true;
+
+    // make object thing:
+    let token = document.head.querySelector('meta[name="csrf-token"]');
+    this.api = setup(
+        {
+          // `axios` options
+          //baseURL: './',
+          headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
+
+          // `axios-cache-adapter` options
+          cache: {
+            maxAge: 15 * 60 * 1000,
+            readHeaders: false,
+            exclude: {
+              query: false,
+            },
+            debug: true
+          }
+        });
   },
 
   methods: {
+    itemsProvider: function (ctx, callback) {
+      console.log('itemsProvider()');
+      console.log('ctx.currentPage = ' + ctx.currentPage);
+      console.log('this.currentPage = ' + this.currentPage);
+      if (ctx.currentPage === this.currentPage) {
+        let direction = this.sortDesc ? '-' : '+';
+        let url = 'api/v1/accounts?type=' + this.type + '&page=' + ctx.currentPage + '&sort=' + direction + this.sortBy;
+        this.api.get(url)
+            .then(async (response) => {
+                    this.total = parseInt(response.data.meta.pagination.total);
+                    let items = this.parseAccountsAndReturn(response.data.data);
+                    items = this.filterAccountListAndReturn(items);
+                    callback(items);
+                  }
+            );
+        return null;
+      }
+      return [];
+    },
+
     saveAccountSort: function (event) {
       let oldIndex = parseInt(event.oldIndex);
       let newIndex = parseInt(event.newIndex);
@@ -277,7 +323,7 @@ export default {
 
     updateFieldList: function () {
       this.fields = [];
-      this.fields = [{key: 'title', label: this.$t('list.name'), sortable: !this.orderMode}];
+      this.fields = [{key: 'name', label: this.$t('list.name'), sortable: !this.orderMode}];
       if ('asset' === this.type) {
         this.fields.push({key: 'role', label: this.$t('list.role'), sortable: !this.orderMode});
       }
@@ -305,7 +351,7 @@ export default {
         this.perPage = this.listPageSize ?? 51;
         this.accounts = [];
         this.allAccounts = [];
-        this.downloadAccountList(1);
+        //this.downloadAccountList(1);
       }
       if (this.indexReady && !this.loading && this.downloaded) {
         // console.log('Index ready, not loading and not downloaded.');
@@ -314,8 +360,13 @@ export default {
       }
     },
     downloadAccountList: function (page) {
+      const http = axios.create({
+                                  baseURL: './',
+                                  headers: {'Cache-Control': 'no-cache'},
+                                });
+
       // console.log('downloadAccountList(' + page + ')');
-      axios.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
+      http.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
           .then(response => {
                   let currentPage = parseInt(response.data.meta.pagination.current_page);
                   let totalPage = parseInt(response.data.meta.pagination.total_pages);
@@ -332,6 +383,29 @@ export default {
                   }
                 }
           );
+    },
+    filterAccountListAndReturn: function (allAccounts) {
+      console.log('filterAccountListAndReturn()');
+      let accounts = [];
+      for (let i in allAccounts) {
+        if (allAccounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+          // 1 = active only
+          // 2 = inactive only
+          // 3 = both
+          if (1 === this.activeFilter && false === allAccounts[i].active) {
+            // console.log('Skip account #' + this.allAccounts[i].id + ' because not active.');
+            continue;
+          }
+          if (2 === this.activeFilter && true === allAccounts[i].active) {
+            // console.log('Skip account #' + this.allAccounts[i].id + ' because active.');
+            continue;
+          }
+          // console.log('Include account #' + this.allAccounts[i].id + '.');
+
+          accounts.push(allAccounts[i]);
+        }
+      }
+      return accounts;
     },
     filterAccountList: function () {
       // console.log('filterAccountList()');
@@ -367,6 +441,49 @@ export default {
       this.total = parseInt(data.pagination.total);
       //console.log('Total is now ' + this.total);
     },
+    parseAccountsAndReturn: function (data) {
+      console.log('In parseAccountsAndReturn()');
+      let allAccounts = [];
+      for (let key in data) {
+        if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+          let current = data[key];
+          let acct = {};
+          acct.id = parseInt(current.id);
+          acct.order = current.attributes.order;
+          acct.name = current.attributes.name;
+          acct.active = current.attributes.active;
+          acct.role = this.roleTranslate(current.attributes.account_role);
+          acct.account_number = current.attributes.account_number;
+          acct.current_balance = current.attributes.current_balance;
+          acct.currency_code = current.attributes.currency_code;
+
+          if ('liabilities' === this.type) {
+            acct.liability_type = this.$t('firefly.account_type_' + current.attributes.liability_type);
+            acct.liability_direction = this.$t('firefly.liability_direction_' + current.attributes.liability_direction + '_short');
+            acct.interest = current.attributes.interest;
+            acct.interest_period = this.$t('firefly.interest_calc_' + current.attributes.interest_period);
+            acct.amount_due = current.attributes.current_debt;
+          }
+          acct.balance_diff = 'loading';
+          acct.last_activity = 'loading';
+
+          if (null !== current.attributes.iban) {
+            acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
+          }
+          if (null === current.attributes.iban) {
+            acct.iban = null;
+          }
+
+          allAccounts.push(acct);
+          if ('asset' === this.type) {
+            // TODO
+            //this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
+            //this.getAccountLastActivity(this.allAccounts.length - 1, current);
+          }
+        }
+      }
+      return allAccounts;
+    },
     parseAccounts: function (data) {
       // console.log('In parseAccounts()');
       for (let key in data) {
@@ -375,7 +492,7 @@ export default {
           let acct = {};
           acct.id = parseInt(current.id);
           acct.order = current.attributes.order;
-          acct.title = current.attributes.name;
+          acct.name = current.attributes.name;
           acct.active = current.attributes.active;
           acct.role = this.roleTranslate(current.attributes.account_role);
           acct.account_number = current.attributes.account_number;

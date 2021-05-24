@@ -56,7 +56,7 @@ class FixFrontpageAccounts extends Command
      */
     public function handle(): int
     {
-        $start          = microtime(true);
+        $start = microtime(true);
 
         $users = User::get();
         /** @var User $user */
@@ -88,16 +88,12 @@ class FixFrontpageAccounts extends Command
         if (is_array($data)) {
             /** @var string $accountId */
             foreach ($data as $accountId) {
-                $accountId = (int)$accountId;
-                $account   = $repository->findNull($accountId);
-                if (null !== $account) {
-                    if (
-                        in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true)
-                    && true === $account->active
-                    ) {
-                        $fixed[] = $account->id;
-                        continue;
-                    }
+                $accountIdInt = (int)$accountId;
+                $account      = $repository->findNull($accountIdInt);
+                if (null !== $account
+                    && in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true)
+                    && true === $account->active) {
+                    $fixed[] = $account->id;
                 }
             }
         }

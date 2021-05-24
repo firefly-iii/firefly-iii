@@ -84,8 +84,12 @@ class ShowController extends Controller
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection = $this->repository->getAccountsByType($types);
+        $collection = $this->repository->getAccountsByType($types, $this->parameters->get('sort') ?? []);
         $count      = $collection->count();
+
+        // continue sort:
+
+
         $accounts   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:

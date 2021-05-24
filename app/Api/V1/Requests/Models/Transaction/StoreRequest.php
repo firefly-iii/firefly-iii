@@ -53,15 +53,13 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         Log::debug('get all data in TransactionStoreRequest');
-        $data = [
+        return [
             'group_title'             => $this->string('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
             'apply_rules'             => $this->boolean('apply_rules', true),
             'transactions'            => $this->getTransactionData(),
         ];
-
         // TODO location
-        return $data;
     }
 
     /**

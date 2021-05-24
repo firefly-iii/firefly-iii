@@ -25,8 +25,6 @@
     <form @submit="submitTransaction" autocomplete="off">
       <SplitPills :transactions="transactions"/>
       <div class="tab-content">
-        <!-- v-on:switch-accounts="switchAccounts($event)" -->
-        <!-- :allowed-opposing-types="allowedOpposingTypes" -->
         <SplitForm
             v-for="(transaction, index) in this.transactions"
             v-bind:key="index"
@@ -119,8 +117,6 @@ import SplitPills from "./SplitPills";
 import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
 import {mapGetters, mapMutations} from "vuex";
-import {getDefaultErrors} from "../../shared/transactions";
-
 
 export default {
   name: "Create",

@@ -227,16 +227,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        $filterQuery = false;
-
-        // now filter the query according to the page and the limit (if necessary)
-        if ($filterQuery) {
-            if (null !== $this->limit && null !== $this->page) {
-                $offset = ($this->page - 1) * $this->limit;
-                $this->query->take($this->limit)->skip($offset);
-            }
-        }
-
         /** @var Collection $result */
         $result = $this->query->get($this->fields);
 
@@ -245,12 +235,10 @@ class GroupCollector implements GroupCollectorInterface
         $this->total = $collection->count();
 
         // now filter the array according to the page and the limit (if necessary)
-        if (!$filterQuery) {
-            if (null !== $this->limit && null !== $this->page) {
-                $offset = ($this->page - 1) * $this->limit;
+        if (null !== $this->limit && null !== $this->page) {
+            $offset = ($this->page - 1) * $this->limit;
 
-                return $collection->slice($offset, $this->limit);
-            }
+            return $collection->slice($offset, $this->limit);
         }
 
         return $collection;

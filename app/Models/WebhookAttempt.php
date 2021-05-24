@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,14 +32,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class WebhookAttempt
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $webhook_message_id
- * @property int $status_code
- * @property string|null $logs
- * @property string|null $response
+ * @property int                                    $id
+ * @property \Illuminate\Support\Carbon|null        $created_at
+ * @property \Illuminate\Support\Carbon|null        $updated_at
+ * @property string|null                            $deleted_at
+ * @property int                                    $webhook_message_id
+ * @property int                                    $status_code
+ * @property string|null                            $logs
+ * @property string|null                            $response
  * @property-read \FireflyIII\Models\WebhookMessage $webhookMessage
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookAttempt newQuery()
@@ -59,6 +60,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class WebhookAttempt extends Model
 {
     use SoftDeletes;
+
     /**
      * @codeCoverageIgnore
      * @return BelongsTo
@@ -84,10 +86,8 @@ class WebhookAttempt extends Model
             $user = auth()->user();
             /** @var WebhookAttempt $attempt */
             $attempt = self::find($attemptId);
-            if (null !== $attempt) {
-                if($attempt->webhookMessage->webhook->user_id === $user->id) {
-                    return $attempt;
-                }
+            if (null !== $attempt && $attempt->webhookMessage->webhook->user_id === $user->id) {
+                return $attempt;
             }
         }
         throw new NotFoundHttpException;

@@ -75,6 +75,9 @@ class ExportDataGenerator
     private Carbon     $start;
     private User       $user;
 
+    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const EXPORT_ERR     = 'Could not export to string: %s';
+
     public function __construct()
     {
         $this->accounts = new Collection;
@@ -142,10 +145,10 @@ class ExportDataGenerator
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $accounts = $repository->getAccountsByType([]);
-        $records  = [];
+        $allAccounts = $repository->getAccountsByType([]);
+        $records     = [];
         /** @var Account $account */
-        foreach ($accounts as $account) {
+        foreach ($allAccounts as $account) {
             $currency  = $repository->getAccountCurrency($account);
             $records[] = [
                 $this->user->id,
@@ -175,7 +178,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -184,7 +187,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -229,7 +232,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -238,7 +241,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -293,7 +296,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -302,7 +305,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -342,7 +345,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -351,7 +354,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -406,7 +409,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -415,7 +418,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -504,7 +507,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -513,7 +516,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -571,7 +574,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -580,7 +583,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -621,7 +624,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -630,7 +633,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
@@ -741,7 +744,7 @@ class ExportDataGenerator
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
-            throw new FireflyException(sprintf('Could not add record to set: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
         //insert all the records
@@ -750,7 +753,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) {
-            throw new FireflyException(sprintf('Could not export to string: %s', $e->getMessage()), 0, $e);
+            throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;

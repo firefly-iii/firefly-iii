@@ -293,11 +293,9 @@ class SearchRuleEngine implements RuleEngineInterface
         $journalTrigger = false;
         $dateTrigger    = false;
         foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName) {
-                if (is_array($values) && 1 === count($values)) {
-                    Log::debug('Found a journal_id trigger with 1 journal, true.');
-                    $journalTrigger = true;
-                }
+            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
+                Log::debug('Found a journal_id trigger with 1 journal, true.');
+                $journalTrigger = true;
             }
             if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
                 Log::debug('Found a date related trigger, set to true.');
@@ -320,11 +318,9 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug('Now in setDateFromJournalTrigger()');
         $journalId = 0;
         foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName) {
-                if (is_array($values) && 1 === count($values)) {
-                    $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
-                    Log::debug(sprintf('Found journal ID #%d', $journalId));
-                }
+            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
+                $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
+                Log::debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
         if (0 !== $journalId) {

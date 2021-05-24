@@ -505,14 +505,6 @@ class BillRepository implements BillRepositoryInterface
 
             $currentStart = clone $nextExpectedMatch;
         }
-        $simple = $set->each(
-            static function (Carbon $date) {
-                return $date->format('Y-m-d');
-            }
-        );
-
-        //Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
-
         return $set;
     }
 
@@ -657,12 +649,6 @@ class BillRepository implements BillRepositoryInterface
         while ($start < $date) {
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
-
-        $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-
-        //Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
-        //Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
-
         $cache->store($start);
 
         return $start;

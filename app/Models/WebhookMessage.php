@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,18 +32,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\WebhookMessage
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property int $webhook_id
- * @property bool $sent
- * @property bool $errored
- * @property int $attempts
- * @property string $uuid
- * @property array $message
- * @property array|null $logs
- * @property-read \FireflyIII\Models\Webhook $webhook
+ * @property int                                                                               $id
+ * @property \Illuminate\Support\Carbon|null                                                   $created_at
+ * @property \Illuminate\Support\Carbon|null                                                   $updated_at
+ * @property string|null                                                                       $deleted_at
+ * @property int                                                                               $webhook_id
+ * @property bool                                                                              $sent
+ * @property bool                                                                              $errored
+ * @property int                                                                               $attempts
+ * @property string                                                                            $uuid
+ * @property array                                                                             $message
+ * @property array|null                                                                        $logs
+ * @property-read \FireflyIII\Models\Webhook                                                   $webhook
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage query()
@@ -59,7 +60,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|WebhookMessage whereWebhookId($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\WebhookAttempt[] $webhookAttempts
- * @property-read int|null $webhook_attempts_count
+ * @property-read int|null                                                                     $webhook_attempts_count
  */
 class WebhookMessage extends Model
 {
@@ -70,7 +71,7 @@ class WebhookMessage extends Model
             'errored' => 'boolean',
             'uuid'    => 'string',
             'message' => 'json',
-            'logs' => 'json',
+            'logs'    => 'json',
         ];
 
     /**
@@ -89,10 +90,8 @@ class WebhookMessage extends Model
             $user = auth()->user();
             /** @var WebhookMessage $message */
             $message = self::find($messageId);
-            if (null !== $message) {
-                if($message->webhook->user_id === $user->id) {
-                    return $message;
-                }
+            if (null !== $message && $message->webhook->user_id === $user->id) {
+                return $message;
             }
         }
         throw new NotFoundHttpException;
