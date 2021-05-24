@@ -59,7 +59,6 @@ class WholePeriodChartGenerator
         $spent     = [];
         $earned    = [];
 
-        /** @var Carbon $current */
         $current = clone $start;
 
         while ($current <= $end) {
@@ -92,7 +91,6 @@ class WholePeriodChartGenerator
             ];
         }
 
-        /** @var Carbon $current */
         $current = clone $start;
 
         while ($current <= $end) {

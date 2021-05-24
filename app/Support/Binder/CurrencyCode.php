@@ -36,7 +36,7 @@ class CurrencyCode implements BinderInterface
      * @param Route  $route
      *
      * @return TransactionCurrency
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): TransactionCurrency
     {

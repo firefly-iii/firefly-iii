@@ -112,7 +112,7 @@ class FrontpageChartGenerator
      */
     private function noBudgetLimits(array $data, Budget $budget): array
     {
-        $spent = $this->opsRepository->sumExpenses($this->start, $this->end, null, new Collection([$budget]), null);
+        $spent = $this->opsRepository->sumExpenses($this->start, $this->end, null, new Collection([$budget]));
         /** @var array $entry */
         foreach ($spent as $entry) {
             $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);

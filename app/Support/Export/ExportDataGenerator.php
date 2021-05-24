@@ -97,8 +97,6 @@ class ExportDataGenerator
 
     /**
      * @return array
-     * @throws CannotInsertRecord
-     * @throws Exception
      * @throws FireflyException
      */
     public function export(): array
@@ -137,6 +135,7 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws FireflyException
      */
     private function exportAccounts(): string
     {
@@ -172,7 +171,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -226,7 +225,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -290,7 +289,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -339,7 +338,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -403,7 +402,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -501,7 +500,7 @@ class ExportDataGenerator
             }
         }
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -568,7 +567,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -618,7 +617,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {
@@ -738,7 +737,7 @@ class ExportDataGenerator
         }
 
         //load the CSV document from a string
-        $csv = Writer::createFromString('');
+        $csv = Writer::createFromString();
 
         //insert the header
         try {

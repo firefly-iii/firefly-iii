@@ -123,7 +123,7 @@ class Telemetry
     private function hasEntry(string $type, string $key, string $value): bool
     {
         try {
-            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR, 512);
+            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
             $jsonEncoded = [];
@@ -153,7 +153,7 @@ class Telemetry
     private function hasRecentEntry(string $type, string $key, string $value, Carbon $date): bool
     {
         try {
-            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR, 512);
+            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
             $jsonEncoded = [];
@@ -173,11 +173,13 @@ class Telemetry
      * @param string $type
      * @param string $name
      * @param string $value
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function storeEntry(string $type, string $name, string $value): void
     {
         $this->generateInstallationId();
-        $config         = app('fireflyconfig')->get('installation_id', null);
+        $config         = app('fireflyconfig')->get('installation_id');
         $installationId = null !== $config ? $config->data : 'empty';
         try {
             TelemetryModel::create(

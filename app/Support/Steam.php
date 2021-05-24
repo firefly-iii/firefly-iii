@@ -42,10 +42,13 @@ class Steam
     /**
      * Gets balance at the end of current month by default
      *
-     * @param \FireflyIII\Models\Account $account
-     * @param \Carbon\Carbon             $date
+     * @param Account                  $account
+     * @param Carbon                   $date
+     * @param TransactionCurrency|null $currency
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
     {
@@ -88,8 +91,8 @@ class Steam
     }
 
     /**
-     * @param \FireflyIII\Models\Account $account
-     * @param \Carbon\Carbon             $date
+     * @param Account $account
+     * @param Carbon  $date
      *
      * @return string
      */
@@ -153,10 +156,10 @@ class Steam
      *
      * [yyyy-mm-dd] => 123,2
      *
-     * @param \FireflyIII\Models\Account $account
-     * @param \Carbon\Carbon             $start
-     * @param \Carbon\Carbon             $end
-     * @param TransactionCurrency|null   $currency
+     * @param Account                  $account
+     * @param Carbon                   $start
+     * @param Carbon                   $end
+     * @param TransactionCurrency|null $currency
      *
      * @return array
      */
@@ -237,8 +240,8 @@ class Steam
     }
 
     /**
-     * @param \FireflyIII\Models\Account $account
-     * @param \Carbon\Carbon             $date
+     * @param Account $account
+     * @param Carbon  $date
      *
      * @return array
      */
@@ -270,8 +273,8 @@ class Steam
     /**
      * This method always ignores the virtual balance.
      *
-     * @param \Illuminate\Support\Collection $accounts
-     * @param \Carbon\Carbon                 $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      *
      * @return array
      */
@@ -302,8 +305,8 @@ class Steam
     /**
      * Same as above, but also groups per currency.
      *
-     * @param \Illuminate\Support\Collection $accounts
-     * @param \Carbon\Carbon                 $date
+     * @param Collection $accounts
+     * @param Carbon     $date
      *
      * @return array
      */
@@ -372,7 +375,7 @@ class Steam
     }
 
     /**
-     * @param string $amount
+     * @param string|null $amount
      *
      * @return string|null
      */

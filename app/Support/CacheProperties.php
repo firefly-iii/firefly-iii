@@ -74,6 +74,7 @@ class CacheProperties
 
     /**
      * @return bool
+     * @throws JsonException
      */
     public function has(): bool
     {
@@ -86,14 +87,13 @@ class CacheProperties
     }
 
     /**
-     * @throws JsonException
      */
     private function hash(): void
     {
         $content = '';
         foreach ($this->properties as $property) {
             try {
-                $content .= json_encode($property, JSON_THROW_ON_ERROR, 512);
+                $content .= json_encode($property, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
                 // @ignoreException
                 $content .= hash('sha256', (string)time());

@@ -100,7 +100,7 @@ class FireflyConfig
      * @param string $name
      * @param mixed  $default
      *
-     * @return \FireflyIII\Models\Configuration|null
+     * @return Configuration|null
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
@@ -147,7 +147,6 @@ class FireflyConfig
             return $item;
         }
         if (null === $config) {
-            /** @var Configuration $item */
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;
