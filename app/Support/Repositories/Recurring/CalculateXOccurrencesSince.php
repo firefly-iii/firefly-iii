@@ -163,7 +163,8 @@ trait CalculateXOccurrencesSince
         $mutator  = clone $date;
         // monday = 1
         // sunday = 7
-        $mutator->addDay(); // always assume today has passed.
+        // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
+        //$mutator->addDay(); // always assume today has passed.
         $dayOfWeek = (int)$moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
