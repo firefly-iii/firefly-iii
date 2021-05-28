@@ -34,10 +34,10 @@ use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
             OAuthServerException::class,
             LaravelOAuthException::class,
             TokenMismatchException::class,
-            HttpException::class
+            HttpException::class,
         ];
 
     /**
@@ -138,6 +138,15 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
+        // do sentry (telemetry)
+        if (!(false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry'))) {
+            if (app()->bound('sentry') && $this->shouldReport($e)) {
+                app('sentry')->captureException($e);
+            }
+        }
+
+
+        // do email the user (no telemetry)
         $doMailError = config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);

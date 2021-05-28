@@ -38,6 +38,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use JsonException;
 use Log;
+use Sentry\State\Scope;
+use function Sentry\captureMessage;
+use function Sentry\configureScope;
 
 /**
  * Class SubmitTelemetryData
@@ -78,40 +81,58 @@ class SubmitTelemetryData implements ShouldQueue
             return;
         }
 
-        $json = $this->parseJson($telemetry);
-        try {
-            $body = json_encode($json, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            Log::error($e->getMessage());
-            Log::error('Could not parse JSON.');
-            throw new FireflyException(sprintf('Could not parse telemetry JSON: %s', $e->getMessage()), 0, $e);
-        }
+        // submit to Sentry one by one:
+        /** @var Telemetry $entry */
+        foreach($telemetry as $entry) {
 
-        $client  = new Client;
-        $options = [
-            'body'    => $body,
-            'headers' => [
-                'Content-Type'    => 'application/json',
-                'Accept'          => 'application/json',
-                'connect_timeout' => 3.14,
-                'User-Agent'      => sprintf('FireflyIII/%s', config('firefly.version')),
-            ],
-        ];
-        try {
-            $result = $client->post($url, $options);
-        } catch (GuzzleException | Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            Log::error('Could not submit telemetry.');
-            throw new FireflyException(sprintf('Could not submit telemetry: %s', $e->getMessage()), 0, $e);
+            configureScope(function (Scope $scope) use ($entry): void {
+                $scope->setContext('telemetry', [
+                    'installation_id' => $entry->installation_id,
+                    'collected_at'    => $entry->created_at->format('r'),
+                    'type'            => $entry->type,
+                    'key'             => $entry->key,
+                    'value'           => $entry->value,
+                ]);
+            });
+
+            captureMessage('Telemetry submission');
         }
-        $body       = (string)$result->getBody();
-        $statusCode = $result->getStatusCode();
-        Log::info(sprintf('Result of submission [%d]: %s', $statusCode, $body));
-        if (200 === $statusCode) {
-            // mark as submitted:
-            $this->markAsSubmitted($telemetry);
-        }
+        $this->markAsSubmitted($telemetry);
+
+//        $json = $this->parseJson($telemetry);
+//        try {
+//            $body = json_encode($json, JSON_THROW_ON_ERROR);
+//        } catch (JsonException $e) {
+//            Log::error($e->getMessage());
+//            Log::error('Could not parse JSON.');
+//            throw new FireflyException(sprintf('Could not parse telemetry JSON: %s', $e->getMessage()), 0, $e);
+//        }
+//
+//        $client  = new Client;
+//        $options = [
+//            'body'    => $body,
+//            'headers' => [
+//                'Content-Type'    => 'application/json',
+//                'Accept'          => 'application/json',
+//                'connect_timeout' => 3.14,
+//                'User-Agent'      => sprintf('FireflyIII/%s', config('firefly.version')),
+//            ],
+//        ];
+//        try {
+//            $result = $client->post($url, $options);
+//        } catch (GuzzleException | Exception $e) {
+//            Log::error($e->getMessage());
+//            Log::error($e->getTraceAsString());
+//            Log::error('Could not submit telemetry.');
+//            throw new FireflyException(sprintf('Could not submit telemetry: %s', $e->getMessage()), 0, $e);
+//        }
+//        $body       = (string)$result->getBody();
+//        $statusCode = $result->getStatusCode();
+//        Log::info(sprintf('Result of submission [%d]: %s', $statusCode, $body));
+//        if (200 === $statusCode) {
+//            // mark as submitted:
+//            $this->markAsSubmitted($telemetry);
+//        }
     }
 
     /**
