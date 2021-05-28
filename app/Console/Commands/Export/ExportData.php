@@ -77,7 +77,6 @@ class ExportData extends Command
     {--force : Force overwriting of previous exports if found.}';
     private AccountRepositoryInterface $accountRepository;
     private JournalRepositoryInterface $journalRepository;
-    private User                       $user;
 
     /**
      * Execute the console command.
@@ -85,6 +84,7 @@ class ExportData extends Command
      * @return int
      * @throws CannotInsertRecord
      * @throws FireflyException
+     * @throws \League\Csv\Exception
      */
     public function handle(): int
     {
@@ -96,9 +96,9 @@ class ExportData extends Command
         }
         // set up repositories.
         $this->stupidLaravel();
-        $this->user = $this->getUser();
-        $this->journalRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
+        $user = $this->getUser();
+        $this->journalRepository->setUser($user);
+        $this->accountRepository->setUser($user);
         // get the options.
         try {
             $options = $this->parseOptions();
@@ -110,7 +110,7 @@ class ExportData extends Command
         // make export object and configure it.
         /** @var ExportDataGenerator $exporter */
         $exporter = app(ExportDataGenerator::class);
-        $exporter->setUser($this->user);
+        $exporter->setUser($user);
 
         $exporter->setStart($options['start']);
         $exporter->setEnd($options['end']);
