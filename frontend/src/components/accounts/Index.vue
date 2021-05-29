@@ -33,11 +33,9 @@
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-          <div class="card-header">
-          </div>
           <div class="card-body p-0">
-            <b-table id="my-table" striped hover responsive="md" primary-key="id" :no-local-sorting="true"
-                     :items="itemsProvider" :fields="fields"
+            <b-table id="my-table" striped hover responsive="md" primary-key="id" :no-local-sorting="false"
+                     :items="accounts" :fields="fields"
                      :per-page="perPage"
                      sort-icon-left
                      ref="table"
@@ -46,13 +44,14 @@
                      :sort-by.sync="sortBy"
                      :sort-desc.sync="sortDesc"
             >
+              <template #table-busy>
+                <i class="fa fa-spinner"></i>
+              </template>
               <template #cell(name)="data">
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
               </template>
-              <template #cell(number)="data">
-                <span v-if="null !== data.item.iban && null === data.item.account_number">{{ data.item.iban }}</span>
-                <span v-if="null === data.item.iban && null !== data.item.account_number">{{ data.item.account_number }}</span>
-                <span v-if="null !== data.item.iban && null !== data.item.account_number">{{ data.item.iban }} ({{ data.item.account_number }})</span>
+              <template #cell(acct_number)="data">
+                {{ data.item.acct_number }}
               </template>
               <template #cell(last_activity)="data">
                 <span v-if="'asset' === type && 'loading' === data.item.last_activity">
@@ -150,8 +149,19 @@
           </div>
           <div class="card-footer">
             <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
+            <a href="#" class="btn btn-info"><i class="fas fa-sync"></i></a>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <b-pagination
+            v-model="currentPage"
+            :total-rows="total"
+            :per-page="perPage"
+            aria-controls="my-table"
+        ></b-pagination>
       </div>
     </div>
   </div>
@@ -162,10 +172,12 @@
 import {mapGetters} from "vuex";
 import Sortable from "sortablejs";
 import format from "date-fns/format";
-import {setup} from 'axios-cache-adapter'
+import {setup} from 'axios-cache-adapter';
 // import {cacheAdapterEnhancer} from 'axios-extensions';
-// pas wat teruggeven als die pagina ook gevraagd wordt, anders een empty array
-// van X lang?
+import {configureAxios} from "../../shared/forageStore";
+
+
+// get all and cache, dont keep the table busy.
 
 export default {
   name: "Index",
@@ -197,13 +209,13 @@ export default {
   },
   watch: {
     storeReady: function () {
-      //this.getAccountList();
+      this.getAccountList();
     },
     start: function () {
-      //this.getAccountList();
+      this.getAccountList();
     },
     end: function () {
-      //this.getAccountList();
+      this.getAccountList();
     },
     orderMode: function (value) {
       // update the table headers
@@ -263,25 +275,25 @@ export default {
   },
 
   methods: {
-    itemsProvider: function (ctx, callback) {
-      console.log('itemsProvider()');
-      console.log('ctx.currentPage = ' + ctx.currentPage);
-      console.log('this.currentPage = ' + this.currentPage);
-      if (ctx.currentPage === this.currentPage) {
-        let direction = this.sortDesc ? '-' : '+';
-        let url = 'api/v1/accounts?type=' + this.type + '&page=' + ctx.currentPage + '&sort=' + direction + this.sortBy;
-        this.api.get(url)
-            .then(async (response) => {
-                    this.total = parseInt(response.data.meta.pagination.total);
-                    let items = this.parseAccountsAndReturn(response.data.data);
-                    items = this.filterAccountListAndReturn(items);
-                    callback(items);
-                  }
-            );
-        return null;
-      }
-      return [];
-    },
+    // itemsProvider: function (ctx, callback) {
+    //   console.log('itemsProvider()');
+    //   console.log('ctx.currentPage = ' + ctx.currentPage);
+    //   console.log('this.currentPage = ' + this.currentPage);
+    //   if (ctx.currentPage === this.currentPage) {
+    //     let direction = this.sortDesc ? '-' : '+';
+    //     let url = 'api/v1/accounts?type=' + this.type + '&page=' + ctx.currentPage + '&sort=' + direction + this.sortBy;
+    //     this.api.get(url)
+    //         .then(async (response) => {
+    //                 this.total = parseInt(response.data.meta.pagination.total);
+    //                 let items = this.parseAccountsAndReturn(response.data.data);
+    //                 items = this.filterAccountListAndReturn(items);
+    //                 callback(items);
+    //               }
+    //         );
+    //     return null;
+    //   }
+    //   return [];
+    // },
 
     saveAccountSort: function (event) {
       let oldIndex = parseInt(event.oldIndex);
@@ -333,7 +345,7 @@ export default {
         this.fields.push({key: 'interest', label: this.$t('list.interest') + ' (' + this.$t('list.interest_period') + ')', sortable: !this.orderMode});
       }
       // add the rest
-      this.fields.push({key: 'number', label: this.$t('list.iban'), sortable: !this.orderMode});
+      this.fields.push({key: 'acct_number', label: this.$t('list.iban'), sortable: !this.orderMode});
       this.fields.push({key: 'current_balance', label: this.$t('list.currentBalance'), sortable: !this.orderMode});
       if ('liabilities' === this.type) {
         this.fields.push({key: 'amount_due', label: this.$t('firefly.left_in_debt'), sortable: !this.orderMode});
@@ -344,45 +356,50 @@ export default {
       this.fields.push({key: 'menu', label: ' ', sortable: false});
     },
     getAccountList: function () {
-      // console.log('getAccountList()');
+      console.log('getAccountList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
-        // console.log('Index ready, not loading and not already downloaded. Reset.');
+        console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
         this.accounts = [];
         this.allAccounts = [];
-        //this.downloadAccountList(1);
+        this.downloadAccountList(1);
       }
       if (this.indexReady && !this.loading && this.downloaded) {
-        // console.log('Index ready, not loading and not downloaded.');
+        console.log('Index ready, not loading and not downloaded.');
         this.loading = true;
         this.filterAccountList();
       }
     },
     downloadAccountList: function (page) {
-      const http = axios.create({
-                                  baseURL: './',
-                                  headers: {'Cache-Control': 'no-cache'},
-                                });
+      console.log('downloadAccountList(' + page + ')');
 
-      // console.log('downloadAccountList(' + page + ')');
-      http.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
-          .then(response => {
-                  let currentPage = parseInt(response.data.meta.pagination.current_page);
-                  let totalPage = parseInt(response.data.meta.pagination.total_pages);
-                  this.total = parseInt(response.data.meta.pagination.total);
-                  this.parseAccounts(response.data.data);
-                  if (currentPage < totalPage) {
-                    let nextPage = currentPage + 1;
-                    this.downloadAccountList(nextPage);
+      // configure().then(async (api) => {
+      //   const response = await api.get('/url')
+      //
+      //   // Display something beautiful with `response.data` ;)
+      // })
+
+
+      configureAxios().then(async (api) => {
+        api.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
+            .then(response => {
+                    let currentPage = parseInt(response.data.meta.pagination.current_page);
+                    let totalPage = parseInt(response.data.meta.pagination.total_pages);
+                    this.total = parseInt(response.data.meta.pagination.total);
+                    this.parseAccounts(response.data.data);
+                    if (currentPage < totalPage) {
+                      let nextPage = currentPage + 1;
+                      this.downloadAccountList(nextPage);
+                    }
+                    if (currentPage >= totalPage) {
+                      // console.log('Looks like all downloaded.');
+                      this.downloaded = true;
+                      this.filterAccountList();
+                    }
                   }
-                  if (currentPage >= totalPage) {
-                    // console.log('Looks like all downloaded.');
-                    this.downloaded = true;
-                    this.filterAccountList();
-                  }
-                }
-          );
+            );
+      });
     },
     filterAccountListAndReturn: function (allAccounts) {
       console.log('filterAccountListAndReturn()');
@@ -439,51 +456,51 @@ export default {
     },
     parsePages: function (data) {
       this.total = parseInt(data.pagination.total);
-      //console.log('Total is now ' + this.total);
+      console.log('Total is now ' + this.total);
     },
-    parseAccountsAndReturn: function (data) {
-      console.log('In parseAccountsAndReturn()');
-      let allAccounts = [];
-      for (let key in data) {
-        if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-          let current = data[key];
-          let acct = {};
-          acct.id = parseInt(current.id);
-          acct.order = current.attributes.order;
-          acct.name = current.attributes.name;
-          acct.active = current.attributes.active;
-          acct.role = this.roleTranslate(current.attributes.account_role);
-          acct.account_number = current.attributes.account_number;
-          acct.current_balance = current.attributes.current_balance;
-          acct.currency_code = current.attributes.currency_code;
-
-          if ('liabilities' === this.type) {
-            acct.liability_type = this.$t('firefly.account_type_' + current.attributes.liability_type);
-            acct.liability_direction = this.$t('firefly.liability_direction_' + current.attributes.liability_direction + '_short');
-            acct.interest = current.attributes.interest;
-            acct.interest_period = this.$t('firefly.interest_calc_' + current.attributes.interest_period);
-            acct.amount_due = current.attributes.current_debt;
-          }
-          acct.balance_diff = 'loading';
-          acct.last_activity = 'loading';
-
-          if (null !== current.attributes.iban) {
-            acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
-          }
-          if (null === current.attributes.iban) {
-            acct.iban = null;
-          }
-
-          allAccounts.push(acct);
-          if ('asset' === this.type) {
-            // TODO
-            //this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
-            //this.getAccountLastActivity(this.allAccounts.length - 1, current);
-          }
-        }
-      }
-      return allAccounts;
-    },
+    // parseAccountsAndReturn: function (data) {
+    //   console.log('In parseAccountsAndReturn()');
+    //   let allAccounts = [];
+    //   for (let key in data) {
+    //     if (data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+    //       let current = data[key];
+    //       let acct = {};
+    //       acct.id = parseInt(current.id);
+    //       acct.order = current.attributes.order;
+    //       acct.name = current.attributes.name;
+    //       acct.active = current.attributes.active;
+    //       acct.role = this.roleTranslate(current.attributes.account_role);
+    //       acct.account_number = current.attributes.account_number;
+    //       acct.current_balance = current.attributes.current_balance;
+    //       acct.currency_code = current.attributes.currency_code;
+    //
+    //       if ('liabilities' === this.type) {
+    //         acct.liability_type = this.$t('firefly.account_type_' + current.attributes.liability_type);
+    //         acct.liability_direction = this.$t('firefly.liability_direction_' + current.attributes.liability_direction + '_short');
+    //         acct.interest = current.attributes.interest;
+    //         acct.interest_period = this.$t('firefly.interest_calc_' + current.attributes.interest_period);
+    //         acct.amount_due = current.attributes.current_debt;
+    //       }
+    //       acct.balance_diff = 'loading';
+    //       acct.last_activity = 'loading';
+    //
+    //       if (null !== current.attributes.iban) {
+    //         acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
+    //       }
+    //       if (null === current.attributes.iban) {
+    //         acct.iban = null;
+    //       }
+    //
+    //       allAccounts.push(acct);
+    //       if ('asset' === this.type) {
+    //         // TODO
+    //         //this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
+    //         //this.getAccountLastActivity(this.allAccounts.length - 1, current);
+    //       }
+    //     }
+    //   }
+    //   return allAccounts;
+    // },
     parseAccounts: function (data) {
       // console.log('In parseAccounts()');
       for (let key in data) {
@@ -495,7 +512,32 @@ export default {
           acct.name = current.attributes.name;
           acct.active = current.attributes.active;
           acct.role = this.roleTranslate(current.attributes.account_role);
-          acct.account_number = current.attributes.account_number;
+
+          // account number in 'acct_number'
+          acct.acct_number = '';
+          let iban = null;
+          let acctNr = null;
+          acct.acct_number = '';
+          if (null !== current.attributes.iban) {
+            iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
+          }
+          if (null !== current.attributes.account_number) {
+            acctNr = current.attributes.account_number;
+          }
+          // only account nr
+          if(null === iban && null !== acctNr) {
+            acct.acct_number = acctNr;
+          }
+          // only iban
+          if(null !== iban && null === acctNr) {
+            acct.acct_number = iban;
+          }
+          // both:
+          if(null !== iban && null !== acctNr) {
+            acct.acct_number = iban + ' (' + acctNr + ')';
+          }
+
+
           acct.current_balance = current.attributes.current_balance;
           acct.currency_code = current.attributes.currency_code;
 
@@ -508,13 +550,6 @@ export default {
           }
           acct.balance_diff = 'loading';
           acct.last_activity = 'loading';
-
-          if (null !== current.attributes.iban) {
-            acct.iban = current.attributes.iban.match(/.{1,4}/g).join(' ');
-          }
-          if (null === current.attributes.iban) {
-            acct.iban = null;
-          }
 
           this.allAccounts.push(acct);
           if ('asset' === this.type) {
@@ -566,7 +601,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
