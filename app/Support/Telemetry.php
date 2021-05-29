@@ -25,11 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Telemetry as TelemetryModel;
 use FireflyIII\Support\System\GeneratesInstallationId;
-use Illuminate\Database\QueryException;
-use JsonException;
-use Log;
+use Sentry\Severity;
+use Sentry\State\Scope;
+use function Sentry\captureMessage;
+use function Sentry\configureScope;
 
 /**
  * Class Telemetry
@@ -37,6 +37,7 @@ use Log;
 class Telemetry
 {
     use GeneratesInstallationId;
+
     /**
      * Feature telemetry stores a $value for the given $feature.
      * Will only store the given $feature / $value combination once.
@@ -64,134 +65,25 @@ class Telemetry
             // do nothing!
             return;
         }
-
-        Log::info(sprintf('Logged telemetry feature "%s" with value "%s".', $key, $value));
-        if (!$this->hasEntry('feature', $key, $value)) {
-            $this->storeEntry('feature', $key, $value);
-        }
-    }
-
-    /**
-     * @param string $key
-     * @param string $value
-     * @param int    $days
-     */
-    public function recurring(string $key, string $value, int $days): void
-    {
-        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
-            // hard stop if not allowed to do telemetry.
-            // do nothing!
-            return;
-        }
-
-        $cutoffDate = Carbon::today()->subDays($days);
-        if (!$this->hasRecentEntry('recurring', $key, $value, $cutoffDate)) {
-            $this->storeEntry('recurring', $key, $value);
-        }
-    }
-
-    /**
-     * String telemetry stores a string value as a telemetry entry. Values could include:
-     *
-     * - "php-version", "php7.3"
-     * - "os-version", "linux"
-     *
-     * Any meta-data stored is strictly non-financial.
-     *
-     * @param string $name
-     * @param string $value
-     */
-    public function string(string $name, string $value): void
-    {
-        if (false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry')) {
-            // hard stop if not allowed to do telemetry.
-            // do nothing!
-            return;
-        }
-        Log::info(sprintf('Logged telemetry string "%s" with value "%s".', $name, $value));
-
-        $this->storeEntry('string', $name, $value);
-    }
-
-    /**
-     * @param string $type
-     * @param string $key
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function hasEntry(string $type, string $key, string $value): bool
-    {
-        try {
-            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
-            $jsonEncoded = [];
-        }
-        try {
-            $count = TelemetryModel
-                ::where('type', $type)
-                ->where('key', $key)
-                ->where('value', $jsonEncoded)
-                ->count();
-        } catch (QueryException $e) {
-            Log::info(sprintf('Could not execute hasEntry() but this is OK: %s', $e->getMessage()));
-            $count = 0;
-        }
-
-        return $count > 0;
-    }
-
-    /**
-     * @param string $type
-     * @param string $key
-     * @param string $value
-     * @param Carbon $date
-     *
-     * @return bool
-     */
-    private function hasRecentEntry(string $type, string $key, string $value, Carbon $date): bool
-    {
-        try {
-            $jsonEncoded = json_encode($value, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
-            Log::error(sprintf('JSON Exception encoding the following value: %s: %s', $value, $e->getMessage()));
-            $jsonEncoded = [];
-        }
-
-        return TelemetryModel
-                   ::where('type', $type)
-                   ->where('key', $key)
-                   ->where('created_at', '>=', $date->format('Y-m-d H:i:s'))
-                   ->where('value', $jsonEncoded)
-                   ->count() > 0;
-    }
-
-    /**
-     * Store new entry in DB.
-     *
-     * @param string $type
-     * @param string $name
-     * @param string $value
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    private function storeEntry(string $type, string $name, string $value): void
-    {
+        // send to Sentry.
         $this->generateInstallationId();
-        $config         = app('fireflyconfig')->get('installation_id');
-        $installationId = null !== $config ? $config->data : 'empty';
-        try {
-            TelemetryModel::create(
-                [
-                    'installation_id' => $installationId,
-                    'key'             => $name,
-                    'type'            => $type,
-                    'value'           => $value,
-                ]
-            );
-        } catch (QueryException $e) {
-            Log::info(sprintf('Could not execute storeEntry() but this is OK: %s', $e->getMessage()));
-        }
+        $installationId = app('fireflyconfig')->get('installation_id');
+
+        // add some context:
+        configureScope(
+            function (Scope $scope) use ($installationId, $key, $value): void {
+                $scope->setContext(
+                    'telemetry', [
+                                   'installation_id' => $installationId->data,
+                                   'version'         => config('firefly.version'),
+                                   'collected_at'    => Carbon::now()->format('r'),
+                                   'key'             => $key,
+                                   'value'           => $value,
+                               ]
+                );
+            }
+        );
+        captureMessage(sprintf('FIT: %s/%s', $key, $value), Severity::info());
     }
+
 }

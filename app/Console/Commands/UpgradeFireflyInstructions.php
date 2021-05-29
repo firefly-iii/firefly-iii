@@ -69,7 +69,6 @@ class UpgradeFireflyInstructions extends Command
         app('telemetry')->feature('system.os.version', PHP_OS);
         app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
         app('telemetry')->feature('system.os.is_docker', $isDocker);
-        app('telemetry')->feature('system.command.executed', $this->signature);
         try {
             app('telemetry')->feature('system.users.count', (string)User::count());
         } catch (QueryException $e) {

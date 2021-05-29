@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
-use FireflyIII\Support\Cronjobs\TelemetryCronjob;
 
 /**
  * Trait CronRunner
@@ -97,35 +96,5 @@ trait CronRunner
 
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    protected function runTelemetry(bool $force, Carbon $date): array
-    {
-        /** @var TelemetryCronjob $telemetry */
-        $telemetry = app(TelemetryCronjob::class);
-        $telemetry->setForce($force);
-        $telemetry->setDate($date);
-        try {
-            $telemetry->fire();
-        } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
-        }
-
-        return [
-            'job_fired'     => $telemetry->jobFired,
-            'job_succeeded' => $telemetry->jobSucceeded,
-            'job_errored'   => $telemetry->jobErrored,
-            'message'       => $telemetry->message,
-        ];
-    }
 
 }

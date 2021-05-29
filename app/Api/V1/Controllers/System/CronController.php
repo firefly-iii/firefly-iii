@@ -51,7 +51,6 @@ class CronController extends Controller
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
-        $return['telemetry']              = $this->runTelemetry($config['force'], $config['date']);
 
         return response()->json($return);
     }

@@ -99,7 +99,7 @@ class ApplyRules extends Command
 
         $result = $this->verifyInput();
         if (false === $result) {
-            app('telemetry')->feature('system.command.errored', $this->signature);
+            app('telemetry')->feature('system.command.errored', 'firefly-iii:apply-rules');
 
             return 1;
         }
@@ -119,7 +119,7 @@ class ApplyRules extends Command
             $this->warn('    --rule_groups=1,2,...');
             $this->warn('    --all_rules');
 
-            app('telemetry')->feature('system.command.errored', $this->signature);
+            app('telemetry')->feature('system.command.errored', 'firefly-iii:apply-rules');
 
             return 1;
         }
@@ -148,7 +148,7 @@ class ApplyRules extends Command
         // file the rule(s)
         $ruleEngine->fire();
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
+        app('telemetry')->feature('system.command.executed', 'firefly-iii:apply-rules');
 
         $this->line('');
         $end = round(microtime(true) - $start, 2);
