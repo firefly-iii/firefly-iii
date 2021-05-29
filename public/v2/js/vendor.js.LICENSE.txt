@@ -4,6 +4,13 @@
  */
 
 /*!
+    localForage -- Offline Storage, Improved
+    Version 1.9.0
+    https://localforage.github.io/localForage
+    (c) 2013-2017 Mozilla, Apache License 2.0
+*/
+
+/*!
   * Bootstrap v4.6.0 (https://getbootstrap.com/)
   * Copyright 2011-2021 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
@@ -16,7 +23,7 @@
  */
 
 /*!
- * Chart.js v3.2.1
+ * Chart.js v3.3.0
  * https://www.chartjs.org
  * (c) 2021 Chart.js Contributors
  * Released under the MIT License
