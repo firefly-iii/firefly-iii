@@ -297,7 +297,7 @@ class OperatorQuerySearch implements SearchInterface
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
 
-        app('telemetry')->feature('search.operators.uses_operator', $operator);
+        //app('telemetry')->feature('search.operators.uses_operator', $operator);
 
         switch ($operator) {
             default:
