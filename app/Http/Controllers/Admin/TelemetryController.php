@@ -60,7 +60,7 @@ class TelemetryController extends Controller
         app('view')->share('subTitle', (string)trans('firefly.telemetry_admin_index'));
         $version = config('firefly.version');
         $enabled = config('firefly.send_telemetry', false) && config('firefly.feature_flags.telemetry');
-        return prefixView('admin.telemetry.index', compact('version', 'enabled', 'count'));
+        return prefixView('admin.telemetry.index', compact('version', 'enabled'));
     }
 
 }
