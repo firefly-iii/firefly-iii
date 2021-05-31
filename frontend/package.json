@@ -31,7 +31,7 @@
         "axios-cache-adapter": "^2.7.3",
         "bootstrap": "^4.6.0",
         "bootstrap-vue": "^2.21.2",
-        "chart.js": "^3.2.0",
+        "chart.js": "^3.3.2",
         "icheck-bootstrap": "^3.0.1",
         "jquery-ui": "^1.12.1",
         "leaflet": "^1.7.1",
