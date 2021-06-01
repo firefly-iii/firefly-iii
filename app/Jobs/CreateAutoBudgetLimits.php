@@ -129,7 +129,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
-        $type = $autoBudget->auto_budget_type;
+
         if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int)$autoBudget->auto_budget_type) {
             // that's easy: create one.
             // do nothing else.
