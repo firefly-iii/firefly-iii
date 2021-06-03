@@ -15,9 +15,10 @@
                     <p>
                         {{ 'export_data_expl'|_ }}
                     </p>
-                    <ul>
-                        <li><i class="fa fa-fw fa-download"></i> <a href="{{ route('export.export') }}" title="{{ 'export_data_all_transactions'|_ }}">{{ 'export_data_all_transactions'|_ }}</a></li>
-                    </ul>
+                    <form action="{{ route('export.export') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <button type="submit"><i class="fa fa-fw fa-download"></i> {{ 'export_data_all_transactions'|_ }}</button>
+                    </form>
                     <p>
                         {{ 'export_data_advanced_expl'|_ }}
                     </p>
