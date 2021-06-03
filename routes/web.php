@@ -538,7 +538,7 @@ Route::group(
 
     // index
         Route::get('', ['uses' => 'Export\IndexController@index', 'as' => 'index']);
-        Route::get('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
+        Route::post('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
     }
 );
 /**
