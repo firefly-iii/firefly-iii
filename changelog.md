@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.5.12 - 2021-06-03
+
+⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
+
+### Security
+
+- This version of Firefly III fixes a security vulnerability in the export routine. You are advised to upgrade as soon as possible. All credits to the excellent @oomb.
+
 ## 5.5.11 - 2021-05-08
 
 ⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.

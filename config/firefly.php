@@ -101,10 +101,8 @@ return [
         'webhooks'     => false,
         'handle_debts' => true,
     ],
-
-    // generic info about Firefly III
-    'version'                      => '5.6.0-alpha.1',
-    'api_version'                  => '1.5.3',
+    'version'                      => '5.5.12',
+    'api_version'                  => '1.5.2',
     'db_version'                   => 16,
 
     // generic settings
