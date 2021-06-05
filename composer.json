@@ -101,7 +101,6 @@
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
     "rcrowe/twigbridge": "^0.12.1",
-    "sentry/sentry-laravel": "^2.6",
     "spatie/data-transfer-object": "^3.1"
   },
   "require-dev": {

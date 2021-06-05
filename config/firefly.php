@@ -97,7 +97,7 @@ return [
     // some feature flags:
     'feature_flags'                => [
         'export'       => true,
-        'telemetry'    => true,
+        'telemetry'    => false,
         'webhooks'     => false,
         'handle_debts' => true,
     ],

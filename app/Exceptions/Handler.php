@@ -138,14 +138,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        // do sentry (telemetry)
-        if (!(false === config('firefly.send_telemetry') || false === config('firefly.feature_flags.telemetry'))) {
-            if (app()->bound('sentry') && $this->shouldReport($e)) {
-                app('sentry')->captureException($e);
-            }
-        }
-
-
         // do email the user (no telemetry)
         $doMailError = config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
