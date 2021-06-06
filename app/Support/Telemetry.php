@@ -65,7 +65,6 @@ class Telemetry
             // do nothing!
             return;
         }
-        // send to Sentry.
         $this->generateInstallationId();
         $installationId = app('fireflyconfig')->get('installation_id');
 
