@@ -57,7 +57,9 @@
               </template>
               <template #cell(description)="data">
                 <span><i class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></i></span>
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
+                    data.value
+                  }}</a>
               </template>
               <template #cell(amount)="data">
                 <span class="text-success" v-if="'deposit' === data.item.type">
@@ -76,10 +78,12 @@
                 {{ data.item.date_formatted }}
               </template>
               <template #cell(source_account)="data">
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.source_id" :title="data.item.source_name">{{ data.item.source_name }}</a>
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.source_id"
+                   :title="data.item.source_name">{{ data.item.source_name }}</a>
               </template>
               <template #cell(destination_account)="data">
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.destination_id" :title="data.item.destination_name">{{ data.item.destination_name }}</a>
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.destination_id"
+                   :title="data.item.destination_name">{{ data.item.destination_name }}</a>
               </template>
               <template #cell(menu)="data">
                 <div class="btn-group btn-group-sm" v-if="! data.item.split || data.item.split_parent === null">
@@ -95,12 +99,12 @@
                   </div>
                 </div>
                 <div class="btn btn-light btn-sm" v-if="data.item.split && data.item.split_parent === null && data.item.collapsed === true"
-                  v-on:click="toggleCollapse(data.item)">
+                     v-on:click="toggleCollapse(data.item)">
                   <i class="fa fa-caret-down"></i>
                   Expand split
                 </div>
                 <div class="btn btn-light btn-sm" v-else-if="data.item.split && data.item.split_parent === null && data.item.collapsed === false"
-                  v-on:click="toggleCollapse(data.item)">
+                     v-on:click="toggleCollapse(data.item)">
                   <i class="fa fa-caret-up"></i>
                   Collapse split
                 </div>
@@ -111,7 +115,8 @@
             </b-table>
           </div>
           <div class="card-footer">
-            <a :href="'./transactions/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
+            <a :href="'./transactions/create/' + type" class="btn btn-success"
+               :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
             <a href="#" class="btn btn-info"><i class="fas fa-sync"></i></a>
           </div>
         </div>
@@ -248,24 +253,27 @@ export default {
         let endStr = format(this.end, 'y-MM-dd');
         api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr)
             .then(response => {
+
                     let currentPage = parseInt(response.data.meta.pagination.current_page);
-                    let totalPage = parseInt(response.data.meta.pagination.total_pages);
+                    let totalPages = parseInt(response.data.meta.pagination.total_pages);
                     this.total = parseInt(response.data.meta.pagination.total);
+                    console.log('total is ' + this.total);
                     this.transactions.push(...response.data.data);
-                    if (currentPage < totalPage) {
-                      let nextPage = currentPage + 1;
-                      this.downloadTransactionList(nextPage);
-                    }
-                    if (currentPage >= totalPage) {
-                      // console.log('Looks like all downloaded.');
-                      this.downloaded = true;
-                      this.createTransactionRows();
-                    }
+                    // if (currentPage < totalPage) {
+                    //   let nextPage = currentPage + 1;
+                    //   this.downloadTransactionList(nextPage);
+                    // }
+                    // if (currentPage >= totalPage) {
+                    // console.log('Looks like all downloaded.');
+                    this.downloaded = true;
+                    this.createTransactionRows();
+                    // }
+
                   }
             );
       });
     },
-    createTransactionRows: function() {
+    createTransactionRows: function () {
       this.transactionRows = [];
       for (let i in this.transactions) {
         let transaction = this.transactions[i];
@@ -277,14 +285,14 @@ export default {
           transactionRow.split = true;
           transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
           transactionRow.amount = transaction.attributes.transactions
-            .map(transaction => Number(transaction.amount))
-            .reduce((sum, n) => sum + n);
+              .map(transaction => Number(transaction.amount))
+              .reduce((sum, n) => sum + n);
           transactionRow.source_name = '';
           transactionRow.source_id = '';
           transactionRow.destination_name = '';
           transactionRow.destination_id = '';
 
-          if (! transactionRow.collapsed) {
+          if (!transactionRow.collapsed) {
             for (let i = 0; i < transaction.attributes.transactions.length; i++) {
               let splitTransactionRow = this.getTransactionRow(transaction, i);
               splitTransactionRow.key = splitTransactionRow.id + "." + i
@@ -300,7 +308,7 @@ export default {
       this.loading = false;
     },
     getTransactionRow(transaction, index) {
-      let transactionRow = { };
+      let transactionRow = {};
       let currentTransaction = transaction.attributes.transactions[index];
 
       transactionRow.key = transaction.id;
@@ -323,16 +331,16 @@ export default {
 
       return transactionRow;
     },
-    toggleCollapse: function(row) {
+    toggleCollapse: function (row) {
       let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
       if (transaction.collapsed === undefined) {
         transaction.collapsed = false;
       } else {
-        transaction.collapsed = ! transaction.collapsed;
+        transaction.collapsed = !transaction.collapsed;
       }
       this.createTransactionRows();
     },
-    tableSortCompare: function(aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
+    tableSortCompare: function (aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
       let a = aRow[key]
       let b = bRow[key]
 
@@ -354,8 +362,8 @@ export default {
       }
 
       if (
-        (typeof a === 'number' && typeof b === 'number') ||
-        (a instanceof Date && b instanceof Date)
+          (typeof a === 'number' && typeof b === 'number') ||
+          (a instanceof Date && b instanceof Date)
       ) {
         // If both compared fields are native numbers or both are native dates
         return a < b ? -1 : a > b ? 1 : 0
@@ -369,9 +377,9 @@ export default {
           return ''
         } else if (value instanceof Object) {
           return Object.keys(value)
-            .sort()
-            .map(key => toString(value[key]))
-            .join(' ')
+              .sort()
+              .map(key => toString(value[key]))
+              .join(' ')
         } else {
           return String(value)
         }
