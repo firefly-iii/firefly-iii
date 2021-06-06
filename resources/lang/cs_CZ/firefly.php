@@ -1692,7 +1692,7 @@ return [
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
 
     // object groups
-    'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name'              => '(neseskupeno)',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Vytvořme účet aktiv!',
@@ -1712,13 +1712,13 @@ return [
     'no_accounts_imperative_liabilities'    => 'Tuto funkci nemusíte používat, ale hodí se pokud si chcete držet přehled v těchto věcech.',
     'no_accounts_create_liabilities'        => 'Vytvořit závazek',
     'no_budgets_title_default'              => 'Pojďme vytvořit rozpočet',
-    'no_rules_title_default'                => 'Let\'s create a rule',
+    'no_rules_title_default'                => 'Pojďme vytvořit pravidlo',
     'no_budgets_intro_default'              => 'You have no budgets yet. Budgets are used to organize your expenses into logical groups, which you can give a soft-cap to limit your expenses.',
     'no_rules_intro_default'                => 'You have no rules yet. Rules are powerful automations that can handle transactions for you.',
     'no_rules_imperative_default'           => 'Rules can be very useful when you\'re managing transactions. Let\'s create one now:',
     'no_budgets_imperative_default'         => 'Rozpočty jsou základní nástroje správy financí. Pojďme takový vytvořit:',
     'no_budgets_create_default'             => 'Vytvořit rozpočet',
-    'no_rules_create_default'               => 'Create a rule',
+    'no_rules_create_default'               => 'Vytvořit pravidlo',
     'no_categories_title_default'           => 'Pojďme vytvořit kategorii!',
     'no_categories_intro_default'           => 'You have no categories yet. Categories are used to fine tune your transactions and label them with their designated category.',
     'no_categories_imperative_default'      => 'Categories are created automatically when you create transactions, but you can create one manually too. Let\'s create one now:',

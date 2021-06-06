@@ -76,7 +76,7 @@
         "profile_create_token": "Vytvo\u0159it token",
         "profile_create": "Vytvo\u0159it",
         "profile_save_changes": "Ulo\u017eit zm\u011bny",
-        "default_group_title_name": "(ungrouped)",
+        "default_group_title_name": "(neseskupeno)",
         "piggy_bank": "Pokladni\u010dka",
         "profile_oauth_client_secret_title": "Client Secret",
         "profile_oauth_client_secret_expl": "Here is your new client secret. This is the only time it will be shown so don't lose it! You may now use this secret to make API requests.",

@@ -200,7 +200,7 @@ return [
     'need_id_in_edit'           => 'Ogni suddivisione deve avere un "transaction_journal_id" (un ID valido oppure 0).',
 
     'ob_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
-    'lc_source_need_data' => 'È necessario avere un ID del conto sorgente valido per continuare.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
     'ob_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
 

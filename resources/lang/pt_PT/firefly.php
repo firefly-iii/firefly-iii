@@ -1714,7 +1714,7 @@ return [
     'no_budgets_title_default'              => 'Vamos criar um orçamento',
     'no_rules_title_default'                => 'Vamos criar uma regra',
     'no_budgets_intro_default'              => 'Você ainda não tem orçamentos. Os orçamentos são usados para organizar as suas despesas em grupos lógicos, que você pode usar como limiar para ajudar a limitar as suas despesas.',
-    'no_rules_intro_default'                => 'Você ainda não possui regras. As regras são poderosas automações que podem gerir transações para si.',
+    'no_rules_intro_default'                => 'Você ainda não tem regras. As regras são poderosas automações que podem gerir transações por si.',
     'no_rules_imperative_default'           => 'As regras podem ser muito úteis quando está a gerir transações. Vamos criar uma agora:',
     'no_budgets_imperative_default'         => 'Os orçamentos são as ferramentas básicas da gestão financeira. Vamos criar um agora:',
     'no_budgets_create_default'             => 'Criar um orçamento',
