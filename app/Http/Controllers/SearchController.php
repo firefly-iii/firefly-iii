@@ -64,7 +64,10 @@ class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher)
     {
         // search params:
-        $fullQuery        = (string) $request->get('search');
+        if(is_array($request->get('search'))) {
+            $fullQuery = '';
+        }
+        $fullQuery        = (string) $fullQuery;
         $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $ruleId           = (int) $request->get('rule');
         $rule             = null;
