@@ -134,7 +134,7 @@
         "liability_direction_debit_short": "Jeste\u015b d\u0142u\u017cny",
         "account_type_debt": "D\u0142ug",
         "account_type_loan": "Po\u017cyczka",
-        "left_in_debt": "Amount due",
+        "left_in_debt": "Do zap\u0142aty",
         "account_type_mortgage": "Hipoteka",
         "save_transactions_by_moving_js": "Brak transakcji|Zapisz t\u0119 transakcj\u0119, przenosz\u0105c j\u0105 na inne konto.|Zapisz te transakcje przenosz\u0105c je na inne konto.",
         "none_in_select_list": "(\u017cadne)"
@@ -157,7 +157,7 @@
     "config": {
         "html_language": "pl",
         "week_in_year_fns": "w 'tydzie\u0144' yyyy",
-        "month_and_day_fns": "MMMM d, y",
+        "month_and_day_fns": "d MMMM y",
         "quarter_fns": "Q 'kwarta\u0142' yyyy",
         "half_year_fns": "'{half} po\u0142owa' yyyy"
     },

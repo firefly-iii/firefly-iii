@@ -150,7 +150,7 @@
         "interest": "Juro",
         "interest_period": "Per\u00edodo de juros",
         "liability_type": "Tipo de responsabilidade",
-        "liability_direction": "Responsabilidade entrada\/sa\u00edda",
+        "liability_direction": "Passivo entrada\/fora",
         "currentBalance": "Saldo actual",
         "next_expected_match": "Proxima correspondencia esperada"
     },

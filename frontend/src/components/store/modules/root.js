@@ -22,7 +22,11 @@
 const state = () => (
     {
         listPageSize: 33,
-        timezone: ''
+        timezone: '',
+        cacheKey: {
+            age: 0,
+            value: 'empty',
+        },
     }
 )
 
@@ -36,11 +40,31 @@ const getters = {
         // console.log('Wil return ' + state.listPageSize);
         return state.timezone;
     },
+    cacheKey: state => {
+        return state.cacheKey.value;
+    },
 }
 
 // actions
 const actions = {
     initialiseStore(context) {
+        // cache key auto refreshes every day
+        console.log('Now in initialize store.')
+        if (localStorage.cacheKey) {
+            console.log('Storage has cache key: ');
+            console.log(localStorage.cacheKey);
+            let object = JSON.parse(localStorage.cacheKey);
+            if (Date.now() - object.age > 86400000) {
+                console.log('Key is here but is old.');
+                context.commit('refreshCacheKey');
+            } else {
+                console.log('Cache key from local storage: ' + object.value);
+                context.commit('setCacheKey', object);
+            }
+        } else {
+            console.log('No key need new one.');
+            context.commit('refreshCacheKey');
+        }
         if (localStorage.listPageSize) {
             state.listPageSize = localStorage.listPageSize;
             context.commit('setListPageSize', {length: localStorage.listPageSize});
@@ -69,6 +93,24 @@ const actions = {
 
 // mutations
 const mutations = {
+    refreshCacheKey(state) {
+        let age = Date.now();
+        let N = 8;
+        let cacheKey = Array(N+1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, N);
+        let object = {age: age, value: cacheKey};
+        console.log('Store new key in string JSON');
+        console.log(JSON.stringify(object));
+        localStorage.cacheKey = JSON.stringify(object);
+        state.cacheKey = {age: age, value: cacheKey};
+        console.log('Refresh: cachekey is now ' + cacheKey);
+    },
+    setCacheKey(state, payload) {
+        console.log('Stored cache key in localstorage.');
+        console.log(payload);
+        console.log(JSON.stringify(payload));
+        localStorage.cacheKey = JSON.stringify(payload);
+        state.cacheKey = payload;
+    },
     setListPageSize(state, payload) {
         // console.log('Got a payload in setListPageSize');
         // console.log(payload);
@@ -76,7 +118,6 @@ const mutations = {
         if (0 !== number) {
             state.listPageSize = number;
             localStorage.listPageSize = number;
-
         }
     },
     setTimezone(state, payload) {

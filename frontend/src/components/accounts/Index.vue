@@ -45,7 +45,7 @@
                      :sort-desc.sync="sortDesc"
             >
               <template #table-busy>
-                <i class="fa fa-spinner"></i>
+                <i class="fas fa-spinner fa-spin"></i>
               </template>
               <template #cell(name)="data">
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
@@ -232,7 +232,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('root', ['listPageSize']),
+    ...mapGetters('root', ['listPageSize', 'cacheKey']),
     ...mapGetters('accounts/index', ['orderMode', 'activeFilter']),
     ...mapGetters('dashboard/index', ['start', 'end',]),
     'indexReady': function () {
@@ -373,16 +373,8 @@ export default {
     },
     downloadAccountList: function (page) {
       console.log('downloadAccountList(' + page + ')');
-
-      // configure().then(async (api) => {
-      //   const response = await api.get('/url')
-      //
-      //   // Display something beautiful with `response.data` ;)
-      // })
-
-
       configureAxios().then(async (api) => {
-        api.get('./api/v1/accounts?type=' + this.type + '&page=' + page)
+        api.get('./api/v1/accounts?type=' + this.type + '&page=' + page + '&key=' + this.cacheKey)
             .then(response => {
                     let currentPage = parseInt(response.data.meta.pagination.current_page);
                     let totalPage = parseInt(response.data.meta.pagination.total_pages);
@@ -525,15 +517,15 @@ export default {
             acctNr = current.attributes.account_number;
           }
           // only account nr
-          if(null === iban && null !== acctNr) {
+          if (null === iban && null !== acctNr) {
             acct.acct_number = acctNr;
           }
           // only iban
-          if(null !== iban && null === acctNr) {
+          if (null !== iban && null === acctNr) {
             acct.acct_number = iban;
           }
           // both:
-          if(null !== iban && null !== acctNr) {
+          if (null !== iban && null !== acctNr) {
             acct.acct_number = iban + ' (' + acctNr + ')';
           }
 
@@ -563,7 +555,7 @@ export default {
       // console.log('getAccountLastActivity(' + index + ')');
       // get single transaction for account:
       //  /api/v1/accounts/1/transactions?limit=1
-      axios.get('./api/v1/accounts/' + acct.id + '/transactions?limit=1').then(response => {
+      axios.get('./api/v1/accounts/' + acct.id + '/transactions?limit=1&key=' + this.cacheKey).then(response => {
         if (0 === response.data.data.length) {
           this.allAccounts[index].last_activity = 'none';
           return;
@@ -588,8 +580,8 @@ export default {
       }));
       let startStr = format(this.start, 'y-MM-dd');
       let endStr = format(this.end, 'y-MM-dd');
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr));
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + endStr));
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr + '&key=' + this.cacheKey));
+      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + endStr + '&key=' + this.cacheKey));
 
       Promise.all(promises).then(responses => {
         let index = responses[0].index;
