@@ -18,17 +18,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+require('../../bootstrap');
 
 import Vue from "vue";
 import store from "../../components/store";
 import Index from "../../components/transactions/Index";
-
-require('../../bootstrap');
+import {BPagination, BTable} from 'bootstrap-vue';
+import Calendar from "../../components/dashboard/Calendar";
 
 // i18n
 let i18n = require('../../i18n');
-
 let props = {};
+
+Vue.component('b-table', BTable);
+Vue.component('b-pagination', BPagination);
+
 new Vue({
             i18n,
             store,
@@ -36,7 +40,23 @@ new Vue({
                 return createElement(Index, {props: props});
             },
             beforeCreate() {
+                // init the old root store (TODO remove me)
                 this.$store.commit('initialiseStore');
-                //this.$store.dispatch('updateCurrencyPreference');
+                this.$store.dispatch('updateCurrencyPreference');
+
+                // init the new root store (dont care about results)
+                this.$store.dispatch('root/initialiseStore');
+
+                // also init the dashboard store.
+                this.$store.dispatch('dashboard/index/initialiseStore');
             },
         }).$mount('#transactions_index');
+
+new Vue({
+            i18n,
+            store,
+            el: "#calendar",
+            render: (createElement) => {
+                return createElement(Calendar, {props: props});
+            },
+        });
