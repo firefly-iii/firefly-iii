@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Message',
     'flash_warning'                                       => 'Warning!',
     'flash_error'                                         => 'Error!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'There is one message|There are :count messages',
     'flash_error_multiple'                                => 'There is one error|There are :count errors',
     'net_worth'                                           => 'Net worth',

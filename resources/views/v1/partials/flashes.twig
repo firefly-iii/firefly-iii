@@ -8,6 +8,13 @@
     </div>
 {% endif %}
 
+{# MANDATORY UPDATE MESSAGE #}
+{% if upgrade_security_message and upgrade_security_level %}
+    <div class="alert alert-{{ upgrade_security_level }} alert-dismissible" role="alert">
+        <strong>{{ ('flash_'~upgrade_security_level)|_ }}</strong> <i class="fa fa-exclamation-triangle"></i> {{ upgrade_security_message }}
+    </div>
+{% endif %}
+
 {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
 {% if session_has('success') %}
     <div class="alert alert-success alert-dismissible" role="alert">
