@@ -81,7 +81,7 @@
                   }}
                 </span>
                 <span v-if="'asset' === type && 'loading' === data.item.balance_diff">
-                  <i class="fas fa-spinner fa-spin"></i>
+                  <span class="fas fa-spinner fa-spin"></span>
                 </span>
                 <span v-if="'asset' === type && 'loading' !== data.item.balance_diff">
                    (<span class="text-success" v-if="parseFloat(data.item.balance_diff) > 0">{{
@@ -110,9 +110,9 @@
                       {{ $t('firefly.actions') }}
                     </button>
                     <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
-                      <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><i class="fa fas fa-pencil-alt"></i> {{ $t('firefly.edit') }}</a>
-                      <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><i class="fa far fa-trash"></i> {{ $t('firefly.delete') }}</a>
-                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><i class="fas fa-check"></i>
+                      <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{ $t('firefly.edit') }}</a>
+                      <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{ $t('firefly.delete') }}</a>
+                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><span class="fas fa-check"></span>
                         {{ $t('firefly.reconcile_this_account') }}</a>
                     </div>
                   </div>

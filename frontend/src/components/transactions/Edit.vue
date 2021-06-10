@@ -79,7 +79,7 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i>
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><span class="far fa-clone"></span>
                     {{ $t('firefly.add_another_split') }}
                   </button>
                 </div>
@@ -88,8 +88,8 @@
                     &nbsp;
                   </div>
                   <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
-                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
-                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                    <span v-if="enableSubmit"><span class="far fa-save"></span> {{ $t('firefly.update_transaction') }}</span>
+                    <span v-if="!enableSubmit"><span class="fas fa-spinner fa-spin"></span></span>
                   </button>
                 </div>
               </div>
