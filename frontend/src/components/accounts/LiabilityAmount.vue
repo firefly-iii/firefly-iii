@@ -33,7 +33,7 @@
           type="number" step="any" min="0"
       />
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><i class="far fa-trash-alt"></i></button>
+        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><span class="far fa-trash-alt"></span></button>
       </div>
     </div>
     <span v-if="errors.length > 0">

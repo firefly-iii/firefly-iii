@@ -28,14 +28,14 @@
         <canvas id="canvas" ref="canvas" width="400" height="400"></canvas>
       </div>
       <div v-if="loading && !error" class="text-center">
-        <i class="fas fa-spinner fa-spin"></i>
+        <span class="fas fa-spinner fa-spin"></span>
       </div>
       <div v-if="error" class="text-center">
-        <i class="fas fa-exclamation-triangle text-danger"></i>
+        <span class="fas fa-exclamation-triangle text-danger"></span>
       </div>
     </div>
     <div class="card-footer">
-      <a class="btn btn-default button-sm" href="./accounts/asset"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_asset_accounts') }}</a>
+      <a class="btn btn-default button-sm" href="./accounts/asset"><span class="far fa-money-bill-alt"></span> {{ $t('firefly.go_to_asset_accounts') }}</a>
     </div>
   </div>
 </template>

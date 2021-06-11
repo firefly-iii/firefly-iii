@@ -41,16 +41,16 @@
               <button
                   :title="$t('firefly.custom_period')" class="btn btn-secondary btn-sm"
                   @click="togglePopover({ placement: 'auto-start', positionFixed: true })"
-              ><i class="fas fa-calendar-alt"></i></button>
+              ><span class="fas fa-calendar-alt"></span></button>
               <button :title="$t('firefly.reset_to_current')"
                       class="btn btn-secondary"
                       @click="resetDate"
-              ><i class="fas fa-history"></i></button>
+              ><span class="fas fa-history"></span></button>
               <button id="dropdownMenuButton" :title="$t('firefly.select_period')" aria-expanded="false" aria-haspopup="true"
                       class="btn btn-secondary dropdown-toggle"
                       data-toggle="dropdown"
                       type="button">
-                <i class="fas fa-list"></i>
+                <span class="fas fa-list"></span>
               </button>
               <div aria-labelledby="dropdownMenuButton" class="dropdown-menu">
                 <a v-for="period in periods" class="dropdown-item" href="#" @click="customDate(period.start, period.end)">{{ period.title }}</a>
