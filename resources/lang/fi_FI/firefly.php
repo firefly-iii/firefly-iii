@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Viesti',
     'flash_warning'                                       => 'Varoitus!',
     'flash_error'                                         => 'Virhe!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Sinulle on yksi viesti|Sinulle on :count viestiä',
     'flash_error_multiple'                                => 'On tapahtunut virhe|On tapahtunut :count virhettä',
     'net_worth'                                           => 'Varallisuus',

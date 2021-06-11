@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => '訊息',
     'flash_warning'                                       => '警告！',
     'flash_error'                                         => '錯誤！',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => '有 1 個訊息|有 :count 個訊息',
     'flash_error_multiple'                                => '有 1 個錯誤|有 :count 個錯誤',
     'net_worth'                                           => '淨值',

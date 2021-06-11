@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Сообщение',
     'flash_warning'                                       => 'Предупреждение!',
     'flash_error'                                         => 'Ошибка!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Есть одно сообщение|Есть :count сообщений',
     'flash_error_multiple'                                => 'Есть одна ошибка|Есть :count ошибок',
     'net_worth'                                           => 'Мои сбережения',

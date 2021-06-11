@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Üzenet',
     'flash_warning'                                       => 'Figyelmeztetés!',
     'flash_error'                                         => 'Hiba!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Egy üzenet érkezett | :count üzenet érkezett',
     'flash_error_multiple'                                => 'Egy hiba történt|:count hiba történt',
     'net_worth'                                           => 'Nettó érték',

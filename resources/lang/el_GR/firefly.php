@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Μήνυμα',
     'flash_warning'                                       => 'Προσοχή!',
     'flash_error'                                         => 'Σφάλμα!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Υπάρχει ένα μήνυμα|Υπάρχουν :count μηνύματα',
     'flash_error_multiple'                                => 'Υπάρχει ένα σφάλμα|Υπάρχουν :count σφάλματα',
     'net_worth'                                           => 'Καθαρή αξία',

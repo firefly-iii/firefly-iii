@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Tin nhắn',
     'flash_warning'                                       => 'Cảnh báo!',
     'flash_error'                                         => 'Lỗi!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Có tin nhắn :tin nhắn',
     'flash_error_multiple'                                => 'Có lỗi :lỗi',
     'net_worth'                                           => 'Tài sản thực',
