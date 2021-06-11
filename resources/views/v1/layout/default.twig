@@ -74,7 +74,7 @@
 
                     <li class="hidden-sm hidden-xs">
                         <a href="#" id="help" data-route="{{ original_route_name }}" data-extra="{{ objectType|default("") }}">
-                            <i class="fa fa-question-circle" data-route="{{ original_route_name }}" data-extra="{{ objectType|default("") }}"></i>
+                            <span class="fa fa-question-circle" data-route="{{ original_route_name }}" data-extra="{{ objectType|default("") }}"></span>
                         </a>
                     </li>
 
@@ -90,7 +90,7 @@
                     </span>
                     </li>
                     <li id="sidebar-toggle">
-                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-plus-circle"></i></a>
+                        <a href="#" data-toggle="control-sidebar"><span class="fa fa-plus-circle"></span></a>
                     </li>
                 </ul>
             </div>
@@ -103,7 +103,7 @@
                 <div class="input-group">
                     <input autocomplete="off" type="text" name="search" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}"/>
                     <span class="input-group-btn">
-                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
               </span>
                 </div>
             </form>

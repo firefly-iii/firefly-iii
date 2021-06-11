@@ -28,7 +28,7 @@ $(function () {
 
 function startRunningCommands() {
     if (0 === index) {
-        $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Running first command...');
+        $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Running first command...');
     }
     runCommand(index);
 }
@@ -41,7 +41,7 @@ function runCommand(index) {
 
             if(data.hasNextCommand) {
                 // inform user
-                $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Just executed ' + data.previous + '...');
+                $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Just executed ' + data.previous + '...');
                 console.log('Will call next command.');
                 runCommand(index);
             } else {
@@ -54,7 +54,7 @@ function runCommand(index) {
         }
 
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> Command failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> Command failed! See log files :(');
     });
 }
 
@@ -69,12 +69,12 @@ function startMigration() {
         }
 
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> Migration failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> Migration failed! See log files :(');
     });
 }
 
 function startDecryption() {
-    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up DB #2...');
+    $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Setting up DB #2...');
     $.post(decryptUri, {_token: token}).done(function (data) {
         if (data.error === false) {
             // move to decrypt routine.
@@ -84,7 +84,7 @@ function startDecryption() {
         }
 
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> Migration failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> Migration failed! See log files :(');
     });
 }
 
@@ -92,7 +92,7 @@ function startDecryption() {
  *
  */
 function startPassport() {
-    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up OAuth2...');
+    $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Setting up OAuth2...');
     $.post(keysUri, {_token: token}).done(function (data) {
         if (data.error === false) {
             startUpgrade();
@@ -101,7 +101,7 @@ function startPassport() {
         }
 
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> OAuth2 failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> OAuth2 failed! See log files :(');
     });
 }
 
@@ -109,7 +109,7 @@ function startPassport() {
  *
  */
 function startUpgrade() {
-    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Upgrading database...');
+    $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Upgrading database...');
     $.post(upgradeUri, {_token: token}).done(function (data) {
         if (data.error === false) {
             startVerify();
@@ -117,7 +117,7 @@ function startUpgrade() {
             displaySoftFail(data.message);
         }
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> Upgrade failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> Upgrade failed! See log files :(');
     });
 }
 
@@ -125,7 +125,7 @@ function startUpgrade() {
  *
  */
 function startVerify() {
-    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Verify database integrity...');
+    $('#status-box').html('<span class="fa fa-spin fa-spinner"></span> Verify database integrity...');
     $.post(verifyUri, {_token: token}).done(function (data) {
         if (data.error === false) {
             completeDone();
@@ -133,7 +133,7 @@ function startVerify() {
             displaySoftFail(data.message);
         }
     }).fail(function () {
-        $('#status-box').html('<i class="fa fa-warning"></i> Verification failed! See log files :(');
+        $('#status-box').html('<span class="fa fa-warning"></span> Verification failed! See log files :(');
     });
 }
 
@@ -141,14 +141,14 @@ function startVerify() {
  *
  */
 function completeDone() {
-    $('#status-box').html('<i class="fa fa-thumbs-up"></i> Installation + upgrade complete! Wait to be redirected...');
+    $('#status-box').html('<span class="fa fa-thumbs-up"></span> Installation + upgrade complete! Wait to be redirected...');
     setTimeout(function () {
         window.location = homeUri;
     }, 3000);
 }
 
 function displaySoftFail(message) {
-    $('#status-box').html('<i class="fa fa-warning"></i> ' + message + '<br /><br />Please read the ' +
+    $('#status-box').html('<span class="fa fa-warning"></span> ' + message + '<br /><br />Please read the ' +
                           '<a href="https://docs.firefly-iii.org/">' +
                           'documentation</a> about this, and upgrade by hand.');
 }

@@ -3,22 +3,22 @@
         <tr>
             <td style="width:120px;">
                 <div class="btn-group btn-group-xs">
-                    <a href="{{ route('attachments.edit', attachment.id) }}" class="btn btn-default"><i
-                                class="fa fa-pencil"></i></a>
-                    <a href="{{ route('attachments.delete', attachment.id) }}" class="btn btn-danger"><i
-                                class="fa fa-trash"></i></a>
+                    <a href="{{ route('attachments.edit', attachment.id) }}" class="btn btn-default"><span
+                                class="fa fa-pencil"></span></a>
+                    <a href="{{ route('attachments.delete', attachment.id) }}" class="btn btn-danger"><span
+                                class="fa fa-trash"></span></a>
                     {% if attachment.file_exists %}
-                        <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><i
-                                    class="fa fa-download"></i></a>
+                        <a href="{{ route('attachments.download', attachment.id) }}" class="btn btn-default"><span
+                                    class="fa fa-download"></span></a>
                     {% endif %}
                     {% if not attachment.file_exists %}
-                        <a href="#" class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i></a>
+                        <a href="#" class="btn btn-danger"><span class="fa fa-exclamation-triangle"></span></a>
                     {% endif %}
                 </div>
             </td>
             <td>
                 {% if attachment.file_exists %}
-                    <i class="fa {{ attachment.mime|mimeIcon }}"></i>
+                    <span class="fa {{ attachment.mime|mimeIcon }}"></span>
                     <a href="{{ route('attachments.view', attachment.id) }}" title="{{ attachment.filename }}">
                         {% if attachment.title %}
                             {{ attachment.title }}
@@ -32,7 +32,7 @@
                     {% endif %}
                 {% endif %}
                 {% if not attachment.file_exists %}
-                    <i class="fa fa-fw fa-exclamation-triangle"></i>
+                    <span class="fa fa-fw fa-exclamation-triangle"></span>
                     {% if attachment.title %}
                         {{ attachment.title }}
                     {% else %}

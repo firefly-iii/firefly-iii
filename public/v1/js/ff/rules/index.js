@@ -115,7 +115,7 @@ function testRuleTriggers(e) {
     var ruleId = parseInt(obj.data('id'));
     var icon = obj;
     if (obj.prop("tagName") === 'A') {
-        icon = $('i', obj);
+        icon = $('span', obj);
     }
     // change icon:
     icon.addClass('fa-spinner fa-spin').removeClass('fa-flask');

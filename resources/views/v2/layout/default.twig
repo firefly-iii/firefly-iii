@@ -46,9 +46,9 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1 class="m-0 text-dark">
-                            {% if mainTitleIcon|default(false) %}<i class="fa fas {{ mainTitleIcon }}"></i>{% endif %}
+                            {% if mainTitleIcon|default(false) %}<span class="fa fas {{ mainTitleIcon }}"></span>{% endif %}
                             {{ title }} <small class="text-muted">
-                                {% if subTitleIcon|default(false) %}<i class="fa fas {{ subTitleIcon }}"></i>{% endif %}
+                                {% if subTitleIcon|default(false) %}<span class="fa fas {{ subTitleIcon }}"></span>{% endif %}
                                 {{ subTitle|default('') }}</small></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">

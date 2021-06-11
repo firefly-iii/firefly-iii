@@ -82,7 +82,7 @@
                     {% if periods|length > 0 %}
                         {% include 'v1.list.groups' %}
                         <p>
-                            <i class="fa fa-calendar"></i>
+                            <span class="fa fa-calendar"></span>
                             <a href="{{ route('categories.show.all', [category.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
@@ -90,7 +90,7 @@
                     {% else %}
                         {% include 'v1.list.groups'  %}
                         <p>
-                            <i class="fa fa-calendar"></i>
+                            <span class="fa fa-calendar"></span>
                             <a href="{{ route('categories.show', [category.id]) }}">
                                 {{ 'show_the_current_period_and_overview'|_ }}
                             </a>

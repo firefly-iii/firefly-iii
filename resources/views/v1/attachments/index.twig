@@ -30,9 +30,9 @@
                             <tr>
                                 <td data-value="{{ att.id }}">
                                     <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                                        <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
+                                        <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><span class="fa fa-pencil"></span></a>
+                                        <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><span class="fa fa-trash"></span></a>
+                                        <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><span class="fa fa-download"></span></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ att.filename }}">
@@ -53,9 +53,9 @@
                                 </td>
                                 <td data-value="{% if att.file_exists %}1{% else %}0{% endif %}">
                                     {% if att.file_exists %}
-                                        <i class="fa fa-check text-success"></i>
+                                        <span class="fa fa-check text-success"></span>
                                     {% else %}
-                                        <i class="fa fa-warning text-danger"></i>
+                                        <span class="fa fa-warning text-danger"></span>
                                     {% endif %}
                                 </td>
                             </tr>

@@ -38,7 +38,7 @@
                             <tbody>
                             {% for objectGroup in objectGroups %}
                                 <tr class="group-sortable" data-id="{{ objectGroup.id }}" data-name="{{ objectGroup.title|escape('html') }}" data-order="{{ objectGroup.order }}">
-                                    <td><i class="fa fa-fw fa-bars group-handle"></i></td>
+                                    <td><span class="fa fa-fw fa-bars group-handle"></span></td>
                                     <td>
                                         <strong>{{ objectGroup.title }}</strong><br />
 
@@ -52,10 +52,10 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a class="btn btn-default" href="{{ route('object-groups.edit', [objectGroup.id]) }}">
-                                                <i class="fa fa-pencil"></i>
+                                                <span class="fa fa-pencil"></span>
                                             </a>
                                             <a class="btn btn-danger" href="{{ route('object-groups.delete', [objectGroup.id]) }}">
-                                                <i class="fa fa-trash"></i>
+                                                <span class="fa fa-trash"></span>
                                             </a>
                                         </div>
                                     </td>

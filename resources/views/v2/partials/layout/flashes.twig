@@ -5,7 +5,7 @@
             <!-- alert from URL -->
             <div class="alert alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-thumbs-up"></i> {{ 'flash_success'|_ }}</h5>
+                <h5><span class="icon fas fa-thumbs-up"></span> {{ 'flash_success'|_ }}</h5>
                 <span>
                 {% if session_has('success_url') %}
                     <a href="{{ session('success_url') }}">
@@ -26,7 +26,7 @@
             <!-- alert from URL -->
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <h5><i class="icon fas fa-exclamation-triangle"></i> {{ 'flash_warning'|_ }}</h5>
+                <h5><span class="icon fas fa-exclamation-triangle"></span> {{ 'flash_warning'|_ }}</h5>
                 <span>
                 {% if session_has('warning_url') %}
                     <a href="{{ session('warning_url') }}" style="color:rgb(31, 45, 61);">

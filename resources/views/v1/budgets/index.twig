@@ -77,7 +77,7 @@
                                     :
                                     <span class="available_amount" data-id="0" data-value="0" data-currency="{{ defaultCurrency.id }}"
                                           data-value="0">{{ formatAmountBySymbol(0, defaultCurrency.symbol, defaultCurrency.decimal_places, true) }}</span>
-                                    <a href="#" data-id="0" class="update_ab btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                    <a href="#" data-id="0" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
                                 </small>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                     <div class="col-lg-12">
                         <p class="pull-right">
                             <a href="#" class="btn btn-light btn-xs create_ab_alt">
-                                <i class="fa fa-plus-circle"></i>
+                                <span class="fa fa-plus-circle"></span>
                                 {{ 'alt_currency_ab_create'|_ }}</a>
                         </p>
                     </div>
@@ -136,9 +136,9 @@
                                         :
                                         <span class="available_amount" data-id="{{ budget.id }}"
                                               data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
-                                        <a href="#" data-id="{{ budget.id }}" class="update_ab btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                        <a href="#" data-id="{{ budget.id }}" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
                                         <a href="{{ route('available-budgets.delete', [budget.id]) }}" data-id="{{ budget.id }}"
-                                           class="delete_ab btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+                                           class="delete_ab btn btn-danger btn-xs"><span class="fa fa-trash"></span></a>
                                     </small>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
                 <div class="col-lg-12">
                     <p class="pull-right">
                         <a href="#" class="btn btn-light btn-xs create_ab_alt">
-                            <i class="fa fa-plus-circle"></i>
+                            <span class="fa fa-plus-circle"></span>
                             {{ 'alt_currency_ab_create'|_ }}</a>
                     </p>
                 </div>
@@ -216,7 +216,7 @@
                     </div>
                     <div class="box-body no-padding">
                         <div style="padding:8px;">
-                            <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+                            <a href="{{ route('budgets.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'createBudget'|_ }}</a>
                         </div>
                         <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
                             <thead>
@@ -233,9 +233,9 @@
                                 <tr data-id="{{ budget.id }}">
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-xs">
-                                            <a href="#" class="handle object-handle btn btn-default"><i class="fa fa-fw fa-bars"></i></a>
-                                            <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                                            <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                                            <a href="#" class="handle object-handle btn btn-default"><span class="fa fa-fw fa-bars"></span></a>
+                                            <a href="{{ route('budgets.edit', budget.id) }}" class="btn btn-xs btn-default"><span class="fa fa-fw fa-pencil"></span></a>
+                                            <a href="{{ route('budgets.delete', budget.id) }}" class="btn btn-xs btn-danger"><span class="fa fa-fw fa-trash-o"></span></a>
                                         </div>
                                     </td>
                                     <td>
@@ -256,14 +256,14 @@
 
                                         {% if budget.auto_budget %}
                                         {% if 1 == budget.auto_budget.auto_budget_type %}
-                                            <i class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></i>
+                                            <span class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></span>
                                         {% endif %}
                                         {% if 2 == budget.auto_budget.auto_budget_type %}
-                                            <i class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></i>
+                                            <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></span>
                                         {% endif %}
                                         {% endif %}
                                         {% if budget.attachments.count() > 0 %}
-                                            <i class="fa fa-paperclip"></i>
+                                            <span class="fa fa-paperclip"></span>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -305,7 +305,7 @@
                                         {% endif %}
                                         {% if budget.budgeted|length < currencies.count() %}
                                             <a href="#" class="btn btn-light btn-xs create_bl" data-id="{{ budget.id }}">
-                                                <i class="fa fa-plus-circle"></i>
+                                                <span class="fa fa-plus-circle"></span>
                                             </a>
                                         {% endif %}
                                     </td>
@@ -391,7 +391,7 @@
                         </table>
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
+                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'createBudget'|_ }}</a>
                     </div>
                 </div>
             </div>

@@ -33,7 +33,7 @@ function showHelp(e) {
     if (typeof specialPage === 'undefined') {
         specialPage = '';
     }
-    $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
+    $('#helpBody').html('<span class="fa fa-refresh fa-spin"></span>');
     $('#helpModal').modal('show');
     $('#helpTitle').html(helpPageTitle);
     $.getJSON('help/' + encodeURI(route)).done(function (data) {
