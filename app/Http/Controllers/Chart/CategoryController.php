@@ -63,7 +63,7 @@ class CategoryController extends Controller
 
     /**
      * Show an overview for a category for all time, per month/week/year.
-     * TODO test method, for category refactor.
+* See reference nr. 59
      *
      * @param Category $category
      *
@@ -111,7 +111,7 @@ class CategoryController extends Controller
 
     /**
      * Shows the category chart on the front page.
-     * TODO test method, for category refactor.
+* See reference nr. 60
      *
      * @return JsonResponse
      */
@@ -138,7 +138,7 @@ class CategoryController extends Controller
 
     /**
      * Chart report.
-     * TODO test method, for category refactor.
+* See reference nr. 61
      *
      * @param Category   $category
      * @param Collection $accounts
@@ -254,7 +254,7 @@ class CategoryController extends Controller
 
     /**
      * Chart for period for transactions without a category.
-     * TODO test me.
+* See reference nr. 62
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -281,7 +281,7 @@ class CategoryController extends Controller
 
     /**
      * Chart for a specific period.
-     * TODO test method, for category refactor.
+* See reference nr. 63
      *
      * @param Category $category
      * @param Carbon   $date

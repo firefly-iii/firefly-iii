@@ -146,8 +146,8 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * TODO this method does not include foreign amount transactions. It only sums up "amount".
-     * TODO this probably also applies to the other "sumExpenses" methods.
+* See reference nr. 15
+* See reference nr. 16
      *
      * @param Carbon                   $start
      * @param Carbon                   $end

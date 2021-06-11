@@ -265,7 +265,7 @@ class FireflyValidator extends Validator
             $repository = app(BudgetRepositoryInterface::class);
             $budgets    = $repository->getBudgets();
             // count budgets, should have at least one
-            // TODO no longer need to loop like this
+// See reference nr. 102
             $count = $budgets->filter(
                 function (Budget $budget) use ($value) {
                     return $budget->name === $value;
@@ -448,7 +448,7 @@ class FireflyValidator extends Validator
         $value = $this->data['name'];
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
-        // TODO no longer need to loop like this
+// See reference nr. 103
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -480,7 +480,7 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
         $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
-        // TODO no longer need to loop like this
+// See reference nr. 104
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {
@@ -504,10 +504,10 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
-        // TODO no longer need to loop like this
+// See reference nr. 105
         /** @var Account $entry */
         foreach ($set as $entry) {
-            // TODO no longer need to loop like this.
+// See reference nr. 106
             if ($entry->name === $value) {
                 return false;
             }
@@ -718,7 +718,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-     * TODO this method does not need a for loop
+* See reference nr. 107
      *
      * @return bool
      */

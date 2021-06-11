@@ -38,7 +38,7 @@ use Log;
 /**
  * Trait PeriodOverview.
  *
- * TODO verify this all works as expected.
+* See reference nr. 36
  *
  * - Always request start date and end date.
  * - Group expenses, income, etc. under this period.
@@ -392,7 +392,7 @@ trait PeriodOverview
     }
 
     /**
-     * TODO fix date.
+* See reference nr. 37
      *
      * Show period overview for no category view.
      *

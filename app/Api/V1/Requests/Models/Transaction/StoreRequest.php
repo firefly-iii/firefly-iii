@@ -60,7 +60,7 @@ class StoreRequest extends FormRequest
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),
             'transactions'            => $this->getTransactionData(),
         ];
-        // TODO location
+// See reference nr. 71
     }
 
     /**

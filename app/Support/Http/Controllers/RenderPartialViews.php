@@ -292,7 +292,7 @@ trait RenderPartialViews
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
-        // TODO duplicated code.
+// See reference nr. 38
         $operators = config('firefly.search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {

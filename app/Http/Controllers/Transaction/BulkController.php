@@ -63,7 +63,7 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
-     * TODO user wont be able to tell if journal is part of split.
+* See reference nr. 47
      *
      * @param array $journals
      *

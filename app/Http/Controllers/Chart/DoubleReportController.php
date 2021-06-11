@@ -249,7 +249,7 @@ class DoubleReportController extends Controller
     }
 
     /**
-     * TODO this method is double.
+* See reference nr. 51
      *
      * @param Collection  $accounts
      * @param int         $id
@@ -274,7 +274,7 @@ class DoubleReportController extends Controller
     }
 
     /**
-     * TODO duplicate function
+* See reference nr. 52
      *
      * @param Carbon $start
      * @param Carbon $end

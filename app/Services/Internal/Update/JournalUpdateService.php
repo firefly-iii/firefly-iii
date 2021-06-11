@@ -48,7 +48,7 @@ use Log;
  * Class to centralise code that updates a journal given the input by system.
  *
  * Class JournalUpdateService
- * TODO test me
+* See reference nr. 93
  */
 class JournalUpdateService
 {
@@ -158,7 +158,7 @@ class JournalUpdateService
         $this->updateAmount();
         $this->updateForeignAmount();
 
-        // TODO update hash
+// See reference nr. 94
 
         app('preferences')->mark();
 
@@ -201,7 +201,7 @@ class JournalUpdateService
         $result = $validator->validateSource($sourceId, $sourceName, null);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+// See reference nr. 95
 
         // validate submitted info:
         return $result;
@@ -295,7 +295,7 @@ class JournalUpdateService
         $result            = $validator->validateDestination($destId, $destName, null);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+// See reference nr. 96
 
         // validate submitted info:
         return $result;

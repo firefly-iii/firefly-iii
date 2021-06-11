@@ -644,7 +644,7 @@ class ExportDataGenerator
      */
     private function exportTransactions(): string
     {
-        // TODO better place for keys?
+// See reference nr. 41
         $header = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'amount', 'foreign_amount', 'currency_code',
                    'foreign_currency_code', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban',
                    'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes',

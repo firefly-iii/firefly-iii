@@ -35,7 +35,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
- * TODO include info about tags.
+* See reference nr. 18
  *
  * @codeCoverageIgnore
  */

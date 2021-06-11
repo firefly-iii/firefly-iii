@@ -72,7 +72,7 @@ class UpdateController extends Controller
      *
      * @return JsonResponse
      *
-     * TODO generates query exception when link exists.
+* See reference nr. 84
      */
     public function update(UpdateRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {

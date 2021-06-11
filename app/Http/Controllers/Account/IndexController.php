@@ -159,7 +159,7 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                // TODO lots of queries executed in this block.
+// See reference nr. 68
                 $account->lastActivityDate    = $this->isInArray($activities, $account->id);
                 $account->startBalance        = $this->isInArray($startBalances, $account->id);
                 $account->endBalance          = $this->isInArray($endBalances, $account->id);

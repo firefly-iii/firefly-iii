@@ -509,7 +509,7 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-     * TODO this chart is not multi-currency aware.
+* See reference nr. 55
      *
      * @param Carbon     $start
      * @param Carbon     $end

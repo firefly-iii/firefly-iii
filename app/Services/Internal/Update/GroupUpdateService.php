@@ -32,7 +32,7 @@ use Log;
 
 /**
  * Class GroupUpdateService
- * TODO test.
+* See reference nr. 91
  */
 class GroupUpdateService
 {

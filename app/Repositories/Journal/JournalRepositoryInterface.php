@@ -58,7 +58,7 @@ interface JournalRepositoryInterface
     public function findByType(array $types): Collection;
 
     /**
-     * TODO Refactor to "find".
+* See reference nr. 1
      * Find a specific journal.
      *
      * @param int $journalId
@@ -85,7 +85,7 @@ interface JournalRepositoryInterface
     public function getDestinationAccount(TransactionJournal $journal): Account;
 
     /**
-     * TODO this method is no longer well-fitted in 4.8,0. Should be refactored and/or removed.
+* See reference nr. 2
      * Return a list of all destination accounts related to journal.
      *
      * @param TransactionJournal $journal
@@ -96,7 +96,7 @@ interface JournalRepositoryInterface
     public function getJournalDestinationAccounts(TransactionJournal $journal): Collection;
 
     /**
-     * TODO this method is no longer well-fitted in 4.8,0. Should be refactored and/or removed.
+* See reference nr. 3
      * Return a list of all source accounts related to journal.
      *
      * @param TransactionJournal $journal
@@ -121,7 +121,7 @@ interface JournalRepositoryInterface
     public function getLast(): ?TransactionJournal;
 
     /**
-     * TODO used only in transformer, so only for API use.
+* See reference nr. 4
      *
      * @param TransactionJournalLink $link
      *
@@ -150,7 +150,7 @@ interface JournalRepositoryInterface
     public function getSourceAccount(TransactionJournal $journal): Account;
 
     /**
-     * TODO maybe move to account repository?
+* See reference nr. 5
      *
      * @param int $journalId
      */

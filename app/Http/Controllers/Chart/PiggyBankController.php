@@ -58,7 +58,7 @@ class PiggyBankController extends Controller
     /**
      * Shows the piggy bank history.
      *
-     * TODO this chart is not multi-currency aware.
+* See reference nr. 53
      *
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
