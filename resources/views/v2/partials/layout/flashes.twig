@@ -40,3 +40,18 @@
         </div>
     </div>
 {% endif %}
+
+{% if upgrade_security_message and upgrade_security_level %}
+    <div class="row">
+        <div class="col">
+            <!-- alert from URL -->
+            <div class="alert alert-{{ upgrade_security_level }}">
+                <h5><span class="fas fa-exclamation-triangle"></span> {{ ('flash_'~upgrade_security_level)|_ }}</h5>
+                <span>
+                    {{ upgrade_security_message }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
