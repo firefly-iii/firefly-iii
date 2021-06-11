@@ -105,6 +105,7 @@ class UpgradeDatabase extends Command
 
             // instructions
             'firefly:instructions update',
+            'firefly-iii:verify-security-alerts'
         ];
         $args     = [];
         if ($this->option('force')) {

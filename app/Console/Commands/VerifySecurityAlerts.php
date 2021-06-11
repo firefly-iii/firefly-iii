@@ -4,6 +4,7 @@ namespace FireflyIII\Console\Commands;
 
 use Illuminate\Console\Command;
 use Storage;
+use Log;
 
 /**
  * Class VerifySecurityAlerts
@@ -49,6 +50,7 @@ class VerifySecurityAlerts extends Command
         $version = config('firefly.version');
         $disk    = Storage::disk('resources');
         if (!$disk->has('alerts.json')) {
+            Log::debug('No alerts.json file present.');
             return 0;
         }
         $content = $disk->get('alerts.json');
@@ -56,24 +58,27 @@ class VerifySecurityAlerts extends Command
 
         /** @var array $array */
         foreach ($json as $array) {
-            // overrule array:
             if ($version === $array['version'] && true === $array['advisory']) {
+                Log::debug(sprintf('Version %s has an alert!', $array['version']));
                 // add advisory to configuration.
                 app('fireflyconfig')->set('upgrade_security_message', $array['message']);
                 app('fireflyconfig')->set('upgrade_security_level', $array['level']);
 
                 // depends on level
                 if ('info' === $array['level']) {
+                    Log::debug('INFO level alert');
                     $this->info($array['message']);
                     return 0;
                 }
                 if ('warning' === $array['level']) {
+                    Log::debug('WARNING level alert');
                     $this->warn('------------------------ :o');
                     $this->warn($array['message']);
                     $this->warn('------------------------ :o');
                     return 0;
                 }
                 if ('danger' === $array['level']) {
+                    Log::debug('DANGER level alert');
                     $this->error('------------------------ :-(');
                     $this->error($array['message']);
                     $this->error('------------------------ :-(');
@@ -83,6 +88,7 @@ class VerifySecurityAlerts extends Command
                 return 0;
             }
         }
+        Log::debug('This version is not mentioned.');
 
         return 0;
     }

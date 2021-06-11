@@ -200,10 +200,12 @@
       "@php artisan firefly-iii:restore-oauth-keys",
       "@php artisan firefly-iii:set-latest-version --james-is-cool",
       "@php artisan firefly:instructions update",
+      "@php artisan firefly-iii:verify-security-alerts",
       "@php artisan passport:install"
     ],
     "post-install-cmd": [
-      "@php artisan firefly:instructions install"
+      "@php artisan firefly:instructions install",
+      "@php artisan firefly-iii:verify-security-alerts"
     ]
   },
   "config": {
