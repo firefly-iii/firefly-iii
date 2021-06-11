@@ -129,6 +129,9 @@ class UpdateRequest extends FormRequest
         if ($this->has('apply_rules')) {
             $data['apply_rules'] = $this->boolean('apply_rules', true);
         }
+        if ($this->has('fire_webhooks')) {
+            $data['fire_webhooks'] = $this->boolean('fire_webhooks', true);
+        }
         if ($this->has('group_title')) {
             $data['group_title'] = $this->string('group_title');
         }

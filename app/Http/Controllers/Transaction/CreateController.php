@@ -70,7 +70,7 @@ class CreateController extends Controller
         $newGroup = $service->cloneGroup($group);
 
         // event!
-        event(new StoredTransactionGroup($newGroup, true));
+        event(new StoredTransactionGroup($newGroup));
 
         app('preferences')->mark();
 
