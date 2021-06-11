@@ -21,8 +21,8 @@
   <div v-if="message.length > 0" :class="'alert alert-' + type + ' alert-dismissible'">
     <button aria-hidden="true" class="close" data-dismiss="alert" type="button">×</button>
     <h5>
-      <i v-if="'danger' === type" class="icon fas fa-ban"></i>
-      <i v-if="'success' === type" class="icon fas fa-thumbs-up"></i>
+      <span v-if="'danger' === type" class="icon fas fa-ban"></span>
+      <span v-if="'success' === type" class="icon fas fa-thumbs-up"></span>
       <span v-if="'danger' === type">{{ $t("firefly.flash_error") }}</span>
       <span v-if="'success' === type">{{ $t("firefly.flash_success") }}</span>
     </h5>

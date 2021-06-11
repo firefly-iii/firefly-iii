@@ -24,7 +24,7 @@
       {{ $t('form.interest_period') }}
     </div>
     <div class="input-group" v-if="loading">
-      <i class="fas fa-spinner fa-spin"></i>
+      <span class="fas fa-spinner fa-spin"></span>
     </div>
     <div class="input-group" v-if="!loading">
       <select

@@ -27,7 +27,7 @@
       <div class="row">
         <div class="col">
           <p v-if="links.length === 0">
-            <button type="button" class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><i class="fas fa-plus"></i> Add transaction link</button>
+            <button type="button" class="btn btn-default btn-xs" data-target="#linkModal" @click="resetModal" data-toggle="modal"><span class="fas fa-plus"></span> Add transaction link</button>
           </p>
           <ul v-if="links.length > 0" class="list-group">
             <li v-for="(transaction, index) in links" class="list-group-item" v-bind:key="index">
@@ -59,12 +59,12 @@
                 }}</span>)
                         </span>
               <div class="btn-group btn-group-xs float-right">
-                <button type="button" class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><i class="far fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-xs btn-danger" @click="removeLink(index)" tabindex="-1"><span class="far fa-trash-alt"></span></button>
               </div>
             </li>
           </ul>
           <div v-if="links.length > 0" class="form-text">
-            <button type="button" class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><i class="fas fa-plus"></i></button>
+            <button type="button" class="btn btn-default" @click="resetModal" data-target="#linkModal" data-toggle="modal"><span class="fas fa-plus"></span></button>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
                       <input id="query" v-model="query" autocomplete="off" class="form-control" maxlength="255" name="search"
                              placeholder="Search query" type="text">
                       <div class="input-group-append">
-                        <button class="btn btn-default" type="submit"><i class="fas fa-search"></i> Search</button>
+                        <button class="btn btn-default" type="submit"><span class="fas fa-search"></span> Search</button>
                       </div>
                     </div>
                   </form>
@@ -104,7 +104,7 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <span v-if="searching"><i class="fas fa-spinner fa-spin"></i></span>
+                  <span v-if="searching"><span class="fas fa-spinner fa-spin"></span></span>
                   <h4 v-if="searchResults.length > 0">{{ $t('firefly.search_results') }}</h4>
                   <table v-if="searchResults.length > 0" class="table table-sm">
                     <caption style="display:none;">{{ $t('firefly.search_results') }}</caption>
