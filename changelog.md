@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 5.6.0
+
+- Disable webhooks with API command
+- static cron token is new?
+- update ldap
+- new credit stuff
+
+
 ## 5.5.12 - 2021-06-03
 
 ⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
