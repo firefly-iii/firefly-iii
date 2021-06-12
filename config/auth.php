@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Ldap\AttributeHandler;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -111,9 +113,7 @@ return [
             'database' => [
                 'model'           => FireflyIII\User::class,
                 'sync_passwords'  => false,
-                'sync_attributes' => [
-                    'email' => 'mail',
-                ],
+                'sync_attributes' => AttributeHandler::class,
             ],
         ],
     ],

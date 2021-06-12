@@ -255,7 +255,7 @@ trait RenderPartialViews
     {
         $index   = 0;
         $actions = [];
-        // todo must be repos
+        // must be repos
         $currentActions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
         /** @var RuleAction $entry */
         foreach ($currentActions as $entry) {
@@ -304,7 +304,7 @@ trait RenderPartialViews
         asort($triggers);
         $index           = 0;
         $renderedEntries = [];
-        // todo must be repos
+        // must be repos
         $currentTriggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $entry */
         foreach ($currentTriggers as $entry) {
