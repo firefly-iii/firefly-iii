@@ -102,7 +102,7 @@ return [
         'handle_debts' => true,
     ],
     'version'                      => '5.6.0-alpha.1',
-    'api_version'                  => '1.5.2',
+    'api_version'                  => '1.5.3',
     'db_version'                   => 16,
 
     // generic settings
