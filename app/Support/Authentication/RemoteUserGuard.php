@@ -62,7 +62,7 @@ class RemoteUserGuard implements Guard
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         if (!is_null($this->user)) {
-            Log::debug('No user found.');
+            Log::debug('User is found.');
 
             return;
         }
