@@ -138,7 +138,7 @@ return [
     // LDAP and authentication settings
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
-    'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
+    'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
     'ldap_auth_field'              => env('LDAP_AUTH_FIELD', env('ADLDAP_AUTH_FIELD', 'distinguishedname')),
 
     // static config (cannot be changed by user)

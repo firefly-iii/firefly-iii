@@ -63,7 +63,7 @@ abstract class Controller extends BaseController
 
         // share custom auth guard info.
         $authGuard = config('firefly.authentication_guard');
-        $logoutUri = config('firefly.custom_logout_uri');
+        $logoutUri = config('firefly.custom_logout_url');
 
         app('view')->share('authGuard', $authGuard);
         app('view')->share('logoutUri', $logoutUri);
