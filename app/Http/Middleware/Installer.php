@@ -87,7 +87,7 @@ class Installer
      */
     private function hasNoTables(): bool
     {
-        Log::debug('Now in routine hasNoTables()');
+        //Log::debug('Now in routine hasNoTables()');
 
         try {
             DB::table('users')->count();
@@ -107,7 +107,7 @@ class Installer
             }
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
-        Log::debug('Everything seems OK with the tables.');
+        //Log::debug('Everything seems OK with the tables.');
 
         return false;
     }
