@@ -67,7 +67,7 @@ class CreditRecalculateService
             // work based on account.
             $this->processAccount();
         }
-        if (0 === count($this->work)) {
+        if (empty($this->work)) {
             Log::debug('No work accounts, do not do CreditRecalculationService');
 
             return;
@@ -127,7 +127,7 @@ class CreditRecalculateService
     {
         /** @var TransactionJournal $journal */
         foreach ($this->group->transactionJournals as $journal) {
-            if (0 === count($this->work)) {
+            if (empty($this->work)) {
                 try {
                     $this->findByJournal($journal);
                 } catch (FireflyException $e) {

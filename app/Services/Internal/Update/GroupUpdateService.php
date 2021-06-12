@@ -57,7 +57,7 @@ class GroupUpdateService
             $transactionGroup->save();
         }
 
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             Log::debug('No transactions submitted, do nothing.');
 
             return $transactionGroup;

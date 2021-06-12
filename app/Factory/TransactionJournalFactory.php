@@ -106,7 +106,7 @@ class TransactionJournalFactory
         Log::debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection;
         $transactions = $dataObject['transactions'] ?? [];
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection;

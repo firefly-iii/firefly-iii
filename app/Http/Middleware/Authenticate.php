@@ -88,7 +88,7 @@ class Authenticate
     protected function authenticate($request, array $guards)
     {
 
-        if (0 === count($guards)) {
+        if (empty($guards)) {
             try {
                 // go for default guard:
                 /** @noinspection PhpUndefinedMethodInspection */

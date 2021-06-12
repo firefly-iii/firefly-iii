@@ -92,7 +92,7 @@ class ActionFactory
      */
     protected static function getActionTypes(): array
     {
-        if (0 === count(self::$actionTypes)) {
+        if (empty(self::$actionTypes)) {
             self::$actionTypes = Domain::getRuleActions();
         }
 

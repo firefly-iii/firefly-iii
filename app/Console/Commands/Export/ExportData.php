@@ -125,11 +125,11 @@ class ExportData extends Command
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
         $data = $exporter->export();
-        if (0 === count($data)) {
+        if (empty($data)) {
             $this->error('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
         $returnCode = 0;
-        if (0 !== count($data)) {
+        if (!empty($data)) {
             try {
                 $this->exportData($options, $data);
                 app('telemetry')->feature('system.command.executed', 'firefly-iii:export-data');

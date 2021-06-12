@@ -331,7 +331,7 @@ class AccountController extends Controller
         Log::debug('Default set is ', $defaultSet);
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
         Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (0 === count($frontPage->data)) {
+        if (empty($frontPage->data)) {
             app('preferences')->set('frontPageAccounts', $defaultSet);
             Log::debug('frontpage set is empty!');
         }

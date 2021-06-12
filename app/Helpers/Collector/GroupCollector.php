@@ -325,7 +325,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (0 !== count($journalIds)) {
+        if (!empty($journalIds)) {
             // make all integers.
             $integerIDs = array_map('intval', $journalIds);
 

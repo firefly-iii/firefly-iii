@@ -50,7 +50,7 @@ class CategoryList implements BinderInterface
             }
 
             $list = array_unique(array_map('\intval', explode(',', $value)));
-            if (0 === count($list)) {
+            if (empty($list)) {
                 throw new NotFoundHttpException; 
             }
 

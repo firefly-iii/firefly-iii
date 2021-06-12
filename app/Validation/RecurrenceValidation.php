@@ -126,7 +126,7 @@ trait RecurrenceValidation
         $data        = $validator->getData();
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
-        if (!is_countable($repetitions) || 0 === count($repetitions)) {
+        if (!is_countable($repetitions) || empty($repetitions)) {
             $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
         }
     }
@@ -144,7 +144,7 @@ trait RecurrenceValidation
             return;
         }
         // need at least one transaction
-        if (0 === count($repetitions)) {
+        if (empty($repetitions)) {
             $validator->errors()->add('repetitions', (string)trans('validation.at_least_one_repetition'));
         }
     }

@@ -319,7 +319,7 @@ class DoubleReportController extends Controller
                 $journalId = $journal['transaction_journal_id'];
 
                 // no tags? also deserves a sport
-                if (0 === count($journal['tags'])) {
+                if (empty($journal['tags'])) {
                     $includedJournals[] = $journalId;
                     // do something
                     $tagName                  = trans('firefly.no_tags');
@@ -379,7 +379,7 @@ class DoubleReportController extends Controller
                 $journalId = $journal['transaction_journal_id'];
 
                 // no tags? also deserves a sport
-                if (0 === count($journal['tags'])) {
+                if (empty($journal['tags'])) {
                     $includedJournals[] = $journalId;
                     // do something
                     $tagName                  = trans('firefly.no_tags');

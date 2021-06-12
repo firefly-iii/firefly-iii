@@ -87,7 +87,7 @@ class AccountController extends Controller
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
 
-        if (0 === count($frontPage->data)) {
+        if (empty($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
