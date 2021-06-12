@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - static cron token is new?
 - update ldap
 - new credit stuff
+- need to force users to switch config or ignore it.
 
 
 ## 5.5.12 - 2021-06-03
