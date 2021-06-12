@@ -309,7 +309,7 @@ export default {
             this.accounts[i].order = newOrder;
             let url = './api/v1/accounts/' + current.id;
             axios.put(url, {order: newOrder}).then(response => {
-              // TODO should update local account list, not refresh the whole thing.
+// See reference nr. 8
               this.getAccountList();
             });
           }
@@ -485,7 +485,7 @@ export default {
     //
     //       allAccounts.push(acct);
     //       if ('asset' === this.type) {
-    //         // TODO
+// See reference nr. 9
     //         //this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
     //         //this.getAccountLastActivity(this.allAccounts.length - 1, current);
     //       }

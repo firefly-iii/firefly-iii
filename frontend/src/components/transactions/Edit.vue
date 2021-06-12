@@ -298,7 +298,7 @@ export default {
       if (0 === index) {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
 
-        // TODO here you may need to catch stuff like loan/debt/mortgage
+// See reference nr. 5
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
         this.date = array.date.substring(0, 16);
@@ -938,7 +938,7 @@ export default {
       return JSON.stringify(compare);
     },
     // uploadAttachments: function (result) {
-    //   //console.log('TODO, upload attachments.');
+// See reference nr. 6
     //   if (0 === Object.keys(result).length) {
     //
     //     for (let i in this.transactions) {
@@ -1172,7 +1172,7 @@ export default {
         for (let i in this.transactions) {
           if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             if (this.transactions.hasOwnProperty(i)) {
-              // TODO
+// See reference nr. 7
             }
           }
         }

@@ -185,7 +185,7 @@
 
 <script>
 const lodashClonedeep = require('lodash.clonedeep');
-// TODO error handling
+// See reference nr. 3
 export default {
   props: ['index', 'value', 'errors', 'customFields'],
   name: "TransactionLinks",

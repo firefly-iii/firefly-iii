@@ -23,7 +23,7 @@
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
     <form @submit="submitTransaction" autocomplete="off">
-      <SplitPills :transactions="transactions"/>
+      <SplitPills :transactions="transactions" :count="transactions.length"/>
       <div class="tab-content">
         <SplitForm
             v-for="(transaction, index) in this.transactions"
@@ -492,7 +492,7 @@ export default {
                 }
                 // submit transaction link:
                 promises.push(axios.post('./api/v1/transaction_links', currentLink).then(response => {
-                  // TODO error handling.
+// See reference nr. 4
                 }));
               }
             }

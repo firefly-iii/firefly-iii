@@ -79,7 +79,7 @@ import format from "date-fns/format";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
-// TODO same as credit list but reversed
+// See reference nr. 2
 
 export default {
   name: "MainCreditList",

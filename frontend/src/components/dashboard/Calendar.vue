@@ -324,7 +324,7 @@ export default {
       let today = new Date(this.range.start);
       let start;
       let end;
-      let title = 'todo';
+      let title = 'tbd';
       let half = 1;
 
       // its currently first half of year:
