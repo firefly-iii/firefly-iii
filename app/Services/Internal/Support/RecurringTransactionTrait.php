@@ -313,7 +313,7 @@ trait RecurringTransactionTrait
      */
     protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
     {
-        if (count($tags) > 0) {
+        if (!empty($tags)) {
             /** @var RecurrenceMeta|null $entry */
             $entry = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {

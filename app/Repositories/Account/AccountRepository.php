@@ -247,7 +247,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         // add sort parameters. At this point they're filtered to allowed fields to sort by:
-        if (count($sort) > 0) {
+        if (!empty($sort)) {
             foreach ($sort as $param) {
                 $query->orderBy($param[0], $param[1]);
             }

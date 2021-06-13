@@ -32,7 +32,7 @@ use Log;
 
 /**
  * Class GroupUpdateService
-* See reference nr. 91
+ * See reference nr. 91
  */
 class GroupUpdateService
 {
@@ -56,6 +56,7 @@ class GroupUpdateService
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
         }
+
 
         if (empty($transactions)) {
             Log::debug('No transactions submitted, do nothing.');
@@ -105,6 +106,9 @@ class GroupUpdateService
      */
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
+        if (empty($data)) {
+            return;
+        }
         /** @var JournalUpdateService $updateService */
         $updateService = app(JournalUpdateService::class);
         $updateService->setTransactionGroup($transactionGroup);

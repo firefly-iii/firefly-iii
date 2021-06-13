@@ -84,8 +84,6 @@ class ScanAttachments extends Command
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
 
-        app('telemetry')->feature('system.command.executed', $this->signature);
-
         return 0;
     }
 }

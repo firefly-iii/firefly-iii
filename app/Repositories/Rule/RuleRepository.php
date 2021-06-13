@@ -542,8 +542,6 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'           => $order,
                 'active'          => $active,
             ];
-            app('telemetry')->feature('rules.triggers.uses_trigger', $trigger['type']);
-
             $this->storeTrigger($rule, $triggerValues);
             ++$order;
         }
@@ -571,8 +569,6 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'           => $order,
                 'active'          => $active,
             ];
-            app('telemetry')->feature('rules.actions.uses_action', $action['type']);
-
             $this->storeAction($rule, $actionValues);
             ++$order;
         }

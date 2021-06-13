@@ -132,11 +132,9 @@ class ExportData extends Command
         if (!empty($data)) {
             try {
                 $this->exportData($options, $data);
-                app('telemetry')->feature('system.command.executed', 'firefly-iii:export-data');
             } catch (FireflyException $e) {
                 $this->error(sprintf('Could not store data: %s', $e->getMessage()));
 
-                app('telemetry')->feature('system.command.errored', 'firefly-iii:export-data');
                 $returnCode = 1;
             }
         }

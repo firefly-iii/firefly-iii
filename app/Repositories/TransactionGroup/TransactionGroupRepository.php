@@ -380,7 +380,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var GroupUpdateService $service */
         $service = app(GroupUpdateService::class);
-
         return $service->update($transactionGroup, $data);
     }
 

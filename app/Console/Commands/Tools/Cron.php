@@ -92,8 +92,6 @@ class Cron extends Command
 
         $this->info('More feedback on the cron jobs can be found in the log files.');
 
-        app('telemetry')->feature('system.command.executed', 'firefly-iii:cron');
-
         return 0;
     }
 
