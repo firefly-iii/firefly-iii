@@ -68,6 +68,3 @@ name: "Interest",
 }
 </script>
 
-<style scoped>
-
-</style>

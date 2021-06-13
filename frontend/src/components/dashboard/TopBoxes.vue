@@ -22,7 +22,7 @@
   <div class="row">
     <div class="col" v-if="0 !== prefCurrencyBalances.length || 0 !== notPrefCurrencyBalances.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
+        <span class="info-box-icon"><span class="far fa-bookmark text-info"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t("firefly.balance") }}</span>
@@ -47,7 +47,7 @@
 
     <div class="col" v-if="0!==prefBillsUnpaid.length || 0 !== notPrefBillsUnpaid.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
+        <span class="info-box-icon"><span class="far fa-calendar-alt text-teal"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
@@ -72,7 +72,7 @@
     <!-- left to spend -->
     <div class="col" v-if="0 !== prefLeftToSpend.length || 0 !== notPrefLeftToSpend.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
+        <span class="info-box-icon"><span class="fas fa-money-bill text-success"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
@@ -99,7 +99,7 @@
     <!-- net worth -->
     <div class="col" v-if="0 !== notPrefNetWorth.length || 0 !== prefNetWorth.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
+        <span class="info-box-icon"><span class="fas fa-money-bill text-success"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.net_worth') }}</span>

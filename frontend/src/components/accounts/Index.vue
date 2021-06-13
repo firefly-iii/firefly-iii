@@ -45,7 +45,7 @@
                      :sort-desc.sync="sortDesc"
             >
               <template #table-busy>
-                <i class="fas fa-spinner fa-spin"></i>
+                <span class="fas fa-spinner fa-spin"></span>
               </template>
               <template #cell(name)="data">
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
@@ -55,7 +55,7 @@
               </template>
               <template #cell(last_activity)="data">
                 <span v-if="'asset' === type && 'loading' === data.item.last_activity">
-                  <i class="fas fa-spinner fa-spin"></i>
+                  <span class="fas fa-spinner fa-spin"></span>
                 </span>
                 <span v-if="'asset' === type && 'none' === data.item.last_activity" class="text-muted">
                   {{ $t('firefly.never') }}
@@ -149,7 +149,7 @@
           </div>
           <div class="card-footer">
             <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
-            <a href="#" class="btn btn-info"><i class="fas fa-sync"></i></a>
+            <a href="#" class="btn btn-info"><span class="fas fa-sync"></span></a>
           </div>
         </div>
       </div>

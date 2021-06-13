@@ -130,7 +130,7 @@ return [
     'field'                   => 'Campo',
     'value'                   => 'Valore',
     'interest'                => 'Interesse',
-    'interest_period'         => 'Interest period',
+    'interest_period'         => 'Periodo interessi',
     'liability_type'          => 'Tipo di passività',
-    'liability_direction'     => 'Liability in/out',
+    'liability_direction'     => 'Passività in entrata/uscita',
 ];

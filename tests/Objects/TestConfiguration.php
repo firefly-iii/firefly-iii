@@ -189,7 +189,7 @@ class TestConfiguration
 
         $totalCount = 0;
         // no mandatory sets? Loop the optional sets:
-        if (0 === count($this->mandatoryFieldSets)) {
+        if (empty($this->mandatoryFieldSets)) {
             // expand the standard submission with extra sets from the optional field set.
             $setCount = count($this->optionalFieldSets);
             $this->debugMsg(sprintf('there are %d optional field sets', $setCount));
@@ -278,19 +278,19 @@ class TestConfiguration
     private function mergeIgnoreArray($left, $right): array
     {
         // if both empty just return empty:
-        if (0 === count($left) && 0 === count($right)) {
+        if (empty($left) && empty($right)) {
             $this->debugMsg('Return empty array');
 
             return [];
         }
         // if left is empty return right
-        if (0 === count($left)) {
+        if (empty($left)) {
             $this->debugMsg('Return right');
 
             return $right;
         }
         // if right is empty return left
-        if (0 === count($right)) {
+        if (empty($right)) {
             $this->debugMsg('Return left');
 
             return $left;
@@ -619,7 +619,7 @@ class TestConfiguration
         if ($k === 0) {
             return [[]];
         }
-        if (count($xs) === 0) {
+        if (empty($xs)) {
             return [];
         }
         $x    = $xs[0];
@@ -639,7 +639,7 @@ class TestConfiguration
      */
     function updateIgnorables(int $index, array $customFields): void
     {
-        if (count($customFields) > 0) {
+        if (!empty($customFields)) {
             /** @var Field $field */
             foreach ($customFields as $field) {
                 if (0 !== count($field->ignorableFields)) {
@@ -656,7 +656,7 @@ class TestConfiguration
     private function updateExpected(int $index, array $customFields): void
     {
         $this->debugMsg('Now parsing expected return values for this set.');
-        if (count($customFields) > 0) {
+        if (!empty($customFields)) {
             /** @var Field $field */
             foreach ($customFields as $field) {
                 // fieldTitle indicates the position:
