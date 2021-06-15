@@ -49,7 +49,7 @@ class RecurrenceUpdateService
     /**
      * Updates a recurrence.
      *
-     * TODO if the user updates the type, accounts must be validated (again).
+* See reference nr. 88
      *
      * @param Recurrence $recurrence
      * @param array      $data
@@ -149,7 +149,7 @@ class RecurrenceUpdateService
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (0 === count($repetitions)) {
+        if (empty($repetitions)) {
             // wont drop repetition, rather avoid.
             return;
         }
@@ -217,7 +217,7 @@ class RecurrenceUpdateService
     }
 
     /**
-     * TODO this method is way too complex.
+* See reference nr. 89
      *
      * @param Recurrence $recurrence
      * @param array      $transactions
@@ -227,7 +227,7 @@ class RecurrenceUpdateService
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             // wont drop transactions, rather avoid.
             return;
         }

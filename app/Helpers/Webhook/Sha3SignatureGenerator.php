@@ -41,7 +41,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            // TODO needs FireflyException.
+// See reference nr. 87
             return sprintf('t=1,v%d=err-invalid-signature', $this->getVersion());
         }
 

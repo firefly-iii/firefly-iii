@@ -35,7 +35,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
- * TODO include info about tags.
+* See reference nr. 18
  *
  * @codeCoverageIgnore
  */
@@ -188,7 +188,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getExpenses(): array
     {
-        if (count($this->expenses) > 0) {
+        if (!empty($this->expenses)) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;
@@ -213,7 +213,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getIncome(): array
     {
-        if (count($this->income) > 0) {
+        if (!empty($this->income)) {
             return $this->income;
         }
 

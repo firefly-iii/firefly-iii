@@ -148,7 +148,7 @@ class BillRepository implements BillRepositoryInterface
     {
         $bills = $this->user->bills()->get(['bills.*']);
 
-        // TODO no longer need to loop like this
+// See reference nr. 6
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

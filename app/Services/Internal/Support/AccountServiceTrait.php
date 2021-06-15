@@ -102,7 +102,7 @@ trait AccountServiceTrait
     /**
      * Update meta data for account. Depends on type which fields are valid.
      *
-     * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
+* See reference nr. 97
      *
      * @param Account $account
      * @param array   $data
@@ -410,7 +410,7 @@ trait AccountServiceTrait
     }
 
     /**
-     * TODO rename to "getOpposingTransaction"
+* See reference nr. 98
      *
      * @param TransactionJournal $journal
      * @param Account            $account
@@ -705,7 +705,7 @@ trait AccountServiceTrait
     }
 
     /**
-     * TODO Refactor to "getFirstJournal"
+* See reference nr. 99
      *
      * @param TransactionGroup $group
      *

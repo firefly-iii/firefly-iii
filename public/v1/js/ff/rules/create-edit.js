@@ -418,7 +418,7 @@ function testRuleTriggers() {
     var button = $('.test_rule_triggers');
 
     // replace with spinner. fa-spin fa-spinner
-    button.html('<i class="fa fa-spin fa-spinner"></i> ' + testRuleTriggersText);
+    button.html('<span class="fa fa-spin fa-spinner"></span> ' + testRuleTriggersText);
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
@@ -442,7 +442,7 @@ function testRuleTriggers() {
             modal.find(".transaction-warning").hide();
         }
         button.removeAttr('disabled');
-        button.html('<i class="fa fa-flask"></i> ' + testRuleTriggersText);
+        button.html('<span class="fa fa-flask"></span> ' + testRuleTriggersText);
         // Show the modal dialog
         modal.modal();
     }).fail(function () {

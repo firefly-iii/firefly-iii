@@ -323,7 +323,7 @@ class TagReportController extends Controller
     }
 
     /**
-     * TODO duplicate function
+* See reference nr. 54
      *
      * @param Carbon $start
      * @param Carbon $end

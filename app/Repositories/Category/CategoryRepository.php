@@ -89,7 +89,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $categories = $this->user->categories()->get(['categories.*']);
 
-        // TODO no longer need to loop like this
+// See reference nr. 7
 
         foreach ($categories as $category) {
             if ($category->name === $name) {

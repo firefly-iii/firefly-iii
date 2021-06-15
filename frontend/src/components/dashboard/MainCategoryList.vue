@@ -26,13 +26,13 @@
     <!-- body if loading -->
     <div v-if="loading && !error" class="card-body">
       <div class="text-center">
-        <i class="fas fa-spinner fa-spin"></i>
+        <span class="fas fa-spinner fa-spin"></span>
       </div>
     </div>
     <!-- body if error -->
     <div v-if="error" class="card-body">
       <div class="text-center">
-        <i class="fas fa-exclamation-triangle text-danger"></i>
+        <span class="fas fa-exclamation-triangle text-danger"></span>
       </div>
     </div>
     <!-- body if normal -->
@@ -248,6 +248,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

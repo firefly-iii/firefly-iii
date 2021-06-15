@@ -117,7 +117,7 @@ class IndexController extends Controller
         $sums    = $this->getSums($budgets);
 
         // get budgeted for default currency:
-        if (0 === count($availableBudgets)) {
+        if (empty($availableBudgets)) {
             $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency,);
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';

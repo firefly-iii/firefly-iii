@@ -22,12 +22,12 @@
   <div class="row">
     <div class="col" v-if="0 !== prefCurrencyBalances.length || 0 !== notPrefCurrencyBalances.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="far fa-bookmark text-info"></i></span>
+        <span class="info-box-icon"><span class="far fa-bookmark text-info"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t("firefly.balance") }}</span>
-          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
-          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
+          <span v-if="loading && !error" class="info-box-text"><span class="fas fa-spinner fa-spin"></span></span>
+          <span v-if="error" class="info-box-text"><span class="fas fa-exclamation-triangle text-danger"></span></span>
           <!-- balance in preferred currency -->
           <span v-for="balance in prefCurrencyBalances" :title="balance.sub_title" class="info-box-number">{{ balance.value_parsed }}</span>
           <span v-if="0 === prefCurrencyBalances.length" class="info-box-number">&nbsp;</span>
@@ -47,12 +47,12 @@
 
     <div class="col" v-if="0!==prefBillsUnpaid.length || 0 !== notPrefBillsUnpaid.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="far fa-calendar-alt text-teal"></i></span>
+        <span class="info-box-icon"><span class="far fa-calendar-alt text-teal"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.bills_to_pay') }}</span>
-          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
-          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
+          <span v-if="loading && !error" class="info-box-text"><span class="fas fa-spinner fa-spin"></span></span>
+          <span v-if="error" class="info-box-text"><span class="fas fa-exclamation-triangle text-danger"></span></span>
           <!-- bills unpaid, in preferred currency. -->
           <span v-for="balance in prefBillsUnpaid" class="info-box-number">{{ balance.value_parsed }}</span>
 
@@ -72,12 +72,12 @@
     <!-- left to spend -->
     <div class="col" v-if="0 !== prefLeftToSpend.length || 0 !== notPrefLeftToSpend.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
+        <span class="info-box-icon"><span class="fas fa-money-bill text-success"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.left_to_spend') }}</span>
-          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
-          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
+          <span v-if="loading && !error" class="info-box-text"><span class="fas fa-spinner fa-spin"></span></span>
+          <span v-if="error" class="info-box-text"><span class="fas fa-exclamation-triangle text-danger"></span></span>
           <!-- left to spend in preferred currency -->
           <span v-for="left in prefLeftToSpend" :title="left.sub_title" class="info-box-number">{{ left.value_parsed }}</span>
           <span v-if="0 === prefLeftToSpend.length" class="info-box-number">&nbsp;</span>
@@ -99,12 +99,12 @@
     <!-- net worth -->
     <div class="col" v-if="0 !== notPrefNetWorth.length || 0 !== prefNetWorth.length">
       <div class="info-box">
-        <span class="info-box-icon"><i class="fas fa-money-bill text-success"></i></span>
+        <span class="info-box-icon"><span class="fas fa-money-bill text-success"></span></span>
 
         <div class="info-box-content">
           <span v-if="!loading && !error" class="info-box-text">{{ $t('firefly.net_worth') }}</span>
-          <span v-if="loading && !error" class="info-box-text"><i class="fas fa-spinner fa-spin"></i></span>
-          <span v-if="error" class="info-box-text"><i class="fas fa-exclamation-triangle text-danger"></i></span>
+          <span v-if="loading && !error" class="info-box-text"><span class="fas fa-spinner fa-spin"></span></span>
+          <span v-if="error" class="info-box-text"><span class="fas fa-exclamation-triangle text-danger"></span></span>
           <span v-for="nw in prefNetWorth" :title="nw.sub_title" class="info-box-number">{{ nw.value_parsed }}</span>
           <span v-if="0===prefNetWorth.length">&nbsp;</span>
           <div class="progress bg-success">

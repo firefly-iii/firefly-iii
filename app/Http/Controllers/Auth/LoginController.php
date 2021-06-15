@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Log;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class LoginController
@@ -55,7 +54,9 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected string $redirectTo = RouteServiceProvider::HOME;
+
+    private string $username;
 
     /**
      * Create a new controller instance.
@@ -65,6 +66,7 @@ class LoginController extends Controller
     public function __construct()
     {
         parent::__construct();
+        $this->username = 'email';
         $this->middleware('guest')->except('logout');
     }
 
@@ -80,25 +82,31 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
-        Log::info('User is trying to login.');
-        if ('ldap' === config('auth.providers.users.driver')) {
-            /** @var Adldap\Connections\Provider $provider */
-            Adldap::getProvider('default'); // @phpstan-ignore-line
+        Log::info(sprintf('User is trying to login.'));
+
+        $guard = config('auth.defaults.guard');
+
+        // if the user logs in using LDAP the field is also changed (per LDAP config)
+        if ('ldap' === $guard) {
+            Log::debug('User wishes to login using LDAP.');
+            $this->username = config('firefly.ldap_auth_field');
         }
 
+
         $this->validateLogin($request);
+        Log::debug('Login data is valid.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if (method_exists($this, 'hasTooManyLoginAttempts') && $this->hasTooManyLoginAttempts($request)) {
-            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
+            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
             $this->sendLockoutResponse($request);
         }
-
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
@@ -108,6 +116,7 @@ class LoginController extends Controller
 
             return $this->sendLoginResponse($request);
         }
+        Log::warning('Login attempt failed.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -129,7 +138,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $authGuard = config('firefly.authentication_guard');
-        $logoutUri = config('firefly.custom_logout_uri');
+        $logoutUri = config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUri) {
             return redirect($logoutUri);
         }
@@ -189,14 +198,26 @@ class LoginController extends Controller
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
-        $count         = DB::table('users')->count();
-        $loginProvider = config('firefly.login_provider');
-        $title         = (string)trans('firefly.login_page_title');
-        if (0 === $count && 'eloquent' === $loginProvider) {
-            return redirect(route('register')); 
+        $count = DB::table('users')->count();
+        $guard = config('auth.defaults.guard');
+        $title = (string)trans('firefly.login_page_title');
+
+        if (0 === $count && 'web' === $guard) {
+            return redirect(route('register'));
         }
 
-        // is allowed to?
+        // switch to LDAP settings:
+        if ('ldap' === $guard) {
+            Log::debug('User wishes to login using LDAP.');
+            $this->username = config('firefly.ldap_auth_field');
+        }
+
+        // throw warning if still using login_provider
+        $ldapWarning = false;
+        if ('ldap' === config('firefly.login_provider')) {
+            $ldapWarning = true;
+        }
+        // is allowed to register, etc.
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
         $allowReset        = true;
@@ -205,7 +226,7 @@ class LoginController extends Controller
         }
 
         // single user mode is ignored when the user is not using eloquent:
-        if ('eloquent' !== $loginProvider) {
+        if ('web' !== $guard) {
             $allowRegistration = false;
             $allowReset        = false;
         }
@@ -218,8 +239,18 @@ class LoginController extends Controller
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
             request()->cookies->set($cookieName, 'invalid');
         }
+        $usernameField = $this->username();
 
-        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title'));
+        return prefixView('auth.login', compact('allowRegistration', 'email', 'remember', 'ldapWarning', 'allowReset', 'title', 'usernameField'));
     }
 
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return $this->username;
+    }
 }

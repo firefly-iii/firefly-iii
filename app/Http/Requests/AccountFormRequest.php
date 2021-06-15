@@ -69,6 +69,9 @@ class AccountFormRequest extends FormRequest
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';
         }
+        if('0' === $data['opening_balance']) {
+            $data['opening_balance'] = '';
+        }
 
         // if the account type is "liabilities" there are actually four types of liability
         // that could have been selected.
@@ -95,7 +98,7 @@ class AccountFormRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                               => 'required|min:1|uniqueAccountForUser',
-            'opening_balance'                    => 'numeric|required_with:opening_balance_date|nullable|max:1000000000',
+            'opening_balance'                    => 'numeric|nullable|max:1000000000',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->string('objectType'))],
             'BIC'                                => 'bic|nullable',

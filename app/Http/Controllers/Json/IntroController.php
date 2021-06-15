@@ -48,7 +48,7 @@ class IntroController extends Controller
         $specificPage  = $specificPage ?? '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
-        if (0 === count($specificSteps)) {
+        if (empty($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
             return response()->json($steps);

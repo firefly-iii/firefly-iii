@@ -45,7 +45,7 @@
                      :sort-desc.sync="sortDesc"
             >
               <template #table-busy>
-                <i class="fas fa-spinner fa-spin"></i>
+                <span class="fas fa-spinner fa-spin"></span>
               </template>
               <template #cell(name)="data">
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.id" :title="data.value">{{ data.value }}</a>
@@ -55,7 +55,7 @@
               </template>
               <template #cell(last_activity)="data">
                 <span v-if="'asset' === type && 'loading' === data.item.last_activity">
-                  <i class="fas fa-spinner fa-spin"></i>
+                  <span class="fas fa-spinner fa-spin"></span>
                 </span>
                 <span v-if="'asset' === type && 'none' === data.item.last_activity" class="text-muted">
                   {{ $t('firefly.never') }}
@@ -105,7 +105,7 @@
                   }}
                 </span>
                 <span v-if="'asset' === type && 'loading' === data.item.balance_diff">
-                  <i class="fas fa-spinner fa-spin"></i>
+                  <span class="fas fa-spinner fa-spin"></span>
                 </span>
                 <span v-if="'asset' === type && 'loading' !== data.item.balance_diff">
                    (<span class="text-success" v-if="parseFloat(data.item.balance_diff) > 0">{{
@@ -137,9 +137,9 @@
                       {{ $t('firefly.actions') }}
                     </button>
                     <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
-                      <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><i class="fa fas fa-pencil-alt"></i> {{ $t('firefly.edit') }}</a>
-                      <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><i class="fa far fa-trash"></i> {{ $t('firefly.delete') }}</a>
-                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><i class="fas fa-check"></i>
+                      <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{ $t('firefly.edit') }}</a>
+                      <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{ $t('firefly.delete') }}</a>
+                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><span class="fas fa-check"></span>
                         {{ $t('firefly.reconcile_this_account') }}</a>
                     </div>
                   </div>
@@ -149,7 +149,7 @@
           </div>
           <div class="card-footer">
             <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
-            <a href="#" class="btn btn-info"><i class="fas fa-sync"></i></a>
+            <a href="#" class="btn btn-info"><span class="fas fa-sync"></span></a>
           </div>
         </div>
       </div>
@@ -309,7 +309,7 @@ export default {
             this.accounts[i].order = newOrder;
             let url = './api/v1/accounts/' + current.id;
             axios.put(url, {order: newOrder}).then(response => {
-              // TODO should update local account list, not refresh the whole thing.
+// See reference nr. 8
               this.getAccountList();
             });
           }
@@ -485,7 +485,7 @@ export default {
     //
     //       allAccounts.push(acct);
     //       if ('asset' === this.type) {
-    //         // TODO
+// See reference nr. 9
     //         //this.getAccountBalanceDifference(this.allAccounts.length - 1, current);
     //         //this.getAccountLastActivity(this.allAccounts.length - 1, current);
     //       }

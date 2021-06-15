@@ -74,7 +74,7 @@ interface BudgetRepositoryInterface
     public function findByName(?string $name): ?Budget;
 
     /**
-     * TODO refactor to "find"
+* See reference nr. 12
      *
      * @param int|null $budgetId
      *

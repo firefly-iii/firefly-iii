@@ -198,19 +198,19 @@ export default {
           if (this.transactionType.toString() !== '' && this.index > 0) {
             if (this.transactionType.toString().toLowerCase() === 'transfer') {
               this.inputDisabled = true;
-              // todo: needs to copy value from very first input
+// See reference nr. 2
 
               return;
             }
 
             if (this.transactionType.toString().toLowerCase() === 'withdrawal' && this.inputName.substr(0, 6).toLowerCase() === 'source') {
-              // todo also clear value?
+// See reference nr. 3
               this.inputDisabled = true;
               return;
             }
 
             if (this.transactionType.toString().toLowerCase() === 'deposit' && this.inputName.substr(0, 11).toLowerCase() === 'destination') {
-              // todo also clear value?
+// See reference nr. 4
               this.inputDisabled = true;
             }
           }
@@ -240,7 +240,7 @@ export default {
           this.$emit('clear:value')
         },
         handleEnter: function (e) {
-          // todo feels sloppy
+// See reference nr. 5
           if (e.keyCode === 13) {
             //e.preventDefault();
           }

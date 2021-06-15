@@ -78,6 +78,3 @@ name: "GenericTextarea",
 }
 </script>
 
-<style scoped>
-
-</style>

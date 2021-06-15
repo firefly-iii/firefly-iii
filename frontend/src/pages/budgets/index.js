@@ -35,7 +35,7 @@ new Vue({
                 return createElement(Index, {props: props});
             },
             beforeCreate() {
-                // init the old root store (TODO remove me)
+// See reference nr. 13
                 //this.$store.commit('initialiseStore');
                 //this.$store.dispatch('updateCurrencyPreference');
 

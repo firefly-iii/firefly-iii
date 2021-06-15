@@ -23,7 +23,7 @@
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
     <form @submit="submitTransaction" autocomplete="off">
-      <SplitPills :transactions="transactions"/>
+      <SplitPills :transactions="transactions" :count="transactions.length"/>
       <div class="tab-content">
         <SplitForm
             v-for="(transaction, index) in this.transactions"
@@ -69,7 +69,7 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><i class="far fa-clone"></i> {{
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><span class="far fa-clone"></span> {{
                       $t('firefly.add_another_split')
                     }}
                   </button>
@@ -79,8 +79,8 @@
                     &nbsp;
                   </div>
                   <button :disabled="!enableSubmit" class="btn btn-success btn-block" @click="submitTransaction">
-                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                    <span v-if="enableSubmit"><span class="far fa-save"></span> {{ $t('firefly.store_transaction') }}</span>
+                    <span v-if="!enableSubmit"><span class="fas fa-spinner fa-spin"></span></span>
                   </button>
                 </div>
               </div>
@@ -492,7 +492,7 @@ export default {
                 }
                 // submit transaction link:
                 promises.push(axios.post('./api/v1/transaction_links', currentLink).then(response => {
-                  // TODO error handling.
+// See reference nr. 4
                 }));
               }
             }
@@ -898,6 +898,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

@@ -111,6 +111,7 @@ class InstallController extends Controller
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
+            'firefly-iii:verify-security-alerts'           => [],
         ];
 
         $this->lastError = '';

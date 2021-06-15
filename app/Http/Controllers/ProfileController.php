@@ -653,7 +653,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * TODO duplicate code.
+* See reference nr. 64
      *
      * @param string $mfaCode
      */

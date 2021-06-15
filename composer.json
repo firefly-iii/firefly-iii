@@ -84,6 +84,7 @@
     "ext-xml": "*",
     "bacon/bacon-qr-code": "2.*",
     "diglactic/laravel-breadcrumbs": "^7.0",
+    "directorytree/ldaprecord-laravel": "^2.2",
     "doctrine/dbal": "3.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
@@ -118,7 +119,7 @@
     "thecodingmachine/phpstan-strict-rules": "^0.12.0"
   },
   "suggest": {
-    "adldap2/adldap2-laravel": "If you want to login using LDAP.",
+    "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
     "ext-ldap": "Needed to support LDAP."
   },
   "autoload": {
@@ -200,10 +201,12 @@
       "@php artisan firefly-iii:restore-oauth-keys",
       "@php artisan firefly-iii:set-latest-version --james-is-cool",
       "@php artisan firefly:instructions update",
+      "@php artisan firefly-iii:verify-security-alerts",
       "@php artisan passport:install"
     ],
     "post-install-cmd": [
-      "@php artisan firefly:instructions install"
+      "@php artisan firefly:instructions install",
+      "@php artisan firefly-iii:verify-security-alerts"
     ]
   },
   "config": {

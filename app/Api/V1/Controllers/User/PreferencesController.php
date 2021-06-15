@@ -52,7 +52,7 @@ class PreferencesController extends Controller
      */
     public function index(): JsonResponse
     {
-        // TODO via repository.
+// See reference nr. 83
         $collection  = auth()->user()->preferences()->get();
         $manager     = $this->getManager();
         $count       = $collection->count();

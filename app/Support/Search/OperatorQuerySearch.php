@@ -178,7 +178,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function searchTransactions(): LengthAwarePaginator
     {
-        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
+        if (empty($this->getWords()) && empty($this->getOperators())) {
             return new LengthAwarePaginator([], 0, 5, 1);
         }
 
@@ -296,8 +296,6 @@ class OperatorQuerySearch implements SearchInterface
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
-
-        //app('telemetry')->feature('search.operators.uses_operator', $operator);
 
         switch ($operator) {
             default:

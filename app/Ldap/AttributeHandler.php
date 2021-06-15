@@ -1,7 +1,6 @@
 <?php
-
 /*
- * LdapFilterScope.php
+ * AttributeHandler.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,28 +19,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Ldap;
 
-namespace FireflyIII\Scopes;
+use FireflyIII\User as DatabaseUser;
+use LdapRecord\Models\OpenLDAP\User as LdapUser;
 
-use Adldap\Laravel\Scopes\ScopeInterface;
-use Adldap\Query\Builder;
-
-// @phpstan-ignore-next-line
-class LdapFilterScope implements ScopeInterface // @phpstan-ignore-line
+/**
+ * Class AttributeHandler
+ */
+class AttributeHandler
 {
     /**
-     * If the ADLDAP_AUTH_FILTER is provided, apply the filter to the LDAP query.
-     *
-     * @param Builder $query
-     *
-     * @return void
+     * @param LdapUser     $ldap
+     * @param DatabaseUser $database
      */
-    public function apply(Builder $query)
+    public function handle(LdapUser $ldap, DatabaseUser $database)
     {
-        $filter = (string)config('ldap_auth.custom_filter');
-        if ('' !== $filter) {
-            $query->rawFilter($filter);
-        }
+        $database->email = $ldap->getFirstAttribute('mail');
+        $database->save();
     }
 }

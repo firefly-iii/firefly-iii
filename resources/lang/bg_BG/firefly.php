@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Съобщение',
     'flash_warning'                                       => 'Внимание!',
     'flash_error'                                         => 'Грешка!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Има ново съобщение| Има :count нови съобщения',
     'flash_error_multiple'                                => 'Има нова грешка| Има :count нови грешки',
     'net_worth'                                           => 'Нетна стойност',

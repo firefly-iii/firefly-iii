@@ -180,7 +180,7 @@ class UpdateRequest extends FormRequest
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? null;
         // need at least one trigger
-        if (is_array($triggers) && 0 === count($triggers)) {
+        if (is_array($triggers) && empty($triggers)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
@@ -195,7 +195,7 @@ class UpdateRequest extends FormRequest
         $data    = $validator->getData();
         $actions = $data['actions'] ?? null;
         // need at least one action
-        if (is_array($actions) && 0 === count($actions)) {
+        if (is_array($actions) && empty($actions)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }

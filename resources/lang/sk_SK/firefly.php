@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Správa',
     'flash_warning'                                       => 'Varovanie!',
     'flash_error'                                         => 'Chyba!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Jedna správa|:count správ',
     'flash_error_multiple'                                => 'Jedna chyba|:count chýb',
     'net_worth'                                           => 'Čisté imanie',

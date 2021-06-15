@@ -86,7 +86,13 @@ class StoredGroupEventHandler
     {
         Log::debug(__METHOD__);
         $group = $storedGroupEvent->transactionGroup;
-        $user  = $group->user;
+        if (false === $storedGroupEvent->fireWebhooks) {
+            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+
+            return;
+        }
+
+        $user = $group->user;
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);

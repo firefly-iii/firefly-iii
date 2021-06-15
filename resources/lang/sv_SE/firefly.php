@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Meddelande',
     'flash_warning'                                       => 'Varning!',
     'flash_error'                                         => 'Fel!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Det finns ett meddelande|Det finns :count meddelanden',
     'flash_error_multiple'                                => 'Det finns ett felmeddelande|Det finns :count felmeddelanden',
     'net_worth'                                           => 'Nettoförmögenhet',

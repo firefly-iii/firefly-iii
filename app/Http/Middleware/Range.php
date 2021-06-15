@@ -109,7 +109,7 @@ class Range
         // send error to view if could not set money format
         if (false === $moneyResult) {
             Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
-            app('view')->share('invalidMonetaryLocale', true); 
+            app('view')->share('invalidMonetaryLocale', true);
         }
 
         // save some formats:
@@ -133,5 +133,14 @@ class Range
     {
         $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
         app('view')->share('listLength', $pref);
+
+        // share security message:
+        if (
+            app('fireflyconfig')->has('upgrade_security_message')
+            && app('fireflyconfig')->has('upgrade_security_level')
+        ) {
+            app('view')->share('upgrade_security_message', app('fireflyconfig')->get('upgrade_security_message')->data);
+            app('view')->share('upgrade_security_level', app('fireflyconfig')->get('upgrade_security_level')->data);
+        }
     }
 }

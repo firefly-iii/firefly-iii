@@ -235,7 +235,6 @@ class CreateSupportTables extends Migration
                     $table->softDeletes();
                     $table->string('name', 50);
                     $table->text('data');
-                    $table->unique(['name']);
                 }
             );
         }

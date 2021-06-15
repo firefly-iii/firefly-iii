@@ -56,7 +56,7 @@
         <div class="card">
           <div class="card-body">
             <div class="text-center">
-              <i class="fas fa-spinner fa-spin"></i>
+              <span class="fas fa-spinner fa-spin"></span>
             </div>
           </div>
         </div>
@@ -265,6 +265,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

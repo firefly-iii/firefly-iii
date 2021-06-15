@@ -42,7 +42,7 @@ class MoveTransactionsRequest extends FormRequest
      * Configure the validator instance with special rules for after the basic validation rules.
      *
      * @param Validator $validator
-     * TODO duplicate code.
+* See reference nr. 74
      *
      * @return void
      */

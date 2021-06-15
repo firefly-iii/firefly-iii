@@ -94,6 +94,10 @@ return [
             'driver' => 'local',
             'root'   => base_path('resources/stubs'),
         ],
+        'resources'    => [
+            'driver' => 'local',
+            'root'   => base_path('resources'),
+        ],
 
         'public' => [
             'driver'     => 'local',

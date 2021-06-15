@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Pesan',
     'flash_warning'                                       => 'PERINGATAN!',
     'flash_error'                                         => 'Kesalahan!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Ada satu pesan|Ada :count pesan',
     'flash_error_multiple'                                => 'Ada satu kesalahan|Ada :count kesalahan',
     'net_worth'                                           => 'Nilai bersih',

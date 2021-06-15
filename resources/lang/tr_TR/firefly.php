@@ -84,6 +84,7 @@ return [
     'flash_info'                                          => 'İleti',
     'flash_warning'                                       => 'Uyarı!',
     'flash_error'                                         => 'Hata!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Bir ileti var|:count ileti var',
     'flash_error_multiple'                                => 'Bir hata var|:count hata var',
     'net_worth'                                           => 'Net değer',

@@ -16,9 +16,9 @@
                         </h3>
                         <div class="box-tools pull-right">
                             <div class="btn-group">
-                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('recurring.create') }}"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_recurring')|_ }}</a></li>
+                                    <li><a href="{{ route('recurring.create') }}"><span class="fa fa-plus fa-fw"></span> {{ ('make_new_recurring')|_ }}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
 
                     <div class="box-body no-padding">
                         <div style="padding:8px;">
-                            <a href="{{ route('recurring.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_recurring')|_ }}
+                            <a href="{{ route('recurring.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ ('make_new_recurring')|_ }}
                             </a>
                         </div>
 
@@ -49,15 +49,15 @@
                                 <tr>
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-xs edit_tr_buttons">
-                                            <a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('recurring.edit',rt.id) }}"><i
-                                                        class="fa fa-fw fa-pencil"></i></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
-                                                                                              href="{{ route('recurring.delete',rt.id) }}"><i
-                                                        class="fa fa-fw fa-trash-o"></i></a>
+                                            <a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('recurring.edit',rt.id) }}"><span
+                                                        class="fa fa-fw fa-pencil"></span></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
+                                                                                              href="{{ route('recurring.delete',rt.id) }}"><span
+                                                        class="fa fa-fw fa-trash-o"></span></a>
                                         </div>
                                     </td>
                                     <td data-value="{{ rt.title }}">
                                         {% if rt.attachments > 0 %}
-                                            <i class="fa fa-fw fa-paperclip"></i>
+                                            <span class="fa fa-fw fa-paperclip"></span>
                                         {% endif %}
                                         {% if rt.active == false %}<s>{% endif %}
                                             {{ rt.type|_ }}:
@@ -146,7 +146,7 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('recurring.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_recurring')|_ }}</a>
+                        <a href="{{ route('recurring.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ ('make_new_recurring')|_ }}</a>
                     </div>
                 </div>
             </div>

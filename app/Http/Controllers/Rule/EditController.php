@@ -143,7 +143,7 @@ class EditController extends Controller
      */
     private function parseFromOperators(array $submittedOperators): array
     {
-        // TODO duplicated code.
+// See reference nr. 65
         $operators       = config('firefly.search.operators');
         $renderedEntries = [];
         $triggers        = [];

@@ -16,8 +16,8 @@
                     <canvas id="accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index','asset') }}" class="btn btn-default button-sm"><i
-                                class="fa fa-money"></i> {{ 'go_to_asset_accounts'|_ }}</a>
+                    <a href="{{ route('accounts.index','asset') }}" class="btn btn-default button-sm"><span
+                                class="fa fa-money"></span> {{ 'go_to_asset_accounts'|_ }}</a>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                 </div>
                 <div class="box-footer">
                     <a href="{{ route('budgets.index') }}" class="btn btn-default button-sm">
-                        <i class="fa fa-pie-chart"></i>
+                        <span class="fa fa-pie-chart"></span>
                         <span>{{ 'go_to_budgets'|_ }}</span>
                     </a>
                 </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="box-footer">
                     <a href="{{ route('categories.index') }}" class="btn btn-default button-sm">
-                        <i class="fa fa-bookmark"></i>
+                        <span class="fa fa-bookmark"></span>
                         <span>{{ 'go_to_categories'|_ }}</span>
                     </a>
                 </div>
@@ -120,8 +120,8 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('bills.index') }}" class="btn btn-default button-sm"><i
-                                    class="fa fa-calendar"></i> {{ 'go_to_bills'|_ }}</a>
+                        <a href="{{ route('bills.index') }}" class="btn btn-default button-sm"><span
+                                    class="fa fa-calendar"></span> {{ 'go_to_bills'|_ }}</a>
                     </div>
                 </div>
             {% endif %}
@@ -145,8 +145,8 @@
                     <canvas id="expense-accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index', ['expense']) }}" class="btn btn-default button-sm"><i
-                                class="fa fa-shopping-cart"></i> {{ 'go_to_expense_accounts'|_ }}</a>
+                    <a href="{{ route('accounts.index', ['expense']) }}" class="btn btn-default button-sm"><span
+                                class="fa fa-shopping-cart"></span> {{ 'go_to_expense_accounts'|_ }}</a>
                 </div>
             </div>
             {# OPTIONAL REVENUE ACCOUNTS #}
@@ -160,8 +160,8 @@
                     <canvas id="revenue-accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index', ['revenue']) }}" class="btn btn-default button-sm"><i
-                                class="fa fa-download"></i> {{ 'go_to_revenue_accounts'|_ }}</a>
+                    <a href="{{ route('accounts.index', ['revenue']) }}" class="btn btn-default button-sm"><span
+                                class="fa fa-download"></span> {{ 'go_to_revenue_accounts'|_ }}</a>
                 </div>
             </div>
         </div>

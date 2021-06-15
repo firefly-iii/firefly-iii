@@ -72,7 +72,7 @@ interface BudgetLimitRepositoryInterface
     public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit;
 
     /**
-     * TODO this method is not multi-currency aware.
+* See reference nr. 11
      *
      * @param Carbon|null $start
      * @param Carbon|null $end

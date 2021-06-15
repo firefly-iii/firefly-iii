@@ -101,8 +101,8 @@ return [
         'webhooks'     => false,
         'handle_debts' => true,
     ],
-    'version'                      => '5.5.12',
-    'api_version'                  => '1.5.2',
+    'version'                      => '5.6.0-alpha.1',
+    'api_version'                  => '1.5.3',
     'db_version'                   => 16,
 
     // generic settings
@@ -134,24 +134,31 @@ return [
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
     'tracker_url'                  => env('TRACKER_URL', ''),
 
-    // login and authentication
+
+    // LDAP and authentication settings
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
-    'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
+    'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
+    'ldap_auth_field'              => env('LDAP_AUTH_FIELD', env('ADLDAP_AUTH_FIELD', 'distinguishedname')),
 
     // static config (cannot be changed by user)
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
     'update_minimum_age'           => 7,
 
-    // send emails?
+    // web configuration:
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
     'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
+
+    // map configuration
     'default_location'             => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
+
+    // internal Firefly III configuration:
+    // edit me = peligro de muerte
     'valid_attachment_models'      => [
         Account::class,
         Bill::class,

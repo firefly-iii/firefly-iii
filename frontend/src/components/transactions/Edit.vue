@@ -79,7 +79,7 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i>
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><span class="far fa-clone"></span>
                     {{ $t('firefly.add_another_split') }}
                   </button>
                 </div>
@@ -88,8 +88,8 @@
                     &nbsp;
                   </div>
                   <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
-                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
-                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                    <span v-if="enableSubmit"><span class="far fa-save"></span> {{ $t('firefly.update_transaction') }}</span>
+                    <span v-if="!enableSubmit"><span class="fas fa-spinner fa-spin"></span></span>
                   </button>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default {
       if (0 === index) {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
 
-        // TODO here you may need to catch stuff like loan/debt/mortgage
+// See reference nr. 5
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
         this.date = array.date.substring(0, 16);
@@ -938,7 +938,7 @@ export default {
       return JSON.stringify(compare);
     },
     // uploadAttachments: function (result) {
-    //   //console.log('TODO, upload attachments.');
+// See reference nr. 6
     //   if (0 === Object.keys(result).length) {
     //
     //     for (let i in this.transactions) {
@@ -1172,7 +1172,7 @@ export default {
         for (let i in this.transactions) {
           if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             if (this.transactions.hasOwnProperty(i)) {
-              // TODO
+// See reference nr. 7
             }
           }
         }
@@ -1182,6 +1182,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

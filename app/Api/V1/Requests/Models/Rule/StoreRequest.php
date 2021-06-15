@@ -167,7 +167,7 @@ class StoreRequest extends FormRequest
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
-        if (!is_countable($triggers) || 0 === count($triggers)) {
+        if (!is_countable($triggers) || empty($triggers)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
@@ -182,7 +182,7 @@ class StoreRequest extends FormRequest
         $data    = $validator->getData();
         $actions = $data['actions'] ?? [];
         // need at least one trigger
-        if (!is_countable($actions) || 0 === count($actions)) {
+        if (!is_countable($actions) || empty($actions)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }

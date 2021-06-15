@@ -1111,13 +1111,13 @@ try {
                 $title = limitStringLength((string)$group->title);
             }
             if ('opening balance' === $type) {
-                // TODO  link to account.
+// See reference nr. 1
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;
             }
             if ('reconciliation' === $type) {
-                // TODO  link to account.
+// See reference nr. 2
                 $breadcrumbs->push($title, route('transactions.show', [$group->id]));
 
                 return;
@@ -1143,7 +1143,7 @@ try {
     Breadcrumbs::for(
         'transactions.mass.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (count($journals) > 0) {
+            if (!empty($journals)) {
                 $objectType = strtolower(reset($journals)['transaction_type_type']);
                 $breadcrumbs->parent('transactions.index', $objectType);
                 $breadcrumbs->push(trans('firefly.mass_edit_journals'), route('transactions.mass.edit', ['']));
@@ -1167,7 +1167,7 @@ try {
     Breadcrumbs::for(
         'transactions.bulk.edit',
         static function (Generator $breadcrumbs, array $journals): void {
-            if (count($journals) > 0) {
+            if (!empty($journals)) {
                 $ids   = Arr::pluck($journals, 'transaction_journal_id');
                 $first = reset($journals);
                 $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));

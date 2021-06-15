@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Melding',
     'flash_warning'                                       => 'Advarsel!',
     'flash_error'                                         => 'Feil!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Det finnes én melding | Det finnes :count meldinger',
     'flash_error_multiple'                                => 'Det er én feil | Det er :count feil',
     'net_worth'                                           => 'Formue',

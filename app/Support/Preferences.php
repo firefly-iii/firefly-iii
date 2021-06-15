@@ -183,7 +183,7 @@ class Preferences
      * @param null   $default
      *
      * @return Preference|null
-     * TODO remove me
+* See reference nr. 44
      * @throws FireflyException
      */
     public function getFreshForUser(User $user, string $name, $default = null): ?Preference

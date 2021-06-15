@@ -83,6 +83,7 @@ return [
     'flash_info'                                          => 'Mesaj',
     'flash_warning'                                       => 'Avertizare!',
     'flash_error'                                         => 'Eroare!',
+    'flash_danger'                                        => 'Danger!',
     'flash_info_multiple'                                 => 'Există un mesaj | Există :count mesaje',
     'flash_error_multiple'                                => 'Există o singură eroare | Există :count erori',
     'net_worth'                                           => 'Valoarea netă',

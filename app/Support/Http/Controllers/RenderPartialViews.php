@@ -255,7 +255,7 @@ trait RenderPartialViews
     {
         $index   = 0;
         $actions = [];
-        // todo must be repos
+        // must be repos
         $currentActions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
         /** @var RuleAction $entry */
         foreach ($currentActions as $entry) {
@@ -292,7 +292,7 @@ trait RenderPartialViews
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
-        // TODO duplicated code.
+// See reference nr. 38
         $operators = config('firefly.search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -304,7 +304,7 @@ trait RenderPartialViews
         asort($triggers);
         $index           = 0;
         $renderedEntries = [];
-        // todo must be repos
+        // must be repos
         $currentTriggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $entry */
         foreach ($currentTriggers as $entry) {

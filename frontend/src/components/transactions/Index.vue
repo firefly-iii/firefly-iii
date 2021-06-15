@@ -46,17 +46,17 @@
                      :sort-compare="tableSortCompare"
             >
               <template #table-busy>
-                <i class="fa fa-spinner"></i>
+                <span class="fa fa-spinner"></span>
               </template>
               <template #cell(type)="data">
                 <span v-if="! data.item.split || data.item.split_parent === null">
-                  <i class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type"></i>
-                  <i class="fas fa-long-arrow-alt-left" v-else-if="'withdrawal' === data.item.type"></i>
-                  <i class="fas fa-long-arrows-alt-h" v-else-if="'transfer' === data.item.type"></i>
+                  <span class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type"></span>
+                  <span class="fas fa-long-arrow-alt-left" v-else-if="'withdrawal' === data.item.type"></span>
+                  <span class="fas fa-long-arrows-alt-h" v-else-if="'transfer' === data.item.type"></span>
                 </span>
               </template>
               <template #cell(description)="data">
-                <span><i class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></i></span>
+                <span><span class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></span></span>
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
                     data.value
                   }}</a>
@@ -93,8 +93,8 @@
                       {{ $t('firefly.actions') }}
                     </button>
                     <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
-                      <a class="dropdown-item" :href="'./transactions/edit/' + data.item.id"><i class="fa fas fa-pencil-alt"></i> {{ $t('firefly.edit') }}</a>
-                      <a class="dropdown-item" :href="'./transactions/delete/' + data.item.id"><i class="fa far fa-trash"></i> {{ $t('firefly.delete') }}</a>
+                      <a class="dropdown-item" :href="'./transactions/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{ $t('firefly.edit') }}</a>
+                      <a class="dropdown-item" :href="'./transactions/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{ $t('firefly.delete') }}</a>
                     </div>
                   </div>
                 </div>
@@ -117,7 +117,7 @@
           <div class="card-footer">
             <a :href="'./transactions/create/' + type" class="btn btn-success"
                :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
-            <a href="#" class="btn btn-info"><i class="fas fa-sync"></i></a>
+            <a href="#" class="btn btn-info"><span class="fas fa-sync"></span></a>
           </div>
         </div>
       </div>
@@ -254,10 +254,10 @@ export default {
         api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr)
             .then(response => {
 
-                    let currentPage = parseInt(response.data.meta.pagination.current_page);
-                    let totalPages = parseInt(response.data.meta.pagination.total_pages);
+                    //let currentPage = parseInt(response.data.meta.pagination.current_page);
+                    //let totalPages = parseInt(response.data.meta.pagination.total_pages);
                     this.total = parseInt(response.data.meta.pagination.total);
-                    console.log('total is ' + this.total);
+                    //console.log('total is ' + this.total);
                     this.transactions.push(...response.data.data);
                     // if (currentPage < totalPage) {
                     //   let nextPage = currentPage + 1;

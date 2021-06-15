@@ -21,6 +21,8 @@
 
 declare(strict_types=1);
 
+use FireflyIII\Ldap\AttributeHandler;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -62,6 +64,10 @@ return [
             'driver'   => 'session',
             'provider' => 'users',
         ],
+        'ldap'              => [
+            'driver'   => 'session',
+            'provider' => 'ldap',
+        ],
         'remote_user_guard' => [
             'driver'   => 'remote_user_guard',
             'provider' => 'remote_user_provider',
@@ -91,12 +97,24 @@ return [
 
     'providers' => [
         'users'                => [
-            'driver' => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+            'driver' => 'eloquent',
             'model'  => FireflyIII\User::class,
         ],
         'remote_user_provider' => [
             'driver' => 'remote_user_provider',
             'model'  => FireflyIII\User::class,
+        ],
+
+        'ldap' => [
+            'driver'   => 'ldap',
+            //'model'    => LdapRecord\Models\ActiveDirectory\User::class,
+            'model'    => LdapRecord\Models\OpenLDAP\User::class,
+            'rules'    => [],
+            'database' => [
+                'model'           => FireflyIII\User::class,
+                'sync_passwords'  => false,
+                'sync_attributes' => AttributeHandler::class,
+            ],
         ],
     ],
 

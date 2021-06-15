@@ -19,14 +19,14 @@
         <tr>
             <td>
                 <div class="btn-group btn-group-xs">
-                    <a href="{{ route('categories.edit', category.id) }}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
-                    <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
+                    <a href="{{ route('categories.edit', category.id) }}" class="btn btn-default btn-xs"><span class="fa fa-fw fa-pencil"></span></a>
+                    <a href="{{ route('categories.delete', category.id) }}" class="btn btn-danger btn-xs"><span class="fa fa-fw fa-trash-o"></span></a>
                 </div>
             </td>
             <td data-value="{{ category.name }}">
                 <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
                 {% if category.attachments.count() > 0 %}
-                    <i class="fa fa-fw fa-paperclip"></i>
+                    <span class="fa fa-fw fa-paperclip"></span>
                 {% endif %}
             </td>
             {% if category.lastActivity %}

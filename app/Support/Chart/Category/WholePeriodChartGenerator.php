@@ -115,7 +115,7 @@ class WholePeriodChartGenerator
     }
 
     /**
-     * TODO is a duplicate function.
+* See reference nr. 32
      *
      * @param Carbon $start
      * @param Carbon $end

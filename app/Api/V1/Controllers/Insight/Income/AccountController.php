@@ -38,7 +38,7 @@ use Illuminate\Http\JsonResponse;
  *
  * Shows income information grouped or limited by date.
  * Ie. all income grouped by account + currency.
- * TODO same code as Expense/AccountController.
+* See reference nr. 75
  */
 class AccountController extends Controller
 {
@@ -74,8 +74,8 @@ class AccountController extends Controller
     }
 
     /**
-     * TODO same code as Expense/AccountController.
-     * TODO does not actually include the name of the expense account.
+* See reference nr. 76
+* See reference nr. 77
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -103,7 +103,7 @@ class AccountController extends Controller
     }
 
     /**
-     * TODO does not actually include the name of the expense account.
+* See reference nr. 78
      *
      * @param GenericRequest $request
      *

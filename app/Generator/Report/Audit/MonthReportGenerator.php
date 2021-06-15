@@ -253,7 +253,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         return [
             'journals'         => $journals,
             'currency'         => $currency,
-            'exists'           => 0!==count($journals),
+            'exists'           => !empty($journals),
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day', [], $locale)),
             'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day', [], $locale)),
