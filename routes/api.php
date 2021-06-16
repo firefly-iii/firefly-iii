@@ -152,7 +152,7 @@ Route::group(
 // Insight in transfers
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Transfer', 'prefix' => 'insight/transfer',
-     'as'        => 'api.v1.insight.income.',],
+     'as'        => 'api.v1.insight.transfer.',],
     static function () {
         // Insight in expenses per account:
         Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
