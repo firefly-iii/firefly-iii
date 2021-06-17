@@ -52,7 +52,7 @@
                     <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
                         {% if piggy.current_amount > 0 %}
                             <a href="{{ route('piggy-banks.remove-money', piggy.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggy.id }}">
-                                <i data-id="{{ piggy.id }}" class="fa fa-minus"></span></a>
+                                <span data-id="{{ piggy.id }}" class="fa fa-minus"></span></a>
                         {% endif %}
                     </td>
 
@@ -77,7 +77,7 @@
                     <td class="hidden-sm hidden-xs" style="width:40px;">
                         {% if piggy.left_to_save > 0 %}
                             <a href="{{ route('piggy-banks.add-money', piggy.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggy.id }}">
-                                <i data-id="{{ piggy.id }}" class="fa fa-plus"></span></a>
+                                <span data-id="{{ piggy.id }}" class="fa fa-plus"></span></a>
                         {% endif %}
                     </td>
                     <td class="hidden-sm hidden-xs" style="text-align:right;">
