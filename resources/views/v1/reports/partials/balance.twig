@@ -23,7 +23,7 @@
                     {% if budget.spent[account.id] %}
                         <td style="text-align: right;">
                             {{ formatAmountBySymbol(budget.spent[account.id].spent, budget.spent[account.id].currency_symbol, budget.spent[account.id].currency_decimal_places) }}
-                            <i data-location="budget-entry"
+                            <span data-location="budget-entry"
                                data-budget-id="{{ budget.budget_id }}"
                                data-account-id="{{ account.id }}"
                                data-currency-id="{{ budget.spent[account.id].currency_id }}"
