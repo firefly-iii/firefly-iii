@@ -85,6 +85,7 @@ new Vue({
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });
+
 new Vue({
             i18n,
             store,

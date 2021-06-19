@@ -138,8 +138,8 @@
         "account_type_mortgage": "Hipoteka",
         "save_transactions_by_moving_js": "Brak transakcji|Zapisz t\u0119 transakcj\u0119, przenosz\u0105c j\u0105 na inne konto.|Zapisz te transakcje przenosz\u0105c je na inne konto.",
         "none_in_select_list": "(\u017cadne)",
-        "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_expand_split": "Rozwi\u0144 podzia\u0142",
+        "transaction_collapse_split": "Zwi\u0144 podzia\u0142"
     },
     "list": {
         "piggy_bank": "Skarbonka",

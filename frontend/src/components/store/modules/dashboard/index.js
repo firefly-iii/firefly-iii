@@ -61,7 +61,7 @@ const getters = {
 // actions
 const actions = {
     initialiseStore(context) {
-        // console.log('initialiseStore');
+        console.log('initialiseStore for dashboard.');
 
         // restore from local storage:
         context.dispatch('restoreViewRange');

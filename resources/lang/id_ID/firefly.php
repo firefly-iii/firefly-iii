@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Kembangkan pemisahan',
+    'transaction_collapse_split'            => 'Kempiskan pemisahan',
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',

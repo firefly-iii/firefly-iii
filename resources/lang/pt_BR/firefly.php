@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Armazene como uma nova transação em vez de atualizar.',
     'reset_after'                           => 'Resetar o formulário após o envio',
     'errors_submission'                     => 'Há algo de errado com o seu envio. Por favor, verifique os erros abaixo.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Exibir divisão',
+    'transaction_collapse_split'            => 'Esconder divisão',
 
     // object groups
     'default_group_title_name'              => '(não agrupado)',

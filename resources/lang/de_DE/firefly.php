@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                           => 'Formular nach der Übermittlung zurücksetzen',
     'errors_submission'                     => 'Ihre Übermittlung ist fehlgeschlagen. Bitte überprüfen Sie die Fehler.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Aufteilung erweitern',
+    'transaction_collapse_split'            => 'Aufteilung reduzieren',
 
     // object groups
     'default_group_title_name'              => '(ohne Gruppierung)',

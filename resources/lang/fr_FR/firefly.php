@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                           => 'Réinitialiser le formulaire après soumission',
     'errors_submission'                     => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Développer la ventilation',
+    'transaction_collapse_split'            => 'Réduire la ventilation',
 
     // object groups
     'default_group_title_name'              => '(Sans groupement)',

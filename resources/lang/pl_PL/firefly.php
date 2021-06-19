@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                           => 'Wyczyść formularz po zapisaniu',
     'errors_submission'                     => 'Coś poszło nie tak w czasie zapisu. Proszę sprawdź błędy.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Rozwiń podział',
+    'transaction_collapse_split'            => 'Zwiń podział',
 
     // object groups
     'default_group_title_name'              => '(bez grupy)',
