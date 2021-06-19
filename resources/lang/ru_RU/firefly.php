@@ -83,7 +83,7 @@ return [
     'flash_info'                                          => 'Сообщение',
     'flash_warning'                                       => 'Предупреждение!',
     'flash_error'                                         => 'Ошибка!',
-    'flash_danger'                                        => 'Danger!',
+    'flash_danger'                                        => 'Опасность!',
     'flash_info_multiple'                                 => 'Есть одно сообщение|Есть :count сообщений',
     'flash_error_multiple'                                => 'Есть одна ошибка|Есть :count ошибок',
     'net_worth'                                           => 'Мои сбережения',
@@ -420,7 +420,7 @@ return [
     'apply_rule_selection'                                => 'Применить ":title" к выбранным вами транзакциям',
     'apply_rule_selection_intro'                          => 'Такие правила, как ":title", обычно применяются только к новым или обновлённым транзакциям, но Firefly III может применить его для выбранных вами существующих транзакций. Это может быть полезно, если вы обновили правило, и вам нужно изменить ранее созданные транзакции в соответствии с новыми условиями.',
     'include_transactions_from_accounts'                  => 'Включить транзакции с указанных счетов',
-    'include'                                             => 'Include?',
+    'include'                                             => 'Включить?',
     'applied_rule_selection'                              => '{0} В вашем выборе ни одна транзакция не была изменена правилом ":title".|[1] В вашем выборе одна транзакция была изменена правилом ":title".|[2,*] :count транзакции(-ий) в вашем выборе было изменено правилом ":title".',
     'execute'                                             => 'Выполнить',
     'apply_rule_group_selection'                          => 'Применить группу правил":title" к выбранным вами транзакциям',
@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                           => 'Сбросить форму после отправки',
     'errors_submission'                     => 'При отправке что-то пошло не так. Пожалуйста, проверьте ошибки ниже.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(без группировки)',

@@ -137,7 +137,9 @@
         "left_in_debt": "Montant d\u00fb",
         "account_type_mortgage": "Pr\u00eat immobilier",
         "save_transactions_by_moving_js": "Aucune op\u00e9ration|Conserver cette op\u00e9ration en la d\u00e9pla\u00e7ant vers un autre compte. |Conserver ces op\u00e9rations en les d\u00e9pla\u00e7ant vers un autre compte.",
-        "none_in_select_list": "(aucun)"
+        "none_in_select_list": "(aucun)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "Tirelire",

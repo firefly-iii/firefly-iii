@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Namiesto aktualizácie uložiť ako novú transakciu.',
     'reset_after'                           => 'Po odoslaní vynulovať formulár',
     'errors_submission'                     => 'Pri odosielaní sa niečo nepodarilo. Skontrolujte prosím chyby.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(nezoskupené)',

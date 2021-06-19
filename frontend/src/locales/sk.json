@@ -137,7 +137,9 @@
         "left_in_debt": "Amount due",
         "account_type_mortgage": "Mortgage",
         "save_transactions_by_moving_js": "\u017diadne transakcie|Zachova\u0165 t\u00fato transakciu presunom pod in\u00fd \u00fa\u010det.|Zachova\u0165 tieto transakcie presunom pod in\u00fd \u00fa\u010det.",
-        "none_in_select_list": "(\u017eiadne)"
+        "none_in_select_list": "(\u017eiadne)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

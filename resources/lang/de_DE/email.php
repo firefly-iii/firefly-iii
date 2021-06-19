@@ -27,7 +27,7 @@ return [
     'greeting'                         => 'Hallo,',
     'closing'                          => 'Piep piep,',
     'signature'                        => 'Der Firefly III E-Mail-Roboter',
-    'footer_ps'                        => 'PS: Diese Nachricht wurde gesendet, da eine Anfrage von IP :ipAddress sie ausgelöst hat.',
+    'footer_ps'                        => 'PS: Diese Nachricht wurde wegen einer Anfrage durch die IP-Adresse :ipAddress versendet.',
 
     // admin test
     'admin_test_subject'               => 'Eine Testmeldung von Ihrer Firefly III Installation',

@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                           => 'Изчистване на формуляра след изпращане',
     'errors_submission'                     => 'Имаше нещо нередно с вашите данни. Моля, проверете грешките.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(без група)',

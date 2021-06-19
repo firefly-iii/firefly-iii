@@ -137,7 +137,9 @@
         "left_in_debt": "Do zap\u0142aty",
         "account_type_mortgage": "Hipoteka",
         "save_transactions_by_moving_js": "Brak transakcji|Zapisz t\u0119 transakcj\u0119, przenosz\u0105c j\u0105 na inne konto.|Zapisz te transakcje przenosz\u0105c je na inne konto.",
-        "none_in_select_list": "(\u017cadne)"
+        "none_in_select_list": "(\u017cadne)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "Skarbonka",

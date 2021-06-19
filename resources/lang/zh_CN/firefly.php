@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => '保存为新交易而不是更新此交易。',
     'reset_after'                           => '提交后重置表单',
     'errors_submission'                     => '您提交的内容有误，请检查错误信息。',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(未分组)',

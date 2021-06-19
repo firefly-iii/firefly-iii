@@ -15,8 +15,6 @@
         "balance": "Balance",
         "transaction_journal_extra": "Extra information",
         "transaction_journal_meta": "Meta information",
-        "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split",
         "basic_journal_information": "Basic transaction information",
         "bills_to_pay": "Bills to pay",
         "left_to_spend": "Left to spend",
@@ -139,7 +137,9 @@
         "left_in_debt": "Amount due",
         "account_type_mortgage": "Mortgage",
         "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
-        "none_in_select_list": "(none)"
+        "none_in_select_list": "(none)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "Piggy bank",

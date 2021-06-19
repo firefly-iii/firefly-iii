@@ -248,13 +248,7 @@ export default {
         }
       }
 
-      return new Promise((resolve) => {
-        resolve(
-            {
-              journals: journals,
-            }
-        );
-      });
+      return Promise.resolve({journals: journals});
     },
     submitLinks: function (response, submission) {
       let promises = [];
@@ -278,13 +272,7 @@ export default {
         }
       }
       if (0 === promises.length) {
-        return new Promise((resolve) => {
-          resolve(
-              {
-                response: 'from submitLinks'
-              }
-          );
-        });
+        return Promise.resolve({response: 'from submitLinks'});
       }
       return Promise.all(promises);
     },
@@ -308,13 +296,7 @@ export default {
         this.submittedAttachments = 0;
       }
 
-      return new Promise((resolve) => {
-        resolve(
-            {
-              response: 'from submitAttachments'
-            }
-        );
-      });
+      return Promise.resolve({response: 'from submitAttachments'});
     },
     selectedAttachment: function (payload) {
       this.updateField({index: payload.index, field: 'attachments', value: true});
@@ -360,13 +342,7 @@ export default {
         this.resetTransactions();
         this.addTransaction();
       }
-      return new Promise((resolve) => {
-        resolve(
-            {
-              response: 'from finaliseSubmission'
-            }
-        );
-      });
+      return Promise.resolve({response: 'from finaliseSubmission'});
     },
     handleSubmissionError: function (error) {
       //console.log('in handleSubmissionError');

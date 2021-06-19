@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                           => 'Resetta il modulo dopo l\'invio',
     'errors_submission'                     => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(non in un gruppo)',

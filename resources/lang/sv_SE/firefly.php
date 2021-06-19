@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                           => 'Återställ formulär efter inskickat',
     'errors_submission'                     => 'Något fel uppstod med inskickningen. Vänligen kontrollera felen nedan.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(ogrupperad)',

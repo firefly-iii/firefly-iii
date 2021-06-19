@@ -137,7 +137,9 @@
         "left_in_debt": "Verschuldigd bedrag",
         "account_type_mortgage": "Hypotheek",
         "save_transactions_by_moving_js": "Geen transacties|Bewaar deze transactie door ze aan een andere rekening te koppelen.|Bewaar deze transacties door ze aan een andere rekening te koppelen.",
-        "none_in_select_list": "(geen)"
+        "none_in_select_list": "(geen)",
+        "transaction_expand_split": "Split uitklappen",
+        "transaction_collapse_split": "Split inklappen"
     },
     "list": {
         "piggy_bank": "Spaarpotje",

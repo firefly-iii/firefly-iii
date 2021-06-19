@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                           => 'Tyhjennä lomake lähetyksen jälkeen',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',

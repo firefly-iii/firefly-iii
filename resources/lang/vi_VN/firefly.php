@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Lưu trữ như một giao dịch mới thay vì cập nhật.',
     'reset_after'                           => 'Đặt lại mẫu sau khi gửi',
     'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',

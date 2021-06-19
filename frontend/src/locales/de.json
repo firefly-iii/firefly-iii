@@ -137,7 +137,9 @@
         "left_in_debt": "F\u00e4lliger Betrag",
         "account_type_mortgage": "Hypothek",
         "save_transactions_by_moving_js": "Keine Buchungen|Speichern Sie diese Buchung, indem Sie sie auf ein anderes Konto verschieben. |Speichern Sie diese Buchungen, indem Sie sie auf ein anderes Konto verschieben.",
-        "none_in_select_list": "(Keine)"
+        "none_in_select_list": "(Keine)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "Sparschwein",

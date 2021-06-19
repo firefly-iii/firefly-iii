@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Opslaan als nieuwe transactie ipv de huidige bij te werken.',
     'reset_after'                           => 'Reset formulier na opslaan',
     'errors_submission'                     => 'Er ging iets mis. Check de errors.',
+    'transaction_expand_split'              => 'Split uitklappen',
+    'transaction_collapse_split'            => 'Split inklappen',
 
     // object groups
     'default_group_title_name'              => '(ongegroepeerd)',

@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Αποθήκευση ως νέα συναλλαγή αντί για ενημέρωση.',
     'reset_after'                           => 'Επαναφορά φόρμας μετά την υποβολή',
     'errors_submission'                     => 'Υπήρξε κάποιο λάθος με την υποβολή σας. Παρακαλώ ελέγξτε τα σφάλματα.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(χωρίς ομάδα)',

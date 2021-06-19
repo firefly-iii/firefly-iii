@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Guarde como uma nova transação em vez de atualizar.',
     'reset_after'                           => 'Repor o formulário após o envio',
     'errors_submission'                     => 'Aconteceu algo errado com a sua submissão. Por favor, verifique os erros.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(não agrupado)',

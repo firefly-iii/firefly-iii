@@ -21,13 +21,16 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
         <b-pagination
             v-model="currentPage"
             :total-rows="total"
             :per-page="perPage"
             aria-controls="my-table"
         ></b-pagination>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
     <div class="row">
@@ -139,7 +142,8 @@
                     <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
                       <a class="dropdown-item" :href="'./accounts/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{ $t('firefly.edit') }}</a>
                       <a class="dropdown-item" :href="'./accounts/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{ $t('firefly.delete') }}</a>
-                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><span class="fas fa-check"></span>
+                      <a v-if="'asset' === type" class="dropdown-item" :href="'./accounts/reconcile/' + data.item.id + '/index'"><span
+                          class="fas fa-check"></span>
                         {{ $t('firefly.reconcile_this_account') }}</a>
                     </div>
                   </div>
@@ -149,13 +153,12 @@
           </div>
           <div class="card-footer">
             <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
-            <a href="#" class="btn btn-info"><span class="fas fa-sync"></span></a>
           </div>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
         <b-pagination
             v-model="currentPage"
             :total-rows="total"
@@ -163,13 +166,16 @@
             aria-controls="my-table"
         ></b-pagination>
       </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import Sortable from "sortablejs";
 import format from "date-fns/format";
 import {setup} from 'axios-cache-adapter';
@@ -275,6 +281,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations('root', ['refreshCacheKey',]),
     // itemsProvider: function (ctx, callback) {
     //   console.log('itemsProvider()');
     //   console.log('ctx.currentPage = ' + ctx.currentPage);
@@ -321,6 +328,12 @@ export default {
         this.sortBy = 'order';
         this.sortDesc = false;
       }
+    },
+    newCacheKey: function () {
+      this.refreshCacheKey();
+      this.downloaded = false;
+      this.accounts = [];
+      this.getAccountList();
     },
     makeTableSortable: function (orderMode) {
       this.sortableOptions.disabled = !orderMode;
@@ -555,13 +568,15 @@ export default {
       // console.log('getAccountLastActivity(' + index + ')');
       // get single transaction for account:
       //  /api/v1/accounts/1/transactions?limit=1
-      axios.get('./api/v1/accounts/' + acct.id + '/transactions?limit=1&key=' + this.cacheKey).then(response => {
-        if (0 === response.data.data.length) {
-          this.allAccounts[index].last_activity = 'none';
-          return;
-        }
-        let date = new Date(response.data.data[0].attributes.transactions[0].date);
-        this.allAccounts[index].last_activity = format(date, this.$t('config.month_and_day_fns'));
+      configureAxios().then(async (api) => {
+        api.get('./api/v1/accounts/' + acct.id + '/transactions?limit=1&key=' + this.cacheKey).then(response => {
+          if (0 === response.data.data.length) {
+            this.allAccounts[index].last_activity = 'none';
+            return;
+          }
+          let date = new Date(response.data.data[0].attributes.transactions[0].date);
+          this.allAccounts[index].last_activity = format(date, this.$t('config.month_and_day_fns'));
+        });
       });
     },
     getAccountBalanceDifference: function (index, acct) {
@@ -570,18 +585,25 @@ export default {
       let promises = [];
 
       // add meta data to promise context.
-      promises.push(new Promise((resolve) => {
-        resolve(
-            {
-              account: acct,
-              index: index,
-            }
-        );
-      }));
+      promises.push(Promise.resolve({
+                                      account: acct,
+                                      index: index,
+                                    }));
+
       let startStr = format(this.start, 'y-MM-dd');
       let endStr = format(this.end, 'y-MM-dd');
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr + '&key=' + this.cacheKey));
-      promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + endStr + '&key=' + this.cacheKey));
+
+      configureAxios().then(api => {
+        return api.get('./api/v1/accounts/' + acct.id + '?date=' + startStr + '&key=' + this.cacheKey);
+      });
+
+      //promises.push(axios.get('./api/v1/accounts/' + acct.id + '?date=' + startStr + '&key=' + this.cacheKey));
+      promises.push(configureAxios().then(api => {
+        return api.get('./api/v1/accounts/' + acct.id + '?date=' + startStr + '&key=' + this.cacheKey);
+      }));
+      promises.push(configureAxios().then(api => {
+        return api.get('./api/v1/accounts/' + acct.id + '?date=' + endStr + '&key=' + this.cacheKey);
+      }));
 
       Promise.all(promises).then(responses => {
         let index = responses[0].index;

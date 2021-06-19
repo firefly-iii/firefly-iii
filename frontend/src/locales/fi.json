@@ -137,7 +137,9 @@
         "left_in_debt": "Amount due",
         "account_type_mortgage": "Mortgage",
         "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
-        "none_in_select_list": "(ei mit\u00e4\u00e4n)"
+        "none_in_select_list": "(ei mit\u00e4\u00e4n)",
+        "transaction_expand_split": "Expand split",
+        "transaction_collapse_split": "Collapse split"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",

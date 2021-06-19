@@ -1691,6 +1691,8 @@ return [
     'store_as_new'                          => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                           => 'Resetați formularul după trimitere',
     'errors_submission'                     => 'A fost ceva în neregulă cu depunerea ta. Te rugăm să verifici erorile.',
+    'transaction_expand_split'              => 'Expand split',
+    'transaction_collapse_split'            => 'Collapse split',
 
     // object groups
     'default_group_title_name'              => '(negrupat)',
