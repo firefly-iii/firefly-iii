@@ -57,6 +57,7 @@ class CreateUsersTable extends Migration
                     $table->string('reset', 32)->nullable();
                     $table->tinyInteger('blocked', false, true)->default('0');
                     $table->string('blocked_code', 25)->nullable();
+                    $table->unique('email');
                 }
             );
         }
