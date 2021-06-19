@@ -261,23 +261,23 @@ export default {
     this.ready = true;
 
     // make object thing:
-    let token = document.head.querySelector('meta[name="csrf-token"]');
-    this.api = setup(
-        {
-          // `axios` options
-          //baseURL: './',
-          headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
-
-          // `axios-cache-adapter` options
-          cache: {
-            maxAge: 15 * 60 * 1000,
-            readHeaders: false,
-            exclude: {
-              query: false,
-            },
-            debug: true
-          }
-        });
+    // let token = document.head.querySelector('meta[name="csrf-token"]');
+    // this.api = setup(
+    //     {
+    //       // `axios` options
+    //       //baseURL: './',
+    //       headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
+    //
+    //       // `axios-cache-adapter` options
+    //       cache: {
+    //         maxAge: 15 * 60 * 1000,
+    //         readHeaders: false,
+    //         exclude: {
+    //           query: false,
+    //         },
+    //         debug: true
+    //       }
+    //     });
   },
 
   methods: {

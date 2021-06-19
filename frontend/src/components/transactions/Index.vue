@@ -46,7 +46,7 @@
         ></b-pagination>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        (refresh)
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
     <div class="row">
@@ -136,14 +136,13 @@
           <div class="card-footer">
             <a :href="'./transactions/create/' + type" class="btn btn-success"
                :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
-            <a href="#" class="btn btn-info"><span class="fas fa-sync"></span></a>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="card">
           <div class="card-body">
-            Box previous period
+            Box previous periods
           </div>
         </div>
       </div>
@@ -158,7 +157,7 @@
         ></b-pagination>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        (refresh)
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
   </div>
@@ -166,9 +165,8 @@
 
 <script>
 
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import format from "date-fns/format";
-import {setup} from 'axios-cache-adapter';
 import {configureAxios} from "../../shared/forageStore";
 
 export default {
@@ -211,7 +209,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('root', ['listPageSize']),
+    ...mapGetters('root', ['listPageSize', 'cacheKey']),
     ...mapGetters('dashboard/index', ['start', 'end',]),
     'indexReady': function () {
       return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
@@ -233,25 +231,26 @@ export default {
     this.ready = true;
 
     // make object thing:
-    let token = document.head.querySelector('meta[name="csrf-token"]');
-    this.api = setup(
-        {
-          // `axios` options
-          //baseURL: './',
-          headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
-
-          // `axios-cache-adapter` options
-          cache: {
-            maxAge: 15 * 60 * 1000,
-            readHeaders: false,
-            exclude: {
-              query: false,
-            },
-            debug: true
-          }
-        });
+    // let token = document.head.querySelector('meta[name="csrf-token"]');
+    // this.api = setup(
+    //     {
+    //       // `axios` options
+    //       //baseURL: './',
+    //       headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
+    //
+    //       // `axios-cache-adapter` options
+    //       cache: {
+    //         maxAge: 15 * 60 * 1000,
+    //         readHeaders: false,
+    //         exclude: {
+    //           query: false,
+    //         },
+    //         debug: true
+    //       }
+    //     });
   },
   methods: {
+    ...mapMutations('root', ['refreshCacheKey',]),
     updateFieldList: function () {
       this.fields = [
         {key: 'type', label: ' ', sortable: false},
@@ -263,6 +262,12 @@ export default {
         {key: 'category_name', label: this.$t('list.category'), sortable: true},
         {key: 'menu', label: ' ', sortable: false},
       ];
+    },
+    newCacheKey: function () {
+      this.refreshCacheKey();
+      this.downloaded = false;
+      this.accounts = [];
+      this.getTransactionList();
     },
     getTransactionList: function () {
       console.log('getTransactionList()');
@@ -280,7 +285,7 @@ export default {
       configureAxios().then(async (api) => {
         let startStr = format(this.start, 'y-MM-dd');
         let endStr = format(this.end, 'y-MM-dd');
-        api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr)
+        api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey)
             .then(response => {
 
                     //let currentPage = parseInt(response.data.meta.pagination.current_page);
