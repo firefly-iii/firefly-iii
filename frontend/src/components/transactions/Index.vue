@@ -100,13 +100,13 @@
                 </div>
                 <div class="btn btn-light btn-sm" v-if="data.item.split && data.item.split_parent === null && data.item.collapsed === true"
                      v-on:click="toggleCollapse(data.item)">
-                  <span class="fa fa-caret-down"></span>
-                  Expand split
+                  <i class="fa fa-caret-down"></i>
+                  {{ $t('firefly.transaction_expand_split') }}
                 </div>
                 <div class="btn btn-light btn-sm" v-else-if="data.item.split && data.item.split_parent === null && data.item.collapsed === false"
                      v-on:click="toggleCollapse(data.item)">
-                  <span class="fa fa-caret-up"></span>
-                  Collapse split
+                  <i class="fa fa-caret-up"></i>
+                  {{ $t('firefly.transaction_collapse_split') }}
                 </div>
               </template>
               <template #cell(category)="data">
