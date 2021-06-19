@@ -21,7 +21,23 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            Treemap categories?
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            Treemap accounts?
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
         <b-pagination
             v-model="currentPage"
             :total-rows="total"
@@ -29,19 +45,22 @@
             aria-controls="my-table"
         ></b-pagination>
       </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        (refresh)
+      </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <div class="card">
           <div class="card-body p-0">
             <b-table id="my-table" striped hover responsive="md" primary-key="key" :no-local-sorting="false"
-                     :items="transactionRows" :fields="fields"
+                     :items="transactionRows"
+                     :fields="fields"
                      :per-page="perPage"
                      sort-icon-left
                      ref="table"
                      :current-page="currentPage"
                      :busy.sync="loading"
-                     :sort-by.sync="sortBy"
                      :sort-desc.sync="sortDesc"
                      :sort-compare="tableSortCompare"
             >
@@ -100,12 +119,12 @@
                 </div>
                 <div class="btn btn-light btn-sm" v-if="data.item.split && data.item.split_parent === null && data.item.collapsed === true"
                      v-on:click="toggleCollapse(data.item)">
-                  <i class="fa fa-caret-down"></i>
+                  <span class="fa fa-caret-down"></span>
                   {{ $t('firefly.transaction_expand_split') }}
                 </div>
                 <div class="btn btn-light btn-sm" v-else-if="data.item.split && data.item.split_parent === null && data.item.collapsed === false"
                      v-on:click="toggleCollapse(data.item)">
-                  <i class="fa fa-caret-up"></i>
+                  <span class="fa fa-caret-up"></span>
                   {{ $t('firefly.transaction_collapse_split') }}
                 </div>
               </template>
@@ -121,15 +140,25 @@
           </div>
         </div>
       </div>
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            Box previous period
+          </div>
+        </div>
+      </div>
     </div>
     <div class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
         <b-pagination
             v-model="currentPage"
             :total-rows="total"
             :per-page="perPage"
             aria-controls="my-table"
         ></b-pagination>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        (refresh)
       </div>
     </div>
   </div>

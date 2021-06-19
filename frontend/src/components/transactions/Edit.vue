@@ -383,8 +383,7 @@ export default {
         linkDirection = 'outward';
       }
       // add meta data to promise context.
-      promises.push(new Promise((resolve) => {
-        resolve(
+      promises.push(Promise.resolve(
             {
               link: link,
               journalId: journalId,
@@ -392,8 +391,8 @@ export default {
               index: index,
               direction: linkDirection
             }
-        );
-      }));
+        ));
+
 
       // get stuff from the API:
       promises.push(axios.get('./api/v1/transaction-journals/' + opposingId));
@@ -700,9 +699,7 @@ export default {
       // console.log(submission);
       if (!shouldSubmit) {
         // console.log('No need to submit transaction.');
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
       const url = './api/v1/transactions/' + this.groupId;
       return axios.put(url, submission);
@@ -733,21 +730,13 @@ export default {
         }
       }
       journals = journals.reverse();
-      return new Promise((resolve) => {
-        resolve(
-            {
-              journals: journals,
-            }
-        );
-      });
+      return Promise.resolve({journals:journals});
     },
     submitLinks: function (shouldSubmit) {
       //console.log('submitLinks()');
       if (!shouldSubmit) {
         //console.log('no need!');
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
       return this.deleteAllOriginalLinks().then(() => this.submitNewLinks());
     },
@@ -756,9 +745,7 @@ export default {
       if (!shouldSubmit) {
         // console.log('no need!');
         this.submittedAttachments = 1;
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
       //console.log('Do upload thing!');
       //console.log(response);
@@ -1074,9 +1061,7 @@ export default {
               promises.push(this.deleteOriginalLinks(originalTransaction));
             }
           } else {
-            promises.push(new Promise((resolve) => {
-              resolve({});
-            }));
+            promises.push(Promise.resolve({}));
           }
         }
       }
