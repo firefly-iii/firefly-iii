@@ -109,7 +109,7 @@ class LoginController extends Controller
         }
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         if ($this->attemptLogin($request)) {
-            Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
+            Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get($this->username())));
             Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
             // if you just logged in, it can't be that you have a valid 2FA cookie.
@@ -123,7 +123,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get('email')));
+        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
     }
