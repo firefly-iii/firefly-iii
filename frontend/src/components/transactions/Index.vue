@@ -50,10 +50,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+      <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12">
         <div class="card">
           <div class="card-body p-0">
-            <b-table id="my-table" striped hover responsive="md" primary-key="key" :no-local-sorting="false"
+            <b-table id="my-table" small striped hover responsive="md" primary-key="key" :no-local-sorting="false"
                      :items="transactionRows"
                      :fields="fields"
                      :per-page="perPage"
@@ -75,7 +75,7 @@
                 </span>
               </template>
               <template #cell(description)="data">
-                <span><span class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></span></span>
+                <span class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></span>
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
                     data.value
                   }}</a>
@@ -139,7 +139,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-2 col-md-4">
         <div class="card">
           <div class="card-body">
             Box previous periods

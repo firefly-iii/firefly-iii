@@ -195,7 +195,7 @@ export default {
     /**
      * Grabbed from the store.
      */
-    ...mapGetters('transactions/create', ['transactionType', 'transactions', 'groupTitle','defaultErrors']),
+    ...mapGetters('transactions/create', ['transactionType', 'transactions', 'groupTitle', 'defaultErrors']),
     ...mapGetters('root', ['listPageSize'])
   },
   watch: {
@@ -713,13 +713,20 @@ export default {
             let current = array.tags[i];
             if (typeof current === 'object' && null !== current) {
               currentSplit.tags.push(current.text);
+              console.log('Add tag "' + current.text + '" from object.');
+              continue;
             }
             if (typeof current === 'string') {
               currentSplit.tags.push(current);
+              console.log('Add tag "' + current + '" from string.');
+              continue;
             }
+            console.log('Is neither.');
           }
         }
       }
+      console.log('Current split tags is now: ');
+      console.log(currentSplit.tags);
 
       // bills and piggy banks
       if (0 !== array.piggy_bank_id) {
