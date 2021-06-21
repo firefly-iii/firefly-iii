@@ -6,6 +6,7 @@ updates:
     directory: "/" # Location of package manifests
     target-branch: develop
     labels: ["bug"]
+    versioning-strategy: increase
     schedule:
       interval: "weekly"
 
@@ -14,6 +15,7 @@ updates:
     directory: "/"
     target-branch: develop
     labels: ["bug"]
+    versioning-strategy: increase
     schedule:
       interval: "weekly"
 
@@ -21,6 +23,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/frontend"
     target-branch: develop
+    versioning-strategy: increase
     labels: ["bug"]
     schedule:
       interval: "weekly"
