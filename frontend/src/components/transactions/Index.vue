@@ -50,7 +50,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12">
+      <div class="col">
         <div class="card">
           <div class="card-body p-0">
             <b-table id="my-table" small striped hover responsive="md" primary-key="key" :no-local-sorting="false"
@@ -139,13 +139,6 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-2 col-md-4">
-        <div class="card">
-          <div class="card-body">
-            Box previous periods
-          </div>
-        </div>
-      </div>
     </div>
     <div class="row">
       <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
@@ -158,6 +151,18 @@
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
         <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">I am title</h3>
+          </div>
+          <div class="card-body">
+            Box previous periods
+          </div>
+        </div>
       </div>
     </div>
   </div>
