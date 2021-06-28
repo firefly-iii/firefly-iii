@@ -41,6 +41,6 @@
         "sortablejs": "^1.13.0",
         "v-calendar": "^2.3.0",
         "vue-typeahead-bootstrap": "^2.8.0",
-        "vue2-leaflet": "^2.7.0"
+        "vue2-leaflet": "^2.7.1"
     }
 }
