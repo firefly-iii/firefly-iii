@@ -298,7 +298,7 @@ export default {
       if (0 === index) {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
 
-// See reference nr. 5
+        // See reference nr. 5
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
         this.date = array.date.substring(0, 16);
@@ -384,14 +384,14 @@ export default {
       }
       // add meta data to promise context.
       promises.push(Promise.resolve(
-            {
-              link: link,
-              journalId: journalId,
-              opposingId: opposingId,
-              index: index,
-              direction: linkDirection
-            }
-        ));
+          {
+            link: link,
+            journalId: journalId,
+            opposingId: opposingId,
+            index: index,
+            direction: linkDirection
+          }
+      ));
 
 
       // get stuff from the API:
@@ -533,7 +533,7 @@ export default {
       this.transactions.push(newTransaction);
     },
     submitTransaction: function (event) {
-      // console.log('submitTransaction()');
+      console.log('submitTransaction()');
       event.preventDefault();
       this.enableSubmit = false;
       let submission = {transactions: []};
@@ -559,7 +559,7 @@ export default {
       // loop each transaction (edited by the user):
       // console.log('Start of loop submitTransaction');
       for (let i in this.transactions) {
-        // console.log('Index ' + i);
+        console.log('Index ' + i);
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // console.log('Has index ' + i);
           // original transaction present:
@@ -573,17 +573,21 @@ export default {
 
           // source and destination are overruled in some cases:
           if (i > 0) {
+            console.log('i > 0');
             diff.type = this.transactionType.toLowerCase();
             if ('deposit' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set destination to be whatever is in transaction zero:
-              currentTransaction.destination_account_name = this.originalTransactions[0].destination_account_name;
-              currentTransaction.destination_account_id = this.originalTransactions[0].destination_account_id;
+              // of the edited transaction
+              currentTransaction.destination_account_name = this.transactions[0].destination_account_name;
+              currentTransaction.destination_account_id = this.transactions[0].destination_account_id;
+              console.log('Destination is now: #' + currentTransaction.destination_account_id + ': ' + currentTransaction.destination_account_name);
             }
 
             if ('withdrawal' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set source to be whatever is in transaction zero:
-              currentTransaction.source_account_name = this.originalTransactions[0].source_account_name;
-              currentTransaction.source_account_id = this.originalTransactions[0].source_account_id;
+              currentTransaction.source_account_name = this.transactions[0].source_account_name;
+              currentTransaction.source_account_id = this.transactions[0].source_account_id;
+              console.log('Source is now: #' + currentTransaction.source_account_id + ': ' + currentTransaction.source_account_name);
             }
           }
 
@@ -607,11 +611,11 @@ export default {
                   // console.log('we skip!');
                   continue;
                 }
-                if ('foreign_currency_id' === submissionFieldName && 0 === currentTransaction[fieldName] ) {
+                if ('foreign_currency_id' === submissionFieldName && 0 === currentTransaction[fieldName]) {
                   // console.log('we skip!');
                   continue;
                 }
-                if ('foreign_currency_id' === submissionFieldName && '0' === currentTransaction[fieldName] ) {
+                if ('foreign_currency_id' === submissionFieldName && '0' === currentTransaction[fieldName]) {
                   // console.log('we skip!');
                   continue;
                 }
@@ -666,7 +670,7 @@ export default {
           if (typeof currentTransaction.selectedAttachments !== 'undefined' && true === currentTransaction.selectedAttachments) {
             shouldUpload = true;
           }
-          if(true === shouldSubmit) {
+          if (true === shouldSubmit) {
             // set the date to whatever the date is:
             diff.date = this.date;
           }
@@ -695,12 +699,13 @@ export default {
     },
 
     submitData: function (shouldSubmit, submission) {
-      // console.log('submitData');
-      // console.log(submission);
+      console.log('submitData');
+      console.log(submission);
       if (!shouldSubmit) {
         // console.log('No need to submit transaction.');
         return Promise.resolve({});
       }
+
       const url = './api/v1/transactions/' + this.groupId;
       return axios.put(url, submission);
 
@@ -730,7 +735,7 @@ export default {
         }
       }
       journals = journals.reverse();
-      return Promise.resolve({journals:journals});
+      return Promise.resolve({journals: journals});
     },
     submitLinks: function (shouldSubmit) {
       //console.log('submitLinks()');

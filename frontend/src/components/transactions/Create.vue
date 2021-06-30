@@ -234,7 +234,7 @@ export default {
       return axios.post(url, data);
     },
     handleSubmissionResponse: function (response) {
-      //console.log('In handleSubmissionResponse()');
+      console.log('In handleSubmissionResponse()');
       // save some meta data:
       this.returnedGroupId = parseInt(response.data.data.id);
       this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
@@ -282,11 +282,14 @@ export default {
         if (response.journals.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           let journalId = response.journals[i];
           let hasAttachments = submission.transactions[i].attachments;
-          // console.log('Decided that ' + journalId);
-          // console.log(hasAttachments);
+          console.log('Decided that ' + journalId);
+          console.log(hasAttachments);
           if (hasAttachments) {
-            // console.log('upload!');
+            console.log('upload!');
             this.updateField({index: i, field: 'transaction_journal_id', value: journalId});
+            // set upload trigger?
+            this.updateField({index: i, field: 'uploadTrigger', value: true});
+            //this.transactions[i].uploadTrigger = true;
             anyAttachments = true;
           }
         }
@@ -302,11 +305,12 @@ export default {
       this.updateField({index: payload.index, field: 'attachments', value: true});
     },
     finaliseSubmission: function () {
+      console.log('finaliseSubmission');
       if (0 === this.submittedAttachments) {
-        // console.log('submittedAttachments = ' + this.submittedAttachments);
+        console.log('submittedAttachments = ' + this.submittedAttachments);
         return;
       }
-      //console.log('In finaliseSubmission');
+      console.log('In finaliseSubmission');
       if (false === this.createAnother) {
         window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
         return;
@@ -318,7 +322,7 @@ export default {
         this.errorMessage = '';
         this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
       }
-
+      console.log('here we are');
       // enable flags:
       this.enableSubmit = true;
       this.submittedTransaction = false;
@@ -359,7 +363,7 @@ export default {
      */
     submitTransaction: function (event) {
       event.preventDefault();
-      // console.log('submitTransaction()');
+      console.log('submitTransaction()');
       // disable the submit button:
       this.enableSubmit = false;
 

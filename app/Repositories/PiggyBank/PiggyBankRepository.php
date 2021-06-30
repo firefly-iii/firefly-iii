@@ -73,7 +73,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function find(int $piggyBankId): ?PiggyBank
     {
-        $piggyBank = $this->user->piggyBanks()->find($piggyBankId);
+        return $this->user->piggyBanks()->find($piggyBankId);
     }
 
     /**
