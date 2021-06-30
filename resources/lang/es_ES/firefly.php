@@ -1691,8 +1691,8 @@ return [
     'store_as_new'                          => 'Almacenar como una nueva transacción en lugar de actualizar.',
     'reset_after'                           => 'Restablecer formulario después del envío',
     'errors_submission'                     => 'Hubo un problema con su envío. Por favor, compruebe los errores.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Expandir división',
+    'transaction_collapse_split'            => 'Colapsar división',
 
     // object groups
     'default_group_title_name'              => '(sin agrupación)',

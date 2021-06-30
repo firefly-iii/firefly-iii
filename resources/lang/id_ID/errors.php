@@ -43,9 +43,9 @@ return [
     'github_help'             => 'Dapatkan bantuan di GitHub',
     'github_instructions'     => 'Anda sangat diperbolehkan untuk membuka isu baru <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">di GitHub</a></strong>.',
     'use_search'              => 'Gunakan pencarian!',
-    'include_info'            => 'Include the information <a href=":link">from this debug page</a>.',
-    'tell_more'               => 'Tell us more than "it says Whoops!"',
-    'include_logs'            => 'Include error logs (see above).',
-    'what_did_you_do'         => 'Tell us what you were doing.',
+    'include_info'            => 'Sertakan informasi <a href=":link"> dari halaman debug ini</a>.',
+    'tell_more'               => 'Beri tahu kami selain "kata Whoops!"',
+    'include_logs'            => 'Sertakan log kesalahan (lihat di atas).',
+    'what_did_you_do'         => 'Beritahu kami apa yang anda lakukan.',
 
 ];
