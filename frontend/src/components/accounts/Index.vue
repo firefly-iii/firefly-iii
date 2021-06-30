@@ -253,7 +253,7 @@ export default {
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
     this.perPage = this.listPageSize ?? 51;
-    console.log('Per page: ' + this.perPage);
+    // console.log('Per page: ' + this.perPage);
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
@@ -369,9 +369,9 @@ export default {
       this.fields.push({key: 'menu', label: ' ', sortable: false});
     },
     getAccountList: function () {
-      console.log('getAccountList()');
+      // console.log('getAccountList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
-        console.log('Index ready, not loading and not already downloaded. Reset.');
+        // console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
         this.accounts = [];
@@ -379,13 +379,13 @@ export default {
         this.downloadAccountList(1);
       }
       if (this.indexReady && !this.loading && this.downloaded) {
-        console.log('Index ready, not loading and not downloaded.');
+        // console.log('Index ready, not loading and not downloaded.');
         this.loading = true;
         this.filterAccountList();
       }
     },
     downloadAccountList: function (page) {
-      console.log('downloadAccountList(' + page + ')');
+      // console.log('downloadAccountList(' + page + ')');
       configureAxios().then(async (api) => {
         api.get('./api/v1/accounts?type=' + this.type + '&page=' + page + '&key=' + this.cacheKey)
             .then(response => {
@@ -407,7 +407,7 @@ export default {
       });
     },
     filterAccountListAndReturn: function (allAccounts) {
-      console.log('filterAccountListAndReturn()');
+      // console.log('filterAccountListAndReturn()');
       let accounts = [];
       for (let i in allAccounts) {
         if (allAccounts.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
@@ -461,7 +461,7 @@ export default {
     },
     parsePages: function (data) {
       this.total = parseInt(data.pagination.total);
-      console.log('Total is now ' + this.total);
+      // console.log('Total is now ' + this.total);
     },
     // parseAccountsAndReturn: function (data) {
     //   console.log('In parseAccountsAndReturn()');

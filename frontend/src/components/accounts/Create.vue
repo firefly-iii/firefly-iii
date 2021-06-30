@@ -239,7 +239,7 @@ export default {
       axios.post(url, submission)
           .then(response => {
             this.errors = lodashClonedeep(this.defaultErrors);
-            console.log('success!');
+            // console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
             this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});

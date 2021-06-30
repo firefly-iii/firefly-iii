@@ -102,7 +102,7 @@ Vue.component('date-picker', DatePicker)
 export default {
   name: "Calendar",
   created() {
-    console.log('Now in calendar created');
+    // console.log('Now in calendar created');
     this.ready = true;
     this.locale = localStorage.locale ?? 'en-US';
   },
@@ -129,9 +129,9 @@ export default {
         ],
     ),
     resetDate: function () {
-      console.log('Reset date to');
-      console.log(this.defaultStart);
-      console.log(this.defaultEnd);
+      // console.log('Reset date to');
+      // console.log(this.defaultStart);
+      // console.log(this.defaultEnd);
       this.range.start = this.defaultStart;
       this.range.end = this.defaultEnd;
       this.setStart(this.defaultStart);
@@ -512,7 +512,7 @@ export default {
     },
     generatePeriods: function () {
       this.periods = [];
-      console.log('The view range is "' + this.viewRange + '".');
+      // console.log('The view range is "' + this.viewRange + '".');
       switch (this.viewRange) {
         case '1D':
           this.generateDaily();
