@@ -98,7 +98,7 @@ return [
     'feature_flags'                => [
         'export'       => true,
         'telemetry'    => false,
-        'webhooks'     => false,
+        'webhooks'     => true,
         'handle_debts' => true,
     ],
     'version'                      => '5.6.0-alpha.1',
