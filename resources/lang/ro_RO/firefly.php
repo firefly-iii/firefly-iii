@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III a găsit :count tranzacție în :time secunde.| Firefly III a găsit :count tranzacții în :time secunde.',
     'search_found_more_transactions'                      => 'Firefly III a găsit mai mult de :count tranzacții în :time secunde.',
     'search_for_query'                                    => 'Firefly III este în căutarea pentru tranzacţii cu toate aceste cuvinte în ele: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Data tranzacţiei este ":value"',
     'search_modifier_id'                                  => 'ID-ul tranzacţiei este ":value"',
     'search_modifier_date_before'                         => 'Data tranzacției este înainte sau pe ":value"',

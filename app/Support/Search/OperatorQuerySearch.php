@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Date;
@@ -62,25 +61,23 @@ use Log;
  */
 class OperatorQuerySearch implements SearchInterface
 {
-    private AccountRepositoryInterface         $accountRepository;
-    private BillRepositoryInterface            $billRepository;
-    private BudgetRepositoryInterface          $budgetRepository;
-    private CategoryRepositoryInterface        $categoryRepository;
-    private GroupCollectorInterface            $collector;
-    private CurrencyRepositoryInterface        $currencyRepository;
-    private Carbon                             $date;
-    private int                                $limit;
-    private Collection                         $modifiers;
-    private Collection                         $operators;
-    private string                             $originalQuery;
-    private int                                $page;
-    private ParsedQuery                        $query;
-    private float                              $startTime;
-    private TagRepositoryInterface             $tagRepository;
-    private TransactionTypeRepositoryInterface $typeRepository; // obsolete
-    private User                               $user;
-    private array                              $validOperators;
-    private array                              $words;
+    private AccountRepositoryInterface  $accountRepository;
+    private BillRepositoryInterface     $billRepository;
+    private BudgetRepositoryInterface   $budgetRepository;
+    private CategoryRepositoryInterface $categoryRepository;
+    private GroupCollectorInterface     $collector;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private Carbon                      $date;
+    private int                         $limit;
+    private Collection                  $operators;
+    private int                         $page;
+    private ParsedQuery                 $query;
+    private float                       $startTime;
+    private TagRepositoryInterface      $tagRepository;
+    private User                        $user;
+    private array                       $validOperators;
+    private array                       $words;
+    private array                       $invalidOperators;
 
     /**
      * OperatorQuerySearch constructor.
@@ -90,12 +87,11 @@ class OperatorQuerySearch implements SearchInterface
     public function __construct()
     {
         Log::debug('Constructed OperatorQuerySearch');
-        $this->modifiers          = new Collection; // obsolete
         $this->operators          = new Collection;
         $this->page               = 1;
         $this->words              = [];
+        $this->invalidOperators   = [];
         $this->limit              = 25;
-        $this->originalQuery      = '';
         $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
@@ -105,7 +101,6 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->tagRepository      = app(TagRepositoryInterface::class);
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
     }
 
     /**
@@ -151,9 +146,8 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser              = new QueryParser();
-        $this->query         = $parser->parse($query);
-        $this->originalQuery = $query;
+        $parser      = new QueryParser();
+        $this->query = $parser->parse($query);
 
         Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
         foreach ($this->query->getNodes() as $searchNode) {
@@ -200,6 +194,14 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidOperators(): array
+    {
+        return $this->invalidOperators;
     }
 
     /**
@@ -277,6 +279,11 @@ class OperatorQuerySearch implements SearchInterface
                             'value' => (string)$value,
                         ]
                     );
+                } else {
+                    $this->invalidOperators[] = [
+                        'type'  => $operator,
+                        'value' => (string)$value,
+                    ];
                 }
                 break;
         }

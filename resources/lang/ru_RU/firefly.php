@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III нашёл :count транзакции за :time секунд.|Firefly III нашёл :count транзакций за :time секунд.',
     'search_found_more_transactions'                      => 'Firefly III нашёл более :count транзакций за :time секунд.',
     'search_for_query'                                    => 'Firefly III ищет транзакции со всеми этими словами: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Дата транзакции — ":value"',
     'search_modifier_id'                                  => 'ID транзакции - ":value"',
     'search_modifier_date_before'                         => 'Дата транзакции до или равна ":value"',

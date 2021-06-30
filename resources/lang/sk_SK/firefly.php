@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III našiel :count transakciu za :time sekúnd.|Firefly III našiel :count transakcií za :time sekúnd.',
     'search_found_more_transactions'                      => 'Firefly III našiel viac než :count transakcií za :time sekúnd.',
     'search_for_query'                                    => 'Firefly III vyhľadáva transakcie obsahujúce tieto výrazy: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Dátum transakcie je ":value"',
     'search_modifier_id'                                  => 'ID transakcie je ":value"',
     'search_modifier_date_before'                         => 'Dátum transakcie je pred alebo v deň ":value"',

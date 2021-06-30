@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Το Firefly III βρήκε :count συναλλαγή σε :time δευτερόλεπτα.|Το Firefly III βρήκε :count συναλλαγές σε :time δευτερόλεπτα.',
     'search_found_more_transactions'                      => 'Το Firefly III βρήκε περισσότερες από :count συναλλαγές σε :time δευτερόλεπτα.',
     'search_for_query'                                    => 'Το Firefly III αναζητεί για συναλλαγές που περιέχουν όλες αυτές τις λέξεις: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Η ημερομηνία συναλλαγής είναι ":value"',
     'search_modifier_id'                                  => 'Το ID συναλλαγής είναι ":value"',
     'search_modifier_date_before'                         => 'Η ημερομηνία συναλλαγής είναι πριν ή στις ":value"',

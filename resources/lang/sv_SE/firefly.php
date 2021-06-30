@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III hittade :count transaktion i :time sekunder.|Firefly III hittade :count transaktioner i :time sekunder.',
     'search_found_more_transactions'                      => 'Firefly III hittade mer än :count transaktioner i :time sekunder.',
     'search_for_query'                                    => 'Firefly III söker efter transaktioner med dessa ord i dem: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Transaktions datum är ":value"',
     'search_modifier_id'                                  => 'Transaktions ID är: ":value"',
     'search_modifier_date_before'                         => 'Transaktions datum är före eller på ":value"',

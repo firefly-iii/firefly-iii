@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Tìm thấy Firefly III :count giao dịch trong :time giây. | Firefly III được tìm thấy :count giao dịch trong :time giây.',
     'search_found_more_transactions'                      => 'Firefly III đã tìm thấy hơn :count giao dịch trong :time giây.',
     'search_for_query'                                    => 'Firefly III đang tìm kiếm các giao dịch với tất cả những từ này trong đó: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Ngày giao dịch là ":value"',
     'search_modifier_id'                                  => 'ID giao dịch là ":value"',
     'search_modifier_date_before'                         => 'Ngày giao dịch phải trước hoặc ngay ":value"',

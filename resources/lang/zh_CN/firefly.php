@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III 找到 :count 条交易，用时 :time 秒。|Firefly III 找到 :count 条交易，用时 :time 秒。',
     'search_found_more_transactions'                      => 'Firefly III 找到超过 :count 条交易，用时 :time 秒。',
     'search_for_query'                                    => 'Firefly III 正在搜索包含 <span class="text-info">:query</span> 的交易',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => '交易日期为“:value”',
     'search_modifier_id'                                  => '交易 ID 为 “:value”',
     'search_modifier_date_before'                         => '交易日期为“:value”或之前',

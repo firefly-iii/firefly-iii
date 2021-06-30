@@ -280,6 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III :count tranzakciót talált :time másodperc alatt.|Firefly III :count tranzakciót talált :time másodperc alatt.',
     'search_found_more_transactions'                      => 'A Firefly III :count tranzakciót talált :time másodperc alatt.',
     'search_for_query'                                    => 'A Firefly III tranzakciókat keres amelyben ez a kifejezés található: <span class="text-info">:query</span>',
+    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
     'search_modifier_date_is'                             => 'Tranzakció dátuma: :value',
     'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Tranzakció dátuma :value előtt van',
