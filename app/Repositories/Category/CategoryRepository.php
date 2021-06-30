@@ -87,17 +87,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function findByName(string $name): ?Category
     {
-        $categories = $this->user->categories()->get(['categories.*']);
-
-// See reference nr. 7
-
-        foreach ($categories as $category) {
-            if ($category->name === $name) {
-                return $category;
-            }
-        }
-
-        return null;
+        return $this->user->categories()->where('name', $name)->first(['categories.*']);
     }
 
     /**
@@ -111,7 +101,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         Log::debug('Now in findCategory()');
         Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
-        $result = $this->findNull((int)$categoryId);
+        $result = $this->find((int)$categoryId);
         if (null === $result) {
             Log::debug(sprintf('Searching for category with name %s...', $categoryName));
             $result = $this->findByName((string)$categoryName);
@@ -135,7 +125,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return Category|null
      */
-    public function findNull(int $categoryId): ?Category
+    public function find(int $categoryId): ?Category
     {
         return $this->user->categories()->find($categoryId);
     }

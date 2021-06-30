@@ -104,8 +104,8 @@ class StoreRequest extends FormRequest
         $data      = $validator->getData();
         $inwardId  = (int)($data['inward_id'] ?? 0);
         $outwardId = (int)($data['outward_id'] ?? 0);
-        $inward    = $journalRepos->findNull($inwardId);
-        $outward   = $journalRepos->findNull($outwardId);
+        $inward    = $journalRepos->find($inwardId);
+        $outward   = $journalRepos->find($outwardId);
 
         if (null === $inward) {
             $validator->errors()->add('inward_id', 'Invalid inward ID.');

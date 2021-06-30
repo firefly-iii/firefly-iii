@@ -55,8 +55,8 @@ class MoveTransactionsRequest extends FormRequest
                 if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
                     $repository = app(AccountRepositoryInterface::class);
                     $repository->setUser(auth()->user());
-                    $original    = $repository->findNull((int)$data['original_account']);
-                    $destination = $repository->findNull((int)$data['destination_account']);
+                    $original    = $repository->find((int)$data['original_account']);
+                    $destination = $repository->find((int)$data['destination_account']);
                     if ($original->accountType->type !== $destination->accountType->type) {
                         $validator->errors()->add('title', (string)trans('validation.same_account_type'));
 

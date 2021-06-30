@@ -326,7 +326,7 @@ class SearchRuleEngine implements RuleEngineInterface
         if (0 !== $journalId) {
             $repository = app(JournalRepositoryInterface::class);
             $repository->setUser($this->user);
-            $journal = $repository->findNull($journalId);
+            $journal = $repository->find($journalId);
             if (null !== $journal) {
                 $date = $journal->date;
                 Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));

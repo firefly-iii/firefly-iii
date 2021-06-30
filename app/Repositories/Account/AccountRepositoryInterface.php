@@ -95,7 +95,7 @@ interface AccountRepositoryInterface
      *
      * @return Account|null
      */
-    public function findNull(int $accountId): ?Account;
+    public function find(int $accountId): ?Account;
 
     /**
      * @param Account $account

@@ -46,7 +46,7 @@ trait ReconciliationValidation
 
             return false;
         }
-        $result = $this->accountRepository->findNull($accountId);
+        $result = $this->accountRepository->find($accountId);
         if (null === $result) {
             $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => '']);
             Log::debug('Return FALSE');
@@ -92,7 +92,7 @@ trait ReconciliationValidation
 
             return false;
         }
-        $result = $this->accountRepository->findNull($accountId);
+        $result = $this->accountRepository->find($accountId);
         $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
         if (null === $result) {
             Log::debug('Return FALSE');

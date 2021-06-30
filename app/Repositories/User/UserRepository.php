@@ -183,7 +183,7 @@ class UserRepository implements UserRepositoryInterface
      *
      * @return User|null
      */
-    public function findNull(int $userId): ?User
+    public function find(int $userId): ?User
     {
         return User::find($userId);
     }
@@ -269,8 +269,6 @@ class UserRepository implements UserRepositoryInterface
      */
     public function hasRole(User $user, string $role): bool
     {
-// See reference nr. 8
-
         /** @var Role $userRole */
         foreach ($user->roles as $userRole) {
             if ($userRole->name === $role) {

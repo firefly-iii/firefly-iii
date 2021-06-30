@@ -89,7 +89,7 @@ class FixFrontpageAccounts extends Command
             /** @var string $accountId */
             foreach ($data as $accountId) {
                 $accountIdInt = (int)$accountId;
-                $account      = $repository->findNull($accountIdInt);
+                $account      = $repository->find($accountIdInt);
                 if (null !== $account
                     && in_array($account->accountType->type, [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE], true)
                     && true === $account->active) {

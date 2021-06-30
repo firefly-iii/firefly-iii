@@ -161,7 +161,7 @@ class EventServiceProvider extends ServiceProvider
             static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
-                $user       = $repository->findNull((int)$oauthClient->user_id);
+                $user       = $repository->find((int)$oauthClient->user_id);
                 if (null === $user) {
                     Log::info('OAuth client generated but no user associated.');
 

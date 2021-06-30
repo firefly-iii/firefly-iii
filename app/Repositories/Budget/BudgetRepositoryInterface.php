@@ -74,13 +74,12 @@ interface BudgetRepositoryInterface
     public function findByName(?string $name): ?Budget;
 
     /**
-* See reference nr. 12
      *
      * @param int|null $budgetId
      *
      * @return Budget|null
      */
-    public function findNull(int $budgetId = null): ?Budget;
+    public function find(int $budgetId = null): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.

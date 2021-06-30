@@ -38,7 +38,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -344,20 +343,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Find by ID, return NULL if not found.
-     * Used in Import Currency!
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     * @deprecated
-     */
-    public function findNull(int $currencyId): ?TransactionCurrency
-    {
-        return TransactionCurrency::find($currencyId);
     }
 
     /**

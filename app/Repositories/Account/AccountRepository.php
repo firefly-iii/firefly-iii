@@ -130,17 +130,7 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
-// See reference nr. 9
-
-        $accounts = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->iban === $iban) {
-                return $account;
-            }
-        }
-
-        return null;
+        return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
     /**
@@ -161,7 +151,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $accounts = $query->get(['accounts.*']);
 
-// See reference nr. 10
+        // See reference nr. 10
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -181,7 +171,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account|null
      */
-    public function findNull(int $accountId): ?Account
+    public function find(int $accountId): ?Account
     {
         return $this->user->accounts()->find($accountId);
     }

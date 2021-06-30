@@ -87,9 +87,9 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal|null
      */
-    public function findNull(int $journalId): ?TransactionJournal
+    public function find(int $journalId): ?TransactionJournal
     {
-        return $this->user->transactionJournals()->where('id', $journalId)->first();
+        return $this->user->transactionJournals()->find($journalId);
     }
 
     /**
@@ -121,62 +121,6 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return $transaction->account;
-    }
-
-    /**
-     * Return a list of all destination accounts related to journal.
-     *
-     * @param TransactionJournal $journal
-     * @param bool               $useCache
-     *
-     * @return Collection
-     */
-    public function getJournalDestinationAccounts(TransactionJournal $journal, bool $useCache = true): Collection
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty($journal->id);
-        $cache->addProperty('destination-account-list');
-        if ($useCache && $cache->has()) {
-            return $cache->get(); 
-        }
-        $transactions = $journal->transactions()->where('amount', '>', 0)->orderBy('transactions.account_id')->with('account')->get();
-        $list         = new Collection;
-        /** @var Transaction $t */
-        foreach ($transactions as $t) {
-            $list->push($t->account);
-        }
-        $list = $list->unique('id');
-        $cache->store($list);
-
-        return $list;
-    }
-
-    /**
-     * Return a list of all source accounts related to journal.
-     *
-     * @param TransactionJournal $journal
-     * @param bool               $useCache
-     *
-     * @return Collection
-     */
-    public function getJournalSourceAccounts(TransactionJournal $journal, bool $useCache = true): Collection
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty($journal->id);
-        $cache->addProperty('source-account-list');
-        if ($useCache && $cache->has()) {
-            return $cache->get(); 
-        }
-        $transactions = $journal->transactions()->where('amount', '<', 0)->orderBy('transactions.account_id')->with('account')->get();
-        $list         = new Collection;
-        /** @var Transaction $t */
-        foreach ($transactions as $t) {
-            $list->push($t->account);
-        }
-        $list = $list->unique('id');
-        $cache->store($list);
-
-        return $list;
     }
 
     /**

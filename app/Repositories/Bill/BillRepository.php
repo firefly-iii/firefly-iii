@@ -146,18 +146,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function findByName(string $name): ?Bill
     {
-        $bills = $this->user->bills()->get(['bills.*']);
-
-// See reference nr. 6
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            if ($bill->name === $name) {
-                return $bill;
-            }
-        }
-
-        return null;
+        return $this->user->bills()->where('name', $name)->first(['bills.*']);
     }
 
     /**
@@ -505,6 +494,7 @@ class BillRepository implements BillRepositoryInterface
 
             $currentStart = clone $nextExpectedMatch;
         }
+
         return $set;
     }
 
@@ -641,7 +631,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
@@ -669,7 +659,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;

@@ -113,7 +113,7 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag|null
      */
-    public function findNull(int $tagId): ?Tag
+    public function find(int $tagId): ?Tag
     {
         return $this->user->tags()->find($tagId);
     }

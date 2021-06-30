@@ -334,7 +334,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
@@ -372,7 +372,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -381,7 +381,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->findNull((int)$accountId);
+                    $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }

@@ -59,10 +59,10 @@ trait RenderPartialViews
 
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budget           = $budgetRepository->findNull((int)$attributes['budgetId']);
+        $budget           = $budgetRepository->find((int)$attributes['budgetId']);
 
         $accountRepos = app(AccountRepositoryInterface::class);
-        $account      = $accountRepos->findNull((int)$attributes['accountId']);
+        $account      = $accountRepos->find((int)$attributes['accountId']);
 
         $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
 
@@ -110,7 +110,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $budget = $budgetRepository->findNull((int)$attributes['budgetId']);
+        $budget = $budgetRepository->find((int)$attributes['budgetId']);
         if (null === $budget) {
             $budget = new Budget;
         }
@@ -139,7 +139,7 @@ trait RenderPartialViews
 
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = app(CategoryRepositoryInterface::class);
-        $category           = $categoryRepository->findNull((int)$attributes['categoryId']);
+        $category           = $categoryRepository->find((int)$attributes['categoryId']);
         $journals           = $popupHelper->byCategory($category, $attributes);
 
         try {
@@ -227,7 +227,7 @@ trait RenderPartialViews
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
 
-        $account = $accountRepository->findNull((int)$attributes['accountId']);
+        $account = $accountRepository->find((int)$attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown account. Apologies.';
@@ -348,7 +348,7 @@ trait RenderPartialViews
 
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
-        $account     = $accountRepository->findNull((int)$attributes['accountId']);
+        $account     = $accountRepository->find((int)$attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown category. Apologies.';

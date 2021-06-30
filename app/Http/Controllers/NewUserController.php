@@ -98,7 +98,7 @@ class NewUserController extends Controller
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->findNull((int) $request->input('amount_currency_id_bank_balance'));
+        $currency = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {

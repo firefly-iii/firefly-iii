@@ -87,7 +87,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function find(int $groupId): ?TransactionGroup
     {
-        return $this->user->transactionGroups()->where('id', $groupId)->first();
+        return $this->user->transactionGroups()->find($groupId);
     }
 
     /**

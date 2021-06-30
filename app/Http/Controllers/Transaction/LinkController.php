@@ -123,7 +123,7 @@ class LinkController extends Controller
         $linkInfo = $request->getLinkInfo();
 
         Log::debug('We are here (store)');
-        $other = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
+        $other = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
 

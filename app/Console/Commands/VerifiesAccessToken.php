@@ -46,7 +46,7 @@ trait VerifiesAccessToken
         $userId = (int)$this->option('user');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull($userId);
+        $user       = $repository->find($userId);
         if (null === $user) {
             throw new FireflyException('User is unexpectedly NULL');
         }
@@ -75,7 +75,7 @@ trait VerifiesAccessToken
         $token  = (string)$this->option('token');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull($userId);
+        $user       = $repository->find($userId);
 
         if (null === $user) {
             Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));

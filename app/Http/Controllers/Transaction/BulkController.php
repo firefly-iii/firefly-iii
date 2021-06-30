@@ -104,7 +104,7 @@ class BulkController extends Controller
 
         foreach ($journalIds as $journalId) {
             $journalId = (int)$journalId;
-            $journal   = $this->repository->findNull($journalId);
+            $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
                 $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->string('tags')));

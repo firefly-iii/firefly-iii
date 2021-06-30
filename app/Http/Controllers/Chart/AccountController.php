@@ -123,7 +123,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
                 $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
@@ -568,7 +568,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
                 $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [

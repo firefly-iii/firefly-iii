@@ -53,7 +53,7 @@ class ExportRequest extends FormRequest
         foreach ($parts as $part) {
             $accountId = (int)$part;
             if (0 !== $accountId) {
-                $account = $repository->findNull($accountId);
+                $account = $repository->find($accountId);
                 if (null !== $account && AccountType::ASSET === $account->accountType->type) {
                     $accounts->push($account);
                 }

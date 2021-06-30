@@ -127,7 +127,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         Log::debug('Now in findBudget()');
         Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
-        $result = $this->findNull((int)$budgetId);
+        $result = $this->find((int)$budgetId);
         if (null === $result && null !== $budgetName && '' !== $budgetName) {
             Log::debug(sprintf('Searching for budget with name %s...', $budgetName));
             $result = $this->findByName((string)$budgetName);
@@ -164,12 +164,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return Budget|null
      */
-    public function findNull(int $budgetId = null): ?Budget
+    public function find(int $budgetId = null): ?Budget
     {
-        if (null === $budgetId) {
-            return null;
-        }
-
         return $this->user->budgets()->find($budgetId);
     }
 
@@ -348,7 +344,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $repos    = app(CurrencyRepositoryInterface::class);
         $currency = null;
         if (array_key_exists('currency_id', $data)) {
-            $currency = $repos->findNull((int)$data['currency_id']);
+            $currency = $repos->find((int)$data['currency_id']);
         }
         if (array_key_exists('currency_code', $data)) {
             $currency = $repos->findByCode((string)$data['currency_code']);
@@ -454,7 +450,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $repos        = app(CurrencyRepositoryInterface::class);
             $currencyId   = (int)($data['currency_id'] ?? 0);
             $currencyCode = (string)($data['currency_code'] ?? '');
-            $currency     = $repos->findNull($currencyId);
+            $currency     = $repos->find($currencyId);
             if (null === $currency) {
                 $currency = $repos->findByCodeNull($currencyCode);
             }

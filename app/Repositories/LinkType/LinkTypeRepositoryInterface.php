@@ -79,7 +79,7 @@ interface LinkTypeRepositoryInterface
      *
      * @return LinkType|null
      */
-    public function findNull(int $linkTypeId): ?LinkType;
+    public function find(int $linkTypeId): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).

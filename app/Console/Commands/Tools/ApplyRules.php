@@ -213,7 +213,7 @@ class ApplyRules extends Command
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
             $accountId = (int)$accountId;
-            $account   = $accountRepository->findNull($accountId);
+            $account   = $accountRepository->find($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
             }

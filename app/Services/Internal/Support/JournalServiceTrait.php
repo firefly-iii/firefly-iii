@@ -96,7 +96,7 @@ trait JournalServiceTrait
         $search = null;
         // first attempt, find by ID.
         if (null !== $data['id']) {
-            $search = $this->accountRepository->findNull((int) $data['id']);
+            $search = $this->accountRepository->find((int) $data['id']);
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
                 Log::debug(
                     sprintf('Found "account_id" object: #%d, "%s" of type %s', $search->id, $search->name, $search->accountType->type)

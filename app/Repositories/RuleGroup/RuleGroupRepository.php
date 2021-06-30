@@ -119,12 +119,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function find(int $ruleGroupId): ?RuleGroup
     {
-        $group = $this->user->ruleGroups()->find($ruleGroupId);
-        if (null === $group) {
-            return null;
-        }
-
-        return $group;
+        return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
     /**

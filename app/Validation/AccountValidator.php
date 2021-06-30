@@ -228,7 +228,7 @@ class AccountValidator
     {
         // find by ID
         if ($accountId > 0) {
-            $first = $this->accountRepository->findNull($accountId);
+            $first = $this->accountRepository->find($accountId);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
                 return $first;
             }

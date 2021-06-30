@@ -103,7 +103,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
 
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->findNull((int)$journalId);
+                $journal = $this->repository->find((int)$journalId);
                 if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
@@ -197,7 +197,7 @@ class MassController extends Controller
      */
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
-        $journal = $this->repository->findNull($journalId);
+        $journal = $this->repository->find($journalId);
         if (null === $journal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); 
         }

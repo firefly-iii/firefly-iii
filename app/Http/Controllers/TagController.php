@@ -208,7 +208,7 @@ class TagController extends Controller
         $count = 0;
         foreach ($tags as $tagId) {
             $tagId = (int)$tagId;
-            $tag   = $this->repository->findNull($tagId);
+            $tag   = $this->repository->find($tagId);
             if (null !== $tag) {
                 $this->repository->destroy($tag);
                 $count++;

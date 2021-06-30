@@ -105,12 +105,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function find(int $ruleId): ?Rule
     {
-        $rule = $this->user->rules()->find($ruleId);
-        if (null === $rule) {
-            return null;
-        }
-
-        return $rule;
+        return $this->user->rules()->find($ruleId);
     }
 
     /**

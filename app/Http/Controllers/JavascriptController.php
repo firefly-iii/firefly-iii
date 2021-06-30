@@ -131,7 +131,7 @@ class JavascriptController extends Controller
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $account    = $repository->findNull((int) $request->get('account'));
+        $account    = $repository->find((int) $request->get('account'));
         $currency = app('amount')->getDefaultCurrency();
         if(null !== $account) {
             $currency = $repository->getAccountCurrency($account) ?? $currency;

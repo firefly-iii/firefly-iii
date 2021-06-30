@@ -74,7 +74,7 @@ interface TagRepositoryInterface
      *
      * @return Tag|null
      */
-    public function findNull(int $tagId): ?Tag;
+    public function find(int $tagId): ?Tag;
 
     /**
      * @param Tag $tag

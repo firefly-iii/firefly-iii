@@ -164,15 +164,6 @@ interface CurrencyRepositoryInterface
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
 
     /**
-     * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findNull(int $currencyId): ?TransactionCurrency;
-
-    /**
      * @return Collection
      */
     public function get(): Collection;

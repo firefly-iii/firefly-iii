@@ -175,7 +175,7 @@ class BasicController extends Controller
         // format amounts:
         $keys = array_keys($sums);
         foreach ($keys as $currencyId) {
-            $currency = $this->currencyRepos->findNull($currencyId);
+            $currency = $this->currencyRepos->find($currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -239,7 +239,7 @@ class BasicController extends Controller
         $return       = [];
         foreach ($paidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->findNull((int)$currencyId);
+            $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
             }
@@ -259,7 +259,7 @@ class BasicController extends Controller
 
         foreach ($unpaidAmount as $currencyId => $amount) {
             $amount   = bcmul($amount, '-1');
-            $currency = $this->currencyRepos->findNull((int)$currencyId);
+            $currency = $this->currencyRepos->find((int)$currencyId);
             if (null === $currency) {
                 continue;
             }

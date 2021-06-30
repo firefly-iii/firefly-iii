@@ -55,7 +55,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->findNull((int)$accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -78,7 +78,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->findNull((int)$budgetId);
+                $budget = $repository->find((int)$budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -101,7 +101,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->findNull((int)$categoryId);
+                $category = $repository->find((int)$categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -124,7 +124,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection;
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->findNull((int)$accountId);
+                $account = $repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -209,7 +209,7 @@ class ReportFormRequest extends FormRequest
                     $collection->push($tag);
                     continue;
                 }
-                $tag = $repository->findNull((int)$tagTag);
+                $tag = $repository->find((int)$tagTag);
                 if (null !== $tag) {
                     $collection->push($tag);
                 }
