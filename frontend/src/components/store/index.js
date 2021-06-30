@@ -66,7 +66,7 @@ export default new Vuex.Store(
                 state.currencyPreference = payload.payload;
             },
             initialiseStore(state) {
-                console.log('Now in initialiseStore()')
+                // console.log('Now in initialiseStore()')
                 // if locale in local storage:
                 if (localStorage.locale) {
                     state.locale = localStorage.locale;
@@ -98,7 +98,7 @@ export default new Vuex.Store(
         actions: {
 
             updateCurrencyPreference(context) {
-                console.log('Now in updateCurrencyPreference');
+                // console.log('Now in updateCurrencyPreference');
                 if (localStorage.currencyPreference) {
                     context.commit('setCurrencyPreference', {payload: JSON.parse(localStorage.currencyPreference)});
                     return;

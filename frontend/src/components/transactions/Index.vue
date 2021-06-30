@@ -228,7 +228,7 @@ export default {
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
     this.perPage = this.listPageSize ?? 51;
-    console.log('Per page: ' + this.perPage);
+    // console.log('Per page: ' + this.perPage);
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
@@ -275,9 +275,9 @@ export default {
       this.getTransactionList();
     },
     getTransactionList: function () {
-      console.log('getTransactionList()');
+      // console.log('getTransactionList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
-        console.log('Index ready, not loading and not already downloaded. Reset.');
+        // console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
         this.transactions = [];
@@ -286,7 +286,7 @@ export default {
       }
     },
     downloadTransactionList: function (page) {
-      console.log('downloadTransactionList(' + page + ')');
+      // console.log('downloadTransactionList(' + page + ')');
       configureAxios().then(async (api) => {
         let startStr = format(this.start, 'y-MM-dd');
         let endStr = format(this.end, 'y-MM-dd');

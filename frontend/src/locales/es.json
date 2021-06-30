@@ -138,8 +138,8 @@
         "account_type_mortgage": "Hipoteca",
         "save_transactions_by_moving_js": "Ninguna transacci\u00f3n|Guardar esta transacci\u00f3n movi\u00e9ndola a otra cuenta. |Guardar estas transacciones movi\u00e9ndolas a otra cuenta.",
         "none_in_select_list": "(ninguno)",
-        "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_expand_split": "Expandir divisi\u00f3n",
+        "transaction_collapse_split": "Colapsar divisi\u00f3n"
     },
     "list": {
         "piggy_bank": "Alcancilla",

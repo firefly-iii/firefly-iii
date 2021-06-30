@@ -533,7 +533,7 @@ export default {
       this.transactions.push(newTransaction);
     },
     submitTransaction: function (event) {
-      console.log('submitTransaction()');
+      // console.log('submitTransaction()');
       event.preventDefault();
       this.enableSubmit = false;
       let submission = {transactions: []};
@@ -559,7 +559,7 @@ export default {
       // loop each transaction (edited by the user):
       // console.log('Start of loop submitTransaction');
       for (let i in this.transactions) {
-        console.log('Index ' + i);
+        // console.log('Index ' + i);
         if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
           // console.log('Has index ' + i);
           // original transaction present:
@@ -573,21 +573,21 @@ export default {
 
           // source and destination are overruled in some cases:
           if (i > 0) {
-            console.log('i > 0');
+            // console.log('i > 0');
             diff.type = this.transactionType.toLowerCase();
             if ('deposit' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set destination to be whatever is in transaction zero:
               // of the edited transaction
               currentTransaction.destination_account_name = this.transactions[0].destination_account_name;
               currentTransaction.destination_account_id = this.transactions[0].destination_account_id;
-              console.log('Destination is now: #' + currentTransaction.destination_account_id + ': ' + currentTransaction.destination_account_name);
+              // console.log('Destination is now: #' + currentTransaction.destination_account_id + ': ' + currentTransaction.destination_account_name);
             }
 
             if ('withdrawal' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set source to be whatever is in transaction zero:
               currentTransaction.source_account_name = this.transactions[0].source_account_name;
               currentTransaction.source_account_id = this.transactions[0].source_account_id;
-              console.log('Source is now: #' + currentTransaction.source_account_id + ': ' + currentTransaction.source_account_name);
+              // console.log('Source is now: #' + currentTransaction.source_account_id + ': ' + currentTransaction.source_account_name);
             }
           }
 
@@ -699,8 +699,8 @@ export default {
     },
 
     submitData: function (shouldSubmit, submission) {
-      console.log('submitData');
-      console.log(submission);
+      // console.log('submitData');
+      // console.log(submission);
       if (!shouldSubmit) {
         // console.log('No need to submit transaction.');
         return Promise.resolve({});

@@ -57,27 +57,37 @@ export default {
       this.selectedCurrency = value;
     },
     sourceCurrencyId: function (value) {
+      // console.log('Watch sourceCurrencyId');
       this.srcCurrencyId = value;
+      this.lockCurrency();
     },
     destinationCurrencyId: function (value) {
+      // console.log('Watch destinationCurrencyId');
       this.dstCurrencyId = value;
+      this.lockCurrency();
     },
     selectedCurrency: function (value) {
       this.$emit('set-field', {field: 'foreign_currency_id', index: this.index, value: value});
     },
     transactionType: function (value) {
-      this.lockedCurrency = 0;
-      if ('Transfer' === value) {
-        this.lockedCurrency = this.dstCurrencyId;
-        this.selectedCurrency = this.dstCurrencyId;
-      }
-      this.filterCurrencies();
+      this.lockCurrency();
     },
   },
   created: function () {
+    // console.log('Created TransactionForeignCurrency');
     this.getAllCurrencies();
   },
   methods: {
+    lockCurrency: function () {
+      // console.log('Lock currency (' + this.transactionType + ')');
+      this.lockedCurrency = 0;
+      if ('transfer' === this.transactionType.toLowerCase()) {
+        // console.log('IS a transfer!');
+        this.lockedCurrency = parseInt(this.dstCurrencyId);
+        this.selectedCurrency = parseInt(this.dstCurrencyId);
+      }
+      this.filterCurrencies();
+    },
     getAllCurrencies: function () {
       axios.get('./api/v1/autocomplete/currencies')
           .then(response => {
@@ -88,17 +98,22 @@ export default {
 
     },
     filterCurrencies() {
+      // console.log('filterCurrencies');
+      // console.log(this.lockedCurrency);
       // if a currency is locked only that currency can (and must) be selected:
       if (0 !== this.lockedCurrency) {
+        // console.log('Here we are');
         for (let key in this.allCurrencies) {
           if (this.allCurrencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             let current = this.allCurrencies[key];
-            if (current.id === this.lockedCurrency) {
+            if (parseInt(current.id) === this.lockedCurrency) {
               this.selectableCurrencies = [current];
               this.selectedCurrency = current.id;
             }
           }
         }
+        // if source + dest ID are the same, skip the whole field.
+
         return;
       }
 
@@ -118,7 +133,7 @@ export default {
   },
   computed: {
     isVisible: function () {
-      return !('Transfer' === this.transactionType && this.srcCurrencyId === this.dstCurrencyId);
+      return !('transfer' === this.transactionType.toLowerCase() && parseInt(this.srcCurrencyId) === parseInt(this.dstCurrencyId));
     }
   }
 }

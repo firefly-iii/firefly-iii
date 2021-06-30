@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - New LDAP code: Firefly III may accidentally create a new account for you instead of reusing the old one.
 
+No LDAP filter yet.
+
 - Disable webhooks with API command
 - static cron token is new?
 - update ldap
