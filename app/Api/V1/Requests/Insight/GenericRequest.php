@@ -95,7 +95,7 @@ class GenericRequest extends FormRequest
         if (is_array($array)) {
             foreach ($array as $accountId) {
                 $accountId = (int)$accountId;
-                $account   = $repository->findNull($accountId);
+                $account   = $repository->find($accountId);
                 if (null !== $account) {
                     $this->accounts->push($account);
                 }
@@ -159,7 +159,7 @@ class GenericRequest extends FormRequest
         if (is_array($array)) {
             foreach ($array as $budgetId) {
                 $budgetId = (int)$budgetId;
-                $budget   = $repository->findNull($budgetId);
+                $budget   = $repository->find($budgetId);
                 if (null !== $budgetId) {
                     $this->budgets->push($budget);
                 }
@@ -191,7 +191,7 @@ class GenericRequest extends FormRequest
         if (is_array($array)) {
             foreach ($array as $categoryId) {
                 $categoryId = (int)$categoryId;
-                $category   = $repository->findNull($categoryId);
+                $category   = $repository->find($categoryId);
                 if (null !== $categoryId) {
                     $this->categories->push($category);
                 }
@@ -281,7 +281,7 @@ class GenericRequest extends FormRequest
         if (is_array($array)) {
             foreach ($array as $tagId) {
                 $tagId = (int)$tagId;
-                $tag   = $repository->findNull($tagId);
+                $tag   = $repository->find($tagId);
                 if (null !== $tagId) {
                     $this->tags->push($tag);
                 }

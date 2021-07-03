@@ -96,7 +96,7 @@ trait JournalServiceTrait
         $search = null;
         // first attempt, find by ID.
         if (null !== $data['id']) {
-            $search = $this->accountRepository->findNull((int) $data['id']);
+            $search = $this->accountRepository->find((int) $data['id']);
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
                 Log::debug(
                     sprintf('Found "account_id" object: #%d, "%s" of type %s', $search->id, $search->name, $search->accountType->type)
@@ -194,7 +194,7 @@ trait JournalServiceTrait
      * @param array        $data
      * @param string       $preferredType
      *
-     * @return Account
+     * @return Account|null
      * @throws FireflyException
      */
     private function createAccount(?Account $account, array $data, string $preferredType): ?Account
@@ -302,7 +302,7 @@ trait JournalServiceTrait
     /**
      * @param string|null $amount
      *
-     * @return string
+     * @return string|null
      * @codeCoverageIgnore
      */
     protected function getForeignAmount(?string $amount): ?string
@@ -372,7 +372,7 @@ trait JournalServiceTrait
 
     /**
      * @param TransactionJournal $journal
-     * @param string             $notes
+     * @param string|null        $notes
      *
      * @codeCoverageIgnore
      */
@@ -405,7 +405,7 @@ trait JournalServiceTrait
      * Link tags to journal.
      *
      * @param TransactionJournal $journal
-     * @param array              $tags
+     * @param array|null         $tags
      *
      * @codeCoverageIgnore
      */

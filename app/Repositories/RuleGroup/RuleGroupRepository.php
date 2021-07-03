@@ -119,12 +119,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function find(int $ruleGroupId): ?RuleGroup
     {
-        $group = $this->user->ruleGroups()->find($ruleGroupId);
-        if (null === $group) {
-            return null;
-        }
-
-        return $group;
+        return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
     /**
@@ -414,7 +409,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         if ($newOrder > $oldOrder) {
             $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)
                        ->where('rule_groups.id', '!=', $ruleGroup->id)
-                       ->decrement('order', 1);
+                       ->decrement('order');
             $ruleGroup->order = $newOrder;
             Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
@@ -424,7 +419,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         $this->user->ruleGroups()->where('rule_groups.order', '>=', $newOrder)->where('rule_groups.order', '<', $oldOrder)
                    ->where('rule_groups.id', '!=', $ruleGroup->id)
-                   ->increment('order', 1);
+                   ->increment('order');
         $ruleGroup->order = $newOrder;
         Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
         $ruleGroup->save();

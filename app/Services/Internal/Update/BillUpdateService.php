@@ -184,14 +184,14 @@ class BillUpdateService
         if ($newOrder > $oldOrder) {
             $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
                        ->where('bills.id', '!=', $bill->id)
-                       ->decrement('bills.order', 1);
+                       ->decrement('bills.order');
             $bill->order = $newOrder;
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
                        ->where('bills.id', '!=', $bill->id)
-                       ->increment('bills.order', 1);
+                       ->increment('bills.order');
             $bill->order = $newOrder;
             $bill->save();
         }

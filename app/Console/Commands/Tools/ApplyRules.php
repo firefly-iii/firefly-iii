@@ -99,8 +99,6 @@ class ApplyRules extends Command
 
         $result = $this->verifyInput();
         if (false === $result) {
-            app('telemetry')->feature('system.command.errored', $this->signature);
-
             return 1;
         }
 
@@ -118,8 +116,6 @@ class ApplyRules extends Command
             $this->warn('    --rules=1,2,...');
             $this->warn('    --rule_groups=1,2,...');
             $this->warn('    --all_rules');
-
-            app('telemetry')->feature('system.command.errored', $this->signature);
 
             return 1;
         }
@@ -147,8 +143,6 @@ class ApplyRules extends Command
 
         // file the rule(s)
         $ruleEngine->fire();
-
-        app('telemetry')->feature('system.command.executed', $this->signature);
 
         $this->line('');
         $end = round(microtime(true) - $start, 2);
@@ -219,7 +213,7 @@ class ApplyRules extends Command
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
             $accountId = (int)$accountId;
-            $account   = $accountRepository->findNull($accountId);
+            $account   = $accountRepository->find($accountId);
             if (null !== $account && in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $finalList->push($account);
             }

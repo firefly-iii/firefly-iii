@@ -43,7 +43,7 @@ import store from '../components/store';
  * vue, uiv and vuei18n are in app_vue.js
  */
 
-// TODO pretty sure not all categories, budgets and other objects are picked up because they're paginated.
+// See reference nr. 14
 
 require('../bootstrap');
 require('chart.js');
@@ -78,13 +78,14 @@ new Vue({
                 return createElement(Dashboard, {props: props});
             },
             beforeCreate() {
-                // TODO migrate to "root" store.
+// See reference nr. 15
                 this.$store.commit('initialiseStore');
                 this.$store.dispatch('updateCurrencyPreference');
                 this.$store.dispatch('root/initialiseStore');
                 this.$store.dispatch('dashboard/index/initialiseStore');
             },
         });
+
 new Vue({
             i18n,
             store,
@@ -92,5 +93,5 @@ new Vue({
             render: (createElement) => {
                 return createElement(Calendar, {props: props});
             },
-            // TODO init store as well?
+// See reference nr. 16
         });

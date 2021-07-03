@@ -178,7 +178,7 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency $foreignCurrency |null
+     * @param TransactionCurrency|null $foreignCurrency |null
      *
      * @codeCoverageIgnore
      */

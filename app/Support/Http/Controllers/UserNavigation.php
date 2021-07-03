@@ -59,7 +59,7 @@ trait UserNavigation
         $uri = (string)session($identifier);
         Log::debug(sprintf('The URI is %s', $uri));
 
-        if (false !== strpos($uri, 'jscript')) {
+        if (str_contains($uri, 'jscript')) {
             $uri = $this->redirectUri; 
             Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
@@ -110,7 +110,7 @@ trait UserNavigation
     final protected function redirectAccountToAccount(Account $account)
     {
         $type = $account->accountType->type;
-        if (AccountType::RECONCILIATION === $type || AccountType::INITIAL_BALANCE === $type) {
+        if (AccountType::RECONCILIATION === $type || AccountType::INITIAL_BALANCE === $type || AccountType::LIABILITY_CREDIT === $type) {
             // reconciliation must be stored somewhere in this account's transactions.
 
             /** @var Transaction|null $transaction */

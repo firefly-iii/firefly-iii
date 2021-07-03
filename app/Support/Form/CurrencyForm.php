@@ -35,7 +35,7 @@ use Throwable;
  *
  * All currency related form methods.
  *
- * TODO cleanup and describe.
+* See reference nr. 22
  */
 class CurrencyForm
 {
@@ -107,7 +107,7 @@ class CurrencyForm
     }
 
     /**
-     * TODO describe and cleanup.
+* See reference nr. 23
      *
      * @param string     $name
      * @param mixed      $value
@@ -121,7 +121,7 @@ class CurrencyForm
     }
 
     /**
-     * TODO cleanup and describe better.
+* See reference nr. 24
      *
      * @param string     $name
      * @param string     $view
@@ -176,7 +176,7 @@ class CurrencyForm
     }
 
     /**
-     * TODO cleanup and describe.
+* See reference nr. 25
      *
      * @param string     $name
      * @param mixed      $value
@@ -201,7 +201,7 @@ class CurrencyForm
     }
 
     /**
-     * TODO cleanup and describe.
+* See reference nr. 26
      *
      * @param string     $name
      * @param mixed      $value

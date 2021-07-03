@@ -11,10 +11,16 @@
         {% endif %}
         {% if objectType == 'liabilities' %}
             <th>{{ trans('list.liability_type') }}</th>
+            <th>{{ trans('form.liability_direction') }}</th>
             <th>{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
-        <th>{{ trans('list.currentBalance') }}</th>
+        <th style="text-align: right;">{{ trans('list.currentBalance') }}</th>
+        {% if objectType == 'liabilities' %}
+            <th style="text-align: right;">
+                {{ trans('firefly.left_in_debt') }}
+            </th>
+        {% endif %}
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
         {% if objectType != 'liabilities' %}
@@ -29,15 +35,15 @@
     {% for account in accounts %}
         <tr class="sortable-object" data-id="{{ account.id }}" data-order="{{ account.order }}" data-position="{{ loop.index0 }}">
             <td class="hidden-sm hidden-xs">
-                <i class="fa fa-fw fa-bars object-handle"></i>
+                <span class="fa fa-fw fa-bars object-handle"></span>
             </td>
             <td>
                 <a href="{{ route('accounts.show',account.id) }}">{{ account.name }}</a>
                 {% if account.location %}
-                    <i class="fa fa-fw fa-map-marker"></i>
+                    <span class="fa fa-fw fa-map-marker"></span>
                 {% endif %}
                 {% if account.attachments.count() > 0 %}
-                    <i class="fa fa-fw fa-paperclip"></i>
+                    <span class="fa fa-fw fa-paperclip"></span>
                 {% endif %}
             </td>
             {% if objectType == "asset" %}
@@ -50,10 +56,9 @@
                 </td>
             {% endif %}
             {% if objectType == 'liabilities' %}
-                <td>{{ account.accountTypeString }}</td>
-            <td>
-                {{ account.interest }}% ({{ account.interestPeriod|lower }})
-            </td>
+            <td>{{ account.accountTypeString }}</td>
+            <td>{{ trans('firefly.liability_direction_'~account.liability_direction~'_short')  }}</td>
+            <td>{{ account.interest }}% ({{ account.interestPeriod|lower }})</td>
             {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             <td style="text-align: right;">
@@ -61,11 +66,18 @@
                 {{ formatAmountByAccount(account, account.endBalance) }}
                 </span>
             </td>
+            {% if objectType == 'liabilities' %}
+            <td style="text-align: right;">
+                {% if '-' != account.current_debt %}
+                    <span class="text-info">{{ formatAmountByAccount(account, account.current_debt, false) }}</span>
+                {% endif %}
+            </td>
+            {% endif %}
             <td class="hidden-sm hidden-xs">
                 {% if account.active %}
-                    <i class="fa fa-fw fa-check"></i>
+                    <span class="fa fa-fw fa-check"></span>
                 {% else %}
-                    <i class="fa fa-fw fa-ban"></i>
+                    <span class="fa fa-fw fa-ban"></span>
                 {% endif %}
             </td>
             {# hide last activity to make room for other stuff #}
@@ -90,10 +102,10 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ 'actions'|_ }} <span class="caret"></span></button>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                        <li><a href="{{ route('accounts.edit',account.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                        <li><a href="{{ route('accounts.delete',account.id) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
+                        <li><a href="{{ route('accounts.edit',account.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                        <li><a href="{{ route('accounts.delete',account.id) }}"><span class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                         {% if objectType == 'asset' %}
-                        <li><a href="{{ route('accounts.reconcile',account.id) }}"><i class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a></li>
+                        <li><a href="{{ route('accounts.reconcile',account.id) }}"><span class="fa fa-fw fa-check"></span> {{ 'reconcile_this_account'|_ }}</a></li>
                         {% endif %}
                     </ul>
                 </div>

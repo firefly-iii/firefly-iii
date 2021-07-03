@@ -87,13 +87,10 @@ export default {
   computed: {
     isVisible: {
       get() {
-        return !('Transfer' === this.transactionType && this.sourceCurrencyId === this.destinationCurrencyId);
+        return !('transfer' === this.transactionType.toLowerCase() && parseInt(this.sourceCurrencyId) === parseInt(this.destinationCurrencyId));
       }
     },
   }
 }
 </script>
 
-<style scoped>
-
-</style>

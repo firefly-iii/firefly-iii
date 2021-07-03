@@ -119,7 +119,7 @@ class NetWorth implements NetWorthInterface
         // loop results and add currency information:
         foreach ($netWorth as $currencyId => $balance) {
             $result[] = [
-                'currency' => $this->currencyRepos->findNull($currencyId),
+                'currency' => $this->currencyRepos->find($currencyId),
                 'balance'  => $balance,
             ];
         }

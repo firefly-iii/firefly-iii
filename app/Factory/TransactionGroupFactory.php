@@ -56,6 +56,7 @@ class TransactionGroupFactory
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     public function create(array $data): TransactionGroup
     {

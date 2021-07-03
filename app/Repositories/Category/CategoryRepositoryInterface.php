@@ -51,7 +51,7 @@ interface CategoryRepositoryInterface
      *
      * @param string $name
      *
-     * @return Category
+     * @return Category|null
      */
     public function findByName(string $name): ?Category;
 
@@ -70,7 +70,7 @@ interface CategoryRepositoryInterface
      *
      * @return Category|null
      */
-    public function findNull(int $categoryId): ?Category;
+    public function find(int $categoryId): ?Category;
 
     /**
      * @param Category $category

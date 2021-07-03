@@ -31,7 +31,9 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
@@ -98,12 +100,14 @@ class EventServiceProvider extends ServiceProvider
             // is a Transaction Journal related event.
             StoredTransactionGroup::class       => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@recalculateCredit',
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerWebhooks',
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionGroup::class      => [
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@unifyAccounts',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@recalculateCredit',
                 'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@triggerWebhooks',
             ],
             DestroyedTransactionGroup::class    => [
@@ -117,6 +121,14 @@ class EventServiceProvider extends ServiceProvider
             // Webhook related event:
             RequestedSendWebhookMessages::class => [
                 'FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages',
+            ],
+
+            // account related events:
+            StoredAccount::class => [
+                'FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit',
+                ],
+            UpdatedAccount::class => [
+                'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
             ],
         ];
 
@@ -149,7 +161,7 @@ class EventServiceProvider extends ServiceProvider
             static function (Client $oauthClient) {
                 /** @var UserRepositoryInterface $repository */
                 $repository = app(UserRepositoryInterface::class);
-                $user       = $repository->findNull((int)$oauthClient->user_id);
+                $user       = $repository->find((int)$oauthClient->user_id);
                 if (null === $user) {
                     Log::info('OAuth client generated but no user associated.');
 
@@ -160,7 +172,7 @@ class EventServiceProvider extends ServiceProvider
                 $ipAddress = Request::ip();
 
                 // see if user has alternative email address:
-                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+                $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
                 if (null !== $pref) {
                     $email = $pref->data;
                 }

@@ -73,6 +73,7 @@ class ListController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function transactions(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse

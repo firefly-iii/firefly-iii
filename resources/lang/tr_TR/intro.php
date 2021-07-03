@@ -34,9 +34,9 @@ return [
 
     // transactions
     'transactions_create_basic_info'                  => 'İşleminizin temel bilgilerini giriniz. Gönderen, alıcı, tarih ve tanım.',
-    'transactions_create_amount_info'                 => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'               => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'                       => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_amount_info'                 => 'İşlem tutarını girin. Gerekirse alanlar diğer para birimi için otomatik olarak güncellenir.',
+    'transactions_create_optional_info'               => 'Bu alanların tümü isteğe bağlıdır. Buraya meta veri eklemek, işlemlerinizi daha iyi organize edecektir.',
+    'transactions_create_split'                       => 'Bir işlemi bölmek istiyorsanız, bu buton ile daha fazla bölüm ekleyin',
 
     // create account:
     'accounts_create_iban'                            => 'Hesaplarınıza geçerli IBAN girin. Bu, ileride veri aktarma işlemini kolaylaştırabilir.',

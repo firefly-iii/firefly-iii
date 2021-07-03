@@ -280,7 +280,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (false !== strpos($name, $route)) {
+                if (str_contains($name, $route)) {
                     return 'active';
                 }
 
@@ -327,7 +327,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (false !== strpos($name, $route)) {
+                if (str_contains($name, $route)) {
                     return 'menu-open';
                 }
 
@@ -355,7 +355,7 @@ class General extends AbstractExtension
 
     /**
      * @return TwigFunction
-     * TODO remove me once layout v1 is deprecated.
+* See reference nr. 43
      */
     protected function getMetaField(): TwigFunction
     {

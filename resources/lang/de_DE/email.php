@@ -26,11 +26,11 @@ return [
     // common items
     'greeting'                         => 'Hallo,',
     'closing'                          => 'Piep piep,',
-    'signature'                        => 'Der Firefly III Mail-Roboter',
+    'signature'                        => 'Der Firefly III E-Mail-Roboter',
     'footer_ps'                        => 'PS: Diese Nachricht wurde wegen einer Anfrage durch die IP-Adresse :ipAddress versendet.',
 
     // admin test
-    'admin_test_subject'               => 'Eine Textnachricht von Ihrer Firefly III Installation',
+    'admin_test_subject'               => 'Eine Testmeldung von Ihrer Firefly III Installation',
     'admin_test_body'                  => 'Dies ist eine Testnachricht von Ihrer Firefly III-Instanz. Sie wurde an :email gesendet.',
 
     // new IP

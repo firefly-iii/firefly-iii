@@ -70,6 +70,8 @@ class ExportController extends Controller
      *
      * @return LaravelResponse
      * @throws CannotInsertRecord
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \League\Csv\Exception
      */
     private function returnExport(string $key): LaravelResponse
     {

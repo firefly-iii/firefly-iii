@@ -71,10 +71,7 @@
 
 <script>
 export default {
-  name: "Index",
-  created() {
-
-  }
+  name: "Index"
 }
 </script>
 

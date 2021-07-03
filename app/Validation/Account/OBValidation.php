@@ -115,7 +115,7 @@ trait OBValidation
         // return false.
         if (null !== $accountId && null === $accountName) {
             Log::debug('Source ID is not null, but name is null.');
-            $search = $this->accountRepository->findNull($accountId);
+            $search = $this->accountRepository->find($accountId);
 
             // the source resulted in an account, but it's not of a valid type.
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {

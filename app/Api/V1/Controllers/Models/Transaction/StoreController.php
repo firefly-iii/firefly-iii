@@ -103,7 +103,9 @@ class StoreController extends Controller
             throw new ValidationException($validator,0, $e);
         }
         app('preferences')->mark();
-        event(new StoredTransactionGroup($transactionGroup, $data['apply_rules'] ?? true));
+        $applyRules = $data['apply_rules'] ?? true;
+        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
         $manager = $this->getManager();
         /** @var User $admin */

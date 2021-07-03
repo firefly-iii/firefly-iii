@@ -74,7 +74,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -126,7 +126,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -292,7 +292,7 @@ class DoubleController extends Controller
     }
 
     /**
-     * TODO this method is double.
+* See reference nr. 67
      *
      * @param Collection  $accounts
      * @param int         $id
@@ -422,7 +422,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {
@@ -472,7 +472,7 @@ class DoubleController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
     {

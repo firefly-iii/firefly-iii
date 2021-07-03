@@ -74,7 +74,7 @@ class RemoteUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
+        throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
     /**
@@ -83,7 +83,7 @@ class RemoteUserProvider implements UserProvider
     public function updateRememberToken(Authenticatable $user, $token)
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
+        throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
     /**
@@ -92,6 +92,6 @@ class RemoteUserProvider implements UserProvider
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
+        throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }
 }

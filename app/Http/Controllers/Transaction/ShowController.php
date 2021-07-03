@@ -73,6 +73,7 @@ class ShowController extends Controller
     }
 
     /**
+     * @param Request          $request
      * @param TransactionGroup $transactionGroup
      *
      * @return Factory|View

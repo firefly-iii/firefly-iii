@@ -115,7 +115,7 @@ trait ModelInformation
      */
     protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
-        // TODO duplicated code.
+// See reference nr. 39
         $operators = config('firefly.search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -167,7 +167,7 @@ trait ModelInformation
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
-        // TODO duplicated code.
+// See reference nr. 40
         $operators = config('firefly.search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {

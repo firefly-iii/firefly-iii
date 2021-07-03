@@ -62,6 +62,7 @@ class CategoryUpdateService
      * @param array    $data
      *
      * @return Category
+     * @throws Exception
      */
     public function update(Category $category, array $data): Category
     {
@@ -167,8 +168,6 @@ class CategoryUpdateService
         }
         $dbNote->text = trim($note);
         $dbNote->save();
-
-        return;
     }
 
 }

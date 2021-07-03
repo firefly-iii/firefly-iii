@@ -115,7 +115,7 @@ class PreferencesController extends Controller
         $locales = ['equal' => (string)trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
-        if (0 === count($frontPageAccounts->data)) {
+        if (empty($frontPageAccounts->data)) {
             $frontPageAccounts = $accountIds;
         }
 
@@ -216,11 +216,6 @@ class PreferencesController extends Controller
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
-
-        // telemetry: user language preference + default language.
-        app('telemetry')->feature('config.firefly.default_language', config('firefly.default_language', 'en_US'));
-        app('telemetry')->feature('user.preferences.language', app('steam')->getLanguage());
-        app('telemetry')->feature('user.preferences.locale', app('steam')->getLocale());
 
         return redirect(route('preferences.index'));
     }

@@ -50,7 +50,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
      * @throws Throwable
      */
     public function render($request, Throwable $e)

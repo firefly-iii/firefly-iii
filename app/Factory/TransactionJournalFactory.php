@@ -106,7 +106,7 @@ class TransactionJournalFactory
         Log::debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection;
         $transactions = $dataObject['transactions'] ?? [];
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection;
@@ -146,6 +146,7 @@ class TransactionJournalFactory
      * @return TransactionJournal|null
      * @throws DuplicateTransactionException
      * @throws FireflyException
+     * @throws \JsonException
      */
     private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
@@ -294,16 +295,17 @@ class TransactionJournalFactory
      * @param NullArrayObject $row
      *
      * @return string
+     * @throws \JsonException
      */
     private function hashArray(NullArrayObject $row): string
     {
         $dataRow = $row->getArrayCopy();
 
         unset($dataRow['import_hash_v2'], $dataRow['original_source']);
-        $json = json_encode($dataRow, JSON_THROW_ON_ERROR, 512);
+        $json = json_encode($dataRow, JSON_THROW_ON_ERROR);
         if (false === $json) {
 
-            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR, 512);
+            $json = json_encode((string)microtime(), JSON_THROW_ON_ERROR);
             Log::error(sprintf('Could not hash the original row! %s', json_last_error_msg()), $dataRow);
 
         }
@@ -319,6 +321,7 @@ class TransactionJournalFactory
      * @param string $hash
      *
      * @throws DuplicateTransactionException
+     * @throws \JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {
@@ -417,7 +420,7 @@ class TransactionJournalFactory
     /**
      * Set foreign currency to NULL if it's the same as the normal currency:
      *
-     * @param TransactionCurrency      $currency
+     * @param TransactionCurrency|null $currency
      * @param TransactionCurrency|null $foreignCurrency
      *
      * @return TransactionCurrency|null

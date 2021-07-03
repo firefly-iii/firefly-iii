@@ -200,7 +200,7 @@ trait CalculateXOccurrences
                 $return[] = clone $obj;
                 $total++;
             }
-            $obj->addYears(1);
+            $obj->addYears();
             $attempts++;
         }
 

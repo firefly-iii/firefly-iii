@@ -263,7 +263,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     $array['tags'] = json_decode($transactionMeta->value);
                     break;
                 case 'piggy_bank_id':
-                    $piggy = $this->piggyRepos->findNull((int)$transactionMeta->value);
+                    $piggy = $this->piggyRepos->find((int)$transactionMeta->value);
                     if (null !== $piggy) {
                         $array['piggy_bank_id']   = (string)$piggy->id;
                         $array['piggy_bank_name'] = $piggy->name;
@@ -284,7 +284,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     }
                     break;
                 case 'budget_id':
-                    $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
+                    $budget = $this->budgetRepos->find((int)$transactionMeta->value);
                     if (null !== $budget) {
                         $array['budget_id']   = (string)$budget->id;
                         $array['budget_name'] = $budget->name;

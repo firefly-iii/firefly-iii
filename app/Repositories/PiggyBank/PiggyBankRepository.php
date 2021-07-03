@@ -71,14 +71,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      *
      * @return PiggyBank|null
      */
-    public function findNull(int $piggyBankId): ?PiggyBank
+    public function find(int $piggyBankId): ?PiggyBank
     {
-        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
-        if (null !== $piggyBank) {
-            return $piggyBank;
-        }
-
-        return null;
+        return $this->user->piggyBanks()->find($piggyBankId);
     }
 
     /**
@@ -92,7 +87,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug('Searching for piggy information.');
 
         if (null !== $piggyBankId) {
-            $searchResult = $this->findNull((int)$piggyBankId);
+            $searchResult = $this->find((int)$piggyBankId);
             if (null !== $searchResult) {
                 Log::debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
 

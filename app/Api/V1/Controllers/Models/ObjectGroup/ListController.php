@@ -67,6 +67,7 @@ class ListController extends Controller
      * @param ObjectGroup $objectGroup
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function bills(ObjectGroup $objectGroup): JsonResponse
@@ -99,6 +100,7 @@ class ListController extends Controller
      * @param ObjectGroup $objectGroup
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse

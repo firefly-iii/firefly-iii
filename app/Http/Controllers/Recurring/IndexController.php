@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
@@ -69,7 +68,7 @@ class IndexController extends Controller
     }
 
     /**
-     * TODO the notes of a recurrence are pretty pointless at this moment.
+* See reference nr. 70
      * Show all recurring transactions.
      *
      * @param Request $request

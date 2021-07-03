@@ -261,7 +261,7 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         // need at least one transaction
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
         }
     }
@@ -276,7 +276,7 @@ trait TransactionValidation
         Log::debug('Now in validateOneTransaction()');
         $transactions = $this->getTransactionsArray($validator);
         // need at least one transaction
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
             Log::debug('Added error: at_least_one_transaction.');
 
@@ -331,9 +331,8 @@ trait TransactionValidation
      * All types of splits must be equal.
      *
      * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
      */
-    public function validateTransactionTypesForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
+    public function validateTransactionTypesForUpdate(Validator $validator): void
     {
         Log::debug('Now in validateTransactionTypesForUpdate()');
         $transactions = $this->getTransactionsArray($validator);

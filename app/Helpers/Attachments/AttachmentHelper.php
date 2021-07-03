@@ -243,7 +243,6 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
 
             $attachment = new Attachment; // create Attachment object.
-            /** @noinspection PhpUndefinedFieldInspection */
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
             $attachment->md5      = md5_file($file->getRealPath());

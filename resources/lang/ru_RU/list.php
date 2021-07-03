@@ -130,6 +130,7 @@ return [
     'field'                   => 'Поле',
     'value'                   => 'Значение',
     'interest'                => 'Процентная ставка',
-    'interest_period'         => 'период начисления процентов',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Тип ответственности',
+    'liability_direction'     => 'Liability in/out',
 ];

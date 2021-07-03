@@ -95,7 +95,7 @@ interface AccountRepositoryInterface
      *
      * @return Account|null
      */
-    public function findNull(int $accountId): ?Account;
+    public function find(int $accountId): ?Account;
 
     /**
      * @param Account $account
@@ -121,11 +121,12 @@ interface AccountRepositoryInterface
     public function getAccountsById(array $accountIds): Collection;
 
     /**
-     * @param array $types
+     * @param array      $types
+     * @param array|null $sort
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types): Collection;
+    public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
     /**
      * @param array $types
@@ -194,7 +195,7 @@ interface AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return string
+     * @return string|null
      */
     public function getOpeningBalanceAmount(Account $account): ?string;
 
@@ -206,6 +207,13 @@ interface AccountRepositoryInterface
      * @return null|string
      */
     public function getOpeningBalanceDate(Account $account): ?string;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionGroup|null
+     */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup;
 
     /**
      * @param Account $account

@@ -165,8 +165,6 @@ class UpdateControllerTest extends TestCase
             $fieldSet->addField(Field::createBasic('transactions/0/' . $value, 'uuid'));
             $configuration->addOptionalFieldSet($value, $fieldSet);
         }
-        $result = $configuration->generateAll();
-
-        return $result;
+        return $configuration->generateAll();
     }
 }

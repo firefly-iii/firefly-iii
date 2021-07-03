@@ -78,8 +78,8 @@ class StoreController extends Controller
     {
         $manager = $this->getManager();
         $data    = $request->getAll();
-        $inward  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
-        $outward = $this->journalRepository->findNull($data['outward_id'] ?? 0);
+        $inward  = $this->journalRepository->find($data['inward_id'] ?? 0);
+        $outward = $this->journalRepository->find($data['outward_id'] ?? 0);
         if (null === $inward || null === $outward) {
             throw new FireflyException('200024: Source or destination does not exist.');
         }

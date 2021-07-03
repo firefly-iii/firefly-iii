@@ -46,7 +46,7 @@ class TransactionJournalMetaFactory
         /** @var TransactionJournalMeta $entry */
         $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (null === $value && null !== $entry) {
-            Log::debug('Value is empty, delete meta value.');
+            //Log::debug('Value is empty, delete meta value.');
             try {
                 $entry->delete();
             } catch (Exception $e) { // @phpstan-ignore-line
@@ -57,7 +57,7 @@ class TransactionJournalMetaFactory
         }
 
         if ($data['data'] instanceof Carbon) {
-            Log::debug('Is a carbon object.');
+            //Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
         if ('' === (string)$value) {
@@ -76,7 +76,7 @@ class TransactionJournalMetaFactory
         }
 
         if (null === $entry) {
-            Log::debug('Will create new object.');
+            //Log::debug('Will create new object.');
             Log::debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
             $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);

@@ -27,7 +27,7 @@
                      with font-awesome or any other icon font library -->
                 <li class="nav-item">
                     <a href="{{ route('index') }}" class="nav-link {{ activeRouteStrict('index') }}">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <span class="nav-icon fas fa-tachometer-alt"></span>
                         <p>
                             {{ 'dashboard'|_ }}
                         </p>
@@ -38,7 +38,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('budgets.index') }}" class="nav-link {{ activeRoutePartial('budgets') }}">
-                        <i class="nav-icon fas fa-chart-pie"></i>
+                        <span class="nav-icon fas fa-chart-pie"></span>
                         <p>
                             {{ 'budgets'|_ }}
                         </p>
@@ -47,7 +47,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('bills.index') }}" class="nav-link {{ activeRoutePartial('bills') }}">
-                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <span class="nav-icon far fa-calendar-alt"></span>
                         <p>
                             {{ 'bills'|_ }}
                         </p>
@@ -56,7 +56,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('piggy-banks.index') }}" class="nav-link {{ activeRoutePartial('piggy-banks') }}">
-                        <i class="nav-icon fas fa-piggy-bank"></i>
+                        <span class="nav-icon fas fa-piggy-bank"></span>
                         <p>
                             {{ 'piggyBanks'|_ }}
                         </p>
@@ -67,28 +67,28 @@
 
                 <li class="nav-item has-treeview {{ menuOpenRoutePartial('transactions') }}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-exchange-alt"></i>
+                        <span class="nav-icon fas fa-exchange-alt"></span>
                         <p>
                             {{ 'transactions'|_ }}
-                            <i class="right fas fa-angle-left"></i>
+                            <span class="right fas fa-angle-left"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('transactions.index', 'withdrawal') }}" class="nav-link {{ activeRoutePartialObjectType('transactions', 'withdrawal') }}">
-                                <i class="fas fa-long-arrow-alt-left nav-icon"></i>
+                                <span class="fas fa-long-arrow-alt-left nav-icon"></span>
                                 <p>{{ 'expenses'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('transactions.index', 'deposit') }}" class="nav-link {{ activeRoutePartialObjectType('transactions', 'deposit') }}">
-                                <i class="fas fa-long-arrow-alt-right nav-icon"></i>
+                                <span class="fas fa-long-arrow-alt-right nav-icon"></span>
                                 <p>{{ 'income'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('transactions.index', 'transfers') }}" class="nav-link {{ activeRoutePartialObjectType('transactions', 'transfers') }}">
-                                <i class="fas fa-exchange-alt nav-icon"></i>
+                                <span class="fas fa-exchange-alt nav-icon"></span>
                                 <p>{{ 'transfers'|_ }}</p>
                             </a>
                         </li>
@@ -97,22 +97,22 @@
 
                 <li class="nav-item has-treeview  {{ menuOpenRoutePartial('rules') }} {{ menuOpenRoutePartial('recurring') }}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-microchip"></i>
+                        <span class="nav-icon fas fa-microchip"></span>
                         <p>
                             {{ 'automation'|_ }}
-                            <i class="right fas fa-angle-left"></i>
+                            <span class="right fas fa-angle-left"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('rules.index') }}" class="nav-link {{ activeRoutePartial('rules') }}">
-                                <i class="fas fa-random nav-icon"></i>
+                                <span class="fas fa-random nav-icon"></span>
                                 <p>{{ 'rules'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('recurring.index') }}" class="nav-link {{ activeRoutePartial('recurring') }}">
-                                <i class="fas fa-magic nav-icon"></i>
+                                <span class="fas fa-magic nav-icon"></span>
                                 <p>{{ 'recurrences'|_ }}</p>
                             </a>
                         </li>
@@ -123,34 +123,34 @@
 
                 <li class="nav-item has-treeview {{ menuOpenRoutePartial('accounts') }}">
                     <a href="#" class="nav-link {{ activeRoutePartial('accounts') }}">
-                        <i class="nav-icon fas fa-credit-card"></i>
+                        <span class="nav-icon fas fa-credit-card"></span>
                         <p>
                             {{ 'accounts'|_ }}
-                            <i class="right fas fa-angle-left"></i>
+                            <span class="right fas fa-angle-left"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('accounts.index','asset') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'asset') }}">
-                                <i class="far fa-money-bill-alt nav-icon"></i>
+                                <span class="far fa-money-bill-alt nav-icon"></span>
                                 <p>{{ 'asset_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('accounts.index','expense') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'expense') }}">
-                                <i class="fas fa-shopping-cart nav-icon"></i>
+                                <span class="fas fa-shopping-cart nav-icon"></span>
                                 <p>{{ 'expense_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('accounts.index','revenue') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'revenue') }}">
-                                <i class="fas fa-briefcase nav-icon"></i>
+                                <span class="fas fa-briefcase nav-icon"></span>
                                 <p>{{ 'revenue_accounts'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('accounts.index','liabilities') }}" class="nav-link {{ activeRoutePartialObjectType('accounts', 'liabilities') }}">
-                                <i class="fas fa-funnel-dollar nav-icon"></i>
+                                <span class="fas fa-funnel-dollar nav-icon"></span>
                                 <p>{{ 'liabilities_accounts'|_ }}</p>
                             </a>
                         </li>
@@ -159,28 +159,28 @@
 
                 <li class="nav-item has-treeview {{ menuOpenRoutePartial('tags') }} {{ menuOpenRoutePartial('categories') }} {{ menuOpenRoutePartial('object-groups') }}">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-tags"></i>
+                        <span class="nav-icon fas fa-tags"></span>
                         <p>
                             {{ 'classification'|_ }}
-                            <i class="right fas fa-angle-left"></i>
+                            <span class="right fas fa-angle-left"></span>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('categories.index') }}" class="nav-link {{ activeRoutePartial('categories') }}">
-                                <i class="fas fa-bookmark nav-icon"></i>
+                                <span class="fas fa-bookmark nav-icon"></span>
                                 <p>{{ 'categories'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('tags.index') }}" class="nav-link {{ activeRoutePartial('tags') }}">
-                                <i class="fas fa-tags nav-icon"></i>
+                                <span class="fas fa-tags nav-icon"></span>
                                 <p>{{ 'tags'|_ }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('object-groups.index') }}" class="nav-link {{ activeRoutePartial('object-groups') }}">
-                                <i class="far fa-envelope nav-icon"></i>
+                                <span class="far fa-envelope nav-icon"></span>
                                 <p>{{ 'object_groups_menu_bar'|_ }}</p>
                             </a>
                         </li>
@@ -189,7 +189,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('reports.index') }}" class="nav-link {{ activeRoutePartial('reports') }}">
-                        <i class="nav-icon far fa-chart-bar"></i>
+                        <span class="nav-icon far fa-chart-bar"></span>
                         <p>
                             {{ 'reports'|_ }}
                         </p>

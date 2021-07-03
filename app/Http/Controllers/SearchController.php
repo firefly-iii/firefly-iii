@@ -46,7 +46,7 @@ class SearchController extends Controller
         $this->middleware(
             static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-search');
-                app('view')->share('title', (string) trans('firefly.search'));
+                app('view')->share('title', (string)trans('firefly.search'));
 
                 return $next($request);
             }
@@ -64,11 +64,14 @@ class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher)
     {
         // search params:
-        $fullQuery        = (string) $request->get('search');
-        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $ruleId           = (int) $request->get('rule');
-        $rule             = null;
-        $ruleChanged      = false;
+        $fullQuery = $request->get('search');
+        if (is_array($request->get('search'))) {
+            $fullQuery = '';
+        }
+        $fullQuery   = (string)$fullQuery;
+        $page        = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $ruleId      = (int)$request->get('rule');
+        $ruleChanged = false;
 
         // find rule, check if query is different, offer to update.
         $ruleRepository = app(RuleRepositoryInterface::class);
@@ -83,12 +86,12 @@ class SearchController extends Controller
         $searcher->parseQuery($fullQuery);
 
         // words from query and operators:
-        $query     = $searcher->getWordsAsString();
-        $operators = $searcher->getOperators();
+        $query            = $searcher->getWordsAsString();
+        $operators        = $searcher->getOperators();
+        $invalidOperators = $searcher->getInvalidOperators();
+        $subTitle         = (string)trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
-        $subTitle = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
-
-        return prefixView('search.index', compact('query',  'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged'));
+        return prefixView('search.index', compact('query', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged', 'invalidOperators'));
     }
 
     /**
@@ -101,8 +104,8 @@ class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $fullQuery = (string) $request->get('query');
-        $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $fullQuery = (string)$request->get('query');
+        $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
 
         $searcher->parseQuery($fullQuery);
 
@@ -121,6 +124,7 @@ class SearchController extends Controller
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             $html = 'Could not render view.';
         }
+
         return response()->json(['count' => $groups->count(), 'html' => $html]);
     }
 }

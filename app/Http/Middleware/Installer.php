@@ -87,7 +87,7 @@ class Installer
      */
     private function hasNoTables(): bool
     {
-        Log::debug('Now in routine hasNoTables()');
+        //Log::debug('Now in routine hasNoTables()');
 
         try {
             DB::table('users')->count();
@@ -107,7 +107,7 @@ class Installer
             }
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
-        Log::debug('Everything seems OK with the tables.');
+        //Log::debug('Everything seems OK with the tables.');
 
         return false;
     }
@@ -157,7 +157,7 @@ class Installer
 
             return true;
         }
-        Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
+        //Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
 
         return false;
     }
@@ -183,7 +183,7 @@ class Installer
 
             return true;
         }
-        Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
+        //Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
 
         return false;
     }

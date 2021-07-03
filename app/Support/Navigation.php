@@ -33,11 +33,11 @@ use Log;
 class Navigation
 {
     /**
-     * @param \Carbon\Carbon $theDate
-     * @param string         $repeatFreq
-     * @param int            $skip
+     * @param Carbon $theDate
+     * @param string $repeatFreq
+     * @param int    $skip
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
     {
@@ -99,15 +99,14 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
-     * @param string         $range
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param string $range
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
      *
      */
-    public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
+    public function blockPeriods(Carbon $start, Carbon $end, string $range): array
     {
         if ($end < $start) {
             [$start, $end] = [$end, $start];
@@ -161,12 +160,12 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $end
-     * @param string         $repeatFreq
+     * @param Carbon $end
+     * @param string $repeatFreq
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
-    public function endOfPeriod(\Carbon\Carbon $end, string $repeatFreq): Carbon
+    public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd = clone $end;
 
@@ -239,11 +238,11 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon      $theCurrentEnd
-     * @param string              $repeatFreq
-     * @param \Carbon\Carbon|null $maxDate
+     * @param Carbon      $theCurrentEnd
+     * @param string      $repeatFreq
+     * @param Carbon|null $maxDate
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function endOfX(Carbon $theCurrentEnd, string $repeatFreq, ?Carbon $maxDate): Carbon
     {
@@ -279,8 +278,8 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -315,12 +314,12 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $theDate
-     * @param string         $repeatFrequency
+     * @param Carbon $theDate
+     * @param string $repeatFrequency
      *
      * @return string
      */
-    public function periodShow(\Carbon\Carbon $theDate, string $repeatFrequency): string
+    public function periodShow(Carbon $theDate, string $repeatFrequency): string
     {
         $date      = clone $theDate;
         $formatMap = [
@@ -359,8 +358,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "Y-m-d". If the difference is less than a year,
      * method returns "Y-m". If the date difference is larger, method returns "Y".
      *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -382,8 +381,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day). If the difference is less than a year,
      * method returns "config.month". If the date difference is larger, method returns "config.year".
      *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -406,8 +405,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference is less than a year,
      * method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
      *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -429,8 +428,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "1D". If the difference is less than a year,
      * method returns "1M". If the date difference is larger, method returns "1Y".
      *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -452,8 +451,8 @@ class Navigation
      * If the date difference between start and end is less than a month, method returns "%Y-%m-%d". If the difference is less than a year,
      * method returns "%Y-%m". If the date difference is larger, method returns "%Y".
      *
-     * @param \Carbon\Carbon $start
-     * @param \Carbon\Carbon $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -472,10 +471,10 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $theDate
-     * @param string         $repeatFreq
+     * @param Carbon $theDate
+     * @param string $repeatFreq
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      */
     public function startOfPeriod(Carbon $theDate, string $repeatFreq): Carbon
     {
@@ -523,13 +522,13 @@ class Navigation
     }
 
     /**
-     * @param \Carbon\Carbon $theDate
-     * @param string         $repeatFreq
-     * @param int            $subtract
+     * @param Carbon   $theDate
+     * @param string   $repeatFreq
+     * @param int|null $subtract
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
     {
@@ -586,12 +585,12 @@ class Navigation
     }
 
     /**
-     * @param string         $range
-     * @param \Carbon\Carbon $start
+     * @param string $range
+     * @param Carbon $start
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
@@ -632,12 +631,12 @@ class Navigation
     }
 
     /**
-     * @param string         $range
-     * @param \Carbon\Carbon $start
+     * @param string $range
+     * @param Carbon $start
      *
-     * @return \Carbon\Carbon
+     * @return Carbon
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
     {

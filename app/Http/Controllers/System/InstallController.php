@@ -85,6 +85,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-recurrence-meta'      => [],
             'firefly-iii:migrate-tag-locations'        => [],
             'firefly-iii:migrate-recurrence-type'      => [],
+            'firefly-iii:upgrade-liabilities'          => [],
 
             // verify commands
             'firefly-iii:fix-piggies'                  => [],
@@ -110,6 +111,7 @@ class InstallController extends Controller
 
             // final command to set latest version in DB
             'firefly-iii:set-latest-version'           => ['--james-is-cool' => true],
+            'firefly-iii:verify-security-alerts'           => [],
         ];
 
         $this->lastError = '';

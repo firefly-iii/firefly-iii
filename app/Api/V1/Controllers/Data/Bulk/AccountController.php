@@ -38,8 +38,8 @@ class AccountController extends Controller
     public function moveTransactions(MoveTransactionsRequest $request): JsonResponse
     {
         $accountIds  = $request->getAll();
-        $original    = $this->repository->findNull($accountIds['original_account']);
-        $destination = $this->repository->findNull($accountIds['destination_account']);
+        $original    = $this->repository->find($accountIds['original_account']);
+        $destination = $this->repository->find($accountIds['destination_account']);
 
         /** @var AccountDestroyService $service */
         $service = app(AccountDestroyService::class);

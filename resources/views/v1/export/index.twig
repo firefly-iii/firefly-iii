@@ -17,7 +17,7 @@
                     </p>
                     <form action="{{ route('export.export') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                        <button type="submit"><i class="fa fa-fw fa-download"></i> {{ 'export_data_all_transactions'|_ }}</button>
+                        <button type="submit"><span class="fa fa-fw fa-download"></span> {{ 'export_data_all_transactions'|_ }}</button>
                     </form>
                     <p>
                         {{ 'export_data_advanced_expl'|_ }}

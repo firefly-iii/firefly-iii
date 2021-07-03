@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Gdbots\QueryParser\Node\Date;
@@ -62,25 +61,23 @@ use Log;
  */
 class OperatorQuerySearch implements SearchInterface
 {
-    private AccountRepositoryInterface         $accountRepository;
-    private BillRepositoryInterface            $billRepository;
-    private BudgetRepositoryInterface          $budgetRepository;
-    private CategoryRepositoryInterface        $categoryRepository;
-    private GroupCollectorInterface            $collector;
-    private CurrencyRepositoryInterface        $currencyRepository;
-    private Carbon                             $date;
-    private int                                $limit;
-    private Collection                         $modifiers;
-    private Collection                         $operators;
-    private string                             $originalQuery;
-    private int                                $page;
-    private ParsedQuery                        $query;
-    private float                              $startTime;
-    private TagRepositoryInterface             $tagRepository;
-    private TransactionTypeRepositoryInterface $typeRepository; // obsolete
-    private User                               $user;
-    private array                              $validOperators;
-    private array                              $words;
+    private AccountRepositoryInterface  $accountRepository;
+    private BillRepositoryInterface     $billRepository;
+    private BudgetRepositoryInterface   $budgetRepository;
+    private CategoryRepositoryInterface $categoryRepository;
+    private GroupCollectorInterface     $collector;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private Carbon                      $date;
+    private int                         $limit;
+    private Collection                  $operators;
+    private int                         $page;
+    private ParsedQuery                 $query;
+    private float                       $startTime;
+    private TagRepositoryInterface      $tagRepository;
+    private User                        $user;
+    private array                       $validOperators;
+    private array                       $words;
+    private array                       $invalidOperators;
 
     /**
      * OperatorQuerySearch constructor.
@@ -90,12 +87,11 @@ class OperatorQuerySearch implements SearchInterface
     public function __construct()
     {
         Log::debug('Constructed OperatorQuerySearch');
-        $this->modifiers          = new Collection; // obsolete
         $this->operators          = new Collection;
         $this->page               = 1;
         $this->words              = [];
+        $this->invalidOperators   = [];
         $this->limit              = 25;
-        $this->originalQuery      = '';
         $this->date               = today(config('app.timezone'));
         $this->validOperators     = array_keys(config('firefly.search.operators'));
         $this->startTime          = microtime(true);
@@ -105,7 +101,6 @@ class OperatorQuerySearch implements SearchInterface
         $this->billRepository     = app(BillRepositoryInterface::class);
         $this->tagRepository      = app(TagRepositoryInterface::class);
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
     }
 
     /**
@@ -151,9 +146,8 @@ class OperatorQuerySearch implements SearchInterface
     public function parseQuery(string $query)
     {
         Log::debug(sprintf('Now in parseQuery(%s)', $query));
-        $parser              = new QueryParser();
-        $this->query         = $parser->parse($query);
-        $this->originalQuery = $query;
+        $parser      = new QueryParser();
+        $this->query = $parser->parse($query);
 
         Log::debug(sprintf('Found %d node(s)', count($this->query->getNodes())));
         foreach ($this->query->getNodes() as $searchNode) {
@@ -178,8 +172,8 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function searchTransactions(): LengthAwarePaginator
     {
-        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            return new LengthAwarePaginator([],0,5,1);
+        if (empty($this->getWords()) && empty($this->getOperators())) {
+            return new LengthAwarePaginator([], 0, 5, 1);
         }
 
         return $this->collector->getPaginatedGroups();
@@ -200,6 +194,14 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidOperators(): array
+    {
+        return $this->invalidOperators;
     }
 
     /**
@@ -259,11 +261,12 @@ class OperatorQuerySearch implements SearchInterface
             case Emoticon::class:
             case Emoji::class:
             case Mention::class:
-                Log::debug(sprintf('Now handle %s', $class));
-                $this->words[] = (string)$searchNode->getValue();
+                $allWords = (string)$searchNode->getValue();
+                Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
+                $this->words[] = $allWords;
                 break;
             case Field::class:
-                Log::debug(sprintf('Now handle %s', $class));
+                Log::debug(sprintf('Now handle Node class %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
                 $operator = strtolower($searchNode->getValue());
@@ -276,6 +279,11 @@ class OperatorQuerySearch implements SearchInterface
                             'value' => (string)$value,
                         ]
                     );
+                } else {
+                    $this->invalidOperators[] = [
+                        'type'  => $operator,
+                        'value' => (string)$value,
+                    ];
                 }
                 break;
         }
@@ -295,8 +303,6 @@ class OperatorQuerySearch implements SearchInterface
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
-
-        app('telemetry')->feature('search.operators.uses_operator', $operator);
 
         switch ($operator) {
             default:
@@ -335,7 +341,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 1, 3);
                 break;
             case 'source_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
@@ -373,7 +379,7 @@ class OperatorQuerySearch implements SearchInterface
                 $this->searchAccount($value, 2, 3);
                 break;
             case 'destination_account_id':
-                $account = $this->accountRepository->findNull((int)$value);
+                $account = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
@@ -382,7 +388,7 @@ class OperatorQuerySearch implements SearchInterface
                 $parts      = explode(',', $value);
                 $collection = new Collection;
                 foreach ($parts as $accountId) {
-                    $account = $this->accountRepository->findNull((int)$accountId);
+                    $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
                         $collection->push($account);
                     }
@@ -545,9 +551,9 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->amountLess($amount);
                 break;
             case 'amount_more':
+                Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
-
+                $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
@@ -835,11 +841,11 @@ class OperatorQuerySearch implements SearchInterface
         if ($parser->isDateRange($value)) {
             return $parser->parseRange($value, $this->date);
         }
-        $date = $parser->parseDate($value);
+        $parsedDate = $parser->parseDate($value);
 
         return [
-            'start' => $date,
-            'end'   => $date,
+            'start' => $parsedDate,
+            'end'   => $parsedDate,
         ];
     }
 

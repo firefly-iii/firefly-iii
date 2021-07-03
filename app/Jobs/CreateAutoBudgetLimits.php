@@ -52,7 +52,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon $date
+     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -130,7 +130,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_RESET === (int)$autoBudget->auto_budget_type) {
             // that's easy: create one.
             // do nothing else.
             $this->createBudgetLimit($autoBudget, $start, $end);
@@ -139,7 +139,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             return;
         }
 
-        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === $autoBudget->auto_budget_type) {
+        if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int)$autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createRollover($autoBudget);
             Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
@@ -238,6 +238,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
     /**
      * @param AutoBudget $autoBudget
+     *
+     * @throws FireflyException
      */
     private function createRollover(AutoBudget $autoBudget): void
     {

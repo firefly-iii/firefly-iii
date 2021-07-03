@@ -62,11 +62,15 @@ class AccountFormRequest extends FormRequest
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
             'include_net_worth'       => '1',
+            'liability_direction'     => $this->string('liability_direction'),
         ];
 
         $data = $this->appendLocationData($data, 'location');
         if (false === $this->boolean('include_net_worth')) {
             $data['include_net_worth'] = '0';
+        }
+        if('0' === $data['opening_balance']) {
+            $data['opening_balance'] = '';
         }
 
         // if the account type is "liabilities" there are actually four types of liability
@@ -74,6 +78,9 @@ class AccountFormRequest extends FormRequest
         if ('liabilities' === $data['account_type_name']) {
             $data['account_type_name'] = null;
             $data['account_type_id']   = $this->integer('liability_type_id');
+            if ('' !== $data['opening_balance']) {
+                $data['opening_balance'] = app('steam')->negative($data['opening_balance']);
+            }
         }
 
         return $data;
@@ -91,7 +98,7 @@ class AccountFormRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                               => 'required|min:1|uniqueAccountForUser',
-            'opening_balance'                    => 'numeric|required_with:opening_balance_date|nullable|max:1000000000',
+            'opening_balance'                    => 'numeric|nullable|max:1000000000',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->string('objectType'))],
             'BIC'                                => 'bic|nullable',
@@ -107,11 +114,6 @@ class AccountFormRequest extends FormRequest
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
         $rules          = Location::requestRules($rules);
-
-        if ('liabilities' === $this->get('objectType')) {
-            $rules['opening_balance']      = ['numeric', 'required', 'max:1000000000'];
-            $rules['opening_balance_date'] = 'date|required';
-        }
 
         /** @var Account $account */
         $account = $this->route()->parameter('account');

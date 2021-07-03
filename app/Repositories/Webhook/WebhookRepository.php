@@ -116,7 +116,7 @@ class WebhookRepository implements WebhookRepositoryInterface
      */
     public function store(array $data): Webhook
     {
-        $secret   = $random = Str::random(24);
+        $secret   = Str::random(24);
         $fullData = [
             'user_id'  => $this->user->id,
             'active'   => $data['active'] ?? false,
@@ -144,7 +144,7 @@ class WebhookRepository implements WebhookRepositoryInterface
         $webhook->url      = $data['url'] ?? $webhook->url;
 
         if (true === $data['secret']) {
-            $secret          = $random = Str::random(24);
+            $secret          = Str::random(24);
             $webhook->secret = $secret;
         }
 

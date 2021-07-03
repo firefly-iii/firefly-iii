@@ -41,8 +41,8 @@ interface LinkTypeRepositoryInterface
     public function countJournals(LinkType $linkType): int;
 
     /**
-     * @param LinkType $linkType
-     * @param LinkType $moveTo
+     * @param LinkType      $linkType
+     * @param LinkType|null $moveTo
      *
      * @return bool
      */
@@ -79,7 +79,7 @@ interface LinkTypeRepositoryInterface
      *
      * @return LinkType|null
      */
-    public function findNull(int $linkTypeId): ?LinkType;
+    public function find(int $linkTypeId): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).

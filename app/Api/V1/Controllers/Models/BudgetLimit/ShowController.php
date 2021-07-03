@@ -73,8 +73,10 @@ class ShowController extends Controller
      * Display a listing of the budget limits for this budget..
      *
      * @param Request $request
+     * @param Budget  $budget
      *
      * @return JsonResponse
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(Request $request, Budget $budget): JsonResponse
@@ -104,6 +106,7 @@ class ShowController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function indexAll(DateRequest $request): JsonResponse
@@ -133,6 +136,7 @@ class ShowController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {

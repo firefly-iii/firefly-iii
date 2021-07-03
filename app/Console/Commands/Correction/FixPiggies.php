@@ -48,9 +48,6 @@ class FixPiggies extends Command
      */
     protected $signature = 'firefly-iii:fix-piggies';
 
-    /** @var int */
-    private $count;
-
     /**
      * Execute the console command.
      *
@@ -58,8 +55,8 @@ class FixPiggies extends Command
      */
     public function handle(): int
     {
-        $this->count = 0;
-        $start       = microtime(true);
+        $count = 0;
+        $start = microtime(true);
         $set         = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
 
         /** @var PiggyBankEvent $event */
@@ -74,7 +71,7 @@ class FixPiggies extends Command
             if (null === $journal) {
                 $event->transaction_journal_id = null;
                 $event->save();
-                $this->count++;
+                $count++;
                 continue;
             }
 
@@ -84,14 +81,14 @@ class FixPiggies extends Command
                 $event->transaction_journal_id = null;
                 $event->save();
                 $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
-                $this->count++;
+                $count++;
             }
         }
-        if (0 === $this->count) {
+        if (0 === $count) {
             $this->line('All piggy bank events are correct.');
         }
-        if (0 !== $this->count) {
-            $this->line(sprintf('Fixed %d piggy bank event(s).', $this->count));
+        if (0 !== $count) {
+            $this->line(sprintf('Fixed %d piggy bank event(s).', $count));
         }
 
         $end = round(microtime(true) - $start, 2);

@@ -14,10 +14,10 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('bills.edit', object.data.id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('bills.delete', object.data.id) }}"><i class="fa fa-fw fa-trash-o"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('bills.edit', object.data.id) }}"><span class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('bills.delete', object.data.id) }}"><span class="fa fa-fw fa-trash-o"></span> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -37,9 +37,9 @@
                             <td style="width:50%;">{{ 'bill_is_active'|_ }}</td>
                             <td>
                                 {% if object.data.active %}
-                                    <i class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></i> {{ 'yes'|_ }}
+                                    <span class="fa fa-check fa-fw" title="{{ 'active'|_ }}"></span> {{ 'yes'|_ }}
                                 {% else %}
-                                    <i class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></i> {{ 'no'|_ }}
+                                    <span class="fa fa-times fa-fw" title="{{ 'inactive'|_ }}"></span> {{ 'no'|_ }}
                                 {% endif %}
                             </td>
                         </tr>

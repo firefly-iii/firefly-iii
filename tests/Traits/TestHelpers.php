@@ -193,7 +193,6 @@ trait TestHelpers
                     $url
                 );
                 $this->assertEquals($response[$key], $original[$key], $message);
-                continue;
             }
         }
     }

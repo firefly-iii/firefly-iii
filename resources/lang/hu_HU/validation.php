@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Minden felosztásnak rendelkeznie kell "transaction_journal_id"-val (lehet érvényes érték vagy 0).',
 
     'ob_source_need_data' => 'Egy érvényes forrásszámla azonosító és/vagy egy érvényes forrásszámla név kell a folytatáshoz.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Egy érvényes célszámla azonosító és/vagy egy érvényes célszámla név kell a folytatáshoz.',
     'ob_dest_bad_data'    => 'Nem található érvényes célszámla ":id" azonosító vagy ":name" név keresésekor.',
 

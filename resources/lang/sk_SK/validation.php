@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Každé rozdelenie musí mať platné transaction_journal_id (platné ID alebo 0).',
 
     'ob_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
+    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
     'ob_dest_need_data'   => 'Pre pokračovanie je potrebné platné ID cieľového účtu a/alebo platný názov cieľového účtu.',
     'ob_dest_bad_data'    => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
 

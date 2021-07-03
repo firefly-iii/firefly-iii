@@ -1,9 +1,9 @@
 <tr data-count="{{ count }}" class="rule-action-holder">
     <td style="width:40px;">
-        <a href="#" class="btn btn-danger btn-sm remove-action"><i class="fa fa-trash"></i></a>
+        <a href="#" class="btn btn-danger btn-sm remove-action"><span class="fa fa-trash"></span></a>
     </td>
     <td style="width:30%;">
-        {# todo error when invalid name. #}
+{# See reference nr. 2 #} 
         <select name="actions[{{ count }}][type]" class="form-control">
             {% for key,type in allRuleActions() %}
                 <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected{% endif %}>{{ type }}</option>

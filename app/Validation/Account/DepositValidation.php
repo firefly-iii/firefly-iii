@@ -117,7 +117,7 @@ trait DepositValidation
         // if the user submits an ID only but that ID is not of the correct type,
         // return false.
         if (null !== $accountId && null === $accountName) {
-            $search = $this->accountRepository->findNull($accountId);
+            $search = $this->accountRepository->find($accountId);
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
                 $result = false;

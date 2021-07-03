@@ -38,7 +38,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -78,6 +77,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param TransactionCurrency $currency
      *
      * @return string|null
+     * @throws FireflyException
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
@@ -244,7 +244,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findByName(string $currencyName): ?TransactionCurrency
     {
@@ -257,7 +257,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      * @deprecated
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency
@@ -270,7 +270,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findBySymbol(string $currencySymbol): ?TransactionCurrency
     {
@@ -283,7 +283,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      * @deprecated
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency
@@ -343,20 +343,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return $result;
-    }
-
-    /**
-     * Find by ID, return NULL if not found.
-     * Used in Import Currency!
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     * @deprecated
-     */
-    public function findNull(int $currencyId): ?TransactionCurrency
-    {
-        return TransactionCurrency::find($currencyId);
     }
 
     /**

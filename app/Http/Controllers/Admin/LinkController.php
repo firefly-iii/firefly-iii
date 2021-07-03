@@ -130,7 +130,7 @@ class LinkController extends Controller
     {
         Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
-        $moveTo = $this->repository->findNull((int)$request->get('move_link_type_before_delete'));
+        $moveTo = $this->repository->find((int)$request->get('move_link_type_before_delete'));
         $this->repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string)trans('firefly.deleted_link_type', ['name' => $name]));

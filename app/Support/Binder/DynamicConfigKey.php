@@ -43,7 +43,7 @@ class DynamicConfigKey
      * @param Route  $route
      *
      * @return string
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): string
     {

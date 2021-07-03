@@ -48,7 +48,7 @@ use Log;
  * Class to centralise code that updates a journal given the input by system.
  *
  * Class JournalUpdateService
- * TODO test me
+ * See reference nr. 93
  */
 class JournalUpdateService
 {
@@ -128,6 +128,11 @@ class JournalUpdateService
     public function update(): void
     {
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
+
+        if ($this->removeReconciliation()) {
+            $this->data['reconciled'] = false;
+        }
+
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
             Log::info('Account info is valid, now update.');
@@ -158,7 +163,7 @@ class JournalUpdateService
         $this->updateAmount();
         $this->updateForeignAmount();
 
-        // TODO update hash
+        // See reference nr. 94
 
         app('preferences')->mark();
 
@@ -201,7 +206,7 @@ class JournalUpdateService
         $result = $validator->validateSource($sourceId, $sourceName, null);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+        // See reference nr. 95
 
         // validate submitted info:
         return $result;
@@ -295,7 +300,7 @@ class JournalUpdateService
         $result            = $validator->validateDestination($destId, $destName, null);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+        // See reference nr. 96
 
         // validate submitted info:
         return $result;
@@ -757,5 +762,20 @@ class JournalUpdateService
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
+    }
+
+    /**
+     * @return bool
+     */
+    private function removeReconciliation(): bool
+    {
+        if (count($this->data) > 1) {
+            return true;
+        }
+        if (1 === count($this->data) && true === array_key_exists('transaction_journal_id', $this->data)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -86,7 +86,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
-        // TODO should be in repos
+// See reference nr. 69
         $count = $recurrence->recurrenceTransactions()->count();
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
@@ -162,7 +162,6 @@ class EditController extends Controller
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
         $data = $request->getAll();
-
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));

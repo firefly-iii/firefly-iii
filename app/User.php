@@ -132,14 +132,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                                        $transaction_groups_count
  * @property-read int|null                                                        $transaction_journals_count
  * @property-read int|null                                                        $transactions_count
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereMfaSecret($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereObjectguid($value)
+ * @method static Builder|User whereMfaSecret($value)
+ * @method static Builder|User whereObjectguid($value)
  * @property string|null                                                          $provider
- * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\User whereProvider($value)
+ * @method static Builder|User whereProvider($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
  * @property-read int|null $object_groups_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[] $webhooks
  * @property-read int|null $webhooks_count
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property string|null $guid
+ * @property string|null $domain
+ * @method static Builder|User whereDomain($value)
+ * @method static Builder|User whereGuid($value)
+ * @method static Builder|User whereTwoFactorRecoveryCodes($value)
+ * @method static Builder|User whereTwoFactorSecret($value)
  */
 class User extends Authenticatable
 {
@@ -439,4 +447,70 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Transaction::class, TransactionJournal::class);
     }
+
+    // start LDAP related code
+    /**
+     * Get the database column name of the domain.
+     *
+     * @return string
+     */
+    public function getLdapDomainColumn()
+    {
+        return 'domain';
+    }
+
+    /**
+     * Get the models LDAP domain.
+     *
+     * @return string
+     */
+    public function getLdapDomain()
+    {
+        return $this->{$this->getLdapDomainColumn()};
+    }
+
+    /**
+     * Set the models LDAP domain.
+     *
+     * @param string $domain
+     *
+     * @return void
+     */
+    public function setLdapDomain($domain)
+    {
+        $this->{$this->getLdapDomainColumn()} = $domain;
+    }
+
+    /**
+     * Get the models LDAP GUID database column name.
+     *
+     * @return string
+     */
+    public function getLdapGuidColumn()
+    {
+        return 'objectguid';
+    }
+
+    /**
+     * Get the models LDAP GUID.
+     *
+     * @return string
+     */
+    public function getLdapGuid()
+    {
+        return $this->{$this->getLdapGuidColumn()};
+    }
+
+    /**
+     * Set the models LDAP GUID.
+     *
+     * @param string $guid
+     *
+     * @return void
+     */
+    public function setLdapGuid($guid)
+    {
+        $this->{$this->getLdapGuidColumn()} = $guid;
+    }
+    // end LDAP related code
 }

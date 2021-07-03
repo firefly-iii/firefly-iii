@@ -61,6 +61,7 @@ class MessageController extends Controller
      * @param Webhook $webhook
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function index(Webhook $webhook): JsonResponse
     {

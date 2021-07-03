@@ -20,7 +20,6 @@
  */
 
 /** @noinspection MultipleReturnStatementsInspection */
-/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Tag;
@@ -29,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use Illuminate\Support\Collection;
+use JetBrains\PhpStorm\Pure;
 use Log;
 use Throwable;
 
@@ -55,7 +55,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * MonthReportGenerator constructor.
      */
-    public function __construct()
+    #[Pure] public function __construct()
     {
         $this->expenses = new Collection;
         $this->income   = new Collection;

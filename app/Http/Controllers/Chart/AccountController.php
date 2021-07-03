@@ -123,7 +123,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
                 $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
@@ -331,7 +331,7 @@ class AccountController extends Controller
         Log::debug('Default set is ', $defaultSet);
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
         Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (0 === count($frontPage->data)) {
+        if (empty($frontPage->data)) {
             app('preferences')->set('frontPageAccounts', $defaultSet);
             Log::debug('frontpage set is empty!');
         }
@@ -509,7 +509,7 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
-     * TODO this chart is not multi-currency aware.
+* See reference nr. 55
      *
      * @param Carbon     $start
      * @param Carbon     $end
@@ -568,7 +568,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
                 $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [

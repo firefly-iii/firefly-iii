@@ -74,13 +74,12 @@ interface BudgetRepositoryInterface
     public function findByName(?string $name): ?Budget;
 
     /**
-     * TODO refactor to "find"
      *
      * @param int|null $budgetId
      *
      * @return Budget|null
      */
-    public function findNull(int $budgetId = null): ?Budget;
+    public function find(int $budgetId = null): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.
@@ -88,7 +87,7 @@ interface BudgetRepositoryInterface
      *
      * @param Budget $budget
      *
-     * @return Carbon
+     * @return Carbon|null
      */
     public function firstUseDate(Budget $budget): ?Carbon;
 

@@ -163,7 +163,8 @@ trait CalculateXOccurrencesSince
         $mutator  = clone $date;
         // monday = 1
         // sunday = 7
-        $mutator->addDay(); // always assume today has passed.
+        // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
+        //$mutator->addDay(); // always assume today has passed.
         $dayOfWeek = (int)$moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
@@ -208,7 +209,7 @@ trait CalculateXOccurrencesSince
         $date->year = $mutator->year;
         if ($mutator > $date) {
             Log::debug(
-                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'),)
+                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'))
             );
             $date->addYear();
             Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
@@ -223,7 +224,7 @@ trait CalculateXOccurrencesSince
                 $return[] = clone $obj;
                 $total++;
             }
-            $obj->addYears(1);
+            $obj->addYears();
             $attempts++;
         }
 

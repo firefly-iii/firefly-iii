@@ -37,36 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'telemetry_collected_info'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    {% if count == 0 %}
-                    <p>
-                        {{ 'no_telemetry_present'|_ }}
-                    </p>
-                    {% else %}
-                    <p>
-                        {{ trans_choice('firefly.records_telemetry_present', count) }}
-                    </p>
-                        <div class="btn-group btn-group-sm">
-                            <a class="btn btn-default" href="{{ route('admin.telemetry.view') }}" title="{{ 'telemetry_button_view'|_ }}">
-                                <i class="fa fa-eye"></i>
-                                {{ 'telemetry_button_view'|_ }}
-                            </a>
-                            <a class="btn btn-danger" href="{{ route('admin.telemetry.delete') }}" title="{{ 'telemetry_button_delete'|_ }}">
-                                <i class="fa fa-trash"></i>
-                                {{ 'telemetry_button_delete'|_ }}
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
     </div>
-
 {% endblock %}
 {% block scripts %}
 {% endblock %}

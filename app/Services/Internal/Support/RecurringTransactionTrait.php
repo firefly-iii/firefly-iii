@@ -145,7 +145,7 @@ trait RecurringTransactionTrait
             if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
                 unset($array['foreign_amount']);
             }
-            // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+// See reference nr. 100
             $transaction = new RecurrenceTransaction(
                 [
                     'recurrence_id'           => $recurrence->id,
@@ -196,7 +196,7 @@ trait RecurringTransactionTrait
         $repository->setUser($this->user);
 
         // if user has submitted an account ID, search for it.
-        $result = $repository->findNull((int)$accountId);
+        $result = $repository->find((int)$accountId);
         if (null !== $result) {
             return $result;
         }
@@ -257,6 +257,8 @@ trait RecurringTransactionTrait
     /**
      * @param RecurrenceTransaction $transaction
      * @param int                   $categoryId
+     *
+     * @throws FireflyException
      */
     private function setCategory(RecurrenceTransaction $transaction, int $categoryId): void
     {
@@ -264,6 +266,9 @@ trait RecurringTransactionTrait
         $categoryFactory->setUser($transaction->recurrence->user);
         $category = $categoryFactory->findOrCreate($categoryId, null);
         if (null === $category) {
+            // remove category:
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->delete();
+            $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
             return;
         }
 
@@ -308,7 +313,7 @@ trait RecurringTransactionTrait
      */
     protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
     {
-        if (count($tags) > 0) {
+        if (!empty($tags)) {
             /** @var RecurrenceMeta|null $entry */
             $entry = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
@@ -317,7 +322,7 @@ trait RecurringTransactionTrait
             $entry->value = json_encode($tags);
             $entry->save();
         }
-        if (0 === count($tags)) {
+        if (empty($tags)) {
             // delete if present
             $transaction->recurrenceTransactionMeta()->where('name', 'tags')->delete();
         }

@@ -54,10 +54,8 @@ class UpdateRequest extends FormRequest
             'enabled'        => ['enabled', 'boolean'],
         ];
 
-        $return = $this->getAllData($fields);
-
-        return $return;
-
+        return $this->getAllData($fields);
+//        return $return;
     }
 
     /**
@@ -71,8 +69,8 @@ class UpdateRequest extends FormRequest
 
         return [
             'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
-            'code'           => sprintf('between:3,3|unique:transaction_currencies,code,%d', $currency->id),
-            'symbol'         => sprintf('between:1,8|unique:transaction_currencies,symbol,%d', $currency->id),
+            'code'           => sprintf('between:3,51|unique:transaction_currencies,code,%d', $currency->id),
+            'symbol'         => sprintf('between:1,51|unique:transaction_currencies,symbol,%d', $currency->id),
             'decimal_places' => 'between:0,20|numeric|min:0|max:20',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],

@@ -19,8 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
-
 declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
@@ -85,8 +83,6 @@ class ScanAttachments extends Command
             $attachment->save();
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
-
-        app('telemetry')->feature('system.command.executed', $this->signature);
 
         return 0;
     }

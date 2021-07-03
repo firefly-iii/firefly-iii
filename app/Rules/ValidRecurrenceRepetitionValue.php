@@ -62,23 +62,23 @@ class ValidRecurrenceRepetitionValue implements Rule
             return true;
         }
 
-        if (0 === strpos($value, 'monthly')) {
+        if (str_starts_with($value, 'monthly')) {
             return $this->validateMonthly($value);
         }
 
         // Value is like: ndom,3,7
         // nth x-day of the month.
-        if (0 === strpos($value, 'ndom')) {
+        if (str_starts_with($value, 'ndom')) {
             return $this->validateNdom($value);
         }
 
         // Value is like: weekly,7
-        if (0 === strpos($value, 'weekly')) {
+        if (str_starts_with($value, 'weekly')) {
             return $this->validateWeekly($value);
         }
 
         // Value is like: yearly,2018-01-01
-        if (0 === strpos($value, 'yearly')) {
+        if (str_starts_with($value, 'yearly')) {
             return $this->validateYearly($value);
         }
 

@@ -28,14 +28,14 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 /**
  * Class PiggyBankForm
  *
- * TODO cleanup and describe.
+* See reference nr. 27
  */
 class PiggyBankForm
 {
     use FormSupport;
 
     /**
-     * TODO cleanup and describe.
+* See reference nr. 28
      *
      * @param string     $name
      * @param mixed      $value

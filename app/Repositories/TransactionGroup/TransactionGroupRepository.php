@@ -87,7 +87,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function find(int $groupId): ?TransactionGroup
     {
-        return $this->user->transactionGroups()->where('id', $groupId)->first();
+        return $this->user->transactionGroups()->find($groupId);
     }
 
     /**
@@ -264,6 +264,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * @param TransactionGroup $group
      *
      * @return array
+     * @throws FireflyException
      */
     public function getPiggyEvents(TransactionGroup $group): array
     {
@@ -379,7 +380,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         /** @var GroupUpdateService $service */
         $service = app(GroupUpdateService::class);
-
         return $service->update($transactionGroup, $data);
     }
 
@@ -397,9 +397,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $array['categories']        = $journal->categories->toArray();
         $array['budgets']           = $journal->budgets->toArray();
         $array['notes']             = $journal->notes->toArray();
-        $array['locations']         = []; // todo
+        $array['locations']         = [];
         $array['attachments']       = $journal->attachments->toArray();
-        $array['links']             = []; // todo
+        $array['links']             = [];
         $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
 
         /** @var Transaction $transaction */

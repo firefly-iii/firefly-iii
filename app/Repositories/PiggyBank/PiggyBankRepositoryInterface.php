@@ -115,7 +115,7 @@ interface PiggyBankRepositoryInterface
      *
      * @return PiggyBank|null
      */
-    public function findNull(int $piggyBankId): ?PiggyBank;
+    public function find(int $piggyBankId): ?PiggyBank;
 
     /**
      * @param int|null    $piggyBankId

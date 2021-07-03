@@ -207,6 +207,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Collection|null $tags
      *
      * @return array
+     * @throws FireflyException
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -222,6 +223,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Collection|null $tags
      *
      * @return array
+     * @throws FireflyException
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {

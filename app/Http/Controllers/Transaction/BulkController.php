@@ -63,7 +63,7 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
-     * TODO user wont be able to tell if journal is part of split.
+* See reference nr. 47
      *
      * @param array $journals
      *
@@ -90,7 +90,7 @@ class BulkController extends Controller
      *
      * @param BulkEditJournalRequest $request
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(BulkEditJournalRequest $request)
     {
@@ -104,7 +104,7 @@ class BulkController extends Controller
 
         foreach ($journalIds as $journalId) {
             $journalId = (int)$journalId;
-            $journal   = $this->repository->findNull($journalId);
+            $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
                 $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->string('tags')));

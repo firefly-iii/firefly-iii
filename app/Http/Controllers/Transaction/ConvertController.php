@@ -47,7 +47,7 @@ use Log;
 /**
  * Class ConvertController.
  *
- * TODO when converting to a split transfer, all sources and destinations must be the same.
+* See reference nr. 49
  */
 class ConvertController extends Controller
 {
@@ -283,7 +283,6 @@ class ConvertController extends Controller
      *
      * @return RedirectResponse|Redirector
      *
-     * @throws FireflyException
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
@@ -347,7 +346,7 @@ class ConvertController extends Controller
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
         }
 
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+// See reference nr. 50
 
         $update = [
             'source_id'        => $sourceId,

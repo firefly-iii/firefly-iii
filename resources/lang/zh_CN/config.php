@@ -28,6 +28,7 @@ return [
     'month'                   => '%Y年%B',
     'month_and_day'           => '%Y年%B%e日',
     'month_and_day_moment_js' => 'YYYY年M月D日',
+    'month_and_day_fns'       => 'MMMM d, y',
     'month_and_date_day'      => '%Y年%B%e日 %A',
     'month_and_day_no_year'   => '%B%e日',
     'date_time'               => '%Y年%B%e日 %T',

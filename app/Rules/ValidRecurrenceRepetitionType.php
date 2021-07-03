@@ -63,10 +63,10 @@ class ValidRecurrenceRepetitionType implements Rule
         if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
             return true;
         }
-        if (0 === strpos($value, 'monthly')) {
+        if (str_starts_with($value, 'monthly')) {
             return true;
         }
-        if (0 === strpos($value, 'ndom')) {
+        if (str_starts_with($value, 'ndom')) {
             return true;
         }
 

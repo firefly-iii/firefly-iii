@@ -46,7 +46,7 @@ class AttachmentFactory
     public function create(array $data): ?Attachment
     {
         // append if necessary.
-        $model = false === strpos($data['attachable_type'], 'FireflyIII') ? sprintf('FireflyIII\\Models\\%s', $data['attachable_type'])
+        $model = !str_contains($data['attachable_type'], 'FireflyIII') ? sprintf('FireflyIII\\Models\\%s', $data['attachable_type'])
             : $data['attachable_type'];
 
         // get journal instead of transaction.

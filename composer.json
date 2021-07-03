@@ -69,7 +69,7 @@
       }
     ],
   "require": {
-    "php": ">=7.4.0",
+    "php": ">=8.0.0",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-fileinfo": "*",
@@ -83,14 +83,15 @@
     "ext-tokenizer": "*",
     "ext-xml": "*",
     "bacon/bacon-qr-code": "2.*",
-    "diglactic/laravel-breadcrumbs": "^6.0",
+    "diglactic/laravel-breadcrumbs": "^7.0",
+    "directorytree/ldaprecord-laravel": "^2.2",
     "doctrine/dbal": "3.*",
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
     "jc5/google2fa-laravel": "2.0.5",
     "jc5/recovery": "^2",
-    "laravel/framework": "^8.0",
+    "laravel/framework": "^8.48",
     "laravel/passport": "10.*",
     "laravel/ui": "^3.0",
     "laravelcollective/html": "6.*",
@@ -101,7 +102,7 @@
     "predis/predis": "^1.1",
     "ramsey/uuid": "^4.1",
     "rcrowe/twigbridge": "^0.12.1",
-    "spatie/data-transfer-object": "^2.8"
+    "spatie/data-transfer-object": "^3.1"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.3",
@@ -113,12 +114,12 @@
     "nunomaduro/larastan": "^0.7.0",
     "phpstan/phpstan": "^0.12.34",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
-    "phpunit/phpunit": "^9.2",
+    "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-master",
     "thecodingmachine/phpstan-strict-rules": "^0.12.0"
   },
   "suggest": {
-    "adldap2/adldap2-laravel": "If you want to login using LDAP.",
+    "directorytree/ldaprecord-laravel": "If you want to login using LDAP.",
     "ext-ldap": "Needed to support LDAP."
   },
   "autoload": {
@@ -172,6 +173,7 @@
       "@php artisan firefly-iii:migrate-recurrence-meta",
       "@php artisan firefly-iii:migrate-tag-locations",
       "@php artisan firefly-iii:migrate-recurrence-type",
+      "@php artisan firefly-iii:upgrade-liabilities",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",
@@ -199,10 +201,12 @@
       "@php artisan firefly-iii:restore-oauth-keys",
       "@php artisan firefly-iii:set-latest-version --james-is-cool",
       "@php artisan firefly:instructions update",
+      "@php artisan firefly-iii:verify-security-alerts",
       "@php artisan passport:install"
     ],
     "post-install-cmd": [
-      "@php artisan firefly:instructions install"
+      "@php artisan firefly:instructions install",
+      "@php artisan firefly-iii:verify-security-alerts"
     ]
   },
   "config": {

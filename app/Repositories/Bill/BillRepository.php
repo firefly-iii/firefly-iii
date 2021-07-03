@@ -99,7 +99,7 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param int $billId
      *
-     * @return Bill
+     * @return Bill|null
      */
     public function find(int $billId): ?Bill
     {
@@ -142,22 +142,11 @@ class BillRepository implements BillRepositoryInterface
      *
      * @param string $name
      *
-     * @return Bill
+     * @return Bill|null
      */
     public function findByName(string $name): ?Bill
     {
-        $bills = $this->user->bills()->get(['bills.*']);
-
-        // TODO no longer need to loop like this
-
-        /** @var Bill $bill */
-        foreach ($bills as $bill) {
-            if ($bill->name === $name) {
-                return $bill;
-            }
-        }
-
-        return null;
+        return $this->user->bills()->where('name', $name)->first(['bills.*']);
     }
 
     /**
@@ -505,13 +494,6 @@ class BillRepository implements BillRepositoryInterface
 
             $currentStart = clone $nextExpectedMatch;
         }
-        $simple = $set->each(
-            static function (Carbon $date) {
-                return $date->format('Y-m-d');
-            }
-        );
-
-        //Log::debug(sprintf('Found dates between %s and %s:', $start->format('Y-m-d'), $end->format('Y-m-d')), $simple->toArray());
 
         return $set;
     }
@@ -649,7 +631,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextDateMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
@@ -657,12 +639,6 @@ class BillRepository implements BillRepositoryInterface
         while ($start < $date) {
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
-
-        $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-
-        //Log::debug('nextDateMatch: Final start is ' . $start->format('Y-m-d'));
-        //Log::debug('nextDateMatch: Matching end is ' . $end->format('Y-m-d'));
-
         $cache->store($start);
 
         return $start;
@@ -683,7 +659,7 @@ class BillRepository implements BillRepositoryInterface
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;

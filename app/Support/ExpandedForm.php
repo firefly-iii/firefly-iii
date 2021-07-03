@@ -41,12 +41,11 @@ class ExpandedForm
     use FormSupport;
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
@@ -73,13 +72,12 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param int    $value
-     * @param mixed  $checked
-     * @param array  $options
+     * @param string     $name
+     * @param int|null   $value
+     * @param mixed      $checked
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
@@ -109,12 +107,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function date(string $name, $value = null, array $options = null): string
     {
@@ -134,11 +131,10 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param array  $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function file(string $name, array $options = null): string
     {
@@ -157,12 +153,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function integer(string $name, $value = null, array $options = null): string
     {
@@ -183,12 +178,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function location(string $name, $value = null, array $options = null): string
     {
@@ -234,9 +228,9 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
      */
@@ -265,12 +259,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function number(string $name, $value = null, array $options = null): string
     {
@@ -339,11 +332,10 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param array  $options
+     * @param string     $name
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function password(string $name, array $options = null): string
     {
@@ -364,12 +356,11 @@ class ExpandedForm
     /**
      * Function to render a percentage.
      *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function percentage(string $name, $value = null, array $options = null): string
     {
@@ -390,12 +381,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function staticText(string $name, $value, array $options = null): string
     {
@@ -413,12 +403,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function text(string $name, $value = null, array $options = null): string
     {
@@ -437,12 +426,11 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param mixed      $value
+     * @param array|null $options
      *
      * @return string
-     *
      */
     public function textarea(string $name, $value = null, array $options = null): string
     {

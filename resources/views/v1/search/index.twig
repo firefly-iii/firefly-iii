@@ -26,22 +26,33 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-1 col-sm-10">
-                                <button type="submit" class="btn btn-info"><i class="fa fa-search"></i> {{ 'search'|_ }}</button>
+                                <button type="submit" class="btn btn-info"><span class="fa fa-search"></span> {{ 'search'|_ }}</button>
                                 {% if ruleId > 0 and ruleChanged %}
-                                <a href="{{ route('rules.edit', [ruleId]) }}?from_query={{ fullQuery }}" class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
+                                    <a href="{{ route('rules.edit', [ruleId]) }}?from_query={{ fullQuery }}"
+                                       class="btn btn-default">{{ trans('firefly.update_rule_from_query', {rule: rule.title}) }}</a>
                                 {% endif %}
                                 <a href="{{ route('rules.create') }}?from_query={{ fullQuery }}" class="btn btn-default">{{ 'create_rule_from_query'|_ }}</a>
                             </div>
                         </div>
                         {% if 0 != ruleId %}
-                            <input type="hidden" name="rule" value="{{ ruleId }}" />
+                            <input type="hidden" name="rule" value="{{ ruleId }}"/>
                         {% endif %}
                     </form>
                     {% if '' != query %}
-                    <p>
-                        {{ trans('firefly.search_for_query', {query: query|escape})|raw}}
-                    </p>
+                        <p>
+                            {{ trans('firefly.search_for_query', {query: query|escape})|raw }}
+                        </p>
                     {% endif %}
+
+                    {% if invalidOperators|length > 0 %}
+                        <p>{{ trans('firefly.invalid_operators_list') }}</p>
+                        <ul>
+                            {% for operator in invalidOperators %}
+                                <li class="text-danger">{{ operator.type  }}:{{ operator.value }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
                     {% if operators|length > 0 %}
                         <p>{{ trans('firefly.modifiers_applies_are') }}</p>
                         <ul>
@@ -68,23 +79,25 @@
                         <div class="search_results" style="display: none;"></div>
                         {# loading indicator #}
                         <div class="overlay">
-                            <i class="fa fa-refresh fa-spin"></i>
+                            <span class="fa fa-refresh fa-spin"></span>
                         </div>
 
                         <div class="row mass_edit_all hidden-xs" style="display: none;">
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                 <div class="mass_button_options btn-group btn-group" style="display:none;">
-                                    <a href="#" class="btn btn-default mass_edit"><i class="fa fa-fw fa-pencil"></i> <span>{{ 'edit_selected'|_ }}</span></a>
+                                    <a href="#" class="btn btn-default mass_edit"><span class="fa fa-fw fa-pencil"></span> <span>{{ 'edit_selected'|_ }}</span></a>
                                     <a href="#" class="btn btn-default bulk_edit"><span>{{ 'bulk_edit'|_ }}</span></a>
-                                    <a href="#" class="btn btn-danger mass_delete"><i class="fa fa-fw fa-trash"></i> <span>{{ 'delete_selected'|_ }}</span></a>
+                                    <a href="#" class="btn btn-danger mass_delete"><span class="fa fa-fw fa-trash"></span>
+                                        <span>{{ 'delete_selected'|_ }}</span></a>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 hidden-xs">
 
                                 <div class="mass_buttons btn-group btn-group pull-right">
-                                    <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
-                                    <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
-                                        ></i> {{ 'stop_selection'|_ }}</a>
+                                    <a href="#" class="btn btn-default mass_select"><span
+                                                class="fa fa-fw fa-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
+                                    <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><span class="fa faw-fw fa-square-o"
+                                        ></span> {{ 'stop_selection'|_ }}</a>
                                 </div>
                             </div>
                         </div>

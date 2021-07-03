@@ -35,15 +35,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionGroup
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property int $user_id
- * @property string|null $title
- * @property-read Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read int|null $transaction_journals_count
- * @property-read User $user
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                                  $user_id
+ * @property string|null                          $title
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read User                            $user
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup newQuery()
  * @method static Builder|TransactionGroup onlyTrashed()

@@ -79,7 +79,16 @@ interface RecurringRepositoryInterface
      *
      * @return null|string
      */
-    public function getCategory(RecurrenceTransaction $recTransaction): ?string;
+    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string;
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recTransaction
+     *
+     * @return null|int
+     */
+    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Returns the count of journals created for this recurrence, possibly limited by time.

@@ -56,7 +56,7 @@ const getters = {
         return state.transactionType;
     },
     accountToTransaction: state => {
-        // TODO better architecture here, does not need the store.
+// See reference nr. 1
         // possible API point!!
         return state.accountToTransaction;
     },

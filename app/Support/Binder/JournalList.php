@@ -38,7 +38,7 @@ class JournalList implements BinderInterface
      *
      * @return array
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): array
     {
@@ -52,7 +52,7 @@ class JournalList implements BinderInterface
             $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
             $collector->setJournalIds($list);
             $result = $collector->getExtractedJournals();
-            if (0 === count($result)) {
+            if (empty($result)) {
                 throw new NotFoundHttpException;
             }
 
@@ -68,7 +68,7 @@ class JournalList implements BinderInterface
     protected static function parseList(string $value): array
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));
-        if (0 === count($list)) {
+        if (empty($list)) {
             throw new NotFoundHttpException; 
         }
 

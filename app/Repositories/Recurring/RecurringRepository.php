@@ -133,13 +133,33 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      * @return null|string
      */
-    public function getCategory(RecurrenceTransaction $recTransaction): ?string
+    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('category_name' === $meta->name) {
                 $return = (string)$meta->value;
+            }
+        }
+
+        return '' === $return ? null : $return;
+    }
+
+    /**
+     * Get the category from a recurring transaction transaction.
+     *
+     * @param RecurrenceTransaction $recTransaction
+     *
+     * @return null|int
+     */
+    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
+    {
+        $return = '';
+        /** @var RecurrenceTransactionMeta $meta */
+        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
+            if ('category_id' === $meta->name) {
+                $return = (int)$meta->value;
             }
         }
 
@@ -270,6 +290,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceTransaction $transaction
      *
      * @return array
+     * @throws \JsonException
      */
     public function getTags(RecurrenceTransaction $transaction): array
     {
@@ -334,7 +355,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = (int)$journalId;
         }
-        if (0 === count($search)) {
+        if (empty($search)) {
 
             return new Collection;
         }
@@ -396,7 +417,6 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param int                  $count
      *
      * @return array
-     * @throws FireflyException
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
@@ -434,7 +454,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceRepetition $repetition
      *
      * @return string
-     *
+     * @throws FireflyException
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {

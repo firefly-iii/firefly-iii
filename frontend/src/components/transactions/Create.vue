@@ -23,10 +23,8 @@
     <alert :message="errorMessage" type="danger"/>
     <alert :message="successMessage" type="success"/>
     <form @submit="submitTransaction" autocomplete="off">
-      <SplitPills :transactions="transactions"/>
+      <SplitPills :transactions="transactions" :count="transactions.length"/>
       <div class="tab-content">
-        <!-- v-on:switch-accounts="switchAccounts($event)" -->
-        <!-- :allowed-opposing-types="allowedOpposingTypes" -->
         <SplitForm
             v-for="(transaction, index) in this.transactions"
             v-bind:key="index"
@@ -71,7 +69,7 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><i class="far fa-clone"></i> {{
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransactionArray"><span class="far fa-clone"></span> {{
                       $t('firefly.add_another_split')
                     }}
                   </button>
@@ -81,8 +79,8 @@
                     &nbsp;
                   </div>
                   <button :disabled="!enableSubmit" class="btn btn-success btn-block" @click="submitTransaction">
-                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.store_transaction') }}</span>
-                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                    <span v-if="enableSubmit"><span class="far fa-save"></span> {{ $t('firefly.store_transaction') }}</span>
+                    <span v-if="!enableSubmit"><span class="fas fa-spinner fa-spin"></span></span>
                   </button>
                 </div>
               </div>
@@ -119,8 +117,6 @@ import SplitPills from "./SplitPills";
 import TransactionGroupTitle from "./TransactionGroupTitle";
 import SplitForm from "./SplitForm";
 import {mapGetters, mapMutations} from "vuex";
-import {getDefaultErrors} from "../../shared/transactions";
-
 
 export default {
   name: "Create",
@@ -199,7 +195,7 @@ export default {
     /**
      * Grabbed from the store.
      */
-    ...mapGetters('transactions/create', ['transactionType', 'transactions', 'groupTitle','defaultErrors']),
+    ...mapGetters('transactions/create', ['transactionType', 'transactions', 'groupTitle', 'defaultErrors']),
     ...mapGetters('root', ['listPageSize'])
   },
   watch: {
@@ -238,7 +234,7 @@ export default {
       return axios.post(url, data);
     },
     handleSubmissionResponse: function (response) {
-      //console.log('In handleSubmissionResponse()');
+      // console.log('In handleSubmissionResponse()');
       // save some meta data:
       this.returnedGroupId = parseInt(response.data.data.id);
       this.returnedGroupTitle = null === response.data.data.attributes.group_title ? response.data.data.attributes.transactions[0].description : response.data.data.attributes.group_title;
@@ -252,13 +248,7 @@ export default {
         }
       }
 
-      return new Promise((resolve) => {
-        resolve(
-            {
-              journals: journals,
-            }
-        );
-      });
+      return Promise.resolve({journals: journals});
     },
     submitLinks: function (response, submission) {
       let promises = [];
@@ -282,13 +272,7 @@ export default {
         }
       }
       if (0 === promises.length) {
-        return new Promise((resolve) => {
-          resolve(
-              {
-                response: 'from submitLinks'
-              }
-          );
-        });
+        return Promise.resolve({response: 'from submitLinks'});
       }
       return Promise.all(promises);
     },
@@ -303,6 +287,9 @@ export default {
           if (hasAttachments) {
             // console.log('upload!');
             this.updateField({index: i, field: 'transaction_journal_id', value: journalId});
+            // set upload trigger?
+            this.updateField({index: i, field: 'uploadTrigger', value: true});
+            //this.transactions[i].uploadTrigger = true;
             anyAttachments = true;
           }
         }
@@ -312,23 +299,18 @@ export default {
         this.submittedAttachments = 0;
       }
 
-      return new Promise((resolve) => {
-        resolve(
-            {
-              response: 'from submitAttachments'
-            }
-        );
-      });
+      return Promise.resolve({response: 'from submitAttachments'});
     },
     selectedAttachment: function (payload) {
       this.updateField({index: payload.index, field: 'attachments', value: true});
     },
     finaliseSubmission: function () {
+      // console.log('finaliseSubmission');
       if (0 === this.submittedAttachments) {
         // console.log('submittedAttachments = ' + this.submittedAttachments);
         return;
       }
-      //console.log('In finaliseSubmission');
+      // console.log('In finaliseSubmission');
       if (false === this.createAnother) {
         window.location.href = (window.previousURL ?? '/') + '?transaction_group_id=' + this.returnedGroupId + '&message=created';
         return;
@@ -340,7 +322,7 @@ export default {
         this.errorMessage = '';
         this.successMessage = this.$t('firefly.transaction_stored_link', {ID: this.returnedGroupId, title: this.returnedGroupTitle});
       }
-
+      // console.log('here we are');
       // enable flags:
       this.enableSubmit = true;
       this.submittedTransaction = false;
@@ -364,13 +346,7 @@ export default {
         this.resetTransactions();
         this.addTransaction();
       }
-      return new Promise((resolve) => {
-        resolve(
-            {
-              response: 'from finaliseSubmission'
-            }
-        );
-      });
+      return Promise.resolve({response: 'from finaliseSubmission'});
     },
     handleSubmissionError: function (error) {
       //console.log('in handleSubmissionError');
@@ -496,7 +472,7 @@ export default {
                 }
                 // submit transaction link:
                 promises.push(axios.post('./api/v1/transaction_links', currentLink).then(response => {
-                  // TODO error handling.
+// See reference nr. 4
                 }));
               }
             }
@@ -741,13 +717,20 @@ export default {
             let current = array.tags[i];
             if (typeof current === 'object' && null !== current) {
               currentSplit.tags.push(current.text);
+              // console.log('Add tag "' + current.text + '" from object.');
+              continue;
             }
             if (typeof current === 'string') {
               currentSplit.tags.push(current);
+              // console.log('Add tag "' + current + '" from string.');
+              continue;
             }
+            // console.log('Is neither.');
           }
         }
       }
+      // console.log('Current split tags is now: ');
+      // console.log(currentSplit.tags);
 
       // bills and piggy banks
       if (0 !== array.piggy_bank_id) {
@@ -902,6 +885,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

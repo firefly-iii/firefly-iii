@@ -40,7 +40,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a class="btn btn-default button-sm" href="./budgets"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_budgets') }}</a>
+      <a class="btn btn-default button-sm" href="./budgets"><span class="far fa-money-bill-alt"></span> {{ $t('firefly.go_to_budgets') }}</a>
     </div>
   </div>
 </template>
@@ -60,6 +60,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

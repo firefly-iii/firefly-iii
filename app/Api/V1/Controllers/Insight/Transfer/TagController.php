@@ -39,7 +39,7 @@ class TagController extends Controller
 
     /**
      * TagController constructor.
-     * TODO lots of copying and pasting here.
+* See reference nr. 82
      */
     public function __construct()
     {

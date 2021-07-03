@@ -184,12 +184,12 @@ class BoxController extends Controller
         // format amounts:
         $keys = array_keys($sums);
         foreach ($keys as $currencyId) {
-            $currency              = $repository->findNull($currencyId);
+            $currency              = $repository->find($currencyId);
             $sums[$currencyId]     = app('amount')->formatAnything($currency, $sums[$currencyId], false);
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (0===count($sums)) {
+        if (empty($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);

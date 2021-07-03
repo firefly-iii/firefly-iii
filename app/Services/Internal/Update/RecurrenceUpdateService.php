@@ -49,7 +49,7 @@ class RecurrenceUpdateService
     /**
      * Updates a recurrence.
      *
-     * TODO if the user updates the type, accounts must be validated (again).
+* See reference nr. 88
      *
      * @param Recurrence $recurrence
      * @param array      $data
@@ -143,11 +143,13 @@ class RecurrenceUpdateService
      *
      * @param Recurrence $recurrence
      * @param array      $repetitions
+     *
+     * @throws FireflyException
      */
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
-        if (0 === count($repetitions)) {
+        if (empty($repetitions)) {
             // wont drop repetition, rather avoid.
             return;
         }
@@ -184,7 +186,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param array $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return RecurrenceRepetition|null
      */
@@ -214,7 +217,7 @@ class RecurrenceUpdateService
     }
 
     /**
-     * TODO this method is way too complex.
+* See reference nr. 89
      *
      * @param Recurrence $recurrence
      * @param array      $transactions
@@ -224,7 +227,7 @@ class RecurrenceUpdateService
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         $originalCount = $recurrence->recurrenceTransactions()->count();
-        if (0 === count($transactions)) {
+        if (empty($transactions)) {
             // wont drop transactions, rather avoid.
             return;
         }
@@ -286,9 +289,17 @@ class RecurrenceUpdateService
                 if (array_key_exists('budget_id', $current)) {
                     $this->setBudget($match, (int)$current['budget_id']);
                 }
+                // reset category if name is set but empty:
+                // can be removed when v1 is retired.
+                if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {
+                    $current['category_name'] = null;
+                    $current['category_id'] = 0;
+                }
+
                 if (array_key_exists('category_id', $current)) {
                     $this->setCategory($match, (int)$current['category_id']);
                 }
+
                 if (array_key_exists('tags', $current)) {
                     $this->updateTags($match, $current['tags']);
                 }
@@ -300,7 +311,8 @@ class RecurrenceUpdateService
     }
 
     /**
-     * @param array $data
+     * @param Recurrence $recurrence
+     * @param array      $data
      *
      * @return RecurrenceTransaction|null
      */

@@ -104,7 +104,7 @@ class DeleteController extends Controller
         $type     = $account->accountType->type;
         $typeName = config(sprintf('firefly.shortNamesByFullName.%s', $type));
         $name     = $account->name;
-        $moveTo   = $this->repository->findNull((int)$request->get('move_account_before_delete'));
+        $moveTo   = $this->repository->find((int)$request->get('move_account_before_delete'));
 
         $this->repository->destroy($account, $moveTo);
 

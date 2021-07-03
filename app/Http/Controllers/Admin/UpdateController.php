@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpMethodParametersCountMismatchInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
@@ -100,10 +99,6 @@ class UpdateController extends Controller
         $checkForUpdates = (int)$request->get('check_for_updates');
         $channel         = $request->get('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
-
-        // store as telemetry
-        app('telemetry')->feature('admin.update.channel', $channel);
-        app('telemetry')->feature('admin.update.permission', (string)$checkForUpdates);
 
         app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
         app('fireflyconfig')->set('last_update_check', time());

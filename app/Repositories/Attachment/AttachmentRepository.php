@@ -123,7 +123,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @param Attachment $attachment
      *
-     * @return string
+     * @return string|null
      */
     public function getNoteText(Attachment $attachment): ?string
     {
@@ -167,6 +167,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param array      $data
      *
      * @return Attachment
+     * @throws Exception
      */
     public function update(Attachment $attachment, array $data): Attachment
     {
@@ -174,10 +175,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             $attachment->title = $data['title'];
         }
 
-        if (array_key_exists('filename', $data)) {
-            if ('' !== (string)$data['filename'] && $data['filename'] !== $attachment->filename) {
-                $attachment->filename = $data['filename'];
-            }
+        if (array_key_exists('filename', $data) && '' !== (string)$data['filename'] && $data['filename'] !== $attachment->filename) {
+            $attachment->filename = $data['filename'];
         }
         // update model (move attachment)
         // should be validated already:

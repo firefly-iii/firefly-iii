@@ -14,14 +14,14 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
+                                        class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
-                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
+                                                class="fa fa-pencil fa-fw"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
+                                                class="fa fa-trash fa-fw"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
                                     </a></li>
                             </ul>
                         </div>
@@ -163,10 +163,10 @@
                 </div>
                 <div class="box-footer">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default"><i
-                                    class="fa fa-pencil fa-fw"></i></a>
-                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><i
-                                    class="fa fa-trash fa-fw"></i></a>
+                        <a href="{{ route('tags.edit',tag.id) }}" class="btn btn-default"><span
+                                    class="fa fa-pencil fa-fw"></span></a>
+                        <a href="{{ route('tags.delete',tag.id) }}" class="btn btn-danger"><span
+                                    class="fa fa-trash fa-fw"></span></a>
                     </div>
                     <p class="text-muted">
                         <small>{{ 'sums_apply_to_range'|_ }}</small>
@@ -180,14 +180,14 @@
                     <h3 class="box-title">{{ 'location'|_ }}</h3>
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
+                                        class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
-                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
+                                                class="fa fa-pencil fa-fw"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
+                                                class="fa fa-trash fa-fw"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
                                     </a></li>
                             </ul>
                         </div>
@@ -237,14 +237,14 @@
 
                     <div class="box-tools pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i
-                                        class="fa fa-ellipsis-v"></i></button>
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span
+                                        class="fa fa-ellipsis-v"></span></button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('tags.edit',tag.id) }}"><i
-                                                class="fa fa-pencil fa-fw"></i> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.edit',tag.id) }}"><span
+                                                class="fa fa-pencil fa-fw"></span> {{ trans('firefly.edit_tag',{tag: tag.tag}) }}
                                     </a></li>
-                                <li><a href="{{ route('tags.delete',tag.id) }}"><i
-                                                class="fa fa-trash fa-fw"></i> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
+                                <li><a href="{{ route('tags.delete',tag.id) }}"><span
+                                                class="fa fa-trash fa-fw"></span> {{ trans('firefly.delete_tag',{tag: tag.tag}) }}
                                     </a></li>
                             </ul>
                         </div>
@@ -255,14 +255,14 @@
 
                     {% if periods|length > 0 %}
                         <p>
-                            <i class="fa fa-calendar"></i>
+                            <span class="fa fa-calendar"></span>
                             <a href="{{ route('tags.show', [tag.id,'all']) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
                     {% else %}
                         <p>
-                            <i class="fa fa-calendar"></i>
+                            <span class="fa fa-calendar"></span>
                             <a href="{{ route('tags.show', [tag.id]) }}">
                                 {{ 'show_the_current_period_and_overview'|_ }}
                             </a>

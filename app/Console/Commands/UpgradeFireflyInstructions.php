@@ -63,19 +63,6 @@ class UpgradeFireflyInstructions extends Command
             $this->installInstructions();
         }
 
-        // collect system telemetry
-        $isDocker = true === env('IS_DOCKER', false) ? 'true' : 'false';
-        app('telemetry')->feature('system.php.version', PHP_VERSION);
-        app('telemetry')->feature('system.os.version', PHP_OS);
-        app('telemetry')->feature('system.database.driver', env('DB_CONNECTION', '(unknown)'));
-        app('telemetry')->feature('system.os.is_docker', $isDocker);
-        app('telemetry')->feature('system.command.executed', $this->signature);
-        try {
-            app('telemetry')->feature('system.users.count', (string)User::count());
-        } catch (QueryException $e) {
-            // @ignoreException
-        }
-
         return 0;
     }
 
@@ -90,7 +77,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (0 === strpos($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }
@@ -119,9 +106,7 @@ class UpgradeFireflyInstructions extends Command
     private function showLine(): void
     {
         $line = '+';
-        for ($i = 0; $i < 78; ++$i) {
-            $line .= '-';
-        }
+        $line .= str_repeat('-', 78);
         $line .= '+';
         $this->line($line);
     }
@@ -163,7 +148,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (0 === strpos($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }

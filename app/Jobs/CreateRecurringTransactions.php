@@ -64,7 +64,7 @@ class CreateRecurringTransactions implements ShouldQueue
      *
      * @codeCoverageIgnore
      *
-     * @param Carbon $date
+     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -347,6 +347,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param Carbon               $date
      *
      * @return TransactionGroup|null
+     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
     {
@@ -384,6 +386,7 @@ class CreateRecurringTransactions implements ShouldQueue
             'group_title'  => $groupTitle,
             'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
         ];
+
         /** @var TransactionGroup $group */
         $group = $this->groupRepository->store($array);
         $this->created++;
@@ -428,8 +431,8 @@ class CreateRecurringTransactions implements ShouldQueue
                 'amount'                => $transaction->amount,
                 'budget_id'             => $this->repository->getBudget($transaction),
                 'budget_name'           => null,
-                'category_id'           => null,
-                'category_name'         => $this->repository->getCategory($transaction),
+                'category_id'           => $this->repository->getCategoryId($transaction),
+                'category_name'         => $this->repository->getCategoryName($transaction),
                 'source_id'             => $transaction->source_id,
                 'source_name'           => null,
                 'destination_id'        => $transaction->destination_id,

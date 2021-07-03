@@ -42,6 +42,7 @@ class AutomationHandler
      * @param RequestedReportOnJournals $event
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {
@@ -54,13 +55,13 @@ class AutomationHandler
         Log::debug('In reportJournals.');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->findNull($event->userId);
+        $user       = $repository->find($event->userId);
         if (null !== $user && 0 !== $event->groups->count()) {
 
             $email = $user->email;
 
             // see if user has alternative email address:
-            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email', null);
+            $pref = app('preferences')->getForUser($user, 'remote_guard_alt_email');
             if (null !== $pref) {
                 $email = $pref->data;
             }

@@ -24,7 +24,7 @@
       <div class="card card-default card-danger">
         <div class="card-header">
           <h3 class="card-title">
-            <i class="fas fa-exclamation-triangle"></i>
+            <span class="fas fa-exclamation-triangle"></span>
             {{ $t('firefly.delete_account') }}
           </h3>
         </div>
@@ -57,7 +57,7 @@
           </p>
 
           <p v-if="loading || deleting || deleted" class="text-center">
-            <i class="fas fa-spinner fa-spin"></i>
+            <span class="fas fa-spinner fa-spin"></span>
           </p>
 
         </div>
@@ -180,6 +180,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

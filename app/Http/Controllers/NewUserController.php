@@ -27,8 +27,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class NewUserController.
@@ -58,7 +60,7 @@ class NewUserController extends Controller
     /**
      * Form the user gets when he has no data in the system.
      *
-     * @return RedirectResponse|Redirector|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return RedirectResponse|Redirector|Factory|View
      */
     public function index()
     {
@@ -96,7 +98,7 @@ class NewUserController extends Controller
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->findNull((int) $request->input('amount_currency_id_bank_balance'));
+        $currency = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {
@@ -122,11 +124,6 @@ class NewUserController extends Controller
         $visibleFields = ['interest_date' => true, 'book_date' => false, 'process_date' => false, 'due_date' => false, 'payment_date' => false,
                           'invoice_date'  => false, 'internal_reference' => false, 'notes' => true, 'attachments' => true,];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
-
-        // telemetry: user language preference + default language.
-        app('telemetry')->feature('config.firefly.default_language', config('firefly.default_language', 'en_US'));
-        app('telemetry')->feature('user.preferences.language', app('steam')->getLanguage());
-        app('telemetry')->feature('user.preferences.locale', app('steam')->getLocale());
 
         session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
         app('preferences')->mark();

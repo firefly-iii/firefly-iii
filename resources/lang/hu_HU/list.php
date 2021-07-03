@@ -130,6 +130,7 @@ return [
     'field'                   => 'Mező',
     'value'                   => 'Érték',
     'interest'                => 'Kamat',
-    'interest_period'         => 'kamatperiódus',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'A kötelezettség típusa',
+    'liability_direction'     => 'Liability in/out',
 ];

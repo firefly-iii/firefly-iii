@@ -21,10 +21,11 @@
  */
 
 declare(strict_types=1);
+
 namespace Tests\Objects;
 
 use Faker\Factory;
-use RuntimeException;
+use UnexpectedValueException;
 
 /**
  * Class TestConfiguration
@@ -70,10 +71,10 @@ class TestConfiguration
     {
         $this->debugMsg('Now in generateAll()');
         // generate submissions
-        $array      = $this->generateSubmissions();
-        $parameters = $this->parameters;
-        $ignored    = $this->ignores;
-        $expected   = $this->expected;
+        $array         = $this->generateSubmissions();
+        $allParameters = $this->parameters;
+        $ignored       = $this->ignores;
+        $expectedValue = $this->expected;
 
         $this->debugMsg(sprintf('Now validating %d ignored() values.', count($ignored)));
 
@@ -111,9 +112,9 @@ class TestConfiguration
         foreach ($array as $index => $submission) {
             $final[] = [[
                             'submission' => $submission,
-                            'expected'   => $expected[$index] ?? $submission,
+                            'expected'   => $expectedValue[$index] ?? $submission,
                             'ignore'     => $newIgnored[$index] ?? [],
-                            'parameters' => $parameters[$index] ?? [],
+                            'parameters' => $allParameters[$index] ?? [],
                         ]];
         }
 
@@ -188,7 +189,7 @@ class TestConfiguration
 
         $totalCount = 0;
         // no mandatory sets? Loop the optional sets:
-        if (0 === count($this->mandatoryFieldSets)) {
+        if (empty($this->mandatoryFieldSets)) {
             // expand the standard submission with extra sets from the optional field set.
             $setCount = count($this->optionalFieldSets);
             $this->debugMsg(sprintf('there are %d optional field sets', $setCount));
@@ -205,7 +206,7 @@ class TestConfiguration
                         $this->debugMsg(sprintf('  Set #%d will consist of:', $totalCount));
                         // the custom set is born!
                         $custom   = [];
-                        $expected = [];
+                        $expectedValue = [];
                         foreach ($combinationSet as $combination) {
                             $this->debugMsg(sprintf('   %s', $combination));
                             // here we start adding stuff to a copy of the standard submission.
@@ -217,7 +218,7 @@ class TestConfiguration
                             foreach ($customSet->fields as $field) {
                                 $this->debugMsg(sprintf('     added field "%s" from custom set "%s"', $field->fieldTitle, $combination));
                                 $custom   = $this->parseField($custom, $field);
-                                $expected = $this->parseExpected($expected, $field, $custom);
+                                $expectedValue = $this->parseExpected($expectedValue, $field, $custom);
                                 // for each field, add the ignores to the current index (+1!) of
                                 // ignores.
                                 $count = count($this->submission);
@@ -248,7 +249,7 @@ class TestConfiguration
 
                                     $this->debugMsg(sprintf('     New set of ignore things (%d) is: %s', $count, json_encode($this->ignores[$count])));
                                 }
-                                $this->expected[$count] = $expected;
+                                $this->expected[$count] = $expectedValue;
                             }
                             $count                    = count($this->submission);
                             $this->parameters[$count] = $customSet->parameters ?? [];
@@ -277,19 +278,19 @@ class TestConfiguration
     private function mergeIgnoreArray($left, $right): array
     {
         // if both empty just return empty:
-        if (0 === count($left) && 0 === count($right)) {
+        if (empty($left) && empty($right)) {
             $this->debugMsg('Return empty array');
 
             return [];
         }
         // if left is empty return right
-        if (0 === count($left)) {
+        if (empty($left)) {
             $this->debugMsg('Return right');
 
             return $right;
         }
         // if right is empty return left
-        if (0 === count($right)) {
+        if (empty($right)) {
             $this->debugMsg('Return left');
 
             return $left;
@@ -341,12 +342,12 @@ class TestConfiguration
     {
         $ignore   = [];
         $result   = [];
-        $expected = [];
+        $expectedValue = [];
         /** @var Field $field */
         foreach ($set->fields as $field) {
             // this is what we will submit:
             $result   = $this->parseField($result, $field);
-            $expected = $this->parseExpected($expected, $field, $result);
+            $expectedValue = $this->parseExpected($expectedValue, $field, $result);
 
             // this is what we will ignore:
             $newIgnore = array_unique($ignore + $field->ignorableFields);
@@ -355,7 +356,7 @@ class TestConfiguration
 
         }
         $this->ignores[]    = array_values($ignore);
-        $this->expected[]   = $expected;
+        $this->expected[]   = $expectedValue;
         $this->parameters[] = $set->parameters ?? [];
 
         return $result;
@@ -388,7 +389,7 @@ class TestConfiguration
 
             return $current;
         }
-        throw new RuntimeException(sprintf('Did not expect count %d from fieldTitle "%s".', $count, $field->fieldTitle));
+        throw new UnexpectedValueException(sprintf('Did not expect count %d from fieldTitle "%s".', $count, $field->fieldTitle));
     }
 
     /**
@@ -401,7 +402,7 @@ class TestConfiguration
         $faker = Factory::create();
         switch ($type) {
             default:
-                throw new RuntimeException(sprintf('Cannot handle field "%s"', $type));
+                throw new UnexpectedValueException(sprintf('Cannot handle field "%s"', $type));
             case 'uuid':
                 return $faker->uuid;
             case 'static-asset':
@@ -604,7 +605,7 @@ class TestConfiguration
 
             return $expected;
         }
-        throw new RuntimeException(sprintf('Did not expect count %d from fieldTitle "%s".', $count, $field->fieldTitle));
+        throw new UnexpectedValueException(sprintf('Did not expect count %d from fieldTitle "%s".', $count, $field->fieldTitle));
     }
 
     /**
@@ -618,7 +619,7 @@ class TestConfiguration
         if ($k === 0) {
             return [[]];
         }
-        if (count($xs) === 0) {
+        if (empty($xs)) {
             return [];
         }
         $x    = $xs[0];
@@ -638,7 +639,7 @@ class TestConfiguration
      */
     function updateIgnorables(int $index, array $customFields): void
     {
-        if (count($customFields) > 0) {
+        if (!empty($customFields)) {
             /** @var Field $field */
             foreach ($customFields as $field) {
                 if (0 !== count($field->ignorableFields)) {
@@ -655,7 +656,7 @@ class TestConfiguration
     private function updateExpected(int $index, array $customFields): void
     {
         $this->debugMsg('Now parsing expected return values for this set.');
-        if (count($customFields) > 0) {
+        if (!empty($customFields)) {
             /** @var Field $field */
             foreach ($customFields as $field) {
                 // fieldTitle indicates the position:

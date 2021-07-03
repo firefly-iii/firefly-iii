@@ -44,7 +44,6 @@ class InstallationId
      *
      * @return mixed
      *
-     * @throws FireflyException
      *
      */
     public function handle($request, Closure $next)

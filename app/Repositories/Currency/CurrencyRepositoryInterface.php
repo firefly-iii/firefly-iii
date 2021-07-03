@@ -112,7 +112,7 @@ interface CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findByName(string $currencyName): ?TransactionCurrency;
 
@@ -121,7 +121,7 @@ interface CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency;
 
@@ -130,7 +130,7 @@ interface CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findBySymbol(string $currencySymbol): ?TransactionCurrency;
 
@@ -139,7 +139,7 @@ interface CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @return TransactionCurrency
+     * @return TransactionCurrency|null
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
 
@@ -162,15 +162,6 @@ interface CurrencyRepositoryInterface
      * @return TransactionCurrency|null
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
-
-    /**
-     * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findNull(int $currencyId): ?TransactionCurrency;
 
     /**
      * @return Collection

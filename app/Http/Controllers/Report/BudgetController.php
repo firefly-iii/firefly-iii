@@ -160,7 +160,7 @@ class BudgetController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
@@ -281,7 +281,7 @@ class BudgetController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return mixed|string
+     * @return string
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -369,7 +369,7 @@ class BudgetController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {

@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Binder;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -40,17 +39,21 @@ class CLIToken implements BinderInterface
      * @param Route  $route
      *
      * @return mixed
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public static function routeBinder(string $value, Route $route)
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        /** @var Collection $users */
-        $users = $repository->all();
+        $users      = $repository->all();
+
+        // check for static token
+        if ($value === config('firefly.static_cron_token') && 32 === strlen((string)config('firefly.static_cron_token'))) {
+            return $value;
+        }
 
         foreach ($users as $user) {
-            $accessToken = app('preferences')->getForUser($user, 'access_token', null);
+            $accessToken = app('preferences')->getForUser($user, 'access_token');
             if (null !== $accessToken && $accessToken->data === $value) {
                 Log::info(sprintf('Recognized user #%d (%s) from his acccess token.', $user->id, $user->email));
 

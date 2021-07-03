@@ -165,15 +165,15 @@ class RecurrenceController extends Controller
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
             $yearlyDate = $date->formatLocalized((string)trans('config.month_and_day_no_year', [], $locale));
             $result     = [
-                'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => 0 === strpos($preSelected, 'daily')],
+                'daily'  => ['label' => (string)trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => ['label'    => (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
-                             'selected' => 0 === strpos($preSelected, 'weekly')],
+                             'selected' => str_starts_with($preSelected, 'weekly')],
                 $monthly => ['label'    => (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
-                             'selected' => 0 === strpos($preSelected, 'monthly')],
+                             'selected' => str_starts_with($preSelected, 'monthly')],
                 $ndom    => ['label'    => (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
-                             'selected' => 0 === strpos($preSelected, 'ndom')],
+                             'selected' => str_starts_with($preSelected, 'ndom')],
                 $yearly  => ['label'    => (string)trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
-                             'selected' => 0 === strpos($preSelected, 'yearly')],
+                             'selected' => str_starts_with($preSelected, 'yearly')],
             ];
         }
         Log::debug('Dropdown is', $result);

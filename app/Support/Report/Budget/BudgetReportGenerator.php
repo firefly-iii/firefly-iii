@@ -51,7 +51,6 @@ class BudgetReportGenerator
     private array                          $report;
     private BudgetRepositoryInterface      $repository;
     private Carbon                         $start;
-    private User                           $user;
 
     /**
      * BudgetReportGenerator constructor.
@@ -367,11 +366,10 @@ class BudgetReportGenerator
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->repository->setUser($user);
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
         $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $this->currency = app('amount')->getDefaultCurrencyByUser($user);
     }
 }

@@ -33,17 +33,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\LinkType
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property string $name
- * @property string $outward
- * @property string $inward
- * @property int $journalCount
- * @property bool $editable
- * @property-read Collection|\FireflyIII\Models\TransactionJournalLink[] $transactionJournalLinks
- * @property-read int|null $transaction_journal_links_count
+ * @property int                                      $id
+ * @property \Illuminate\Support\Carbon|null          $created_at
+ * @property \Illuminate\Support\Carbon|null          $updated_at
+ * @property \Illuminate\Support\Carbon|null          $deleted_at
+ * @property string                                   $name
+ * @property string                                   $outward
+ * @property string                                   $inward
+ * @property int                                      $journalCount
+ * @property bool                                     $editable
+ * @property-read Collection|TransactionJournalLink[] $transactionJournalLinks
+ * @property-read int|null                            $transaction_journal_links_count
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|LinkType newQuery()
  * @method static Builder|LinkType onlyTrashed()

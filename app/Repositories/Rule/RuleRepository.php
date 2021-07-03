@@ -105,12 +105,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function find(int $ruleId): ?Rule
     {
-        $rule = $this->user->rules()->find($ruleId);
-        if (null === $rule) {
-            return null;
-        }
-
-        return $rule;
+        return $this->user->rules()->find($ruleId);
     }
 
     /**
@@ -327,7 +322,7 @@ class RuleRepository implements RuleRepositoryInterface
                        ->where('rules.order', '<=', $newOrder)
                        ->where('rules.order', '>', $oldOrder)
                        ->where('rules.id', '!=', $rule->id)
-                       ->decrement('rules.order', 1);
+                       ->decrement('rules.order');
             $rule->order = $newOrder;
             Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
             $rule->save();
@@ -340,7 +335,7 @@ class RuleRepository implements RuleRepositoryInterface
                    ->where('rules.order', '>=', $newOrder)
                    ->where('rules.order', '<', $oldOrder)
                    ->where('rules.id', '!=', $rule->id)
-                   ->increment('rules.order', 1);
+                   ->increment('rules.order');
         $rule->order = $newOrder;
         Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
@@ -358,6 +353,7 @@ class RuleRepository implements RuleRepositoryInterface
      * @param array $data
      *
      * @return Rule
+     * @throws FireflyException
      */
     public function store(array $data): Rule
     {
@@ -541,8 +537,6 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'           => $order,
                 'active'          => $active,
             ];
-            app('telemetry')->feature('rules.triggers.uses_trigger', $trigger['type']);
-
             $this->storeTrigger($rule, $triggerValues);
             ++$order;
         }
@@ -570,8 +564,6 @@ class RuleRepository implements RuleRepositoryInterface
                 'order'           => $order,
                 'active'          => $active,
             ];
-            app('telemetry')->feature('rules.actions.uses_action', $action['type']);
-
             $this->storeAction($rule, $actionValues);
             ++$order;
         }

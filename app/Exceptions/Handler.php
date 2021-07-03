@@ -34,10 +34,10 @@ use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 /**
@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
             OAuthServerException::class,
             LaravelOAuthException::class,
             TokenMismatchException::class,
-            HttpException::class
+            HttpException::class,
         ];
 
     /**
@@ -68,6 +68,7 @@ class Handler extends ExceptionHandler
      * @param Throwable $e
      *
      * @return mixed
+     * @throws Throwable
      */
     public function render($request, Throwable $e)
     {
@@ -127,8 +128,6 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * This is a great spot to send exceptions to Sentry etc.
-     *
      * @param Throwable $e
      *
      * @return void
@@ -137,6 +136,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
+        // do email the user (no telemetry)
         $doMailError = config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);

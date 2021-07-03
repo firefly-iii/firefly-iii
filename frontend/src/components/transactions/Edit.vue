@@ -79,7 +79,7 @@
                   <div class="text-xs d-none d-lg-block d-xl-block">
                     &nbsp;
                   </div>
-                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><i class="far fa-clone"></i>
+                  <button type="button" class="btn btn-outline-primary btn-block" @click="addTransaction"><span class="far fa-clone"></span>
                     {{ $t('firefly.add_another_split') }}
                   </button>
                 </div>
@@ -88,8 +88,8 @@
                     &nbsp;
                   </div>
                   <button :disabled="!enableSubmit" class="btn btn-info btn-block" @click="submitTransaction">
-                    <span v-if="enableSubmit"><i class="far fa-save"></i> {{ $t('firefly.update_transaction') }}</span>
-                    <span v-if="!enableSubmit"><i class="fas fa-spinner fa-spin"></i></span>
+                    <span v-if="enableSubmit"><span class="far fa-save"></span> {{ $t('firefly.update_transaction') }}</span>
+                    <span v-if="!enableSubmit"><span class="fas fa-spinner fa-spin"></span></span>
                   </button>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export default {
       if (0 === index) {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
 
-        // TODO here you may need to catch stuff like loan/debt/mortgage
+        // See reference nr. 5
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
         this.date = array.date.substring(0, 16);
@@ -383,17 +383,16 @@ export default {
         linkDirection = 'outward';
       }
       // add meta data to promise context.
-      promises.push(new Promise((resolve) => {
-        resolve(
-            {
-              link: link,
-              journalId: journalId,
-              opposingId: opposingId,
-              index: index,
-              direction: linkDirection
-            }
-        );
-      }));
+      promises.push(Promise.resolve(
+          {
+            link: link,
+            journalId: journalId,
+            opposingId: opposingId,
+            index: index,
+            direction: linkDirection
+          }
+      ));
+
 
       // get stuff from the API:
       promises.push(axios.get('./api/v1/transaction-journals/' + opposingId));
@@ -574,17 +573,21 @@ export default {
 
           // source and destination are overruled in some cases:
           if (i > 0) {
+            // console.log('i > 0');
             diff.type = this.transactionType.toLowerCase();
             if ('deposit' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set destination to be whatever is in transaction zero:
-              currentTransaction.destination_account_name = this.originalTransactions[0].destination_account_name;
-              currentTransaction.destination_account_id = this.originalTransactions[0].destination_account_id;
+              // of the edited transaction
+              currentTransaction.destination_account_name = this.transactions[0].destination_account_name;
+              currentTransaction.destination_account_id = this.transactions[0].destination_account_id;
+              // console.log('Destination is now: #' + currentTransaction.destination_account_id + ': ' + currentTransaction.destination_account_name);
             }
 
             if ('withdrawal' === this.transactionType.toLowerCase() || 'transfer' === this.transactionType.toLowerCase()) {
               // set source to be whatever is in transaction zero:
-              currentTransaction.source_account_name = this.originalTransactions[0].source_account_name;
-              currentTransaction.source_account_id = this.originalTransactions[0].source_account_id;
+              currentTransaction.source_account_name = this.transactions[0].source_account_name;
+              currentTransaction.source_account_id = this.transactions[0].source_account_id;
+              // console.log('Source is now: #' + currentTransaction.source_account_id + ': ' + currentTransaction.source_account_name);
             }
           }
 
@@ -608,11 +611,11 @@ export default {
                   // console.log('we skip!');
                   continue;
                 }
-                if ('foreign_currency_id' === submissionFieldName && 0 === currentTransaction[fieldName] ) {
+                if ('foreign_currency_id' === submissionFieldName && 0 === currentTransaction[fieldName]) {
                   // console.log('we skip!');
                   continue;
                 }
-                if ('foreign_currency_id' === submissionFieldName && '0' === currentTransaction[fieldName] ) {
+                if ('foreign_currency_id' === submissionFieldName && '0' === currentTransaction[fieldName]) {
                   // console.log('we skip!');
                   continue;
                 }
@@ -667,7 +670,7 @@ export default {
           if (typeof currentTransaction.selectedAttachments !== 'undefined' && true === currentTransaction.selectedAttachments) {
             shouldUpload = true;
           }
-          if(true === shouldSubmit) {
+          if (true === shouldSubmit) {
             // set the date to whatever the date is:
             diff.date = this.date;
           }
@@ -700,10 +703,9 @@ export default {
       // console.log(submission);
       if (!shouldSubmit) {
         // console.log('No need to submit transaction.');
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
+
       const url = './api/v1/transactions/' + this.groupId;
       return axios.put(url, submission);
 
@@ -733,21 +735,13 @@ export default {
         }
       }
       journals = journals.reverse();
-      return new Promise((resolve) => {
-        resolve(
-            {
-              journals: journals,
-            }
-        );
-      });
+      return Promise.resolve({journals: journals});
     },
     submitLinks: function (shouldSubmit) {
       //console.log('submitLinks()');
       if (!shouldSubmit) {
         //console.log('no need!');
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
       return this.deleteAllOriginalLinks().then(() => this.submitNewLinks());
     },
@@ -756,9 +750,7 @@ export default {
       if (!shouldSubmit) {
         // console.log('no need!');
         this.submittedAttachments = 1;
-        return new Promise((resolve) => {
-          resolve({});
-        });
+        return Promise.resolve({});
       }
       //console.log('Do upload thing!');
       //console.log(response);
@@ -938,7 +930,7 @@ export default {
       return JSON.stringify(compare);
     },
     // uploadAttachments: function (result) {
-    //   //console.log('TODO, upload attachments.');
+// See reference nr. 6
     //   if (0 === Object.keys(result).length) {
     //
     //     for (let i in this.transactions) {
@@ -1074,9 +1066,7 @@ export default {
               promises.push(this.deleteOriginalLinks(originalTransaction));
             }
           } else {
-            promises.push(new Promise((resolve) => {
-              resolve({});
-            }));
+            promises.push(Promise.resolve({}));
           }
         }
       }
@@ -1172,7 +1162,7 @@ export default {
         for (let i in this.transactions) {
           if (this.transactions.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
             if (this.transactions.hasOwnProperty(i)) {
-              // TODO
+// See reference nr. 7
             }
           }
         }
@@ -1182,6 +1172,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

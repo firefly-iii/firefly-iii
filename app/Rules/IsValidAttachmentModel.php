@@ -131,7 +131,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -159,7 +159,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -173,7 +173,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(CategoryRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -186,7 +186,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -200,7 +200,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**
@@ -214,7 +214,7 @@ class IsValidAttachmentModel implements Rule
         $repository = app(TagRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findNull($value);
+        return null !== $repository->find($value);
     }
 
     /**

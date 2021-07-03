@@ -61,7 +61,7 @@ class RequestedReportOnJournals
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return Channel|array
+     * @return PrivateChannel
      */
     public function broadcastOn()
     {

@@ -32,6 +32,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Log;
 
 /**
@@ -39,11 +40,8 @@ use Log;
  */
 class CurrencyController extends Controller
 {
-    /** @var CurrencyRepositoryInterface The currency repository */
-    protected $repository;
-
-    /** @var UserRepositoryInterface The user repository */
-    protected $userRepository;
+    protected CurrencyRepositoryInterface $repository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
@@ -70,7 +68,7 @@ class CurrencyController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function create(Request $request)
     {
@@ -123,7 +121,7 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function delete(Request $request, TransactionCurrency $currency)
     {
@@ -261,7 +259,7 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return Factory|RedirectResponse|Redirector|\Illuminate\View\View
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function edit(Request $request, TransactionCurrency $currency)
     {
@@ -319,7 +317,7 @@ class CurrencyController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(Request $request)
     {

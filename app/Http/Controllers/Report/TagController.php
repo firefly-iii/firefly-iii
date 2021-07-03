@@ -268,7 +268,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -320,7 +320,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function avgIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -480,7 +480,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -530,7 +530,7 @@ class TagController extends Controller
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return array|string
+     * @return string
      */
     public function topIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {

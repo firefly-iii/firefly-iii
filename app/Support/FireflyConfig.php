@@ -46,7 +46,7 @@ class FireflyConfig
             Cache::forget($fullName);
         }
         try {
-            Configuration::where('name', $name)->delete();
+            Configuration::where('name', $name)->forceDelete();
         } catch (Exception $e) { // @phpstan-ignore-line
             // @ignoreException
         }
@@ -100,7 +100,7 @@ class FireflyConfig
      * @param string $name
      * @param mixed  $default
      *
-     * @return \FireflyIII\Models\Configuration|null
+     * @return Configuration|null
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
@@ -138,7 +138,7 @@ class FireflyConfig
     public function set(string $name, $value): Configuration
     {
         try {
-            $config = Configuration::whereName($name)->first();
+            $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
         } catch (QueryException | Exception $e) { // @phpstan-ignore-line
             $item       = new Configuration;
             $item->name = $name;
@@ -146,13 +146,12 @@ class FireflyConfig
 
             return $item;
         }
+
         if (null === $config) {
-            /** @var Configuration $item */
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;
             $item->save();
-
             Cache::forget('ff-config-' . $name);
 
             return $item;

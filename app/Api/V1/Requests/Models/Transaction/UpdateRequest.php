@@ -129,6 +129,9 @@ class UpdateRequest extends FormRequest
         if ($this->has('apply_rules')) {
             $data['apply_rules'] = $this->boolean('apply_rules', true);
         }
+        if ($this->has('fire_webhooks')) {
+            $data['fire_webhooks'] = $this->boolean('fire_webhooks', true);
+        }
         if ($this->has('group_title')) {
             $data['group_title'] = $this->string('group_title');
         }
@@ -366,7 +369,7 @@ class UpdateRequest extends FormRequest
                 $this->validateJournalIds($validator, $transactionGroup);
 
                 // all transaction types must be equal:
-                $this->validateTransactionTypesForUpdate($validator, $transactionGroup);
+                $this->validateTransactionTypesForUpdate($validator);
 
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);

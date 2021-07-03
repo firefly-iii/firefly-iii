@@ -29,7 +29,7 @@
               <span v-if="count > 1">({{ index + 1 }} / {{ count }}) </span>
             </h3>
             <div v-if="count>1" class="card-tools">
-              <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-danger btn-xs" @click="removeTransaction"><span class="fas fa-trash-alt"></span></button>
             </div>
           </div>
 
@@ -386,23 +386,23 @@ export default {
     },
     sourceAccount: function () {
       //console.log('computed::sourceAccount(' + this.index + ')');
-      let value = {
+      return {
         id: this.transaction.source_account_id,
         name: this.transaction.source_account_name,
         type: this.transaction.source_account_type,
       };
       //console.log(JSON.stringify(value));
-      return value;
+      //return value;
     },
     destinationAccount: function () {
       //console.log('computed::destinationAccount(' + this.index + ')');
-      let value = {
+      return {
         id: this.transaction.destination_account_id,
         name: this.transaction.destination_account_name,
         type: this.transaction.destination_account_type,
       };
       //console.log(JSON.stringify(value));
-      return value;
+      //return value;
     },
     hasMetaFields: function () {
       let requiredFields = [

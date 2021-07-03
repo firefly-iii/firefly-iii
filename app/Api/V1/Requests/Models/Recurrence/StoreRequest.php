@@ -135,8 +135,6 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $today = Carbon::now()->addDay();
-
         return [
             'type'                                 => 'required|in:withdrawal,transfer,deposit',
             'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',

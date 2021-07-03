@@ -19,7 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection MultipleReturnStatementsInspection */
-/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Budget;
@@ -35,7 +34,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
- *  TODO include info about tags.
+* See reference nr. 19
  *
  * @codeCoverageIgnore
  */
@@ -180,7 +179,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getExpenses(): array
     {
-        if (count($this->expenses) > 0) {
+        if (!empty($this->expenses)) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;

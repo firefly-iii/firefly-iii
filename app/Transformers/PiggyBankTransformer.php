@@ -58,7 +58,6 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function transform(PiggyBank $piggyBank): array
     {
-        /** @var Account $account */
         $account = $piggyBank->account;
 
         // set up repositories

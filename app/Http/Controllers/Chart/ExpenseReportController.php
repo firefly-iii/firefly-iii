@@ -69,7 +69,7 @@ class ExpenseReportController extends Controller
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
-     * TODO this chart is not multi-currency aware.
+* See reference nr. 58
      *
      * @param Collection $accounts
      * @param Collection $expense
@@ -184,10 +184,10 @@ class ExpenseReportController extends Controller
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key]; 
+                $newSet[$key] = $entry;
             }
         }
-        if (0===count($newSet)) {
+        if (empty($newSet)) {
             $newSet = $chartData; 
         }
         $data = $this->generator->multiSet($newSet);

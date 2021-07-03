@@ -38,7 +38,7 @@ class BudgetList implements BinderInterface
      * @param Route $route
      *
      * @return Collection
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      *
      */
     public static function routeBinder(string $value, Route $route): Collection
@@ -55,7 +55,7 @@ class BudgetList implements BinderInterface
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
 
-            if (0 === count($list)) {
+            if (empty($list)) {
                 Log::warning('Budget list count is zero, return 404.');
                 throw new NotFoundHttpException;
             }

@@ -138,7 +138,7 @@ export default {
       this.$emit('input', this.$refs.descr.value);
     },
     handleEnter: function (e) {
-      // todo feels sloppy
+// See reference nr. 7
 
       if (e.keyCode === 13) {
         //e.preventDefault();

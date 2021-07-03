@@ -808,7 +808,7 @@ Route::group(
      'as'         => 'report-data.category.',],
     static function () {
 
-    // TODO three routes still in use?
+// See reference nr. 3
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations']);
         Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income']);
         Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses']);
@@ -864,7 +864,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'],
     static function () {
         Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general']);
-        // TODO is route still used?
+// See reference nr. 4
         Route::get('period/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period']);
 
         Route::get('accounts/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accounts', 'as' => 'accounts']);
@@ -974,7 +974,7 @@ Route::group(
     static function () {
 
     // show groups:
-        // TODO improve these routes
+// See reference nr. 5
         Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
             ['what' => 'withdrawal|deposit|transfers|transfer']
         );
@@ -1047,7 +1047,7 @@ Route::group(
     static function () {
         Route::get('modal/{tj}', ['uses' => 'LinkController@modal', 'as' => 'modal']);
 
-        // TODO improve this route:
+// See reference nr. 6
         Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
         Route::get('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
@@ -1103,10 +1103,6 @@ Route::group(
 
         // telemetry manager:
         Route::get('telemetry', ['uses' => 'TelemetryController@index', 'as' => 'telemetry.index']);
-        Route::get('telemetry/view', ['uses' => 'TelemetryController@view', 'as' => 'telemetry.view']);
-        Route::get('telemetry/delete', ['uses' => 'TelemetryController@deleteAll', 'as' => 'telemetry.delete']);
-        Route::get('telemetry/delete-submitted', ['uses' => 'TelemetryController@deleteSubmitted', 'as' => 'telemetry.delete-submitted']);
-        Route::get('telemetry/submit', ['uses' => 'TelemetryController@submit', 'as' => 'telemetry.submit']);
 
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

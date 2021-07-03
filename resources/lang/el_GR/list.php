@@ -130,6 +130,7 @@ return [
     'field'                   => 'Πεδίο',
     'value'                   => 'Τιμή',
     'interest'                => 'Τόκος',
-    'interest_period'         => 'τοκιζόμενη περίοδος',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Τύπος υποχρέωσης',
+    'liability_direction'     => 'Liability in/out',
 ];

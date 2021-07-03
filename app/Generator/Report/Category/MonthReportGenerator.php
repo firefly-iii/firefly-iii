@@ -19,7 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @noinspection MultipleReturnStatementsInspection */
-/** @noinspection PhpUndefinedMethodInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report\Category;
@@ -30,12 +29,13 @@ use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use JetBrains\PhpStorm\Pure;
 use Log;
 use Throwable;
 
 /**
  * Class MonthReportGenerator.
- * TODO include info about tags.
+* See reference nr. 18
  *
  * @codeCoverageIgnore
  */
@@ -57,7 +57,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * MonthReportGenerator constructor.
      */
-    public function __construct()
+    #[Pure] public function __construct()
     {
         $this->income   = new Collection;
         $this->expenses = new Collection;
@@ -76,7 +76,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            return prefixView('reports.category.month', compact('accountIds', 'categoryIds', 'reportType',))
+            return prefixView('reports.category.month', compact('accountIds', 'categoryIds', 'reportType'))
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
@@ -188,7 +188,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getExpenses(): array
     {
-        if (count($this->expenses) > 0) {
+        if (!empty($this->expenses)) {
             Log::debug('Return previous set of expenses.');
 
             return $this->expenses;
@@ -213,7 +213,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     protected function getIncome(): array
     {
-        if (count($this->income) > 0) {
+        if (!empty($this->income)) {
             return $this->income;
         }
 

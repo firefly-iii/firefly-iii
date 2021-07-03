@@ -27,7 +27,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class StoredTransactionLink
- * TODO not used.
+* See reference nr. 85
  */
 class StoredTransactionLink extends Event
 {

@@ -227,17 +227,6 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        $filterQuery = false;
-
-        // now filter the query according to the page and the limit (if necessary)
-        if ($filterQuery) {
-            if (null !== $this->limit && null !== $this->page) {
-                $offset = ($this->page - 1) * $this->limit;
-                $this->query->take($this->limit)->skip($offset);
-            }
-        }
-
-        /** @var Collection $result */
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
@@ -245,12 +234,10 @@ class GroupCollector implements GroupCollectorInterface
         $this->total = $collection->count();
 
         // now filter the array according to the page and the limit (if necessary)
-        if (!$filterQuery) {
-            if (null !== $this->limit && null !== $this->page) {
-                $offset = ($this->page - 1) * $this->limit;
+        if (null !== $this->limit && null !== $this->page) {
+            $offset = ($this->page - 1) * $this->limit;
 
-                return $collection->slice($offset, $this->limit);
-            }
+            return $collection->slice($offset, $this->limit);
         }
 
         return $collection;
@@ -338,8 +325,12 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (0 !== count($journalIds)) {
-            $this->query->whereIn('transaction_journals.id', $journalIds);
+        if (!empty($journalIds)) {
+            // make all integers.
+            $integerIDs = array_map('intval', $journalIds);
+
+
+            $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
 
         return $this;

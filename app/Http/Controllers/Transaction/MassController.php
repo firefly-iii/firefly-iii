@@ -91,7 +91,7 @@ class MassController extends Controller
      *
      * @param MassDeleteJournalRequest $request
      *
-     * @return mixed
+     * @return \Illuminate\Contracts\Foundation\Application|Redirector|RedirectResponse
      *
      */
     public function destroy(MassDeleteJournalRequest $request)
@@ -103,7 +103,7 @@ class MassController extends Controller
             foreach ($ids as $journalId) {
 
                 /** @var TransactionJournal $journal */
-                $journal = $this->repository->findNull((int)$journalId);
+                $journal = $this->repository->find((int)$journalId);
                 if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
@@ -167,7 +167,7 @@ class MassController extends Controller
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
-            // TODO something error.
+// See reference nr. 48
             throw new FireflyException('This is not an array.'); 
         }
         $count = 0;
@@ -197,7 +197,7 @@ class MassController extends Controller
      */
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
-        $journal = $this->repository->findNull($journalId);
+        $journal = $this->repository->find($journalId);
         if (null === $journal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId)); 
         }

@@ -31,31 +31,32 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Attachment
  *
  * @property int                                  $id
- * @property \Illuminate\Support\Carbon|null      $created_at
- * @property \Illuminate\Support\Carbon|null      $updated_at
- * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property Carbon|null      $created_at
+ * @property Carbon|null      $updated_at
+ * @property Carbon|null      $deleted_at
  * @property int                                  $user_id
  * @property int                                  $attachable_id
- * @property string                               $attachable_type
- * @property bool                                 $file_exists
- * @property string                               $md5
- * @property string                               $filename
- * @property string|null                          $title
- * @property string|null                          $description
- * @property string                               $mime
- * @property int                                  $size
- * @property bool                                 $uploaded
- * @property string                               $notes_text
- * @property-read Model|\Eloquent                 $attachable
- * @property Collection|\FireflyIII\Models\Note[] $notes
- * @property-read int|null                        $notes_count
- * @property-read User                            $user
+ * @property string              $attachable_type
+ * @property bool                $file_exists
+ * @property string              $md5
+ * @property string              $filename
+ * @property string|null         $title
+ * @property string|null         $description
+ * @property string              $mime
+ * @property int                 $size
+ * @property bool                $uploaded
+ * @property string              $notes_text
+ * @property-read Model|Eloquent $attachable
+ * @property Collection|Note[]   $notes
+ * @property-read int|null       $notes_count
+ * @property-read User           $user
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
  * @method static Builder|Attachment onlyTrashed()

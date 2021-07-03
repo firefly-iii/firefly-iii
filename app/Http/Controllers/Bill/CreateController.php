@@ -70,7 +70,7 @@ class CreateController extends Controller
      *
      * @param Request $request
      *
-     * @return Application|Factory|View
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function create(Request $request)
     {

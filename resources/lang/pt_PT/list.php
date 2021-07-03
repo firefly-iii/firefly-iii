@@ -130,6 +130,7 @@ return [
     'field'                   => 'Campo',
     'value'                   => 'Valor',
     'interest'                => 'Juro',
-    'interest_period'         => 'periodo de juros',
+    'interest_period'         => 'Período de juros',
     'liability_type'          => 'Tipo de responsabilidade',
+    'liability_direction'     => 'Passivo entrada/fora',
 ];

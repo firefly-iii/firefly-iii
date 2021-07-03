@@ -84,7 +84,8 @@ class Preferences
      * @param string $name
      * @param mixed  $default
      *
-     * @return \FireflyIII\Models\Preference|null
+     * @return Preference|null
+     * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Preference
     {
@@ -104,7 +105,7 @@ class Preferences
      * @param string $name
      * @param mixed  $default
      *
-     * @return \FireflyIII\Models\Preference|null
+     * @return Preference|null
      */
     public function getFresh(string $name, $default = null): ?Preference
     {
@@ -121,8 +122,8 @@ class Preferences
     }
 
     /**
-     * @param \FireflyIII\User $user
-     * @param array            $list
+     * @param User  $user
+     * @param array $list
      *
      * @return array
      */
@@ -148,7 +149,7 @@ class Preferences
      * @param string          $name
      * @param null|string|int $default
      *
-     * @return \FireflyIII\Models\Preference|null
+     * @return Preference|null
      * @throws FireflyException
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
@@ -177,12 +178,13 @@ class Preferences
     }
 
     /**
-     * @param User        $user
-     * @param string      $name
-     * @param null|string $default
+     * @param User   $user
+     * @param string $name
+     * @param null   $default
      *
-     * @return \FireflyIII\Models\Preference|null
-     * TODO remove me
+     * @return Preference|null
+* See reference nr. 44
+     * @throws FireflyException
      */
     public function getFreshForUser(User $user, string $name, $default = null): ?Preference
     {
@@ -220,7 +222,8 @@ class Preferences
      * @param string $name
      * @param mixed  $value
      *
-     * @return \FireflyIII\Models\Preference
+     * @return Preference
+     * @throws FireflyException
      */
     public function set(string $name, $value): Preference
     {
@@ -249,9 +252,9 @@ class Preferences
     }
 
     /**
-     * @param \FireflyIII\User $user
-     * @param string           $name
-     * @param mixed            $value
+     * @param User   $user
+     * @param string $name
+     * @param mixed  $value
      *
      * @return Preference
      * @throws FireflyException

@@ -74,12 +74,12 @@ interface TagRepositoryInterface
      *
      * @return Tag|null
      */
-    public function findNull(int $tagId): ?Tag;
+    public function find(int $tagId): ?Tag;
 
     /**
      * @param Tag $tag
      *
-     * @return Carbon
+     * @return Carbon|null
      */
     public function firstUseDate(Tag $tag): ?Carbon;
 

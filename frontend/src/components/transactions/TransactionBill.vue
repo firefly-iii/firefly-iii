@@ -50,7 +50,6 @@ export default {
     return {
       billList: [],
       bill: this.value,
-      emitEvent: true
     }
   },
   created() {
@@ -93,10 +92,7 @@ export default {
       this.bill = value;
     },
     bill: function (value) {
-      if (true === this.emitEvent) {
         this.$emit('set-field', {field: 'bill_id', index: this.index, value: value});
-      }
-      this.emitEvent = true;
     }
   },
 }

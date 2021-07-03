@@ -123,14 +123,14 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function findByIbanNull(string $iban, array $types): ?Account
     {
-        $query = $this->user->accounts()->where('accounts.iban', $iban);
+        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
 
-        return $query->first(['accounts.*']);
+        return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
     /**
@@ -143,7 +143,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts();
 
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -151,7 +151,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         $accounts = $query->get(['accounts.*']);
 
-        // TODO no longer need to loop like this
+        // See reference nr. 10
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -171,7 +171,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account|null
      */
-    public function findNull(int $accountId): ?Account
+    public function find(int $accountId): ?Account
     {
         return $this->user->accounts()->find($accountId);
     }
@@ -212,7 +212,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts();
 
-        if (0 !== count($accountIds)) {
+        if (!empty($accountIds)) {
             $query->whereIn('accounts.id', $accountIds);
         }
         $query->orderBy('accounts.order', 'ASC');
@@ -223,25 +223,35 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param array $types
+     * @param array      $types
+     * @param array|null $sort
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types): Collection
+    public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
+        $res   = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
         $query = $this->user->accounts();
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
-        $res = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        if (0 !== count($res)) {
-            $query->orderBy('accounts.order', 'ASC');
+
+        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        if (!empty($sort)) {
+            foreach ($sort as $param) {
+                $query->orderBy($param[0], $param[1]);
+            }
         }
-        $query->orderBy('accounts.active', 'DESC');
-        $query->orderBy('accounts.name', 'ASC');
+
+        if (empty($sort)) {
+            if (!empty($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+        }
 
         return $query->get(['accounts.*']);
-
     }
 
     /**
@@ -256,7 +266,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'account_role');
             }, 'attachments']
         );
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', true);
@@ -316,7 +326,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'account_role');
             }]
         );
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 0);
@@ -397,7 +407,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return string
+     * @return string|null
      */
     public function getOpeningBalanceAmount(Account $account): ?string
     {
@@ -654,7 +664,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
 
         }
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
@@ -692,7 +702,7 @@ class AccountRepository implements AccountRepositoryInterface
                 );
             }
         }
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
@@ -728,7 +738,6 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
-     * @throws FireflyException
      */
     public function update(Account $account, array $data): Account
     {
@@ -736,6 +745,23 @@ class AccountRepository implements AccountRepositoryInterface
         $service = app(AccountUpdateService::class);
 
         return $service->update($account, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup
+    {
+        $journal = TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*']);
+        if (null === $journal) {
+            return null;
+        }
+
+        return $journal->transactionGroup;
     }
 
     /**
@@ -755,11 +781,12 @@ class AccountRepository implements AccountRepositoryInterface
                 }
             );
 
-        if (0 !== count($types)) {
+        if (!empty($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
 
         return $dbQuery->first(['accounts.*']);
     }
+
 }

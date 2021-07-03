@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
@@ -37,7 +38,7 @@ use Log;
 /**
  * Trait PeriodOverview.
  *
- * TODO verify this all works as expected.
+* See reference nr. 36
  *
  * - Always request start date and end date.
  * - Group expenses, income, etc. under this period.
@@ -76,6 +77,7 @@ trait PeriodOverview
      * @param Carbon  $end
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
@@ -266,6 +268,7 @@ trait PeriodOverview
      * @param Carbon   $end
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
@@ -343,6 +346,7 @@ trait PeriodOverview
      * @param Carbon $end
      *
      * @return array
+     * @throws FireflyException
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
@@ -388,14 +392,14 @@ trait PeriodOverview
     }
 
     /**
-     * TODO fix date.
+* See reference nr. 37
      *
      * Show period overview for no category view.
      *
      * @param Carbon $theDate
      *
      * @return array
-     *
+     * @throws FireflyException
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
@@ -475,7 +479,7 @@ trait PeriodOverview
      * @param Carbon $end
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
@@ -549,7 +553,7 @@ trait PeriodOverview
      * @param Carbon $end
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {

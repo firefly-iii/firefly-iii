@@ -74,8 +74,9 @@ export default {
       //let strokePointHighColors = [];
 
 
-      for (let i = 0; i < colourSet.length; i++) {
-        fillColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.5)");
+      //for (let i = 0; i < colourSet.length; i++) {
+      for (let value of colourSet) {
+        fillColors.push("rgba(" + value[0] + ", " + value[1] + ", " + value[2] + ", 0.5)");
         //strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
       }
       this.newDataSet.labels = this.dataSet.labels;
@@ -123,8 +124,9 @@ export default {
       //let strokePointHighColors = [];
 
 
-      for (let i = 0; i < colourSet.length; i++) {
-        fillColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.5)");
+      //for (let i = 0; i < colourSet.length; i++) {
+      for (let value of colourSet) {
+        fillColors.push("rgba(" + value[0] + ", " + value[1] + ", " + value[2] + ", 0.5)");
         //strokePointHighColors.push("rgba(" + colourSet[i][0] + ", " + colourSet[i][1] + ", " + colourSet[i][2] + ", 0.9)");
       }
       this.newDataSet.labels = this.dataSet.labels;

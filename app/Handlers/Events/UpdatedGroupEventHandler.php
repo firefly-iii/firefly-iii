@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -81,9 +82,14 @@ class UpdatedGroupEventHandler
      */
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        Log::debug('UpdatedGroupEventHandler:triggerWebhooks');
+        Log::debug(__METHOD__);
         $group = $updatedGroupEvent->transactionGroup;
-        $user  = $group->user;
+        if (false === $updatedGroupEvent->fireWebhooks) {
+            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+
+            return;
+        }
+        $user = $group->user;
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
@@ -92,6 +98,18 @@ class UpdatedGroupEventHandler
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages);
+    }
+
+    /**
+     * @param UpdatedTransactionGroup $event
+     */
+    public function recalculateCredit(UpdatedTransactionGroup $event): void
+    {
+        $group = $event->transactionGroup;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setGroup($group);
+        $object->recalculate();
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
-
+declare(strict_types=1);
 /*
- * LdapFilterScope.php
+ * UpdatedAccountEventHandler.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,28 +20,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Events;
 
-namespace FireflyIII\Scopes;
 
-use Adldap\Laravel\Scopes\ScopeInterface;
-use Adldap\Query\Builder;
+use FireflyIII\Events\StoredAccount;
+use FireflyIII\Events\UpdatedAccount;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 
-// @phpstan-ignore-next-line
-class LdapFilterScope implements ScopeInterface // @phpstan-ignore-line
+/**
+ * Class UpdatedAccountEventHandler
+ */
+class UpdatedAccountEventHandler
 {
     /**
-     * If the ADLDAP_AUTH_FILTER is provided, apply the filter to the LDAP query.
-     *
-     * @param Builder $query
-     *
-     * @return void
+     * @param UpdatedAccount $event
      */
-    public function apply(Builder $query)
+    public function recalculateCredit(UpdatedAccount $event): void
     {
-        $filter = (string)config('ldap_auth.custom_filter');
-        if ('' !== $filter) {
-            $query->rawFilter($filter);
-        }
+        $account = $event->account;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setAccount($account);
+        $object->recalculate();
     }
 }

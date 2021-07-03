@@ -200,6 +200,7 @@ return [
     'need_id_in_edit'           => 'Chaque ventilation doit avoir transaction_journal_id (ID valide ou 0).',
 
     'ob_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
+    'lc_source_need_data' => 'Besoin d\'un identifiant de compte source valide pour continuer.',
     'ob_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'ob_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 

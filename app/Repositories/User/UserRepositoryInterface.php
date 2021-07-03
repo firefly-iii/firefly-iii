@@ -114,7 +114,7 @@ interface UserRepositoryInterface
      *
      * @return User|null
      */
-    public function findNull(int $userId): ?User;
+    public function find(int $userId): ?User;
 
     /**
      * Returns the first user in the DB. Generally only works when there is just one.

@@ -113,7 +113,7 @@ class UpdateControllerTest extends TestCase
     public function updateDataSet(): array
     {
         $faker = Factory::create();
-        $set   = [
+        return [
             'name'           => [
                 'id'           => 'INR',
                 'fields'       => [
@@ -157,7 +157,5 @@ class UpdateControllerTest extends TestCase
                 'extra_ignore' => [],
             ],
         ];
-
-        return $set;
     }
 }

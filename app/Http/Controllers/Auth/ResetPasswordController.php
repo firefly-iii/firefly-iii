@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
@@ -120,10 +119,11 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param Request     $request
-     * @param string|null $token
+     * @param Request $request
+     * @param null    $token
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function showResetForm(Request $request, $token = null)
     {

@@ -1,8 +1,8 @@
 <?php
-
-/**
- * TelemetryRepositoryInterface.php
- * Copyright (c) 2020 james@firefly-iii.org
+declare(strict_types=1);
+/*
+ * StoredAccountEventHandler.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,41 +20,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Events;
 
-namespace FireflyIII\Repositories\Telemetry;
-
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use FireflyIII\Events\StoredAccount;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 
 /**
- * Interface TelemetryRepositoryInterface
+ * Class StoredAccountEventHandler
  */
-interface TelemetryRepositoryInterface
+class StoredAccountEventHandler
 {
     /**
-     * Return the number of stored telemetry records.
-     *
-     * @return int
+     * @param StoredAccount $event
      */
-    public function count(): int;
-
-    /**
-     * Delete all records.
-     */
-    public function deleteAll(): void;
-
-    /**
-     *
-     */
-    public function deleteSubmitted(): void;
-
-    /**
-     * Return paginated result of telemetry records.
-     *
-     * @param int $pageSize
-     *
-     * @return LengthAwarePaginator
-     */
-    public function paginated(int $pageSize): LengthAwarePaginator;
+    public function recalculateCredit(StoredAccount $event): void
+    {
+        $account = $event->account;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setAccount($account);
+        $object->recalculate();
+    }
 
 }

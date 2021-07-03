@@ -13,9 +13,9 @@
         <tr>
             <td data-value="{{ info.title }}">
                 {% if info.id != 0 %}
-                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [info.id]) }}"><i class="fa fa-external-link"></i></a>
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.show', [info.id]) }}"><span class="fa fa-external-link"></span></a>
                 {% else %}
-                    <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><i class="fa fa-external-link"></i></a>
+                    <a class="btn btn-default btn-xs" href="{{ route('categories.no-category') }}"><span class="fa fa-external-link"></span></a>
                 {% endif %}
             </td>
             <td data-value="{{ info.title }}">

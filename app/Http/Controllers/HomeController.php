@@ -102,10 +102,9 @@ class HomeController extends Controller
      *
      * @param AccountRepositoryInterface $repository
      *
-     * @return Factory|RedirectResponse|Redirector|View
-     * @throws Exception
+     * @return mixed
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(AccountRepositoryInterface $repository): mixed
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);

@@ -89,53 +89,76 @@ use FireflyIII\User;
  */
 
 return [
-    'configuration' => [
+    // default values for certain things:
+    'configuration'                => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
-    'feature_flags' => [
+    // some feature flags:
+    'feature_flags'                => [
         'export'       => true,
-        'telemetry'    => true,
-        'webhooks'     => false,
+        'telemetry'    => false,
+        'webhooks'     => true,
         'handle_debts' => true,
     ],
+    'version'                      => '5.6.0-alpha.1',
+    'api_version'                  => '1.5.3',
+    'db_version'                   => 17,
 
-    'version'                      => '5.5.12',
-    'api_version'                  => '1.5.2',
-    'db_version'                   => 16,
+    // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
 
-    // send emails?
-    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
-    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
-    'demo_username'                => env('DEMO_USERNAME', ''),
-    'demo_password'                => env('DEMO_PASSWORD', ''),
+    // tokens and keys
     'fixer_api_key'                => env('FIXER_API_KEY', ''),
     'mapbox_api_key'               => env('MAPBOX_API_KEY', ''),
+    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
+    'static_cron_token'            => envNonEmpty('STATIC_CRON_TOKEN'),
+
+    // flags
     'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
-    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
-    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
-    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
-    'tracker_url'                  => env('TRACKER_URL', ''),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
-    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
-    'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
-    'custom_logout_uri'            => envNonEmpty('CUSTOM_LOGOUT_URI', ''),
-    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
-    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
+
+    // email flags
+    'send_registration_mail'       => env('SEND_REGISTRATION_MAIL', true),
+    'warn_new_ip'                  => env('SEND_LOGIN_NEW_IP_WARNING', true),
+    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
+
+    // info for demo site
+    'demo_username'                => env('DEMO_USERNAME', ''),
+    'demo_password'                => env('DEMO_PASSWORD', ''),
+    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
+    'tracker_url'                  => env('TRACKER_URL', ''),
+
+
+    // LDAP and authentication settings
+    'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
+    'ldap_auth_field'              => env('LDAP_AUTH_FIELD', env('ADLDAP_AUTH_FIELD', 'distinguishedname')),
+
+    // static config (cannot be changed by user)
+    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
-    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
     'update_minimum_age'           => 7,
+
+    // web configuration:
+    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
+    'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
+
+    // map configuration
     'default_location'             => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
+
+    // internal Firefly III configuration:
+    // edit me = peligro de muerte
     'valid_attachment_models'      => [
         Account::class,
         Bill::class,
@@ -147,6 +170,7 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
+    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
@@ -647,84 +671,89 @@ return [
             ],
         ],
         'destination' => [
-            TransactionTypeModel::WITHDRAWAL      => [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT,
-                                                      AccountType::MORTGAGE,],
-            TransactionTypeModel::DEPOSIT         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                      AccountType::MORTGAGE,],
-            TransactionTypeModel::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
+            TransactionTypeModel::WITHDRAWAL       => [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT,
+                                                       AccountType::MORTGAGE,],
+            TransactionTypeModel::DEPOSIT          => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::OPENING_BALANCE  => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
+                                                       AccountType::MORTGAGE,],
+            TransactionTypeModel::RECONCILIATION   => [AccountType::RECONCILIATION, AccountType::ASSET],
+            TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
         ],
     ],
     'allowed_opposing_types'    => [
         'source'      => [
-            AccountType::ASSET           => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE,
-                                             AccountType::LOAN, AccountType::RECONCILIATION, AccountType::MORTGAGE],
-            AccountType::CASH            => [AccountType::ASSET],
-            AccountType::DEBT            => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
-                                             AccountType::MORTGAGE,],
-            AccountType::EXPENSE         => [], // is not allowed as a source.
-            AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::LOAN            => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
-                                             AccountType::MORTGAGE,],
-            AccountType::MORTGAGE        => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
-                                             AccountType::MORTGAGE,],
-            AccountType::RECONCILIATION  => [AccountType::ASSET],
-            AccountType::REVENUE         => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountType::ASSET            => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE,
+                                              AccountType::LOAN, AccountType::RECONCILIATION, AccountType::MORTGAGE],
+            AccountType::CASH             => [AccountType::ASSET],
+            AccountType::DEBT             => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
+                                              AccountType::MORTGAGE, AccountType::LIABILITY_CREDIT],
+            AccountType::EXPENSE          => [], // is not allowed as a source.
+            AccountType::INITIAL_BALANCE  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountType::LOAN             => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
+                                              AccountType::MORTGAGE, AccountType::LIABILITY_CREDIT],
+            AccountType::MORTGAGE         => [AccountType::ASSET, AccountType::DEBT, AccountType::EXPENSE, AccountType::INITIAL_BALANCE, AccountType::LOAN,
+                                              AccountType::MORTGAGE, AccountType::LIABILITY_CREDIT],
+            AccountType::RECONCILIATION   => [AccountType::ASSET],
+            AccountType::REVENUE          => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountType::LIABILITY_CREDIT => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
 
         ],
         'destination' => [
-            AccountType::ASSET           => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN,
-                                             AccountType::MORTGAGE, AccountType::RECONCILIATION, AccountType::REVENUE,],
-            AccountType::CASH            => [AccountType::ASSET],
-            AccountType::DEBT            => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
-                                             AccountType::REVENUE,],
-            AccountType::EXPENSE         => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-            AccountType::LOAN            => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
-                                             AccountType::REVENUE,],
-            AccountType::MORTGAGE        => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
-                                             AccountType::REVENUE,],
-            AccountType::RECONCILIATION  => [AccountType::ASSET],
-            AccountType::REVENUE         => [], // is not allowed as a destination
+            AccountType::ASSET            => [AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN,
+                                              AccountType::MORTGAGE, AccountType::RECONCILIATION, AccountType::REVENUE,],
+            AccountType::CASH             => [AccountType::ASSET],
+            AccountType::DEBT             => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
+                                              AccountType::REVENUE,],
+            AccountType::EXPENSE          => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountType::INITIAL_BALANCE  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
+            AccountType::LOAN             => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
+                                              AccountType::REVENUE,],
+            AccountType::MORTGAGE         => [AccountType::ASSET, AccountType::DEBT, AccountType::INITIAL_BALANCE, AccountType::LOAN, AccountType::MORTGAGE,
+                                              AccountType::REVENUE,],
+            AccountType::RECONCILIATION   => [AccountType::ASSET],
+            AccountType::REVENUE          => [], // is not allowed as a destination
+            AccountType::LIABILITY_CREDIT => [],// is not allowed as a destination
         ],
     ],
     // depending on the account type, return the allowed transaction types:
     'allowed_transaction_types' => [
         'source'      => [
-            AccountType::ASSET           => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::TRANSFER, TransactionTypeModel::OPENING_BALANCE,
-                                             TransactionTypeModel::RECONCILIATION,],
-            AccountType::EXPENSE         => [], // is not allowed as a source.
-            AccountType::REVENUE         => [TransactionTypeModel::DEPOSIT],
-            AccountType::LOAN            => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::DEBT            => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::MORTGAGE        => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::INITIAL_BALANCE => [TransactionTypeModel::OPENING_BALANCE],
-            AccountType::RECONCILIATION  => [TransactionTypeModel::RECONCILIATION],
+            AccountType::ASSET            => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::TRANSFER, TransactionTypeModel::OPENING_BALANCE,
+                                              TransactionTypeModel::RECONCILIATION,],
+            AccountType::EXPENSE          => [], // is not allowed as a source.
+            AccountType::REVENUE          => [TransactionTypeModel::DEPOSIT],
+            AccountType::LOAN             => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE, TransactionTypeModel::LIABILITY_CREDIT],
+            AccountType::DEBT             => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE, TransactionTypeModel::LIABILITY_CREDIT],
+            AccountType::MORTGAGE         => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE, TransactionTypeModel::LIABILITY_CREDIT],
+            AccountType::INITIAL_BALANCE  => [TransactionTypeModel::OPENING_BALANCE],
+            AccountType::RECONCILIATION   => [TransactionTypeModel::RECONCILIATION],
+            AccountType::LIABILITY_CREDIT => [TransactionTypeModel::LIABILITY_CREDIT],
         ],
         'destination' => [
-            AccountType::ASSET           => [TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER, TransactionTypeModel::OPENING_BALANCE,
-                                             TransactionTypeModel::RECONCILIATION,],
-            AccountType::EXPENSE         => [TransactionTypeModel::WITHDRAWAL],
-            AccountType::REVENUE         => [], // is not allowed as destination.
-            AccountType::LOAN            => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::DEBT            => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::MORTGAGE        => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
-                                             TransactionTypeModel::OPENING_BALANCE,],
-            AccountType::INITIAL_BALANCE => [TransactionTypeModel::OPENING_BALANCE],
-            AccountType::RECONCILIATION  => [TransactionTypeModel::RECONCILIATION],
+            AccountType::ASSET            => [TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER, TransactionTypeModel::OPENING_BALANCE,
+                                              TransactionTypeModel::RECONCILIATION,],
+            AccountType::EXPENSE          => [TransactionTypeModel::WITHDRAWAL],
+            AccountType::REVENUE          => [], // is not allowed as destination.
+            AccountType::LOAN             => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE,],
+            AccountType::DEBT             => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE,],
+            AccountType::MORTGAGE         => [TransactionTypeModel::WITHDRAWAL, TransactionTypeModel::DEPOSIT, TransactionTypeModel::TRANSFER,
+                                              TransactionTypeModel::OPENING_BALANCE,],
+            AccountType::INITIAL_BALANCE  => [TransactionTypeModel::OPENING_BALANCE],
+            AccountType::RECONCILIATION   => [TransactionTypeModel::RECONCILIATION],
+            AccountType::LIABILITY_CREDIT => [], // is not allowed as a destination
         ],
 
     ],
 
     // having the source + dest will tell you the transaction type.
     'account_to_transaction'    => [
-        AccountType::ASSET           => [
+        AccountType::ASSET            => [
             AccountType::ASSET           => TransactionTypeModel::TRANSFER,
             AccountType::CASH            => TransactionTypeModel::WITHDRAWAL,
             AccountType::DEBT            => TransactionTypeModel::WITHDRAWAL,
@@ -734,10 +763,10 @@ return [
             AccountType::MORTGAGE        => TransactionTypeModel::WITHDRAWAL,
             AccountType::RECONCILIATION  => TransactionTypeModel::RECONCILIATION,
         ],
-        AccountType::CASH            => [
+        AccountType::CASH             => [
             AccountType::ASSET => TransactionTypeModel::DEPOSIT,
         ],
-        AccountType::DEBT            => [
+        AccountType::DEBT             => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -745,13 +774,13 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::INITIAL_BALANCE => [
+        AccountType::INITIAL_BALANCE  => [
             AccountType::ASSET    => TransactionTypeModel::OPENING_BALANCE,
             AccountType::DEBT     => TransactionTypeModel::OPENING_BALANCE,
             AccountType::LOAN     => TransactionTypeModel::OPENING_BALANCE,
             AccountType::MORTGAGE => TransactionTypeModel::OPENING_BALANCE,
         ],
-        AccountType::LOAN            => [
+        AccountType::LOAN             => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -759,7 +788,7 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::MORTGAGE        => [
+        AccountType::MORTGAGE         => [
             AccountType::ASSET           => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT            => TransactionTypeModel::TRANSFER,
             AccountType::EXPENSE         => TransactionTypeModel::WITHDRAWAL,
@@ -767,48 +796,59 @@ return [
             AccountType::LOAN            => TransactionTypeModel::TRANSFER,
             AccountType::MORTGAGE        => TransactionTypeModel::TRANSFER,
         ],
-        AccountType::RECONCILIATION  => [
+        AccountType::RECONCILIATION   => [
             AccountType::ASSET => TransactionTypeModel::RECONCILIATION,
         ],
-        AccountType::REVENUE         => [
+        AccountType::REVENUE          => [
             AccountType::ASSET    => TransactionTypeModel::DEPOSIT,
             AccountType::DEBT     => TransactionTypeModel::DEPOSIT,
             AccountType::LOAN     => TransactionTypeModel::DEPOSIT,
             AccountType::MORTGAGE => TransactionTypeModel::DEPOSIT,
         ],
+        AccountType::LIABILITY_CREDIT => [
+            AccountType::DEBT     => TransactionTypeModel::LIABILITY_CREDIT,
+            AccountType::LOAN     => TransactionTypeModel::LIABILITY_CREDIT,
+            AccountType::MORTGAGE => TransactionTypeModel::LIABILITY_CREDIT,
+        ],
+        // AccountType::EXPENSE unlisted because it cant be a source
     ],
 
     // allowed source -> destination accounts.
     'source_dests'              => [
-        TransactionTypeModel::WITHDRAWAL      => [
+        TransactionTypeModel::WITHDRAWAL       => [
             AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
             AccountType::LOAN     => [AccountType::EXPENSE, AccountType::CASH],
             AccountType::DEBT     => [AccountType::EXPENSE, AccountType::CASH],
             AccountType::MORTGAGE => [AccountType::EXPENSE, AccountType::CASH],
         ],
-        TransactionTypeModel::DEPOSIT         => [
+        TransactionTypeModel::DEPOSIT          => [
             AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::CASH     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::LOAN     => [AccountType::ASSET],
             AccountType::DEBT     => [AccountType::ASSET],
             AccountType::MORTGAGE => [AccountType::ASSET],
         ],
-        TransactionTypeModel::TRANSFER        => [
+        TransactionTypeModel::TRANSFER         => [
             AccountType::ASSET    => [AccountType::ASSET],
             AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
         ],
-        TransactionTypeModel::OPENING_BALANCE => [
+        TransactionTypeModel::OPENING_BALANCE  => [
             AccountType::ASSET           => [AccountType::INITIAL_BALANCE],
             AccountType::LOAN            => [AccountType::INITIAL_BALANCE],
             AccountType::DEBT            => [AccountType::INITIAL_BALANCE],
             AccountType::MORTGAGE        => [AccountType::INITIAL_BALANCE],
             AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
         ],
-        TransactionTypeModel::RECONCILIATION  => [
+        TransactionTypeModel::RECONCILIATION   => [
             AccountType::RECONCILIATION => [AccountType::ASSET],
             AccountType::ASSET          => [AccountType::RECONCILIATION],
+        ],
+        TransactionTypeModel::LIABILITY_CREDIT => [
+            AccountType::LOAN     => [AccountType::LIABILITY_CREDIT],
+            AccountType::DEBT     => [AccountType::LIABILITY_CREDIT],
+            AccountType::MORTGAGE => [AccountType::LIABILITY_CREDIT],
         ],
     ],
     // if you add fields to this array, dont forget to update the export routine (ExportDataGenerator).
@@ -845,7 +885,8 @@ return [
             Webhook::DELIVERY_JSON => 'DELIVERY_JSON',
         ],
     ],
-    'can_have_virtual_amounts'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
+    'can_have_virtual_amounts'  => [AccountType::ASSET],
+    'can_have_opening_balance'  => [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],

@@ -35,16 +35,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $budget_id
- * @property int|null $transaction_currency_id
- * @property \Illuminate\Support\Carbon $start_date
+ * @property int                             $budget_id
+ * @property int|null                        $transaction_currency_id
+ * @property \Illuminate\Support\Carbon      $start_date
  * @property \Illuminate\Support\Carbon|null $end_date
- * @property string $amount
- * @property string $spent
- * @property string|null $period
- * @property int $generated
- * @property-read \FireflyIII\Models\Budget $budget
- * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
+ * @property string                          $amount
+ * @property string                          $spent
+ * @property string|null                     $period
+ * @property int                             $generated
+ * @property-read Budget                     $budget
+ * @property-read TransactionCurrency|null   $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
  * @method static Builder|BudgetLimit query()

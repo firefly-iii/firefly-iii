@@ -40,6 +40,7 @@ class TransactionTypeSeeder extends Seeder
             TransactionType::OPENING_BALANCE,
             TransactionType::RECONCILIATION,
             TransactionType::INVALID,
+            TransactionType::LIABILITY_CREDIT
         ];
 
         foreach ($types as $type) {

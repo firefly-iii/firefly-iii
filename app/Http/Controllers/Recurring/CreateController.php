@@ -122,6 +122,8 @@ class CreateController extends Controller
     /**
      * @param Request            $request
      * @param TransactionJournal $journal
+     *
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
@@ -214,6 +216,7 @@ class CreateController extends Controller
      * @param RecurrenceFormRequest $request
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function store(RecurrenceFormRequest $request)
     {

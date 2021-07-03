@@ -43,6 +43,11 @@ interface SearchInterface
     public function getOperators(): Collection;
 
     /**
+     * @return array
+     */
+    public function getInvalidOperators(): array;
+
+    /**
      * @return string
      */
     public function getWordsAsString(): string;

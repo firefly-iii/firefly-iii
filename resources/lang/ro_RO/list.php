@@ -130,6 +130,7 @@ return [
     'field'                   => 'Câmp',
     'value'                   => 'Valoare',
     'interest'                => 'Interes',
-    'interest_period'         => 'perioadă de interes',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Tip de provizion',
+    'liability_direction'     => 'Liability in/out',
 ];

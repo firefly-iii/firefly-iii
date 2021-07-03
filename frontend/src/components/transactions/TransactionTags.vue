@@ -58,7 +58,6 @@ export default {
       currentTag: '',
       updateTags: true, // the idea is that this is always true, except when the tags-function sets the value.
       tagList: this.value,
-      emitEvent: true
     };
   },
   created() {
@@ -74,15 +73,11 @@ export default {
   watch: {
     'currentTag': 'initItems',
     value: function (value) {
-      this.emitEvent = false;
       this.tagList = value;
     },
     tagList: function (value) {
       // console.log('watch tagList');
-      if (true === this.emitEvent) {
         this.$emit('set-field', {field: 'tags', index: this.index, value: value});
-      }
-      this.emitEvent = true;
       this.updateTags = false;
       this.tags = value;
     },

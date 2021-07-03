@@ -62,7 +62,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @return Application|Factory|View
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -75,7 +75,10 @@ class IndexController extends Controller
     }
 
     /**
+     * @param Request     $request
      * @param ObjectGroup $objectGroup
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {

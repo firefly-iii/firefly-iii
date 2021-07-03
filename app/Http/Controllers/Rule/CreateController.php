@@ -80,7 +80,6 @@ class CreateController extends Controller
     public function create(Request $request, RuleGroup $ruleGroup = null)
     {
         $this->createDefaultRuleGroup();
-        $this->createDefaultRule();
         $preFilled   = [
             'strict' => true,
         ];
@@ -145,7 +144,6 @@ class CreateController extends Controller
         $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_bill', ['name' => e($bill->name)]));
 
         $this->createDefaultRuleGroup();
-        $this->createDefaultRule();
         $preFilled = [
             'strict'      => true,
             'title'       => (string)trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]),
@@ -189,6 +187,8 @@ class CreateController extends Controller
     /**
      * @param Request            $request
      * @param TransactionJournal $journal
+     *
+     * @return Factory|\Illuminate\Contracts\View\View
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {
@@ -202,7 +202,6 @@ class CreateController extends Controller
         $oldActions  = [];
 
         $this->createDefaultRuleGroup();
-        $this->createDefaultRule();
 
         // collect pre-filled information:
         $preFilled = [
@@ -242,7 +241,6 @@ class CreateController extends Controller
      */
     public function duplicate(Rule $rule): RedirectResponse
     {
-        /** @var Rule $newRule */
         $newRule = $this->ruleRepos->duplicate($rule);
 
         session()->flash('success', trans('firefly.duplicated_rule', ['title' => $rule->title, 'newTitle' => $newRule->title]));

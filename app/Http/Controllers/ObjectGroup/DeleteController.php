@@ -61,6 +61,8 @@ class DeleteController extends Controller
      * Delete a piggy bank.
      *
      * @param ObjectGroup $objectGroup
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function delete(ObjectGroup $objectGroup)
     {
@@ -77,6 +79,7 @@ class DeleteController extends Controller
      * Destroy the piggy bank.
      *
      * @param ObjectGroup $objectGroup
+     * @return RedirectResponse
      */
     public function destroy(ObjectGroup $objectGroup): RedirectResponse
     {

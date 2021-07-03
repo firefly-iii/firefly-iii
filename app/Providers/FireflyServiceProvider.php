@@ -42,8 +42,6 @@ use FireflyIII\Helpers\Webhook\Sha3SignatureGenerator;
 use FireflyIII\Helpers\Webhook\SignatureGeneratorInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
-use FireflyIII\Repositories\Telemetry\TelemetryRepository;
-use FireflyIII\Repositories\Telemetry\TelemetryRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
@@ -226,7 +224,6 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
-        $this->app->bind(TelemetryRepositoryInterface::class, TelemetryRepository::class);
 
         // webhooks:
         $this->app->bind(MessageGeneratorInterface::class, StandardMessageGenerator::class);

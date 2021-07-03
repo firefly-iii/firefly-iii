@@ -106,6 +106,7 @@ class AccountCurrencies extends Command
 
     /**
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function isExecuted(): bool
     {
@@ -134,6 +135,8 @@ class AccountCurrencies extends Command
     /**
      * @param User   $user
      * @param string $systemCurrencyCode
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
     {

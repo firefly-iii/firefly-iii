@@ -61,6 +61,8 @@ class EditController extends Controller
      * Edit an object group.
      *
      * @param ObjectGroup $objectGroup
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function edit(ObjectGroup $objectGroup)
     {
@@ -80,6 +82,7 @@ class EditController extends Controller
      *
      * @param ObjectGroupFormRequest $request
      * @param ObjectGroup            $objectGroup
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup)
     {

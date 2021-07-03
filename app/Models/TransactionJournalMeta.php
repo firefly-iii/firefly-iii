@@ -32,15 +32,15 @@ use Illuminate\Support\Carbon;
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int $transaction_journal_id
- * @property string $name
- * @property mixed $data
- * @property string $hash
- * @property Carbon|null $deleted_at
- * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
+ * @property int                     $id
+ * @property Carbon|null             $created_at
+ * @property Carbon|null             $updated_at
+ * @property int                     $transaction_journal_id
+ * @property string                  $name
+ * @property mixed                   $data
+ * @property string                  $hash
+ * @property Carbon|null             $deleted_at
+ * @property-read TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newQuery()
  * @method static Builder|TransactionJournalMeta onlyTrashed()

@@ -56,9 +56,9 @@ export default {
     error: Array
   },
   mounted: function () {
-    window.addEventListener('paste', e => {
-      this.$refs.input.files = e.clipboardData.files;
-    });
+    // window.addEventListener('paste', e => {
+    //   this.$refs.input.files = e.clipboardData.files;
+    // });
   },
   methods: {
     clearAtt: function () {

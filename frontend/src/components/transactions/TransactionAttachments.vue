@@ -53,15 +53,15 @@ export default {
       this.availableFields = value;
     },
     uploadTrigger: function () {
-      //console.log('uploadTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
+      // console.log('uploadTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
       this.doUpload();
     },
     clearTrigger: function () {
-      //console.log('clearTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
+      // console.log('clearTrigger(' + this.transaction_journal_id + ',' + this.index + ')');
       this.$refs.att.value = null;
     },
     transaction_journal_id: function (value) {
-      //console.log('watch transaction_journal_id: ' + value + ' (index ' + this.index + ')');
+      // console.log('watch transaction_journal_id: ' + value + ' (index ' + this.index + ')');
     }
   },
   computed: {
@@ -95,9 +95,9 @@ export default {
     },
     countAttachment: function () {
       this.uploaded++;
-      //console.log('Uploaded ' + this.uploaded + ' / ' + this.uploads);
+      // console.log('Uploaded ' + this.uploaded + ' / ' + this.uploads);
       if (this.uploaded >= this.uploads) {
-        //console.log('All files uploaded. Emit event for ' + this.transaction_journal_id + '(' + this.index + ')');
+        // console.log('All files uploaded. Emit event for ' + this.transaction_journal_id + '(' + this.index + ')');
         this.$emit('uploaded-attachments', this.transaction_journal_id);
       }
     },
@@ -138,6 +138,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>

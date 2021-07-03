@@ -123,7 +123,7 @@ class BudgetLimitController extends Controller
     /**
      * @param Request $request
      *
-     * @return JsonResponse|RedirectResponse|Redirector
+     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(Request $request)
@@ -131,7 +131,7 @@ class BudgetLimitController extends Controller
         Log::debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int)$request->get('transaction_currency_id'));
-        $budget   = $this->repository->findNull((int)$request->get('budget_id'));
+        $budget   = $this->repository->find((int)$request->get('budget_id'));
         if (null === $currency || null === $budget) {
             throw new FireflyException('No valid currency or budget.');
         }

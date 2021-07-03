@@ -130,6 +130,7 @@ return [
     'field'                   => 'Поле',
     'value'                   => 'Стойност',
     'interest'                => 'Лихва',
-    'interest_period'         => 'лихвен период',
+    'interest_period'         => 'Interest period',
     'liability_type'          => 'Вид на задължението',
+    'liability_direction'     => 'Liability in/out',
 ];

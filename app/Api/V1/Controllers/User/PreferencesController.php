@@ -47,11 +47,12 @@ class PreferencesController extends Controller
      * List all of them.
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
     {
-        // TODO via repository.
+// See reference nr. 83
         $collection  = auth()->user()->preferences()->get();
         $manager     = $this->getManager();
         $count       = $collection->count();
@@ -115,8 +116,10 @@ class PreferencesController extends Controller
 
     /**
      * @param PreferenceUpdateRequest $request
+     * @param Preference              $preference
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {

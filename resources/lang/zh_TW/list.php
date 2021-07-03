@@ -130,6 +130,7 @@ return [
     'field'                   => '欄位',
     'value'                   => '值',
     'interest'                => '利率',
-    'interest_period'         => '利率期',
+    'interest_period'         => 'Interest period',
     'liability_type'          => '負債類型',
+    'liability_direction'     => 'Liability in/out',
 ];

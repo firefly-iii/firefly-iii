@@ -32,7 +32,7 @@ use Log;
 
 /**
  * Class GroupUpdateService
- * TODO test.
+ * See reference nr. 91
  */
 class GroupUpdateService
 {
@@ -57,7 +57,8 @@ class GroupUpdateService
             $transactionGroup->save();
         }
 
-        if (0 === count($transactions)) {
+
+        if (empty($transactions)) {
             Log::debug('No transactions submitted, do nothing.');
 
             return $transactionGroup;
@@ -105,6 +106,9 @@ class GroupUpdateService
      */
     private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
     {
+        if (empty($data)) {
+            return;
+        }
         /** @var JournalUpdateService $updateService */
         $updateService = app(JournalUpdateService::class);
         $updateService->setTransactionGroup($transactionGroup);
@@ -165,6 +169,7 @@ class GroupUpdateService
      * @param array            $data
      *
      * @throws FireflyException
+     * @throws \FireflyIII\Exceptions\DuplicateTransactionException
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): void
     {

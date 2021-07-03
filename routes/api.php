@@ -121,10 +121,10 @@ Route::group(
         Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
 
-        // TODO Per object group, maybe in the future.
-        // TODO Per recurrence, all transactions created under it.
-        // TODO Per currency, or as a filter?
-        // TODO Show user net worth?
+// See reference nr. 7
+// See reference nr. 8
+// See reference nr. 9
+// See reference nr. 10
     }
 );
 // insight in income
@@ -142,17 +142,17 @@ Route::group(
         Route::get('tag', ['uses' => 'TagController@tag', 'as' => 'tag']);
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
 
-        // TODO Per object group, maybe in the future.
-        // TODO Per recurrence, all transactions created under it.
-        // TODO Per currency, or as a filter?
-        // TODO Show user net worth?
+// See reference nr. 11
+// See reference nr. 12
+// See reference nr. 13
+// See reference nr. 14
     }
 );
 
 // Insight in transfers
 Route::group(
     ['namespace' => 'FireflyIII\Api\V1\Controllers\Insight\Transfer', 'prefix' => 'insight/transfer',
-     'as'        => 'api.v1.insight.income.',],
+     'as'        => 'api.v1.insight.transfer.',],
     static function () {
         // Insight in expenses per account:
         Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
@@ -162,7 +162,7 @@ Route::group(
         Route::get('no-tag', ['uses' => 'TagController@noTag', 'as' => 'no-tag']);
         Route::get('total', ['uses' => 'PeriodController@total', 'as' => 'total']);
 
-        // TODO Transfers for piggies
+// See reference nr. 15
     }
 );
 /**
@@ -342,7 +342,7 @@ Route::group(
         Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::get('{recurrence}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
-        // TODO
+// See reference nr. 16
         Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
     }
 );
@@ -360,9 +360,9 @@ Route::group(
         Route::delete('{rule}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::get('{rule}/test', ['uses' => 'TriggerController@testRule', 'as' => 'test']);
-        // TODO give results back.
+// See reference nr. 17
         Route::post('{rule}/trigger', ['uses' => 'TriggerController@triggerRule', 'as' => 'trigger']);
-        // TODO rule transactions, rule bills?
+// See reference nr. 18
     }
 );
 

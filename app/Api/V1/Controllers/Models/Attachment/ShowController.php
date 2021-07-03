@@ -111,6 +111,7 @@ class ShowController extends Controller
      * Display a listing of the resource.
      *
      * @return JsonResponse
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse

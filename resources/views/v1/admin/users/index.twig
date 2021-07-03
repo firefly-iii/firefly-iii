@@ -29,8 +29,8 @@
                             <tr>
                                 <td class="hidden-xs" data-value="{{ user.id }}">
                                     <div class="btn-group btn-group-xs">
-                                        <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><i class="fa fa-pencil"></i></a>
-                                        <a class="btn btn-danger" href="{{ route('admin.users.delete',user.id) }}"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><span class="fa fa-pencil"></span></a>
+                                        <a class="btn btn-danger" href="{{ route('admin.users.delete',user.id) }}"><span class="fa fa-trash"></span></a>
                                     </div>
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
@@ -46,23 +46,23 @@
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.isAdmin %}1{% else %}0{% endif %}">
                                     {% if user.isAdmin %}
-                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
                                     {% else %}
-                                        <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
+                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-xs" data-value="{% if user.has2FA %}1{% else %}0{% endif %}">
                                     {% if user.has2FA %}
-                                        <small class="text-success"><i class="fa fa-fw fa-check"></i></small>
+                                        <small class="text-success"><span class="fa fa-fw fa-check"></span></small>
                                     {% else %}
-                                        <small class="text-danger"><i class="fa fa-fw fa-times"></i></small>
+                                        <small class="text-danger"><span class="fa fa-fw fa-times"></span></small>
                                     {% endif %}
                                 </td>
                                 <td data-value="{% if user.blocked %}1{% else %}0{% endif %}">
                                     {% if user.blocked == 1 %}
-                                        <small class="text-danger"><i class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></i></small>
+                                        <small class="text-danger"><span class="fa fa-fw fa-check" title="{{ 'yes'|_ }}"></span></small>
                                     {% else %}
-                                        <small class="text-success"><i class="fa fa-fw fa-times" title="{{ 'no'|_ }}"></i></small>
+                                        <small class="text-success"><span class="fa fa-fw fa-times" title="{{ 'no'|_ }}"></span></small>
                                     {% endif %}
                                 </td>
                                 <td class="hidden-xs">

@@ -111,6 +111,7 @@ class CreateController extends Controller
      * @param BudgetFormStoreRequest $request
      *
      * @return RedirectResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(BudgetFormStoreRequest $request): RedirectResponse
     {

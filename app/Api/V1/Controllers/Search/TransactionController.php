@@ -42,6 +42,7 @@ class TransactionController extends Controller
      * @param SearchInterface $searcher
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {

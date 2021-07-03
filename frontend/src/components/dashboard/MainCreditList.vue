@@ -26,13 +26,13 @@
     <!-- body if loading -->
     <div v-if="loading && !error" class="card-body">
       <div class="text-center">
-        <i class="fas fa-spinner fa-spin"></i>
+        <span class="fas fa-spinner fa-spin"></span>
       </div>
     </div>
     <!-- body if error -->
     <div v-if="error" class="card-body">
       <div class="text-center">
-        <i class="fas fa-exclamation-triangle text-danger"></i>
+        <span class="fas fa-exclamation-triangle text-danger"></span>
       </div>
     </div>
     <!-- body if normal -->
@@ -67,7 +67,7 @@
       </table>
     </div>
     <div class="card-footer">
-      <a class="btn btn-default button-sm" href="./transactions/deposit"><i class="far fa-money-bill-alt"></i> {{ $t('firefly.go_to_deposits') }}</a>
+      <a class="btn btn-default button-sm" href="./transactions/deposit"><span class="far fa-money-bill-alt"></span> {{ $t('firefly.go_to_deposits') }}</a>
     </div>
   </div>
 </template>
@@ -79,7 +79,7 @@ import format from "date-fns/format";
 
 const {mapState, mapGetters, mapActions, mapMutations} = createNamespacedHelpers('dashboard/index')
 
-// TODO same as credit list but reversed
+// See reference nr. 2
 
 export default {
   name: "MainCreditList",
@@ -141,9 +141,9 @@ export default {
       });
     },
     parseIncome(data) {
-      for (let mainKey in data) {
-        if (data.hasOwnProperty(mainKey)) {
-          mainKey = parseInt(mainKey);
+      for (let i in data) {
+        if (data.hasOwnProperty(i)) {
+          let mainKey = parseInt(i);
           // contains currency info and entries.
           let current = data[mainKey];
           current.pct = 0;
