@@ -2,18 +2,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.6.0
+## 5.6.0 - 2021-xx-xx
 
-- New LDAP code: Firefly III may accidentally create a new account for you instead of reusing the old one.
+⚠️ This release features new LDAP libraries. Your mileage may vary. Make sure you back up everything. Firefly III may accidentally create a new account for you instead of reusing the old one. There is no option for LDAP filters yet.
 
-No LDAP filter yet.
+### Added
+- A few new pages for the new v2 layout. Thanks @alex6480!
+- Feature to be able to rebuild Docker images and show security warnings in new builds.
+- Added a new currency yay!
+- You can now manage loans and debts a little better.
 
-- Disable webhooks with API command
-- static cron token is new?
-- update ldap
-- new credit stuff
-- need to force users to switch config or ignore it.
+### Changed
+- A better cache routine for layout v2 pages.
+- All LDAP libraries have been upgrade.
 
+### Fixed
+- Various Sonarqube issues, thanks @hazma-fadil!
+- Correct menu display, thanks @vonsogt!
+
+### API
+- You can disable webhooks with an extra field in API submissions.
+- There is a static cron token (see `.env.example`) which is useful for Docker.
 
 ## 5.5.12 - 2021-06-03
 

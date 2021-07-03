@@ -24,14 +24,14 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
-            Treemap categories?
+            Treemap categories
           </div>
         </div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-body">
-            Treemap accounts?
+            Treemap accounts
           </div>
         </div>
       </div>
@@ -82,15 +82,15 @@
               </template>
               <template #cell(amount)="data">
                 <span class="text-success" v-if="'deposit' === data.item.type">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
 
                 <span class="text-danger" v-else-if="'withdrawal' === data.item.type">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(-data.item.amount) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(-data.item.amount) }}
                 </span>
 
                 <span class="text-muted" v-else-if="'transfer' === data.item.type">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
               </template>
               <template #cell(date)="data">
@@ -154,13 +154,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12">
+      <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12" v-for="range in ranges">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">I am title</h3>
+            <h3 class="card-title">{{ formatDate(range.start, 'yyyy-LL') }}</h3>
           </div>
           <div class="card-body">
-            Box previous periods
+            <a :href="'./transactions/' + type + '/' + formatDate(range.start,'yyyy-LL-dd') + '/' + formatDate(range.end, 'yyyy-LL-dd')">Transactions</a>
           </div>
         </div>
       </div>
@@ -172,6 +172,9 @@
 
 import {mapGetters, mapMutations} from "vuex";
 import format from "date-fns/format";
+import sub from "date-fns/sub";
+import startOfMonth from "date-fns/startOfMonth";
+import endOfMonth from "date-fns/endOfMonth";
 import {configureAxios} from "../../shared/forageStore";
 
 export default {
@@ -196,7 +199,11 @@ export default {
         chosenClass: 'is-selected',
         onEnd: null
       },
-      sortable: null
+      sortable: null,
+      locale: 'en-US',
+      ranges: [],
+      urlStart: null,
+      urlEnd: null,
     }
   },
   watch: {
@@ -224,11 +231,16 @@ export default {
     }
   },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
     this.perPage = this.listPageSize ?? 51;
-    // console.log('Per page: ' + this.perPage);
+    if (5 === parts.length) {
+      this.urlStart = new Date(parts[3]);
+      this.urlEnd = new Date(parts[4]);
+      this.type = parts[parts.length - 3];
+    }
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
@@ -262,8 +274,8 @@ export default {
         {key: 'description', label: this.$t('list.description'), sortable: true},
         {key: 'amount', label: this.$t('list.amount'), sortable: true},
         {key: 'date', label: this.$t('list.date'), sortable: true},
-        {key: 'source_name', label: this.$t('list.source_account'), sortable: true},
-        {key: 'destination_name', label: this.$t('list.destination_account'), sortable: true},
+        {key: 'source_account', label: this.$t('list.source_account'), sortable: true},
+        {key: 'destination_account', label: this.$t('list.destination_account'), sortable: true},
         {key: 'category_name', label: this.$t('list.category'), sortable: true},
         {key: 'menu', label: ' ', sortable: false},
       ];
@@ -283,13 +295,39 @@ export default {
         this.transactions = [];
         this.transactionRows = [];
         this.downloadTransactionList(1);
+        this.calculateDateRanges();
       }
+    },
+    calculateDateRanges: function () {
+      let yearAgo = sub(this.start, {years: 1});
+      let currentDate = this.start;
+
+      while (currentDate > yearAgo) {
+        // start + end of month:
+        let st = startOfMonth(currentDate);
+        let en = endOfMonth(currentDate);
+
+        this.ranges.push({start: st, end: en});
+
+        currentDate = sub(currentDate, {months: 1});
+        //console.log(currentDate);
+      }
+    },
+    formatDate: function (date, frm) {
+      return format(date, frm);
     },
     downloadTransactionList: function (page) {
       // console.log('downloadTransactionList(' + page + ')');
       configureAxios().then(async (api) => {
         let startStr = format(this.start, 'y-MM-dd');
         let endStr = format(this.end, 'y-MM-dd');
+        console.log(this.urlEnd);
+        console.log(this.urlStart);
+        if(null !== this.urlEnd && null !== this.urlStart) {
+          startStr = format(this.urlStart, 'y-MM-dd');
+          endStr = format(this.urlEnd, 'y-MM-dd');
+        }
+
         api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey)
             .then(response => {
 

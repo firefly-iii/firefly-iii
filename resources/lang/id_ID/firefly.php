@@ -280,7 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III found :count transaction in :time seconds.|Firefly III found :count transactions in :time seconds.',
     'search_found_more_transactions'                      => 'Firefly III found more than :count transactions in :time seconds.',
     'search_for_query'                                    => 'Firefly III is searching for transactions with all of these words in them: <span class="text-info">:query</span>',
-    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
+    'invalid_operators_list'                              => 'Parameter pencarian ini tidak valdi dan telah diabaikan.',
     'search_modifier_date_is'                             => 'Transaction date is ":value"',
     'search_modifier_id'                                  => 'Transaction ID is ":value"',
     'search_modifier_date_before'                         => 'Transaction date is before or on ":value"',

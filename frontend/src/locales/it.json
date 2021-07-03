@@ -138,8 +138,8 @@
         "account_type_mortgage": "Mutuo",
         "save_transactions_by_moving_js": "Nessuna transazione|Salva questa transazione spostandola in un altro conto.|Salva queste transazioni spostandole in un altro conto.",
         "none_in_select_list": "(nessuna)",
-        "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_expand_split": "Espandi suddivisione",
+        "transaction_collapse_split": "Comprimi suddivisione"
     },
     "list": {
         "piggy_bank": "Salvadanaio",

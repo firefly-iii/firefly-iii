@@ -280,7 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III hat :count Transaktion in :time Sekunden gefunden.|Firefly III hat :count Transaktionen in :time Sekunden gefunden.',
     'search_found_more_transactions'                      => 'Firefly III hat mehr als :count Transaktionen in :time Sekunden gefunden.',
     'search_for_query'                                    => 'Firefly III sucht nach Buchungen mit folgenden Wörtern im Namen: <span class="text-info">:query</span>',
-    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
+    'invalid_operators_list'                              => 'Diese Suchparameter sind ungültig und wurden ignoriert.',
     'search_modifier_date_is'                             => 'Buchungsdatum ist „:value”',
     'search_modifier_id'                                  => 'Buchungsnummer ist ":value"',
     'search_modifier_date_before'                         => 'Buchungsdatum ist vor oder am ":value"',

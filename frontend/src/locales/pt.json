@@ -138,8 +138,8 @@
         "account_type_mortgage": "Hipoteca",
         "save_transactions_by_moving_js": "Nenhuma transa\u00e7\u00e3o| Guarde esta transa\u00e7\u00e3o movendo-a para outra conta| Guarde estas transa\u00e7\u00f5es movendo-as para outra conta.",
         "none_in_select_list": "(nenhum)",
-        "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_expand_split": "Expandir divis\u00e3o",
+        "transaction_collapse_split": "Ocultar divis\u00e3o"
     },
     "list": {
         "piggy_bank": "Mealheiro",

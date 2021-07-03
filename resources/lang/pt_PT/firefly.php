@@ -83,7 +83,7 @@ return [
     'flash_info'                                          => 'Mensagem',
     'flash_warning'                                       => 'Aviso!',
     'flash_error'                                         => 'Erro!',
-    'flash_danger'                                        => 'Danger!',
+    'flash_danger'                                        => 'Perigo!',
     'flash_info_multiple'                                 => 'Tens 1 mensagem|Tens :count mensagens',
     'flash_error_multiple'                                => 'Tens 1 erro|Tens :count erros',
     'net_worth'                                           => 'Património liquido',
@@ -280,7 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III encontrou :count transacção em :time segundos.|Firefly III encontrou :count transacções em :time segundos.',
     'search_found_more_transactions'                      => 'Firefly III encontrou mais de :count transacções em :time segundos.',
     'search_for_query'                                    => 'O Firefly III está à procura de transacções com as palavras: <span class="text-info">:query</span>',
-    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
+    'invalid_operators_list'                              => 'Estes parâmetros de pesquisa não são válidos e foram ignorados.',
     'search_modifier_date_is'                             => 'A data da transacção é ":value"',
     'search_modifier_id'                                  => 'O ID da transação é ":value"',
     'search_modifier_date_before'                         => 'A data da transacção é anterior ou a ":value"',
@@ -1692,8 +1692,8 @@ return [
     'store_as_new'                          => 'Guarde como uma nova transação em vez de atualizar.',
     'reset_after'                           => 'Repor o formulário após o envio',
     'errors_submission'                     => 'Aconteceu algo errado com a sua submissão. Por favor, verifique os erros.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Expandir divisão',
+    'transaction_collapse_split'            => 'Ocultar divisão',
 
     // object groups
     'default_group_title_name'              => '(não agrupado)',

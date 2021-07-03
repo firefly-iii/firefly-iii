@@ -20,8 +20,7 @@
 
 <template>
   <div class="form-group"
-       v-bind:class="{ 'has-error': hasError()}"
-  >
+       v-bind:class="{ 'has-error': hasError()}">
     <div class="col-sm-12 text-sm">
       {{ $t('firefly.tags') }}
     </div>
@@ -49,7 +48,6 @@
     <ul v-for="error in this.error" class="list-unstyled">
       <li class="text-danger">{{ error }}</li>
     </ul>
-  </div>
   </div>
 </template>
 

@@ -280,7 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III ha trovato :count transazione in :time secondi.|Firefly III ha trovato :count transazioni in :time secondi.',
     'search_found_more_transactions'                      => 'Firefly III ha trovato più di :count transazioni in :time secondi.',
     'search_for_query'                                    => 'Firefly III sta cercando le transazioni contenenti tutte queste parole: <span class="text-info">:query</span>',
-    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
+    'invalid_operators_list'                              => 'Questi parametri di ricerca non sono validi e sono stati ignorati.',
     'search_modifier_date_is'                             => 'La data della transazione è ":value"',
     'search_modifier_id'                                  => 'L\'ID della transazione è ":value"',
     'search_modifier_date_before'                         => 'La data della transazione è antecedente o uguale a ":value"',
@@ -1692,8 +1692,8 @@ return [
     'store_as_new'                          => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                           => 'Resetta il modulo dopo l\'invio',
     'errors_submission'                     => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto.',
-    'transaction_expand_split'              => 'Expand split',
-    'transaction_collapse_split'            => 'Collapse split',
+    'transaction_expand_split'              => 'Espandi suddivisione',
+    'transaction_collapse_split'            => 'Comprimi suddivisione',
 
     // object groups
     'default_group_title_name'              => '(non in un gruppo)',

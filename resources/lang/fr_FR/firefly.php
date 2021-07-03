@@ -280,7 +280,7 @@ return [
     'search_found_transactions'                           => 'Firefly III a trouvé :count opération en :time secondes.|Firefly III a trouvé :count opérations en :time secondes.',
     'search_found_more_transactions'                      => 'Firefly III a trouvé plus de :count transactions en :time secondes.',
     'search_for_query'                                    => 'Firefly III recherche des opérations contenant tous ces mots : <span class="text-info">:query</span>',
-    'invalid_operators_list'                              => 'These search parameters are not valid and have been ignored.',
+    'invalid_operators_list'                              => 'Ces paramètres de recherche ne sont pas valides et ont été ignorés.',
     'search_modifier_date_is'                             => 'La date de l\'opération est ":value"',
     'search_modifier_id'                                  => 'L\'ID de l\'opération est ":value"',
     'search_modifier_date_before'                         => 'La date de l\'opération est avant ou le ":value"',

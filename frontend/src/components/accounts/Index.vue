@@ -69,22 +69,22 @@
               </template>
               <template #cell(amount_due)="data">
                 <span class="text-success" v-if="parseFloat(data.item.amount_due) > 0">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
                 </span>
 
                 <span class="text-danger" v-if="parseFloat(data.item.amount_due) < 0">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
                 </span>
 
                 <span class="text-muted" v-if="parseFloat(data.item.amount_due) === 0.0">
-                  {{ Intl.NumberFormat('en-US', {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount_due) }}
                 </span>
 
               </template>
               <template #cell(current_balance)="data">
                 <span class="text-success" v-if="parseFloat(data.item.current_balance) > 0">
                   {{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.current_balance)
@@ -92,7 +92,7 @@
                 </span>
                 <span class="text-danger" v-if="parseFloat(data.item.current_balance) < 0">
                   {{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.current_balance)
@@ -101,7 +101,7 @@
 
                 <span class="text-muted" v-if="0 === parseFloat(data.item.current_balance)">
                   {{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.current_balance)
@@ -112,17 +112,17 @@
                 </span>
                 <span v-if="'asset' === type && 'loading' !== data.item.balance_diff">
                    (<span class="text-success" v-if="parseFloat(data.item.balance_diff) > 0">{{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.balance_diff)
                   }}</span><span class="text-muted" v-if="0===parseFloat(data.item.balance_diff)">{{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.balance_diff)
                   }}</span><span class="text-danger" v-if="parseFloat(data.item.balance_diff) < 0">{{
-                    Intl.NumberFormat('en-US', {
+                    Intl.NumberFormat(locale, {
                       style: 'currency', currency:
                       data.item.currency_code
                     }).format(data.item.balance_diff)
@@ -210,7 +210,8 @@ export default {
         chosenClass: 'is-selected',
         onEnd: null
       },
-      sortable: null
+      sortable: null,
+      locale: 'en-US'
     }
   },
   watch: {
@@ -249,6 +250,7 @@ export default {
     }
   },
   created() {
+    this.locale = localStorage.locale ?? 'en-US';
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
