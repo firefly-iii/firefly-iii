@@ -56,6 +56,9 @@ mix.js('src/pages/accounts/delete.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/show.js', 'public/js/accounts').vue({version: 2});
 mix.js('src/pages/accounts/create.js', 'public/js/accounts').vue({version: 2});
 
+// bills
+mix.js('src/pages/bills/index.js', 'public/js/bills').vue({version: 2});
+
 // budgets
 mix.js('src/pages/budgets/index.js', 'public/js/budgets').vue({version: 2});
 
