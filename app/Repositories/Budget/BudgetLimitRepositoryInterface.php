@@ -72,7 +72,7 @@ interface BudgetLimitRepositoryInterface
     public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit;
 
     /**
-* See reference nr. 11
+     * See reference nr. 11
      *
      * @param Carbon|null $start
      * @param Carbon|null $end
