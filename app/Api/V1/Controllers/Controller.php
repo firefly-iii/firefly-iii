@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -91,7 +92,7 @@ abstract class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse($date);
-                } catch (InvalidDateException $e) {
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     Log::error(sprintf('Invalid date exception in API controller: %s', $e->getMessage()));
                 }
