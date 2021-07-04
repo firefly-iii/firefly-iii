@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
+
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -90,7 +91,7 @@ trait ModifiesPiggyBanks
         $leftOnAccount = $this->leftOnAccount($piggyBank, today(config('app.timezone')));
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
-        $maxAmount     = (string)min(round((float)$leftOnAccount, 12), round((float)$leftToSave, 12));
+        $maxAmount     = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
         $compare       = bccomp($amount, $maxAmount);
         $result        = $compare <= 0;
 
@@ -304,7 +305,7 @@ trait ModifiesPiggyBanks
             $piggyBank = PiggyBank::create($piggyData);
         } catch (QueryException $e) {
             Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
-            throw new FireflyException('400005: Could not store new piggy bank.',0,$e);
+            throw new FireflyException('400005: Could not store new piggy bank.', 0, $e);
         }
 
         // reset order then set order:
@@ -315,7 +316,7 @@ trait ModifiesPiggyBanks
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
-        if (null !== $repetition && array_key_exists('current_amount',$data) && '' !== $data['current_amount']) {
+        if (null !== $repetition && array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
         }

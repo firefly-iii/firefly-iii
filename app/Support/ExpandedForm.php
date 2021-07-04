@@ -58,9 +58,9 @@ class ExpandedForm
         unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = round((float)$value, 8);
-        }
+        //if (null !== $value && '' !== $value) {
+        //$value = round((float)$value, 8);
+        //}
         try {
             $html = prefixView('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) { // @phpstan-ignore-line
@@ -224,6 +224,7 @@ class ExpandedForm
             }
             $selectList[$entryId] = $title;
         }
+
         return $selectList;
     }
 
@@ -246,7 +247,7 @@ class ExpandedForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = round((float)$value, $selectedCurrency->decimal_places);
+            //            $value = round((float)$value, $selectedCurrency->decimal_places);
         }
         try {
             $html = prefixView('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();

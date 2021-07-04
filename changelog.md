@@ -8,7 +8,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - A few new pages for the new v2 layout. Thanks @alex6480!
-- Feature to be able to rebuild Docker images and show security warnings in new builds.
 - Added a new currency yay!
 - You can now manage loans and debts a little better.
 
@@ -16,9 +15,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - A better cache routine for layout v2 pages.
 - All LDAP libraries have been upgrade.
 
+### Deprecated
+- Initial release.
+
+### Removed
+- All telemetry options have been removed.
+
+
 ### Fixed
+- #4894 Bad number comparison
 - Various Sonarqube issues, thanks @hazma-fadil!
 - Correct menu display, thanks @vonsogt!
+
+
+### Security
+- Feature to be able to rebuild Docker images and show security warnings in new builds.
 
 ### API
 - You can disable webhooks with an extra field in API submissions.
