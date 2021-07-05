@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Schlagwort „:tag” bearbeiten',
     'delete_tag'             => 'Schlagwort „:tag” löschen',
     'delete_journal_link'    => 'Transaktionsverknüpfung löschen',
-    'telemetry_index'        => 'Telemetrie',
-    'telemetry_view'         => 'Telemetrie anzeigen',
     'edit_object_group'      => 'Gruppe „:title” bearbeiten',
     'delete_object_group'    => 'Gruppe „:title” löschen',
     'logout_others'          => 'Alle anderen Sitzungen abmelden'

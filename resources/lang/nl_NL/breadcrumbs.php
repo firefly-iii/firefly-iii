@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Wijzig tag ":tag"',
     'delete_tag'             => 'Verwijder tag ":tag"',
     'delete_journal_link'    => 'Verwijder koppeling tussen transacties',
-    'telemetry_index'        => 'Telemetrie',
-    'telemetry_view'         => 'Bekijk telemetrie',
     'edit_object_group'      => 'Wijzig groep ":title"',
     'delete_object_group'    => 'Verwijder groep ":title"',
     'logout_others'          => 'Andere sessies afmelden'

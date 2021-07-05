@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Modyfikuj tag ":tag"',
     'delete_tag'             => 'Usuń tag ":tag"',
     'delete_journal_link'    => 'Usuń powiązanie między transakcjami',
-    'telemetry_index'        => 'Telemetria',
-    'telemetry_view'         => 'Zobacz telemetrię',
     'edit_object_group'      => 'Modyfikuj grupę ":title"',
     'delete_object_group'    => 'Usuń grupę ":title"',
     'logout_others'          => 'Wyloguj z pozostałych sesji'

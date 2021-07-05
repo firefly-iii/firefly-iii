@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Editează eticheta ":tag"',
     'delete_tag'             => 'Șterge eticheta ":tag"',
     'delete_journal_link'    => 'Şterge legătura dintre tranzacţii',
-    'telemetry_index'        => 'Telemetrie',
-    'telemetry_view'         => 'Vizualizare telemetrie',
     'edit_object_group'      => 'Editați grupul de reguli ":title"',
     'delete_object_group'    => 'Șterge grupul de reguli ":title"',
     'logout_others'          => 'Deconectare celelalte sesiuni'

@@ -58,8 +58,6 @@ return [
     'edit_tag'               => '":tag" címke szerkesztése',
     'delete_tag'             => '":tag" címke törlése',
     'delete_journal_link'    => 'Tranzakciók közötti kapcsolat törlése',
-    'telemetry_index'        => 'Telemetria',
-    'telemetry_view'         => 'Telemetria megtekintése',
     'edit_object_group'      => '":title" csoport szerkesztése',
     'delete_object_group'    => '":title" csoport törlése',
     'logout_others'          => 'Minden más munkamenet kijelentkeztetése'

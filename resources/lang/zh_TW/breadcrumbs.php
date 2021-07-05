@@ -58,8 +58,6 @@ return [
     'edit_tag'               => '編輯標籤 ":tag"',
     'delete_tag'             => '刪除標籤 ":tag"',
     'delete_journal_link'    => '刪除交易記錄之間的連結',
-    'telemetry_index'        => '使用紀錄回傳 (telemetry)',
-    'telemetry_view'         => '檢視使用紀錄回傳',
     'edit_object_group'      => '編輯群組 ":title"',
     'delete_object_group'    => '刪除群組 ":title"',
     'logout_others'          => '登出其他 sessions'

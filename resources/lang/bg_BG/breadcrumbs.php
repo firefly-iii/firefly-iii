@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Редактирай етикет ":tag"',
     'delete_tag'             => 'Изтрии етикет ":tag"',
     'delete_journal_link'    => 'Изтрий връзката между трансакциите',
-    'telemetry_index'        => 'Телеметрия',
-    'telemetry_view'         => 'Преглед на телеметрията',
     'edit_object_group'      => 'Редактирай група ":title"',
     'delete_object_group'    => 'Изтрии група ":title"',
     'logout_others'          => 'Изход от другите сесии'

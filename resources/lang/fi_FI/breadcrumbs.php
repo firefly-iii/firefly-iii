@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Muokkaa tägiä ":tag"',
     'delete_tag'             => 'Poista tägi ":tag"',
     'delete_journal_link'    => 'Poista linkki tapahtumien väliltä',
-    'telemetry_index'        => 'Käyttötiedot',
-    'telemetry_view'         => 'Tarkastele käyttötietoja',
     'edit_object_group'      => 'Muokkaa ryhmää ":title"',
     'delete_object_group'    => 'Poista ryhmä ":title"',
     'logout_others'          => 'Kirjaudu ulos muista istunnoista'

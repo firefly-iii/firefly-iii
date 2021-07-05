@@ -58,8 +58,6 @@ return [
     'edit_tag'               => '编辑标签“:tag”',
     'delete_tag'             => '删除标签“:tag”',
     'delete_journal_link'    => '删除交易之间的关联',
-    'telemetry_index'        => '遥测',
-    'telemetry_view'         => '查看遥测',
     'edit_object_group'      => '编辑组“:title”',
     'delete_object_group'    => '删除组“:title”',
     'logout_others'          => '退出其他已登录设备'
