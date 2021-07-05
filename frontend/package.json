@@ -38,7 +38,7 @@
         "localforage": "^1.9.0",
         "localforage-memoryStorageDriver": "^0.9.2",
         "overlayscrollbars": "^1.13.1",
-        "sortablejs": "^1.13.0",
+        "sortablejs": "^1.14.0",
         "v-calendar": "^2.3.0",
         "vue-typeahead-bootstrap": "^2.8.0",
         "vue2-leaflet": "^2.7.1"
