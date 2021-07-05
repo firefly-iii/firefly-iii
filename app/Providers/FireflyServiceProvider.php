@@ -64,7 +64,6 @@ use FireflyIII\Support\Form\RuleForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\Telemetry;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\Validation\FireflyValidator;
@@ -162,13 +161,6 @@ class FireflyServiceProvider extends ServiceProvider
             'ruleform',
             static function () {
                 return new RuleForm;
-            }
-        );
-
-        $this->app->bind(
-            'telemetry',
-            static function () {
-                return new Telemetry;
             }
         );
 

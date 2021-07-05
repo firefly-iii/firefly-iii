@@ -215,9 +215,6 @@ export default {
     }
   },
   watch: {
-    storeReady: function () {
-      this.getAccountList();
-    },
     start: function () {
       this.getAccountList();
     },

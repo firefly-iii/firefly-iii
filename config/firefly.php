@@ -120,7 +120,6 @@ return [
     'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
-    'send_telemetry'               => env('SEND_TELEMETRY', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
 
     // email flags
@@ -143,7 +142,6 @@ return [
 
     // static config (cannot be changed by user)
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
-    'telemetry_endpoint'           => 'https://telemetry.firefly-iii.org',
     'update_minimum_age'           => 7,
 
     // web configuration:

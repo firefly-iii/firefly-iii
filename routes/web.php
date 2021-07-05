@@ -1101,9 +1101,6 @@ Route::group(
         Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
         Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
 
-        // telemetry manager:
-        Route::get('telemetry', ['uses' => 'TelemetryController@index', 'as' => 'telemetry.index']);
-
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);
         Route::get('links/create', ['uses' => 'LinkController@create', 'as' => 'links.create']);

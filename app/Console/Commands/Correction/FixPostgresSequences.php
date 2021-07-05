@@ -88,7 +88,6 @@ class FixPostgresSequences extends Command
             'rules',
             'tag_transaction_journal',
             'tags',
-            'telemetry',
             'transaction_currencies',
             'transaction_groups',
             'transaction_journals',
