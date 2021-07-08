@@ -166,9 +166,13 @@ class PreferencesController extends Controller
 
         // custom fiscal year
         $customFiscalYear = 1 === (int)$request->get('customFiscalYear');
-        $fiscalYearStart  = date('m-d', strtotime((string)$request->get('fiscalYearStart')));
-        app('preferences')->set('customFiscalYear', $customFiscalYear);
-        app('preferences')->set('fiscalYearStart', $fiscalYearStart);
+        $string = strtotime((string)$request->get('fiscalYearStart'));
+        if(false !== $string) {
+            $fiscalYearStart  = date('m-d', $string);
+            app('preferences')->set('customFiscalYear', $customFiscalYear);
+            app('preferences')->set('fiscalYearStart', $fiscalYearStart);
+        }
+
 
         // save page size:
         app('preferences')->set('listPageSize', 50);
