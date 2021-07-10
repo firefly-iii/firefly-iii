@@ -139,7 +139,8 @@
         "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
         "none_in_select_list": "(Tr\u1ed1ng)",
         "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_collapse_split": "Collapse split",
+        "default_group_title_name": "(ch\u01b0a nh\u00f3m)"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",

@@ -139,7 +139,8 @@
         "save_transactions_by_moving_js": "Nenhuma transa\u00e7\u00e3o.|Salve esta transa\u00e7\u00e3o movendo-a para outra conta.|Salve essas transa\u00e7\u00f5es movendo-as para outra conta.",
         "none_in_select_list": "(nenhum)",
         "transaction_expand_split": "Exibir divis\u00e3o",
-        "transaction_collapse_split": "Esconder divis\u00e3o"
+        "transaction_collapse_split": "Esconder divis\u00e3o",
+        "default_group_title_name": "(n\u00e3o agrupado)"
     },
     "list": {
         "piggy_bank": "Cofrinho",

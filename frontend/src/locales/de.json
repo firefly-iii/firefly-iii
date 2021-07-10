@@ -139,7 +139,8 @@
         "save_transactions_by_moving_js": "Keine Buchungen|Speichern Sie diese Buchung, indem Sie sie auf ein anderes Konto verschieben. |Speichern Sie diese Buchungen, indem Sie sie auf ein anderes Konto verschieben.",
         "none_in_select_list": "(Keine)",
         "transaction_expand_split": "Aufteilung erweitern",
-        "transaction_collapse_split": "Aufteilung reduzieren"
+        "transaction_collapse_split": "Aufteilung reduzieren",
+        "default_group_title_name": "(ohne Gruppierung)"
     },
     "list": {
         "piggy_bank": "Sparschwein",

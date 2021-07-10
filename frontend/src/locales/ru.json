@@ -139,7 +139,8 @@
         "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
         "none_in_select_list": "(\u043d\u0435\u0442)",
         "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_collapse_split": "Collapse split",
+        "default_group_title_name": "(\u0431\u0435\u0437 \u0433\u0440\u0443\u043f\u043f\u0438\u0440\u043e\u0432\u043a\u0438)"
     },
     "list": {
         "piggy_bank": "\u041a\u043e\u043f\u0438\u043b\u043a\u0430",

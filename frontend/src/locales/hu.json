@@ -139,7 +139,8 @@
         "save_transactions_by_moving_js": "No transactions|Save this transaction by moving it to another account. |Save these transactions by moving them to another account.",
         "none_in_select_list": "(nincs)",
         "transaction_expand_split": "Expand split",
-        "transaction_collapse_split": "Collapse split"
+        "transaction_collapse_split": "Collapse split",
+        "default_group_title_name": "(nem csoportos\u00edtott)"
     },
     "list": {
         "piggy_bank": "Malacpersely",
