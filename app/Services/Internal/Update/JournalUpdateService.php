@@ -48,7 +48,6 @@ use Log;
  * Class to centralise code that updates a journal given the input by system.
  *
  * Class JournalUpdateService
- * See reference nr. 93
  */
 class JournalUpdateService
 {
@@ -162,8 +161,6 @@ class JournalUpdateService
         $this->updateCurrency();
         $this->updateAmount();
         $this->updateForeignAmount();
-
-        // See reference nr. 94
 
         app('preferences')->mark();
 

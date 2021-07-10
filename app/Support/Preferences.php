@@ -145,6 +145,19 @@ class Preferences
     }
 
     /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        $user = auth()->user();
+        if(null === $user) {
+            return new Collection;
+        }
+
+        return Preference::where('user_id', $user->id)->get();
+    }
+
+    /**
      * @param User            $user
      * @param string          $name
      * @param null|string|int $default

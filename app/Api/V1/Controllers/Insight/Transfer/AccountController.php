@@ -58,8 +58,6 @@ class AccountController extends Controller
     }
 
     /**
-* See reference nr. 80
-* See reference nr. 81
      *
      * @param GenericRequest $request
      *

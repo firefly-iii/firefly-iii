@@ -149,21 +149,17 @@ class AccountRepository implements AccountRepositoryInterface
         }
         Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
-        $accounts = $query->get(['accounts.*']);
-
-        // See reference nr. 10
-
+        $query->where('accounts.name', $name);
         /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name) {
-                Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+        $account = $query->first(['accounts.*']);
+        if (null === $account) {
+            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
 
-                return $account;
-            }
+            return null;
         }
-        Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
+        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
-        return null;
+        return $account;
     }
 
     /**

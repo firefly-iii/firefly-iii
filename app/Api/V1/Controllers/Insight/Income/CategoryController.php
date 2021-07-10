@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class CategoryController
-* See reference nr. 79
  */
 class CategoryController extends Controller
 {

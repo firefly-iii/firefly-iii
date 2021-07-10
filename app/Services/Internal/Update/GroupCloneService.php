@@ -35,7 +35,6 @@ use FireflyIII\Models\TransactionJournalMeta;
 
 /**
  * Class GroupCloneService
-* See reference nr. 92
  */
 class GroupCloneService
 {
