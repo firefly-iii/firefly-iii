@@ -44,11 +44,11 @@
                 <form action="{{ route('login') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="input-group mb-3">
-                        {% if config('firefly.login_provider') == 'eloquent' %}
+                        {% if config('firefly.authentication_guard') == 'web' %}
                             <input type="email" required autocomplete="email" name="email" value="{{ email }}" class="form-control"
                                    id="emailInput" placeholder="{{ trans('form.email') }}"/>
                         {% else %}
-                            <input type="text" required autocomplete="username" name="email" value="{{ email }}" class="form-control"
+                            <input type="text" required autocomplete="username" name="{{ usernameField }}" value="{{ email }}" class="form-control"
                                    placeholder="{{ trans('form.login_name') }}"/>
                         {% endif %}
                         <div class="input-group-append">

@@ -22,7 +22,7 @@ require('../../bootstrap');
 import Vue from "vue";
 import Index from "../../components/bills/Index";
 import store from "../../components/store";
-//import {BPagination, BTable} from 'bootstrap-vue';
+import {BPagination, BTable} from 'bootstrap-vue';
 //import Calendar from "../../components/dashboard/Calendar";
 //import IndexOptions from "../../components/accounts/IndexOptions";
 
@@ -33,8 +33,8 @@ let props = {};
 // See reference nr. 8
 // See reference nr. 9
 
-//Vue.component('b-table', BTable);
-//Vue.component('b-pagination', BPagination);
+Vue.component('b-table', BTable);
+Vue.component('b-pagination', BPagination);
 //Vue.use(Vuex);
 
 new Vue({
