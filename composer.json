@@ -88,7 +88,7 @@
     "fideloper/proxy": "4.*",
     "gdbots/query-parser": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
-    "jc5/google2fa-laravel": "2.0.5",
+    "jc5/google2fa-laravel": "2.0.6",
     "jc5/recovery": "^2",
     "laravel/framework": "^8.48",
     "laravel/passport": "10.*",
