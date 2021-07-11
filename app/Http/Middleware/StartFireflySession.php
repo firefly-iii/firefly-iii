@@ -46,11 +46,13 @@ class StartFireflySession extends StartSession
         $isDeletePage = strpos($uri, 'delete');
         $isLoginPage  = strpos($uri, '/login');
         $isJsonPage   = strpos($uri, '/json');
+        $isView       = strpos($uri, '/attachments/view');
 
         // also stop remembering "delete" URL's.
         if (false === $isScriptPage && false === $isDeletePage
             && false === $isLoginPage
             && false === $isJsonPage
+            && false === $isView
             && 'GET' === $request->method()
             && !$request->ajax()) {
             $session->setPreviousUrl($uri);
