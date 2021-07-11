@@ -71,7 +71,7 @@ Vue.component('create-transaction', CreateTransaction);
 const i18n = require('./i18n');
 
 let props = {};
-new Vue({
+const app = new Vue({
     i18n,
     el: "#create_transaction",
     render: (createElement) => {

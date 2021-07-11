@@ -32,7 +32,7 @@ let i18n = require('../../i18n');
 let props = {
 
 };
-new Vue({
+const app = new Vue({
             i18n,
             render(createElement) {
                 return createElement(Show, {props: props});

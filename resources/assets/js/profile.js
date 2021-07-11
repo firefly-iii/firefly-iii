@@ -40,7 +40,7 @@ Vue.component('profile-options', ProfileOptions);
 const i18n = require('./i18n');
 
 let props = {};
-new Vue({
+const app = new Vue({
     i18n,
     el: "#passport_clients",
     render: (createElement) => {

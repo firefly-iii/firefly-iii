@@ -37,7 +37,7 @@ Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);
 //Vue.use(Vuex);
 
-new Vue({
+const app = new Vue({
             i18n,
             store,
             el: "#bills",

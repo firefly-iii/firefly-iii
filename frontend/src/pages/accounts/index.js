@@ -37,7 +37,7 @@ Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);
 //Vue.use(Vuex);
 
-new Vue({
+const app = new Vue({
             i18n,
             store,
             el: "#accounts",
@@ -57,7 +57,7 @@ new Vue({
             },
         });
 
-new Vue({
+const calendar = new Vue({
             i18n,
             store,
             el: "#calendar",
@@ -67,7 +67,7 @@ new Vue({
 // See reference nr. 11
         });
 
-new Vue({
+const opt = new Vue({
             i18n,
             store,
             el: "#indexOptions",

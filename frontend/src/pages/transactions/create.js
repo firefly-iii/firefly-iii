@@ -35,7 +35,7 @@ let i18n = require('../../i18n');
 // See reference nr. 7
 
 let props = {};
-new Vue({
+const app = new Vue({
             i18n,
             store,
             render(createElement) {
