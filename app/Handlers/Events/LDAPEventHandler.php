@@ -38,20 +38,18 @@ class LDAPEventHandler
      */
     public function importedUser(Imported $event)
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         /** @var User $user */
         $user        = $event->eloquent;
         $alternative = User::where('email', $user->email)->where('id', '!=', $user->id)->first();
         if (null !== $alternative) {
-            // already a user exists with these records.
-            // copy objectguid and domain
-            // then logout
+            Log::debug(sprintf('User #%d is created but user #%d already exists.', $user->id, $alternative->id));
             $alternative->objectguid = $user->objectguid;
             $alternative->domain     = $user->domain;
             $alternative->save();
             $user->delete();
             auth()->logout();
         }
-        Log::debug('HERE WE ARE');
     }
 
 }
