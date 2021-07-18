@@ -365,6 +365,45 @@ try {
         }
     );
 
+    // SUBSCRIPTIONS
+    Breadcrumbs::for(
+        'subscriptions.index',
+        static function (Generator $breadcrumbs) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push(trans('breadcrumbs.bills'), route('subscriptions.index'));
+        }
+    );
+    Breadcrumbs::for(
+        'subscriptions.create',
+        static function (Generator $breadcrumbs) {
+            $breadcrumbs->parent('subscriptions.index');
+            $breadcrumbs->push(trans('breadcrumbs.newBill'), route('subscriptions.create'));
+        }
+    );
+
+    Breadcrumbs::for(
+        'subscriptions.edit',
+        static function (Generator $breadcrumbs, Bill $bill) {
+            $breadcrumbs->parent('subscriptions.show', $bill);
+            $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => limitStringLength($bill->name)]), route('subscriptions.edit', [$bill->id]));
+        }
+    );
+    Breadcrumbs::for(
+        'subscriptions.delete',
+        static function (Generator $breadcrumbs, Bill $bill) {
+            $breadcrumbs->parent('subscriptions.show', $bill);
+            $breadcrumbs->push(trans('breadcrumbs.delete_bill', ['name' => limitStringLength($bill->name)]), route('subscriptions.delete', [$bill->id]));
+        }
+    );
+
+    Breadcrumbs::for(
+        'subscriptions.show',
+        static function (Generator $breadcrumbs, Bill $bill) {
+            $breadcrumbs->parent('subscriptions.index');
+            $breadcrumbs->push(limitStringLength($bill->name), route('subscriptions.show', [$bill->id]));
+        }
+    );
+
     // BUDGETS
     Breadcrumbs::for(
         'budgets.index',

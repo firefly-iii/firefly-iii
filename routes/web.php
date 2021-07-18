@@ -200,6 +200,24 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'subscriptions', 'as' => 'subscriptions.'],
+    static function () {
+        Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
+        Route::get('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
+        Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
+        Route::get('edit/{bill}', ['uses' => 'Bill\EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
+        Route::get('show/{bill}', ['uses' => 'Bill\ShowController@show', 'as' => 'show']);
+
+        Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
+        Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
+        Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
+
+        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
+    }
+);
+
 /**
  * Budget Controller.
  */

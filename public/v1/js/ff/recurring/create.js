@@ -198,6 +198,7 @@ function updateFormFields() {
 
         // show budget
         $('#budget_id_holder').show();
+        $('#bill_id_holder').show();
 
         // hide piggy bank:
         $('#piggy_bank_id_holder').hide();
@@ -214,6 +215,7 @@ function updateFormFields() {
 
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
+        $('#bill_id_holder').hide();
         $('#piggy_bank_id_holder').hide();
     }
 
@@ -228,6 +230,7 @@ function updateFormFields() {
 
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();
+        $('#bill_id_holder').hide();
         $('#piggy_bank_id_holder').show();
     }
 }

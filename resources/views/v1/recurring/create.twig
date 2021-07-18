@@ -128,6 +128,13 @@
                         {# CATEGORY ALWAYS #}
                         {{ ExpandedForm.text('category') }}
 
+                        {# BILL / SUBSCRIPTION ONLY FOR WITHDRAWALS #}
+                        {% if bills|length > 1 %}
+                            {{ ExpandedForm.select('bill_id', bills, null) }}
+                        {% else %}
+                            {{ ExpandedForm.select('bill_id', bills, null, {helpText: trans('firefly.no_bill_pointer', {link: route('bills.index')})}) }}
+                        {% endif %}
+
                         {# TAGS #}
                         {{ ExpandedForm.text('tags') }}
 
