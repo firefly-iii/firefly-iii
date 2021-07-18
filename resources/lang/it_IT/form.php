@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Valuta',
     'account_id'                  => 'Conto attività',
     'budget_id'                   => 'Budget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Saldo di apertura',
     'tagMode'                     => 'Modalità etichetta',
     'virtual_balance'             => 'Saldo virtuale',

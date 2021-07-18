@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Divisa',
     'account_id'                  => 'Cuenta',
     'budget_id'                   => 'Presupuesto',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo de etiqueta',
     'virtual_balance'             => 'Saldo virtual',

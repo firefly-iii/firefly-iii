@@ -130,7 +130,11 @@ return [
     'field'                   => 'Kolonka',
     'value'                   => 'Hodnota',
     'interest'                => 'Úrok',
-    'interest_period'         => 'Interest period',
+    'interest_period'         => 'Úrokové období',
     'liability_type'          => 'Typ závazku',
-    'liability_direction'     => 'Liability in/out',
+    'liability_direction'     => 'Směr závazku',
+    'end_date'                => 'End date',
+    'payment_info'            => 'Payment information',
+    'expected_info'           => 'Next expected transaction',
+    'start_date'              => 'Start date',
 ];

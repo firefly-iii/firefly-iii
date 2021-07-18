@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Νόμισμα',
     'account_id'                  => 'Λογαριασμός κεφαλαίου',
     'budget_id'                   => 'Προϋπολογισμός',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Υπόλοιπο έναρξης',
     'tagMode'                     => 'Λειτουργία ετικέτας',
     'virtual_balance'             => 'Εικονικό υπόλοιπο',

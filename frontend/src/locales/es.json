@@ -140,7 +140,29 @@
         "none_in_select_list": "(ninguno)",
         "transaction_expand_split": "Expandir divisi\u00f3n",
         "transaction_collapse_split": "Colapsar divisi\u00f3n",
-        "default_group_title_name": "(sin agrupaci\u00f3n)"
+        "default_group_title_name": "(sin agrupaci\u00f3n)",
+        "bill_repeats_weekly": "Repeats weekly",
+        "bill_repeats_monthly": "Repeats monthly",
+        "bill_repeats_quarterly": "Repeats quarterly",
+        "bill_repeats_half-year": "Repeats every half year",
+        "bill_repeats_yearly": "Repeats yearly",
+        "bill_repeats_weekly_other": "Repeats every other week",
+        "bill_repeats_monthly_other": "Repeats every other month",
+        "bill_repeats_quarterly_other": "Repeats every other quarter",
+        "bill_repeats_half-year_other": "Repeats yearly",
+        "bill_repeats_yearly_other": "Repeats every other year",
+        "bill_repeats_weekly_skip": "Repeats every {skip} weeks",
+        "bill_repeats_monthly_skip": "Repeats every {skip} months",
+        "bill_repeats_quarterly_skip": "Repeats every {skip} quarters",
+        "bill_repeats_half-year_skip": "Repeats every {skip} half years",
+        "bill_repeats_yearly_skip": "Repeats every {skip} years",
+        "not_expected_period": "No se espera en este per\u00edodo",
+        "subscriptions": "Subscriptions",
+        "bill_expected_date_js": "Expected {date}",
+        "inactive": "Inactivo",
+        "forever": "Forever",
+        "extension_date_is": "Extension date is {date}",
+        "create_new_bill": "Crear nueva factura"
     },
     "list": {
         "piggy_bank": "Alcancilla",
@@ -160,7 +182,11 @@
         "liability_type": "Tipo de pasivo",
         "liability_direction": "Pasivo entrada\/salida",
         "currentBalance": "Balance actual",
-        "next_expected_match": "Pr\u00f3xima coincidencia esperada"
+        "next_expected_match": "Pr\u00f3xima coincidencia esperada",
+        "expected_info": "Next expected transaction",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "payment_info": "Payment information"
     },
     "config": {
         "html_language": "es",

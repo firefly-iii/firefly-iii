@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Valuta',
     'account_id'                  => 'Tillgångskonto',
     'budget_id'                   => 'Budget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Ingående balans',
     'tagMode'                     => 'Etikett läge',
     'virtual_balance'             => 'Virtuell balans',

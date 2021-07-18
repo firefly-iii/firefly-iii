@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Valuutta',
     'account_id'                  => 'Käyttötili',
     'budget_id'                   => 'Budjetti',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Alkusaldo',
     'tagMode'                     => 'Tägimoodi',
     'virtual_balance'             => 'Virtuaalinen saldo',

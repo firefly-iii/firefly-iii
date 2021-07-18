@@ -140,7 +140,29 @@
         "none_in_select_list": "(nici unul)",
         "transaction_expand_split": "Expand split",
         "transaction_collapse_split": "Collapse split",
-        "default_group_title_name": "(negrupat)"
+        "default_group_title_name": "(negrupat)",
+        "bill_repeats_weekly": "Repeats weekly",
+        "bill_repeats_monthly": "Repeats monthly",
+        "bill_repeats_quarterly": "Repeats quarterly",
+        "bill_repeats_half-year": "Repeats every half year",
+        "bill_repeats_yearly": "Repeats yearly",
+        "bill_repeats_weekly_other": "Repeats every other week",
+        "bill_repeats_monthly_other": "Repeats every other month",
+        "bill_repeats_quarterly_other": "Repeats every other quarter",
+        "bill_repeats_half-year_other": "Repeats yearly",
+        "bill_repeats_yearly_other": "Repeats every other year",
+        "bill_repeats_weekly_skip": "Repeats every {skip} weeks",
+        "bill_repeats_monthly_skip": "Repeats every {skip} months",
+        "bill_repeats_quarterly_skip": "Repeats every {skip} quarters",
+        "bill_repeats_half-year_skip": "Repeats every {skip} half years",
+        "bill_repeats_yearly_skip": "Repeats every {skip} years",
+        "not_expected_period": "Nu se a\u015fteapt\u0103 aceast\u0103 perioad\u0103",
+        "subscriptions": "Subscriptions",
+        "bill_expected_date_js": "Expected {date}",
+        "inactive": "Inactiv",
+        "forever": "Forever",
+        "extension_date_is": "Extension date is {date}",
+        "create_new_bill": "Crea\u021bi o nou\u0103 factur\u0103"
     },
     "list": {
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
@@ -160,7 +182,11 @@
         "liability_type": "Tip de provizion",
         "liability_direction": "Liability in\/out",
         "currentBalance": "Sold curent",
-        "next_expected_match": "Urm\u0103toarea potrivire a\u0219teptat\u0103"
+        "next_expected_match": "Urm\u0103toarea potrivire a\u0219teptat\u0103",
+        "expected_info": "Next expected transaction",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "payment_info": "Payment information"
     },
     "config": {
         "html_language": "ro",

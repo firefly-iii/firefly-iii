@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Mata uang',
     'account_id'                  => 'Akun aset',
     'budget_id'                   => 'Anggaran',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Saldo awal',
     'tagMode'                     => 'Mode Tag',
     'virtual_balance'             => 'Saldo virtual',

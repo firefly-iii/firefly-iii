@@ -133,4 +133,8 @@ return [
     'interest_period'         => 'Periode bunga',
     'liability_type'          => 'Jenis kewajiban',
     'liability_direction'     => 'Kewajiban masuk/keluar',
+    'end_date'                => 'End date',
+    'payment_info'            => 'Payment information',
+    'expected_info'           => 'Next expected transaction',
+    'start_date'              => 'Start date',
 ];

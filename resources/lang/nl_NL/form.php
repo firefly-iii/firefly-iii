@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Valuta',
     'account_id'                  => 'Betaalrekening',
     'budget_id'                   => 'Budget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Startsaldo',
     'tagMode'                     => 'Tag modus',
     'virtual_balance'             => 'Virtueel saldo',

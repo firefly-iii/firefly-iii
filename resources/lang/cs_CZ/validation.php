@@ -134,8 +134,8 @@ return [
     'starts_with'                    => 'Hodnota musí začínat :values.',
     'unique_webhook'                 => 'Webhook s těmito hodnotami již existuje.',
     'unique_existing_webhook'        => 'Jiný webhook s těmito hodnotami již existuje.',
-    'same_account_type'              => 'Both accounts must be of the same account type',
-    'same_account_currency'          => 'Both accounts must have the same currency setting',
+    'same_account_type'              => 'Oba účty musí být stejného typu',
+    'same_account_currency'          => 'Oba účty musí mít stejné nastavení měny',
 
     'secure_password'             => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Neplatný typ opakování pro opakované transakce.',
@@ -200,7 +200,7 @@ return [
     'need_id_in_edit'           => 'Každé rozdělení musí mít transakci_journal_id (platné ID nebo 0).',
 
     'ob_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'Pro pokračování je třeba získat platné ID zdrojového účtu.',
     'ob_dest_need_data'   => 'Pro pokračování je potřeba získat platné cílové ID účtu a/nebo platné jméno cílového účtu.',
     'ob_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
 

@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Devise',
     'account_id'                  => 'Compte d’actif',
     'budget_id'                   => 'Budget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Solde initial',
     'tagMode'                     => 'Mode du tag',
     'virtual_balance'             => 'Solde virtuel',

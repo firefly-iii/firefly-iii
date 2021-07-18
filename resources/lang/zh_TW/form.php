@@ -58,6 +58,7 @@ return [
     'currency'                    => '貨幣',
     'account_id'                  => '資產帳戶',
     'budget_id'                   => '預算',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => '初始餘額',
     'tagMode'                     => '標籤模式',
     'virtual_balance'             => '虛擬餘額',

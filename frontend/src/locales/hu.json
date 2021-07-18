@@ -140,7 +140,29 @@
         "none_in_select_list": "(nincs)",
         "transaction_expand_split": "Expand split",
         "transaction_collapse_split": "Collapse split",
-        "default_group_title_name": "(nem csoportos\u00edtott)"
+        "default_group_title_name": "(nem csoportos\u00edtott)",
+        "bill_repeats_weekly": "Repeats weekly",
+        "bill_repeats_monthly": "Repeats monthly",
+        "bill_repeats_quarterly": "Repeats quarterly",
+        "bill_repeats_half-year": "Repeats every half year",
+        "bill_repeats_yearly": "Repeats yearly",
+        "bill_repeats_weekly_other": "Repeats every other week",
+        "bill_repeats_monthly_other": "Repeats every other month",
+        "bill_repeats_quarterly_other": "Repeats every other quarter",
+        "bill_repeats_half-year_other": "Repeats yearly",
+        "bill_repeats_yearly_other": "Repeats every other year",
+        "bill_repeats_weekly_skip": "Repeats every {skip} weeks",
+        "bill_repeats_monthly_skip": "Repeats every {skip} months",
+        "bill_repeats_quarterly_skip": "Repeats every {skip} quarters",
+        "bill_repeats_half-year_skip": "Repeats every {skip} half years",
+        "bill_repeats_yearly_skip": "Repeats every {skip} years",
+        "not_expected_period": "Nem v\u00e1rhat\u00f3 ebben az id\u0151szakban",
+        "subscriptions": "Subscriptions",
+        "bill_expected_date_js": "Expected {date}",
+        "inactive": "Inakt\u00edv",
+        "forever": "Forever",
+        "extension_date_is": "Extension date is {date}",
+        "create_new_bill": "\u00daj sz\u00e1mla l\u00e9trehoz\u00e1sa"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -160,7 +182,11 @@
         "liability_type": "A k\u00f6telezetts\u00e9g t\u00edpusa",
         "liability_direction": "Liability in\/out",
         "currentBalance": "Aktu\u00e1lis egyenleg",
-        "next_expected_match": "K\u00f6vetkez\u0151 v\u00e1rhat\u00f3 egyez\u00e9s"
+        "next_expected_match": "K\u00f6vetkez\u0151 v\u00e1rhat\u00f3 egyez\u00e9s",
+        "expected_info": "Next expected transaction",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "payment_info": "Payment information"
     },
     "config": {
         "html_language": "hu",

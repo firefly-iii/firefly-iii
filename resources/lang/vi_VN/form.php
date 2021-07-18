@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Tiền tệ',
     'account_id'                  => 'tài khoản',
     'budget_id'                   => 'Ngân sách',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Số dư đầu kỳ',
     'tagMode'                     => 'Chế độ nhãn',
     'virtual_balance'             => 'Cân bằng ảo',

@@ -58,6 +58,7 @@ return [
     'currency'                    => '货币',
     'account_id'                  => '资产账户',
     'budget_id'                   => '预算',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => '初始余额',
     'tagMode'                     => '标签模式',
     'virtual_balance'             => '虚拟账户余额',

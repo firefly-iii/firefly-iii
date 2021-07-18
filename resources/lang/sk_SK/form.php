@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Mena',
     'account_id'                  => 'Účet aktív',
     'budget_id'                   => 'Rozpočet',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Počiatočný zostatok',
     'tagMode'                     => 'Režim štítku',
     'virtual_balance'             => 'Virtuálnu zostatok',

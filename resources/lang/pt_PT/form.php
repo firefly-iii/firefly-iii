@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Divisa',
     'account_id'                  => 'Conta de activos',
     'budget_id'                   => 'Orcamento',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Saldo inicial',
     'tagMode'                     => 'Modo da etiqueta',
     'virtual_balance'             => 'Saldo virtual',

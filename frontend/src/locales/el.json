@@ -140,7 +140,29 @@
         "none_in_select_list": "(\u03c4\u03af\u03c0\u03bf\u03c4\u03b1)",
         "transaction_expand_split": "Expand split",
         "transaction_collapse_split": "Collapse split",
-        "default_group_title_name": "(\u03c7\u03c9\u03c1\u03af\u03c2 \u03bf\u03bc\u03ac\u03b4\u03b1)"
+        "default_group_title_name": "(\u03c7\u03c9\u03c1\u03af\u03c2 \u03bf\u03bc\u03ac\u03b4\u03b1)",
+        "bill_repeats_weekly": "Repeats weekly",
+        "bill_repeats_monthly": "Repeats monthly",
+        "bill_repeats_quarterly": "Repeats quarterly",
+        "bill_repeats_half-year": "Repeats every half year",
+        "bill_repeats_yearly": "Repeats yearly",
+        "bill_repeats_weekly_other": "Repeats every other week",
+        "bill_repeats_monthly_other": "Repeats every other month",
+        "bill_repeats_quarterly_other": "Repeats every other quarter",
+        "bill_repeats_half-year_other": "Repeats yearly",
+        "bill_repeats_yearly_other": "Repeats every other year",
+        "bill_repeats_weekly_skip": "Repeats every {skip} weeks",
+        "bill_repeats_monthly_skip": "Repeats every {skip} months",
+        "bill_repeats_quarterly_skip": "Repeats every {skip} quarters",
+        "bill_repeats_half-year_skip": "Repeats every {skip} half years",
+        "bill_repeats_yearly_skip": "Repeats every {skip} years",
+        "not_expected_period": "\u0394\u03b5\u03bd \u03b1\u03bd\u03b1\u03bc\u03ad\u03bd\u03b5\u03c4\u03b1\u03b9 \u03b1\u03c5\u03c4\u03ae \u03c4\u03b7\u03bd \u03c0\u03b5\u03c1\u03af\u03bf\u03b4\u03bf",
+        "subscriptions": "Subscriptions",
+        "bill_expected_date_js": "Expected {date}",
+        "inactive": "\u0391\u03bd\u03b5\u03bd\u03b5\u03c1\u03b3\u03cc",
+        "forever": "Forever",
+        "extension_date_is": "Extension date is {date}",
+        "create_new_bill": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03bd\u03ad\u03bf\u03c5 \u03c0\u03ac\u03b3\u03b9\u03bf\u03c5 \u03ad\u03be\u03bf\u03b4\u03bf\u03c5"
     },
     "list": {
         "piggy_bank": "\u039a\u03bf\u03c5\u03bc\u03c0\u03b1\u03c1\u03ac\u03c2",
@@ -160,7 +182,11 @@
         "liability_type": "\u03a4\u03cd\u03c0\u03bf\u03c2 \u03c5\u03c0\u03bf\u03c7\u03c1\u03ad\u03c9\u03c3\u03b7\u03c2",
         "liability_direction": "Liability in\/out",
         "currentBalance": "\u03a4\u03c1\u03ad\u03c7\u03bf\u03bd \u03c5\u03c0\u03cc\u03bb\u03bf\u03b9\u03c0\u03bf",
-        "next_expected_match": "\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03b1\u03bc\u03b5\u03bd\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03c4\u03b9\u03c3\u03c4\u03bf\u03af\u03c7\u03b9\u03c3\u03b7"
+        "next_expected_match": "\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03b1\u03bc\u03b5\u03bd\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b1\u03bd\u03c4\u03b9\u03c3\u03c4\u03bf\u03af\u03c7\u03b9\u03c3\u03b7",
+        "expected_info": "Next expected transaction",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "payment_info": "Payment information"
     },
     "config": {
         "html_language": "el",

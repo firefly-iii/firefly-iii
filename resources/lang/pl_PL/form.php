@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Waluta',
     'account_id'                  => 'Konto aktywów',
     'budget_id'                   => 'Budżet',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Saldo początkowe',
     'tagMode'                     => 'Tryb tagów',
     'virtual_balance'             => 'Wirtualne saldo',

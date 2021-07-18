@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Měna',
     'account_id'                  => 'Účet aktiv',
     'budget_id'                   => 'Rozpočet',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Počáteční zůstatek',
     'tagMode'                     => 'Režim štítku',
     'virtual_balance'             => 'Virtuální zůstatek',
@@ -80,7 +81,7 @@ return [
     'api_key'                     => 'Klíč k API',
     'remember_me'                 => 'Zapamatovat si mě',
     'liability_type_id'           => 'Typ závazku',
-    'liability_type'              => 'Liability type',
+    'liability_type'              => 'Typ závazku',
     'interest'                    => 'Úrok',
     'interest_period'             => 'Úrokové období',
 
@@ -170,7 +171,7 @@ return [
     'recurring_keep_transactions' => 'Jediná transakce vytvořená touto opakující se transakcí nebude smazána.|Všech :count transakcí vytvořených touto opakující se transakcí nebude odstraněno.',
     'tag_keep_transactions'       => 'Jediná transakce připojená k tomuto štítku nebude smazána.|Všech :count transakcí připojených k tomuto štítku nebudou odstraněno.',
     'check_for_updates'           => 'Zjistit dostupnost případných aktualizací',
-    'liability_direction'         => 'Liability in/out',
+    'liability_direction'         => 'Směr závazku',
 
     'delete_object_group' => 'Odstranit skupinu „:title“',
 

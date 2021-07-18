@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Валюта',
     'account_id'                  => 'Основной счёт',
     'budget_id'                   => 'Бюджет',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Начальный баланс',
     'tagMode'                     => 'Режим метки',
     'virtual_balance'             => 'Виртуальный баланс',

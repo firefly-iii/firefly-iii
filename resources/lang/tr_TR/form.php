@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Para birimi',
     'account_id'                  => 'Varlık hesabı',
     'budget_id'                   => 'Bütçe',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Etiket modu',
     'virtual_balance'             => 'Virtual balance',

@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Valuta',
     'account_id'                  => 'Aktivakonto',
     'budget_id'                   => 'Busjett',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Taggmodus',
     'virtual_balance'             => 'Virtual balance',

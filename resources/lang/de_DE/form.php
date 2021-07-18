@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Währung',
     'account_id'                  => 'Bestandskonto',
     'budget_id'                   => 'Budget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Eröffnungsbilanz',
     'tagMode'                     => 'Schlagwort-Modus',
     'virtual_balance'             => 'Virtueller Kontostand',

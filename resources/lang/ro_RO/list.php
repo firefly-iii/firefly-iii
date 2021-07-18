@@ -133,4 +133,8 @@ return [
     'interest_period'         => 'Interest period',
     'liability_type'          => 'Tip de provizion',
     'liability_direction'     => 'Liability in/out',
+    'end_date'                => 'End date',
+    'payment_info'            => 'Payment information',
+    'expected_info'           => 'Next expected transaction',
+    'start_date'              => 'Start date',
 ];

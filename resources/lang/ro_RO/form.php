@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Monedă',
     'account_id'                  => 'Cont de active',
     'budget_id'                   => 'Buget',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Soldul de deschidere',
     'tagMode'                     => 'Mod de etichetare',
     'virtual_balance'             => 'Soldul virtual',

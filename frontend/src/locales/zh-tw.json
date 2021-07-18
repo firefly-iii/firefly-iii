@@ -140,7 +140,29 @@
         "none_in_select_list": "(\u7a7a)",
         "transaction_expand_split": "Expand split",
         "transaction_collapse_split": "Collapse split",
-        "default_group_title_name": "(ungrouped)"
+        "default_group_title_name": "(ungrouped)",
+        "bill_repeats_weekly": "Repeats weekly",
+        "bill_repeats_monthly": "Repeats monthly",
+        "bill_repeats_quarterly": "Repeats quarterly",
+        "bill_repeats_half-year": "Repeats every half year",
+        "bill_repeats_yearly": "Repeats yearly",
+        "bill_repeats_weekly_other": "Repeats every other week",
+        "bill_repeats_monthly_other": "Repeats every other month",
+        "bill_repeats_quarterly_other": "Repeats every other quarter",
+        "bill_repeats_half-year_other": "Repeats yearly",
+        "bill_repeats_yearly_other": "Repeats every other year",
+        "bill_repeats_weekly_skip": "Repeats every {skip} weeks",
+        "bill_repeats_monthly_skip": "Repeats every {skip} months",
+        "bill_repeats_quarterly_skip": "Repeats every {skip} quarters",
+        "bill_repeats_half-year_skip": "Repeats every {skip} half years",
+        "bill_repeats_yearly_skip": "Repeats every {skip} years",
+        "not_expected_period": "Not expected this period",
+        "subscriptions": "Subscriptions",
+        "bill_expected_date_js": "Expected {date}",
+        "inactive": "\u672a\u555f\u7528",
+        "forever": "Forever",
+        "extension_date_is": "Extension date is {date}",
+        "create_new_bill": "\u5efa\u7acb\u65b0\u5e33\u55ae"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
@@ -160,7 +182,11 @@
         "liability_type": "\u8ca0\u50b5\u985e\u578b",
         "liability_direction": "Liability in\/out",
         "currentBalance": "\u76ee\u524d\u9918\u984d",
-        "next_expected_match": "\u4e0b\u4e00\u500b\u9810\u671f\u7684\u914d\u5c0d"
+        "next_expected_match": "\u4e0b\u4e00\u500b\u9810\u671f\u7684\u914d\u5c0d",
+        "expected_info": "Next expected transaction",
+        "start_date": "Start date",
+        "end_date": "End date",
+        "payment_info": "Payment information"
     },
     "config": {
         "html_language": "zh-tw",

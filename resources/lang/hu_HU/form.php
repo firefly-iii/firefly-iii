@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Pénznem',
     'account_id'                  => 'Eszközszámla',
     'budget_id'                   => 'Költségkeret',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Nyitó egyenleg',
     'tagMode'                     => 'Címke mód',
     'virtual_balance'             => 'Virtuális egyenleg',

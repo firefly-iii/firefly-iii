@@ -58,6 +58,7 @@ return [
     'currency'                    => 'Валута',
     'account_id'                  => 'Сметка за активи',
     'budget_id'                   => 'Бюджет',
+    'bill_id'                   => 'Bill',
     'opening_balance'             => 'Начално салдо',
     'tagMode'                     => 'Режим на етикети',
     'virtual_balance'             => 'Виртуален баланс',
