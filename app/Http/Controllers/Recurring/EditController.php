@@ -29,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RecurrenceFormRequest;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
@@ -48,6 +49,7 @@ class EditController extends Controller
     private AttachmentHelperInterface    $attachments;
     private BudgetRepositoryInterface    $budgetRepos;
     private RecurringRepositoryInterface $recurring;
+    private BillRepositoryInterface      $billRepository;
 
     /**
      * EditController constructor.
@@ -65,9 +67,10 @@ class EditController extends Controller
                 app('view')->share('title', (string)trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string)trans('firefly.recurrences'));
 
-                $this->recurring   = app(RecurringRepositoryInterface::class);
-                $this->budgetRepos = app(BudgetRepositoryInterface::class);
-                $this->attachments = app(AttachmentHelperInterface::class);
+                $this->recurring      = app(RecurringRepositoryInterface::class);
+                $this->budgetRepos    = app(BudgetRepositoryInterface::class);
+                $this->attachments    = app(AttachmentHelperInterface::class);
+                $this->billRepository = app(BillRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -86,7 +89,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
-// See reference nr. 69
+        // See reference nr. 69
         $count = $recurrence->recurrenceTransactions()->count();
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
@@ -98,6 +101,7 @@ class EditController extends Controller
 
         $array   = $transformer->transform($recurrence);
         $budgets = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills   = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
 
         /** @var RecurrenceRepetition $repetition */
         $repetition     = $recurrence->recurrenceRepetitions()->first();
@@ -146,7 +150,10 @@ class EditController extends Controller
 
         return prefixView(
             'recurring.edit',
-            compact('recurrence', 'array', 'weekendResponses', 'budgets', 'preFilled', 'currentRepType', 'repetitionEnd', 'repetitionEnds')
+            compact(
+                'recurrence', 'array', 'bills',
+                'weekendResponses', 'budgets', 'preFilled', 'currentRepType', 'repetitionEnd', 'repetitionEnds'
+            )
         );
     }
 

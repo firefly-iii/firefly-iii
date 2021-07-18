@@ -78,6 +78,8 @@ class RecurrenceFormRequest extends FormRequest
                     'foreign_currency_code' => null,
                     'budget_id'             => $this->integer('budget_id'),
                     'budget_name'           => null,
+                    'bill_id'               => $this->integer('bill_id'),
+                    'bill_name'             => null,
                     'category_id'           => null,
                     'category_name'         => $this->string('category'),
                     'tags'                  => '' !== $this->string('tags') ? explode(',', $this->string('tags')) : [],
@@ -109,7 +111,7 @@ class RecurrenceFormRequest extends FormRequest
         // fill in source and destination account data
         switch ($this->string('transaction_type')) {
             default:
-                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); 
+                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type')));
             case 'withdrawal':
                 $return['transactions'][0]['source_id']      = $this->integer('source_id');
                 $return['transactions'][0]['destination_id'] = $this->integer('withdrawal_destination_id');
@@ -162,11 +164,11 @@ class RecurrenceFormRequest extends FormRequest
             $return['type']   = substr($value, 0, 6);
             $return['moment'] = substr($value, 7);
         }
-        if (0 === strpos($value, 'monthly')) {
+        if (str_starts_with($value, 'monthly')) {
             $return['type']   = substr($value, 0, 7);
             $return['moment'] = substr($value, 8);
         }
-        if (0 === strpos($value, 'ndom')) {
+        if (str_starts_with($value, 'ndom')) {
             $return['type']   = substr($value, 0, 4);
             $return['moment'] = substr($value, 5);
         }
@@ -213,6 +215,7 @@ class RecurrenceFormRequest extends FormRequest
 
             // optional fields:
             'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
+            'bill_id'                 => 'mustExist:bills,id|belongsToUser:bills,id|nullable',
             'category'                => 'between:1,255|nullable',
             'tags'                    => 'between:1,255|nullable',
         ];
@@ -251,7 +254,7 @@ class RecurrenceFormRequest extends FormRequest
 
                 break;
             default:
-                throw new FireflyException(sprintf('Cannot handle transaction type of type "%s"', $this->string('transaction_type'))); 
+                throw new FireflyException(sprintf('Cannot handle transaction type of type "%s"', $this->string('transaction_type')));
         }
 
         // update some rules in case the user is editing a post:
@@ -304,11 +307,11 @@ class RecurrenceFormRequest extends FormRequest
         $sourceId      = null;
         $destinationId = null;
 
-// See reference nr. 45
+        // See reference nr. 45
 
         switch ($this->string('transaction_type')) {
             default:
-                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); 
+                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type')));
             case 'withdrawal':
                 $sourceId      = (int)$data['source_id'];
                 $destinationId = (int)$data['withdrawal_destination_id'];

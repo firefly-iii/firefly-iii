@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
+
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
@@ -29,6 +30,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -44,6 +46,7 @@ class RecurrenceTransformer extends AbstractTransformer
     private CategoryFactory              $factory;
     private PiggyBankRepositoryInterface $piggyRepos;
     private RecurringRepositoryInterface $repository;
+    private BillRepositoryInterface      $billRepos;
 
     /**
      * RecurrenceTransformer constructor.
@@ -56,6 +59,7 @@ class RecurrenceTransformer extends AbstractTransformer
         $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
         $this->factory     = app(CategoryFactory::class);
         $this->budgetRepos = app(BudgetRepositoryInterface::class);
+        $this->billRepos   = app(BillRepositoryInterface::class);
 
     }
 
@@ -251,6 +255,8 @@ class RecurrenceTransformer extends AbstractTransformer
         $array['budget_name']     = null;
         $array['piggy_bank_id']   = null;
         $array['piggy_bank_name'] = null;
+        $array['bill_id']         = null;
+        $array['bill_name']       = null;
 
         /** @var RecurrenceTransactionMeta $transactionMeta */
         foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
@@ -258,6 +264,11 @@ class RecurrenceTransformer extends AbstractTransformer
                 default:
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
                 case 'bill_id':
+                    $bill = $this->billRepos->find((int)$transactionMeta->value);
+                    if (null !== $bill) {
+                        $array['bill_id']   = (string)$bill->id;
+                        $array['bill_name'] = $bill->name;
+                    }
                     break;
                 case 'tags':
                     $array['tags'] = json_decode($transactionMeta->value);

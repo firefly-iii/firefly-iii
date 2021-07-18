@@ -289,6 +289,9 @@ class RecurrenceUpdateService
                 if (array_key_exists('budget_id', $current)) {
                     $this->setBudget($match, (int)$current['budget_id']);
                 }
+                if (array_key_exists('bill_id', $current)) {
+                    $this->setBill($match, (int)$current['bill_id']);
+                }
                 // reset category if name is set but empty:
                 // can be removed when v1 is retired.
                 if (array_key_exists('category_name', $current) && '' === (string)$current['category_name']) {

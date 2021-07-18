@@ -110,6 +110,8 @@ class Bill extends Model
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
             'date'            => 'date',
+            'end_date'        => 'date',
+            'extension_date'  => 'date',
             'skip'            => 'int',
             'automatch'       => 'boolean',
             'active'          => 'boolean',
