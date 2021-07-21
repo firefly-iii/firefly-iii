@@ -74,7 +74,7 @@ trait JournalServiceTrait
 
         // and now try to find it, based on the type of transaction.
         $message = 'Based on the fact that the transaction is a %s, the %s account should be in: %s. Direction is %s.';
-        Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType]), $direction));
+        Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
         $result = $this->findAccountById($data, $expectedTypes[$transactionType]);
         $result = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
