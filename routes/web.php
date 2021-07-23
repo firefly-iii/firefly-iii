@@ -21,6 +21,13 @@
 
 declare(strict_types=1);
 
+$app_url = (string)config("app.url");
+if (!empty($app_url)) {
+    $schema = explode(':', $app_url)[0];
+    URL::forceRootUrl($app_url);
+    URL::forceScheme($schema);
+}
+
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
      'as'        => 'installer.', 'prefix' => 'install',],
