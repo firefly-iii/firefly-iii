@@ -95,12 +95,12 @@ return [
     ],
     'feature_flags' => [
         'export'       => true,
-        'telemetry'    => true,
+        'telemetry'    => false,
         'webhooks'     => false,
         'handle_debts' => true,
     ],
 
-    'version'                      => '5.5.12',
+    'version'                      => '5.5.13',
     'api_version'                  => '1.5.2',
     'db_version'                   => 16,
     'maxUploadSize'                => 1073741824, // 1 GB
