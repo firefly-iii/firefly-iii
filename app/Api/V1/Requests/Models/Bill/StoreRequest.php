@@ -55,6 +55,8 @@ class StoreRequest extends FormRequest
             'currency_id'        => ['currency_id', 'integer'],
             'currency_code'      => ['currency_code', 'string'],
             'date'               => ['date', 'date'],
+            'end_date'           => ['end_date', 'date'],
+            'extension_date'     => ['extension_date', 'date'],
             'repeat_freq'        => ['repeat_freq', 'string'],
             'skip'               => ['skip', 'integer'],
             'active'             => ['active', 'boolean'],
@@ -75,16 +77,18 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'          => 'between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'    => 'numeric|gt:0',
-            'amount_max'    => 'numeric|gt:0',
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
-            'date'          => 'date',
-            'repeat_freq'   => 'in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'          => 'between:0,31',
-            'active'        => [new IsBoolean],
-            'notes'         => 'between:1,65536',
+            'name'           => 'between:1,255|uniqueObjectForUser:bills,name',
+            'amount_min'     => 'numeric|gt:0|required',
+            'amount_max'     => 'numeric|gt:0|required',
+            'currency_id'    => 'numeric|exists:transaction_currencies,id',
+            'currency_code'  => 'min:3|max:3|exists:transaction_currencies,code',
+            'date'           => 'date|required',
+            'end_date'       => 'date|after:date',
+            'extension_date' => 'date|after:date',
+            'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
+            'skip'           => 'between:0,31',
+            'active'         => [new IsBoolean],
+            'notes'          => 'between:1,65536',
         ];
     }
 

@@ -23,7 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Fixed
-- #4894 Bad number comparison
+- [Issue 4894](https://github.com/firefly-iii/firefly-iii/issues/4894) Bad number comparison
 - Various Sonarqube issues, thanks @hazma-fadil!
 - Correct menu display, thanks @vonsogt!
 

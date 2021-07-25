@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\Request;
@@ -58,6 +59,10 @@ class InterestingMessage
             Preferences::mark();
             $this->handleAccountMessage($request);
         }
+        if ($this->billMessage($request)) {
+            Preferences::mark();
+            $this->handleBillMessage($request);
+        }
 
         return $next($request);
     }
@@ -88,11 +93,12 @@ class InterestingMessage
     /**
      * @param Request $request
      */
-    private function handleAccountMessage(Request $request): void {
+    private function handleAccountMessage(Request $request): void
+    {
 
         // get parameters from request.
         $accountId = $request->get('account_id');
-        $message            = $request->get('message');
+        $message   = $request->get('message');
 
         /** @var Account $account */
         $account = auth()->user()->accounts()->withTrashed()->find($accountId);
@@ -103,10 +109,35 @@ class InterestingMessage
         if ('deleted' === $message) {
             session()->flash('success', (string)trans('firefly.account_deleted', ['name' => $account->name]));
         }
-        if('created' === $message) {
+        if ('created' === $message) {
             session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         }
     }
+
+    /**
+     * @param Request $request
+     */
+    private function handleBillMessage(Request $request): void
+    {
+
+        // get parameters from request.
+        $billId = $request->get('bill_id');
+        $message   = $request->get('message');
+
+        /** @var Bill $bill */
+        $bill = auth()->user()->bills()->withTrashed()->find($billId);
+
+        if (null === $bill) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string)trans('firefly.deleted_bill', ['name' => $bill->name]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        }
+    }
+
     /**
      * @param Request $request
      */
@@ -161,5 +192,19 @@ class InterestingMessage
         $message   = $request->get('message');
 
         return null !== $accountId && null !== $message;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function billMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('bill_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
     }
 }

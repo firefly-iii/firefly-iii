@@ -38,6 +38,7 @@ class EitherConfigKey
         'firefly.accountRoles',
         'firefly.valid_liabilities',
         'firefly.interest_periods',
+        'firefly.bill_periods',
         'firefly.enable_external_map',
         'firefly.expected_source_types',
         'app.timezone',
