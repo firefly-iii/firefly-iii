@@ -162,7 +162,13 @@
         "inactive": "Disattivo",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Crea una nuova bolletta"
+        "create_new_bill": "Crea una nuova bolletta",
+        "store_new_bill": "Salva la nuova bolletta",
+        "repeat_freq_yearly": "annualmente",
+        "repeat_freq_half-year": "semestralmente",
+        "repeat_freq_quarterly": "trimestralmente",
+        "repeat_freq_monthly": "mensilmente",
+        "repeat_freq_weekly": "settimanalmente"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Note",
         "location": "Posizione",
+        "repeat_freq": "Si ripete",
+        "startdate": "Data inizio",
+        "enddate": "End date",
+        "object_group": "Gruppo",
         "attachments": "Allegati",
         "active": "Attivo",
         "include_net_worth": "Includi nel patrimonio",
@@ -226,6 +236,11 @@
         "process_date": "Data elaborazione",
         "due_date": "Data scadenza",
         "payment_date": "Data pagamento",
-        "invoice_date": "Data fatturazione"
+        "invoice_date": "Data fatturazione",
+        "amount_min": "Importo minimo",
+        "amount_max": "Importo massimo",
+        "start_date": "Inizio intervallo",
+        "end_date": "Fine intervallo",
+        "extension_date": "Extension date"
     }
 }

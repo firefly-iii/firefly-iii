@@ -162,7 +162,13 @@
         "inactive": "Neakt\u00edvne",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Vytvori\u0165 nov\u00fd \u00fa\u010det"
+        "create_new_bill": "Vytvori\u0165 nov\u00fd \u00fa\u010det",
+        "store_new_bill": "Ulo\u017ei\u0165 nov\u00fd \u00fa\u010det",
+        "repeat_freq_yearly": "ro\u010dne",
+        "repeat_freq_half-year": "polro\u010dne",
+        "repeat_freq_quarterly": "\u0161tvr\u0165ro\u010dne",
+        "repeat_freq_monthly": "mesa\u010dne",
+        "repeat_freq_weekly": "t\u00fd\u017edenne"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Pozn\u00e1mky",
         "location": "\u00dadaje o polohe",
+        "repeat_freq": "Opakuje sa",
+        "startdate": "D\u00e1tum zah\u00e1jenia",
+        "enddate": "End date",
+        "object_group": "Skupina",
         "attachments": "Pr\u00edlohy",
         "active": "Akt\u00edvne",
         "include_net_worth": "Zahrn\u00fa\u0165 do \u010dist\u00e9ho majetku",
@@ -226,6 +236,11 @@
         "process_date": "D\u00e1tum spracovania",
         "due_date": "D\u00e1tum splatnosti",
         "payment_date": "D\u00e1tum \u00fahrady",
-        "invoice_date": "D\u00e1tum vystavenia"
+        "invoice_date": "D\u00e1tum vystavenia",
+        "amount_min": "Minim\u00e1lna suma",
+        "amount_max": "Maxim\u00e1lna suma",
+        "start_date": "Za\u010diatok rozsahu",
+        "end_date": "Koniec rozsahu",
+        "extension_date": "Extension date"
     }
 }

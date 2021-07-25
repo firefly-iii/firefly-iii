@@ -162,7 +162,13 @@
         "inactive": "Inactivo",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Criar nova fatura"
+        "create_new_bill": "Criar nova fatura",
+        "store_new_bill": "Guardar nova fatura",
+        "repeat_freq_yearly": "anualmente",
+        "repeat_freq_half-year": "todo meio ano",
+        "repeat_freq_quarterly": "trimestral",
+        "repeat_freq_monthly": "mensalmente",
+        "repeat_freq_weekly": "semanalmente"
     },
     "list": {
         "piggy_bank": "Mealheiro",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Notas",
         "location": "Localiza\u00e7\u00e3o",
+        "repeat_freq": "Repete",
+        "startdate": "Data de inicio",
+        "enddate": "End date",
+        "object_group": "Grupo",
         "attachments": "Anexos",
         "active": "Activo",
         "include_net_worth": "Incluir no patrimonio liquido",
@@ -226,6 +236,11 @@
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",
         "payment_date": "Data de pagamento",
-        "invoice_date": "Data da factura"
+        "invoice_date": "Data da factura",
+        "amount_min": "Montante minimo",
+        "amount_max": "Montante maximo",
+        "start_date": "Inicio do intervalo",
+        "end_date": "Fim do intervalo",
+        "extension_date": "Extension date"
     }
 }

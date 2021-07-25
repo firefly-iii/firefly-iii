@@ -162,7 +162,13 @@
         "inactive": "Inactivo",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Crear nueva factura"
+        "create_new_bill": "Crear nueva factura",
+        "store_new_bill": "Crear factura",
+        "repeat_freq_yearly": "anualmente",
+        "repeat_freq_half-year": "cada medio a\u00f1o",
+        "repeat_freq_quarterly": "trimestralmente",
+        "repeat_freq_monthly": "mensualmente",
+        "repeat_freq_weekly": "semanalmente"
     },
     "list": {
         "piggy_bank": "Alcancilla",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Notas",
         "location": "Ubicaci\u00f3n",
+        "repeat_freq": "Repetici\u00f3n",
+        "startdate": "Fecha de inicio",
+        "enddate": "End date",
+        "object_group": "Grupo",
         "attachments": "Adjuntos",
         "active": "Activo",
         "include_net_worth": "Incluir en valor neto",
@@ -226,6 +236,11 @@
         "process_date": "Fecha de procesamiento",
         "due_date": "Fecha de vencimiento",
         "payment_date": "Fecha de pago",
-        "invoice_date": "Fecha de la factura"
+        "invoice_date": "Fecha de la factura",
+        "amount_min": "Importe m\u00ednimo",
+        "amount_max": "Importe m\u00e1ximo",
+        "start_date": "Inicio del rango",
+        "end_date": "Final del rango",
+        "extension_date": "Extension date"
     }
 }

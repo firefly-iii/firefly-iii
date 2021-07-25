@@ -162,7 +162,13 @@
         "inactive": "Inakt\u00edv",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "\u00daj sz\u00e1mla l\u00e9trehoz\u00e1sa"
+        "create_new_bill": "\u00daj sz\u00e1mla l\u00e9trehoz\u00e1sa",
+        "store_new_bill": "\u00daj sz\u00e1mla t\u00e1rol\u00e1sa",
+        "repeat_freq_yearly": "\u00e9ves",
+        "repeat_freq_half-year": "f\u00e9l\u00e9vente",
+        "repeat_freq_quarterly": "negyed\u00e9ves",
+        "repeat_freq_monthly": "havi",
+        "repeat_freq_weekly": "heti"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Megjegyz\u00e9sek",
         "location": "Hely",
+        "repeat_freq": "Ism\u00e9tl\u0151d\u00e9sek",
+        "startdate": "Kezd\u0151 d\u00e1tum",
+        "enddate": "End date",
+        "object_group": "Csoport",
         "attachments": "Mell\u00e9kletek",
         "active": "Akt\u00edv",
         "include_net_worth": "Befoglalva a nett\u00f3 \u00e9rt\u00e9kbe",
@@ -226,6 +236,11 @@
         "process_date": "Feldolgoz\u00e1s d\u00e1tuma",
         "due_date": "Lej\u00e1rati id\u0151pont",
         "payment_date": "Fizet\u00e9s d\u00e1tuma",
-        "invoice_date": "Sz\u00e1mla d\u00e1tuma"
+        "invoice_date": "Sz\u00e1mla d\u00e1tuma",
+        "amount_min": "Minim\u00e1lis \u00f6sszeg",
+        "amount_max": "Maxim\u00e1lis \u00f6sszeg",
+        "start_date": "Tartom\u00e1ny kezdete",
+        "end_date": "Tartom\u00e1ny v\u00e9ge",
+        "extension_date": "Extension date"
     }
 }

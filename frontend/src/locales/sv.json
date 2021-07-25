@@ -162,7 +162,13 @@
         "inactive": "Inaktiv",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Skapa en ny nota"
+        "create_new_bill": "Skapa en ny nota",
+        "store_new_bill": "Spara ny nota",
+        "repeat_freq_yearly": "\u00e5rligen",
+        "repeat_freq_half-year": "varje halv\u00e5r",
+        "repeat_freq_quarterly": "kvartal",
+        "repeat_freq_monthly": "m\u00e5nadsvis",
+        "repeat_freq_weekly": "veckovis"
     },
     "list": {
         "piggy_bank": "Spargris",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Anteckningar",
         "location": "Plats",
+        "repeat_freq": "Upprepningar",
+        "startdate": "Startdatum",
+        "enddate": "End date",
+        "object_group": "Grupp",
         "attachments": "Bilagor",
         "active": "Aktiv",
         "include_net_worth": "Inkludera i nettov\u00e4rde",
@@ -226,6 +236,11 @@
         "process_date": "Behandlingsdatum",
         "due_date": "F\u00f6rfallodatum",
         "payment_date": "Betalningsdatum",
-        "invoice_date": "Fakturadatum"
+        "invoice_date": "Fakturadatum",
+        "amount_min": "Minsta belopp",
+        "amount_max": "H\u00f6gsta belopp",
+        "start_date": "Start omr\u00e5de",
+        "end_date": "Slut omr\u00e5de",
+        "extension_date": "Extension date"
     }
 }

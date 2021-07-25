@@ -162,7 +162,13 @@
         "inactive": "Neaktivn\u00ed",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Vytvo\u0159it novou fakturu"
+        "create_new_bill": "Vytvo\u0159it novou fakturu",
+        "store_new_bill": "Ulo\u017eit novou \u00fa\u010dtenku",
+        "repeat_freq_yearly": "ro\u010dn\u011b",
+        "repeat_freq_half-year": "p\u016floro\u010dn\u011b",
+        "repeat_freq_quarterly": "\u010dtvrtletn\u011b",
+        "repeat_freq_monthly": "m\u011bs\u00ed\u010dn\u011b",
+        "repeat_freq_weekly": "t\u00fddn\u011b"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Pozn\u00e1mky",
         "location": "\u00dadaje o poloze",
+        "repeat_freq": "Opakuje se",
+        "startdate": "Datum zah\u00e1jen\u00ed",
+        "enddate": "End date",
+        "object_group": "Skupina",
         "attachments": "P\u0159\u00edlohy",
         "active": "Aktivn\u00ed",
         "include_net_worth": "Zahrnout do \u010dist\u00e9ho jm\u011bn\u00ed",
@@ -226,6 +236,11 @@
         "process_date": "Datum zpracov\u00e1n\u00ed",
         "due_date": "Datum splatnosti",
         "payment_date": "Datum zaplacen\u00ed",
-        "invoice_date": "Datum vystaven\u00ed"
+        "invoice_date": "Datum vystaven\u00ed",
+        "amount_min": "Minim\u00e1ln\u00ed \u010d\u00e1stka",
+        "amount_max": "Maxim\u00e1ln\u00ed \u010d\u00e1stka",
+        "start_date": "Za\u010d\u00e1tek rozsahu",
+        "end_date": "Konec rozsahu",
+        "extension_date": "Extension date"
     }
 }

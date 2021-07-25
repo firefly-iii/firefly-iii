@@ -162,7 +162,13 @@
         "inactive": "Nieaktywne",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Utw\u00f3rz nowy rachunek"
+        "create_new_bill": "Utw\u00f3rz nowy rachunek",
+        "store_new_bill": "Zapisz nowy rachunek",
+        "repeat_freq_yearly": "rocznie",
+        "repeat_freq_half-year": "co p\u00f3\u0142 roku",
+        "repeat_freq_quarterly": "kwartalnie",
+        "repeat_freq_monthly": "miesi\u0119cznie",
+        "repeat_freq_weekly": "tygodniowo"
     },
     "list": {
         "piggy_bank": "Skarbonka",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Notatki",
         "location": "Lokalizacja",
+        "repeat_freq": "Powtarza si\u0119",
+        "startdate": "Data rozpocz\u0119cia",
+        "enddate": "End date",
+        "object_group": "Grupa",
         "attachments": "Za\u0142\u0105czniki",
         "active": "Aktywny",
         "include_net_worth": "Uwzgl\u0119dnij w warto\u015bci netto",
@@ -226,6 +236,11 @@
         "process_date": "Data przetworzenia",
         "due_date": "Termin realizacji",
         "payment_date": "Data p\u0142atno\u015bci",
-        "invoice_date": "Data faktury"
+        "invoice_date": "Data faktury",
+        "amount_min": "Minimalna kwota",
+        "amount_max": "Maksymalna kwota",
+        "start_date": "Pocz\u0105tek zakresu",
+        "end_date": "Koniec zakresu",
+        "extension_date": "Extension date"
     }
 }

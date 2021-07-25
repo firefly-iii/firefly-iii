@@ -162,7 +162,13 @@
         "inactive": "Inactiv",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Crea\u021bi o nou\u0103 factur\u0103"
+        "create_new_bill": "Crea\u021bi o nou\u0103 factur\u0103",
+        "store_new_bill": "Salva\u021bi o nou\u0103 factur\u0103",
+        "repeat_freq_yearly": "anual",
+        "repeat_freq_half-year": "fiecare jum\u0103tate de an",
+        "repeat_freq_quarterly": "trimestrial",
+        "repeat_freq_monthly": "lunar",
+        "repeat_freq_weekly": "s\u0103pt\u0103m\u00e2nal"
     },
     "list": {
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Noti\u021be",
         "location": "Loca\u021bie",
+        "repeat_freq": "Repet\u0103",
+        "startdate": "Data de \u00eenceput",
+        "enddate": "End date",
+        "object_group": "Grup",
         "attachments": "Fi\u0219iere ata\u0219ate",
         "active": "Activ",
         "include_net_worth": "Include\u021bi \u00een valoare net\u0103",
@@ -226,6 +236,11 @@
         "process_date": "Data proces\u0103rii",
         "due_date": "Data scadent\u0103",
         "payment_date": "Data de plat\u0103",
-        "invoice_date": "Data facturii"
+        "invoice_date": "Data facturii",
+        "amount_min": "Suma minim\u0103",
+        "amount_max": "suma maxim\u0103",
+        "start_date": "Start de interval",
+        "end_date": "\u0218f\u00e2r\u0219it de interval",
+        "extension_date": "Extension date"
     }
 }

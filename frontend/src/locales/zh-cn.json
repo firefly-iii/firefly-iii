@@ -162,7 +162,13 @@
         "inactive": "\u5df2\u505c\u7528",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "\u521b\u5efa\u65b0\u8d26\u5355"
+        "create_new_bill": "\u521b\u5efa\u65b0\u8d26\u5355",
+        "store_new_bill": "\u4fdd\u5b58\u65b0\u8d26\u5355",
+        "repeat_freq_yearly": "\u6bcf\u5e74",
+        "repeat_freq_half-year": "\u6bcf\u534a\u5e74",
+        "repeat_freq_quarterly": "\u6bcf\u5b63",
+        "repeat_freq_monthly": "\u6bcf\u6708",
+        "repeat_freq_weekly": "\u6bcf\u5468"
     },
     "list": {
         "piggy_bank": "\u5b58\u94b1\u7f50",
@@ -204,6 +210,10 @@
         "BIC": "\u94f6\u884c\u8bc6\u522b\u4ee3\u7801 BIC",
         "notes": "\u5907\u6ce8",
         "location": "\u4f4d\u7f6e",
+        "repeat_freq": "\u91cd\u590d",
+        "startdate": "\u5f00\u59cb\u65e5\u671f",
+        "enddate": "End date",
+        "object_group": "\u7ec4",
         "attachments": "\u9644\u4ef6",
         "active": "\u542f\u7528",
         "include_net_worth": "\u5305\u542b\u4e8e\u51c0\u8d44\u4ea7",
@@ -226,6 +236,11 @@
         "process_date": "\u5904\u7406\u65e5\u671f",
         "due_date": "\u5230\u671f\u65e5",
         "payment_date": "\u4ed8\u6b3e\u65e5\u671f",
-        "invoice_date": "\u53d1\u7968\u65e5\u671f"
+        "invoice_date": "\u53d1\u7968\u65e5\u671f",
+        "amount_min": "\u6700\u5c0f\u91d1\u989d",
+        "amount_max": "\u6700\u5927\u91d1\u989d",
+        "start_date": "\u8303\u56f4\u8d77\u59cb",
+        "end_date": "\u8303\u56f4\u7ed3\u675f",
+        "extension_date": "Extension date"
     }
 }

@@ -34,7 +34,7 @@
             <div class="card-body">
               <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
                                 v-on:set-field="storeField($event)"/>
-              <Currency :disabled="submitting" v-model="currency_id" :errors="errors.currency" v-on:set-field="storeField($event)"/>
+              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency" v-on:set-field="storeField($event)"/>
               <AssetAccountRole :disabled="submitting" v-if="'asset' === type" v-model="account_role" :errors="errors.account_role"
                                 v-on:set-field="storeField($event)"/>
               <LiabilityType :disabled="submitting" v-if="'liabilities' === type" v-model="liability_type" :errors="errors.liability_type"
@@ -129,7 +129,7 @@
 
 <script>
 const lodashClonedeep = require('lodash.clonedeep');
-import Currency from "./Currency";
+import GenericCurrency from "../form/GenericCurrency";
 import AssetAccountRole from "./AssetAccountRole"
 import LiabilityType from "./LiabilityType";
 import LiabilityDirection from "./LiabilityDirection";
@@ -145,7 +145,7 @@ import Alert from '../partials/Alert';
 export default {
   name: "Create",
   components: {
-    Currency, AssetAccountRole, LiabilityType, LiabilityDirection, Interest, InterestPeriod,
+    GenericCurrency, AssetAccountRole, LiabilityType, LiabilityDirection, Interest, InterestPeriod,
     GenericTextInput, GenericTextarea, GenericLocation, GenericAttachments, GenericCheckbox, Alert
 
   },
@@ -168,7 +168,7 @@ export default {
       // info
       name: '',
       type: 'any',
-      currency_id: null,
+
 
       // liabilities
       liability_type: 'Loan',

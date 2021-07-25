@@ -162,7 +162,13 @@
         "inactive": "Ei aktiivinen",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Luo uusi lasku"
+        "create_new_bill": "Luo uusi lasku",
+        "store_new_bill": "Tallenna uusi lasku",
+        "repeat_freq_yearly": "vuosittain",
+        "repeat_freq_half-year": "puoli-vuosittain",
+        "repeat_freq_quarterly": "nelj\u00e4nnesvuosittain",
+        "repeat_freq_monthly": "kuukausittain",
+        "repeat_freq_weekly": "viikoittain"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Muistiinpanot",
         "location": "Sijainti",
+        "repeat_freq": "Toistot",
+        "startdate": "Aloitusp\u00e4iv\u00e4",
+        "enddate": "End date",
+        "object_group": "Ryhm\u00e4",
         "attachments": "Liitteet",
         "active": "Aktiivinen",
         "include_net_worth": "Sis\u00e4llyt\u00e4 varallisuuteen",
@@ -226,6 +236,11 @@
         "process_date": "K\u00e4sittelyp\u00e4iv\u00e4",
         "due_date": "Er\u00e4p\u00e4iv\u00e4",
         "payment_date": "Maksup\u00e4iv\u00e4",
-        "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4"
+        "invoice_date": "Laskun p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",
+        "amount_min": "V\u00e4himm\u00e4issumma",
+        "amount_max": "Enimm\u00e4issumma",
+        "start_date": "Valikoiman alku",
+        "end_date": "Valikoiman loppu",
+        "extension_date": "Extension date"
     }
 }

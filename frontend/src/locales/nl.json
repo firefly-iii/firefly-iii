@@ -162,7 +162,13 @@
         "inactive": "Niet actief",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Nieuw contract"
+        "create_new_bill": "Nieuw contract",
+        "store_new_bill": "Sla nieuw contract op",
+        "repeat_freq_yearly": "jaarlijks",
+        "repeat_freq_half-year": "elk half jaar",
+        "repeat_freq_quarterly": "elk kwartaal",
+        "repeat_freq_monthly": "maandelijks",
+        "repeat_freq_weekly": "wekelijks"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Notities",
         "location": "Locatie",
+        "repeat_freq": "Herhaling",
+        "startdate": "Startdatum",
+        "enddate": "End date",
+        "object_group": "Groep",
         "attachments": "Bijlagen",
         "active": "Actief",
         "include_net_worth": "Meetellen in kapitaal",
@@ -226,6 +236,11 @@
         "process_date": "Verwerkingsdatum",
         "due_date": "Vervaldatum",
         "payment_date": "Betalingsdatum",
-        "invoice_date": "Factuurdatum"
+        "invoice_date": "Factuurdatum",
+        "amount_min": "Minimumbedrag",
+        "amount_max": "Maximumbedrag",
+        "start_date": "Start van bereik",
+        "end_date": "Einde van bereik",
+        "extension_date": "Extension date"
     }
 }

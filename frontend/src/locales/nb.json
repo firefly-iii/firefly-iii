@@ -162,7 +162,13 @@
         "inactive": "Inaktiv",
         "forever": "Forever",
         "extension_date_is": "Extension date is {date}",
-        "create_new_bill": "Opprett ny regning"
+        "create_new_bill": "Opprett ny regning",
+        "store_new_bill": "Lagre ny regning",
+        "repeat_freq_yearly": "\u00e5rlig",
+        "repeat_freq_half-year": "hvert halv\u00e5r",
+        "repeat_freq_quarterly": "kvartalsvis",
+        "repeat_freq_monthly": "m\u00e5nedlig",
+        "repeat_freq_weekly": "ukentlig"
     },
     "list": {
         "piggy_bank": "Sparegris",
@@ -204,6 +210,10 @@
         "BIC": "BIC",
         "notes": "Notater",
         "location": "Location",
+        "repeat_freq": "Gjentas",
+        "startdate": "Startdato",
+        "enddate": "End date",
+        "object_group": "Group",
         "attachments": "Vedlegg",
         "active": "Aktiv",
         "include_net_worth": "Inkluder i formue",
@@ -226,6 +236,11 @@
         "process_date": "Prosesseringsdato",
         "due_date": "Forfallsdato",
         "payment_date": "Betalingsdato",
-        "invoice_date": "Fakturadato"
+        "invoice_date": "Fakturadato",
+        "amount_min": "Minimumsbel\u00f8p",
+        "amount_max": "Maksimumsbel\u00f8p",
+        "start_date": "Startgrense",
+        "end_date": "Sluttgrense",
+        "extension_date": "Extension date"
     }
 }
