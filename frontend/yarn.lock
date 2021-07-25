@@ -1064,9 +1064,9 @@
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
 "@types/node@*":
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.1.tgz#9fad171a5b701613ee8a6f4ece3c88b1034b1b03"
-  integrity sha512-UW7cbLqf/Wu5XH2RKKY1cHwUNLicIDRLMraYKz+HHAerJ0ZffUEk+fMnd8qU2JaS6cAy0r8tsaf7yqHASf/Y0Q==
+  version "16.4.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.2.tgz#0a95d7fd950cb1eaca0ce11031d72e8f680b775a"
+  integrity sha512-vxyhOzFCm+jC/T5KugbVsYy1DbQM0h3NCFUrVbu0+pYa/nr+heeucpqxpa8j4pUmIGLPYzboY9zIdOF0niFAjQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1905,9 +1905,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001219, caniuse-lite@^1.0.30001243:
-  version "1.0.30001246"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001246.tgz#fe17d9919f87124d6bb416ef7b325356d69dc76c"
-  integrity sha512-Tc+ff0Co/nFNbLOrziBXmMVtpt9S2c2Y+Z9Nk9Khj09J+0zR9ejvIW5qkZAErCbOrVODCx/MN+GpB5FNBs5GFA==
+  version "1.0.30001247"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001247.tgz#105be7a8fb30cdd303275e769a9dfb87d4b3577a"
+  integrity sha512-4rS7co+7+AoOSPRPOPUt5/GdaqZc0EsUpWk66ofE3HJTAajUK2Ss2VwoNzVN69ghg8lYYlh0an0Iy4LIHHo9UQ==
 
 chalk@^2.0.0, chalk@^2.4.2:
   version "2.4.2"
@@ -1940,9 +1940,9 @@ chart.js@^2.9.4:
     moment "^2.10.2"
 
 chart.js@^3.4.0:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.4.1.tgz#ff3b2b2a04a37b83618b4a6399a5f87ccc0f1e8a"
-  integrity sha512-0R4mL7WiBcYoazIhrzSYnWcOw6RmrRn7Q4nKZNsBQZCBrlkZKodQbfeojCCo8eETPRCs1ZNTsAcZhIfyhyP61g==
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.5.0.tgz#6eb075332d4ebbbb20a94e5a07a234052ed6c4fb"
+  integrity sha512-J1a4EAb1Gi/KbhwDRmoovHTRuqT8qdF0kZ4XgwxpGethJHUdDrkqyPYwke0a+BuvSeUxPf8Cos6AX2AB8H8GLA==
 
 chartjs-color-string@^0.6.0:
   version "0.6.0"
@@ -2323,9 +2323,9 @@ css-color-names@^1.0.1:
   integrity sha512-/loXYOch1qU1biStIFsHH8SxTmOseh1IJqFvy8IujXOm1h+QjUdDhkzOrR5HG8K8mlxREj0yfi8ewCHx0eMxzA==
 
 css-declaration-sorter@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/css-declaration-sorter/-/css-declaration-sorter-6.0.3.tgz#9dfd8ea0df4cc7846827876fafb52314890c21a9"
-  integrity sha512-52P95mvW1SMzuRZegvpluT6yEv0FqQusydKQPZsNN5Q7hh8EwQvN8E2nwuJ16BBvNN6LcoIZXu/Bk58DAhrrxw==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/css-declaration-sorter/-/css-declaration-sorter-6.1.1.tgz#77b32b644ba374bc562c0fc6f4fdaba4dfb0b749"
+  integrity sha512-BZ1aOuif2Sb7tQYY1GeCjG7F++8ggnwUkH5Ictw0mrdpqpEd+zWmcPdstnH2TItlb74FqR0DrVEieon221T/1Q==
   dependencies:
     timsort "^0.3.0"
 

@@ -16,9 +16,16 @@
     "/public/css/app.css": "/public/css/app.css",
     "/public/js/vendor.js": "/public/js/vendor.js",
     "/public/v2/js/dashboard.js": "/public/v2/js/dashboard.js",
+    "/public/v2/js/dashboard.js.map": "/public/v2/js/dashboard.js.map",
     "/public/v2/js/empty.js": "/public/v2/js/empty.js",
+    "/public/v2/js/empty.js.map": "/public/v2/js/empty.js.map",
     "/public/v2/js/manifest.js": "/public/v2/js/manifest.js",
+    "/public/v2/js/manifest.js.map": "/public/v2/js/manifest.js.map",
     "/public/v2/js/register.js": "/public/v2/js/register.js",
+    "/public/v2/js/register.js.map": "/public/v2/js/register.js.map",
     "/public/v2/js/vendor.js": "/public/v2/js/vendor.js",
-    "/public/v2/css/app.css": "/public/v2/css/app.css"
+    "/public/v2/js/vendor.js.LICENSE.txt": "/public/v2/js/vendor.js.LICENSE.txt",
+    "/public/v2/js/vendor.js.map": "/public/v2/js/vendor.js.map",
+    "/public/v2/css/app.css": "/public/v2/css/app.css",
+    "/public/v2/css/app.css.map": "/public/v2/css/app.css.map"
 }
