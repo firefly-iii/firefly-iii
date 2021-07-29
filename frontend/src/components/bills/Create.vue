@@ -65,7 +65,15 @@
               <GenericTextarea :disabled="submitting" field-name="notes" :title="$t('form.notes')" v-model="notes" :errors="errors.notes"
                                v-on:set-field="storeField($event)"/>
 
-              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"/>
+              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
+                                  v-on:selected-attachments="selectedAttachments($event)"
+                                  v-on:selected-no-attachments="selectedNoAttachments($event)"
+                                  v-on:uploaded-attachments="uploadedAttachments($event)"
+                                  :upload-trigger="uploadTrigger"
+                                  :upload-object-type="uploadObjectType"
+                                  :upload-object-id="uploadObjectId"
+
+              />
 
               <GenericTextInput :disabled="submitting" v-model="skip" field-name="skip" :errors="errors.skip" :title="$t('form.skip')"
                                 v-on:set-field="storeField($event)"/>
@@ -144,8 +152,14 @@ export default {
 
       // optional fields
       notes: '',
-      skip: 0,
+      skip: '0',
       group_title: '',
+
+      // has attachments to upload?
+      hasAttachments: false,
+      uploadTrigger: false,
+      uploadObjectId: 0,
+      uploadObjectType: 'Bill',
 
 
       // optional fields:
@@ -181,6 +195,12 @@ export default {
       }
       this[payload.field] = payload.value;
     },
+    selectedAttachments: function (e) {
+      this.hasAttachments = true;
+    },
+    selectedNoAttachments: function (e) {
+      this.hasAttachments = false;
+    },
     submitForm: function (e) {
       e.preventDefault();
       this.submitting = true;
@@ -192,19 +212,17 @@ export default {
       axios.post(url, submission)
           .then(response => {
             this.errors = lodashClonedeep(this.defaultErrors);
-            // console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
-            this.successMessage = this.$t('firefly.stored_new_bill_js', {ID: this.returnedId, name: this.returnedTitle});
-            // stay here is false?
-            if (false === this.createAnother) {
-              window.location.href = (window.previousURL ?? '/') + '?bill_id=' + this.returnedId + '&message=created';
-              return;
+
+            if (this.hasAttachments) {
+              // upload attachments. Do a callback to a finish up method.
+              //alert('must now upload!');
+              this.uploadObjectId = this.returnedId;
+              this.uploadTrigger = true;
             }
-            this.submitting = false;
-            if (this.resetFormAfter) {
-              // console.log('reset!');
-              this.name = '';
+            if(!this.hasAttachments) {
+              this.finishSubmission();
             }
           })
           .catch(error => {
@@ -212,6 +230,22 @@ export default {
             this.parseErrors(error.response.data);
             // display errors!
           });
+    },
+    uploadedAttachments: function(e) {
+      this.finishSubmission();
+    },
+    finishSubmission: function() {
+      this.successMessage = this.$t('firefly.stored_new_bill_js', {ID: this.returnedId, name: this.returnedTitle});
+      // stay here is false?
+      if (false === this.createAnother) {
+        window.location.href = (window.previousURL ?? '/') + '?bill_id=' + this.returnedId + '&message=created';
+        return;
+      }
+      this.submitting = false;
+      if (this.resetFormAfter) {
+        // console.log('reset!');
+        this.name = '';
+      }
     },
     parseErrors: function (errors) {
       this.errors = lodashClonedeep(this.defaultErrors);
@@ -239,13 +273,13 @@ export default {
         submission.latitude = this.location.lat;
         submission.zoom_level = this.location.zoomLevel;
       }
-      if('' !== this.end_date) {
+      if ('' !== this.end_date) {
         submission.end_date = this.end_date;
       }
-      if('' !== this.extension_date) {
+      if ('' !== this.extension_date) {
         submission.extension_date = this.extension_date;
       }
-      if('' !== this.notes) {
+      if ('' !== this.notes) {
         submission.notes = this.notes;
       }
 

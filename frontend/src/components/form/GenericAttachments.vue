@@ -34,6 +34,12 @@
           type="file"
           :disabled=disabled
       />
+      <span class="input-group-btn">
+            <button
+                class="btn btn-default"
+                type="button"
+                v-on:click="clearAtt"><span class="far fa-trash-alt"></span></button>
+        </span>
     </div>
     <span v-if="errors.length > 0">
       <span v-for="error in errors" class="text-danger small">{{ error }}<br/></span>
@@ -63,17 +69,104 @@ export default {
         return [];
       }
     },
-  },
-  methods: {
-    selectedFile: function() {
-      this.$emit('selected-attachments');
+    uploadTrigger: {
+      type: Boolean,
+      default: false
     },
+    uploadObjectType: {
+      type: String,
+      default: ''
+    },
+    uploadObjectId: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {
-      localValue: this.value
+      localValue: this.value,
+      uploaded: 0,
+      uploads: 0,
     }
   },
+  watch: {
+    uploadTrigger: function (value) {
+      if (true === value) {
+        // this.createAttachment().then(response => {
+        //   this.uploadAttachment(response.data.data.id, new Blob([evt.target.result]));
+        // });
+
+        // new code
+        console.log('start of new');
+        let files = this.$refs.att.files;
+        this.uploads = files.length;
+        // loop all files and create attachments.
+        for (let i in files) {
+          if (files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
+            console.log('Now at file ' + (parseInt(i) + 1) + ' / ' + files.length);
+            // read file into file reader:
+            let current = files[i];
+            let fileReader = new FileReader();
+            let theParent = this; // dont ask me why i need to do this.
+            fileReader.onloadend = evt => {
+              if (evt.target.readyState === FileReader.DONE) {
+                console.log('I am done reading file ' + (parseInt(i) + 1));
+                this.createAttachment(current.name).then(response => {
+                  console.log('Created attachment. Now upload (1)');
+                  return theParent.uploadAttachment(response.data.data.id, new Blob([evt.target.result]));
+                }).then(theParent.countAttachment);
+              }
+            }
+            fileReader.readAsArrayBuffer(current);
+          }
+        }
+        if (0 === files.length) {
+          console.log('No files to upload. Emit event!');
+          this.$emit('uploaded-attachments', this.transaction_journal_id);
+        }
+        // Promise.all(promises).then(response => {
+        //   console.log('All files uploaded. Emit event!');
+        //   this.$emit('uploaded-attachments', this.transaction_journal_id);
+        // });
+
+        // end new code
+
+
+      }
+    },
+  },
+  methods: {
+    countAttachment: function () {
+      this.uploaded++;
+      // console.log('Uploaded ' + this.uploaded + ' / ' + this.uploads);
+      if (this.uploaded >= this.uploads) {
+        // console.log('All files uploaded. Emit event for ' + this.transaction_journal_id + '(' + this.index + ')');
+        this.$emit('uploaded-attachments', this.transaction_journal_id);
+      }
+    },
+    uploadAttachment: function (attachmentId, data) {
+      this.created++;
+      // console.log('Now in uploadAttachment()');
+      const uploadUri = './api/v1/attachments/' + attachmentId + '/upload';
+      return axios.post(uploadUri, data)
+    },
+    createAttachment: function (name) {
+      const uri = './api/v1/attachments';
+      const data = {
+        filename: name,
+        attachable_type: this.uploadObjectType,
+        attachable_id: this.uploadObjectId,
+      };
+      return axios.post(uri, data);
+    },
+    selectedFile: function () {
+      this.$emit('selected-attachments');
+    },
+    clearAtt: function () {
+      this.$refs.att.value = '';
+      this.$emit('selected-no-attachments');
+    },
+  }
 }
 </script>
 
