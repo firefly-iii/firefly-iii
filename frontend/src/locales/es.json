@@ -211,6 +211,7 @@
         "notes": "Notas",
         "location": "Ubicaci\u00f3n",
         "repeat_freq": "Repetici\u00f3n",
+        "skip": "Saltar",
         "startdate": "Fecha de inicio",
         "enddate": "End date",
         "object_group": "Grupo",

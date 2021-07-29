@@ -211,6 +211,7 @@
         "notes": "Notes",
         "location": "Location",
         "repeat_freq": "Repeats",
+        "skip": "Skip",
         "startdate": "Start date",
         "enddate": "End date",
         "object_group": "Group",

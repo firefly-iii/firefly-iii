@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Renteperiode',
     'liability_type'          => 'Type passiva',
     'liability_direction'     => 'Passiva in- of uitgaand',
-    'end_date'                => 'End date',
-    'payment_info'            => 'Payment information',
-    'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'end_date'                => 'Einddatum',
+    'payment_info'            => 'Betalingsinformatie',
+    'expected_info'           => 'Volgende verwachte transactie',
+    'start_date'              => 'Startdatum',
 ];

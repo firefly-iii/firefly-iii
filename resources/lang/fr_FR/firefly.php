@@ -1045,8 +1045,8 @@ return [
     'bill_repeats_half-year_skip'               => 'Se répète tous les {skip} semestres',
     'bill_repeats_yearly_skip'                  => 'Se répète tous les {skip} ans',
     'subscriptions'                             => 'Abonnements',
-    'forever'                                   => 'Forever',
-    'extension_date_is'                         => 'Extension date is {date}',
+    'forever'                                   => 'Pour toujours',
+    'extension_date_is'                         => 'La date de l\'extension est {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Vous avez :count compte inactif (archivé) que vous pouvez consulter sur cette page dédiée.| Vous avez :count comptes inactifs (archivés) que vous pouvez consulter sur cette page dédiée.',

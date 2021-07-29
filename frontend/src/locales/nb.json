@@ -211,6 +211,7 @@
         "notes": "Notater",
         "location": "Location",
         "repeat_freq": "Gjentas",
+        "skip": "Hopp over",
         "startdate": "Startdato",
         "enddate": "End date",
         "object_group": "Group",

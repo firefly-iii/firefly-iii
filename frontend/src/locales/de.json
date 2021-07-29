@@ -160,8 +160,8 @@
         "subscriptions": "Abonnements",
         "bill_expected_date_js": "Erwartet {date}",
         "inactive": "Inaktiv",
-        "forever": "Forever",
-        "extension_date_is": "Extension date is {date}",
+        "forever": "Dauerhaft",
+        "extension_date_is": "Zeitpunkt der Verl\u00e4ngerung ist {date}",
         "create_new_bill": "Eine neue Rechnung erstellen",
         "store_new_bill": "Neue Rechnung speichern",
         "repeat_freq_yearly": "J\u00e4hrlich",
@@ -189,10 +189,10 @@
         "liability_direction": "Verbindlichkeit ein\/aus",
         "currentBalance": "Aktueller Kontostand",
         "next_expected_match": "N\u00e4chste erwartete \u00dcbereinstimmung",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "N\u00e4chste erwartete Buchung",
+        "start_date": "Beginnt am",
+        "end_date": "Endet am",
+        "payment_info": "Zahlungsinformationen"
     },
     "config": {
         "html_language": "de",
@@ -211,6 +211,7 @@
         "notes": "Notizen",
         "location": "Herkunft",
         "repeat_freq": "Wiederholungen",
+        "skip": "\u00dcberspringen",
         "startdate": "Startdatum",
         "enddate": "End date",
         "object_group": "Gruppe",

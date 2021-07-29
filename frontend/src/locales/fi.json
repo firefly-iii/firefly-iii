@@ -211,6 +211,7 @@
         "notes": "Muistiinpanot",
         "location": "Sijainti",
         "repeat_freq": "Toistot",
+        "skip": "Ohita",
         "startdate": "Aloitusp\u00e4iv\u00e4",
         "enddate": "End date",
         "object_group": "Ryhm\u00e4",

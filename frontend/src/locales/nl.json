@@ -160,8 +160,8 @@
         "subscriptions": "Abonnementen",
         "bill_expected_date_js": "Verwacht op {date}",
         "inactive": "Niet actief",
-        "forever": "Forever",
-        "extension_date_is": "Extension date is {date}",
+        "forever": "Voor altijd",
+        "extension_date_is": "Verlengdatum is {date}",
         "create_new_bill": "Nieuw contract",
         "store_new_bill": "Sla nieuw contract op",
         "repeat_freq_yearly": "jaarlijks",
@@ -189,10 +189,10 @@
         "liability_direction": "Passiva in- of uitgaand",
         "currentBalance": "Huidig saldo",
         "next_expected_match": "Volgende verwachte match",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "Volgende verwachte transactie",
+        "start_date": "Startdatum",
+        "end_date": "Einddatum",
+        "payment_info": "Betalingsinformatie"
     },
     "config": {
         "html_language": "nl",
@@ -211,8 +211,9 @@
         "notes": "Notities",
         "location": "Locatie",
         "repeat_freq": "Herhaling",
+        "skip": "Overslaan",
         "startdate": "Startdatum",
-        "enddate": "End date",
+        "enddate": "Einddatum",
         "object_group": "Groep",
         "attachments": "Bijlagen",
         "active": "Actief",
@@ -241,6 +242,6 @@
         "amount_max": "Maximumbedrag",
         "start_date": "Start van bereik",
         "end_date": "Einde van bereik",
-        "extension_date": "Extension date"
+        "extension_date": "Verlengdatum"
     }
 }

@@ -211,6 +211,7 @@
         "notes": "Anteckningar",
         "location": "Plats",
         "repeat_freq": "Upprepningar",
+        "skip": "Hoppa \u00f6ver",
         "startdate": "Startdatum",
         "enddate": "End date",
         "object_group": "Grupp",

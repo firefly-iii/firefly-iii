@@ -160,8 +160,8 @@
         "subscriptions": "Abonnements",
         "bill_expected_date_js": "Attendu le {date}",
         "inactive": "Inactif",
-        "forever": "Forever",
-        "extension_date_is": "Extension date is {date}",
+        "forever": "Pour toujours",
+        "extension_date_is": "La date de l'extension est {date}",
         "create_new_bill": "Cr\u00e9er une nouvelle facture",
         "store_new_bill": "Cr\u00e9er une nouvelle facture",
         "repeat_freq_yearly": "annuellement",
@@ -189,10 +189,10 @@
         "liability_direction": "Sens du passif",
         "currentBalance": "Solde courant",
         "next_expected_match": "Prochaine association attendue",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "Prochaine op\u00e9ration attendue",
+        "start_date": "Date de d\u00e9but",
+        "end_date": "Date de fin",
+        "payment_info": "Informations sur le paiement"
     },
     "config": {
         "html_language": "fr",
@@ -211,6 +211,7 @@
         "notes": "Notes",
         "location": "Emplacement",
         "repeat_freq": "R\u00e9p\u00e9titions",
+        "skip": "Ignorer",
         "startdate": "Date de d\u00e9but",
         "enddate": "End date",
         "object_group": "Groupe",

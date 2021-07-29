@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Période d’intérêt',
     'liability_type'          => 'Type de passif',
     'liability_direction'     => 'Sens du passif',
-    'end_date'                => 'End date',
-    'payment_info'            => 'Payment information',
-    'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'end_date'                => 'Date de fin',
+    'payment_info'            => 'Informations sur le paiement',
+    'expected_info'           => 'Prochaine opération attendue',
+    'start_date'              => 'Date de début',
 ];

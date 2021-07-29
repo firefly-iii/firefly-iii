@@ -211,6 +211,7 @@
         "notes": "Megjegyz\u00e9sek",
         "location": "Hely",
         "repeat_freq": "Ism\u00e9tl\u0151d\u00e9sek",
+        "skip": "Kihagy\u00e1s",
         "startdate": "Kezd\u0151 d\u00e1tum",
         "enddate": "End date",
         "object_group": "Csoport",

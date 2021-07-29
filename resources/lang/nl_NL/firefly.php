@@ -1045,8 +1045,8 @@ return [
     'bill_repeats_half-year_skip'               => 'Herhaalt elke {skip} halve jaren',
     'bill_repeats_yearly_skip'                  => 'Herhaalt elke {skip} jaar',
     'subscriptions'                             => 'Abonnementen',
-    'forever'                                   => 'Forever',
-    'extension_date_is'                         => 'Extension date is {date}',
+    'forever'                                   => 'Voor altijd',
+    'extension_date_is'                         => 'Verlengdatum is {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Je hebt :count inactieve (gearchiveerde) rekening, die je kan bekijken op deze aparte pagina.|Je hebt :count inactieve (gearchiveerde) rekeningen, die je kan bekijken op deze aparte pagina.',

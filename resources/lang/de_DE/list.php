@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Zinsperiode',
     'liability_type'          => 'Verbindlichkeitsart',
     'liability_direction'     => 'Verbindlichkeit ein/aus',
-    'end_date'                => 'End date',
-    'payment_info'            => 'Payment information',
-    'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'end_date'                => 'Endet am',
+    'payment_info'            => 'Zahlungsinformationen',
+    'expected_info'           => 'Nächste erwartete Buchung',
+    'start_date'              => 'Beginnt am',
 ];

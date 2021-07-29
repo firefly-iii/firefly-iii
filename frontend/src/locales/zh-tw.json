@@ -211,6 +211,7 @@
         "notes": "\u5099\u8a3b",
         "location": "Location",
         "repeat_freq": "\u91cd\u8907",
+        "skip": "\u7565\u904e",
         "startdate": "\u958b\u59cb\u65e5\u671f",
         "enddate": "End date",
         "object_group": "Group",

@@ -211,6 +211,7 @@
         "notes": "Notas",
         "location": "Localiza\u00e7\u00e3o",
         "repeat_freq": "Repete",
+        "skip": "Pular",
         "startdate": "Data de inicio",
         "enddate": "End date",
         "object_group": "Grupo",
