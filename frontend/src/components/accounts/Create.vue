@@ -34,7 +34,7 @@
             <div class="card-body">
               <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
                                 v-on:set-field="storeField($event)"/>
-              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency" v-on:set-field="storeField($event)"/>
+              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
               <AssetAccountRole :disabled="submitting" v-if="'asset' === type" v-model="account_role" :errors="errors.account_role"
                                 v-on:set-field="storeField($event)"/>
               <LiabilityType :disabled="submitting" v-if="'liabilities' === type" v-model="liability_type" :errors="errors.liability_type"
@@ -88,7 +88,15 @@
 
               <GenericLocation :disabled="submitting" v-model="location" :title="$t('form.location')" :errors="errors.location"
                                v-on:set-field="storeField($event)"/>
-              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"/>
+
+              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
+                                  v-on:selected-attachments="selectedAttachments($event)"
+                                  v-on:selected-no-attachments="selectedNoAttachments($event)"
+                                  v-on:uploaded-attachments="uploadedAttachments($event)"
+                                  :upload-trigger="uploadTrigger"
+                                  :upload-object-type="uploadObjectType"
+                                  :upload-object-id="uploadObjectId"
+              />
 
 
             </div>
@@ -168,7 +176,7 @@ export default {
       // info
       name: '',
       type: 'any',
-
+      currency_id: null,
 
       // liabilities
       liability_type: 'Loan',
@@ -177,6 +185,7 @@ export default {
       liability_date: null,
       interest: null,
       interest_period: 'monthly',
+
 
       // optional fields
       iban: null,
@@ -190,12 +199,20 @@ export default {
       notes: null,
       location: {},
 
+      // has attachments to upload?
+      hasAttachments: false,
+      uploadTrigger: false,
+      uploadObjectId: 0,
+      uploadObjectType: 'Account',
+
 
       account_role: 'defaultAsset',
-      errors: {},
+      errors: {
+        currency_id: [],
+      },
       defaultErrors: {
         name: [],
-        currency: [],
+        currency_id: [],
         account_role: [],
         liability_type: [],
         liability_direction: [],
@@ -217,7 +234,7 @@ export default {
   },
   methods: {
     storeField: function (payload) {
-      // console.log(payload);
+      console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.location = payload.value;
@@ -227,6 +244,15 @@ export default {
         return;
       }
       this[payload.field] = payload.value;
+    },
+    selectedAttachments: function (e) {
+      this.hasAttachments = true;
+    },
+    selectedNoAttachments: function (e) {
+      this.hasAttachments = false;
+    },
+    uploadedAttachments: function (e) {
+      this.finishSubmission();
     },
     submitForm: function (e) {
       e.preventDefault();
@@ -239,41 +265,51 @@ export default {
       axios.post(url, submission)
           .then(response => {
             this.errors = lodashClonedeep(this.defaultErrors);
-            // console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
-            this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});
-            // stay here is false?
-            if (false === this.createAnother) {
-              window.location.href = (window.previousURL ?? '/') + '?account_id=' + this.returnedId + '&message=created';
-              return;
+
+            if (this.hasAttachments) {
+              // upload attachments. Do a callback to a finish up method.
+              this.uploadObjectId = this.returnedId;
+              this.uploadTrigger = true;
             }
-            this.submitting = false;
-            if (this.resetFormAfter) {
-              // console.log('reset!');
-              this.name = '';
-              this.liability_type = 'Loan';
-              this.liability_direction = 'debit';
-              this.liability_amount = null;
-              this.liability_date = null;
-              this.interest = null;
-              this.interest_period = 'monthly';
-              this.iban = null;
-              this.bic = null;
-              this.account_number = null;
-              this.virtual_balance = null;
-              this.opening_balance = null;
-              this.opening_balance_date = null;
-              this.include_net_worth = true;
-              this.active = true;
-              this.notes = null;
-              this.location = {};
+            if (!this.hasAttachments) {
+              this.finishSubmission();
             }
           })
           .catch(error => {
             this.submitting = false;
             this.parseErrors(error.response.data);
           });
+    },
+    finishSubmission: function () {
+      this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});
+      // stay here is false?
+      if (false === this.createAnother) {
+        window.location.href = (window.previousURL ?? '/') + '?account_id=' + this.returnedId + '&message=created';
+        return;
+      }
+      this.submitting = false;
+      if (this.resetFormAfter) {
+        // console.log('reset!');
+        this.name = '';
+        this.liability_type = 'Loan';
+        this.liability_direction = 'debit';
+        this.liability_amount = null;
+        this.liability_date = null;
+        this.interest = null;
+        this.interest_period = 'monthly';
+        this.iban = null;
+        this.bic = null;
+        this.account_number = null;
+        this.virtual_balance = null;
+        this.opening_balance = null;
+        this.opening_balance_date = null;
+        this.include_net_worth = true;
+        this.active = true;
+        this.notes = null;
+        this.location = {};
+      }
     },
     parseErrors: function (errors) {
       this.errors = lodashClonedeep(this.defaultErrors);
@@ -282,7 +318,7 @@ export default {
         if (errors.errors.hasOwnProperty(i)) {
           this.errors[i] = errors.errors[i];
         }
-        if('liability_start_date' === i) {
+        if ('liability_start_date' === i) {
           this.errors.opening_balance_date = errors.errors[i];
         }
       }
@@ -314,7 +350,7 @@ export default {
         submission.opening_balance = this.opening_balance;
         submission.opening_balance_date = this.opening_balance_date;
       }
-      if('' === submission.opening_balance) {
+      if ('' === submission.opening_balance) {
         delete submission.opening_balance;
       }
 

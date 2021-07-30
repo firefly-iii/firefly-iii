@@ -46,8 +46,6 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-
 export default {
   name: "GenericCurrency",
   props: {
@@ -57,9 +55,6 @@ export default {
       type: Boolean,
       default: false
     },
-  },
-  computed: {
-    ...mapGetters('root', [ 'cacheKey']),
   },
   data() {
     return {
@@ -73,7 +68,7 @@ export default {
       this.loadCurrencyPage(1);
     },
     loadCurrencyPage: function (page) {
-      axios.get('./api/v1/currencies?page=' + page + '&key=' + this.cacheKey)
+      axios.get('./api/v1/currencies?page=' + page)
           .then(response => {
                   let totalPages = parseInt(response.data.meta.pagination.total_pages);
                   let currentPage = parseInt(response.data.meta.pagination.current_page);

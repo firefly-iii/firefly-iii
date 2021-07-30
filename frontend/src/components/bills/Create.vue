@@ -34,7 +34,7 @@
             <div class="card-body">
               <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
                                 v-on:set-field="storeField($event)"/>
-              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency" v-on:set-field="storeField($event)"/>
+              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
 
               <GenericTextInput :disabled="submitting" field-type="number" field-step="any" v-model="amount_min"
                                 field-name="amount_min" :errors="errors.amount_min" :title="$t('form.amount_min')" v-on:set-field="storeField($event)"/>
@@ -72,7 +72,6 @@
                                   :upload-trigger="uploadTrigger"
                                   :upload-object-type="uploadObjectType"
                                   :upload-object-id="uploadObjectId"
-
               />
 
               <GenericTextInput :disabled="submitting" v-model="skip" field-name="skip" :errors="errors.skip" :title="$t('form.skip')"
@@ -124,6 +123,7 @@ import GenericCurrency from "../form/GenericCurrency";
 import GenericTextarea from "../form/GenericTextarea";
 import GenericAttachments from "../form/GenericAttachments";
 import GenericGroup from "../form/GenericGroup";
+import format from "date-fns/format";
 
 const lodashClonedeep = require('lodash.clonedeep');
 
@@ -167,12 +167,14 @@ export default {
 
       // errors
       errors: {
-        currency: [],
+        currency_id: [],
         repeat_freq: [],
+        group_title: [],
       },
       defaultErrors: {
         name: [],
-        currency: [],
+        group_title: [],
+        currency_id: [],
         amount_min: [],
         amount_max: [],
         date: [],
@@ -182,9 +184,12 @@ export default {
       }
     }
   },
+  created() {
+    this.date = format(new Date, 'yyyy-MM-dd');
+  },
   methods: {
     storeField: function (payload) {
-      // console.log(payload);
+      console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.location = payload.value;
@@ -259,14 +264,14 @@ export default {
     getSubmission: function () {
       let submission = {
         name: this.name,
-        currency_id: this.currency,
+        currency_id: this.currency_id,
         amount_min: this.amount_min,
         amount_max: this.amount_max,
         date: this.date,
         repeat_freq: this.repeat_freq,
         skip: this.skip,
         active: true,
-        object_group_title: this.object_group_title
+        object_group_title: this.group_title
       };
       if (Object.keys(this.location).length >= 3) {
         submission.longitude = this.location.lng;

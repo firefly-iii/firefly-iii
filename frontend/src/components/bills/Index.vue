@@ -22,7 +22,7 @@
   <div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill') }}</a>
+          <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill') }}</a>
         <button @click="newCacheKey" class="btn btn-sm mb-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>

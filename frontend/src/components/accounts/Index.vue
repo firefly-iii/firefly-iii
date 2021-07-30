@@ -30,7 +30,8 @@
         ></b-pagination>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+        <a :href="'./accounts/create/' + type" class="btn btn-sm mb-2 float-right btn-success" :title="$t('firefly.create_new_' + type)"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_' + type) }}</a>
+        <button @click="newCacheKey" class="btn btn-sm mb-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
     <div class="row">
@@ -151,9 +152,6 @@
               </template>
             </b-table>
           </div>
-          <div class="card-footer">
-            <a :href="'./accounts/create/' + type" class="btn btn-success" :title="$t('firefly.create_new_' + type)">{{ $t('firefly.create_new_' + type) }}</a>
-          </div>
         </div>
       </div>
     </div>
@@ -167,7 +165,8 @@
         ></b-pagination>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+        <a :href="'./accounts/create/' + type" class="btn btn-sm mt-2 float-right btn-success" :title="$t('firefly.create_new_' + type)"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_' + type) }}</a>
+        <button @click="newCacheKey" class="btn btn-sm mt-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
   </div>
