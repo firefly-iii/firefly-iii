@@ -28,7 +28,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use Route;
 use Twig\Extension\AbstractExtension;
@@ -203,8 +203,10 @@ class General extends AbstractExtension
     protected function markdown(): TwigFilter
     {
         return new TwigFilter(
-            'markdown',
+               'markdown',
             static function (string $text): string {
+
+
                 $environment = Environment::createCommonMarkEnvironment();
                 $environment->addExtension(new GithubFlavoredMarkdownExtension());
 
@@ -355,7 +357,7 @@ class General extends AbstractExtension
 
     /**
      * @return TwigFunction
-* See reference nr. 43
+     * See reference nr. 43
      */
     protected function getMetaField(): TwigFunction
     {

@@ -69,6 +69,7 @@ class RegisterController extends Controller
         if ('eloquent' !== $loginProvider || 'web' !== $authGuard) {
             throw new FireflyException('Using external identity provider. Cannot continue.');
         }
+
     }
 
     /**
@@ -84,21 +85,19 @@ class RegisterController extends Controller
     {
         // is allowed to?
         $allowRegistration = true;
-        $loginProvider     = config('firefly.login_provider');
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
-        if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
+        $guard             = config('auth.defaults.guard');
+        if (true === $singleUserMode && $userCount > 0 && 'ldap' !== $guard) {
             $allowRegistration = false;
         }
 
-        if ('eloquent' !== $loginProvider) {
+        if ('ldap' === $guard) {
             $allowRegistration = false;
         }
 
         if (false === $allowRegistration) {
-            $message = 'Registration is currently not available.';
-
-            return prefixView('error', compact('message'));
+            throw new FireflyException('Registration is currently not available :(');
         }
 
         $this->validator($request->all())->validate();
@@ -126,21 +125,21 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         $allowRegistration = true;
-        $loginProvider     = config('firefly.login_provider');
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $pageTitle         = (string)trans('firefly.register_page_title');
+        $guard             = config('auth.defaults.guard');
 
         if (true === $isDemoSite) {
             $allowRegistration = false;
         }
 
-        if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
+        if (true === $singleUserMode && $userCount > 0 && 'ldap' !== $guard) {
             $allowRegistration = false;
         }
 
-        if ('eloquent' !== $loginProvider) {
+        if ('ldap' === $guard) {
             $allowRegistration = false;
         }
 
