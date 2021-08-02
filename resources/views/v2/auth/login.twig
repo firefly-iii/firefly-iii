@@ -1,23 +1,44 @@
 {% extends './v2/layout/auth' %}
 {% block content %}
-    {# error when logging in #}
-    {% if errors.has('email') %}
+
+    {# error when logging in? #}
+    {% if errors.count > 0 %}
         <div class="row">
             <div class="alert alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h5><span class="icon fas fa-ban"></span> {{ 'flash_error'|_ }}</h5>
-                {{ errors.get('email')[0] }}
+                {{ errors.first }}
             </div>
         </div>
     {% endif %}
 
-    {# error when logout force #}
+    {# Success message (used for undo email change etc. #}
+    {% if Session.has('success') %}
+        <div class="row">
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><span class="icon fas fa-info"></span>
+                    {{ session('success') }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# error when forced to logout #}
     {% if session('logoutMessage') %}
         <div class="row">
             <div class="alert alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <h5><span class="icon fas fa-info"></span>
                     {{ session('logoutMessage') }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# LDAP warning (untranslatable, i dont care) #}
+    {% if ldapWarning %}
+        <div class="row">
+            <div class="alert alert-info alert-dismissible">
+                <a target="_blank" href="https://docs.firefly-iii.org/firefly-iii/advanced-installation/authentication/#ldap">Please upgrade LDAP configuration</a>
             </div>
         </div>
     {% endif %}
@@ -44,13 +65,21 @@
                 <form action="{{ route('login') }}" method="post">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <div class="input-group mb-3">
+
+                        {#  switch between alernative and Firefly III auth. #}
                         {% if config('firefly.authentication_guard') == 'web' %}
-                            <input type="email" required autocomplete="email" name="email" value="{{ email }}" class="form-control"
-                                   id="emailInput" placeholder="{{ trans('form.email') }}"/>
+                            <input type="email" required autocomplete="email" name="email" class="form-control"
+                                   id="emailInput" placeholder="{{ trans('form.email') }}"
+                                   value="{% if not IS_DEMO_SITE %}{{ email }}{% else %}{{ DEMO_USERNAME }}{% endif %}"
+                            />
                         {% else %}
                             <input type="text" required autocomplete="username" name="{{ usernameField }}" value="{{ email }}" class="form-control"
-                                   placeholder="{{ trans('form.login_name') }}"/>
+                                   placeholder="{{ trans('form.login_name') }}"
+
+                            />
                         {% endif %}
+
+
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -59,7 +88,9 @@
                     </div>
                     <div class="input-group mb-3">
                         <input type="password" name="password" required autocomplete="current-password" class="form-control"
-                               placeholder="{{ trans('form.password') }}"/>
+                               placeholder="{{ trans('form.password') }}"
+                               {% if IS_DEMO_SITE %}value="{{ DEMO_PASSWORD }}"{% endif%}
+                        />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>

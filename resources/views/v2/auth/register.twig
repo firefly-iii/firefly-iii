@@ -1,10 +1,8 @@
 {% extends './v2/layout/auth' %}
 {% block content %}
-    {# alerts here #}
 
+    {# errors during registration: #}
     {% if errors|length > 0 %}
-
-
         <div class="row">
             <div class="alert alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -64,14 +62,14 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="icheck-primary">
-                                <input id="remember" checked type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1">
-                                <label for="remember">
+                                <input id="verify_password" checked type="checkbox" name="verify_password" value="1">
+                                <label for="verify_password">
                                     {{ trans('form.verify_password') }}
                                 </label>
-
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <!-- /.col -->
                         <div class="col-12">
@@ -84,7 +82,7 @@
                             <ul class="list-unstyled small">
                                 <li>
                                     <a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">
-                                        What is "verify password security"?
+                                        {{ 'what_is_pw_security'|_ }}
                                     </a>
                                 </li>
                                 <li>
@@ -93,6 +91,7 @@
                                 <li>
                                     <a href="{{ route('password.reset.request') }}">{{ 'forgot_my_password'|_ }}</a>
                                 </li>
+                            </ul>
                         </div>
                     </div>
                 </form>

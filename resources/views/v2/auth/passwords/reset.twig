@@ -23,8 +23,7 @@
     {# default header #}
     <div class="login-box">
         <div class="login-logo">
-            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
-            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+            <img src="v2/images/firefly-iii-logo-new.png" alt="Firefly III" width="90"/><br />
         </div>
         <!-- /.login-logo -->
         <div class="card">
@@ -35,7 +34,7 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                     <input type="hidden" name="token" value="{{ token }}">
                     <div class="input-group mb-3">
-                        <input type="email" required autocomplete="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="{{ trans('form.email') }}"/>
+                        <input type="email" required autocomplete="email" id="emailInput" name="email" class="form-control" value="{{ old('email') }}" placeholder="{{ trans('form.email') }}"/>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -62,6 +61,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="icheck-primary">
+                                <input id="verify_password" checked type="checkbox" name="verify_password" value="1">
+                                <label for="verify_password">
+                                    {{ trans('form.verify_password') }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">{{ 'button_reset_password'|_ }}</button>
@@ -72,7 +83,11 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <ul class="list-unstyled small">
-
+                            <li>
+                                <a data-toggle="modal" data-target="#passwordModal" href="#passwordModal">
+                                    {{ 'what_is_pw_security'|_ }}
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('login') }}">{{ 'want_to_login'|_ }}</a>
                             </li>
@@ -89,4 +104,13 @@
         </div>
     </div>
     <!-- /.login-box -->
+    {% include 'v2.partials.auth.password-modal' %}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        document.getElementById("emailInput").focus();
+    </script>
+    <script src="v2/js/manifest.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/vendor.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v2/js/register.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}
