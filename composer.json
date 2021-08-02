@@ -111,7 +111,7 @@
     "fakerphp/faker": "1.*",
     "mockery/mockery": "1.*",
     "nunomaduro/larastan": "^0.7.11",
-    "phpstan/phpstan": "^0.12.92",
+    "phpstan/phpstan": "^0.12.94",
     "phpstan/phpstan-deprecation-rules": "^0.12.5",
     "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-master",
