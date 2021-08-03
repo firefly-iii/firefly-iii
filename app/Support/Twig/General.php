@@ -212,7 +212,7 @@ class General extends AbstractExtension
 
                 $converter = new CommonMarkConverter(['allow_unsafe_links' => false, 'max_nesting_level' => 3, 'html_input' => 'escape'], $environment);
 
-                return $converter->convertToHtml($text);
+                return (string) $converter->convertToHtml($text);
             }, ['is_safe' => ['html']]
         );
     }
