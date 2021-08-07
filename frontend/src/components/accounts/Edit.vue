@@ -19,12 +19,262 @@
   -->
 
 <template>
+  <div>
+    <Alert :message="errorMessage" type="danger"/>
+    <Alert :message="successMessage" type="success"/>
+    <form @submit="submitForm" autocomplete="off">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">
+                {{ $t('firefly.mandatoryFields') }}
+              </h3>
+            </div>
+            <div class="card-body">
+              <GenericTextInput :disabled="submitting" v-model="account.name" field-name="name" :errors="errors.name" :title="$t('form.name')"
+                                v-on:set-field="storeField($event)"/>
 
+              <GenericCurrency :disabled="submitting" v-model="account.currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
+
+              <AssetAccountRole :disabled="submitting" v-if="'asset' === account.type" v-model="account.account_role" :errors="errors.account_role"
+                                v-on:set-field="storeField($event)"/>
+              <LiabilityType :disabled="submitting" v-if="'liabilities' === account.type" v-model="account.liability_type" :errors="errors.liability_type"
+                             v-on:set-field="storeField($event)"/>
+
+              <LiabilityDirection :disabled="submitting" v-if="'liabilities' === account.type" v-model="account.liability_direction"
+                                  :errors="errors.liability_direction"
+                                  v-on:set-field="storeField($event)"/>
+
+              <GenericTextInput :disabled="submitting" v-if="'liabilities' === account.type" field-type="number" field-step="any"
+                                v-model="account.liability_amount"
+                                field-name="liability_amount" :errors="errors.liability_amount" :title="$t('form.amount')" v-on:set-field="storeField($event)"/>
+              <GenericTextInput :disabled="submitting" v-if="'liabilities' === account.type" field-type="date" v-model="account.liability_date"
+                                field-name="liability_date"
+                                :errors="errors.liability_date" :title="$t('form.date')" v-on:set-field="storeField($event)"/>
+
+              <Interest :disabled="submitting" v-if="'liabilities' === account.type" v-model="account.interest" :errors="errors.interest"
+                        v-on:set-field="storeField($event)"/>
+              <InterestPeriod :disabled="submitting" v-if="'liabilities' === account.type" v-model="account.interest_period" :errors="errors.interest_period"
+                              v-on:set-field="storeField($event)"/>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">
+                {{ $t('firefly.optionalFields') }}
+              </h3>
+            </div>
+            <div class="card-body">
+              <GenericTextInput :disabled="submitting" v-model="account.iban" field-name="iban" :errors="errors.iban" :title="$t('form.iban')"
+                                v-on:set-field="storeField($event)"/>
+              <GenericTextInput :disabled="submitting" v-model="account.bic" field-name="bic" :errors="errors.bic" :title="$t('form.BIC')"
+                                v-on:set-field="storeField($event)"/>
+              <GenericTextInput :disabled="submitting" v-model="account.account_number" field-name="account_number" :errors="errors.account_number"
+                                :title="$t('form.account_number')" v-on:set-field="storeField($event)"/>
+
+              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.virtual_balance" field-name="virtual_balance"
+                                :errors="errors.virtual_balance" :title="$t('form.virtual_balance')" v-on:set-field="storeField($event)"/>
+              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.opening_balance" field-name="opening_balance"
+                                :errors="errors.opening_balance" :title="$t('form.opening_balance')" v-on:set-field="storeField($event)"/>
+              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="date" v-model="account.opening_balance_date"
+                                field-name="opening_balance_date" :errors="errors.opening_balance_date" :title="$t('form.opening_balance_date')"
+                                v-on:set-field="storeField($event)"/>
+
+              <GenericCheckbox :disabled="submitting" v-if="'asset' === account.type" :title="$t('form.include_net_worth')" field-name="include_net_worth"
+                               v-model="account.include_net_worth" :errors="errors.include_net_worth" :description="$t('form.include_net_worth')"
+                               v-on:set-field="storeField($event)"/>
+              <GenericCheckbox :disabled="submitting" :title="$t('form.active')" field-name="active"
+                               v-model="account.active" :errors="errors.active" :description="$t('form.active')"
+                               v-on:set-field="storeField($event)"/>
+              <GenericTextarea :disabled="submitting" field-name="notes" :title="$t('form.notes')" v-model="account.notes" :errors="errors.notes"
+                               v-on:set-field="storeField($event)"/>
+
+              <GenericLocation :disabled="submitting" v-model="account.location" :title="$t('form.location')" :errors="errors.location"
+                               v-on:set-field="storeField($event)"/>
+
+              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
+                                  v-on:selected-attachments="selectedAttachments($event)"
+                                  v-on:selected-no-attachments="selectedNoAttachments($event)"
+                                  v-on:uploaded-attachments="uploadedAttachments($event)"
+                                  :upload-trigger="uploadTrigger"
+                                  :upload-object-type="uploadObjectType"
+                                  :upload-object-id="uploadObjectId"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 offset-xl-6 offset-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-6 offset-lg-6">
+                Button
+                <div class="form-check">
+                  <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
+                  <label class="form-check-label" for="stayHere">
+                    <span class="small">{{ $t('firefly.after_update_create_another') }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+
+import Alert from '../partials/Alert';
+import lodashClonedeep from "lodash.clonedeep";
+import GenericTextInput from '../form/GenericTextInput';
+import GenericCurrency from "../form/GenericCurrency";
+import AssetAccountRole from "./AssetAccountRole";
+import LiabilityType from "./LiabilityType";
+import LiabilityDirection from "./LiabilityDirection";
+import Interest from "./Interest";
+import InterestPeriod from "./InterestPeriod";
+import GenericTextarea from "../form/GenericTextarea";
+import GenericCheckbox from "../form/GenericCheckbox";
+import GenericAttachments from "../form/GenericAttachments";
+import GenericLocation from "../form/GenericLocation";
+import format from "date-fns/format";
+
 export default {
-  name: "Edit"
+  name: "Edit",
+  created() {
+    // console.log('Created');
+    let parts = window.location.pathname.split('/');
+    this.accountId = parseInt(parts[parts.length - 1]);
+    this.uploadObjectId= parseInt(parts[parts.length - 1]);
+    this.getAccount();
+  },
+  components: {
+    Alert, GenericTextInput, GenericCurrency, AssetAccountRole, LiabilityDirection, LiabilityType, Interest, InterestPeriod, GenericTextarea, GenericCheckbox, GenericAttachments, GenericLocation
+  },
+  data() {
+    return {
+      successMessage: '',
+      errorMessage: '',
+      stayHere: false,
+      accountId: 0,
+      submitting: false,
+
+      // account + original account
+      account: {},
+      originalAccount: {},
+
+      // has attachments to upload?
+      hasAttachments: false,
+      uploadTrigger: false,
+      uploadObjectId: 0,
+      uploadObjectType: 'Account',
+
+      // errors
+      errors: {
+        currency_id: [],
+        account_role: [],
+        liability_type: [],
+        location: []
+      },
+      defaultErrors: {}
+    }
+  },
+  methods: {
+    selectedAttachments: function (e) {
+      this.hasAttachments = true;
+    },
+    selectedNoAttachments: function (e) {
+      this.hasAttachments = false;
+    },
+    uploadedAttachments: function (e) {
+      this.finishSubmission();
+    },
+    submitForm: function () {
+      e.preventDefault();
+      this.submitting = true;
+      //let submission = this.getSubmission();
+    },
+    finishSubmission: function() {
+
+    },
+    /**
+     * Grab account from URL and submit GET.
+     */
+    getAccount: function () {
+      // console.log('getTransactionGroup');
+      axios.get('./api/v1/accounts/' + this.accountId)
+          .then(response => {
+                  this.parseAccount(response.data);
+                }
+          ).catch(error => {
+        console.log('I failed :(');
+        console.log(error);
+      });
+    },
+    storeField: function (payload) {
+      console.log(payload);
+      if ('location' === payload.field) {
+        if (true === payload.value.hasMarker) {
+          this.location = payload.value;
+          return;
+        }
+        this.location = {};
+        return;
+      }
+      this.account[payload.field] = payload.value;
+    },
+    /**
+     * Parse transaction group. Title is easy, transactions have their own method.
+     * @param response
+     */
+    parseAccount: function (response) {
+      console.log('Will now parse');
+      console.log(response);
+      let attributes = response.data.attributes;
+      let account = {};
+
+      // parse account:
+      account.account_number = attributes.account_number;
+      account.account_role = attributes.account_role;
+      account.active = attributes.active;
+      account.bic = attributes.bic;
+      account.credit_card_type = attributes.credit_card_type;
+      account.currency_code = attributes.currency_code;
+      account.currency_decimal_places = parseInt(attributes.currency_decimal_places);
+      account.currency_id = parseInt(attributes.currency_id);
+      account.currency_symbol = attributes.currency_symbol;
+      account.iban = attributes.iban;
+      account.include_net_worth = attributes.include_net_worth;
+      account.interest = attributes.interest;
+      account.interest_period = attributes.interest_period;
+      account.liability_direction = attributes.liability_direction;
+      account.liability_type = attributes.liability_type;
+      account.monthly_payment_date = attributes.monthly_payment_date;
+      account.name = attributes.name;
+      account.notes = attributes.notes;
+      account.opening_balance = attributes.opening_balance;
+      account.opening_balance_date = attributes.opening_balance_date;
+      account.type = attributes.type;
+      account.virtual_balance = attributes.virtual_balance;
+      account.location = {
+        latitude: attributes.latitude,
+        longitude: attributes.longitude,
+        zoom_level: attributes.zoom_level
+      };
+
+      this.account = account;
+      this.originalAccount = lodashClonedeep(this.account);
+    },
+  }
 }
 </script>
 

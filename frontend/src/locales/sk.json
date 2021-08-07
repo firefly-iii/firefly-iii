@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "polro\u010dne",
         "repeat_freq_quarterly": "\u0161tvr\u0165ro\u010dne",
         "repeat_freq_monthly": "mesa\u010dne",
-        "repeat_freq_weekly": "t\u00fd\u017edenne"
+        "repeat_freq_weekly": "t\u00fd\u017edenne",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -218,7 +219,9 @@
         "attachments": "Pr\u00edlohy",
         "active": "Akt\u00edvne",
         "include_net_worth": "Zahrn\u00fa\u0165 do \u010dist\u00e9ho majetku",
+        "cc_type": "Z\u00fa\u010dtovacie obdobie kreditnej karty",
         "account_number": "\u010c\u00edslo \u00fa\u010dtu",
+        "cc_monthly_payment_date": "D\u00e1tum mesa\u010dnej \u00fahrady kreditnej karty",
         "virtual_balance": "Virtu\u00e1lnu zostatok",
         "opening_balance": "Po\u010diato\u010dn\u00fd zostatok",
         "opening_balance_date": "D\u00e1tum po\u010diato\u010dn\u00e9ho zostatku",

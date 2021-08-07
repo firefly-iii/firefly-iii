@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "semestriel",
         "repeat_freq_quarterly": "trimestriel",
         "repeat_freq_monthly": "mensuel",
-        "repeat_freq_weekly": "hebdomadaire"
+        "repeat_freq_weekly": "hebdomadaire",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Tirelire",
@@ -213,12 +214,14 @@
         "repeat_freq": "R\u00e9p\u00e9titions",
         "skip": "Ignorer",
         "startdate": "Date de d\u00e9but",
-        "enddate": "End date",
+        "enddate": "Date de fin",
         "object_group": "Groupe",
         "attachments": "Documents joints",
         "active": "Actif",
         "include_net_worth": "Inclure dans l'avoir net",
+        "cc_type": "Plan de paiement de carte de cr\u00e9dit",
         "account_number": "Num\u00e9ro de compte",
+        "cc_monthly_payment_date": "Date de paiement mensuelle de la carte de cr\u00e9dit",
         "virtual_balance": "Solde virtuel",
         "opening_balance": "Solde initial",
         "opening_balance_date": "Date du solde initial",
@@ -242,6 +245,6 @@
         "amount_max": "Montant maximum",
         "start_date": "D\u00e9but de l'\u00e9tendue",
         "end_date": "Fin de l'\u00e9tendue",
-        "extension_date": "Extension date"
+        "extension_date": "Date d'extension"
     }
 }

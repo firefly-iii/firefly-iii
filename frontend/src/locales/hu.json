@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "f\u00e9l\u00e9vente",
         "repeat_freq_quarterly": "negyed\u00e9ves",
         "repeat_freq_monthly": "havi",
-        "repeat_freq_weekly": "heti"
+        "repeat_freq_weekly": "heti",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Malacpersely",
@@ -218,7 +219,9 @@
         "attachments": "Mell\u00e9kletek",
         "active": "Akt\u00edv",
         "include_net_worth": "Befoglalva a nett\u00f3 \u00e9rt\u00e9kbe",
+        "cc_type": "Hitelk\u00e1rtya fizet\u00e9si terv",
         "account_number": "Sz\u00e1mlasz\u00e1m",
+        "cc_monthly_payment_date": "Hitelk\u00e1rtya havi fizet\u00e9s d\u00e1tuma",
         "virtual_balance": "Virtu\u00e1lis egyenleg",
         "opening_balance": "Nyit\u00f3 egyenleg",
         "opening_balance_date": "Nyit\u00f3 egyenleg d\u00e1tuma",

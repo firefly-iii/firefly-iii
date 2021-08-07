@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "elk half jaar",
         "repeat_freq_quarterly": "elk kwartaal",
         "repeat_freq_monthly": "maandelijks",
-        "repeat_freq_weekly": "wekelijks"
+        "repeat_freq_weekly": "wekelijks",
+        "credit_card_type_monthlyFull": "Volledige betaling elke maand"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
@@ -218,7 +219,9 @@
         "attachments": "Bijlagen",
         "active": "Actief",
         "include_net_worth": "Meetellen in kapitaal",
+        "cc_type": "Betaalplan",
         "account_number": "Rekeningnummer",
+        "cc_monthly_payment_date": "Betaaldatum",
         "virtual_balance": "Virtueel saldo",
         "opening_balance": "Startsaldo",
         "opening_balance_date": "Startsaldodatum",

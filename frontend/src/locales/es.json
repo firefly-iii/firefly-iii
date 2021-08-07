@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "cada medio a\u00f1o",
         "repeat_freq_quarterly": "trimestralmente",
         "repeat_freq_monthly": "mensualmente",
-        "repeat_freq_weekly": "semanalmente"
+        "repeat_freq_weekly": "semanalmente",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Alcancilla",
@@ -218,7 +219,9 @@
         "attachments": "Adjuntos",
         "active": "Activo",
         "include_net_worth": "Incluir en valor neto",
+        "cc_type": "Plan de pagos con tarjeta de cr\u00e9dito",
         "account_number": "N\u00famero de cuenta",
+        "cc_monthly_payment_date": "Fecha de pago mensual de la tarjeta de cr\u00e9dito",
         "virtual_balance": "Saldo virtual",
         "opening_balance": "Saldo inicial",
         "opening_balance_date": "Fecha del saldo inicial",

@@ -200,7 +200,7 @@ return [
     'need_id_in_edit'           => 'Varje delad transaktion kräver transaction_journal_id (giltigt ID eller 0).',
 
     'ob_source_need_data' => 'Ett giltigt källkonto-ID och/eller ett giltigt källkontonamn behövs för att gå vidare.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'Behöver få ett giltigt källkontonummer för att fortsätta.',
     'ob_dest_need_data'   => 'Ett giltigt destinationskonto-ID och/eller giltigt mottagarkontonamn behövs för att gå vidare.',
     'ob_dest_bad_data'    => 'Det gick inte att hitta ett giltigt mottagarkonto med ID ":id" eller namn ":name".',
 

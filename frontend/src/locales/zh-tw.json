@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "\u6bcf\u534a\u5e74",
         "repeat_freq_quarterly": "\u6bcf\u5b63",
         "repeat_freq_monthly": "\u6bcf\u6708",
-        "repeat_freq_weekly": "\u6bcf\u9031"
+        "repeat_freq_weekly": "\u6bcf\u9031",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",
@@ -218,7 +219,9 @@
         "attachments": "\u9644\u52a0\u6a94\u6848",
         "active": "\u555f\u7528",
         "include_net_worth": "\u5305\u62ec\u6de8\u503c",
+        "cc_type": "\u4fe1\u7528\u5361\u4ed8\u6b3e\u8a08\u5283",
         "account_number": "\u5e33\u6236\u865f\u78bc",
+        "cc_monthly_payment_date": "\u4fe1\u7528\u5361\u6bcf\u6708\u4ed8\u6b3e\u65e5\u671f",
         "virtual_balance": "\u865b\u64ec\u9918\u984d",
         "opening_balance": "\u521d\u59cb\u9918\u984d",
         "opening_balance_date": "\u521d\u59cb\u9918\u984d\u65e5\u671f",

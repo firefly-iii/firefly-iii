@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "fiecare jum\u0103tate de an",
         "repeat_freq_quarterly": "trimestrial",
         "repeat_freq_monthly": "lunar",
-        "repeat_freq_weekly": "s\u0103pt\u0103m\u00e2nal"
+        "repeat_freq_weekly": "s\u0103pt\u0103m\u00e2nal",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Pu\u0219culi\u021b\u0103",
@@ -218,7 +219,9 @@
         "attachments": "Fi\u0219iere ata\u0219ate",
         "active": "Activ",
         "include_net_worth": "Include\u021bi \u00een valoare net\u0103",
+        "cc_type": "Plan de plat\u0103 cu card de credit",
         "account_number": "Num\u0103r de cont",
+        "cc_monthly_payment_date": "Data pl\u0103\u021bii lunare cu cartea de credit",
         "virtual_balance": "Soldul virtual",
         "opening_balance": "Soldul de deschidere",
         "opening_balance_date": "Data soldului de deschidere",

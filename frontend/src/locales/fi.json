@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "puoli-vuosittain",
         "repeat_freq_quarterly": "nelj\u00e4nnesvuosittain",
         "repeat_freq_monthly": "kuukausittain",
-        "repeat_freq_weekly": "viikoittain"
+        "repeat_freq_weekly": "viikoittain",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "S\u00e4\u00e4st\u00f6possu",
@@ -218,7 +219,9 @@
         "attachments": "Liitteet",
         "active": "Aktiivinen",
         "include_net_worth": "Sis\u00e4llyt\u00e4 varallisuuteen",
+        "cc_type": "Luottokortin maksusuunnitelma",
         "account_number": "Tilinumero",
+        "cc_monthly_payment_date": "Luottokortin laskun er\u00e4p\u00e4iv\u00e4",
         "virtual_balance": "Virtuaalinen saldo",
         "opening_balance": "Alkusaldo",
         "opening_balance_date": "Alkusaldon p\u00e4iv\u00e4m\u00e4\u00e4r\u00e4",

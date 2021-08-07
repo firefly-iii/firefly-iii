@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "halbj\u00e4hrlich",
         "repeat_freq_quarterly": "viertelj\u00e4hrlich",
         "repeat_freq_monthly": "monatlich",
-        "repeat_freq_weekly": "w\u00f6chentlich"
+        "repeat_freq_weekly": "w\u00f6chentlich",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Sparschwein",
@@ -213,12 +214,14 @@
         "repeat_freq": "Wiederholungen",
         "skip": "\u00dcberspringen",
         "startdate": "Startdatum",
-        "enddate": "End date",
+        "enddate": "Endet am",
         "object_group": "Gruppe",
         "attachments": "Anh\u00e4nge",
         "active": "Aktiv",
         "include_net_worth": "Im Eigenkapital enthalten",
+        "cc_type": "Kreditkartenzahlungsplan",
         "account_number": "Kontonummer",
+        "cc_monthly_payment_date": "Monatlicher Kreditkartenzahlungsplan",
         "virtual_balance": "Virtueller Kontostand",
         "opening_balance": "Er\u00f6ffnungsbilanz",
         "opening_balance_date": "Er\u00f6ffnungsbilanzdatum",
@@ -242,6 +245,6 @@
         "amount_max": "H\u00f6chstbetrag",
         "start_date": "Anfang des Bereichs",
         "end_date": "Ende des Bereichs",
-        "extension_date": "Extension date"
+        "extension_date": "Verl\u00e4ngerungsdatum"
     }
 }

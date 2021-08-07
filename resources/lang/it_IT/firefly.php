@@ -757,6 +757,7 @@ return [
     'invalid_password'                          => 'Password non valida!',
     'what_is_pw_security'                       => 'Che cos\'è "verifica la sicurezza della password"?',
     'secure_pw_title'                           => 'Come scegliere una password sicura',
+    'forgot_password_response'                  => 'Grazie. Se esiste un account con questo indirizzo email, troverai le istruzioni nella tua casella di posta.',
     'secure_pw_history'                         => 'Non passa una settimana senza leggere una notizia di un sito che perde le password dei suoi utenti. Gli hacker e i ladri usano queste password per cercare di rubare le tue informazioni personali. Queste informazioni sono preziose.',
     'secure_pw_ff'                              => 'Utilizzi la stessa password ovunque in Internet? Se un sito perde la tua password, gli hacker hanno accesso a tutti i tuoi dati. Firefly III si affida a te nello scegliere una password robusta e unica per proteggere le tue informazioni finanziarie.',
     'secure_pw_check_box'                       => 'Per aiutarti a fare ciò, Firefly III può controllare se la password che vuoi utilizzare è stata rubata in passato. In un caso del genere, Firefly III ti consiglia di NON utilizzare quella password.',
@@ -1045,8 +1046,8 @@ return [
     'bill_repeats_half-year_skip'               => 'Ripeti ogni {skip} mezzi anni',
     'bill_repeats_yearly_skip'                  => 'Ripeti ogni {skip} anni',
     'subscriptions'                             => 'Abbonamenti',
-    'forever'                                   => 'Forever',
-    'extension_date_is'                         => 'Extension date is {date}',
+    'forever'                                   => 'Per sempre',
+    'extension_date_is'                         => 'La data di estensione è {date}',
 
     // accounts:
     'inactive_account_link'                     => 'Hai :count conto inattivo (archiviato), che puoi visualizzare in questa pagina separata.|Hai :count conti inattivi (archiviati), che puoi visualizzare in questa pagina separata.',
@@ -1343,6 +1344,7 @@ return [
     'account_type_loan'                         => 'Prestito',
     'account_type_mortgage'                     => 'Mutuo',
     'account_type_Credit card'                  => 'Carta di credito',
+    'credit_card_type_monthlyFull'              => 'Full payment every month',
     'liability_direction_credit'                => 'Questo debito mi è dovuto',
     'liability_direction_debit'                 => 'Devo questo debito a qualcun altro',
     'liability_direction_credit_short'          => 'Mi devono questo debito',

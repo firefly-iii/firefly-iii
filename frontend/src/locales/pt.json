@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "todo meio ano",
         "repeat_freq_quarterly": "trimestral",
         "repeat_freq_monthly": "mensalmente",
-        "repeat_freq_weekly": "semanalmente"
+        "repeat_freq_weekly": "semanalmente",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Mealheiro",
@@ -218,7 +219,9 @@
         "attachments": "Anexos",
         "active": "Activo",
         "include_net_worth": "Incluir no patrimonio liquido",
+        "cc_type": "Plano de pagamento do cart\u00e3o de cr\u00e9dito",
         "account_number": "N\u00famero de conta",
+        "cc_monthly_payment_date": "Data de pagamento mensal do cart\u00e3o de cr\u00e9dito",
         "virtual_balance": "Saldo virtual",
         "opening_balance": "Saldo inicial",
         "opening_balance_date": "Data do saldo inicial",

@@ -238,6 +238,7 @@ return [
     'ccTypes'                      => [
         'monthlyFull' => 'Full payment every month',
     ],
+    'credit_card_types'                      => ['monthlyFull'],
     'range_to_repeat_freq'         => [
         '1D'     => 'weekly',
         '1W'     => 'weekly',

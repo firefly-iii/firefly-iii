@@ -41,6 +41,7 @@ class EitherConfigKey
         'firefly.bill_periods',
         'firefly.enable_external_map',
         'firefly.expected_source_types',
+        'firefly.credit_card_types',
         'app.timezone',
     ];
     /**

@@ -133,8 +133,8 @@ return [
     'interest_period'         => 'Úrokové období',
     'liability_type'          => 'Typ závazku',
     'liability_direction'     => 'Směr závazku',
-    'end_date'                => 'End date',
-    'payment_info'            => 'Payment information',
-    'expected_info'           => 'Next expected transaction',
-    'start_date'              => 'Start date',
+    'end_date'                => 'Datum ukončení',
+    'payment_info'            => 'Informace o platbě',
+    'expected_info'           => 'Další očekávaná transakce',
+    'start_date'              => 'Datum zahájení',
 ];

@@ -168,7 +168,8 @@
         "repeat_freq_half-year": "p\u016floro\u010dn\u011b",
         "repeat_freq_quarterly": "\u010dtvrtletn\u011b",
         "repeat_freq_monthly": "m\u011bs\u00ed\u010dn\u011b",
-        "repeat_freq_weekly": "t\u00fddn\u011b"
+        "repeat_freq_weekly": "t\u00fddn\u011b",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",
@@ -189,10 +190,10 @@
         "liability_direction": "Sm\u011br z\u00e1vazku",
         "currentBalance": "Aktu\u00e1ln\u00ed z\u016fstatek",
         "next_expected_match": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 shoda",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "Dal\u0161\u00ed o\u010dek\u00e1van\u00e1 transakce",
+        "start_date": "Datum zah\u00e1jen\u00ed",
+        "end_date": "Datum ukon\u010den\u00ed",
+        "payment_info": "Informace o platb\u011b"
     },
     "config": {
         "html_language": "cs",
@@ -213,12 +214,14 @@
         "repeat_freq": "Opakuje se",
         "skip": "P\u0159esko\u010dit",
         "startdate": "Datum zah\u00e1jen\u00ed",
-        "enddate": "End date",
+        "enddate": "Datum ukon\u010den\u00ed",
         "object_group": "Skupina",
         "attachments": "P\u0159\u00edlohy",
         "active": "Aktivn\u00ed",
         "include_net_worth": "Zahrnout do \u010dist\u00e9ho jm\u011bn\u00ed",
+        "cc_type": "Z\u00fa\u010dtovac\u00ed obdob\u00ed kreditn\u00ed karty",
         "account_number": "\u010c\u00edslo \u00fa\u010dtu",
+        "cc_monthly_payment_date": "Datum m\u011bs\u00ed\u010dn\u00ed \u00fahrady kreditn\u00ed karty",
         "virtual_balance": "Virtu\u00e1ln\u00ed z\u016fstatek",
         "opening_balance": "Po\u010d\u00e1te\u010dn\u00ed z\u016fstatek",
         "opening_balance_date": "Datum po\u010d\u00e1te\u010dn\u00edho z\u016fstatku",
@@ -242,6 +245,6 @@
         "amount_max": "Maxim\u00e1ln\u00ed \u010d\u00e1stka",
         "start_date": "Za\u010d\u00e1tek rozsahu",
         "end_date": "Konec rozsahu",
-        "extension_date": "Extension date"
+        "extension_date": "Datum roz\u0161\u00ed\u0159en\u00ed"
     }
 }

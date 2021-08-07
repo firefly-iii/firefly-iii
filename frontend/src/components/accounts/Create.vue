@@ -37,6 +37,14 @@
               <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
               <AssetAccountRole :disabled="submitting" v-if="'asset' === type" v-model="account_role" :errors="errors.account_role"
                                 v-on:set-field="storeField($event)"/>
+
+              <!-- some CC fields -->
+              <CreditCardType :disabled="submitting" v-if="'ccAsset' === account_role" v-model="credit_card_type" :errors="errors.credit_card_type"
+                             v-on:set-field="storeField($event)" />
+              <GenericTextInput :disabled="submitting" v-if="'ccAsset' === account_role" field-type="date" v-model="monthly_payment_date" field-name="monthly_payment_date"
+                                :errors="errors.monthly_payment_date" :title="$t('form.cc_monthly_payment_date')" v-on:set-field="storeField($event)" />
+
+              <!-- liability fields -->
               <LiabilityType :disabled="submitting" v-if="'liabilities' === type" v-model="liability_type" :errors="errors.liability_type"
                              v-on:set-field="storeField($event)"/>
               <LiabilityDirection :disabled="submitting" v-if="'liabilities' === type" v-model="liability_direction" :errors="errors.liability_direction"
@@ -44,6 +52,7 @@
 
               <GenericTextInput :disabled="submitting" v-if="'liabilities' === type" field-type="number" field-step="any" v-model="liability_amount"
                                 field-name="liability_amount" :errors="errors.liability_amount" :title="$t('form.amount')" v-on:set-field="storeField($event)"/>
+
               <GenericTextInput :disabled="submitting" v-if="'liabilities' === type" field-type="date" v-model="liability_date" field-name="liability_date"
                                 :errors="errors.liability_date" :title="$t('form.date')" v-on:set-field="storeField($event)"/>
 
@@ -136,10 +145,13 @@
 </template>
 
 <script>
+import format from "date-fns/format";
+
 const lodashClonedeep = require('lodash.clonedeep');
 import GenericCurrency from "../form/GenericCurrency";
 import AssetAccountRole from "./AssetAccountRole"
 import LiabilityType from "./LiabilityType";
+import CreditCardType from "./CreditCardType";
 import LiabilityDirection from "./LiabilityDirection";
 import Interest from "./Interest";
 import InterestPeriod from "./InterestPeriod";
@@ -154,7 +166,8 @@ export default {
   name: "Create",
   components: {
     GenericCurrency, AssetAccountRole, LiabilityType, LiabilityDirection, Interest, InterestPeriod,
-    GenericTextInput, GenericTextarea, GenericLocation, GenericAttachments, GenericCheckbox, Alert
+    GenericTextInput, GenericTextarea, GenericLocation, GenericAttachments, GenericCheckbox, Alert,
+    CreditCardType
 
   },
   created() {
@@ -162,6 +175,9 @@ export default {
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
+
+    this.date = format(new Date, 'yyyy-MM-dd');
+    this.monthly_payment_date = format(new Date, 'yyyy-MM-dd');
   },
   data() {
     return {
@@ -199,6 +215,10 @@ export default {
       notes: null,
       location: {},
 
+      // credit card fields
+      monthly_payment_date: null,
+      credit_card_type: 'monthlyFull',
+
       // has attachments to upload?
       hasAttachments: false,
       uploadTrigger: false,
@@ -209,14 +229,17 @@ export default {
       account_role: 'defaultAsset',
       errors: {
         currency_id: [],
+        credit_card_type: [],
       },
       defaultErrors: {
         name: [],
+        monthly_payment_date: [],
         currency_id: [],
         account_role: [],
         liability_type: [],
         liability_direction: [],
         liability_amount: [],
+        credit_card_type: [],
         liability_date: [],
         interest: [],
         interest_period: [],
@@ -355,8 +378,8 @@ export default {
       }
 
       if ('asset' === this.type && 'ccAsset' === this.account_role) {
-        submission.credit_card_type = 'monthlyFull';
-        submission.monthly_payment_date = '2021-01-01';
+        submission.credit_card_type = this.credit_card_type;
+        submission.monthly_payment_date = this.monthly_payment_date;
       }
       if (Object.keys(this.location).length >= 3) {
         submission.longitude = this.location.lng;

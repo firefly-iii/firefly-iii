@@ -160,15 +160,16 @@
         "subscriptions": "Abbonamenti",
         "bill_expected_date_js": "Attesa per {date}",
         "inactive": "Disattivo",
-        "forever": "Forever",
-        "extension_date_is": "Extension date is {date}",
+        "forever": "Per sempre",
+        "extension_date_is": "La data di estensione \u00e8 {date}",
         "create_new_bill": "Crea una nuova bolletta",
         "store_new_bill": "Salva la nuova bolletta",
         "repeat_freq_yearly": "annualmente",
         "repeat_freq_half-year": "semestralmente",
         "repeat_freq_quarterly": "trimestralmente",
         "repeat_freq_monthly": "mensilmente",
-        "repeat_freq_weekly": "settimanalmente"
+        "repeat_freq_weekly": "settimanalmente",
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Salvadanaio",
@@ -189,10 +190,10 @@
         "liability_direction": "Passivit\u00e0 in entrata\/uscita",
         "currentBalance": "Saldo corrente",
         "next_expected_match": "Prossimo abbinamento previsto",
-        "expected_info": "Next expected transaction",
-        "start_date": "Start date",
-        "end_date": "End date",
-        "payment_info": "Payment information"
+        "expected_info": "Prossima transazione attesa",
+        "start_date": "Data inizio",
+        "end_date": "Data fine",
+        "payment_info": "Informazioni di pagamento"
     },
     "config": {
         "html_language": "it",
@@ -213,12 +214,14 @@
         "repeat_freq": "Si ripete",
         "skip": "Salta ogni",
         "startdate": "Data inizio",
-        "enddate": "End date",
+        "enddate": "Data di scadenza",
         "object_group": "Gruppo",
         "attachments": "Allegati",
         "active": "Attivo",
         "include_net_worth": "Includi nel patrimonio",
+        "cc_type": "Piano di pagamento della carta di credito",
         "account_number": "Numero conto",
+        "cc_monthly_payment_date": "Data di addebito mensile della carta di credito",
         "virtual_balance": "Saldo virtuale",
         "opening_balance": "Saldo di apertura",
         "opening_balance_date": "Data saldo di apertura",
@@ -242,6 +245,6 @@
         "amount_max": "Importo massimo",
         "start_date": "Inizio intervallo",
         "end_date": "Fine intervallo",
-        "extension_date": "Extension date"
+        "extension_date": "Data di estensione"
     }
 }

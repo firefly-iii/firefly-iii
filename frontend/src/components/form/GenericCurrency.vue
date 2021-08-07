@@ -36,7 +36,7 @@
           :disabled=disabled
           name="currency_id"
       >
-        <option v-for="currency in this.currencyList" :label="currency.name" :value="currency.id">{{ currency.name }}</option>
+        <option v-for="currency in this.currencyList" :label="currency.name" :value="currency.id" :selected="value === currency.id">{{ currency.name }}</option>
       </select>
     </div>
     <span v-if="errors.length > 0">
@@ -49,7 +49,7 @@
 export default {
   name: "GenericCurrency",
   props: {
-    value: {},
+    value: 0,
     errors: [],
     disabled: {
       type: Boolean,
@@ -76,9 +76,10 @@ export default {
                   for (let i in currencies) {
                     if (currencies.hasOwnProperty(i)) {
                       let current = currencies[i];
-                      if (true === current.attributes.default && (null === this.currency_id || typeof this.currency_id === 'undefined')) {
+                      if (true === current.attributes.default && null === this.value) {
                         this.currency_id = parseInt(current.id);
                       }
+
                       if (false === current.attributes.enabled) {
                         continue;
                       }
@@ -103,9 +104,16 @@ export default {
     currency_id: function (value) {
       this.$emit('set-field', {field: 'currency_id', value: value});
     },
+    value: function(value) {
+      this.currency_id = value;
+    }
   },
   created() {
-    this.loadCurrencies()
+    this.loadCurrencies();
+    if (typeof this.value === 'number' && 0 !== this.value) {
+      this.currency_id = tthis.value;
+    }
+
   }
 }
 </script>

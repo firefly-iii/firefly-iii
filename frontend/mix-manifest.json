@@ -4,6 +4,7 @@
     "/public/js/accounts/delete.js": "/public/js/accounts/delete.js",
     "/public/js/accounts/show.js": "/public/js/accounts/show.js",
     "/public/js/accounts/create.js": "/public/js/accounts/create.js",
+    "/public/js/accounts/edit.js": "/public/js/accounts/edit.js",
     "/public/js/bills/index.js": "/public/js/bills/index.js",
     "/public/js/bills/create.js": "/public/js/bills/create.js",
     "/public/js/budgets/index.js": "/public/js/budgets/index.js",

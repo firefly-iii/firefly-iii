@@ -22,40 +22,40 @@
   <div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill') }}</a>
+        <a href="./subscriptions/create" class="btn btn-sm mb-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill')
+          }}</a>
         <button @click="newCacheKey" class="btn btn-sm mb-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
     <div class="row" v-for="group in sortedGroups">
       <div v-if="group[1].bills.length > 0" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">
-                {{ group[1].title }}
-              </h3>
-            </div>
-            <div class="card-body p-0">
-              <b-table id="my-table" striped hover responsive="md" primary-key="id" :no-local-sorting="false"
-                       :items="group[1].bills"
-                       sort-icon-left
-                       :fields="fields"
-                       :busy.sync="loading"
-              >
-                <template #cell(name)="data">
-                  <a :href="'./bills/show/' + data.item.id">{{ data.item.name }}</a>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              {{ group[1].title }}
+            </h3>
+          </div>
+          <div class="card-body p-0">
+            <b-table id="my-table" striped hover responsive="md" primary-key="id" :no-local-sorting="false"
+                     :items="group[1].bills"
+                     sort-icon-left
+                     :fields="fields"
+                     :busy.sync="loading"
+            >
+              <template #cell(name)="data">
+                <a :href="'./bills/show/' + data.item.id">{{ data.item.name }}</a>
 
-                  <br/>
-                  <small v-if="true === data.item.active && 0 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq) }}</small>
-                  <small v-if="true === data.item.active && 1 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq + '_other') }}</small>
-                  <small v-if="true === data.item.active && data.item.skip > 1">{{
-                      $t('firefly.bill_repeats_' + data.item.repeat_freq + '_skip', {skip: data.item.skip + 1})
-                    }}</small>
-                  <small v-if="false === data.item.active">{{ $t('firefly.inactive') }}</small>
-                  <!-- (rules, recurring) -->
-                </template>
-                <template #cell(expected_info)="data">
-                  <span v-if="true === data.item.active">
-                    <span v-if="data.item.paid_dates.length > 0 && data.item.pay_dates.length > 0">
+                <br/>
+                <small v-if="true === data.item.active && 0 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq) }}</small>
+                <small v-if="true === data.item.active && 1 === data.item.skip">{{ $t('firefly.bill_repeats_' + data.item.repeat_freq + '_other') }}</small>
+                <small v-if="true === data.item.active && data.item.skip > 1">{{
+                  $t('firefly.bill_repeats_' + data.item.repeat_freq + '_skip', {skip: data.item.skip + 1})
+                  }}</small>
+                <small v-if="false === data.item.active">{{ $t('firefly.inactive') }}</small>
+                <!-- (rules, recurring) -->
+              </template>
+              <template #cell(expected_info)="data">
+                    <span v-if="true === data.item.active && data.item.paid_dates.length > 0 && data.item.pay_dates.length > 0">
                       {{
                         new Intl.DateTimeFormat(locale, {
                           month: 'long',
@@ -63,44 +63,43 @@
                           day: 'numeric'
                         }).format(new Date(data.item.next_expected_match.substring(0, 10)))
                       }}
-                    </span>
-                    <br>
+                      <br>
                   </span>
-                  <!--
-                  not paid, not expected and active
-                  -->
-                  <span v-if="0 === data.item.paid_dates.length && 0 === data.item.pay_dates.length && true === data.item.active">
+                <!--
+                not paid, not expected and active
+                -->
+                <span v-if="0 === data.item.paid_dates.length && 0 === data.item.pay_dates.length && true === data.item.active">
                     {{ $t('firefly.not_expected_period') }}
                   </span>
-                  <!--
-                  not paid but expected
-                  -->
+                <!--
+                not paid but expected
+                -->
 
-                  <span :title="new Intl.DateTimeFormat(locale, {
+                <span :title="new Intl.DateTimeFormat(locale, {
                       month: 'long',
                       year: 'numeric',
                       day: 'numeric'
                     }).format(new Date(data.item.pay_dates[0].substring(0,10)))"
-                        class="text-danger" v-if="0 === data.item.paid_dates.length && data.item.pay_dates.length > 0 && true === data.item.active">
+                      class="text-danger" v-if="0 === data.item.paid_dates.length && data.item.pay_dates.length > 0 && true === data.item.active">
                     {{ $t('firefly.bill_expected_date_js', {date: data.item.next_expected_match_diff}) }}
                   </span>
 
-                  <!--
-                  bill is not active
-                  -->
-                  <span v-if="false === data.item.active">
+                <!--
+                bill is not active
+                -->
+                <span v-if="false === data.item.active">
                     ~
                   </span>
-                </template>
-                <template #cell(start_date)="data">
-                  {{ formatDate(new Date(data.item.date.substring(0, 10)), $t('config.month_and_day_fns')) }}
-                </template>
-                <template #cell(end_date)="data">
+              </template>
+              <template #cell(start_date)="data">
+                {{ formatDate(new Date(data.item.date.substring(0, 10)), $t('config.month_and_day_fns')) }}
+              </template>
+              <template #cell(end_date)="data">
                   <span v-if="null !== data.item.end_date">{{
                       formatDate(new Date(data.item.end_date.substring(0, 10)), $t('config.month_and_day_fns'))
                     }}</span>
-                  <span v-if="null === data.item.end_date">{{ $t('firefly.forever') }}</span>
-                  <span v-if="null !== data.item.extension_date"><br/>
+                <span v-if="null === data.item.end_date">{{ $t('firefly.forever') }}</span>
+                <span v-if="null !== data.item.extension_date"><br/>
                     <small>
                     {{
                         $t('firefly.extension_date_is', {date: formatDate(new Date(data.item.extension_date.substring(0, 10)), $t('config.month_and_day_fns'))})
@@ -108,19 +107,19 @@
                       </small>
                   </span>
 
-                </template>
-                <template #cell(amount)="data">
-                  ~ <span class="text-info">{{
+              </template>
+              <template #cell(amount)="data">
+                ~ <span class="text-info">{{
                     Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format((data.item.amount_min + data.item.amount_max) / 2)
                   }}
                   </span>
-                </template>
-                <template #cell(payment_info)="data">
-                  <!--
-                  paid_dates >= 0 (bill is paid X times).
-                  Don't care about pay_dates.
-                  -->
-                  <span v-if="data.item.paid_dates.length > 0 &&  true === data.item.active">
+              </template>
+              <template #cell(payment_info)="data">
+                <!--
+                paid_dates >= 0 (bill is paid X times).
+                Don't care about pay_dates.
+                -->
+                <span v-if="data.item.paid_dates.length > 0 &&  true === data.item.active">
                     <span v-for="currentPaid in data.item.paid_dates">
                       <a :href="'./transactions/show/' + currentPaid.transaction_group_id">
                         {{
@@ -135,39 +134,40 @@
                     </span>
                   </span>
 
-                  <!--
-                  bill is not active
-                  -->
-                  <span v-if="false === data.item.active">
+                <!--
+                bill is not active
+                -->
+                <span v-if="false === data.item.active">
                     ~
                   </span>
-                </template>
-                <template #cell(menu)="data">
-                  <div class="btn-group btn-group-sm">
-                    <div class="dropdown">
-                      <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + data.item.id" data-toggle="dropdown"
-                              aria-haspopup="true" aria-expanded="false">
-                        {{ $t('firefly.actions') }}
-                      </button>
-                      <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
-                        <a class="dropdown-item" :href="'./subscriptions/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{
-                            $t('firefly.edit')
-                          }}</a>
-                        <a class="dropdown-item" :href="'./subscriptions/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{
-                            $t('firefly.delete')
-                          }}</a>
-                      </div>
+              </template>
+              <template #cell(menu)="data">
+                <div class="btn-group btn-group-sm">
+                  <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + data.item.id" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                      {{ $t('firefly.actions') }}
+                    </button>
+                    <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
+                      <a class="dropdown-item" :href="'./subscriptions/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{
+                        $t('firefly.edit')
+                        }}</a>
+                      <a class="dropdown-item" :href="'./subscriptions/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{
+                        $t('firefly.delete')
+                        }}</a>
                     </div>
                   </div>
-                </template>
-              </b-table>
-            </div>
+                </div>
+              </template>
+            </b-table>
           </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <a href="./subscriptions/create" class="btn btn-sm mt-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill') }}</a>
+        <a href="./subscriptions/create" class="btn btn-sm mt-2 float-right btn-success"><span class="fas fa-plus"></span> {{ $t('firefly.create_new_bill')
+          }}</a>
         <button @click="newCacheKey" class="btn btn-sm mt-2 mr-2 float-right btn-info"><span class="fas fa-sync"></span></button>
       </div>
     </div>
