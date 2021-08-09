@@ -76,9 +76,11 @@
               <GenericTextInput :disabled="submitting" v-model="account.account_number" field-name="account_number" :errors="errors.account_number"
                                 :title="$t('form.account_number')" v-on:set-field="storeField($event)"/>
 
-              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.virtual_balance" field-name="virtual_balance"
+              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.virtual_balance"
+                                field-name="virtual_balance"
                                 :errors="errors.virtual_balance" :title="$t('form.virtual_balance')" v-on:set-field="storeField($event)"/>
-              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.opening_balance" field-name="opening_balance"
+              <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="amount" v-model="account.opening_balance"
+                                field-name="opening_balance"
                                 :errors="errors.opening_balance" :title="$t('form.opening_balance')" v-on:set-field="storeField($event)"/>
               <GenericTextInput :disabled="submitting" v-if="'asset' === account.type" field-type="date" v-model="account.opening_balance_date"
                                 field-name="opening_balance_date" :errors="errors.opening_balance_date" :title="$t('form.opening_balance_date')"
@@ -115,7 +117,10 @@
           <div class="card-body">
             <div class="row">
               <div class="col-lg-6 offset-lg-6">
-                Button
+                <button :disabled=submitting type="button" @click="submitForm" class="btn btn-success btn-block">{{
+                    $t('firefly.update_' + account.type + '_account')
+                  }}
+                </button>
                 <div class="form-check">
                   <input id="stayHere" v-model="stayHere" class="form-check-input" type="checkbox">
                   <label class="form-check-label" for="stayHere">
@@ -146,7 +151,6 @@ import GenericTextarea from "../form/GenericTextarea";
 import GenericCheckbox from "../form/GenericCheckbox";
 import GenericAttachments from "../form/GenericAttachments";
 import GenericLocation from "../form/GenericLocation";
-import format from "date-fns/format";
 
 export default {
   name: "Edit",
@@ -154,17 +158,29 @@ export default {
     // console.log('Created');
     let parts = window.location.pathname.split('/');
     this.accountId = parseInt(parts[parts.length - 1]);
-    this.uploadObjectId= parseInt(parts[parts.length - 1]);
+    this.uploadObjectId = parseInt(parts[parts.length - 1]);
     this.getAccount();
   },
   components: {
-    Alert, GenericTextInput, GenericCurrency, AssetAccountRole, LiabilityDirection, LiabilityType, Interest, InterestPeriod, GenericTextarea, GenericCheckbox, GenericAttachments, GenericLocation
+    Alert,
+    GenericTextInput,
+    GenericCurrency,
+    AssetAccountRole,
+    LiabilityDirection,
+    LiabilityType,
+    Interest,
+    InterestPeriod,
+    GenericTextarea,
+    GenericCheckbox,
+    GenericAttachments,
+    GenericLocation
   },
   data() {
     return {
       successMessage: '',
       errorMessage: '',
       stayHere: false,
+      inError: false,
       accountId: 0,
       submitting: false,
 
@@ -185,7 +201,28 @@ export default {
         liability_type: [],
         location: []
       },
-      defaultErrors: {}
+      defaultErrors: {
+        name: [],
+        currency_id: [],
+        account_role: [],
+        liability_type: [],
+        liability_direction: [],
+        liability_amount: [],
+        liability_date: [],
+        interest: [],
+        interest_period: [],
+        iban: [],
+        bic: [],
+        account_number: [],
+        virtual_balance: [],
+        opening_balance: [],
+        opening_balance_date: [],
+        include_net_worth: [],
+        active: [],
+        notes: [],
+        location: [],
+        attachments: [],
+      }
     }
   },
   methods: {
@@ -196,15 +233,82 @@ export default {
       this.hasAttachments = false;
     },
     uploadedAttachments: function (e) {
-      this.finishSubmission();
+      this.finaliseSubmission();
     },
-    submitForm: function () {
+    submitForm: function (e) {
       e.preventDefault();
       this.submitting = true;
-      //let submission = this.getSubmission();
+      let submission = this.getSubmission();
+      if (0 === Object.keys(submission).length) {
+        // console.log('Nothing to submit. Just finish up.');
+        this.finaliseSubmission();
+        return;
+      }
+      // console.log('Will submit:');
+      // console.log(submission);
+      const url = './api/v1/accounts/' + this.accountId;
+      axios.put(url, submission)
+          .then(this.processSubmission)
+          .catch(err => {
+            this.handleSubmissionError(err.response.data)
+          });
     },
-    finishSubmission: function() {
-
+    processSubmission: function() {
+      if (this.hasAttachments) {
+        // upload attachments. Do a callback to a finish up method.
+        this.uploadTrigger = true;
+        return;
+      }
+      this.finaliseSubmission();
+    },
+    finaliseSubmission: function () {
+      // console.log('finaliseSubmission');
+      // stay here, display message
+      if (true === this.stayHere && false === this.inError) {
+        this.errorMessage = '';
+        this.successMessage = this.$t('firefly.updated_account_js', {ID: this.accountId, title: this.account.name});
+        this.submitting = false;
+      }
+      // return to previous (bad hack), display message:
+      if (false === this.stayHere && false === this.inError) {
+        //console.log('no error + changes + redirect');
+        window.location.href = (window.previousURL ?? '/') + '?account_id=' + this.accountId + '&message=updated';
+        this.submitting = false;
+      }
+      // error or warning? here.
+      // console.log('end of finaliseSubmission');
+    },
+    handleSubmissionError: function (errors) {
+      console.log('Bad');
+      console.log(errors);
+      this.inError = true;
+      this.submitting = false;
+      this.errors = lodashClonedeep(this.defaultErrors);
+      for (let i in errors.errors) {
+        if (errors.errors.hasOwnProperty(i)) {
+          this.errors[i] = errors.errors[i];
+        }
+      }
+    },
+    getSubmission: function () {
+      let submission = {};
+      // console.log('getSubmission');
+      // console.log(this.account);
+      for (let i in this.account) {
+        // console.log(i);
+        if (this.account.hasOwnProperty(i) && this.originalAccount.hasOwnProperty(i) && JSON.stringify(this.account[i]) !== JSON.stringify(this.originalAccount[i])) {
+          // console.log('Field "' + i + '" has changed.');
+          // console.log('Original:')
+          // console.log(this.account[i]);
+          // console.log('Backup  : ');
+          // console.log(this.originalAccount[i]);
+          submission[i] = this.account[i];
+        }
+        // else {
+        //   console.log('Field "' + i + '" has not changed.');
+        // }
+      }
+      return submission;
     },
     /**
      * Grab account from URL and submit GET.
@@ -224,10 +328,10 @@ export default {
       console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
-          this.location = payload.value;
+          this.account.location = payload.value;
           return;
         }
-        this.location = {};
+        this.account.location = {};
         return;
       }
       this.account[payload.field] = payload.value;
@@ -237,8 +341,8 @@ export default {
      * @param response
      */
     parseAccount: function (response) {
-      console.log('Will now parse');
-      console.log(response);
+      // console.log('Will now parse');
+      // console.log(response);
       let attributes = response.data.attributes;
       let account = {};
 
@@ -265,11 +369,15 @@ export default {
       account.opening_balance_date = attributes.opening_balance_date;
       account.type = attributes.type;
       account.virtual_balance = attributes.virtual_balance;
-      account.location = {
-        latitude: attributes.latitude,
-        longitude: attributes.longitude,
-        zoom_level: attributes.zoom_level
-      };
+      account.location = {};
+      if (null !== attributes.latitude && null !== attributes.longitude && null !== attributes.zoom_level) {
+        account.location = {
+          latitude: attributes.latitude,
+          longitude: attributes.longitude,
+          zoom_level: attributes.zoom_level
+        };
+      }
+
 
       this.account = account;
       this.originalAccount = lodashClonedeep(this.account);

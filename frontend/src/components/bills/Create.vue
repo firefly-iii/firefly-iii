@@ -189,7 +189,7 @@ export default {
   },
   methods: {
     storeField: function (payload) {
-      console.log(payload);
+      // console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.location = payload.value;
@@ -210,8 +210,8 @@ export default {
       e.preventDefault();
       this.submitting = true;
       let submission = this.getSubmission();
-      console.log('Will submit:');
-      console.log(submission);
+      // console.log('Will submit:');
+      // console.log(submission);
       let url = './api/v1/bills';
 
       axios.post(url, submission)

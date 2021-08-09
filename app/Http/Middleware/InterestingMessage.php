@@ -112,6 +112,9 @@ class InterestingMessage
         if ('created' === $message) {
             session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         }
+        if ('updated' === $message) {
+            session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
+        }
     }
 
     /**

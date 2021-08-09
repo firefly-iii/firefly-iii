@@ -29,12 +29,13 @@
           :class="errors.length > 0 ? 'form-control is-invalid' : 'form-control'"
           :placeholder="title"
           :name="fieldName"
+          ref="textInput"
           :type="fieldType"
           :disabled=disabled
           :step="fieldStep"
       />
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary" tabindex="-1" type="button"><span class="far fa-trash-alt"></span></button>
+        <button class="btn btn-outline-secondary" v-on:click="clearText" tabindex="-1" type="button"><span class="far fa-trash-alt"></span></button>
       </div>
     </div>
     <span v-if="errors.length > 0">
@@ -82,6 +83,11 @@ export default {
     return {
       localValue: this.value
     }
+  },
+  methods: {
+    clearText: function () {
+      this.localValue = '';
+    },
   },
   watch: {
     localValue: function (value) {

@@ -169,7 +169,13 @@
         "repeat_freq_quarterly": "kvartal",
         "repeat_freq_monthly": "m\u00e5nadsvis",
         "repeat_freq_weekly": "veckovis",
-        "credit_card_type_monthlyFull": "Full payment every month"
+        "credit_card_type_monthlyFull": "Full betalning varje m\u00e5nad",
+        "update_liabilities_account": "Uppdatera skuld",
+        "update_expense_account": "Uppdatera utgiftskonto",
+        "update_revenue_account": "Uppdatera int\u00e4ktskonto",
+        "update_undefined_account": "Update account",
+        "update_asset_account": "Uppdatera tillg\u00e5ngskonto",
+        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
     "list": {
         "piggy_bank": "Spargris",

@@ -257,7 +257,7 @@ export default {
   },
   methods: {
     storeField: function (payload) {
-      console.log(payload);
+      // console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.location = payload.value;

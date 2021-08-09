@@ -97,22 +97,22 @@ export default {
         // });
 
         // new code
-        console.log('start of new');
+        // console.log('start of new');
         let files = this.$refs.att.files;
         this.uploads = files.length;
         // loop all files and create attachments.
         for (let i in files) {
           if (files.hasOwnProperty(i) && /^0$|^[1-9]\d*$/.test(i) && i <= 4294967294) {
-            console.log('Now at file ' + (parseInt(i) + 1) + ' / ' + files.length);
+            // console.log('Now at file ' + (parseInt(i) + 1) + ' / ' + files.length);
             // read file into file reader:
             let current = files[i];
             let fileReader = new FileReader();
             let theParent = this; // dont ask me why i need to do this.
             fileReader.onloadend = evt => {
               if (evt.target.readyState === FileReader.DONE) {
-                console.log('I am done reading file ' + (parseInt(i) + 1));
+                // console.log('I am done reading file ' + (parseInt(i) + 1));
                 this.createAttachment(current.name).then(response => {
-                  console.log('Created attachment. Now upload (1)');
+                  // console.log('Created attachment. Now upload (1)');
                   return theParent.uploadAttachment(response.data.data.id, new Blob([evt.target.result]));
                 }).then(theParent.countAttachment);
               }
@@ -121,7 +121,7 @@ export default {
           }
         }
         if (0 === files.length) {
-          console.log('No files to upload. Emit event!');
+          // console.log('No files to upload. Emit event!');
           this.$emit('uploaded-attachments', this.transaction_journal_id);
         }
         // Promise.all(promises).then(response => {
