@@ -2,7 +2,7 @@
 [![License][license-shield]][license-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-url]
-[![huntr][hack-url]][hack-link]
+[![huntr][hack-shield]][hack-url]
 
 <!-- PROJECT LOGO -->
 <br />
