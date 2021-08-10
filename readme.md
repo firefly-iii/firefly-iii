@@ -1,14 +1,14 @@
 [![Packagist][packagist-shield]][packagist-url]
 [![License][license-shield]][license-url]
 [![Stargazers][stars-shield]][stars-url]
-[![Donate][donate-shield]][donate-uri]
-[![huntr](hack-shield)](hack-link)
+[![Donate][donate-shield]][donate-url]
+[![huntr][hack-url]][hack-link]
 
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://firefly-iii.org/">
-    <img src="https://fireflyiiiwebsite.z6.web.core.windows.net/assets/logo/small.png" alt="Firefly III" width="120" height="178">
+    <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png" alt="Firefly III" width="120" height="178">
   </a>
 </p>
   <h1 align="center">Firefly III</h1>
@@ -47,7 +47,7 @@
 ## About Firefly III
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.github/assets/img/imac-complete.png" alt="Firefly III on iMac" />
+	<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/imac-complete.png" alt="Firefly III on iMac" />
 </p>
 
 "Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. Using a bunch of external tools, you can import data. It also has many neat financial reports available.
@@ -59,7 +59,7 @@ But you get the idea: this is your money. These are your expenses. Stop them fro
 ### Purpose
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.github/assets/img/ipad-complete.png" alt="Firefly III on iPad" width="600">
+  <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/ipad-complete.png" alt="Firefly III on iPad" width="600">
 </p>
 
 Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards, others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
@@ -101,7 +101,7 @@ And to organise everything:
 Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/introduction).
 
 ### Who's it for?
-<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
+<img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
 
  This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
  
@@ -166,7 +166,7 @@ The Firefly III logo is made by the excellent Cherie Woo.
 [stars-shield]: https://img.shields.io/github/stars/firefly-iii/firefly-iii.svg?style=flat-square
 [stars-url]: https://github.com/firefly-iii/firefly-iii/stargazers
 [donate-shield]: https://img.shields.io/badge/donate-%24%20%E2%82%AC-brightgreen?style=flat-square
-[donate-uri]: #support-the-development-of-firefly-iii
+[donate-url]: #support-the-development-of-firefly-iii
 [build-shield]: https://api.travis-ci.com/firefly-iii/firefly-iii.svg?branch=master
 [build-url]: https://travis-ci.com/github/firefly-iii/firefly-iii
 [sc-gate-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=alert_status
@@ -175,4 +175,4 @@ The Firefly III logo is made by the excellent Cherie Woo.
 [sc-vuln-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities
 [sc-project-url]: https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii
 [hack-shield]: https://cdn.huntr.dev/huntr_security_badge_mono.svg
-[hack-link]: https://huntr.dev/bounties/disclose
+[hack-url]: https://huntr.dev/bounties/disclose
