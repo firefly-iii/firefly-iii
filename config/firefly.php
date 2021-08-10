@@ -101,7 +101,7 @@ return [
         'webhooks'     => true,
         'handle_debts' => true,
     ],
-    'version'                      => '5.6.0-alpha.1',
+    'version'                      => '5.6.0-alpha.2',
     'api_version'                  => '1.5.3',
     'db_version'                   => 17,
 
@@ -164,7 +164,7 @@ return [
         // 'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         // 'is_IS' => ['name_locale' => 'Icelandic', 'name_english' => 'Icelandic'],
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
-        'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
+        'ja_JP' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
         // 'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
         'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],

@@ -35,6 +35,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - You can disable webhooks with an extra field in API submissions.
 - There is a static cron token (see `.env.example`) which is useful for Docker.
 
+## 5.5.13 - 2021-07-25
+
+### Security
+
+- This version of Firefly III fixes [CVE-2021-3663](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3663)
+
 ## 5.5.12 - 2021-06-03
 
 ⚠️ On July 1st 2021 the Docker tag will change to `fireflyiii/core`. You can already start using the new tag.
