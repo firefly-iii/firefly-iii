@@ -133,7 +133,6 @@ return [
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
     'tracker_url'                  => env('TRACKER_URL', ''),
 
-
     // LDAP and authentication settings
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
@@ -143,6 +142,49 @@ return [
     // static config (cannot be changed by user)
     'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
     'update_minimum_age'           => 7,
+
+    // enabled languages
+    'languages'                    => [
+        // currently enabled languages
+        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
+        // 'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
+        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
+        // 'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
+        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
+        'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
+        'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
+        // 'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
+        // 'fa_IR' => ['name_locale' => 'فارسی', 'name_english' => 'Persian'],
+        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        // 'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
+        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
+        // 'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
+        // 'is_IS' => ['name_locale' => 'Icelandic', 'name_english' => 'Icelandic'],
+        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
+        'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
+        // 'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
+        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
+        'pt_PT' => ['name_locale' => 'Português', 'name_english' => 'Portuguese'],
+        'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
+        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
+        // 'si_LK' => ['name_locale' => 'සිංහල', 'name_english' => 'Sinhala (Sri Lanka)'],
+        'sk_SK' => ['name_locale' => 'Slovenčina', 'name_english' => 'Slovak'],
+        // 'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
+        // 'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
+        'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
+        // 'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
+        // 'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
+        // 'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
+        'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
+        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
+        'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
+    ],
 
     // web configuration:
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
@@ -155,8 +197,20 @@ return [
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
 
-    // internal Firefly III configuration:
-    // edit me = peligro de muerte
+    // default user-related values
+    'list_length'                  => 10, // to be removed if v1 is cancelled.
+    'default_preferences'          => [
+        'frontPageAccounts'  => [],
+        'listPageSize'       => 50,
+        'currencyPreference' => 'EUR',
+        'language'           => 'en_US',
+        'locale'             => 'equal',
+    ],
+    'default_currency' => 'EUR',
+    'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
+
+    // "value must be in this list" values
     'valid_attachment_models'      => [
         Account::class,
         Bill::class,
@@ -168,7 +222,6 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
-    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
@@ -230,15 +283,16 @@ return [
         'application/vnd.oasis.opendocument.database',
         'application/vnd.oasis.opendocument.image',
     ],
-    'list_length'                  => 10, // to be removed if v1 is cancelled.
-    'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
     'valid_liabilities'            => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE],
-    'ccTypes'                      => [
-        'monthlyFull' => 'Full payment every month',
-    ],
-    'credit_card_types'                      => ['monthlyFull'],
+    'ccTypes'                      => ['monthlyFull' => 'Full payment every month',],
+    'credit_card_types'            => ['monthlyFull'],
+
+    // "period must be in this list" values
+    'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+
+    // settings to translate X to Y
     'range_to_repeat_freq'         => [
         '1D'     => 'weekly',
         '1W'     => 'weekly',
@@ -312,50 +366,6 @@ return [
         AccountType::DEBT       => AccountType::DEBT,
         AccountType::MORTGAGE   => AccountType::MORTGAGE,
     ],
-    /**
-     * Languages configuration.
-     */
-    'languages'                    => [
-        // currently enabled languages
-        'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
-        // 'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'],
-        'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
-        // 'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
-        'el_GR' => ['name_locale' => 'Ελληνικά', 'name_english' => 'Greek'],
-        'en_GB' => ['name_locale' => 'English (GB)', 'name_english' => 'English (GB)'],
-        'en_US' => ['name_locale' => 'English (US)', 'name_english' => 'English (US)'],
-        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
-        // 'et_EE' => ['name_locale' => 'Estonian', 'name_english' => 'Estonian'],
-        // 'fa_IR' => ['name_locale' => 'فارسی', 'name_english' => 'Persian'],
-        'fi_FI' => ['name_locale' => 'Suomi', 'name_english' => 'Finnish'],
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
-        // 'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'],
-        'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'],
-        // 'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
-        // 'is_IS' => ['name_locale' => 'Icelandic', 'name_english' => 'Icelandic'],
-        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
-        // 'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'],
-        // 'lt_LT' => ['name_locale' => 'Lietuvių', 'name_english' => 'Lithuanian'],
-        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
-        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
-        'pt_PT' => ['name_locale' => 'Português', 'name_english' => 'Portuguese'],
-        'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
-        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
-        // 'si_LK' => ['name_locale' => 'සිංහල', 'name_english' => 'Sinhala (Sri Lanka)'],
-        'sk_SK' => ['name_locale' => 'Slovenčina', 'name_english' => 'Slovak'],
-        // 'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'],
-        // 'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'],
-        'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'],
-        // 'tlh_AA' => ['name_locale' => 'tlhIngan Hol', 'name_english' => 'Klingon'],
-        // 'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
-        // 'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'],
-        'vi_VN' => ['name_locale' => 'Tiếng Việt', 'name_english' => 'Vietnamese'],
-        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'],
-        'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'],
-    ],
     'transactionTypesByType'       => [
         'expenses'   => ['Withdrawal'],
         'withdrawal' => ['Withdrawal'],
@@ -378,8 +388,8 @@ return [
         'deposit'    => 'fa-long-arrow-right',
         'transfer'   => 'fa-exchange',
         'transfers'  => 'fa-exchange',
-
     ],
+
     'bindables'                    => [
         // models
         'account'          => Account::class,
@@ -479,9 +489,7 @@ return [
         'limit' => 10,
         'range' => 200,
     ],
-    'default_currency' => 'EUR',
-    'default_language' => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
-    'default_locale'   => envNonEmpty('DEFAULT_LOCALE', 'equal'),
+
 
     'search'                    => [
         'operators' => [
@@ -653,15 +661,15 @@ return [
     // expected source types for each transaction type, in order of preference.
     'expected_source_types'     => [
         'source'      => [
-            TransactionTypeModel::WITHDRAWAL      => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            TransactionTypeModel::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                      AccountType::MORTGAGE,],
-            TransactionTypeModel::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
+            TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::DEPOSIT          => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::TRANSFER         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            TransactionTypeModel::OPENING_BALANCE  => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
+                                                       AccountType::MORTGAGE,],
+            TransactionTypeModel::RECONCILIATION   => [AccountType::RECONCILIATION, AccountType::ASSET],
             TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             // in case no transaction type is known yet, it could be anything.
-            'none'                                => [
+            'none'                                 => [
                 AccountType::ASSET,
                 AccountType::EXPENSE,
                 AccountType::REVENUE,
@@ -890,11 +898,7 @@ return [
     'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
     'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
-    'default_preferences'       => [
-        'frontPageAccounts'  => [],
-        'listPageSize'       => 50,
-        'currencyPreference' => 'EUR',
-        'language'           => 'en_US',
-        'locale'             => 'equal',
-    ],
+
+    // only used in v1
+    'allowed_sort_parameters'   => ['order', 'name', 'iban'],
 ];
