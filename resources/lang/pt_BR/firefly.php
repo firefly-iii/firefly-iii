@@ -1074,7 +1074,7 @@ return [
     'expense_deleted'                           => 'Conta de despesa ":name" excluída com sucesso',
     'revenue_deleted'                           => 'Conta de receitas ":name" excluída com sucesso',
     'update_asset_account'                      => 'Atualizar de conta de ativo',
-    'update_undefined_account'                  => 'Update account',
+    'update_undefined_account'                  => 'Atualizar conta',
     'update_liabilities_account'                => 'Atualizar passivo',
     'update_expense_account'                    => 'Atualizar conta de despesas',
     'update_revenue_account'                    => 'Atualizar conta de receita',

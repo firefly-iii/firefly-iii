@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Ini bukan IBAN yang valid.',
     'zero_or_more'                   => 'Nilai tidak bisa negatif.',
     'date_or_time'                   => 'Nilainya harus berupa nilai tanggal atau waktu yang valid (ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Perlu untuk mendapatkan sebuah ID akun tujuan yang valid dan/atau nama akun tujuan yang valid untuk melanjutkan.',
     'withdrawal_dest_bad_data'    => 'Tidak dapat menemukan sebuah akun tujuan yang valid saat mencari ID ":id" atau nama ":name".',
 
-    'generic_source_bad_data'  => 'Tidak dapat menemukan sebuah akun sumber yang valid saat mencari ID ":id" atau nama ":name".',
+    'generic_source_bad_data' => 'Tidak dapat menemukan sebuah akun sumber yang valid saat mencari ID ":id" atau nama ":name".',
 
     'deposit_source_need_data' => 'Perlu untuk mendapatkan sebuah ID akun sumber yang valid dan/atau nama akun sumber yang valid untuk melanjutkan.',
     'deposit_source_bad_data'  => 'Tidak dapat menemukan sebuah akun sumber yang valid saat mencari ID ":id" atau nama ":name".',

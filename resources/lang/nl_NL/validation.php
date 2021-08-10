@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array mist "where"-clausule',
+    'missing_update'                 => 'Array mist "update"-clausule',
+    'invalid_where_key'              => 'JSON bevat een ongeldige key in de "where"-clausule',
+    'invalid_update_key'             => 'JSON bevat een ongeldige key in de "update"-clausule',
+    'invalid_query_data'             => 'Er zitten ongeldige gegevens in het %s:%s veld van je query.',
+    'invalid_query_account_type'     => 'Je query bevat accounts van verschillende types, wat niet is toegestaan.',
+    'invalid_query_currency'         => 'Je query bevat account met verschillende valuta-instellingen, wat niet is toegestaan.',
     'iban'                           => 'Dit is niet een geldige IBAN.',
     'zero_or_more'                   => 'De waarde mag niet negatief zijn.',
     'date_or_time'                   => 'De waarde moet een geldige datum of tijdwaarde zijn (ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Om door te gaan moet een geldig bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'withdrawal_dest_bad_data'    => 'Kan geen geldige doelrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
-    'generic_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
+    'generic_source_bad_data' => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
 
     'deposit_source_need_data' => 'Om door te gaan moet een geldige bronrekening ID en/of geldige bronrekeningnaam worden gevonden.',
     'deposit_source_bad_data'  => 'Kan geen geldige bronrekening vinden bij het zoeken naar ID ":id" of naam ":name".',
