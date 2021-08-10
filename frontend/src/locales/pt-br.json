@@ -173,7 +173,7 @@
         "update_liabilities_account": "Atualizar passivo",
         "update_expense_account": "Atualizar conta de despesas",
         "update_revenue_account": "Atualizar conta de receita",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "Atualizar conta",
         "update_asset_account": "Atualizar de conta de ativo",
         "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
