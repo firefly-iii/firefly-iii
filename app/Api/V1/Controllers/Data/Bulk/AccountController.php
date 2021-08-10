@@ -12,11 +12,16 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class AccountController
+ *
+ * @deprecated
  */
 class AccountController extends Controller
 {
     private AccountRepositoryInterface $repository;
 
+    /**
+     *
+     */
     public function __construct()
     {
         parent::__construct();
@@ -37,8 +42,8 @@ class AccountController extends Controller
      */
     public function moveTransactions(MoveTransactionsRequest $request): JsonResponse
     {
-        $accountIds  = $request->getAll();
-        $original    = $this->repository->find($accountIds['original_account']);
+        $accountIds = $request->getAll();
+        $original = $this->repository->find($accountIds['original_account']);
         $destination = $this->repository->find($accountIds['destination_account']);
 
         /** @var AccountDestroyService $service */
