@@ -34,9 +34,17 @@
             <div class="card-body">
               <GenericTextInput :disabled="submitting" v-model="name" field-name="name" :errors="errors.name" :title="$t('form.name')"
                                 v-on:set-field="storeField($event)"/>
-              <Currency :disabled="submitting" v-model="currency_id" :errors="errors.currency" v-on:set-field="storeField($event)"/>
+              <GenericCurrency :disabled="submitting" v-model="currency_id" :errors="errors.currency_id" v-on:set-field="storeField($event)"/>
               <AssetAccountRole :disabled="submitting" v-if="'asset' === type" v-model="account_role" :errors="errors.account_role"
                                 v-on:set-field="storeField($event)"/>
+
+              <!-- some CC fields -->
+              <CreditCardType :disabled="submitting" v-if="'ccAsset' === account_role" v-model="credit_card_type" :errors="errors.credit_card_type"
+                             v-on:set-field="storeField($event)" />
+              <GenericTextInput :disabled="submitting" v-if="'ccAsset' === account_role" field-type="date" v-model="monthly_payment_date" field-name="monthly_payment_date"
+                                :errors="errors.monthly_payment_date" :title="$t('form.cc_monthly_payment_date')" v-on:set-field="storeField($event)" />
+
+              <!-- liability fields -->
               <LiabilityType :disabled="submitting" v-if="'liabilities' === type" v-model="liability_type" :errors="errors.liability_type"
                              v-on:set-field="storeField($event)"/>
               <LiabilityDirection :disabled="submitting" v-if="'liabilities' === type" v-model="liability_direction" :errors="errors.liability_direction"
@@ -44,6 +52,7 @@
 
               <GenericTextInput :disabled="submitting" v-if="'liabilities' === type" field-type="number" field-step="any" v-model="liability_amount"
                                 field-name="liability_amount" :errors="errors.liability_amount" :title="$t('form.amount')" v-on:set-field="storeField($event)"/>
+
               <GenericTextInput :disabled="submitting" v-if="'liabilities' === type" field-type="date" v-model="liability_date" field-name="liability_date"
                                 :errors="errors.liability_date" :title="$t('form.date')" v-on:set-field="storeField($event)"/>
 
@@ -88,7 +97,15 @@
 
               <GenericLocation :disabled="submitting" v-model="location" :title="$t('form.location')" :errors="errors.location"
                                v-on:set-field="storeField($event)"/>
-              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"/>
+
+              <GenericAttachments :disabled="submitting" :title="$t('form.attachments')" field-name="attachments" :errors="errors.attachments"
+                                  v-on:selected-attachments="selectedAttachments($event)"
+                                  v-on:selected-no-attachments="selectedNoAttachments($event)"
+                                  v-on:uploaded-attachments="uploadedAttachments($event)"
+                                  :upload-trigger="uploadTrigger"
+                                  :upload-object-type="uploadObjectType"
+                                  :upload-object-id="uploadObjectId"
+              />
 
 
             </div>
@@ -128,10 +145,13 @@
 </template>
 
 <script>
+import format from "date-fns/format";
+
 const lodashClonedeep = require('lodash.clonedeep');
-import Currency from "./Currency";
+import GenericCurrency from "../form/GenericCurrency";
 import AssetAccountRole from "./AssetAccountRole"
 import LiabilityType from "./LiabilityType";
+import CreditCardType from "./CreditCardType";
 import LiabilityDirection from "./LiabilityDirection";
 import Interest from "./Interest";
 import InterestPeriod from "./InterestPeriod";
@@ -145,8 +165,9 @@ import Alert from '../partials/Alert';
 export default {
   name: "Create",
   components: {
-    Currency, AssetAccountRole, LiabilityType, LiabilityDirection, Interest, InterestPeriod,
-    GenericTextInput, GenericTextarea, GenericLocation, GenericAttachments, GenericCheckbox, Alert
+    GenericCurrency, AssetAccountRole, LiabilityType, LiabilityDirection, Interest, InterestPeriod,
+    GenericTextInput, GenericTextarea, GenericLocation, GenericAttachments, GenericCheckbox, Alert,
+    CreditCardType
 
   },
   created() {
@@ -154,6 +175,9 @@ export default {
     let pathName = window.location.pathname;
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
+
+    this.date = format(new Date, 'yyyy-MM-dd');
+    this.monthly_payment_date = format(new Date, 'yyyy-MM-dd');
   },
   data() {
     return {
@@ -178,6 +202,7 @@ export default {
       interest: null,
       interest_period: 'monthly',
 
+
       // optional fields
       iban: null,
       bic: null,
@@ -190,16 +215,31 @@ export default {
       notes: null,
       location: {},
 
+      // credit card fields
+      monthly_payment_date: null,
+      credit_card_type: 'monthlyFull',
+
+      // has attachments to upload?
+      hasAttachments: false,
+      uploadTrigger: false,
+      uploadObjectId: 0,
+      uploadObjectType: 'Account',
+
 
       account_role: 'defaultAsset',
-      errors: {},
+      errors: {
+        currency_id: [],
+        credit_card_type: [],
+      },
       defaultErrors: {
         name: [],
-        currency: [],
+        monthly_payment_date: [],
+        currency_id: [],
         account_role: [],
         liability_type: [],
         liability_direction: [],
         liability_amount: [],
+        credit_card_type: [],
         liability_date: [],
         interest: [],
         interest_period: [],
@@ -228,6 +268,15 @@ export default {
       }
       this[payload.field] = payload.value;
     },
+    selectedAttachments: function (e) {
+      this.hasAttachments = true;
+    },
+    selectedNoAttachments: function (e) {
+      this.hasAttachments = false;
+    },
+    uploadedAttachments: function (e) {
+      this.finishSubmission();
+    },
     submitForm: function (e) {
       e.preventDefault();
       this.submitting = true;
@@ -239,41 +288,51 @@ export default {
       axios.post(url, submission)
           .then(response => {
             this.errors = lodashClonedeep(this.defaultErrors);
-            // console.log('success!');
             this.returnedId = parseInt(response.data.data.id);
             this.returnedTitle = response.data.data.attributes.name;
-            this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});
-            // stay here is false?
-            if (false === this.createAnother) {
-              window.location.href = (window.previousURL ?? '/') + '?account_id=' + this.returnedId + '&message=created';
-              return;
+
+            if (this.hasAttachments) {
+              // upload attachments. Do a callback to a finish up method.
+              this.uploadObjectId = this.returnedId;
+              this.uploadTrigger = true;
             }
-            this.submitting = false;
-            if (this.resetFormAfter) {
-              // console.log('reset!');
-              this.name = '';
-              this.liability_type = 'Loan';
-              this.liability_direction = 'debit';
-              this.liability_amount = null;
-              this.liability_date = null;
-              this.interest = null;
-              this.interest_period = 'monthly';
-              this.iban = null;
-              this.bic = null;
-              this.account_number = null;
-              this.virtual_balance = null;
-              this.opening_balance = null;
-              this.opening_balance_date = null;
-              this.include_net_worth = true;
-              this.active = true;
-              this.notes = null;
-              this.location = {};
+            if (!this.hasAttachments) {
+              this.finishSubmission();
             }
           })
           .catch(error => {
             this.submitting = false;
             this.parseErrors(error.response.data);
           });
+    },
+    finishSubmission: function () {
+      this.successMessage = this.$t('firefly.stored_new_account_js', {ID: this.returnedId, name: this.returnedTitle});
+      // stay here is false?
+      if (false === this.createAnother) {
+        window.location.href = (window.previousURL ?? '/') + '?account_id=' + this.returnedId + '&message=created';
+        return;
+      }
+      this.submitting = false;
+      if (this.resetFormAfter) {
+        // console.log('reset!');
+        this.name = '';
+        this.liability_type = 'Loan';
+        this.liability_direction = 'debit';
+        this.liability_amount = null;
+        this.liability_date = null;
+        this.interest = null;
+        this.interest_period = 'monthly';
+        this.iban = null;
+        this.bic = null;
+        this.account_number = null;
+        this.virtual_balance = null;
+        this.opening_balance = null;
+        this.opening_balance_date = null;
+        this.include_net_worth = true;
+        this.active = true;
+        this.notes = null;
+        this.location = {};
+      }
     },
     parseErrors: function (errors) {
       this.errors = lodashClonedeep(this.defaultErrors);
@@ -282,7 +341,7 @@ export default {
         if (errors.errors.hasOwnProperty(i)) {
           this.errors[i] = errors.errors[i];
         }
-        if('liability_start_date' === i) {
+        if ('liability_start_date' === i) {
           this.errors.opening_balance_date = errors.errors[i];
         }
       }
@@ -314,13 +373,13 @@ export default {
         submission.opening_balance = this.opening_balance;
         submission.opening_balance_date = this.opening_balance_date;
       }
-      if('' === submission.opening_balance) {
+      if ('' === submission.opening_balance) {
         delete submission.opening_balance;
       }
 
       if ('asset' === this.type && 'ccAsset' === this.account_role) {
-        submission.credit_card_type = 'monthlyFull';
-        submission.monthly_payment_date = '2021-01-01';
+        submission.credit_card_type = this.credit_card_type;
+        submission.monthly_payment_date = this.monthly_payment_date;
       }
       if (Object.keys(this.location).length >= 3) {
         submission.longitude = this.location.lng;

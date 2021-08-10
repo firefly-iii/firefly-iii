@@ -615,7 +615,7 @@ export default {
           // console.log('now at ' + i);
 
           // for transfers, overrule both the source and the destination:
-          if ('Transfer' === this.transactionType) {
+          if ('transfer' === this.transactionType.toLowerCase()) {
             data.transactions[i].source_name = null;
             data.transactions[i].destination_name = null;
             if (i > 0) {
@@ -624,7 +624,7 @@ export default {
             }
           }
           // for deposits, overrule the destination and ignore the rest.
-          if ('Deposit' === this.transactionType) {
+          if ('deposit' === this.transactionType.toLowerCase()) {
             data.transactions[i].destination_name = null;
             if (i > 0) {
               data.transactions[i].destination_id = data.transactions[0].destination_id;
@@ -632,7 +632,7 @@ export default {
           }
 
           // for withdrawals, overrule the source and ignore the rest.
-          if ('Withdrawal' === this.transactionType) {
+          if ('withdrawal' === this.transactionType.toLowerCase()) {
             data.transactions[i].source_name = null;
             if (i > 0) {
               data.transactions[i].source_id = data.transactions[0].source_id;

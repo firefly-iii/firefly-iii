@@ -1,7 +1,7 @@
 <?php
-declare(strict_types=1);
+
 /*
- * StaticConfigKey.php
+ * EitherConfigKey.php
  * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 use Illuminate\Routing\Route;
@@ -38,8 +40,10 @@ class EitherConfigKey
         'firefly.accountRoles',
         'firefly.valid_liabilities',
         'firefly.interest_periods',
+        'firefly.bill_periods',
         'firefly.enable_external_map',
         'firefly.expected_source_types',
+        'firefly.credit_card_types',
         'app.timezone',
     ];
     /**

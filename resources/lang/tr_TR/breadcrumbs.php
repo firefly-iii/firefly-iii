@@ -58,8 +58,6 @@ return [
     'edit_tag'               => '":tag" etiketini düzenle',
     'delete_tag'             => '":tag" etiketini sil',
     'delete_journal_link'    => 'Hesap hareketleri arasındaki bağlantıyı sil',
-    'telemetry_index'        => 'Telemetri',
-    'telemetry_view'         => 'Telemetriye bak',
     'edit_object_group'      => '":title" grubunu düzenle',
     'delete_object_group'    => '":title" grubunu sil',
     'logout_others'          => 'Diğer tüm oturumlardan çıkış yap'

@@ -32,7 +32,6 @@ use Log;
 
 /**
  * Class GroupUpdateService
- * See reference nr. 91
  */
 class GroupUpdateService
 {

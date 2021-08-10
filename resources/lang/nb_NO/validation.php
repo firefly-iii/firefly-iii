@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Dette er ikke en gyldig IBAN.',
     'zero_or_more'                   => 'Verdien kan ikke være negativ.',
     'date_or_time'                   => 'Verdien må være et gyldig dato- eller klokkeslettformat (ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
     'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',

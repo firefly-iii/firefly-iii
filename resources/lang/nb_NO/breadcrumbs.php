@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Rediger tagg ":tag"',
     'delete_tag'             => 'Slett tagg ":tag"',
     'delete_journal_link'    => 'Slett kobling mellom transaksjoner',
-    'telemetry_index'        => 'Telemetry',
-    'telemetry_view'         => 'View telemetry',
     'edit_object_group'      => 'Edit group ":title"',
     'delete_object_group'    => 'Delete group ":title"',
     'logout_others'          => 'Logout other sessions'

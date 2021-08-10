@@ -130,7 +130,11 @@ return [
     'field'                   => 'Πεδίο',
     'value'                   => 'Τιμή',
     'interest'                => 'Τόκος',
-    'interest_period'         => 'Interest period',
+    'interest_period'         => 'Τοκιζόμενη περίοδος',
     'liability_type'          => 'Τύπος υποχρέωσης',
-    'liability_direction'     => 'Liability in/out',
+    'liability_direction'     => 'Υποχρέωση εντός/εκτός',
+    'end_date'                => 'Ημερομηνία λήξης',
+    'payment_info'            => 'Πληροφορίες Πληρωμής',
+    'expected_info'           => 'Επόμενη αναμενόμενη συναλλαγή',
+    'start_date'              => 'Ημερομηνία έναρξης',
 ];

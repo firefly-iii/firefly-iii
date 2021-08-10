@@ -22,8 +22,7 @@
     {# default header #}
     <div class="login-box">
         <div class="login-logo">
-            <img src="v2/images/firefly-iii-logo.png" alt="Firefly III" width="40"/>
-            <a href="{{ route('index') }}"><b>Firefly</b>III</a>
+            <img src="v2/images/firefly-iii-logo-new.png" alt="Firefly III" width="90"/><br />
         </div>
 
 
@@ -44,7 +43,7 @@
                     <form action="{{ route('password.email') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <div class="input-group mb-3">
-                            <input type="email" required autocomplete="email" class="form-control" name="email" placeholder="{{ trans('form.email') }}"/>
+                            <input type="email" id="emailInput" required autocomplete="email" class="form-control" name="email" placeholder="{{ trans('form.email') }}"/>
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
@@ -78,4 +77,9 @@
         </div>
     </div>
     <!-- /.login-box -->
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" nonce="{{ JS_NONCE }}">
+        document.getElementById("emailInput").focus();
+    </script>
 {% endblock %}

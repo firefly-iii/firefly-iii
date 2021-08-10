@@ -130,7 +130,11 @@ return [
     'field'                   => 'Fält',
     'value'                   => 'Värde',
     'interest'                => 'Ränta',
-    'interest_period'         => 'Interest period',
+    'interest_period'         => 'Ränteperiod',
     'liability_type'          => 'Typ av ansvar',
-    'liability_direction'     => 'Liability in/out',
+    'liability_direction'     => 'Ansvar in/ut',
+    'end_date'                => 'Slutdatum',
+    'payment_info'            => 'Betalinformation',
+    'expected_info'           => 'Nästa förväntade transaktion',
+    'start_date'              => 'Startdatum',
 ];

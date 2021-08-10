@@ -8,7 +8,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - A few new pages for the new v2 layout. Thanks @alex6480!
-- Feature to be able to rebuild Docker images and show security warnings in new builds.
 - Added a new currency yay!
 - You can now manage loans and debts a little better.
 
@@ -16,13 +15,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - A better cache routine for layout v2 pages.
 - All LDAP libraries have been upgrade.
 
+### Deprecated
+- Initial release.
+
+### Removed
+- All telemetry options have been removed.
+
+
 ### Fixed
+- [Issue 4894](https://github.com/firefly-iii/firefly-iii/issues/4894) Bad number comparison
 - Various Sonarqube issues, thanks @hazma-fadil!
 - Correct menu display, thanks @vonsogt!
+
+
+### Security
+- Feature to be able to rebuild Docker images and show security warnings in new builds.
 
 ### API
 - You can disable webhooks with an extra field in API submissions.
 - There is a static cron token (see `.env.example`) which is useful for Docker.
+
+## 5.5.13 - 2021-07-25
+
+### Security
+
+- This version of Firefly III fixes [CVE-2021-3663](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3663)
 
 ## 5.5.12 - 2021-06-03
 

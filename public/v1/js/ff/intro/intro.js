@@ -45,5 +45,6 @@ function setupIntro(steps) {
 }
 
 function reportIntroFinished() {
+    console.log('Route for finished intro: ' + routeForFinishedTour);
     $.post(routeForFinishedTour, {_token: token});
 }

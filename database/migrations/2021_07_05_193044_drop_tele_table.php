@@ -1,7 +1,8 @@
 <?php
+
 /*
- * UpdatedTransactionLink.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * 2021_07_05_193044_drop_tele_table.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,27 +22,31 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events;
-use FireflyIII\Models\TransactionJournalLink;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
- * Class UpdatedTransactionLink
-* See reference nr. 86
+ * Class DropTeleTable
  */
-class UpdatedTransactionLink extends Event
+class DropTeleTable extends Migration
 {
-    use SerializesModels;
-
-    private TransactionJournalLink $link;
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('telemetry');
+    }
 
     /**
-     * DestroyedTransactionLink constructor.
+     * Run the migrations.
      *
-     * @param TransactionJournalLink $link
+     * @return void
      */
-    public function __construct(TransactionJournalLink $link)
+    public function up()
     {
-        $this->link = $link;
+        Schema::dropIfExists('telemetry');
     }
 }

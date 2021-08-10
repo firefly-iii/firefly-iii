@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Toto nie je platný IBAN.',
     'zero_or_more'                   => 'Hodnota nemôže byť záporná.',
     'date_or_time'                   => 'Je třeba, aby hodnota byla platné datum nebo čas (ve formátu dle normy ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Pro pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
     'withdrawal_dest_bad_data'    => 'Pre ID „:id“ alebo mena „:name“ sa nenašiel žiadny platný cieľový účet.',
 
-    'generic_source_bad_data'  => 'Pre ID ":id" alebo meno ":name" sa nenašiel žiadny platný zdrojový účet.',
+    'generic_source_bad_data' => 'Pre ID ":id" alebo meno ":name" sa nenašiel žiadny platný zdrojový účet.',
 
     'deposit_source_need_data' => 'Pre pokračovanie je potrebné platné ID zdrojového účtu a/alebo platný názov zdrojového účtu.',
     'deposit_source_bad_data'  => 'Pre ID „:id“ alebo „:name“ sa nenašiel žiadny platný zdrojový účet.',

@@ -136,7 +136,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        // do email the user (no telemetry)
         $doMailError = config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);

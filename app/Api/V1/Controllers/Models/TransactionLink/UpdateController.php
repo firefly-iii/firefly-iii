@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionLink\UpdateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -71,8 +70,6 @@ class UpdateController extends Controller
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
-     *
-* See reference nr. 84
      */
     public function update(UpdateRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {

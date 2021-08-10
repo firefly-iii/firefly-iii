@@ -29,6 +29,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use PDOException;
 use Session;
 
 /**
@@ -142,6 +143,19 @@ class Preferences
         }
 
         return $result;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function all(): Collection
+    {
+        $user = auth()->user();
+        if(null === $user) {
+            return new Collection;
+        }
+
+        return Preference::where('user_id', $user->id)->get();
     }
 
     /**
@@ -284,7 +298,11 @@ class Preferences
             $pref->name = $name;
         }
         $pref->data = $value;
-        $pref->save();
+        try {
+            $pref->save();
+        } catch(PDOException $e) {
+            throw new FireflyException(sprintf('Could not save preference: %s', $e->getMessage()), 0, $e);
+        }
         Cache::forever($fullName, $pref);
 
         return $pref;

@@ -95,7 +95,7 @@ class Help implements HelpInterface
         if ('' !== $content) {
             Log::debug('Content is longer than zero. Expect something.');
             $converter = new CommonMarkConverter();
-            $content   = $converter->convertToHtml($content);
+            $content   = (string) $converter->convertToHtml($content);
         }
 
         return $content;

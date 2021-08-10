@@ -14,9 +14,6 @@
                     <ul>
                         <li><a href="{{ route('admin.configuration.index') }}">{{ 'firefly_instance_configuration'|_ }}</a></li>
                         <li><a href="{{ route('admin.links.index') }}">{{ 'journal_link_configuration'|_ }}</a></li>
-                        {% if config('firefly.feature_flags.telemetry') %}
-                            <li><a href="{{ route('admin.telemetry.index') }}">{{ 'telemetry_admin_index'|_ }}</a></li>
-                        {% endif %}
                         <li><a href="{{ route('admin.update-check') }}">{{ 'update_check_title'|_ }}</a></li>
                     </ul>
                 </div>

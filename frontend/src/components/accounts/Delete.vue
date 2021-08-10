@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 offset-lg-3">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <div class="card card-default card-danger">
         <div class="card-header">
           <h3 class="card-title">
@@ -32,7 +32,7 @@
         <div class="card-body">
           <div class="callout callout-danger" v-if="!deleting && !deleted">
             <p>
-              {{ $t('form.permDeleteWarning') }}
+              <span class="far fa-dizzy"></span> {{ $t('form.permDeleteWarning') }}
             </p>
           </div>
           <p v-if="!loading && !deleting && !deleted">
@@ -91,7 +91,6 @@ export default {
   },
   created() {
     let pathName = window.location.pathname;
-    // console.log(pathName);
     let parts = pathName.split('/');
     this.accountId = parseInt(parts[parts.length - 1]);
     this.getAccount();
@@ -108,7 +107,14 @@ export default {
       }
     },
     moveTransactions: function () {
-      axios.post('./api/v1/data/bulk/accounts/transactions', {original_account: this.accountId, destination_account: this.moveToAccount}).then(response => {
+
+      let query =
+          {
+            where: {source_account_id: this.accountId},
+            update: {destination_account_id: this.moveToAccount}
+          };
+
+      axios.post('./api/v1/data/bulk/transactions', {query: JSON.stringify(query)}).then(response => {
         this.execDeleteAccount();
       });
     },

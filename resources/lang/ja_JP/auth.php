@@ -1,7 +1,8 @@
 <?php
-/*
- * StoredTransactionLink.php
- * Copyright (c) 2020 james@firefly-iii.org
+
+/**
+ * auth.php
+ * Copyright (c) 2019 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,27 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events;
-use FireflyIII\Models\TransactionJournalLink;
-use Illuminate\Queue\SerializesModels;
-
-/**
- * Class StoredTransactionLink
-* See reference nr. 85
- */
-class StoredTransactionLink extends Event
-{
-    use SerializesModels;
-
-    private TransactionJournalLink $link;
-
-    /**
-     * DestroyedTransactionLink constructor.
-     *
-     * @param TransactionJournalLink $link
-     */
-    public function __construct(TransactionJournalLink $link)
-    {
-        $this->link = $link;
-    }
-}
+return [
+    'failed'   => '認証データが登録情報と一致しません。',
+    'throttle' => 'ログインの失敗が既定回数に達しました。:seconds 秒以上空けて、再度お試しください。',
+];

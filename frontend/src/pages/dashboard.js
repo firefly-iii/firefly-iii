@@ -70,7 +70,7 @@ Vue.use(Vuex);
 let i18n = require('../i18n');
 let props = {};
 
-new Vue({
+const app = new Vue({
             i18n,
             store,
             el: '#dashboard',
@@ -86,7 +86,7 @@ new Vue({
             },
         });
 
-new Vue({
+const calendar = new Vue({
             i18n,
             store,
             el: "#calendar",

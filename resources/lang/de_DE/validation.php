@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Dies ist keine gültige IBAN.',
     'zero_or_more'                   => 'Der Wert darf nicht negativ sein.',
     'date_or_time'                   => 'Der Wert muss ein gültiges Datum oder Zeitangabe sein (ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'withdrawal_dest_bad_data'    => 'Bei der Suche nach Kennung „:id” oder Name „:name” konnte kein gültiges Zielkonto gefunden werden.',
 
-    'generic_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'generic_source_bad_data' => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',

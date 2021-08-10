@@ -78,43 +78,62 @@ class BillTransformer extends AbstractTransformer
 
         $paidDataFormatted = [];
         $payDatesFormatted = [];
-        foreach($paidData['paid_dates'] as $object) {
-            $object['date'] = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'))->toAtomString();
-                $paidDataFormatted[] = $object;
+        foreach ($paidData['paid_dates'] as $object) {
+            $object['date']      = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'))->toAtomString();
+            $paidDataFormatted[] = $object;
         }
 
         foreach ($payDates as $string) {
             $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
         }
         $nextExpectedMatch = null;
-        if(null !== $paidData['next_expected_match'] ) {
+        if (null !== $paidData['next_expected_match']) {
             $nextExpectedMatch = Carbon::createFromFormat('!Y-m-d', $paidData['next_expected_match'], config('app.timezone'))->toAtomString();
         }
 
+        $nextExpectedMatchDiff = trans('firefly.not_expected_period');
+        // converting back and forth is bad code but OK.
+        $temp = new Carbon($nextExpectedMatch);
+        if ($temp->isToday()) {
+            $nextExpectedMatchDiff = trans('firefly.today');
+        }
+
+        $current = $payDatesFormatted[0] ?? null;
+        if (null !== $current && !$temp->isToday()) {
+            $temp2                 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+            $nextExpectedMatchDiff = $temp2->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
+        }
+        unset($temp, $temp2);
+
         return [
-            'id'                      => (int)$bill->id,
-            'created_at'              => $bill->created_at->toAtomString(),
-            'updated_at'              => $bill->updated_at->toAtomString(),
-            'currency_id'             => (string)$bill->transaction_currency_id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
-            'name'                    => $bill->name,
-            'amount_min'              => number_format((float)$bill->amount_min, $currency->decimal_places, '.', ''),
-            'amount_max'              => number_format((float)$bill->amount_max, $currency->decimal_places, '.', ''),
-            'date'                    => $bill->date->toAtomString(),
-            'repeat_freq'             => $bill->repeat_freq,
-            'skip'                    => (int)$bill->skip,
-            'active'                  => $bill->active,
-            'order'                   => (int)$bill->order,
-            'notes'                   => $notes,
-            'next_expected_match'     => $nextExpectedMatch,
-            'pay_dates'               => $payDatesFormatted,
-            'paid_dates'              => $paidDataFormatted,
-            'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
-            'object_group_order'      => $objectGroupOrder,
-            'object_group_title'      => $objectGroupTitle,
-            'links'                   => [
+            'id'                       => (int)$bill->id,
+            'created_at'               => $bill->created_at->toAtomString(),
+            'updated_at'               => $bill->updated_at->toAtomString(),
+            'currency_id'              => (string)$bill->transaction_currency_id,
+            'currency_code'            => $currency->code,
+            'currency_symbol'          => $currency->symbol,
+            'currency_decimal_places'  => (int)$currency->decimal_places,
+            'name'                     => $bill->name,
+            'amount_min'               => number_format((float)$bill->amount_min, $currency->decimal_places, '.', ''),
+            'amount_max'               => number_format((float)$bill->amount_max, $currency->decimal_places, '.', ''),
+            'date'                     => $bill->date->toAtomString(),
+            'end_date'                 => $bill->end_date?->toAtomString(),
+            'extension_date'           => $bill->extension_date?->toAtomString(),
+            'repeat_freq'              => $bill->repeat_freq,
+            'skip'                     => (int)$bill->skip,
+            'active'                   => $bill->active,
+            'order'                    => (int)$bill->order,
+            'notes'                    => $notes,
+            'object_group_id'          => $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_order'       => $objectGroupOrder,
+            'object_group_title'       => $objectGroupTitle,
+
+            // these fields need work:
+            'next_expected_match'      => $nextExpectedMatch,
+            'next_expected_match_diff' => $nextExpectedMatchDiff,
+            'pay_dates'                => $payDatesFormatted,
+            'paid_dates'               => $paidDataFormatted,
+            'links'                    => [
                 [
                     'rel' => 'self',
                     'uri' => '/bills/' . $bill->id,
@@ -208,7 +227,7 @@ class BillTransformer extends AbstractTransformer
     protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
         if (0 === $dates->count()) {
-            return $default; 
+            return $default;
         }
         $latest = $dates->first()->date;
         /** @var TransactionJournal $journal */
@@ -254,6 +273,7 @@ class BillTransformer extends AbstractTransformer
                 return $date->format('Y-m-d');
             }
         );
+
         return $simple->toArray();
     }
 

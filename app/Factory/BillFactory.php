@@ -67,6 +67,8 @@ class BillFactory
                     'transaction_currency_id' => $currency->id,
                     'amount_max'              => $data['amount_max'],
                     'date'                    => $data['date'],
+                    'end_date'                => $data['end_date'] ?? null,
+                    'extension_date'          => $data['extension_date'] ?? null,
                     'repeat_freq'             => $data['repeat_freq'],
                     'skip'                    => $skip,
                     'automatch'               => true,

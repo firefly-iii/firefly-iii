@@ -29,6 +29,7 @@ use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\NewIPAddressWarningMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
@@ -190,6 +191,7 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
+
         return true;
     }
 
@@ -216,6 +218,7 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
+
         return true;
     }
 
@@ -241,6 +244,7 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
+
         return true;
     }
 
@@ -283,6 +287,7 @@ class UserEventHandler
 
     /**
      * @param Login $event
+     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeUserIPAddress(Login $event): void
@@ -290,9 +295,16 @@ class UserEventHandler
         /** @var User $user */
         $user = $event->user;
         /** @var array $preference */
-        $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
-        $inArray    = false;
-        $ip         = request()->ip();
+        try {
+            $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        } catch (FireflyException $e) {
+            // don't care.
+            Log::error($e->getMessage());
+
+            return;
+        }
+        $inArray = false;
+        $ip      = request()->ip();
         Log::debug(sprintf('User logging in from IP address %s', $ip));
 
         // update array if in array

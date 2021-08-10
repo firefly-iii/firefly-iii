@@ -150,7 +150,6 @@ class DebugController extends Controller
         $foundDBversion    = FireflyConfig::get('db_version', 1)->data;
 
         // some new vars.
-        $telemetry       = true === config('firefly.send_telemetry') && true === config('firefly.feature_flags.telemetry');
         $defaultLanguage = (string)config('firefly.default_language');
         $defaultLocale   = (string)config('firefly.default_locale');
         $userLanguage    = app('steam')->getLanguage();
@@ -218,7 +217,6 @@ class DebugController extends Controller
                 'logContent',
                 'cacheDriver',
                 'trustedProxies',
-                'telemetry',
                 'userLanguage',
                 'userLocale',
                 'defaultLanguage',

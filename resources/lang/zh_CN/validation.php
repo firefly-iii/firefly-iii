@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => '此 IBAN 无效',
     'zero_or_more'                   => '此值不能为负',
     'date_or_time'                   => '此值必须是有效的日期或时间 (ISO 8601)',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => '需要一个有效的目标账户 ID 和/或目标账户名称才能继续',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
-    'generic_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
     'deposit_source_bad_data'  => '搜索 ID “:id”或名称“:name”时找不到有效的来源账户',

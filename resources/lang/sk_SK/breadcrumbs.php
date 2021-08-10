@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Upraviť štítok „:tag“',
     'delete_tag'             => 'Odstrániť štítok „:tag“',
     'delete_journal_link'    => 'Odstrániť previazanie medzi transakciami',
-    'telemetry_index'        => 'Telemetria',
-    'telemetry_view'         => 'Zobraziť telemetriu',
     'edit_object_group'      => 'Upraviť skupinu pravidiel „:title“',
     'delete_object_group'    => 'Zmazať skupinu pravidiel „:title“',
     'logout_others'          => 'Odhlásiť všetky ostatné relácie'

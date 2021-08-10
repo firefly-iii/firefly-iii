@@ -23,7 +23,7 @@
  */
 
 /*!
- * Chart.js v3.4.0
+ * Chart.js v3.5.0
  * https://www.chartjs.org
  * (c) 2021 Chart.js Contributors
  * Released under the MIT License
@@ -90,7 +90,7 @@
  */
 
 /*!
- * vue-i18n v8.24.5 
+ * vue-i18n v8.25.0 
  * (c) 2021 kazuya kawaguchi
  * Released under the MIT License.
  */
@@ -768,7 +768,7 @@
  */
 
 /**!
- * Sortable 1.13.0
+ * Sortable 1.14.0
  * @author	RubaXa   <trash@rubaxa.org>
  * @author	owenm    <owen23355@gmail.com>
  * @license MIT

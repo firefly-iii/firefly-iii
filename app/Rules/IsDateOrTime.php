@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
@@ -68,6 +69,10 @@ class IsDateOrTime implements Rule
                 Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return false;
+            } catch(InvalidFormatException $e) {
+                Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
+
+                return false;
             }
 
             return true;
@@ -77,6 +82,10 @@ class IsDateOrTime implements Rule
             Carbon::parse($value);
         } catch (InvalidDateException $e) {
             Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
+
+            return false;
+        } catch(InvalidFormatException $e) {
+            Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
             return false;
         }

@@ -58,8 +58,6 @@ return [
     'edit_tag'               => 'Edit label ":tag"',
     'delete_tag'             => 'Hapus label ":tag"',
     'delete_journal_link'    => 'Hapus tautan antar transaksi',
-    'telemetry_index'        => 'Pengukur jarak',
-    'telemetry_view'         => 'Melihat data',
     'edit_object_group'      => 'Ubah grup ":title"',
     'delete_object_group'    => 'Hapus grup ":title"',
     'logout_others'          => 'Keluar dari semua sesi'

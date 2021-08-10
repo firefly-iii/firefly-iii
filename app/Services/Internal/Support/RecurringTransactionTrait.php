@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Internal\Support;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Factory\BillFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\PiggyBankFactory;
@@ -136,16 +137,16 @@ trait RecurringTransactionTrait
             $validator->setUser($recurrence->user);
             $validator->setTransactionType($recurrence->transactionType->type);
             if (!$validator->validateSource($source->id, null, null)) {
-                throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError)); 
+                throw new FireflyException(sprintf('Source invalid: %s', $validator->sourceError));
             }
 
             if (!$validator->validateDestination($destination->id, null, null)) {
-                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); 
+                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError));
             }
             if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
                 unset($array['foreign_amount']);
             }
-// See reference nr. 100
+            // See reference nr. 100
             $transaction = new RecurrenceTransaction(
                 [
                     'recurrence_id'           => $recurrence->id,
@@ -162,6 +163,9 @@ trait RecurringTransactionTrait
 
             if (array_key_exists('budget_id', $array)) {
                 $this->setBudget($transaction, (int)$array['budget_id']);
+            }
+            if (array_key_exists('bill_id', $array)) {
+                $this->setBill($transaction, (int)$array['bill_id']);
             }
             if (array_key_exists('category_id', $array)) {
                 $this->setCategory($transaction, (int)$array['category_id']);
@@ -256,6 +260,29 @@ trait RecurringTransactionTrait
 
     /**
      * @param RecurrenceTransaction $transaction
+     * @param int                   $billId
+     */
+    private function setBill(RecurrenceTransaction $transaction, int $billId): void
+    {
+        $billFactory = app(BillFactory::class);
+        $billFactory->setUser($transaction->recurrence->user);
+        $bill = $billFactory->find($billId, null);
+        if (null === $bill) {
+            return;
+        }
+
+        $meta = $transaction->recurrenceTransactionMeta()->where('name', 'bill_id')->first();
+        if (null === $meta) {
+            $meta        = new RecurrenceTransactionMeta;
+            $meta->rt_id = $transaction->id;
+            $meta->name  = 'bill_id';
+        }
+        $meta->value = $bill->id;
+        $meta->save();
+    }
+
+    /**
+     * @param RecurrenceTransaction $transaction
      * @param int                   $categoryId
      *
      * @throws FireflyException
@@ -269,6 +296,7 @@ trait RecurringTransactionTrait
             // remove category:
             $transaction->recurrenceTransactionMeta()->where('name', 'category_id')->delete();
             $transaction->recurrenceTransactionMeta()->where('name', 'category_name')->delete();
+
             return;
         }
 

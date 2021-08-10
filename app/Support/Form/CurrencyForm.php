@@ -34,8 +34,6 @@ use Throwable;
  * Class CurrencyForm
  *
  * All currency related form methods.
- *
-* See reference nr. 22
  */
 class CurrencyForm
 {
@@ -61,7 +59,7 @@ class CurrencyForm
      *
      * @return string
      */
-    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
+    protected function currencyField(string $name, string $view, mixed $value = null, array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);

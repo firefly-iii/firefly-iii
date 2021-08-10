@@ -133,4 +133,8 @@ return [
     'interest_period'         => 'Okres odsetkowy',
     'liability_type'          => 'Rodzaj zobowiązania',
     'liability_direction'     => 'Zobowiązania przychodzące/wychodzące',
+    'end_date'                => 'Data końcowa',
+    'payment_info'            => 'Informacje o płatności',
+    'expected_info'           => 'Następna oczekiwana transakcja',
+    'start_date'              => 'Data rozpoczęcia',
 ];

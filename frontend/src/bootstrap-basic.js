@@ -23,5 +23,4 @@
 window.$ = window.jQuery = require('jquery');
 
 // admin stuff
-//require('bootstrap');
-
+require('bootstrap');

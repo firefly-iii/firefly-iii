@@ -73,7 +73,7 @@ Route::group(
         Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
         Route::any('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
-        Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
+        //Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
         Route::get('debug', 'DebugController@index')->name('debug');
     }
 );
@@ -86,7 +86,7 @@ Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
     static function () {
         Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
-        Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']);
+        Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']); // can be removed when v2 is live.
     }
 );
 
@@ -107,11 +107,11 @@ Route::group(
     }
 );
 
-//// show inactive
-//
+// show inactive
 
 /**
  * Account Controller.
+ * DROP ME WHEN v2 hits
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'inactive-accounts', 'as' => 'accounts.'],
@@ -126,8 +126,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'],
     static function () {
 
-    // show:
-        Route::get('', ['uses' => 'Account\IndexController@emptyIndex', 'as' => 'empty-index']);
+        // show:
         Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
         // create
@@ -184,6 +183,24 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'bills', 'as' => 'bills.'],
+    static function () {
+        Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
+        Route::get('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
+        Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
+        Route::get('edit/{bill}', ['uses' => 'Bill\EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
+        Route::get('show/{bill}', ['uses' => 'Bill\ShowController@show', 'as' => 'show']);
+
+        Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
+        Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
+        Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
+
+        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
+    }
+);
+
+Route::group(
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'subscriptions', 'as' => 'subscriptions.'],
     static function () {
         Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
         Route::get('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
@@ -1100,9 +1117,6 @@ Route::group(
 
         Route::post('users/update/{user}', ['uses' => 'UserController@update', 'as' => 'users.update']);
         Route::post('users/destroy/{user}', ['uses' => 'UserController@destroy', 'as' => 'users.destroy']);
-
-        // telemetry manager:
-        Route::get('telemetry', ['uses' => 'TelemetryController@index', 'as' => 'telemetry.index']);
 
         // journal links manager
         Route::get('links', ['uses' => 'LinkController@index', 'as' => 'links.index']);

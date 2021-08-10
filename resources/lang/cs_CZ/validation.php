@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Toto není platný IBAN.',
     'zero_or_more'                   => 'Hodnota nemůže být záporná.',
     'date_or_time'                   => 'Je třeba, aby hodnota byla platné datum nebo čas (ve formátu dle normy ISO 8601).',
@@ -134,8 +141,8 @@ return [
     'starts_with'                    => 'Hodnota musí začínat :values.',
     'unique_webhook'                 => 'Webhook s těmito hodnotami již existuje.',
     'unique_existing_webhook'        => 'Jiný webhook s těmito hodnotami již existuje.',
-    'same_account_type'              => 'Both accounts must be of the same account type',
-    'same_account_currency'          => 'Both accounts must have the same currency setting',
+    'same_account_type'              => 'Oba účty musí být stejného typu',
+    'same_account_currency'          => 'Oba účty musí mít stejné nastavení měny',
 
     'secure_password'             => 'Toto není bezpečné heslo. Zkuste jiné. Více se dozvíte na http://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'   => 'Neplatný typ opakování pro opakované transakce.',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'withdrawal_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
 
-    'generic_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
+    'generic_source_bad_data' => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
 
     'deposit_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
     'deposit_source_bad_data'  => 'Nelze najít platný zdrojový účet při hledání ID „:id“ nebo jména „:name“.',
@@ -200,7 +207,7 @@ return [
     'need_id_in_edit'           => 'Každé rozdělení musí mít transakci_journal_id (platné ID nebo 0).',
 
     'ob_source_need_data' => 'Pro pokračování je potřeba získat platné ID zdrojového účtu a/nebo platný název zdrojového účtu.',
-    'lc_source_need_data' => 'Need to get a valid source account ID to continue.',
+    'lc_source_need_data' => 'Pro pokračování je třeba získat platné ID zdrojového účtu.',
     'ob_dest_need_data'   => 'Pro pokračování je potřeba získat platné cílové ID účtu a/nebo platné jméno cílového účtu.',
     'ob_dest_bad_data'    => 'Při hledání ID „:id“ nebo jména „:name“ nelze najít platný cílový účet.',
 

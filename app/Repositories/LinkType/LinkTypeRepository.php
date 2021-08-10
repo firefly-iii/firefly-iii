@@ -24,8 +24,6 @@ namespace FireflyIII\Repositories\LinkType;
 
 use Exception;
 use FireflyIII\Events\DestroyedTransactionLink;
-use FireflyIII\Events\StoredTransactionLink;
-use FireflyIII\Events\UpdatedTransactionLink;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -281,8 +279,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         // make note in noteable:
         $this->setNoteText($link, (string)$information['notes']);
 
-        event(new StoredTransactionLink($link));
-
         return $link;
     }
 
@@ -351,8 +347,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);
         }
-
-        event(new UpdatedTransactionLink($journalLink));
 
         return $journalLink;
     }

@@ -125,6 +125,13 @@
                         {# CATEGORY ALWAYS #}
                         {{ ExpandedForm.text('category',array.transactions[0].category_name) }}
 
+                        {# BILL ONLY WHEN CREATING A WITHDRAWAL #}
+                        {% if bills|length > 1 %}
+                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].bill_id) }}
+                        {% else %}
+                            {{ ExpandedForm.select('bill_id', bills, array.transactions[0].bill_id, {helpText: trans('firefly.no_bill_pointer', {link: route('bills.index')})}) }}
+                        {% endif %}
+
                         {# TAGS #}
                         {{ ExpandedForm.text('tags', array.transactions[0].tags) }}
 

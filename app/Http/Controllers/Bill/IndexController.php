@@ -107,18 +107,18 @@ class IndexController extends Controller
                     'object_group_title' => $array['object_group_title'],
                     'bills'              => [],
                 ];
-
-            // expected today? default:
-            $array['next_expected_match_diff'] = trans('firefly.not_expected_period');
-            $nextExpectedMatch                 = new Carbon($array['next_expected_match']);
-            if ($nextExpectedMatch->isToday()) {
-                $array['next_expected_match_diff'] = trans('firefly.today');
-            }
-            $current = $array['pay_dates'][0] ?? null;
-            if (null !== $current && !$nextExpectedMatch->isToday()) {
-                $currentExpectedMatch              = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-                $array['next_expected_match_diff'] = $currentExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
-            }
+//            var_dump($array);exit;
+//            // expected today? default:
+//            $array['next_expected_match_diff'] = trans('firefly.not_expected_period');
+//            $nextExpectedMatch                 = new Carbon($array['next_expected_match']);
+//            if ($nextExpectedMatch->isToday()) {
+//                $array['next_expected_match_diff'] = trans('firefly.today');
+//            }
+//            $current = $array['pay_dates'][0] ?? null;
+//            if (null !== $current && !$nextExpectedMatch->isToday()) {
+//                $currentExpectedMatch              = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+//                $array['next_expected_match_diff'] = $currentExpectedMatch->diffForHumans(today(), Carbon::DIFF_RELATIVE_TO_NOW);
+//            }
 
             $currency                         = $bill->transactionCurrency ?? $defaultCurrency;
             $array['currency_id']             = $currency->id;

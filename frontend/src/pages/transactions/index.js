@@ -33,7 +33,7 @@ let props = {};
 Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);
 
-new Vue({
+const app = new Vue({
             i18n,
             store,
             render(createElement) {
@@ -52,7 +52,7 @@ new Vue({
             },
         }).$mount('#transactions_index');
 
-new Vue({
+const calendar = new Vue({
             i18n,
             store,
             el: "#calendar",

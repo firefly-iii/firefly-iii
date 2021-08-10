@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\Webhook;
@@ -179,10 +178,13 @@ class FireflyValidator extends Validator
                     '32', '33', '34', '35',];
 
         // take
-        $first    = substr($value, 0, 4);
-        $last     = substr($value, 4);
-        $iban     = $last . $first;
-        $iban     = str_replace($search, $replace, $iban);
+        $first = substr($value, 0, 4);
+        $last  = substr($value, 4);
+        $iban  = $last . $first;
+        $iban  = trim(str_replace($search, $replace, $iban));
+        if (0 === strlen($iban)) {
+            return false;
+        }
         $checksum = bcmod($iban, '97');
 
         return 1 === (int)$checksum;
@@ -263,16 +265,8 @@ class FireflyValidator extends Validator
         if ('set_budget' === $actionType) {
             /** @var BudgetRepositoryInterface $repository */
             $repository = app(BudgetRepositoryInterface::class);
-            $budgets    = $repository->getBudgets();
-            // count budgets, should have at least one
-// See reference nr. 102
-            $count = $budgets->filter(
-                function (Budget $budget) use ($value) {
-                    return $budget->name === $value;
-                }
-            )->count();
 
-            return 1 === $count;
+            return null !== $repository->findByName($value);
         }
 
         // if it's link to bill, verify the name of the bill.
@@ -439,7 +433,7 @@ class FireflyValidator extends Validator
      */
     private function validateAccountAnonymously(): bool
     {
-        if (!array_key_exists('user_id',$this->data)) {
+        if (!array_key_exists('user_id', $this->data)) {
             return false;
         }
 
@@ -447,16 +441,14 @@ class FireflyValidator extends Validator
         $type  = AccountType::find($this->data['account_type_id'])->first();
         $value = $this->data['name'];
 
-        $set = $user->accounts()->where('account_type_id', $type->id)->get();
-// See reference nr. 103
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-            if ($entry->name === $value) {
-                return false;
+        $set    = $user->accounts()->where('account_type_id', $type->id)->get();
+        $result = $set->first(
+            function (Account $account) use ($value) {
+                return $account->name === $value;
             }
-        }
+        );
 
-        return true;
+        return null === $result;
     }
 
     /**
@@ -480,15 +472,13 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
         $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
-// See reference nr. 104
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-            if ($entry->name === $value) {
-                return false;
+        $result = $set->first(
+            function (Account $account) use ($value) {
+                return $account->name === $value;
             }
-        }
+        );
+        return null === $result;
 
-        return true;
     }
 
     /**
@@ -504,16 +494,13 @@ class FireflyValidator extends Validator
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
-// See reference nr. 105
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-// See reference nr. 106
-            if ($entry->name === $value) {
-                return false;
-            }
-        }
 
-        return true;
+        $result = $set->first(
+            function (Account $account) use ($value) {
+                return $account->name === $value;
+            }
+        );
+        return null === $result;
     }
 
     /**
@@ -718,7 +705,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
-* See reference nr. 107
+     * See reference nr. 107
      *
      * @return bool
      */
@@ -730,18 +717,8 @@ class FireflyValidator extends Validator
         if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', (int)$exclude);
         }
-        $set = $query->get(['piggy_banks.*']);
-
-        /** @var PiggyBank $entry */
-        foreach ($set as $entry) {
-
-            $fieldValue = $entry->name;
-            if ($fieldValue === $value) {
-                return false;
-            }
-        }
-
-        return true;
+        $query->where('piggy_banks.name',$value);
+        return null === $query->first(['piggy_banks.*']);
     }
 
     /**

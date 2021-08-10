@@ -1,7 +1,8 @@
 <?php
-/**
- * Amount.php
- * Copyright (c) 2019 james@firefly-iii.org
+
+/*
+ * ClauseType.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,24 +19,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Facades;
-
-use Illuminate\Support\Facades\Facade;
+namespace FireflyIII\Enums;
 
 /**
- * Class Telemetry
+ * Class ClauseType
  */
-class Telemetry extends Facade
+class ClauseType
 {
-    /**
-     * Get the registered name of the component.
-     *
-     * @return string
-     */
-    protected static function getFacadeAccessor(): string
-    {
-        return 'telemetry';
-    }
+    public const TRANSACTION = 'transaction';
+    public const WHERE       = 'where';
+    public const UPDATE      = 'update';
 }

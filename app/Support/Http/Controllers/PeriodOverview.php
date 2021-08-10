@@ -38,7 +38,7 @@ use Log;
 /**
  * Trait PeriodOverview.
  *
-* See reference nr. 36
+ * See reference nr. 36
  *
  * - Always request start date and end date.
  * - Group expenses, income, etc. under this period.
@@ -91,7 +91,7 @@ trait PeriodOverview
         $cache->addProperty('account-show-period-entries');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -284,7 +284,7 @@ trait PeriodOverview
         $cache->addProperty($category->id);
 
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -360,7 +360,7 @@ trait PeriodOverview
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         /** @var array $dates */
@@ -392,7 +392,7 @@ trait PeriodOverview
     }
 
     /**
-* See reference nr. 37
+     * See reference nr. 37
      *
      * Show period overview for no category view.
      *
@@ -419,7 +419,7 @@ trait PeriodOverview
         $cache->addProperty('no-category-period-entries');
 
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
 
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -494,7 +494,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -568,7 +568,7 @@ trait PeriodOverview
         $cache->addProperty('transactions-period-entries');
         $cache->addProperty($transactionType);
         if ($cache->has()) {
-            return $cache->get(); 
+            return $cache->get();
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);

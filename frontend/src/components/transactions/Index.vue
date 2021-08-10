@@ -321,8 +321,8 @@ export default {
       configureAxios().then(async (api) => {
         let startStr = format(this.start, 'y-MM-dd');
         let endStr = format(this.end, 'y-MM-dd');
-        console.log(this.urlEnd);
-        console.log(this.urlStart);
+        // console.log(this.urlEnd);
+        // console.log(this.urlStart);
         if(null !== this.urlEnd && null !== this.urlStart) {
           startStr = format(this.urlStart, 'y-MM-dd');
           endStr = format(this.urlEnd, 'y-MM-dd');

@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Webhook;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
 use JsonException;
+use Log;
+
 
 /**
  * Class Sha3SignatureGenerator
@@ -41,8 +44,11 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-// See reference nr. 87
-            return sprintf('t=1,v%d=err-invalid-signature', $this->getVersion());
+            Log::error('Could not generate hash.');
+            Log::error(sprintf('JSON value: %s', $message->message));
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException('Could not generate JSON for SHA3 hash.', $e);
         }
 
         // signature v1 is generated using the following structure:

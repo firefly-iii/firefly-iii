@@ -23,6 +23,13 @@
 declare(strict_types=1);
 
 return [
+    'missing_where'                  => 'Array is missing "where"-clause',
+    'missing_update'                 => 'Array is missing "update"-clause',
+    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
+    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
+    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
+    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
+    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
     'zero_or_more'                   => 'Le montant ne peut pas être négatif.',
     'date_or_time'                   => 'La valeur doit être une date ou une heure valide (ISO 8601).',
@@ -185,7 +192,7 @@ return [
     'withdrawal_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
-    'generic_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
+    'generic_source_bad_data' => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
     'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'deposit_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',

@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\User;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\User\PreferenceStoreRequest;
 use FireflyIII\Api\V1\Requests\User\PreferenceUpdateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Illuminate\Http\JsonResponse;
@@ -47,13 +48,12 @@ class PreferencesController extends Controller
      * List all of them.
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @codeCoverageIgnore
      */
     public function index(): JsonResponse
     {
-// See reference nr. 83
-        $collection  = auth()->user()->preferences()->get();
+        $collection  = app('preferences')->all();
         $manager     = $this->getManager();
         $count       = $collection->count();
         $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
@@ -119,7 +119,7 @@ class PreferencesController extends Controller
      * @param Preference              $preference
      *
      * @return JsonResponse
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {

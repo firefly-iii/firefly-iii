@@ -99,8 +99,6 @@ interface JournalRepositoryInterface
     public function getLast(): ?TransactionJournal;
 
     /**
-     * See reference nr. 4
-     *
      * @param TransactionJournalLink $link
      *
      * @return string
