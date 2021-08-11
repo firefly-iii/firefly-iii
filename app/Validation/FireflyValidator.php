@@ -194,7 +194,7 @@ class FireflyValidator extends Validator
             $message = sprintf('Could not validate IBAN check value "%s"', $iban);
             Log::error($message);
             Log::error($e->getTraceAsString());
-            throw new FireflyException($message, $e);
+            throw new FireflyException($message, 0, $e);
         }
 
         return 1 === (int)$checksum;
