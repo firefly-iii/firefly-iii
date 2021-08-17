@@ -88,6 +88,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             )
             ->where('budget_limits.transaction_currency_id', $currency->id)
             ->whereNull('budgets.deleted_at')
+            ->where('budgets.active', true)
             ->where('budgets.user_id', $this->user->id);
         if (null !== $budgets && $budgets->count() > 0) {
             $query->whereIn('budget_limits.budget_id', $budgets->pluck('id')->toArray());
