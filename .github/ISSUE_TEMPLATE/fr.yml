@@ -1,0 +1,40 @@
+name: Feature Request
+description: Request a feature or enhancement in Firefly III (or associated tools)
+body:
+  - type: checkboxes
+    attributes:
+      label: Support guidelines
+      description: Please read the support guidelines before proceeding.
+      options:
+        - label: I've read the [support guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/support.md)
+          required: true
+        - label: My request is not listed as [an idea that won't be implemented](https://docs.firefly-iii.org/firefly-iii/support/features/#ideas-that-wont-be-implemented)
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: Please describe your feature request
+      placeholder: |
+        - I would like Firefly III to do ABC.
+        - What if you would add feature XYZ?
+        - Firefly III doesn't do DEF.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Solution
+      description: Describe what your feature would add to Firefly III.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What are alternatives?
+      description: Please describe what alternatives currently exist.
+
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
