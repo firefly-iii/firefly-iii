@@ -7,7 +7,7 @@
 First of all: thank you for reporting a bug instead of ditching the tool altogether. Bugs have a lot of priority! 
 
 1. Open bugs will have open issues, so search for one first.
-2. If your feature request is already there, vote on it with :+1: or :+1: reactions.
+2. If your feature request is already there, vote on it with :+1: or :-1: reactions.
 3. Do NOT hijack old issues with the bug you found, open your own issue.
 4. If relevant, take the time and see if the [demo site](https://demo.firefly-iii.org/) is also suffering from your issue.
 5. If relevant, read the [documentation](https://docs.firefly-iii.org/).
