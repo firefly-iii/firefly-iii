@@ -1076,7 +1076,7 @@ return [
     'expense_deleted'                           => '支出口座「:name」を正常に削除しました',
     'revenue_deleted'                           => '収入口座「:name」を正常に削除しました',
     'update_asset_account'                      => '支出アカウント（資産勘定）',
-    'update_undefined_account'                  => 'Update account',
+    'update_undefined_account'                  => '口座情報の更新',
     'update_liabilities_account'                => 'チャンネルを更新',
     'update_expense_account'                    => '支出先アカウント（支出元アカウント
 ）',
@@ -1125,7 +1125,7 @@ return [
     'stored_new_account'                        => '新しい支出先',
     'stored_new_account_js'                     => '新しい口座「<a href="accounts/show/{ID}">{name}</a>」が保存されました！',
     'updated_account'                           => '銀行名',
-    'updated_account_js'                        => 'Updated account "<a href="accounts/show/{ID}">{title}</a>".',
+    'updated_account_js'                        => '口座「<a href="accounts/show/{ID}">{title}</a>」を更新しました。',
     'credit_card_options'                       => 'クレジットカード上限額',
     'no_transactions_account'                   => '資産口座「:name」の取引は(この期間中)ありません。',
     'no_transactions_period'                    => '利息期間',

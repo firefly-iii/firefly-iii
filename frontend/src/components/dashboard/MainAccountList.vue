@@ -62,9 +62,9 @@
           </div>
           <div class="card-body table-responsive p-0">
             <div>
-              <transaction-list-large v-if="1===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
-              <transaction-list-medium v-if="2===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
-              <transaction-list-small v-if="accounts.length > 2" :account_id="account.id" :transactions="account.transactions"/>
+              <dashboard-list-large v-if="1===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <dashboard-list-medium v-if="2===accounts.length" :account_id="account.id" :transactions="account.transactions"/>
+              <dashboard-list-small v-if="accounts.length > 2" :account_id="account.id" :transactions="account.transactions"/>
             </div>
           </div>
         </div>

@@ -21,6 +21,7 @@
 
 require('../../bootstrap');
 
+import store from '../../components/store';
 import Show from "../../components/accounts/Show";
 
 // i18n
@@ -29,12 +30,11 @@ let i18n = require('../../i18n');
 // get page name?
 
 
-let props = {
-
-};
+let props = {};
 const app = new Vue({
-            i18n,
-            render(createElement) {
-                return createElement(Show, {props: props});
-            }
-        }).$mount('#accounts_show');
+                        i18n,
+                        store,
+                        render(createElement) {
+                            return createElement(Show, {props: props});
+                        }
+                    }).$mount('#accounts_show');

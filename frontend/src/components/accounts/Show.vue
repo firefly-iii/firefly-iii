@@ -58,11 +58,13 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">
-              List
+              Title
             </h3>
           </div>
           <div class="card-body">
-            Transaction list
+            <TransactionListLarge :account_id=accountId :transactions=transactions>
+
+            </TransactionListLarge>
           </div>
         </div>
       </div>
@@ -85,8 +87,59 @@
 </template>
 
 <script>
+import TransactionListLarge from "../transactions/TransactionListLarge";
+import format from "date-fns/format";
+import {mapGetters, mapMutations} from "vuex";
+
 export default {
   name: "Show",
+  computed: {
+    ...mapGetters('root', ['listPageSize', 'cacheKey']),
+    ...mapGetters('dashboard/index', ['start', 'end',]),
+    'showReady': function () {
+      return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
+    },
+  },
+
+  data() {
+    return {
+      accountId: 0,
+      transactions: [],
+      ready: false,
+      currentPage: 1,
+    }
+  },
+  created() {
+    this.ready = true;
+    let parts = window.location.pathname.split('/');
+    this.accountId = parseInt(parts[parts.length - 1]);
+
+    let params = new URLSearchParams(window.location.search);
+    this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
+    //this.getTransactions();
+  },
+  components: {TransactionListLarge},
+  methods: {
+    getTransactions: function() {
+      console.log('goooooo');
+      let startStr = format(this.start, 'y-MM-dd');
+      let endStr = format(this.end, 'y-MM-dd');
+      axios.get('./api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=10&start=' + startStr + '&end=' + endStr)
+          .then(response => {
+                  this.transactions = response.data.data;
+                  //this.loading = false;
+                  //this.error = false;
+                }
+          );
+    }
+  },
+  watch: {
+    showReady: function (value) {
+      if (true === value) {
+        this.getTransactions();
+      }
+    },
+  }
 
 }
 </script>

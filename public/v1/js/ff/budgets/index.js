@@ -34,6 +34,7 @@ $(function () {
 
     $('.budget_amount').on('change', updateBudgetedAmount);
     $('.create_bl').on('click', createBudgetLimit);
+    $('.delete_bl').on('click', deleteBudgetLimit);
 
 
     /*
@@ -202,6 +203,13 @@ function createBudgetLimit(e) {
     $('#defaultModal').empty().load(createBudgetLimitUri.replace('REPLACEME', budgetId.toString()), function () {
         $('#defaultModal').modal('show');
     });
+    return false;
+}
+
+function deleteBudgetLimit(e) {
+    var button = $(e.currentTarget);
+    var budgetLimitId = button.data('budget-limit-id');
+    var url = deleteBudgetLimitUrl.replace('REPLACEME', budgetId.toString();
     return false;
 }
 

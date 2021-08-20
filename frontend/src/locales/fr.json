@@ -169,13 +169,13 @@
         "repeat_freq_quarterly": "trimestriel",
         "repeat_freq_monthly": "mensuel",
         "repeat_freq_weekly": "hebdomadaire",
-        "credit_card_type_monthlyFull": "Full payment every month",
+        "credit_card_type_monthlyFull": "Paiement complet tous les mois",
         "update_liabilities_account": "Mettre \u00e0 jour le passif",
         "update_expense_account": "Mettre \u00e0 jour le compte de d\u00e9penses",
         "update_revenue_account": "Mettre \u00e0 jour le compte de recettes",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "Mettre \u00e0 jour le compte",
         "update_asset_account": "Mettre \u00e0 jour le compte d\u2019actif",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "updated_account_js": "Compte \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\" mis \u00e0 jour."
     },
     "list": {
         "piggy_bank": "Tirelire",
