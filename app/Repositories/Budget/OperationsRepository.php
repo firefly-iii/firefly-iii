@@ -180,7 +180,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId = (int)$journal['transaction_journal_id'];
+            $journalId                                                                    = (int)$journal['transaction_journal_id'];
             $array[$currencyId]['budgets'][$budgetId]['transaction_journals'][$journalId] = [
                 'amount'                   => app('steam')->negative($journal['amount']),
                 'destination_account_id'   => $journal['destination_account_id'],
@@ -227,7 +227,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-// See reference nr. 13
+        // See reference nr. 13
         $set        = $collector->getGroups();
         $return     = [];
         $total      = [];
@@ -343,23 +343,13 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->negative($journal['foreign_amount']));
             }
         }
+
         return $array;
     }
 
     /**
-     * @return Collection
-     */
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-
-        return $repos->getActiveBudgets();
-    }
-
-    /**
      * For now, simply refer to whichever repository holds this function.
-* See reference nr. 14
+     * See reference nr. 14
      *
      * @param Budget      $budget
      * @param Carbon|null $start
@@ -373,5 +363,16 @@ class OperationsRepository implements OperationsRepositoryInterface
         $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         return $blRepository->getBudgetLimits($budget, $start, $end);
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
     }
 }

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
+
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;

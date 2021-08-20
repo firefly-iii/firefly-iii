@@ -57,6 +57,14 @@ interface BudgetRepositoryInterface
     public function destroyAutoBudget(Budget $budget): void;
 
     /**
+     *
+     * @param int|null $budgetId
+     *
+     * @return Budget|null
+     */
+    public function find(int $budgetId = null): ?Budget;
+
+    /**
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
@@ -72,14 +80,6 @@ interface BudgetRepositoryInterface
      * @return Budget|null
      */
     public function findByName(?string $name): ?Budget;
-
-    /**
-     *
-     * @param int|null $budgetId
-     *
-     * @return Budget|null
-     */
-    public function find(int $budgetId = null): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.
