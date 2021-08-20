@@ -285,7 +285,7 @@
                                                         {{ trans('firefly.budget_limit_not_in_range', {start: budgetLimit.start_date, end: budgetLimit.end_date}) }}
                                                     </small><br>
                                                 {% endif %}
-                                                <div class="input-group">
+                                                <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
                                                     <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
                                                     <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
                                                         data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
@@ -295,7 +295,9 @@
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false"><span class="caret"></span></button>
                                                         <ul class="dropdown-menu">
-                                                            <li><a href="{{ route('budget-limits.delete', [budgetLimit.id]) }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a></li>
+                                                            <li>
+                                                                <a class="delete_bl" href="#" data-budget-limit-id="{{ budgetLimit.id }}">{{ trans('firefly.remove_budgeted_amount', {currency: budgetLimit.currency_name }) }}</a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -468,6 +470,7 @@
         var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var storeBudgetLimitUri = "{{ route('budget-limits.store') }}";
         var updateBudgetLimitUri = "{{ route('budget-limits.update', ['REPLACEME']) }}";
+        var deleteBudgetLimitUrl = "{{ route('budget-limits.delete', ['REPLACEME']) }}";
         var totalBudgetedUri = "{{ route('json.budget.total-budgeted', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
 
         // period thing:

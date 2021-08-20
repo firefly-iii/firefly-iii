@@ -133,7 +133,7 @@ function updateTotalBudgetedAmount(currencyId) {
         });
 
     // get new amount:
-    $.get(totalBudgetedUri.replace('REPLACEME',currencyId)).done(function (data) {
+    $.get(totalBudgetedUri.replace('REPLACEME', currencyId)).done(function (data) {
         // set thing:
         $('span.budgeted_amount[data-currency="' + currencyId + '"]')
             .html(data.budgeted_formatted)
@@ -207,9 +207,14 @@ function createBudgetLimit(e) {
 }
 
 function deleteBudgetLimit(e) {
+    e.preventDefault();
     var button = $(e.currentTarget);
     var budgetLimitId = button.data('budget-limit-id');
-    var url = deleteBudgetLimitUrl.replace('REPLACEME', budgetId.toString();
+    var url = deleteBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString());
+    $.post(url, {_token: token}).then(function () {
+        $('.bl_entry[data-budget-limit-id="' + budgetLimitId + '"]').remove();
+        
+    });
     return false;
 }
 
