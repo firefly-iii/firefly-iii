@@ -330,7 +330,7 @@ Route::group(
         Route::get('create', ['uses' => 'CurrencyController@create', 'as' => 'create']);
         Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
         Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-        Route::get('default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
+        Route::post('default', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
         Route::get('enable/{currency}', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
         Route::get('disable/{currency}', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
 
