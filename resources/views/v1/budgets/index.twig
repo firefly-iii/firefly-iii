@@ -137,8 +137,7 @@
                                         <span class="available_amount" data-id="{{ budget.id }}"
                                               data-value="{{ budget.amount }}">{{ formatAmountBySymbol(budget.amount, budget.transaction_currency.symbol, budget.transaction_currency.decimal_places, true) }}</span>
                                         <a href="#" data-id="{{ budget.id }}" class="update_ab btn btn-default btn-xs"><span class="fa fa-pencil"></span></a>
-                                        <a href="{{ route('available-budgets.delete', [budget.id]) }}" data-id="{{ budget.id }}"
-                                           class="delete_ab btn btn-danger btn-xs"><span class="fa fa-trash"></span></a>
+                                        <a href="#" data-id="{{ budget.id }}" class="delete_ab btn btn-danger btn-xs"><span class="fa fa-trash"></span></a>
                                     </small>
                                 </div>
                             </div>
@@ -465,6 +464,7 @@
         var createAvailableBudgetUri = "{{ route('available-budgets.create', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var createAltAvailableBudgetUri = "{{ route('available-budgets.create-alternative', [start.format('Y-m-d'), end.format('Y-m-d')]) }}";
         var editAvailableBudgetUri = "{{ route('available-budgets.edit', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";
+        var deleteABUrl = "{{ route('available-budgets.delete') }}";
 
         // budget limit create form.
         var createBudgetLimitUri = "{{ route('budget-limits.create', ['REPLACEME', start.format('Y-m-d'), end.format('Y-m-d')]) }}";

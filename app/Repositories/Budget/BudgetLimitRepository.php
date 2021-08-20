@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
+
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -319,7 +320,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // find the budget:
         $budget = $this->user->budgets()->find((int)$data['budget_id']);
         if (null === $budget) {
-            throw new FireflyException('200004: Budget does not exist.'); 
+            throw new FireflyException('200004: Budget does not exist.');
         }
 
         // find limit with same date range and currency.
@@ -329,7 +330,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                         ->where('budget_limits.transaction_currency_id', $currency->id)
                         ->first(['budget_limits.*']);
         if (null !== $limit) {
-            throw new FireflyException('200027: Budget limit already exists.'); 
+            throw new FireflyException('200027: Budget limit already exists.');
         }
         Log::debug('No existing budget limit, create a new one');
 
@@ -425,6 +426,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
             } catch (Exception $e) { // @phpstan-ignore-line
                 // @ignoreException
             }
+
             return null;
         }
         // update if exists:
