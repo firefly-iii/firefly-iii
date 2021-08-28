@@ -1,7 +1,7 @@
 <?php
-/**
- * DatabaseSeeder.php
- * Copyright (c) 2019 james@firefly-iii.org.
+/*
+ * UserGroup.php
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,28 +18,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Database\Seeders;
+namespace FireflyIII\Models;
 
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class DatabaseSeeder.
+ * Class UserGroup
  */
-class DatabaseSeeder extends Seeder
+class UserGroup extends Model
 {
+    protected $fillable = ['title'];
+
     /**
-     * Run the database seeds.
+     * @codeCoverageIgnore
+     *
+     * @return HasMany
      */
-    public function run()
+    public function groupMemberships(): HasMany
     {
-        $this->call(AccountTypeSeeder::class);
-        $this->call(TransactionCurrencySeeder::class);
-        $this->call(TransactionTypeSeeder::class);
-        $this->call(PermissionSeeder::class);
-        $this->call(LinkTypeSeeder::class);
-        $this->call(ConfigSeeder::class);
-        $this->call(UserRoleSeeder::class);
+        return $this->hasMany(GroupMembership::class);
     }
 }
