@@ -22,27 +22,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\AvailableBudget
  *
  * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property int                             $user_id
  * @property int                             $transaction_currency_id
  * @property string                          $amount
- * @property \Illuminate\Support\Carbon      $start_date
- * @property \Illuminate\Support\Carbon      $end_date
+ * @property Carbon      $start_date
+ * @property Carbon      $end_date
  * @property-read TransactionCurrency        $transactionCurrency
  * @property-read User                       $user
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
@@ -65,6 +65,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AvailableBudget extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -87,13 +88,13 @@ class AvailableBudget extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return AvailableBudget
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): AvailableBudget
     {
         if (auth()->check()) {
-            $availableBudgetId = (int) $value;
+            $availableBudgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var AvailableBudget $availableBudget */

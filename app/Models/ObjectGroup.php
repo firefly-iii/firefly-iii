@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * FireflyIII\Models\ObjectGroup
  *
@@ -63,8 +65,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ObjectGroup extends Model
 {
-    protected $fillable = ['title', 'order', 'user_id'];
-
     /**
      * The attributes that should be casted to native types.
      *
@@ -77,13 +77,36 @@ class ObjectGroup extends Model
             'user_id'    => 'integer',
             'deleted_at' => 'datetime',
         ];
+    protected $fillable = ['title', 'order', 'user_id'];
+
+    /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
+     * @param string $value
+     *
+     * @return ObjectGroup
+     * @throws NotFoundHttpException
+     */
+    public static function routeBinder(string $value): ObjectGroup
+    {
+        if (auth()->check()) {
+            $objectGroupId = (int)$value;
+            /** @var ObjectGroup $objectGroup */
+            $objectGroup = self::where('object_groups.id', $objectGroupId)
+                               ->where('object_groups.user_id', auth()->user()->id)->first();
+            if (null !== $objectGroup) {
+                return $objectGroup;
+            }
+        }
+        throw new NotFoundHttpException;
+    }
 
     /**
      * @return MorphToMany
      */
-    public function piggyBanks()
+    public function accounts()
     {
-        return $this->morphedByMany(PiggyBank::class, 'object_groupable');
+        return $this->morphedByMany(Account::class, 'object_groupable');
     }
 
     /**
@@ -97,31 +120,9 @@ class ObjectGroup extends Model
     /**
      * @return MorphToMany
      */
-    public function accounts()
+    public function piggyBanks()
     {
-        return $this->morphedByMany(Account::class, 'object_groupable');
-    }
-
-    /**
-     * Route binder. Converts the key in the URL to the specified object (or throw 404).
-     *
-     * @param string $value
-     *
-     * @throws NotFoundHttpException
-     * @return ObjectGroup
-     */
-    public static function routeBinder(string $value): ObjectGroup
-    {
-        if (auth()->check()) {
-            $objectGroupId = (int) $value;
-            /** @var ObjectGroup $objectGroup */
-            $objectGroup   = self::where('object_groups.id', $objectGroupId)
-                                 ->where('object_groups.user_id', auth()->user()->id)->first();
-            if (null !== $objectGroup) {
-                return $objectGroup;
-            }
-        }
-        throw new NotFoundHttpException;
+        return $this->morphedByMany(PiggyBank::class, 'object_groupable');
     }
 
     /**

@@ -65,15 +65,6 @@ class WebhookAttempt extends Model
     use SoftDeletes;
 
     /**
-     * @codeCoverageIgnore
-     * @return BelongsTo
-     */
-    public function webhookMessage(): BelongsTo
-    {
-        return $this->belongsTo(WebhookMessage::class);
-    }
-
-    /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @param string $value
@@ -94,5 +85,14 @@ class WebhookAttempt extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function webhookMessage(): BelongsTo
+    {
+        return $this->belongsTo(WebhookMessage::class);
     }
 }

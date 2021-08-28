@@ -22,23 +22,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\BudgetLimit
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int                             $id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int                             $budget_id
  * @property int|null                        $transaction_currency_id
- * @property \Illuminate\Support\Carbon      $start_date
- * @property \Illuminate\Support\Carbon|null $end_date
+ * @property Carbon      $start_date
+ * @property Carbon|null $end_date
  * @property string                          $amount
  * @property string                          $spent
  * @property string|null                     $period

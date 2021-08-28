@@ -22,20 +22,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
+
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
  * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int                             $piggy_bank_id
  * @property int|null                        $transaction_journal_id
- * @property \Illuminate\Support\Carbon      $date
+ * @property Carbon      $date
  * @property string                          $amount
  * @property PiggyBank                       $piggyBank
  * @property-read TransactionJournal|null    $transactionJournal
@@ -85,7 +86,7 @@ class PiggyBankEvent extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string) $value;
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**

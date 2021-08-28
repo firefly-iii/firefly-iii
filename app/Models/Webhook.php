@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Webhook
  *
- * @property int                                                                               $id
+ * @property int                              $id
  * @property Carbon|null                      $created_at
  * @property Carbon|null                      $updated_at
  * @property Carbon|null                      $deleted_at
@@ -66,8 +67,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|Webhook withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Webhook withoutTrashed()
  * @mixin Eloquent
- * @property string $title
- * @property string $secret
+ * @property string                           $title
+ * @property string                           $secret
  * @method static Builder|Webhook whereSecret($value)
  * @method static Builder|Webhook whereTitle($value)
  */
@@ -88,9 +89,6 @@ class Webhook extends Model
 
     // delivery
     public const DELIVERY_JSON = 300;
-
-    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'url', 'title', 'secret'];
-
     protected $casts
         = [
             'active'   => 'boolean',
@@ -98,6 +96,7 @@ class Webhook extends Model
             'response' => 'integer',
             'delivery' => 'integer',
         ];
+    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'url', 'title', 'secret'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

@@ -39,9 +39,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * FireflyIII\Models\Budget
  *
  * @property int                                  $id
- * @property Carbon|null      $created_at
- * @property Carbon|null      $updated_at
- * @property Carbon|null      $deleted_at
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
  * @property int                                  $user_id
  * @property string                               $name
  * @property bool                                 $active
@@ -74,7 +74,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @mixin Eloquent
- * @property string $email
+ * @property string                               $email
  */
 class Budget extends Model
 {

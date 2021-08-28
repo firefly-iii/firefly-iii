@@ -35,33 +35,33 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool $reconciled
- * @property int $account_id
- * @property int $transaction_journal_id
- * @property string|null $description
- * @property int|null $transaction_currency_id
- * @property string $modified
- * @property string $modified_foreign
- * @property string $date
- * @property string $max_date
- * @property string $amount
- * @property string|null $foreign_amount
- * @property int|null $foreign_currency_id
- * @property int $identifier
- * @property-read \FireflyIII\Models\Account $account
- * @property-read Collection|\FireflyIII\Models\Budget[] $budgets
- * @property-read int|null $budgets_count
- * @property-read Collection|\FireflyIII\Models\Category[] $categories
- * @property-read int|null $categories_count
- * @property-read \FireflyIII\Models\TransactionCurrency|null $foreignCurrency
- * @property-read \FireflyIII\Models\TransactionCurrency|null $transactionCurrency
- * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
- * @method static Builder|Transaction after(\Carbon\Carbon $date)
- * @method static Builder|Transaction before(\Carbon\Carbon $date)
+ * @property int                                              $id
+ * @property \Illuminate\Support\Carbon|null                  $created_at
+ * @property \Illuminate\Support\Carbon|null                  $updated_at
+ * @property \Illuminate\Support\Carbon|null                  $deleted_at
+ * @property bool                                             $reconciled
+ * @property int                                              $account_id
+ * @property int                                              $transaction_journal_id
+ * @property string|null                   $description
+ * @property int|null                      $transaction_currency_id
+ * @property string                        $modified
+ * @property string                        $modified_foreign
+ * @property string                        $date
+ * @property string                        $max_date
+ * @property string                        $amount
+ * @property string|null                   $foreign_amount
+ * @property int|null                      $foreign_currency_id
+ * @property int                           $identifier
+ * @property-read Account                  $account
+ * @property-read Collection|Budget[]      $budgets
+ * @property-read int|null                 $budgets_count
+ * @property-read Collection|Category[]    $categories
+ * @property-read int|null                 $categories_count
+ * @property-read TransactionCurrency|null $foreignCurrency
+ * @property-read TransactionCurrency|null $transactionCurrency
+ * @property-read TransactionJournal       $transactionJournal
+ * @method static Builder|Transaction after(Carbon $date)
+ * @method static Builder|Transaction before(Carbon $date)
  * @method static Builder|Transaction newModelQuery()
  * @method static Builder|Transaction newQuery()
  * @method static \Illuminate\Database\Query\Builder|Transaction onlyTrashed()
@@ -83,11 +83,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
  * @mixin Eloquent
- * @property int $the_count
+ * @property int                                              $the_count
  */
 class Transaction extends Model
 {
     use SoftDeletes, HasFactory;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -109,30 +110,6 @@ class Transaction extends Model
            'foreign_amount', 'reconciled'];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
-
-    /**
-     * Check if a table is joined.
-     *
-     * @param Builder $query
-     * @param string  $table
-     *
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    public static function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Get the account this object belongs to.
@@ -195,6 +172,30 @@ class Transaction extends Model
     }
 
     /**
+     * Check if a table is joined.
+     *
+     * @param Builder $query
+     * @param string  $table
+     *
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check for transactions BEFORE the specified date.
      *
      * @codeCoverageIgnore
@@ -235,7 +236,7 @@ class Transaction extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string) $value;
+        $this->attributes['amount'] = (string)$value;
     }
 
     /**

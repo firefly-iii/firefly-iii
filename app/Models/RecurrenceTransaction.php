@@ -22,20 +22,21 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * FireflyIII\Models\RecurrenceTransaction
  *
- * @property int $id
- * @property Carbon|null $created_at
+ * @property int                                                                       $id
+ * @property Carbon|null                                                               $created_at
  * @property Carbon|null                                                               $updated_at
  * @property Carbon|null                                                               $deleted_at
  * @property int                                                                       $recurrence_id
@@ -49,7 +50,7 @@ use Illuminate\Support\Collection;
  * @property-read Account                                                              $destinationAccount
  * @property-read TransactionCurrency|null                                             $foreignCurrency
  * @property-read Recurrence                                                           $recurrence
- * @property-read \Illuminate\Database\Eloquent\Collection|RecurrenceTransactionMeta[] $recurrenceTransactionMeta
+ * @property-read Collection|RecurrenceTransactionMeta[] $recurrenceTransactionMeta
  * @property-read int|null                                                             $recurrence_transaction_meta_count
  * @property-read Account                                                              $sourceAccount
  * @property-read TransactionCurrency                                                  $transactionCurrency
@@ -79,6 +80,7 @@ use Illuminate\Support\Collection;
 class RecurrenceTransaction extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -153,6 +155,7 @@ class RecurrenceTransaction extends Model
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
+
     /**
      * @codeCoverageIgnore
      * @return BelongsTo

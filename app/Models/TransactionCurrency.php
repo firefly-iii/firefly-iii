@@ -22,21 +22,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * FireflyIII\Models\TransactionCurrency
  *
  * @property int                                  $id
- * @property \Illuminate\Support\Carbon|null      $created_at
- * @property \Illuminate\Support\Carbon|null      $updated_at
- * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property Carbon|null      $created_at
+ * @property Carbon|null      $updated_at
+ * @property Carbon|null      $deleted_at
  * @property bool                                 $enabled
  * @property string                               $code
  * @property string                               $name
@@ -90,13 +91,13 @@ class TransactionCurrency extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return TransactionCurrency
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionCurrency
     {
         if (auth()->check()) {
-            $currencyId = (int) $value;
+            $currencyId = (int)$value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 return $currency;

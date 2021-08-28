@@ -39,8 +39,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account
  *
- * @property int                                                                            $id
- * @property \Illuminate\Support\Carbon|null                                                $created_at
+ * @property int                             $id
+ * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int                             $user_id
@@ -89,16 +89,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
  * @mixin Eloquent
- * @property Carbon                                                                         $lastActivityDate
- * @property string                                                                         $startBalance
- * @property string                                                                         $endBalance
- * @property string $difference
- * @property string $interest
- * @property string $interestPeriod
- * @property string $accountTypeString
- * @property string $location
- * @property string $liability_direction
- * @property string $current_debt
+ * @property Carbon                          $lastActivityDate
+ * @property string                          $startBalance
+ * @property string                          $endBalance
+ * @property string                          $difference
+ * @property string                          $interest
+ * @property string                          $interestPeriod
+ * @property string                          $accountTypeString
+ * @property string                          $location
+ * @property string                          $liability_direction
+ * @property string                          $current_debt
  */
 class Account extends Model
 {
@@ -149,11 +149,12 @@ class Account extends Model
     }
 
     /**
-     * Get all of the tags for the post.
+     * @return BelongsTo
+     * @codeCoverageIgnore
      */
-    public function objectGroups()
+    public function accountType(): BelongsTo
     {
-        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
+        return $this->belongsTo(AccountType::class);
     }
 
     /**
@@ -163,24 +164,6 @@ class Account extends Model
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
-    }
-
-    /**
-     * @return HasMany
-     * @codeCoverageIgnore
-     */
-    public function accountMeta(): HasMany
-    {
-        return $this->hasMany(AccountMeta::class);
-    }
-
-    /**
-     * @return BelongsTo
-     * @codeCoverageIgnore
-     */
-    public function accountType(): BelongsTo
-    {
-        return $this->belongsTo(AccountType::class);
     }
 
     /**
@@ -196,6 +179,15 @@ class Account extends Model
                           ->first();
 
         return $metaValue ? $metaValue->data : '';
+    }
+
+    /**
+     * @return HasMany
+     * @codeCoverageIgnore
+     */
+    public function accountMeta(): HasMany
+    {
+        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -229,6 +221,14 @@ class Account extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * Get all of the tags for the post.
+     */
+    public function objectGroups()
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
     /**

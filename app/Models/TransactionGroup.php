@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * FireflyIII\Models\TransactionGroup
  *
@@ -85,13 +86,13 @@ class TransactionGroup extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return TransactionGroup
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionGroup
     {
         if (auth()->check()) {
-            $groupId = (int) $value;
+            $groupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */

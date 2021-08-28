@@ -60,6 +60,7 @@ use Illuminate\Support\Carbon;
 class TransactionJournalMeta extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
