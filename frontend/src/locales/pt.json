@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "trimestral",
         "repeat_freq_monthly": "mensalmente",
         "repeat_freq_weekly": "semanalmente",
-        "credit_card_type_monthlyFull": "Full payment every month",
-        "update_liabilities_account": "Actualizar passivo",
-        "update_expense_account": "Alterar conta de despesas",
-        "update_revenue_account": "Alterar conta de receitas",
-        "update_undefined_account": "Update account",
-        "update_asset_account": "Actualizar conta de activos",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Mealheiro",

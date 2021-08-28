@@ -89,7 +89,7 @@
 <script>
 import TransactionListLarge from "../transactions/TransactionListLarge";
 import format from "date-fns/format";
-import {mapGetters, mapMutations} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
   name: "Show",
@@ -100,44 +100,49 @@ export default {
       return null !== this.start && null !== this.end && null !== this.listPageSize && this.ready;
     },
   },
-
   data() {
     return {
       accountId: 0,
       transactions: [],
       ready: false,
       currentPage: 1,
+      perPage: 51,
+      locale: 'en-US'
     }
   },
   created() {
     this.ready = true;
     let parts = window.location.pathname.split('/');
     this.accountId = parseInt(parts[parts.length - 1]);
+    this.perPage = this.listPageSize ?? 51;
 
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
-    //this.getTransactions();
+    this.getTransactions();
   },
   components: {TransactionListLarge},
   methods: {
-    getTransactions: function() {
+    getTransactions: function () {
       console.log('goooooo');
-      let startStr = format(this.start, 'y-MM-dd');
-      let endStr = format(this.end, 'y-MM-dd');
-      axios.get('./api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=10&start=' + startStr + '&end=' + endStr)
-          .then(response => {
-                  this.transactions = response.data.data;
-                  //this.loading = false;
-                  //this.error = false;
-                }
-          );
+      if (this.showReady) {
+        let startStr = format(this.start, 'y-MM-dd');
+        let endStr = format(this.end, 'y-MM-dd');
+        axios.get('./api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr)
+            .then(response => {
+                    this.transactions = response.data.data;
+                    //this.loading = false;
+                    //this.error = false;
+                  }
+            );
+      }
     }
   },
   watch: {
-    showReady: function (value) {
-      if (true === value) {
-        this.getTransactions();
-      }
+    start: function () {
+      this.getTransactions();
+    },
+    end: function () {
+      this.getTransactions();
     },
   }
 

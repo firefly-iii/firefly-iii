@@ -36,5 +36,16 @@ const app = new Vue({
                         store,
                         render(createElement) {
                             return createElement(Show, {props: props});
-                        }
+                        },
+                        beforeCreate() {
+// See reference nr. 10
+                            this.$store.commit('initialiseStore');
+                            this.$store.dispatch('updateCurrencyPreference');
+
+                            // init the new root store (dont care about results)
+                            this.$store.dispatch('root/initialiseStore');
+
+                            // also init the dashboard store.
+                            this.$store.dispatch('dashboard/index/initialiseStore');
+                        },
                     }).$mount('#accounts_show');

@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "negyed\u00e9ves",
         "repeat_freq_monthly": "havi",
         "repeat_freq_weekly": "heti",
-        "credit_card_type_monthlyFull": "Full payment every month",
-        "update_liabilities_account": "K\u00f6telezetts\u00e9g friss\u00edt\u00e9se",
-        "update_expense_account": "K\u00f6lts\u00e9gsz\u00e1mla friss\u00edt\u00e9se",
-        "update_revenue_account": "J\u00f6vedelemsz\u00e1mla friss\u00edt\u00e9se",
-        "update_undefined_account": "Update account",
-        "update_asset_account": "Eszk\u00f6zsz\u00e1mla friss\u00edt\u00e9se",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Malacpersely",

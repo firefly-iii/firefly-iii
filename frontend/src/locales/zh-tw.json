@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "\u6bcf\u5b63",
         "repeat_freq_monthly": "\u6bcf\u6708",
         "repeat_freq_weekly": "\u6bcf\u9031",
-        "credit_card_type_monthlyFull": "Full payment every month",
-        "update_liabilities_account": "\u66f4\u65b0\u50b5\u52d9",
-        "update_expense_account": "\u66f4\u65b0\u652f\u51fa\u5e33\u6236",
-        "update_revenue_account": "\u66f4\u65b0\u6536\u5165\u5e33\u6236",
-        "update_undefined_account": "Update account",
-        "update_asset_account": "\u66f4\u65b0\u8cc7\u7522\u5e33\u6236",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "\u5c0f\u8c6c\u64b2\u6eff",

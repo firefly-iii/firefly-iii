@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "h\u00e0ng qu\u00fd",
         "repeat_freq_monthly": "h\u00e0ng th\u00e1ng",
         "repeat_freq_weekly": "h\u00e0ng tu\u1ea7n",
-        "credit_card_type_monthlyFull": "Full payment every month",
-        "update_liabilities_account": "C\u1eadp nh\u1eadt n\u1ee3",
-        "update_expense_account": "C\u1eadp nh\u1eadt t\u00e0i kho\u1ea3n chi ph\u00ed",
-        "update_revenue_account": "C\u1eadp nh\u1eadt t\u00e0i kho\u1ea3n doanh thu",
-        "update_undefined_account": "Update account",
-        "update_asset_account": "C\u1eadp nh\u1eadt t\u00e0i kho\u1ea3n",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "\u1ed0ng heo con",

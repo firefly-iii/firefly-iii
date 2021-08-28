@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "\u0161tvr\u0165ro\u010dne",
         "repeat_freq_monthly": "mesa\u010dne",
         "repeat_freq_weekly": "t\u00fd\u017edenne",
-        "credit_card_type_monthlyFull": "Full payment every month",
-        "update_liabilities_account": "Upravi\u0165 z\u00e1v\u00e4zok",
-        "update_expense_account": "Upravi\u0165 v\u00fddavkov\u00fd \u00fa\u010det",
-        "update_revenue_account": "Upravi\u0165 pr\u00edjmov\u00fd \u00fa\u010det",
-        "update_undefined_account": "Update account",
-        "update_asset_account": "Upravi\u0165 v\u00fddajov\u00fd \u00fa\u010det",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "credit_card_type_monthlyFull": "Full payment every month"
     },
     "list": {
         "piggy_bank": "Pokladni\u010dka",

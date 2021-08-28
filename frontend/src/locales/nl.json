@@ -169,13 +169,7 @@
         "repeat_freq_quarterly": "elk kwartaal",
         "repeat_freq_monthly": "maandelijks",
         "repeat_freq_weekly": "wekelijks",
-        "credit_card_type_monthlyFull": "Volledige betaling elke maand",
-        "update_liabilities_account": "Update passiva",
-        "update_expense_account": "Wijzig crediteur",
-        "update_revenue_account": "Wijzig debiteur",
-        "update_undefined_account": "Account bijwerken",
-        "update_asset_account": "Wijzig betaalrekening",
-        "updated_account_js": "Account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\" bijgewerkt."
+        "credit_card_type_monthlyFull": "Volledige betaling elke maand"
     },
     "list": {
         "piggy_bank": "Spaarpotje",
