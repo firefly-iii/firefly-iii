@@ -101,7 +101,7 @@ class CreateGroupMemberships extends Command
     private function createGroupMembership(User $user): void
     {
         $userGroup = UserGroup::create(['title' => $user->email]);
-        $userRole  = UserRole::where('title', UserRole::FULL)->first();
+        $userRole  = UserRole::where('title', UserRole::OWNER)->first();
 
         if (null === $userRole) {
             throw new FireflyException('Firefly III could not find a user role. Please make sure all validations have run.');
@@ -117,6 +117,9 @@ class CreateGroupMemberships extends Command
         if (null === $membership) {
             throw new FireflyException('Firefly III could not create user group management object. Please make sure all validations have run.');
         }
+        $user->user_group_id = $userGroup->id;
+        $user->save();
+
         Log::debug(sprintf('User #%d now has main group.', $user->id));
     }
 

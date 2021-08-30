@@ -262,7 +262,7 @@ class UserEventHandler
         $user = $event->user;
         // create a new group.
         $group = UserGroup::create(['title' => $user->email]);
-        $role  = UserRole::where('title', UserRole::FULL)->first();
+        $role  = UserRole::where('title', UserRole::OWNER)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
@@ -273,6 +273,8 @@ class UserEventHandler
                 'user_role_id'  => $role->id,
             ]
         );
+        $user->user_group_id = $group->id;
+        $user->save();
 
         return true;
     }

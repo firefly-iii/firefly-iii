@@ -36,6 +36,7 @@ class UserRole extends Model
     public const CHANGE_REPETITIONS  = 'change_reps';
     public const VIEW_REPORTS        = 'view_reports';
     public const FULL                = 'full';
+    public const OWNER               = 'owner';
     protected $fillable = ['title'];
 
     /**

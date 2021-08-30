@@ -26,6 +26,7 @@ class UserRoleSeeder extends Seeder
             UserRole::CHANGE_REPETITIONS,
             UserRole::VIEW_REPORTS,
             UserRole::FULL,
+            UserRole::OWNER,
         ];
 
         /** @var string $role */

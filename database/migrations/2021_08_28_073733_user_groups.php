@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class UserGroups
@@ -15,6 +16,17 @@ class UserGroups extends Migration
      */
     public function down()
     {
+        Schema::table(
+            'users', function (Blueprint $table) {
+
+            $table->dropForeign('type_user_group_id');
+            if (Schema::hasColumn('users', 'user_group_id')) {
+                $table->dropColumn('user_group_id');
+            }
+
+        }
+        );
+
         Schema::dropIfExists('group_memberships');
         Schema::dropIfExists('user_roles');
         Schema::dropIfExists('user_groups');
@@ -68,6 +80,14 @@ class UserGroups extends Migration
                 $table->foreign('user_role_id')->references('id')->on('user_roles')->onUpdate('cascade')->onDelete('cascade');
                 $table->unique(['user_id', 'user_group_id', 'user_role_id']);
             }
+        );
+        Schema::table(
+            'users', function (Blueprint $table) {
+            if (!Schema::hasColumn('users', 'user_group_id')) {
+                $table->bigInteger('user_group_id', false, true)->nullable();
+                $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null');
+            }
+        }
         );
 
     }

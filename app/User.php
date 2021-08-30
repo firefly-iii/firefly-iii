@@ -46,8 +46,10 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -311,6 +313,14 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class,);
+    }
     /**
      * @codeCoverageIgnore
      * Link to currency exchange rates
