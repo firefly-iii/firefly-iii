@@ -54,7 +54,6 @@ body:
       label: Debug information
       description: Please provide the table from the /debug page
       placeholder: The output from the /debug page
-      render: yaml
     validations:
       required: true
 
