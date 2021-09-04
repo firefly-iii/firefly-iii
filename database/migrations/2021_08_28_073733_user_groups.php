@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Schema;
  */
 class UserGroups extends Migration
 {
+    private array $tables
+        = ['accounts', 'attachments', 'available_budgets', 'bills', 'budgets', 'categories', 'recurrences', 'rule_groups', 'rules', 'tags',
+           'transaction_groups', 'transaction_journals', 'webhooks'];
+
     /**
      * Reverse the migrations.
      *
@@ -16,6 +20,20 @@ class UserGroups extends Migration
      */
     public function down()
     {
+        // remove columns from tables
+        /** @var string $tableName */
+        foreach ($this->tables as $tableName) {
+            Schema::table(
+                $tableName, function (Blueprint $table) use ($tableName) {
+                
+                $table->dropForeign(sprintf('%s_to_ugi', $tableName));
+                if (Schema::hasColumn($tableName, 'user_group_id')) {
+                    $table->dropColumn('user_group_id');
+                }
+            }
+            );
+        }
+
         Schema::table(
             'users', function (Blueprint $table) {
 
@@ -85,10 +103,24 @@ class UserGroups extends Migration
             'users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'user_group_id')) {
                 $table->bigInteger('user_group_id', false, true)->nullable();
-                $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null');
+                $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
             }
         }
         );
+
+        // ADD columns from tables
+        /** @var string $tableName */
+        foreach ($this->tables as $tableName) {
+            Schema::table(
+                $tableName, function (Blueprint $table) use ($tableName) {
+
+                if (!Schema::hasColumn($tableName, 'user_group_id')) {
+                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                    $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                }
+            }
+            );
+        }
 
     }
 }
