@@ -47,5 +47,8 @@ return [
     'tell_more'               => 'Dicci di più di "dice Oops!"',
     'include_logs'            => 'Includi i log degli errori (vedi sopra).',
     'what_did_you_do'         => 'Dicci cosa stavi facendo.',
+    'offline_header'          => 'Sembreresti essere offline',
+    'offline_unreachable'     => 'Firefly III non è raggiungibile. Il tuo dispositivo sembrerebbe offline, o il server non sta funzionando.',
+    'offline_github'          => 'Se si è certi che sia il server che il dispositivo siano correttamente funzionanti, si può aprire un ticket <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];
