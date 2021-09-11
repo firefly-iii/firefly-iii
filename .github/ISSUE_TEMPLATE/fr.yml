@@ -8,7 +8,7 @@ body:
       options:
         - label: I've read the [support guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/support.md)
           required: true
-        - label: My request is not listed as [an idea that won't be implemented](https://docs.firefly-iii.org/firefly-iii/support/features/#ideas-that-wont-be-implemented)
+        - label: My request is not listed as [a very good idea, but unfortunately...](https://docs.firefly-iii.org/firefly-iii/about-firefly-iii/what-its-not/)
           required: true
         - label: I've used [the search](https://github.com/firefly-iii/firefly-iii/issues?q=is%3Aissue) and this has not been discussed before.
           required: true
