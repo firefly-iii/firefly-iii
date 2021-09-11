@@ -32,8 +32,9 @@
 
 - [About Firefly III](#about-firefly-iii)
   - [Purpose](#purpose)
+- [Need help?](#need-help)
   - [Features](#features)
-  - [Who's it for?](#-whos-it-for)
+  - [Who's it for?](#whos-it-for)
   - [The Firefly III eco-system](#the-firefly-iii-eco-system)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
@@ -67,6 +68,18 @@ Personal financial management is pretty difficult, and everybody has their own a
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
 You can read more about the purpose of Firefly III in the [documentation](https://docs.firefly-iii.org/).
+
+<!-- HELP TEXT -->
+## Need help?
+
+If you need support using Firefly III or the associated tools, come find us!
+
+- [GitHub Discussions for questions and support](https://github.com/firefly-iii/firefly-iii/discussions/)
+- [Gitter.im for a good chat and a quick answer](https://gitter.im/firefly-iii/firefly-iii)
+- [GitHub Issues for bugs and issues](https://github.com/firefly-iii/firefly-iii/issues)
+- [Follow me around for news and updates on Twitter](https://twitter.com/Firefly_iii)
+
+<!-- END OF HELP TEXT -->
 
 ### Features
 
