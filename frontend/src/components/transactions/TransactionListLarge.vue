@@ -19,84 +19,366 @@
   -->
 
 <template>
-  <table class="table table-striped table-sm">
-    <caption style="display:none;">{{ $t('firefly.transaction_table_description') }}</caption>
-    <thead>
-    <tr>
-      <th class="text-left" scope="col">{{ $t('firefly.description') }}</th>
-      <th scope="col">{{ $t('firefly.opposing_account') }}</th>
-      <th class="text-right" scope="col">{{ $t('firefly.amount') }}</th>
-      <th scope="col">{{ $t('firefly.category') }}</th>
-      <th scope="col">{{ $t('firefly.budget') }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="transaction in this.transactions">
-      <td>
-        <a :href="'transactions/show/' + transaction.id " :title="transaction.date">
-          <span v-if="transaction.attributes.transactions.length > 1">{{ transaction.attributes.group_title }}</span>
-          <span v-if="1===transaction.attributes.transactions.length">{{ transaction.attributes.transactions[0].description }}</span>
-        </a>
-      </td>
-      <td>
-                <span v-for="tr in transaction.attributes.transactions">
-                    <a v-if="'withdrawal' === tr.type" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
-                    <a v-if="'deposit' === tr.type" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
-                    <a v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
-                    <a v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
-                    <br/>
+  <div>
+    <div class="row">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+        <BPagination
+            v-model="currentPage"
+            :total-rows="total"
+            :per-page="perPage"
+            aria-controls="my-table"
+        ></BPagination>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body p-0">
+            <BTable id="my-table" small striped hover responsive="md" primary-key="key" :no-local-sorting="false"
+                    :items="transactions"
+                    :fields="fields"
+                    :per-page="perPage"
+                    sort-icon-left
+                    ref="table"
+                    :current-page="currentPage"
+                    :busy.sync="loading"
+                    :sort-desc.sync="sortDesc"
+                    :sort-compare="tableSortCompare"
+            >
+              <template #table-busy>
+                <span class="fa fa-spinner"></span>
+              </template>
+              <template #cell(type)="data">
+                <span v-if="! data.item.split || data.item.split_parent === null">
+                  <span class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type"></span>
+                  <span class="fas fa-long-arrow-alt-left" v-else-if="'withdrawal' === data.item.type"></span>
+                  <span class="fas fa-long-arrows-alt-h" v-else-if="'transfer' === data.item.type"></span>
                 </span>
-      </td>
-      <td style="text-align:right;">
-                <span v-for="tr in transaction.attributes.transactions">
-                     <span v-if="'withdrawal' === tr.type" class="text-danger">
-                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
-                     </span>
-                    <span v-if="'deposit' === tr.type" class="text-success">
-                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
-                     </span>
-                    <span v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" class="text-info">
-                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount * -1) }}<br>
-                    </span>
-                    <span v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" class="text-info">
-                        {{ Intl.NumberFormat(locale, {style: 'currency', currency: tr.currency_code}).format(tr.amount) }}<br>
-                    </span>
+              </template>
+              <template #cell(description)="data">
+                <span class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></span>
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
+                    data.value
+                  }}</a>
+              </template>
+              <template #cell(amount)="data">
+                <span class="text-success" v-if="'deposit' === data.item.type">
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
-      </td>
-      <td>
-                <span v-for="tr in transaction.attributes.transactions">
-                    <a v-if="0!==tr.category_id" :href="'categories/show/' + tr.category_id">{{ tr.category_name }}</a><br/>
+
+                <span class="text-danger" v-else-if="'withdrawal' === data.item.type">
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(-data.item.amount) }}
                 </span>
-      </td>
-      <td>
-                <span v-for="tr in transaction.attributes.transactions">
-                    <a v-if="0!==tr.budget_id" :href="'budgets/show/' + tr.budget_id">{{ tr.budget_name }}</a><br/>
+
+                <span class="text-muted" v-else-if="'transfer' === data.item.type">
+                  {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+              </template>
+              <template #cell(date)="data">
+                {{ data.item.date_formatted }}
+              </template>
+              <template #cell(source_account)="data">
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.source_id"
+                   :title="data.item.source_name">{{ data.item.source_name }}</a>
+              </template>
+              <template #cell(destination_account)="data">
+                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.destination_id"
+                   :title="data.item.destination_name">{{ data.item.destination_name }}</a>
+              </template>
+              <template #cell(menu)="data">
+                <div class="btn-group btn-group-sm" v-if="! data.item.split || data.item.split_parent === null">
+                  <div class="dropdown">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + data.item.id" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                      {{ $t('firefly.actions') }}
+                    </button>
+                    <div class="dropdown-menu" :aria-labelledby="'dropdownMenuButton' + data.item.id">
+                      <a class="dropdown-item" :href="'./transactions/edit/' + data.item.id"><span class="fa fas fa-pencil-alt"></span> {{
+                          $t('firefly.edit')
+                        }}</a>
+                      <a class="dropdown-item" :href="'./transactions/delete/' + data.item.id"><span class="fa far fa-trash"></span> {{
+                          $t('firefly.delete')
+                        }}</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="btn btn-light btn-sm" v-if="data.item.split && data.item.split_parent === null && data.item.collapsed === true"
+                     v-on:click="toggleCollapse(data.item)">
+                  <span class="fa fa-caret-down"></span>
+                  {{ $t('firefly.transaction_expand_split') }}
+                </div>
+                <div class="btn btn-light btn-sm" v-else-if="data.item.split && data.item.split_parent === null && data.item.collapsed === false"
+                     v-on:click="toggleCollapse(data.item)">
+                  <span class="fa fa-caret-up"></span>
+                  {{ $t('firefly.transaction_collapse_split') }}
+                </div>
+              </template>
+              <template #cell(category)="data">
+                {{ data.item.category_name }}
+              </template>
+            </BTable>
+
+          </div>
+          <div class="card-footer">
+            <a :href="'./transactions/create/' + type" class="btn btn-success"
+               :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+        <BPagination
+            v-model="currentPage"
+            :total-rows="total"
+            :per-page="perPage"
+            aria-controls="my-table"
+        ></BPagination>
+      </div>
+      <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <button @click="newCacheKey" class="btn btn-sm float-right btn-info"><span class="fas fa-sync"></span></button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+
+
+/*
+this.transactions = [];
+        this.transactionRows = [];
+        this.downloadTransactionList(1);
+
+
+
+
+    downloadTransactionList: function (page) {
+      // console.log('downloadTransactionList(' + page + ')');
+      configureAxios().then(async (api) => {
+        let startStr = format(this.start, 'y-MM-dd');
+        let endStr = format(this.end, 'y-MM-dd');
+        // console.log(this.urlEnd);
+        // console.log(this.urlStart);
+        if (null !== this.urlEnd && null !== this.urlStart) {
+          startStr = format(this.urlStart, 'y-MM-dd');
+          endStr = format(this.urlEnd, 'y-MM-dd');
+        }
+
+        api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey)
+            .then(response => {
+                    //let currentPage = parseInt(response.data.meta.pagination.current_page);
+                    //let totalPages = parseInt(response.data.meta.pagination.total_pages);
+                    this.total = parseInt(response.data.meta.pagination.total);
+                    //console.log('total is ' + this.total);
+                    this.transactions.push(...response.data.data);
+                    // if (currentPage < totalPage) {
+                    //   let nextPage = currentPage + 1;
+                    //   this.downloadTransactionList(nextPage);
+                    // }
+                    // if (currentPage >= totalPage) {
+                    // console.log('Looks like all downloaded.');
+                    this.downloaded = true;
+                    this.createTransactionRows();
+                    // }
+
+                  }
+            );
+      });
+    },
+
+
+createTransactionRows: function () {
+      this.transactionRows = [];
+      for (let i in this.transactions) {
+        let transaction = this.transactions[i];
+        let transactionRow = this.getTransactionRow(transaction, 0);
+        this.transactionRows.push(transactionRow);
+
+        if (transaction.attributes.transactions.length > 1) {
+          transactionRow.description = transaction.attributes.group_title;
+          transactionRow.split = true;
+          transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
+          transactionRow.amount = transaction.attributes.transactions
+              .map(transaction => Number(transaction.amount))
+              .reduce((sum, n) => sum + n);
+          transactionRow.source_name = '';
+          transactionRow.source_id = '';
+          transactionRow.destination_name = '';
+          transactionRow.destination_id = '';
+
+          if (!transactionRow.collapsed) {
+            for (let i = 0; i < transaction.attributes.transactions.length; i++) {
+              let splitTransactionRow = this.getTransactionRow(transaction, i);
+              splitTransactionRow.key = splitTransactionRow.id + "." + i
+              splitTransactionRow.split = true;
+              splitTransactionRow.split_index = i + 1;
+              splitTransactionRow.split_parent = transactionRow;
+              this.transactionRows.push(splitTransactionRow);
+            }
+          }
+        }
+      }
+
+      this.loading = false;
+    },
+    getTransactionRow(transaction, index) {
+      let transactionRow = {};
+      let currentTransaction = transaction.attributes.transactions[index];
+
+      transactionRow.key = transaction.id;
+      transactionRow.id = transaction.id;
+      transactionRow.type = currentTransaction.type;
+      transactionRow.description = currentTransaction.description;
+      transactionRow.amount = currentTransaction.amount;
+      transactionRow.currency_code = currentTransaction.currency_code;
+      transactionRow.date = new Date(currentTransaction.date);
+      transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
+      transactionRow.source_name = currentTransaction.source_name;
+      transactionRow.source_id = currentTransaction.source_id;
+      transactionRow.destination_name = currentTransaction.destination_name;
+      transactionRow.destination_id = currentTransaction.destination_id;
+      transactionRow.category_id = currentTransaction.category_id;
+      transactionRow.category_name = currentTransaction.category_name;
+      transactionRow.split = false;
+      transactionRow.split_index = 0;
+      transactionRow.split_parent = null;
+
+      return transactionRow;
+    },
+
+
+toggleCollapse: function (row) {
+      let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
+      if (transaction.collapsed === undefined) {
+        transaction.collapsed = false;
+      } else {
+        transaction.collapsed = !transaction.collapsed;
+      }
+      this.createTransactionRows();
+    },
+ */
+
+import {mapGetters, mapMutations} from "vuex";
+import {BPagination, BTable} from 'bootstrap-vue';
+
 export default {
   name: "TransactionListLarge",
+  components: {BPagination, BTable},
   data() {
     return {
-      locale: 'en-US'
+      locale: 'en-US',
+      fields: [],
     }
+  },
+  computed: {
+    ...mapGetters('root', ['listPageSize', 'cacheKey']),
   },
   created() {
     this.locale = localStorage.locale ?? 'en-US';
+    this.updateFieldList();
   },
+  watch: {
+  },
+  methods: {
+    ...mapMutations('root', ['refreshCacheKey',]),
+    newCacheKey: function () {
+      alert('TODO');
+      this.refreshCacheKey();
+      //this.downloaded = false;
+      //this.accounts = [];
+      //this.getTransactionList();
+    },
+    updateFieldList: function () {
+      this.fields = [
+        {key: 'type', label: ' ', sortable: false},
+        {key: 'description', label: this.$t('list.description') + 'X', sortable: true},
+        {key: 'amount', label: this.$t('list.amount'), sortable: true},
+        {key: 'date', label: this.$t('list.date'), sortable: true},
+        {key: 'source_account', label: this.$t('list.source_account'), sortable: true},
+        {key: 'destination_account', label: this.$t('list.destination_account'), sortable: true},
+        {key: 'category_name', label: this.$t('list.category'), sortable: true},
+        {key: 'menu', label: ' ', sortable: false},
+      ];
+    },
+    tableSortCompare: function (aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
+      let a = aRow[key]
+      let b = bRow[key]
+
+      if (aRow.id === bRow.id) {
+        // Order split transactions normally when compared to each other, except always put the header first
+        if (aRow.split_parent === null) {
+          return sortDesc ? 1 : -1;
+        } else if (bRow.split_parent === null) {
+          return sortDesc ? -1 : 1;
+        }
+      } else {
+        // Sort split transactions based on their parent when compared to other transactions
+        if (aRow.split && aRow.split_parent !== null) {
+          a = aRow.split_parent[key]
+        }
+        if (bRow.split && bRow.split_parent !== null) {
+          b = bRow.split_parent[key]
+        }
+      }
+
+      if (
+          (typeof a === 'number' && typeof b === 'number') ||
+          (a instanceof Date && b instanceof Date)
+      ) {
+        // If both compared fields are native numbers or both are native dates
+        return a < b ? -1 : a > b ? 1 : 0
+      } else {
+        // Otherwise stringify the field data and use String.prototype.localeCompare
+        return toString(a).localeCompare(toString(b), compareLocale, compareOptions)
+      }
+
+      function toString(value) {
+        if (value === null || typeof value === 'undefined') {
+          return ''
+        } else if (value instanceof Object) {
+          return Object.keys(value)
+              .sort()
+              .map(key => toString(value[key]))
+              .join(' ')
+        } else {
+          return String(value)
+        }
+      }
+    },
+  },
+
   props: {
+    currentPage: {
+      type: Number,
+      default: 1
+    },
+    perPage: {
+      type: Number,
+      default: 1
+    },
+    loading: {
+      type: Boolean,
+      default: true
+    },
+    sortDesc: {
+      type: Boolean,
+      default: true
+    },
+    total: {
+      type: Number,
+      default: 1
+    },
     transactions: {
       type: Array,
       default: function () {
         return [];
       }
     },
-    account_id: {
+    accountId: {
       type: Number,
       default: function () {
         return 0;

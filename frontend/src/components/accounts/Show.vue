@@ -53,22 +53,17 @@
         <!-- ./card -->
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              Title
-            </h3>
-          </div>
-          <div class="card-body">
-            <TransactionListLarge :account_id=accountId :transactions=transactions>
 
-            </TransactionListLarge>
-          </div>
-        </div>
-      </div>
-    </div>
+            <TransactionListLarge
+                :transactions="transactions"
+                :current-page="currentPage"
+                :total="total"
+                :per-page="perPage"
+                :loading="loading"
+                :sort-desc="sortDesc"
+                :account-id="accountId"
+            />
+
     <div class="row">
       <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
         <div class="card">
@@ -105,6 +100,9 @@ export default {
       accountId: 0,
       transactions: [],
       ready: false,
+      loading: true,
+      total: 0,
+      sortDesc: false,
       currentPage: 1,
       perPage: 51,
       locale: 'en-US'
