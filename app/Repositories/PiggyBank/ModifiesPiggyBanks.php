@@ -88,14 +88,15 @@ trait ModifiesPiggyBanks
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $leftOnAccount = $this->leftOnAccount($piggyBank, today(config('app.timezone')));
+        $today = today(config('app.timezone'));
+        $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
         $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
         $compare       = bccomp($amount, $maxAmount);
         $result        = $compare <= 0;
 
-        Log::debug(sprintf('Left on account: %s', $leftOnAccount));
+        Log::debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d')));
         Log::debug(sprintf('Saved so far: %s', $savedSoFar));
         Log::debug(sprintf('Left to save: %s', $leftToSave));
         Log::debug(sprintf('Maximum amount: %s', $maxAmount));
