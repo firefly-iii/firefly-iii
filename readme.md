@@ -33,9 +33,9 @@
 - [About Firefly III](#about-firefly-iii)
   - [Purpose](#purpose)
 - [Need help?](#need-help)
-  - [Features](#features)
-  - [Who's it for?](#whos-it-for)
-  - [The Firefly III eco-system](#the-firefly-iii-eco-system)
+- [Features](#features)
+- [Who's it for?](#whos-it-for)
+- [The Firefly III eco-system](#the-firefly-iii-eco-system)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
   - [Support the development of Firefly III](#support-the-development-of-firefly-iii)
@@ -81,7 +81,7 @@ If you need support using Firefly III or the associated tools, come find us!
 
 <!-- END OF HELP TEXT -->
 
-### Features
+## Features
 
 Firefly III is pretty feature packed. Some important stuff first:
 
@@ -113,14 +113,14 @@ And to organise everything:
 
 Many more features are listed in the [documentation](https://docs.firefly-iii.org/about-firefly-iii/introduction).
 
-### Who's it for?
+## Who's it for?
 <img src="https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/iphone-complete.png" alt="Firefly III on iPhone" align="left" width="250">
 
  This application is for people who want to track their finances, keep an eye on their money **without having to upload their financial records to the cloud**. You're a bit tech-savvy, you like open source software and you don't mind tinkering with (self-hosted) servers.
  
  <br clear="left"/>
 
-### The Firefly III eco-system
+## The Firefly III eco-system
 
 Several users have built pretty awesome stuff around the Firefly III API. [Check out these tools in the documentation](https://docs.firefly-iii.org/other-pages/3rdparty).
 
