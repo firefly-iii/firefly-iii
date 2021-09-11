@@ -33,8 +33,9 @@ body:
 
   - type: textarea
     attributes:
-      label: Actual behaviour
-      description: Please describe precisely what is actually happening.
+      label: Debug information
+      description: Please provide the table from the /debug page
+      placeholder: The output from the /debug page
     validations:
       required: true
 
@@ -47,16 +48,7 @@ body:
         2. ...
         3. ...
     validations:
-      required: true
-
-  - type: textarea
-    attributes:
-      label: Debug information
-      description: Please provide the table from the /debug page
-      placeholder: The output from the /debug page
-      render: yaml
-    validations:
-      required: true
+      required: false
 
   - type: textarea
     attributes:
