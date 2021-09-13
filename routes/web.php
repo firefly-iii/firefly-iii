@@ -40,7 +40,7 @@ Route::group(
 Route::group(
     ['middleware' => 'binders-only'],
     static function () {
-        Route::get('offline', fn () => view('errors.Offline'));
+        Route::get('offline', fn () => view('errors.offline'));
     }
 );
 
