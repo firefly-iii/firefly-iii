@@ -47,5 +47,4 @@ return [
     'tell_more'               => 'Tell us more than "it says Whoops!"',
     'include_logs'            => 'Include error logs (see above).',
     'what_did_you_do'         => 'Tell us what you were doing.',
-
 ];

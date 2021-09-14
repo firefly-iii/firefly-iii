@@ -37,6 +37,13 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => 'binders-only'],
+    static function () {
+        Route::get('offline', fn () => view('errors.offline'));
+    }
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */
