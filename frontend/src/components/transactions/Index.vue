@@ -36,13 +36,14 @@
         </div>
       </div>
     </div>
+    <!-- page is ignored for the time being -->
     <TransactionListLarge
-        :transactions="transactionRows"
-        :current-page="currentPage"
+        :entries="rawTransactions"
+        :page="currentPage"
         :total="total"
         :per-page="perPage"
-        :loading="loading"
         :sort-desc="sortDesc"
+        v-on:jump-page="jumpToPage($event)"
     />
     <div class="row">
       <div class="col-xl-2 col-lg-4 col-sm-6 col-xs-12" v-for="range in ranges">
@@ -74,6 +75,7 @@ export default {
   components: {TransactionListLarge},
   data() {
     return {
+      rawTransactions: [],
       transactions: [],
       transactionRows: [],
       type: 'all',
@@ -137,25 +139,6 @@ export default {
     let params = new URLSearchParams(window.location.search);
     this.currentPage = params.get('page') ? parseInt(params.get('page')) : 1;
     this.ready = true;
-
-    // make object thing:
-    // let token = document.head.querySelector('meta[name="csrf-token"]');
-    // this.api = setup(
-    //     {
-    //       // `axios` options
-    //       //baseURL: './',
-    //       headers: {'X-CSRF-TOKEN': token.content, 'X-James': 'yes'},
-    //
-    //       // `axios-cache-adapter` options
-    //       cache: {
-    //         maxAge: 15 * 60 * 1000,
-    //         readHeaders: false,
-    //         exclude: {
-    //           query: false,
-    //         },
-    //         debug: true
-    //       }
-    //     });
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
@@ -165,6 +148,11 @@ export default {
       this.accounts = [];
       this.getTransactionList();
     },
+    jumpToPage: function(event) {
+      console.log('noticed a change!');
+      this.currentPage = event.page;
+      this.downloadTransactionList(event.page);
+    },
     getTransactionList: function () {
       // console.log('getTransactionList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
@@ -173,7 +161,8 @@ export default {
         this.perPage = this.listPageSize ?? 51;
         this.transactions = [];
         this.transactionRows = [];
-        this.downloadTransactionList(1);
+        this.rawTransactions = [];
+        this.downloadTransactionList(this.currentPage);
         this.calculateDateRanges();
       }
     },
@@ -206,24 +195,25 @@ export default {
           startStr = format(this.urlStart, 'y-MM-dd');
           endStr = format(this.urlEnd, 'y-MM-dd');
         }
-
-        api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey)
+        let url = './api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey;
+        url = './api/v1/transactions?type=' + this.type + '&page=' + page + '&cache=' + this.cacheKey;
+        api.get(url)
             .then(response => {
                     //let currentPage = parseInt(response.data.meta.pagination.current_page);
                     //let totalPages = parseInt(response.data.meta.pagination.total_pages);
                     this.total = parseInt(response.data.meta.pagination.total);
                     //console.log('total is ' + this.total);
-                    this.transactions.push(...response.data.data);
+                    this.rawTransactions = response.data.data;
                     // if (currentPage < totalPage) {
                     //   let nextPage = currentPage + 1;
                     //   this.downloadTransactionList(nextPage);
                     // }
                     // if (currentPage >= totalPage) {
                     // console.log('Looks like all downloaded.');
-                    this.downloaded = true;
-                    this.createTransactionRows();
+                    //this.downloaded = true;
+                    //this.createTransactionRows();
                     // }
-
+                    this.loading = false;
                   }
             );
       });

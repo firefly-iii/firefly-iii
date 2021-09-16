@@ -22,11 +22,18 @@
   <div>
     <div class="row">
       <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
-        <BPagination
-            v-model="currentPage"
-            :total-rows="total"
-            :per-page="perPage"
-            aria-controls="my-table"
+
+        currentPage: {{ currentPage }}<br>
+        page: {{ page }}<br>
+        Total: {{ total }}<br>
+        Per page: {{ perPage }}<br>
+        Loading: {{ loading }}<br>
+        <BPagination v-if="!loading"
+                     v-model="currentPage"
+                     @change="currentPage = $event"
+                     :total-rows="total"
+                     :per-page="perPage"
+                     aria-controls="my-table"
         ></BPagination>
       </div>
       <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
@@ -49,7 +56,7 @@
                     :sort-compare="tableSortCompare"
             >
               <template #table-busy>
-                <span class="fa fa-spinner"></span>
+                <span class="fa fa-spinner fa-spin"></span>
               </template>
               <template #cell(type)="data">
                 <span v-if="! data.item.split || data.item.split_parent === null">
@@ -63,6 +70,7 @@
                 <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
                     data.value
                   }}</a>
+                <span class="fa fa-spinner fa-spin" v-if="data.item.dummy"></span>
               </template>
               <template #cell(amount)="data">
                 <span class="text-success" v-if="'deposit' === data.item.type">
@@ -122,9 +130,11 @@
             </BTable>
 
           </div>
-          <div class="card-footer">
+          <div class="card-footer"> (button)
+            <!--
             <a :href="'./transactions/create/' + type" class="btn btn-success"
                :title="$t('firefly.create_new_transaction')">{{ $t('firefly.create_new_transaction') }}</a>
+               -->
           </div>
         </div>
       </div>
@@ -264,6 +274,7 @@ toggleCollapse: function (row) {
 
 import {mapGetters, mapMutations} from "vuex";
 import {BPagination, BTable} from 'bootstrap-vue';
+import format from "date-fns/format";
 
 export default {
   name: "TransactionListLarge",
@@ -272,6 +283,9 @@ export default {
     return {
       locale: 'en-US',
       fields: [],
+      currentPage: 1,
+      transactions: [],
+      loading: true
     }
   },
   computed: {
@@ -280,17 +294,80 @@ export default {
   created() {
     this.locale = localStorage.locale ?? 'en-US';
     this.updateFieldList();
+    //this.currentPage = this.page;
+    this.parseTransactions();
   },
   watch: {
+    currentPage: function (value) {
+      console.log('Watch currentPage go to ' + value);
+      this.$emit('jump-page', {page: value});
+    },
+    // page: function (value) {
+    //   console.log('Watch page go to ' + value);
+    //   this.currentPage = value;
+    // },
+    entries: function (value) {
+      this.parseTransactions();
+    },
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
+
+    toggleCollapse: function (row) {
+      let transaction = this.entries.filter(transaction => transaction.id === row.id)[0];
+      if (transaction.collapsed === undefined) {
+        transaction.collapsed = false;
+      } else {
+        transaction.collapsed = !transaction.collapsed;
+      }
+      this.parseTransactions();
+    },
+
+    parseTransactions: function () {
+      console.log('parseTransactions. Count is ' + this.entries.length + ' and page is ' + this.page);
+      for (let i = 0; i < this.total; i++) {
+        this.transactions.push({dummy: true});
+      }
+      let index = (this.page - 1) * this.perPage;
+      for (let i in this.entries) {
+        let transaction = this.entries[i];
+        this.transactions[index] = this.getTransactionRow(transaction, 0);
+
+        // this code will not be used for the time being.
+        // if (transaction.attributes.transactions.length > 1) {
+        //   transactionRow.description = transaction.attributes.group_title;
+        //   transactionRow.split = true;
+        //   transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
+        //   transactionRow.amount = transaction.attributes.transactions
+        //       .map(transaction => Number(transaction.amount))
+        //       .reduce((sum, n) => sum + n);
+        //   transactionRow.source_name = '';
+        //   transactionRow.source_id = '';
+        //   transactionRow.destination_name = '';
+        //   transactionRow.destination_id = '';
+        //
+        //   if (!transactionRow.collapsed) {
+        //     for (let i = 0; i < transaction.attributes.transactions.length; i++) {
+        //       let splitTransactionRow = this.getTransactionRow(transaction, i);
+        //       splitTransactionRow.key = splitTransactionRow.id + "." + i
+        //       splitTransactionRow.split = true;
+        //       splitTransactionRow.split_index = i + 1;
+        //       splitTransactionRow.split_parent = transactionRow;
+        //
+        //       // need to verify this.
+        //       index++;
+        //       this.transactions[index] = splitTransactionRow;
+        //     }
+        //   }
+        // }
+        index++;
+      }
+
+      this.loading = false;
+    },
     newCacheKey: function () {
       alert('TODO');
       this.refreshCacheKey();
-      //this.downloaded = false;
-      //this.accounts = [];
-      //this.getTransactionList();
     },
     updateFieldList: function () {
       this.fields = [
@@ -304,6 +381,31 @@ export default {
         {key: 'menu', label: ' ', sortable: false},
       ];
     },
+    getTransactionRow(transaction, index) {
+      let transactionRow = {};
+      let currentTransaction = transaction.attributes.transactions[index];
+
+      transactionRow.key = transaction.id;
+      transactionRow.id = transaction.id;
+      transactionRow.type = currentTransaction.type;
+      transactionRow.description = currentTransaction.description;
+      transactionRow.amount = currentTransaction.amount;
+      transactionRow.currency_code = currentTransaction.currency_code;
+      transactionRow.date = new Date(currentTransaction.date);
+      transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
+      transactionRow.source_name = currentTransaction.source_name;
+      transactionRow.source_id = currentTransaction.source_id;
+      transactionRow.destination_name = currentTransaction.destination_name;
+      transactionRow.destination_id = currentTransaction.destination_id;
+      transactionRow.category_id = currentTransaction.category_id;
+      transactionRow.category_name = currentTransaction.category_name;
+      transactionRow.split = false;
+      transactionRow.split_index = 0;
+      transactionRow.split_parent = null;
+
+      return transactionRow;
+    },
+
     tableSortCompare: function (aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
       let a = aRow[key]
       let b = bRow[key]
@@ -352,17 +454,12 @@ export default {
   },
 
   props: {
-    currentPage: {
-      type: Number,
-      default: 1
+    page: {
+      type: Number
     },
     perPage: {
       type: Number,
       default: 1
-    },
-    loading: {
-      type: Boolean,
-      default: true
     },
     sortDesc: {
       type: Boolean,
@@ -372,7 +469,7 @@ export default {
       type: Number,
       default: 1
     },
-    transactions: {
+    entries: {
       type: Array,
       default: function () {
         return [];

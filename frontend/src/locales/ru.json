@@ -169,7 +169,13 @@
         "repeat_freq_quarterly": "\u0440\u0430\u0437 \u0432 \u043a\u0432\u0430\u0440\u0442\u0430\u043b",
         "repeat_freq_monthly": "\u0435\u0436\u0435\u043c\u0435\u0441\u044f\u0447\u043d\u043e",
         "repeat_freq_weekly": "\u0435\u0436\u0435\u043d\u0435\u0434\u0435\u043b\u044c\u043d\u043e",
-        "credit_card_type_monthlyFull": "Full payment every month"
+        "credit_card_type_monthlyFull": "Full payment every month",
+        "update_liabilities_account": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0434\u043e\u043b\u0433\u043e\u0432\u043e\u0439 \u0441\u0447\u0451\u0442",
+        "update_expense_account": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0447\u0451\u0442 \u0440\u0430\u0441\u0445\u043e\u0434\u0430",
+        "update_revenue_account": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0447\u0451\u0442 \u0434\u043e\u0445\u043e\u0434\u0430",
+        "update_undefined_account": "Update account",
+        "update_asset_account": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u0441\u0447\u0451\u0442",
+        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
     },
     "list": {
         "piggy_bank": "\u041a\u043e\u043f\u0438\u043b\u043a\u0430",

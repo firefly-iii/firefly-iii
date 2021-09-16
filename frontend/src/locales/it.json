@@ -169,7 +169,13 @@
         "repeat_freq_quarterly": "trimestralmente",
         "repeat_freq_monthly": "mensilmente",
         "repeat_freq_weekly": "settimanalmente",
-        "credit_card_type_monthlyFull": "Pagamento intero ogni mese"
+        "credit_card_type_monthlyFull": "Pagamento intero ogni mese",
+        "update_liabilities_account": "Aggiorna passivit\u00e0",
+        "update_expense_account": "Aggiorna conto uscite",
+        "update_revenue_account": "Aggiorna conto entrate",
+        "update_undefined_account": "Aggiorna conto",
+        "update_asset_account": "Aggiorna conto attivit\u00e0",
+        "updated_account_js": "Conto \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\" aggiornato."
     },
     "list": {
         "piggy_bank": "Salvadanaio",
