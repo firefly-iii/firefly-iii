@@ -47,5 +47,4 @@ return [
     'tell_more'               => 'Dicci di più di "dice Oops!"',
     'include_logs'            => 'Includi i log degli errori (vedi sopra).',
     'what_did_you_do'         => 'Dicci cosa stavi facendo.',
-
 ];
