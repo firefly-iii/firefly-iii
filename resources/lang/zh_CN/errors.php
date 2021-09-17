@@ -47,5 +47,8 @@ return [
     'tell_more'               => '请提交给我们更多信息，而不仅仅是“网页提示说很抱歉”。',
     'include_logs'            => '请包含错误日志（见上文）。',
     'what_did_you_do'         => '告诉我们您进行了哪些操作。',
+    'offline_header'          => 'You are probably offline',
+    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
+    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

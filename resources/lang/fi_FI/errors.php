@@ -47,5 +47,8 @@ return [
     'tell_more'               => 'Kerro meille enemmän kuin "se sanoo Whoops!"',
     'include_logs'            => 'Sisällytä virhelokit (katso yllä).',
     'what_did_you_do'         => 'Kerro meille mitä olit tekemässä.',
+    'offline_header'          => 'You are probably offline',
+    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
+    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

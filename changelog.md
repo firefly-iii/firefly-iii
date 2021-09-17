@@ -2,38 +2,55 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 5.6.0 - 2021-xx-xx
+## 5.6.0 - 2021-09-17
 
-⚠️ This release features new LDAP libraries. Your mileage may vary. Make sure you back up everything. Firefly III may accidentally create a new account for you instead of reusing the old one. There is no option for LDAP filters yet.
+⚠️ This release features new LDAP libraries. Your mileage may vary. Make sure you back up everything. Firefly III may accidentally create a new account for you instead of reusing the old one. There is no option for LDAP filters yet. 
+
+Please refer to the [documentation](https://docs.firefly-iii.org/firefly-iii/) and support channels if you run into problems:
+
+- [Gitter.im](https://gitter.im/firefly-iii/firefly-iii)
+- [Twitter](https://twitter.com/Firefly_III/)
+- [GitHub Issues](https://github.com/firefly-iii/firefly-iii/issues)
+- [GitHub Discussions](https://github.com/firefly-iii/firefly-iii/discussions)
 
 ### Added
 - A few new pages for the new v2 layout. Thanks @alex6480!
-- Added a new currency yay!
-- You can now manage loans and debts a little better.
+- Added a new currency, thanks @kasperkls02!
+- You can now manage loans and debts a little better, see also the documentation for help.
+- Some screenshots are now in the GitHub repository for better management, thanks @Flightkick!
+- @LBreda has added a service worker and updated icons, thanks!
 
 ### Changed
+- @hoshsadiq has added all PHP requirements to the composer file, thanks!
 - A better cache routine for layout v2 pages.
-- All LDAP libraries have been upgrade.
-
-### Deprecated
-- Initial release.
+- All LDAP libraries have been upgraded.
+- New issue templates and help text for easier GitHub support.
+- First preparations for multi-administration and group membership options.
+- The search will return nothing if you submit invalid values, instead of everything.
 
 ### Removed
 - All telemetry options have been removed.
 
-
 ### Fixed
 - [Issue 4894](https://github.com/firefly-iii/firefly-iii/issues/4894) Bad number comparison
+- [Issue 4987](https://github.com/firefly-iii/firefly-iii/issues/4987) Budgeted amount includes inactive budgets
+- [Issue 4988](https://github.com/firefly-iii/firefly-iii/issues/4988) Can't select liability account from imported transactions
+- #5042 HTTP 500 when creating Personal Access Token or OAuth Client
 - Various Sonarqube issues, thanks @hazma-fadil!
 - Correct menu display, thanks @vonsogt!
-
+- The IBAN validator will filter special characters.
+- In some cases, piggy banks would report being full or empty while this was not actually the case. 
+- Various other bugs and minor issues.
 
 ### Security
 - Feature to be able to rebuild Docker images and show security warnings in new builds.
+- [CVE-2021-3663](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3663) A missing rate limiter makes brute-forcing the login easy. 
+- It also fixes [CVE-2021-3728](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3728), [CVE-2021-3729](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3729) and [CVE-2021-3730](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-3730), all variations of the same security vulnerability: some actions in Firefly III were vulnerable to CSRF.
 
 ### API
 - You can disable webhooks with an extra field in API submissions.
 - There is a static cron token (see `.env.example`) which is useful for Docker.
+- A better endpoint to move transactions around, see [api-docs.firefly-iii.org](https://api-docs.firefly-iii.org).
 
 ## 5.5.13 - 2021-07-25
 
