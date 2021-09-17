@@ -30,7 +30,6 @@
         Loading: {{ loading }}<br>
         <BPagination v-if="!loading"
                      v-model="currentPage"
-                     @change="currentPage = $event"
                      :total-rows="total"
                      :per-page="perPage"
                      aria-controls="my-table"
@@ -59,45 +58,84 @@
                 <span class="fa fa-spinner fa-spin"></span>
               </template>
               <template #cell(type)="data">
-                <span v-if="! data.item.split || data.item.split_parent === null">
+                <span v-if="!data.item.dummy">
                   <span class="fas fa-long-arrow-alt-right" v-if="'deposit' === data.item.type"></span>
                   <span class="fas fa-long-arrow-alt-left" v-else-if="'withdrawal' === data.item.type"></span>
                   <span class="fas fa-long-arrows-alt-h" v-else-if="'transfer' === data.item.type"></span>
                 </span>
               </template>
               <template #cell(description)="data">
-                <span class="fas fa-angle-right" v-if="data.item.split && data.item.split_parent !== null"></span>
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./transactions/show/' + data.item.id" :title="data.value">{{
-                    data.value
-                  }}</a>
                 <span class="fa fa-spinner fa-spin" v-if="data.item.dummy"></span>
+                <span v-if="!data.item.split">
+                  <a :href="'./transactions/show/' + data.item.id" :title="data.value">
+                  {{ data.item.description }}
+                  </a>
+                </span>
+                <span v-if="data.item.split">
+                  <!-- title first -->
+                  <span class="fas fa-angle-right" @click="toggleCollapse(data.item.id)" style="cursor: pointer;"></span>
+                  <a :href="'./transactions/show/' + data.item.id" :title="data.value">
+                  {{ data.item.description }}
+                  </a><br />
+                  <span v-if="!data.item.collapsed">
+                    <span v-for="(split, index) in data.item.splits" v-bind:key="index">
+                      &nbsp; &nbsp; {{ split.description }}<br />
+                    </span>
+                  </span>
+                </span>
               </template>
               <template #cell(amount)="data">
-                <span class="text-success" v-if="'deposit' === data.item.type">
+                <!-- row amount first (3x) -->
+                <span :class="'text-success ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'deposit' === data.item.type">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
                 </span>
-
-                <span class="text-danger" v-else-if="'withdrawal' === data.item.type">
+                <span :class="'text-danger ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'withdrawal' === data.item.type">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(-data.item.amount) }}
                 </span>
-
-                <span class="text-muted" v-else-if="'transfer' === data.item.type">
+                <span :class="'text-muted ' + (!data.item.collapsed ? 'font-weight-bold' : '')" v-if="'transfer' === data.item.type">
                   {{ Intl.NumberFormat(locale, {style: 'currency', currency: data.item.currency_code}).format(data.item.amount) }}
+                </span>
+                <br />
+                <!-- splits -->
+                <span v-if="!data.item.collapsed">
+                  <span v-for="(split, index) in data.item.splits" v-bind:key="index">
+                    {{ Intl.NumberFormat(locale, {style: 'currency', currency: split.currency_code}).format(split.amount) }}<br />
+                  </span>
                 </span>
               </template>
               <template #cell(date)="data">
                 {{ data.item.date_formatted }}
               </template>
               <template #cell(source_account)="data">
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.source_id"
-                   :title="data.item.source_name">{{ data.item.source_name }}</a>
+                <!-- extra break for splits -->
+                <span v-if="true===data.item.split && !data.item.collapsed">
+                  <br />
+                </span>
+                <em v-if="true===data.item.split && data.item.collapsed">
+                  ...
+                </em>
+
+                <!-- loop all accounts, hidden if split -->
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./accounts/show/' + split.source_id" :title="split.source_name">{{ split.source_name }}</a><br />
+                </span>
               </template>
               <template #cell(destination_account)="data">
-                <a :class="false === data.item.active ? 'text-muted' : ''" :href="'./accounts/show/' + data.item.destination_id"
-                   :title="data.item.destination_name">{{ data.item.destination_name }}</a>
+                <!-- extra break for splits -->
+                <span v-if="true===data.item.split && !data.item.collapsed">
+                  <br />
+                </span>
+                <em v-if="true===data.item.split && data.item.collapsed">
+                  ...
+                </em>
+
+                <!-- loop all accounts, hidden if split -->
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./accounts/show/' + split.destination_id" :title="split.destination_name">{{ split.destination_name }}</a><br />
+                </span>
               </template>
               <template #cell(menu)="data">
-                <div class="btn-group btn-group-sm" v-if="! data.item.split || data.item.split_parent === null">
+                <div class="btn-group btn-group-sm">
                   <div class="dropdown">
                     <button class="btn btn-light btn-sm dropdown-toggle" type="button" :id="'dropdownMenuButton' + data.item.id" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
@@ -113,19 +151,20 @@
                     </div>
                   </div>
                 </div>
-                <div class="btn btn-light btn-sm" v-if="data.item.split && data.item.split_parent === null && data.item.collapsed === true"
-                     v-on:click="toggleCollapse(data.item)">
-                  <span class="fa fa-caret-down"></span>
-                  {{ $t('firefly.transaction_expand_split') }}
-                </div>
-                <div class="btn btn-light btn-sm" v-else-if="data.item.split && data.item.split_parent === null && data.item.collapsed === false"
-                     v-on:click="toggleCollapse(data.item)">
-                  <span class="fa fa-caret-up"></span>
-                  {{ $t('firefly.transaction_collapse_split') }}
-                </div>
               </template>
-              <template #cell(category)="data">
-                {{ data.item.category_name }}
+              <template #cell(category_name)="data">
+                <!-- extra break for splits -->
+                <span v-if="true===data.item.split && !data.item.collapsed">
+                  <br />
+                </span>
+                <em v-if="true===data.item.split && data.item.collapsed">
+                  ...
+                </em>
+
+                <!-- loop all categories, hidden if split -->
+                <span v-for="(split, index) in data.item.splits" v-bind:key="index" v-if="false===data.item.split || (true===data.item.split && !data.item.collapsed)">
+                  <a :href="'./categories/show/' + split.category_id" :title="split.category_name">{{ split.category_name }}</a><br />
+                </span>
               </template>
             </BTable>
 
@@ -313,25 +352,34 @@ export default {
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
 
-    toggleCollapse: function (row) {
-      let transaction = this.entries.filter(transaction => transaction.id === row.id)[0];
-      if (transaction.collapsed === undefined) {
-        transaction.collapsed = false;
-      } else {
-        transaction.collapsed = !transaction.collapsed;
-      }
-      this.parseTransactions();
-    },
+    // toggleCollapse: function (row) {
+    //   let transaction = this.entries.filter(transaction => transaction.id === row.id)[0];
+    //   if (transaction.collapsed === undefined) {
+    //     transaction.collapsed = false;
+    //   } else {
+    //     transaction.collapsed = !transaction.collapsed;
+    //   }
+    //   this.parseTransactions();
+    // },
 
     parseTransactions: function () {
       console.log('parseTransactions. Count is ' + this.entries.length + ' and page is ' + this.page);
+      if (0 === this.entries.length) {
+        return;
+      }
+      console.log('Now have ' + this.transactions.length + ' transactions');
       for (let i = 0; i < this.total; i++) {
         this.transactions.push({dummy: true});
       }
+      console.log('Generated ' + this.total + ' dummies');
+      console.log('Now have ' + this.transactions.length + ' transactions');
       let index = (this.page - 1) * this.perPage;
       for (let i in this.entries) {
         let transaction = this.entries[i];
-        this.transactions[index] = this.getTransactionRow(transaction, 0);
+
+        // build split
+        this.transactions[index] = this.parseTransaction(transaction);
+        //this.transactions[index] = this.getTransactionRow(transaction, 0);
 
         // this code will not be used for the time being.
         // if (transaction.attributes.transactions.length > 1) {
@@ -362,6 +410,9 @@ export default {
         // }
         index++;
       }
+      console.log('Added ' + this.entries.length + ' entries');
+      console.log('Now have ' + this.transactions.length + ' transactions');
+
 
       this.loading = false;
     },
@@ -381,30 +432,90 @@ export default {
         {key: 'menu', label: ' ', sortable: false},
       ];
     },
-    getTransactionRow(transaction, index) {
-      let transactionRow = {};
-      let currentTransaction = transaction.attributes.transactions[index];
+    /**
+     * Parse a single transaction.
+     * @param transaction
+     */
+    parseTransaction: function (transaction) {
+      let row = {};
 
-      transactionRow.key = transaction.id;
-      transactionRow.id = transaction.id;
-      transactionRow.type = currentTransaction.type;
-      transactionRow.description = currentTransaction.description;
-      transactionRow.amount = currentTransaction.amount;
-      transactionRow.currency_code = currentTransaction.currency_code;
-      transactionRow.date = new Date(currentTransaction.date);
-      transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
-      transactionRow.source_name = currentTransaction.source_name;
-      transactionRow.source_id = currentTransaction.source_id;
-      transactionRow.destination_name = currentTransaction.destination_name;
-      transactionRow.destination_id = currentTransaction.destination_id;
-      transactionRow.category_id = currentTransaction.category_id;
-      transactionRow.category_name = currentTransaction.category_name;
-      transactionRow.split = false;
-      transactionRow.split_index = 0;
-      transactionRow.split_parent = null;
+      // default values:
+      row.splits = [];
+      row.key = transaction.id;
+      row.id = transaction.id
+      row.dummy = false;
 
-      return transactionRow;
+      // pick this up from the first transaction
+      let first = transaction.attributes.transactions[0];
+      row.type = first.type;
+      row.date = new Date(first.date);
+      row.date_formatted = format(row.date, this.$t('config.month_and_day_fns'));
+      row.description = first.description;
+      row.collapsed = true;
+      row.split = false;
+      row.amount = 0;
+      row.currency_code = first.currency_code;
+      if (transaction.attributes.transactions.length > 1) {
+        row.split = true;
+        row.description = transaction.attributes.group_title;
+      }
+
+      // collapsed?
+      if (typeof transaction.collapsed !== 'undefined') {
+        row.collapsed = transaction.collapsed;
+      }
+      console.log('is collapsed? ' + row.collapsed);
+
+      // then loop each split
+      for (let i in transaction.attributes.transactions) {
+        if (transaction.attributes.transactions.hasOwnProperty(i)) {
+          let info = transaction.attributes.transactions[i];
+          let split = {};
+          row.amount = row.amount + parseFloat(info.amount);
+          split.description = info.description;
+          split.amount = info.amount;
+          split.currency_code = info.currency_code;
+          split.source_name = info.source_name;
+          split.source_id = info.source_id;
+          split.destination_name = info.destination_name;
+          split.destination_id = info.destination_id;
+          split.category_id = info.category_id;
+          split.category_name = info.category_name;
+          split.split_index = i;
+          row.splits.push(split);
+        }
+      }
+      return row;
     },
+    toggleCollapse: function (id) {
+      let transaction = this.transactions.filter(transaction => transaction.id === id)[0];
+      transaction.collapsed = !transaction.collapsed;
+    },
+
+    // getTransactionRow(transaction, index) {
+    //   let transactionRow = {};
+    //   let currentTransaction = transaction.attributes.transactions[index];
+    //
+    //   transactionRow.key = transaction.id;
+    //   transactionRow.id = transaction.id;
+    //   transactionRow.type = currentTransaction.type;
+    //   transactionRow.description = currentTransaction.description;
+    //   transactionRow.amount = currentTransaction.amount;
+    //   transactionRow.currency_code = currentTransaction.currency_code;
+    //   transactionRow.date = new Date(currentTransaction.date);
+    //   transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
+    //   transactionRow.source_name = currentTransaction.source_name;
+    //   transactionRow.source_id = currentTransaction.source_id;
+    //   transactionRow.destination_name = currentTransaction.destination_name;
+    //   transactionRow.destination_id = currentTransaction.destination_id;
+    //   transactionRow.category_id = currentTransaction.category_id;
+    //   transactionRow.category_name = currentTransaction.category_name;
+    //   transactionRow.split = false;
+    //   transactionRow.split_index = 0;
+    //   transactionRow.split_parent = null;
+    //
+    //   return transactionRow;
+    // },
 
     tableSortCompare: function (aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
       let a = aRow[key]

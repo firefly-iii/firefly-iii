@@ -196,7 +196,6 @@ export default {
           endStr = format(this.urlEnd, 'y-MM-dd');
         }
         let url = './api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey;
-        url = './api/v1/transactions?type=' + this.type + '&page=' + page + '&cache=' + this.cacheKey;
         api.get(url)
             .then(response => {
                     //let currentPage = parseInt(response.data.meta.pagination.current_page);
@@ -218,73 +217,73 @@ export default {
             );
       });
     },
-    createTransactionRows: function () {
-      this.transactionRows = [];
-      for (let i in this.transactions) {
-        let transaction = this.transactions[i];
-        let transactionRow = this.getTransactionRow(transaction, 0);
-        this.transactionRows.push(transactionRow);
-
-        if (transaction.attributes.transactions.length > 1) {
-          transactionRow.description = transaction.attributes.group_title;
-          transactionRow.split = true;
-          transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
-          transactionRow.amount = transaction.attributes.transactions
-              .map(transaction => Number(transaction.amount))
-              .reduce((sum, n) => sum + n);
-          transactionRow.source_name = '';
-          transactionRow.source_id = '';
-          transactionRow.destination_name = '';
-          transactionRow.destination_id = '';
-
-          if (!transactionRow.collapsed) {
-            for (let i = 0; i < transaction.attributes.transactions.length; i++) {
-              let splitTransactionRow = this.getTransactionRow(transaction, i);
-              splitTransactionRow.key = splitTransactionRow.id + "." + i
-              splitTransactionRow.split = true;
-              splitTransactionRow.split_index = i + 1;
-              splitTransactionRow.split_parent = transactionRow;
-              this.transactionRows.push(splitTransactionRow);
-            }
-          }
-        }
-      }
-
-      this.loading = false;
-    },
-    getTransactionRow(transaction, index) {
-      let transactionRow = {};
-      let currentTransaction = transaction.attributes.transactions[index];
-
-      transactionRow.key = transaction.id;
-      transactionRow.id = transaction.id;
-      transactionRow.type = currentTransaction.type;
-      transactionRow.description = currentTransaction.description;
-      transactionRow.amount = currentTransaction.amount;
-      transactionRow.currency_code = currentTransaction.currency_code;
-      transactionRow.date = new Date(currentTransaction.date);
-      transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
-      transactionRow.source_name = currentTransaction.source_name;
-      transactionRow.source_id = currentTransaction.source_id;
-      transactionRow.destination_name = currentTransaction.destination_name;
-      transactionRow.destination_id = currentTransaction.destination_id;
-      transactionRow.category_id = currentTransaction.category_id;
-      transactionRow.category_name = currentTransaction.category_name;
-      transactionRow.split = false;
-      transactionRow.split_index = 0;
-      transactionRow.split_parent = null;
-
-      return transactionRow;
-    },
-    toggleCollapse: function (row) {
-      let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
-      if (transaction.collapsed === undefined) {
-        transaction.collapsed = false;
-      } else {
-        transaction.collapsed = !transaction.collapsed;
-      }
-      this.createTransactionRows();
-    },
+    // createTransactionRows: function () {
+    //   this.transactionRows = [];
+    //   for (let i in this.transactions) {
+    //     let transaction = this.transactions[i];
+    //     let transactionRow = this.getTransactionRow(transaction, 0);
+    //     this.transactionRows.push(transactionRow);
+    //
+    //     if (transaction.attributes.transactions.length > 1) {
+    //       transactionRow.description = transaction.attributes.group_title;
+    //       transactionRow.split = true;
+    //       transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
+    //       transactionRow.amount = transaction.attributes.transactions
+    //           .map(transaction => Number(transaction.amount))
+    //           .reduce((sum, n) => sum + n);
+    //       transactionRow.source_name = '';
+    //       transactionRow.source_id = '';
+    //       transactionRow.destination_name = '';
+    //       transactionRow.destination_id = '';
+    //
+    //       if (!transactionRow.collapsed) {
+    //         for (let i = 0; i < transaction.attributes.transactions.length; i++) {
+    //           let splitTransactionRow = this.getTransactionRow(transaction, i);
+    //           splitTransactionRow.key = splitTransactionRow.id + "." + i
+    //           splitTransactionRow.split = true;
+    //           splitTransactionRow.split_index = i + 1;
+    //           splitTransactionRow.split_parent = transactionRow;
+    //           this.transactionRows.push(splitTransactionRow);
+    //         }
+    //       }
+    //     }
+    //   }
+    //
+    //   this.loading = false;
+    // },
+    // getTransactionRow(transaction, index) {
+    //   let transactionRow = {};
+    //   let currentTransaction = transaction.attributes.transactions[index];
+    //
+    //   transactionRow.key = transaction.id;
+    //   transactionRow.id = transaction.id;
+    //   transactionRow.type = currentTransaction.type;
+    //   transactionRow.description = currentTransaction.description;
+    //   transactionRow.amount = currentTransaction.amount;
+    //   transactionRow.currency_code = currentTransaction.currency_code;
+    //   transactionRow.date = new Date(currentTransaction.date);
+    //   transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
+    //   transactionRow.source_name = currentTransaction.source_name;
+    //   transactionRow.source_id = currentTransaction.source_id;
+    //   transactionRow.destination_name = currentTransaction.destination_name;
+    //   transactionRow.destination_id = currentTransaction.destination_id;
+    //   transactionRow.category_id = currentTransaction.category_id;
+    //   transactionRow.category_name = currentTransaction.category_name;
+    //   transactionRow.split = false;
+    //   transactionRow.split_index = 0;
+    //   transactionRow.split_parent = null;
+    //
+    //   return transactionRow;
+    // },
+    // toggleCollapse: function (row) {
+    //   let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
+    //   if (transaction.collapsed === undefined) {
+    //     transaction.collapsed = false;
+    //   } else {
+    //     transaction.collapsed = !transaction.collapsed;
+    //   }
+    //   this.createTransactionRows();
+    // },
 
   },
 }
