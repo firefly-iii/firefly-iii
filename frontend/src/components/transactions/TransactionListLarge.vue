@@ -22,12 +22,6 @@
   <div>
     <div class="row">
       <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
-
-        currentPage: {{ currentPage }}<br>
-        page: {{ page }}<br>
-        Total: {{ total }}<br>
-        Per page: {{ perPage }}<br>
-        Loading: {{ loading }}<br>
         <BPagination v-if="!loading"
                      v-model="currentPage"
                      :total-rows="total"
@@ -195,122 +189,6 @@
 </template>
 
 <script>
-
-
-/*
-this.transactions = [];
-        this.transactionRows = [];
-        this.downloadTransactionList(1);
-
-
-
-
-    downloadTransactionList: function (page) {
-      // console.log('downloadTransactionList(' + page + ')');
-      configureAxios().then(async (api) => {
-        let startStr = format(this.start, 'y-MM-dd');
-        let endStr = format(this.end, 'y-MM-dd');
-        // console.log(this.urlEnd);
-        // console.log(this.urlStart);
-        if (null !== this.urlEnd && null !== this.urlStart) {
-          startStr = format(this.urlStart, 'y-MM-dd');
-          endStr = format(this.urlEnd, 'y-MM-dd');
-        }
-
-        api.get('./api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey)
-            .then(response => {
-                    //let currentPage = parseInt(response.data.meta.pagination.current_page);
-                    //let totalPages = parseInt(response.data.meta.pagination.total_pages);
-                    this.total = parseInt(response.data.meta.pagination.total);
-                    //console.log('total is ' + this.total);
-                    this.transactions.push(...response.data.data);
-                    // if (currentPage < totalPage) {
-                    //   let nextPage = currentPage + 1;
-                    //   this.downloadTransactionList(nextPage);
-                    // }
-                    // if (currentPage >= totalPage) {
-                    // console.log('Looks like all downloaded.');
-                    this.downloaded = true;
-                    this.createTransactionRows();
-                    // }
-
-                  }
-            );
-      });
-    },
-
-
-createTransactionRows: function () {
-      this.transactionRows = [];
-      for (let i in this.transactions) {
-        let transaction = this.transactions[i];
-        let transactionRow = this.getTransactionRow(transaction, 0);
-        this.transactionRows.push(transactionRow);
-
-        if (transaction.attributes.transactions.length > 1) {
-          transactionRow.description = transaction.attributes.group_title;
-          transactionRow.split = true;
-          transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
-          transactionRow.amount = transaction.attributes.transactions
-              .map(transaction => Number(transaction.amount))
-              .reduce((sum, n) => sum + n);
-          transactionRow.source_name = '';
-          transactionRow.source_id = '';
-          transactionRow.destination_name = '';
-          transactionRow.destination_id = '';
-
-          if (!transactionRow.collapsed) {
-            for (let i = 0; i < transaction.attributes.transactions.length; i++) {
-              let splitTransactionRow = this.getTransactionRow(transaction, i);
-              splitTransactionRow.key = splitTransactionRow.id + "." + i
-              splitTransactionRow.split = true;
-              splitTransactionRow.split_index = i + 1;
-              splitTransactionRow.split_parent = transactionRow;
-              this.transactionRows.push(splitTransactionRow);
-            }
-          }
-        }
-      }
-
-      this.loading = false;
-    },
-    getTransactionRow(transaction, index) {
-      let transactionRow = {};
-      let currentTransaction = transaction.attributes.transactions[index];
-
-      transactionRow.key = transaction.id;
-      transactionRow.id = transaction.id;
-      transactionRow.type = currentTransaction.type;
-      transactionRow.description = currentTransaction.description;
-      transactionRow.amount = currentTransaction.amount;
-      transactionRow.currency_code = currentTransaction.currency_code;
-      transactionRow.date = new Date(currentTransaction.date);
-      transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
-      transactionRow.source_name = currentTransaction.source_name;
-      transactionRow.source_id = currentTransaction.source_id;
-      transactionRow.destination_name = currentTransaction.destination_name;
-      transactionRow.destination_id = currentTransaction.destination_id;
-      transactionRow.category_id = currentTransaction.category_id;
-      transactionRow.category_name = currentTransaction.category_name;
-      transactionRow.split = false;
-      transactionRow.split_index = 0;
-      transactionRow.split_parent = null;
-
-      return transactionRow;
-    },
-
-
-toggleCollapse: function (row) {
-      let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
-      if (transaction.collapsed === undefined) {
-        transaction.collapsed = false;
-      } else {
-        transaction.collapsed = !transaction.collapsed;
-      }
-      this.createTransactionRows();
-    },
- */
-
 import {mapGetters, mapMutations} from "vuex";
 import {BPagination, BTable} from 'bootstrap-vue';
 import format from "date-fns/format";
@@ -338,80 +216,44 @@ export default {
   },
   watch: {
     currentPage: function (value) {
-      console.log('Watch currentPage go to ' + value);
+      // console.log('Watch currentPage go to ' + value);
       this.$emit('jump-page', {page: value});
     },
-    // page: function (value) {
-    //   console.log('Watch page go to ' + value);
-    //   this.currentPage = value;
-    // },
     entries: function (value) {
       this.parseTransactions();
     },
   },
   methods: {
     ...mapMutations('root', ['refreshCacheKey',]),
-
-    // toggleCollapse: function (row) {
-    //   let transaction = this.entries.filter(transaction => transaction.id === row.id)[0];
-    //   if (transaction.collapsed === undefined) {
-    //     transaction.collapsed = false;
-    //   } else {
-    //     transaction.collapsed = !transaction.collapsed;
-    //   }
-    //   this.parseTransactions();
-    // },
-
     parseTransactions: function () {
-      console.log('parseTransactions. Count is ' + this.entries.length + ' and page is ' + this.page);
+      // console.log('Start of parseTransactions. Count of entries is ' + this.entries.length + ' and page is ' + this.page);
+      // console.log('Reported total is ' + this.total);
       if (0 === this.entries.length) {
+        // console.log('Will not render now');
         return;
       }
-      console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log('Now have ' + this.transactions.length + ' transactions');
       for (let i = 0; i < this.total; i++) {
         this.transactions.push({dummy: true});
+        // console.log('Push dummy to index ' + i);
+        // console.log('Now have ' + this.transactions.length + ' transactions');
       }
-      console.log('Generated ' + this.total + ' dummies');
-      console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log('Generated ' + this.total + ' dummies');
+      // console.log('Now have ' + this.transactions.length + ' transactions');
       let index = (this.page - 1) * this.perPage;
+      // console.log('Start index is ' + index);
       for (let i in this.entries) {
         let transaction = this.entries[i];
 
         // build split
         this.transactions[index] = this.parseTransaction(transaction);
-        //this.transactions[index] = this.getTransactionRow(transaction, 0);
-
-        // this code will not be used for the time being.
-        // if (transaction.attributes.transactions.length > 1) {
-        //   transactionRow.description = transaction.attributes.group_title;
-        //   transactionRow.split = true;
-        //   transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
-        //   transactionRow.amount = transaction.attributes.transactions
-        //       .map(transaction => Number(transaction.amount))
-        //       .reduce((sum, n) => sum + n);
-        //   transactionRow.source_name = '';
-        //   transactionRow.source_id = '';
-        //   transactionRow.destination_name = '';
-        //   transactionRow.destination_id = '';
-        //
-        //   if (!transactionRow.collapsed) {
-        //     for (let i = 0; i < transaction.attributes.transactions.length; i++) {
-        //       let splitTransactionRow = this.getTransactionRow(transaction, i);
-        //       splitTransactionRow.key = splitTransactionRow.id + "." + i
-        //       splitTransactionRow.split = true;
-        //       splitTransactionRow.split_index = i + 1;
-        //       splitTransactionRow.split_parent = transactionRow;
-        //
-        //       // need to verify this.
-        //       index++;
-        //       this.transactions[index] = splitTransactionRow;
-        //     }
-        //   }
-        // }
+        // console.log('Push transaction to index ' + index);
+        // console.log('Now have ' + this.transactions.length + ' transactions');
         index++;
       }
-      console.log('Added ' + this.entries.length + ' entries');
-      console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log('Added ' + this.entries.length + ' entries');
+      // console.log('Now have ' + this.transactions.length + ' transactions');
+      // console.log(this.transactions);
 
 
       this.loading = false;
@@ -423,7 +265,7 @@ export default {
     updateFieldList: function () {
       this.fields = [
         {key: 'type', label: ' ', sortable: false},
-        {key: 'description', label: this.$t('list.description') + 'X', sortable: true},
+        {key: 'description', label: this.$t('list.description'), sortable: true},
         {key: 'amount', label: this.$t('list.amount'), sortable: true},
         {key: 'date', label: this.$t('list.date'), sortable: true},
         {key: 'source_account', label: this.$t('list.source_account'), sortable: true},
@@ -464,7 +306,7 @@ export default {
       if (typeof transaction.collapsed !== 'undefined') {
         row.collapsed = transaction.collapsed;
       }
-      console.log('is collapsed? ' + row.collapsed);
+      //console.log('is collapsed? ' + row.collapsed);
 
       // then loop each split
       for (let i in transaction.attributes.transactions) {
@@ -491,32 +333,6 @@ export default {
       let transaction = this.transactions.filter(transaction => transaction.id === id)[0];
       transaction.collapsed = !transaction.collapsed;
     },
-
-    // getTransactionRow(transaction, index) {
-    //   let transactionRow = {};
-    //   let currentTransaction = transaction.attributes.transactions[index];
-    //
-    //   transactionRow.key = transaction.id;
-    //   transactionRow.id = transaction.id;
-    //   transactionRow.type = currentTransaction.type;
-    //   transactionRow.description = currentTransaction.description;
-    //   transactionRow.amount = currentTransaction.amount;
-    //   transactionRow.currency_code = currentTransaction.currency_code;
-    //   transactionRow.date = new Date(currentTransaction.date);
-    //   transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
-    //   transactionRow.source_name = currentTransaction.source_name;
-    //   transactionRow.source_id = currentTransaction.source_id;
-    //   transactionRow.destination_name = currentTransaction.destination_name;
-    //   transactionRow.destination_id = currentTransaction.destination_id;
-    //   transactionRow.category_id = currentTransaction.category_id;
-    //   transactionRow.category_name = currentTransaction.category_name;
-    //   transactionRow.split = false;
-    //   transactionRow.split_index = 0;
-    //   transactionRow.split_parent = null;
-    //
-    //   return transactionRow;
-    // },
-
     tableSortCompare: function (aRow, bRow, key, sortDesc, formatter, compareOptions, compareLocale) {
       let a = aRow[key]
       let b = bRow[key]

@@ -830,6 +830,10 @@ export default {
             //console.log('getExpectedSourceTypes.');
             this.sourceAllowedTypes = response.data.data.value.source[this.transactionType];
             this.destinationAllowedTypes = response.data.data.value.destination[this.transactionType];
+
+            // console.log('sourceAllowedTypes');
+            // console.log(this.sourceAllowedTypes);
+
             // console.log('Source allowed types for ' + this.transactionType + ' is: ');
             // console.log(this.sourceAllowedTypes);
 

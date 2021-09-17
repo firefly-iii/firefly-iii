@@ -76,8 +76,6 @@ export default {
   data() {
     return {
       rawTransactions: [],
-      transactions: [],
-      transactionRows: [],
       type: 'all',
       downloaded: false,
       loading: false,
@@ -130,6 +128,7 @@ export default {
     let parts = pathName.split('/');
     this.type = parts[parts.length - 1];
     this.perPage = this.listPageSize ?? 51;
+
     if (5 === parts.length) {
       this.urlStart = new Date(parts[3]);
       this.urlEnd = new Date(parts[4]);
@@ -149,18 +148,14 @@ export default {
       this.getTransactionList();
     },
     jumpToPage: function(event) {
-      console.log('noticed a change!');
+      // console.log('noticed a change!');
       this.currentPage = event.page;
       this.downloadTransactionList(event.page);
     },
     getTransactionList: function () {
-      // console.log('getTransactionList()');
       if (this.indexReady && !this.loading && !this.downloaded) {
-        // console.log('Index ready, not loading and not already downloaded. Reset.');
         this.loading = true;
         this.perPage = this.listPageSize ?? 51;
-        this.transactions = [];
-        this.transactionRows = [];
         this.rawTransactions = [];
         this.downloadTransactionList(this.currentPage);
         this.calculateDateRanges();
@@ -171,119 +166,38 @@ export default {
       let currentDate = this.start;
 
       while (currentDate > yearAgo) {
-        // start + end of month:
         let st = startOfMonth(currentDate);
         let en = endOfMonth(currentDate);
 
         this.ranges.push({start: st, end: en});
 
         currentDate = sub(currentDate, {months: 1});
-        //console.log(currentDate);
       }
     },
     formatDate: function (date, frm) {
       return format(date, frm);
     },
     downloadTransactionList: function (page) {
-      // console.log('downloadTransactionList(' + page + ')');
       configureAxios().then(async (api) => {
         let startStr = format(this.start, 'y-MM-dd');
         let endStr = format(this.end, 'y-MM-dd');
-        // console.log(this.urlEnd);
-        // console.log(this.urlStart);
+
         if (null !== this.urlEnd && null !== this.urlStart) {
           startStr = format(this.urlStart, 'y-MM-dd');
           endStr = format(this.urlEnd, 'y-MM-dd');
         }
+
         let url = './api/v1/transactions?type=' + this.type + '&page=' + page + "&start=" + startStr + "&end=" + endStr + '&cache=' + this.cacheKey;
         api.get(url)
             .then(response => {
-                    //let currentPage = parseInt(response.data.meta.pagination.current_page);
-                    //let totalPages = parseInt(response.data.meta.pagination.total_pages);
                     this.total = parseInt(response.data.meta.pagination.total);
-                    //console.log('total is ' + this.total);
                     this.rawTransactions = response.data.data;
-                    // if (currentPage < totalPage) {
-                    //   let nextPage = currentPage + 1;
-                    //   this.downloadTransactionList(nextPage);
-                    // }
-                    // if (currentPage >= totalPage) {
-                    // console.log('Looks like all downloaded.');
-                    //this.downloaded = true;
-                    //this.createTransactionRows();
-                    // }
                     this.loading = false;
                   }
             );
       });
     },
-    // createTransactionRows: function () {
-    //   this.transactionRows = [];
-    //   for (let i in this.transactions) {
-    //     let transaction = this.transactions[i];
-    //     let transactionRow = this.getTransactionRow(transaction, 0);
-    //     this.transactionRows.push(transactionRow);
-    //
-    //     if (transaction.attributes.transactions.length > 1) {
-    //       transactionRow.description = transaction.attributes.group_title;
-    //       transactionRow.split = true;
-    //       transactionRow.collapsed = transaction.collapsed === true || transaction.collapsed === undefined;
-    //       transactionRow.amount = transaction.attributes.transactions
-    //           .map(transaction => Number(transaction.amount))
-    //           .reduce((sum, n) => sum + n);
-    //       transactionRow.source_name = '';
-    //       transactionRow.source_id = '';
-    //       transactionRow.destination_name = '';
-    //       transactionRow.destination_id = '';
-    //
-    //       if (!transactionRow.collapsed) {
-    //         for (let i = 0; i < transaction.attributes.transactions.length; i++) {
-    //           let splitTransactionRow = this.getTransactionRow(transaction, i);
-    //           splitTransactionRow.key = splitTransactionRow.id + "." + i
-    //           splitTransactionRow.split = true;
-    //           splitTransactionRow.split_index = i + 1;
-    //           splitTransactionRow.split_parent = transactionRow;
-    //           this.transactionRows.push(splitTransactionRow);
-    //         }
-    //       }
-    //     }
-    //   }
-    //
-    //   this.loading = false;
-    // },
-    // getTransactionRow(transaction, index) {
-    //   let transactionRow = {};
-    //   let currentTransaction = transaction.attributes.transactions[index];
-    //
-    //   transactionRow.key = transaction.id;
-    //   transactionRow.id = transaction.id;
-    //   transactionRow.type = currentTransaction.type;
-    //   transactionRow.description = currentTransaction.description;
-    //   transactionRow.amount = currentTransaction.amount;
-    //   transactionRow.currency_code = currentTransaction.currency_code;
-    //   transactionRow.date = new Date(currentTransaction.date);
-    //   transactionRow.date_formatted = format(transactionRow.date, this.$t('config.month_and_day_fns'));
-    //   transactionRow.source_name = currentTransaction.source_name;
-    //   transactionRow.source_id = currentTransaction.source_id;
-    //   transactionRow.destination_name = currentTransaction.destination_name;
-    //   transactionRow.destination_id = currentTransaction.destination_id;
-    //   transactionRow.category_id = currentTransaction.category_id;
-    //   transactionRow.category_name = currentTransaction.category_name;
-    //   transactionRow.split = false;
-    //   transactionRow.split_index = 0;
-    //   transactionRow.split_parent = null;
-    //
-    //   return transactionRow;
-    // },
-    // toggleCollapse: function (row) {
-    //   let transaction = this.transactions.filter(transaction => transaction.id === row.id)[0];
-    //   if (transaction.collapsed === undefined) {
-    //     transaction.collapsed = false;
-    //   } else {
-    //     transaction.collapsed = !transaction.collapsed;
-    //   }
-    //   this.createTransactionRows();
-    // },
+
 
   },
 }

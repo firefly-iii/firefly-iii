@@ -28,7 +28,6 @@
       <SplitPills
           :transactions="transactions"
           :count="transactions.length"
-
       />
 
       <div class="tab-content">
@@ -132,6 +131,7 @@ export default {
     this.groupId = parseInt(parts[parts.length - 1]);
     this.transactions = [];
     this.getTransactionGroup();
+    //this.getExpectedSourceTypes();
     this.getAllowedOpposingTypes();
     this.getCustomFields();
   },
@@ -238,6 +238,9 @@ export default {
   watch: {
     submittedAttachments: function () {
       this.finaliseSubmission();
+    },
+    transactionType: function() {
+      this.getExpectedSourceTypes();
     }
   },
 
@@ -299,8 +302,12 @@ export default {
         this.transactionType = array.type.charAt(0).toUpperCase() + array.type.slice(1);
 
         // See reference nr. 5
+
         this.sourceAllowedTypes = [array.source_type];
         this.destinationAllowedTypes = [array.destination_type];
+        // console.log('sourceAllowedTypes (parseTransaction)');
+        // console.log(this.sourceAllowedTypes);
+
         this.date = array.date.substring(0, 16);
         this.originalDate = array.date.substring(0, 16);
       }
@@ -426,6 +433,18 @@ export default {
         this.transactions[index].links.push(object);
         this.originalTransactions[index].links.push(object);
       });
+    },
+    getExpectedSourceTypes: function () {
+      axios.get('./api/v1/configuration/firefly.expected_source_types')
+          .then(response => {
+            this.sourceAllowedTypes = response.data.data.value.source[this.transactionType];
+            this.destinationAllowedTypes = response.data.data.value.destination[this.transactionType];
+            // console.log('sourceAllowedTypes (getExpectedSourceTypes)');
+            // console.log(JSON.stringify(response.data.data.value.source[this.transactionType]));
+            // console.log(JSON.stringify(response.data.data.value.source));
+            // console.log(this.transactionType);
+            //console.log(this.transactionType);
+          });
     },
     /**
      * Get API value.
