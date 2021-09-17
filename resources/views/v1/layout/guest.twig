@@ -76,5 +76,17 @@
     <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 {% endif %}
 
+<script nonce="{{ JS_NONCE }}">
+    // Initialize the service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceworker.js?v={{ FF_VERSION }}', {
+            scope: '{{ route('index') }}'
+        }).then(
+            () => console.log('ServiceWorker registration successful'),
+            (err) => console.log('ServiceWorker registration failed: ', err)
+        );
+    }
+</script>
+
 </body>
 </html>

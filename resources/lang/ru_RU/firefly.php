@@ -1038,7 +1038,7 @@ return [
     'bill_repeats_weekly_other'                 => 'Repeats every other week',
     'bill_repeats_monthly_other'                => 'Repeats every other month',
     'bill_repeats_quarterly_other'              => 'Repeats every other quarter',
-    'bill_repeats_half-year_other'              => 'Repeats yearly',
+    'bill_repeats_half-year_other'              => 'Повторяется ежегодно',
     'bill_repeats_yearly_other'                 => 'Repeats every other year',
     'bill_repeats_weekly_skip'                  => 'Repeats every {skip} weeks',
     'bill_repeats_monthly_skip'                 => 'Repeats every {skip} months',

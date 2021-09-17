@@ -23,13 +23,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => '配列に「where」節がありません',
+    'missing_update'                 => '配列に「update」節がありません',
+    'invalid_where_key'              => 'JSON の「where」節に無効なキーが含まれています',
+    'invalid_update_key'             => 'JSON の「update」節に無効なキーが含まれています',
+    'invalid_query_data'             => 'クエリの %s:%s 項目に無効なデータがあります。',
+    'invalid_query_account_type'     => 'クエリには異なるタイプの口座を含めることはできません。',
+    'invalid_query_currency'         => 'クエリには異なる通貨設定の口座を含めることはできません。',
     'iban'                           => '無効なIBANです。',
     'zero_or_more'                   => '数値はマイナスにできません。',
     'date_or_time'                   => '数値はISO 8601 準拠の有効な日付や時刻である必要があります。',

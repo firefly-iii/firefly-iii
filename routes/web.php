@@ -37,6 +37,13 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => 'binders-only'],
+    static function () {
+        Route::get('offline', fn () => view('errors.offline'));
+    }
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */
@@ -269,7 +276,7 @@ Route::group(
         Route::get('edit/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@edit', 'as' => 'edit']);
         Route::post('update/{availableBudget}/{start_date}/{end_date}', ['uses' => 'Budget\AvailableBudgetController@update', 'as' => 'update']);
 
-        Route::get('delete/{availableBudget}', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
+        Route::post('delete', ['uses' => 'Budget\AvailableBudgetController@delete', 'as' => 'delete']);
     }
 );
 
@@ -282,7 +289,7 @@ Route::group(
         Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create']);
         Route::post('store', ['uses' => 'Budget\BudgetLimitController@store', 'as' => 'store']);
 
-        Route::get('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
+        Route::post('delete/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@delete', 'as' => 'delete']);
 
         Route::post('update/{budgetLimit}', ['uses' => 'Budget\BudgetLimitController@update', 'as' => 'update']);
     }
@@ -330,7 +337,7 @@ Route::group(
         Route::get('create', ['uses' => 'CurrencyController@create', 'as' => 'create']);
         Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
         Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-        Route::get('default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
+        Route::post('default', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
         Route::get('enable/{currency}', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
         Route::get('disable/{currency}', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
 

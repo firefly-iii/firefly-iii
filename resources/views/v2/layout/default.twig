@@ -46,9 +46,11 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h1 class="m-0 text-dark">
-                            {% if mainTitleIcon|default(false) %}<span class="fa fas {{ mainTitleIcon }}"></span>{% endif %}
+                            {% if mainTitleIcon|default(false) %}<span
+                                class="fa fas {{ mainTitleIcon }}"></span>{% endif %}
                             {{ title }} <small class="text-muted">
-                                {% if subTitleIcon|default(false) %}<span class="fa fas {{ subTitleIcon }}"></span>{% endif %}
+                                {% if subTitleIcon|default(false) %}<span
+                                    class="fa fas {{ subTitleIcon }}"></span>{% endif %}
                                 {{ subTitle|default('') }}</small></h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
@@ -90,6 +92,18 @@
 <script src="v2/js/manifest.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 <script src="v2/js/vendor.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 {% block scripts %}{% endblock %}
+
+<script nonce="{{ JS_NONCE }}">
+    // Initialize the service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceworker.js?v={{ FF_VERSION }}', {
+            scope: '{{ route('index') }}'
+        }).then(
+            () => console.log('ServiceWorker registration successful'),
+            (err) => console.log('ServiceWorker registration failed: ', err)
+        );
+    }
+</script>
 
 </body>
 </html>

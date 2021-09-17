@@ -23,15 +23,11 @@ require('../../bootstrap');
 import Vue from "vue";
 import store from "../../components/store";
 import Index from "../../components/transactions/Index";
-import {BPagination, BTable} from 'bootstrap-vue';
 import Calendar from "../../components/dashboard/Calendar";
 
 // i18n
 let i18n = require('../../i18n');
 let props = {};
-
-Vue.component('b-table', BTable);
-Vue.component('b-pagination', BPagination);
 
 const app = new Vue({
             i18n,

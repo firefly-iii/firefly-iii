@@ -173,9 +173,9 @@
         "update_liabilities_account": "\u30c1\u30e3\u30f3\u30cd\u30eb\u3092\u66f4\u65b0",
         "update_expense_account": "\u652f\u51fa\u5148\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u652f\u51fa\u5143\u30a2\u30ab\u30a6\u30f3\u30c8\n\uff09",
         "update_revenue_account": "\u652f\u51fa\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u53ce\u5165\u30a2\u30ab\u30a6\u30f3\u30c8\uff09",
-        "update_undefined_account": "Update account",
+        "update_undefined_account": "\u53e3\u5ea7\u60c5\u5831\u306e\u66f4\u65b0",
         "update_asset_account": "\u652f\u51fa\u30a2\u30ab\u30a6\u30f3\u30c8\uff08\u8cc7\u7523\u52d8\u5b9a\uff09",
-        "updated_account_js": "Updated account \"<a href=\"accounts\/show\/{ID}\">{title}<\/a>\"."
+        "updated_account_js": "\u53e3\u5ea7\u300c<a href=\"accounts\/show\/{ID}\">{title}<\/a>\u300d\u3092\u66f4\u65b0\u3057\u307e\u3057\u305f\u3002"
     },
     "list": {
         "piggy_bank": "\u8caf\u91d1\u7bb1",

@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -43,6 +42,7 @@ use Google2FA;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
 use Log;
+use ValueError;
 use function is_string;
 
 /**
@@ -114,6 +114,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      *
      * @return bool
+     * @throws FireflyException
      */
     public function validateIban($attribute, $value): bool
     {
@@ -168,11 +169,15 @@ class FireflyValidator extends Validator
             "\u{202F}", // narrow no-break space
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
+            '-',
+            '?'
         ];
         $replace = '';
         $value   = str_replace($search, $replace, $value);
         $value   = strtoupper($value);
 
+        // replace characters outside of ASCI range.
+        $value   = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $replace = ['', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31',
                     '32', '33', '34', '35',];
@@ -185,7 +190,14 @@ class FireflyValidator extends Validator
         if (0 === strlen($iban)) {
             return false;
         }
-        $checksum = bcmod($iban, '97');
+        try {
+            $checksum = bcmod($iban, '97');
+        } catch (ValueError $e) {
+            $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
+            Log::error($message);
+            Log::error($e->getTraceAsString());
+            return false;
+        }
 
         return 1 === (int)$checksum;
     }
@@ -471,12 +483,13 @@ class FireflyValidator extends Validator
         $ignore         = (int)($parameters[0] ?? 0.0);
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
         /** @var Collection $set */
-        $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
+        $set    = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
         $result = $set->first(
             function (Account $account) use ($value) {
                 return $account->name === $value;
             }
         );
+
         return null === $result;
 
     }
@@ -500,6 +513,7 @@ class FireflyValidator extends Validator
                 return $account->name === $value;
             }
         );
+
         return null === $result;
     }
 
@@ -717,7 +731,8 @@ class FireflyValidator extends Validator
         if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', (int)$exclude);
         }
-        $query->where('piggy_banks.name',$value);
+        $query->where('piggy_banks.name', $value);
+
         return null === $query->first(['piggy_banks.*']);
     }
 

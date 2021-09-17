@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionJournalLink
  *
  * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int                             $link_type_id
  * @property int                             $source_id
  * @property int                             $destination_id
@@ -80,14 +80,14 @@ class TransactionJournalLink extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return TransactionJournalLink
      *
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournalLink
     {
         if (auth()->check()) {
-            $linkId = (int) $value;
+            $linkId = (int)$value;
             $link   = self::where('journal_links.id', $linkId)
                           ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
                           ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')

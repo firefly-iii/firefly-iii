@@ -47,5 +47,8 @@ return [
     'tell_more'               => '「おっと！」以上のことを教えてください。',
     'include_logs'            => 'エラーログを含めます (上記参照)。',
     'what_did_you_do'         => '何をしていたか教えてください。',
+    'offline_header'          => 'おそらくオフラインです',
+    'offline_unreachable'     => 'Firefly III に到達できません。現在デバイスがオフラインかサーバーが動作していません。',
+    'offline_github'          => 'あなたのデバイス、サーバーが共にオンラインであることを確認している場合は、 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> でチケットを開いてください。',
 
 ];

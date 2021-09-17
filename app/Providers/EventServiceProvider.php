@@ -68,6 +68,7 @@ class EventServiceProvider extends ServiceProvider
             RegisteredUser::class               => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
+                'FireflyIII\Handlers\Events\UserEventHandler@createGroupMembership',
             ],
             // is a User related event.
             Login::class                        => [

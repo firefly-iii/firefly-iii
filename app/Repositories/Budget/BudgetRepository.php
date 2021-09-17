@@ -118,6 +118,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Find a budget or return NULL
+     *
+     * @param int|null $budgetId |null
+     *
+     * @return Budget|null
+     */
+    public function find(int $budgetId = null): ?Budget
+    {
+        return $this->user->budgets()->find($budgetId);
+    }
+
+    /**
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
@@ -155,18 +167,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $query = sprintf('%%%s%%', $name);
 
         return $this->user->budgets()->where('name', 'LIKE', $query)->first();
-    }
-
-    /**
-     * Find a budget or return NULL
-     *
-     * @param int|null $budgetId |null
-     *
-     * @return Budget|null
-     */
-    public function find(int $budgetId = null): ?Budget
-    {
-        return $this->user->budgets()->find($budgetId);
     }
 
     /**

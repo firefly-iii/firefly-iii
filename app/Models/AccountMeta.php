@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use JsonException;
 
 /**
  * Class AccountMeta
@@ -79,7 +80,7 @@ class AccountMeta extends Model
      * @param mixed $value
      *
      * @return mixed
-     * @throws \JsonException
+     * @throws JsonException
      * @codeCoverageIgnore
      */
     public function getDataAttribute($value)

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,10 +38,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Recurrence
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
+ * @property int                                     $id
+ * @property Carbon|null                             $created_at
+ * @property Carbon|null                             $updated_at
+ * @property Carbon|null                             $deleted_at
  * @property int                                     $user_id
  * @property int                                     $transaction_type_id
  * @property string                                  $title
@@ -89,6 +90,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Recurrence extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *
@@ -120,13 +122,13 @@ class Recurrence extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Recurrence
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Recurrence
     {
         if (auth()->check()) {
-            $recurrenceId = (int) $value;
+            $recurrenceId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Recurrence $recurrence */
@@ -136,6 +138,15 @@ class Recurrence extends Model
             }
         }
         throw new NotFoundHttpException;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
@@ -181,15 +192,6 @@ class Recurrence extends Model
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return MorphMany
-     */
-    public function attachments(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**

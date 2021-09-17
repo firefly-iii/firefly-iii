@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -31,19 +30,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null       $updated_at
- * @property \Illuminate\Support\Carbon|null       $deleted_at
+ * @property int                                   $id
+ * @property Carbon|null       $created_at
+ * @property Carbon|null       $updated_at
+ * @property Carbon|null       $deleted_at
  * @property int                                   $account_id
  * @property string                                $name
  * @property string                                $targetamount
- * @property \Illuminate\Support\Carbon|null       $startdate
- * @property \Illuminate\Support\Carbon|null       $targetdate
+ * @property Carbon|null       $startdate
+ * @property Carbon|null       $targetdate
  * @property int                                   $order
  * @property bool                                  $active
  * @property bool                                  $encrypted
@@ -108,13 +109,13 @@ class PiggyBank extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return PiggyBank
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): PiggyBank
     {
         if (auth()->check()) {
-            $piggyBankId = (int) $value;
+            $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
@@ -123,23 +124,6 @@ class PiggyBank extends Model
             }
         }
         throw new NotFoundHttpException;
-    }
-
-    /**
-     * Get all of the tags for the post.
-     */
-    public function objectGroups()
-    {
-        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return MorphMany
-     */
-    public function attachments(): MorphMany
-    {
-        return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
@@ -153,11 +137,28 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return MorphMany
+     */
+    public function attachments(): MorphMany
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    /**
+     * @codeCoverageIgnore
      * Get all of the piggy bank's notes.
      */
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * Get all of the tags for the post.
+     */
+    public function objectGroups()
+    {
+        return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
     /**
@@ -185,6 +186,6 @@ class PiggyBank extends Model
      */
     public function setTargetamountAttribute($value): void
     {
-        $this->attributes['targetamount'] = (string) $value;
+        $this->attributes['targetamount'] = (string)$value;
     }
 }

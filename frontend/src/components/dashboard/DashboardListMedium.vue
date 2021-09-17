@@ -1,5 +1,5 @@
 <!--
-  - TransactionListSmall.vue
+  - DashboardListMedium.vue
   - Copyright (c) 2020 james@firefly-iii.org
   -
   - This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,17 +24,26 @@
     <thead>
     <tr>
       <th class="text-left" scope="col">{{ $t('firefly.description') }}</th>
+      <th scope="col">{{ $t('firefly.opposing_account') }}</th>
       <th class="text-right" scope="col">{{ $t('firefly.amount') }}</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="transaction in this.transactions">
       <td>
-        <a :href="'transactions/show/' + transaction.id "
-           :title="new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(transaction.attributes.transactions[0].date))">
+        <a :href="'transactions/show/' + transaction.id " :title="transaction.date">
           <span v-if="transaction.attributes.transactions.length > 1">{{ transaction.attributes.group_title }}</span>
           <span v-if="1===transaction.attributes.transactions.length">{{ transaction.attributes.transactions[0].description }}</span>
         </a>
+      </td>
+      <td>
+                <span v-for="tr in transaction.attributes.transactions">
+                    <a v-if="'withdrawal' === tr.type" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'deposit' === tr.type" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <a v-if="'transfer' === tr.type && parseInt(tr.source_id) === account_id" :href="'accounts/show/' + tr.destination_id">{{ tr.destination_name }}</a>
+                    <a v-if="'transfer' === tr.type && parseInt(tr.destination_id) === account_id" :href="'accounts/show/' + tr.source_id">{{ tr.source_name }}</a>
+                    <br/>
+                </span>
       </td>
       <td style="text-align:right;">
                 <span v-for="tr in transaction.attributes.transactions">
@@ -59,7 +68,7 @@
 
 <script>
 export default {
-  name: "TransactionListSmall",
+  name: "DashboardListMedium",
   data() {
     return {
       locale: 'en-US'
@@ -68,7 +77,6 @@ export default {
   created() {
     this.locale = localStorage.locale ?? 'en-US';
   },
-  methods: {},
   props: {
     transactions: {
       type: Array,

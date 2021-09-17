@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
+
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
@@ -146,8 +147,8 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-* See reference nr. 15
-* See reference nr. 16
+     * See reference nr. 15
+     * See reference nr. 16
      *
      * @param Carbon                   $start
      * @param Carbon                   $end

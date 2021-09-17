@@ -28,9 +28,9 @@ import MainBudgetList from '../components/dashboard/MainBudgetList';
 import MainCreditList from '../components/dashboard/MainCreditList';
 import MainDebitList from '../components/dashboard/MainDebitList';
 import MainPiggyList from '../components/dashboard/MainPiggyList';
-import TransactionListLarge from '../components/transactions/TransactionListLarge';
-import TransactionListMedium from '../components/transactions/TransactionListMedium';
-import TransactionListSmall from '../components/transactions/TransactionListSmall';
+import DashboardListLarge from '../components/dashboard/DashboardListLarge';
+import DashboardListMedium from '../components/dashboard/DashboardListMedium';
+import DashboardListSmall from '../components/dashboard/DashboardListSmall';
 import Calendar from '../components/dashboard/Calendar';
 import MainCategoryList from '../components/dashboard/MainCategoryList';
 import Vue from 'vue';
@@ -48,9 +48,9 @@ import store from '../components/store';
 require('../bootstrap');
 require('chart.js');
 
-Vue.component('transaction-list-large', TransactionListLarge);
-Vue.component('transaction-list-medium', TransactionListMedium);
-Vue.component('transaction-list-small', TransactionListSmall);
+Vue.component('dashboard-list-large', DashboardListLarge);
+Vue.component('dashboard-list-medium', DashboardListMedium);
+Vue.component('dashboard-list-small', DashboardListSmall);
 
 // components as an example
 

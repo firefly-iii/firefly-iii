@@ -30,10 +30,12 @@ $(function () {
     drawBudgetedBars();
 
     $('.update_ab').on('click', updateAvailableBudget);
+    $('.delete_ab').on('click', deleteAvailableBudget);
     $('.create_ab_alt').on('click', createAltAvailableBudget);
 
     $('.budget_amount').on('change', updateBudgetedAmount);
     $('.create_bl').on('click', createBudgetLimit);
+    $('.delete_bl').on('click', deleteBudgetLimit);
 
 
     /*
@@ -132,7 +134,7 @@ function updateTotalBudgetedAmount(currencyId) {
         });
 
     // get new amount:
-    $.get(totalBudgetedUri.replace('REPLACEME',currencyId)).done(function (data) {
+    $.get(totalBudgetedUri.replace('REPLACEME', currencyId)).done(function (data) {
         // set thing:
         $('span.budgeted_amount[data-currency="' + currencyId + '"]')
             .html(data.budgeted_formatted)
@@ -205,6 +207,18 @@ function createBudgetLimit(e) {
     return false;
 }
 
+function deleteBudgetLimit(e) {
+    e.preventDefault();
+    var button = $(e.currentTarget);
+    var budgetLimitId = button.data('budget-limit-id');
+    var url = deleteBudgetLimitUrl.replace('REPLACEME', budgetLimitId.toString());
+    $.post(url, {_token: token}).then(function () {
+        $('.bl_entry[data-budget-limit-id="' + budgetLimitId + '"]').remove();
+        
+    });
+    return false;
+}
+
 function createAltAvailableBudget(e) {
     $('#defaultModal').empty().load(createAltAvailableBudgetUri, function () {
         $('#defaultModal').modal('show');
@@ -228,7 +242,17 @@ function updateAvailableBudget(e) {
     }
     return false;
 }
-
+function deleteAvailableBudget(e) {
+    //
+    e.preventDefault();
+    var button = $(e.currentTarget);
+    var abId = button.data('id');
+    $.post(deleteABUrl, {_token: token, id: abId}).then(function () {
+        // lame but it works.
+        location.reload();
+    });
+    return false;
+}
 
 function drawBudgetedBars() {
     "use strict";
@@ -275,133 +299,3 @@ function drawSpentBars() {
         }
     });
 }
-
-//
-//
-// function drawSpentBar() {
-//     "use strict";
-//     if ($('.spentBar').length > 0) {
-//         var overspent = spent > budgeted;
-//         var pct;
-//
-//         if (overspent) {
-//             // draw overspent bar
-//             pct = (budgeted / spent) * 100;
-//             $('.spentBar .progress-bar-warning').css('width', pct + '%');
-//             $('.spentBar .progress-bar-danger').css('width', (100 - pct) + '%');
-//         } else {
-//             // draw normal bar:
-//             pct = (spent / budgeted) * 100;
-//             $('.spentBar .progress-bar-info').css('width', pct + '%');
-//         }
-//     }
-// }
-//
-// function drawBudgetedBar() {
-//     "use strict";
-//
-//     if ($('.budgetedBar').length > 0) {
-//         var budgetedMuch = budgeted > available;
-//
-//         // recalculate percentage:
-//
-//         var pct;
-//         if (budgetedMuch) {
-//             // budgeted too much.
-//             pct = (available / budgeted) * 100;
-//             $('.budgetedBar .progress-bar-warning').css('width', pct + '%');
-//             $('.budgetedBar .progress-bar-danger').css('width', (100 - pct) + '%');
-//             $('.budgetedBar .progress-bar-info').css('width', 0);
-//         } else {
-//             pct = (budgeted / available) * 100;
-//             $('.budgetedBar .progress-bar-warning').css('width', 0);
-//             $('.budgetedBar .progress-bar-danger').css('width', 0);
-//             $('.budgetedBar .progress-bar-info').css('width', pct + '%');
-//         }
-//
-//         $('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
-//     }
-// }
-
-// /**
-//  *
-//  * @param e
-//  */
-// function updateBudgetedAmounts(e) {
-//     "use strict";
-//     var target = $(e.target);
-//     var id = target.data('id');
-//     var leftCell = $('td[class$="left"][data-id="' + id + '"]');
-//     var link = $('a[data-id="' + id + '"][class="budget-link"]');
-//     var value = target.val();
-//     var original = target.data('original');
-//
-//     // disable input
-//     target.prop('disabled', true);
-//
-//     // replace link (for now)
-//     link.attr('href', '#');
-//
-//     // replace "left" with spinner.
-//     leftCell.empty().html('<i class="fa fa-fw fa-spin fa-spinner"></i>');
-//
-//     // send a post to Firefly to update the amount:
-//     var newUri = budgetAmountUri.replace("REPLACE", id);
-//
-//     $.post(newUri, {amount: value, start: periodStart, end: periodEnd, _token: token}).done(function (data) {
-//
-//         // difference between new value and original value
-//         var difference = value - original;
-//
-//         // update budgeted value
-//         budgeted = budgeted + difference;
-//
-//         // fill in "left" value:
-//
-//
-//         if (data.left_per_day !== null) {
-//             leftCell.html(data.left + ' (' + data.left_per_day + ')');
-//         } else {
-//             leftCell.html(data.left);
-//         }
-//
-//         // update "budgeted" input:
-//         target.val(data.amount);
-//
-//         // enable thing again
-//         target.prop('disabled', false);
-//
-//         // set new original value:
-//         target.data('original', data.amount);
-//
-//         // run drawBudgetedBar() again:
-//         drawBudgetedBar();
-//
-//         // update the link if relevant:
-//         link.attr('href', 'budgets/show/' + id);
-//         if (data.limit > 0) {
-//             link.attr('href', 'budgets/show/' + id + '/' + data.limit);
-//         }
-//
-//         // update the warning if relevant:
-//         if (data.large_diff === true) {
-//             $('span[class$="budget_warning"][data-id="' + id + '"]').html(data.warn_text).show();
-//             console.log('Show warning for budget');
-//         } else {
-//             $('span[class$="budget_warning"][data-id="' + id + '"]').empty().hide();
-//         }
-//     });
-// }
-
-// /**
-//  *
-//  * @returns {boolean}
-//  */
-// function updateIncome() {
-//     "use strict";
-//     $('#defaultModal').empty().load(updateIncomeUri, function () {
-//         $('#defaultModal').modal('show');
-//     });
-//
-//     return false;
-// }

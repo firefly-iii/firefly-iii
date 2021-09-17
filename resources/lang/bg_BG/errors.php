@@ -47,5 +47,8 @@ return [
     'tell_more'               => 'Разкажете ни повече от „казва Опаааа!“',
     'include_logs'            => 'Включете регистрационни файлове за грешки (вижте по-горе).',
     'what_did_you_do'         => 'Кажете ни какво правихте.',
+    'offline_header'          => 'You are probably offline',
+    'offline_unreachable'     => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
+    'offline_github'          => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

@@ -36,25 +36,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Rule
  *
- * @property int                           $id
- * @property Carbon|null                   $created_at
- * @property Carbon|null                   $updated_at
- * @property Carbon|null                   $deleted_at
- * @property int                           $user_id
- * @property int                           $rule_group_id
- * @property string                        $title
- * @property string|null                   $description
- * @property int                           $order
- * @property bool                          $active
- * @property bool                          $stop_processing
- * @property bool                          $strict
- * @property-read string $action_value
- * @property-read Collection|RuleAction[]  $ruleActions
- * @property-read int|null                 $rule_actions_count
- * @property-read RuleGroup                $ruleGroup
- * @property Collection|RuleTrigger[] $ruleTriggers
- * @property-read int|null                 $rule_triggers_count
- * @property-read User                     $user
+ * @property int                          $id
+ * @property Carbon|null                  $created_at
+ * @property Carbon|null                  $updated_at
+ * @property Carbon|null                  $deleted_at
+ * @property int                          $user_id
+ * @property int                          $rule_group_id
+ * @property string                       $title
+ * @property string|null                  $description
+ * @property int                          $order
+ * @property bool                         $active
+ * @property bool                         $stop_processing
+ * @property bool                         $strict
+ * @property-read string                  $action_value
+ * @property-read Collection|RuleAction[] $ruleActions
+ * @property-read int|null                $rule_actions_count
+ * @property-read RuleGroup               $ruleGroup
+ * @property Collection|RuleTrigger[]     $ruleTriggers
+ * @property-read int|null                $rule_triggers_count
+ * @property-read User                    $user
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Rule newQuery()
  * @method static Builder|Rule onlyTrashed()

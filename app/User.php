@@ -34,6 +34,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
+use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
@@ -45,8 +46,10 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -136,14 +139,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereObjectguid($value)
  * @property string|null                                                          $provider
  * @method static Builder|User whereProvider($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
- * @property-read int|null $object_groups_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[] $webhooks
- * @property-read int|null $webhooks_count
- * @property string|null $two_factor_secret
- * @property string|null $two_factor_recovery_codes
- * @property string|null $guid
- * @property string|null $domain
+ * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[]          $objectGroups
+ * @property-read int|null                                                        $object_groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[]              $webhooks
+ * @property-read int|null                                                        $webhooks_count
+ * @property string|null                                                          $two_factor_secret
+ * @property string|null                                                          $two_factor_recovery_codes
+ * @property string|null                                                          $guid
+ * @property string|null                                                          $domain
  * @method static Builder|User whereDomain($value)
  * @method static Builder|User whereGuid($value)
  * @method static Builder|User whereTwoFactorRecoveryCodes($value)
@@ -210,6 +213,16 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @return HasMany
+     */
+    public function groupMemberships(): HasMany
+    {
+        return $this->hasMany(GroupMembership::class)->with(['userGroup','userRole']);
     }
 
     /**
@@ -300,6 +313,14 @@ class User extends Authenticatable
         return $this->hasMany(Category::class);
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class,);
+    }
     /**
      * @codeCoverageIgnore
      * Link to currency exchange rates
@@ -449,6 +470,7 @@ class User extends Authenticatable
     }
 
     // start LDAP related code
+
     /**
      * Get the database column name of the domain.
      *

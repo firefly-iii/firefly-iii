@@ -57,6 +57,13 @@ interface AvailableBudgetRepositoryInterface
     public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget;
 
     /**
+     * @param int $id
+     *
+     * @return AvailableBudget|null
+     */
+    public function findById(int $id): ?AvailableBudget;
+
+    /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      *
      * @param Carbon|null $start

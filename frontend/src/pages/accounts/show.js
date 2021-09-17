@@ -21,6 +21,7 @@
 
 require('../../bootstrap');
 
+import store from '../../components/store';
 import Show from "../../components/accounts/Show";
 
 // i18n
@@ -29,12 +30,22 @@ let i18n = require('../../i18n');
 // get page name?
 
 
-let props = {
-
-};
+let props = {};
 const app = new Vue({
-            i18n,
-            render(createElement) {
-                return createElement(Show, {props: props});
-            }
-        }).$mount('#accounts_show');
+                        i18n,
+                        store,
+                        render(createElement) {
+                            return createElement(Show, {props: props});
+                        },
+                        beforeCreate() {
+// See reference nr. 10
+                            this.$store.commit('initialiseStore');
+                            this.$store.dispatch('updateCurrencyPreference');
+
+                            // init the new root store (dont care about results)
+                            this.$store.dispatch('root/initialiseStore');
+
+                            // also init the dashboard store.
+                            this.$store.dispatch('dashboard/index/initialiseStore');
+                        },
+                    }).$mount('#accounts_show');

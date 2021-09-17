@@ -57,12 +57,18 @@ class UpdatePiggybank implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
+
+        // refresh the transaction type.
+        $user                             = User::find($journal['user_id']);
+        $journalObj                       = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $type                             = TransactionType::find((int)$journalObj->transaction_type_id);
+        $journal['transaction_type_type'] = $type->type;
+
         if (TransactionType::TRANSFER !== $journal['transaction_type_type']) {
             Log::info(sprintf('Journal #%d is a "%s" so skip this action.', $journal['transaction_journal_id'], $journal['transaction_type_type']));
 
             return false;
         }
-        $user = User::find($journal['user_id']);
 
         $piggyBank = $this->findPiggybank($user);
         if (null === $piggyBank) {
@@ -92,7 +98,7 @@ class UpdatePiggybank implements ActionInterface
 
             return true;
         }
-        Log::info('Piggy bank is not linked to source or destination, so no action will be taken.');
+        Log::info(sprintf('Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $source->account_id, $destination->account_id));
 
         return true;
     }

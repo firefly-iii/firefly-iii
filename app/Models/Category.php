@@ -96,13 +96,13 @@ class Category extends Model
      *
      * @param string $value
      *
-     * @throws NotFoundHttpException
      * @return Category
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Category
     {
         if (auth()->check()) {
-            $categoryId = (int) $value;
+            $categoryId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Category $category */
@@ -114,14 +114,6 @@ class Category extends Model
         throw new NotFoundHttpException;
     }
 
-    /**
-     * @codeCoverageIgnore
-     * @return BelongsToMany
-     */
-    public function transactionJournals(): BelongsToMany
-    {
-        return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
-    }
     /**
      * @codeCoverageIgnore
      * @return MorphMany
@@ -138,6 +130,15 @@ class Category extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsToMany
+     */
+    public function transactionJournals(): BelongsToMany
+    {
+        return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
 
     /**

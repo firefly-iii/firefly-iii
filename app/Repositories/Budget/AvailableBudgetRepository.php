@@ -80,6 +80,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function findById(int $id): ?AvailableBudget
+    {
+        return $this->user->availableBudgets->find($id);
+    }
+
+    /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      *
      * @param Carbon|null $start

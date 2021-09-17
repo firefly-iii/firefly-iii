@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
+
 use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -58,6 +59,7 @@ use Illuminate\Support\Carbon;
 class RecurrenceMeta extends Model
 {
     use SoftDeletes;
+
     /**
      * The attributes that should be casted to native types.
      *

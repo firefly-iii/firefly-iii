@@ -43,6 +43,7 @@ interface OperationsRepositoryInterface
      * @return string
      */
     public function budgetedPerDay(Budget $budget): string;
+
     /**
      * @param Collection $budgets
      * @param Collection $accounts

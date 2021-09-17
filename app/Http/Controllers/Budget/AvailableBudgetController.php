@@ -137,10 +137,16 @@ class AvailableBudgetController extends Controller
      *
      * @return RedirectResponse|Redirector
      */
-    public function delete(AvailableBudget $availableBudget)
+    public function delete(Request $request)
     {
-        $this->abRepository->destroyAvailableBudget($availableBudget);
-        session()->flash('success', trans('firefly.deleted_ab'));
+        $id = (int)$request->get('id');
+        if (0 !== $id) {
+            $availableBudget = $this->abRepository->findById($id);
+            if (null !== $availableBudget) {
+                $this->abRepository->destroyAvailableBudget($availableBudget);
+                session()->flash('success', trans('firefly.deleted_ab'));
+            }
+        }
 
         return redirect(route('budgets.index'));
     }

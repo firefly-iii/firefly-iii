@@ -35,6 +35,9 @@ use FireflyIII\Mail\NewIPAddressWarningMail;
 use FireflyIII\Mail\RegisteredUser as RegisteredUserMail;
 use FireflyIII\Mail\RequestedNewPassword as RequestedNewPasswordMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
+use FireflyIII\Models\GroupMembership;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Models\UserRole;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
@@ -244,6 +247,34 @@ class UserEventHandler
         } catch (Exception $e) { // @phpstan-ignore-line
             Log::error($e->getMessage());
         }
+
+        return true;
+    }
+
+    /**
+     * @param RegisteredUser $event
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    public function createGroupMembership(RegisteredUser $event): bool
+    {
+        $user = $event->user;
+        // create a new group.
+        $group = UserGroup::create(['title' => $user->email]);
+        $role  = UserRole::where('title', UserRole::OWNER)->first();
+        if (null === $role) {
+            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
+        }
+        GroupMembership::create(
+            [
+                'user_id'       => $user->id,
+                'user_group_id' => $group->id,
+                'user_role_id'  => $role->id,
+            ]
+        );
+        $user->user_group_id = $group->id;
+        $user->save();
 
         return true;
     }
