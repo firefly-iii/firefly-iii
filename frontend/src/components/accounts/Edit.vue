@@ -279,8 +279,8 @@ export default {
       // console.log('end of finaliseSubmission');
     },
     handleSubmissionError: function (errors) {
-      console.log('Bad');
-      console.log(errors);
+      console.error('Bad');
+      console.error(errors);
       this.inError = true;
       this.submitting = false;
       this.errors = lodashClonedeep(this.defaultErrors);
@@ -320,12 +320,12 @@ export default {
                   this.parseAccount(response.data);
                 }
           ).catch(error => {
-        console.log('I failed :(');
-        console.log(error);
+        console.error('I failed :(');
+        console.error(error);
       });
     },
     storeField: function (payload) {
-      console.log(payload);
+      //console.log(payload);
       if ('location' === payload.field) {
         if (true === payload.value.hasMarker) {
           this.account.location = payload.value;

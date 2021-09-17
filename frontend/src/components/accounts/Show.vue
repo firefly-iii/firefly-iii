@@ -54,16 +54,14 @@
       </div>
     </div>
 
-            <TransactionListLarge
-                :transactions="transactions"
-                :current-page="currentPage"
-                :total="total"
-                :per-page="perPage"
-                :loading="loading"
-                :sort-desc="sortDesc"
-                :account-id="accountId"
-            />
-
+    <TransactionListLarge
+        :entries="rawTransactions"
+        :page="currentPage"
+        :total="total"
+        :per-page="perPage"
+        :sort-desc="sortDesc"
+        v-on:jump-page="jumpToPage($event)"
+    />
     <div class="row">
       <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
         <div class="card">
@@ -85,6 +83,7 @@
 import TransactionListLarge from "../transactions/TransactionListLarge";
 import format from "date-fns/format";
 import {mapGetters} from "vuex";
+import {configureAxios} from "../../shared/forageStore";
 
 export default {
   name: "Show",
@@ -98,14 +97,15 @@ export default {
   data() {
     return {
       accountId: 0,
-      transactions: [],
+      rawTransactions: [],
       ready: false,
-      loading: true,
+      loading: false,
       total: 0,
       sortDesc: false,
       currentPage: 1,
       perPage: 51,
-      locale: 'en-US'
+      locale: 'en-US',
+      api: null,
     }
   },
   created() {
@@ -121,19 +121,34 @@ export default {
   components: {TransactionListLarge},
   methods: {
     getTransactions: function () {
-      console.log('goooooo');
-      if (this.showReady) {
-        let startStr = format(this.start, 'y-MM-dd');
-        let endStr = format(this.end, 'y-MM-dd');
-        axios.get('./api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr)
-            .then(response => {
-                    this.transactions = response.data.data;
-                    //this.loading = false;
-                    //this.error = false;
-                  }
-            );
+      if (this.showReady && !this.loading) {
+        this.loading = true;
+        configureAxios().then(async (api) => {
+          // console.log('Now getTransactions() x Start');
+          let startStr = format(this.start, 'y-MM-dd');
+          let endStr = format(this.end, 'y-MM-dd');
+          this.rawTransactions = [];
+
+          let url = './api/v1/accounts/' + this.accountId + '/transactions?page=1&limit=' + this.perPage + '&start=' + startStr + '&end=' + endStr;
+
+
+          api.get(url)
+              .then(response => {
+                      // console.log('Now getTransactions() DONE!');
+                      this.total = parseInt(response.data.meta.pagination.total);
+                      this.rawTransactions = response.data.data;
+                      this.loading = false;
+                    }
+              );
+        });
+
       }
-    }
+    },
+    jumpToPage: function (event) {
+      // console.log('noticed a change!');
+      this.currentPage = event.page;
+      this.downloadTransactionList(event.page);
+    },
   },
   watch: {
     start: function () {
