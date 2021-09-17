@@ -58,6 +58,13 @@ interface GroupCollectorInterface
     public function amountLess(string $amount): GroupCollectorInterface;
 
     /**
+     * Ensure the search will find nothing at all, zero results.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function findNothing(): GroupCollectorInterface;
+
+    /**
      * Get transactions where the amount is more than.
      *
      * @param string $amount

@@ -345,6 +345,10 @@ class OperatorQuerySearch implements SearchInterface
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection([$account]));
                 }
+                if (null === $account) {
+                    // since the source does not exist, cannot return results:
+                    $this->collector->findNothing();
+                }
                 break;
             case 'journal_id':
                 $parts = explode(',', $value);
@@ -383,6 +387,9 @@ class OperatorQuerySearch implements SearchInterface
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection([$account]));
                 }
+                if (null === $account) {
+                    $this->collector->findNothing();
+                }
                 break;
             case 'account_id':
                 $parts      = explode(',', $value);
@@ -395,6 +402,9 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 if ($collection->count() > 0) {
                     $this->collector->setAccounts($collection);
+                }
+                if (0 === $collection->count()) {
+                    $this->collector->findNothing();
                 }
                 break;
             //
@@ -436,11 +446,17 @@ class OperatorQuerySearch implements SearchInterface
                 if (null !== $currency) {
                     $this->collector->setCurrency($currency);
                 }
+                if (null === $currency) {
+                    $this->collector->findNothing();
+                }
                 break;
             case 'foreign_currency_is':
                 $currency = $this->findCurrency($value);
                 if (null !== $currency) {
                     $this->collector->setForeignCurrency($currency);
+                }
+                if (null === $currency) {
+                    $this->collector->findNothing();
                 }
                 break;
             //
@@ -463,6 +479,9 @@ class OperatorQuerySearch implements SearchInterface
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
                 break;
             //
             // budgets
@@ -477,6 +496,9 @@ class OperatorQuerySearch implements SearchInterface
                 $result = $this->budgetRepository->searchBudget($value, 25);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
+                }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
                 }
                 break;
             //
@@ -493,6 +515,9 @@ class OperatorQuerySearch implements SearchInterface
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
+                if (0 === $result->count()) {
+                    $this->collector->findNothing();
+                }
                 break;
             //
             // tags
@@ -507,6 +532,11 @@ class OperatorQuerySearch implements SearchInterface
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
                     $this->collector->setTags($result);
+                }
+                // no tags found means search must result in nothing.
+                if (0 === $result->count()) {
+                    Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
                 }
                 break;
             //
@@ -698,10 +728,8 @@ class OperatorQuerySearch implements SearchInterface
         // get accounts:
         $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero accounts, search for invalid account.');
-            $account     = new Account;
-            $account->id = 0;
-            $this->collector->$collectorMethod(new Collection([$account]));
+            Log::debug('Found zero accounts, search for non existing account, NO results will be returned.');
+            $this->collector->findNothing();
 
             return;
         }
@@ -713,10 +741,8 @@ class OperatorQuerySearch implements SearchInterface
         );
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero accounts, search for invalid account.');
-            $account     = new Account;
-            $account->id = 0;
-            $this->collector->$collectorMethod(new Collection([$account]));
+            Log::debug('Left with zero accounts, so cannot find anything, NO results will be returned.');
+            $this->collector->findNothing();
 
             return;
         }
@@ -764,9 +790,7 @@ class OperatorQuerySearch implements SearchInterface
         $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 25);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
-            $account     = new Account;
-            $account->id = 0;
-            $this->collector->$collectorMethod(new Collection([$account]));
+            $this->collector->findNothing();
 
             return;
         }
@@ -791,9 +815,7 @@ class OperatorQuerySearch implements SearchInterface
 
         if (0 === $filtered->count()) {
             Log::debug('Left with zero, search for invalid account');
-            $account     = new Account;
-            $account->id = 0;
-            $this->collector->$collectorMethod(new Collection([$account]));
+            $this->collector->findNothing();
 
             return;
         }

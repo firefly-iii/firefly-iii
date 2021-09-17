@@ -767,4 +767,14 @@ class GroupCollector implements GroupCollectorInterface
 
         return $groups;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findNothing(): GroupCollectorInterface
+    {
+        $this->query->where('transaction_groups.id', -1);
+
+        return $this;
+    }
 }
