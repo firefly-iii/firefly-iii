@@ -116,6 +116,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection|Location[] $locations
  * @property-read int|null                                            $locations_count
  * @property int                                                      $the_count
+ * @property int|null $user_group_id
+ * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  */
 class TransactionJournal extends Model
 {

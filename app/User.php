@@ -151,6 +151,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereGuid($value)
  * @method static Builder|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder|User whereTwoFactorSecret($value)
+ * @property int|null $user_group_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|GroupMembership[] $groupMemberships
+ * @property-read int|null $group_memberships_count
+ * @property-read UserGroup|null $userGroup
+ * @method static Builder|User whereUserGroupId($value)
  */
 class User extends Authenticatable
 {

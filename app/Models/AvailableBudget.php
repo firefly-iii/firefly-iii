@@ -61,6 +61,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|AvailableBudget withTrashed()
  * @method static Builder|AvailableBudget withoutTrashed()
  * @mixin Eloquent
+ * @property int|null $user_group_id
+ * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
  */
 class AvailableBudget extends Model
 {

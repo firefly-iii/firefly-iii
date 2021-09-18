@@ -29,6 +29,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class UserRole
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property string $title
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\GroupMembership[] $groupMemberships
+ * @property-read int|null $group_memberships_count
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserRole whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class UserRole extends Model
 {

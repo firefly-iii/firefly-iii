@@ -29,6 +29,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class UserGroup
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property string $title
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\GroupMembership[] $groupMemberships
+ * @property-read int|null $group_memberships_count
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserGroup whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class UserGroup extends Model
 {

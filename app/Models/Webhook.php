@@ -71,6 +71,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                           $secret
  * @method static Builder|Webhook whereSecret($value)
  * @method static Builder|Webhook whereTitle($value)
+ * @property int|null $user_group_id
+ * @method static Builder|Webhook whereUserGroupId($value)
  */
 class Webhook extends Model
 {

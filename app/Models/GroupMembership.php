@@ -30,6 +30,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class GroupMembership
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property int $user_id
+ * @property int $user_group_id
+ * @property int $user_role_id
+ * @property-read User $user
+ * @property-read \FireflyIII\Models\UserGroup $userGroup
+ * @property-read \FireflyIII\Models\UserRole $userRole
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership query()
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereUserGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GroupMembership whereUserRoleId($value)
+ * @mixin \Eloquent
  */
 class GroupMembership extends Model
 {
