@@ -55,7 +55,8 @@ class TagController extends Controller
     }
 
     /**
-     * Expenses for no tag filtered by account.
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightTransferNoTag
      *
      * @param GenericRequest $request
      *
@@ -107,6 +108,9 @@ class TagController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightTransferTag
+     *
      * Transfers per tag, possibly filtered by tag and account.
      *
      * @param GenericRequest $request

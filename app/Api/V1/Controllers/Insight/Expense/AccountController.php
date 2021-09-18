@@ -37,7 +37,7 @@ use Illuminate\Http\JsonResponse;
  * Class AccountController
  *
  * Shows expense information grouped or limited by date.
- * Ie. all expenses grouped by account + currency.
+ * I.e. all expenses grouped by account + currency.
  */
 class AccountController extends Controller
 {
@@ -73,6 +73,9 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseAsset
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
@@ -101,6 +104,9 @@ class AccountController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseExpense
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse

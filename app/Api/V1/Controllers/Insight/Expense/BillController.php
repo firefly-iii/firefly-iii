@@ -56,6 +56,9 @@ class BillController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseBill
+     *
      * Expenses per bill, possibly filtered by bill and account.
      *
      * @param GenericRequest $request
@@ -116,6 +119,9 @@ class BillController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseNoBill
+     *
      * Expenses for no bill filtered by account.
      *
      * @param GenericRequest $request

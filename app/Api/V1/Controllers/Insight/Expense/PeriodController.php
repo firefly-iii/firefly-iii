@@ -36,6 +36,9 @@ class PeriodController extends Controller
 {
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/insight/insightExpenseTotal
+     *
      * @param GenericRequest $request
      *
      * @return JsonResponse
