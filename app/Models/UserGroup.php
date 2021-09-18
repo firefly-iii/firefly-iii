@@ -34,13 +34,13 @@ use Illuminate\Support\Carbon;
 /**
  * Class UserGroup
  *
- * @property int $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $deleted_at
- * @property string $title
- * @property-read Collection|\FireflyIII\Models\GroupMembership[] $groupMemberships
- * @property-read int|null $group_memberships_count
+ * @property int                               $id
+ * @property Carbon|null                       $created_at
+ * @property Carbon|null                       $updated_at
+ * @property string|null                       $deleted_at
+ * @property string                            $title
+ * @property-read Collection|GroupMembership[] $groupMemberships
+ * @property-read int|null                     $group_memberships_count
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()

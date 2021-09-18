@@ -69,7 +69,7 @@ class ExpenseReportController extends Controller
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
-* See reference nr. 58
+     * See reference nr. 58
      *
      * @param Collection $accounts
      * @param Collection $expense
@@ -77,7 +77,7 @@ class ExpenseReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     *
+     * @throws \JsonException
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {

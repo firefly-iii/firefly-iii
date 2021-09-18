@@ -67,9 +67,7 @@ class IndexController extends Controller
 
     /**
      * @return LaravelResponse
-     * @throws CannotInsertRecord
      * @throws FireflyException
-     * @throws Exception
      */
     public function export(): LaravelResponse
     {

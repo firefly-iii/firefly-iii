@@ -90,6 +90,7 @@ class IndexController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {

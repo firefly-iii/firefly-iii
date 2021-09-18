@@ -57,6 +57,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
@@ -102,6 +103,7 @@ class BillController extends Controller
      * @param Bill $bill
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function single(Bill $bill): JsonResponse
     {

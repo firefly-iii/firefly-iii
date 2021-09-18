@@ -44,8 +44,7 @@ class RemoteUserGuard implements Guard
      * Create a new authentication guard.
      *
      * @param UserProvider $provider
-     *
-     * @return void
+     * @param Application  $app
      */
     // @phpstan-ignore-next-line
     public function __construct(UserProvider $provider, Application $app) // @phpstan-ignore-line

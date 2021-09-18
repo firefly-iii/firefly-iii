@@ -24,10 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
@@ -145,6 +143,7 @@ class IndexController extends Controller
      * @param array $bills
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function getSums(array $bills): array
     {

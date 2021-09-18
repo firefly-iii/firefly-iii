@@ -156,7 +156,6 @@ class TransactionJournal extends Model
      * @param string $value
      *
      * @return TransactionJournal
-     * @throws FireflyException
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournal

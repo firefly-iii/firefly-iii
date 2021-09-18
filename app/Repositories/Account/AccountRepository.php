@@ -730,6 +730,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
+     * @throws FireflyException
+     * @throws \JsonException
      */
     public function update(Account $account, array $data): Account
     {

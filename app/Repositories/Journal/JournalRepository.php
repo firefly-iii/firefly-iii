@@ -129,6 +129,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      *
      * @return string
+     * @throws \JsonException
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
@@ -185,6 +186,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param string $field
      *
      * @return null|Carbon
+     * @throws \JsonException
      */
     public function getMetaDateById(int $journalId, string $field): ?Carbon
     {

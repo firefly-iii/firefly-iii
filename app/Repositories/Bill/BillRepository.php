@@ -623,6 +623,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     * @throws \JsonException
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
@@ -651,6 +652,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $date
      *
      * @return Carbon
+     * @throws \JsonException
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {

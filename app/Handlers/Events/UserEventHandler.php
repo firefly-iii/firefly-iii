@@ -114,7 +114,7 @@ class UserEventHandler
      * @param Login $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function demoUserBackToEnglish(Login $event): bool
     {
@@ -136,7 +136,7 @@ class UserEventHandler
     /**
      * @param DetectedNewIPAddress $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -178,7 +178,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendEmailChangeConfirmMail(UserChangedEmail $event): bool
     {
@@ -204,7 +204,7 @@ class UserEventHandler
      * @param UserChangedEmail $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendEmailChangeUndoMail(UserChangedEmail $event): bool
     {
@@ -286,7 +286,7 @@ class UserEventHandler
      * @param RegisteredUser $event
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function sendRegistrationMail(RegisteredUser $event): bool
     {
@@ -319,7 +319,7 @@ class UserEventHandler
     /**
      * @param Login $event
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function storeUserIPAddress(Login $event): void
     {

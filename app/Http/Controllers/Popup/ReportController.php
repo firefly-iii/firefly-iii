@@ -51,26 +51,14 @@ class ReportController extends Controller
         app('view')->share('start', $attributes['startDate']);
         app('view')->share('end', $attributes['endDate']);
 
-        switch ($attributes['location']) {
-            default:
-                $html = sprintf('Firefly III cannot handle "%s"-popups.', $attributes['location']);
-                break;
-            case 'budget-spent-amount':
-                $html = $this->budgetSpentAmount($attributes);
-                break;
-            case 'expense-entry':
-                $html = $this->expenseEntry($attributes);
-                break;
-            case 'income-entry':
-                $html = $this->incomeEntry($attributes);
-                break;
-            case 'category-entry':
-                $html = $this->categoryEntry($attributes);
-                break;
-            case 'budget-entry':
-                $html = $this->budgetEntry($attributes);
-                break;
-        }
+        $html = match ($attributes['location']) {
+            default => sprintf('Firefly III cannot handle "%s"-popups.', $attributes['location']),
+            'budget-spent-amount' => $this->budgetSpentAmount($attributes),
+            'expense-entry' => $this->expenseEntry($attributes),
+            'income-entry' => $this->incomeEntry($attributes),
+            'category-entry' => $this->categoryEntry($attributes),
+            'budget-entry' => $this->budgetEntry($attributes),
+        };
 
         return response()->json(['html' => $html]);
     }

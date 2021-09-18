@@ -85,7 +85,7 @@ trait GetConfigurationData
      * Get config for date range.
      *
      * @return array
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {

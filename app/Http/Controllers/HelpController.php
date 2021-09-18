@@ -35,6 +35,7 @@ class HelpController extends Controller
      * @param string $route
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function show(string $route): JsonResponse
     {

@@ -95,8 +95,9 @@ class TransactionJournalFactory
      * @param array $data
      *
      * @return Collection
-     * @throws FireflyException
      * @throws DuplicateTransactionException
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function create(array $data): Collection
     {
@@ -388,15 +389,11 @@ class TransactionJournalFactory
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
         Log::debug('Now ingetCurrencyByAccount()');
-        switch ($type) {
-            default:
-            case TransactionType::WITHDRAWAL:
-            case TransactionType::TRANSFER:
-                return $this->getCurrency($currency, $source);
-            case TransactionType::DEPOSIT:
-                return $this->getCurrency($currency, $destination);
 
-        }
+        return match ($type) {
+            default => $this->getCurrency($currency, $source),
+            TransactionType::DEPOSIT => $this->getCurrency($currency, $destination),
+        };
     }
 
     /**

@@ -328,6 +328,8 @@ class CreateRecurringTransactions implements ShouldQueue
      * @param array                $occurrences
      *
      * @return Collection
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
      */
     private function handleOccurrences(Recurrence $recurrence, RecurrenceRepetition $repetition, array $occurrences): Collection
     {

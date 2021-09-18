@@ -103,6 +103,7 @@ class IntroController extends Controller
      * @param string|null $specialPage
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function postEnable(string $route, string $specialPage = null): JsonResponse
     {
@@ -126,6 +127,7 @@ class IntroController extends Controller
      * @param string|null $specialPage
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function postFinished(string $route, string $specialPage = null): JsonResponse
     {

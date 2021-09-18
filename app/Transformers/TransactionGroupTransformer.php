@@ -351,7 +351,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $bill            = $this->getBill($journal->bill);
 
         if (null !== $foreignAmount && null !== $foreignCurrency) {
-            $foreignAmount = number_format((float)$foreignAmount, $foreignCurrency['decimal_places'], '.', '');
+            $foreignAmount = number_format((float)$foreignAmount, $foreignCurrency->decimal_places ?? 0, '.', '');
         }
 
         $longitude = null;

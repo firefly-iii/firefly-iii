@@ -51,6 +51,7 @@ class ParseDateString
      * @param string $date
      *
      * @return Carbon
+     * @throws FireflyException
      */
     public function parseDate(string $date): Carbon
     {
@@ -265,31 +266,20 @@ class ParseDateString
     protected function parseKeyword(string $keyword): Carbon
     {
         $today = Carbon::today()->startOfDay();
-        switch ($keyword) {
-            default:
-            case 'today':
-                return $today;
-            case 'yesterday':
-                return $today->subDay();
-            case 'tomorrow':
-                return $today->addDay();
-            case 'start of this week':
-                return $today->startOfWeek();
-            case 'end of this week':
-                return $today->endOfWeek();
-            case 'start of this month':
-                return $today->startOfMonth();
-            case 'end of this month':
-                return $today->endOfMonth();
-            case 'start of this quarter':
-                return $today->startOfQuarter();
-            case 'end of this quarter':
-                return $today->endOfQuarter();
-            case 'start of this year':
-                return $today->startOfYear();
-            case 'end of this year':
-                return $today->endOfYear();
-        }
+
+        return match ($keyword) {
+            default => $today,
+            'yesterday' => $today->subDay(),
+            'tomorrow' => $today->addDay(),
+            'start of this week' => $today->startOfWeek(),
+            'end of this week' => $today->endOfWeek(),
+            'start of this month' => $today->startOfMonth(),
+            'end of this month' => $today->endOfMonth(),
+            'start of this quarter' => $today->startOfQuarter(),
+            'end of this quarter' => $today->endOfQuarter(),
+            'start of this year' => $today->startOfYear(),
+            'end of this year' => $today->endOfYear(),
+        };
     }
 
     /**
@@ -371,7 +361,6 @@ class ParseDateString
             ],
         ];
 
-        /** @var string $part */
         foreach ($parts as $part) {
             Log::debug(sprintf('Now parsing part "%s"', $part));
             $part = trim($part);

@@ -62,6 +62,7 @@ class NetWorth implements NetWorthInterface
      * @param Carbon     $date
      *
      * @return array
+     * @throws \JsonException
      */
     public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
     {

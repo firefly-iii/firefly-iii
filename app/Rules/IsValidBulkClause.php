@@ -71,6 +71,8 @@ class IsValidBulkClause implements Rule
     /**
      * Does basic rule based validation.
      *
+     * @param string $value
+     *
      * @return bool
      */
     private function basicValidation(string $value): bool

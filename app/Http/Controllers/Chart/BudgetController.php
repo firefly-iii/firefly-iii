@@ -84,6 +84,7 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function budget(Budget $budget): JsonResponse
     {
@@ -152,6 +153,7 @@ class BudgetController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
+     * @throws \JsonException
      */
     public function budgetLimit(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
@@ -202,6 +204,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -270,6 +273,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -334,6 +338,7 @@ class BudgetController extends Controller
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit = null): JsonResponse
     {
@@ -397,7 +402,7 @@ class BudgetController extends Controller
      * Shows a budget list with spent/left/overspent.
      *
      * @return JsonResponse
-     *
+     * @throws \JsonException
      */
     public function frontpage(): JsonResponse
     {
@@ -435,6 +440,7 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function period(Budget $budget, TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -510,6 +516,7 @@ class BudgetController extends Controller
      * @param Carbon              $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function periodNoBudget(TransactionCurrency $currency, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

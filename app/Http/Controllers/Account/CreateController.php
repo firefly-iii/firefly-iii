@@ -135,6 +135,7 @@ class CreateController extends Controller
      * @param AccountFormRequest $request
      *
      * @return RedirectResponse|Redirector
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(AccountFormRequest $request)
     {

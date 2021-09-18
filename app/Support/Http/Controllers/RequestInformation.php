@@ -162,6 +162,7 @@ trait RequestInformation
      * Returns if user has seen demo.
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {

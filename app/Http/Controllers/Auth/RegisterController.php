@@ -78,7 +78,7 @@ class RegisterController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return \Illuminate\Contracts\Foundation\Application|Redirector|RedirectResponse
      * @throws FireflyException
      * @throws ValidationException
      */

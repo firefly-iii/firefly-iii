@@ -166,7 +166,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @inheritDoc
-     * @throws FireflyException
      */
     public function searchTransactions(): LengthAwarePaginator
     {

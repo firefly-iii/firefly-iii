@@ -68,6 +68,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -142,6 +143,7 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

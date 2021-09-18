@@ -49,7 +49,6 @@ class Steam
      * @param TransactionCurrency|null $currency
      *
      * @return string
-     * @throws FireflyException
      * @throws JsonException
      */
     public function balance(Account $account, Carbon $date, ?TransactionCurrency $currency = null): string
@@ -97,6 +96,7 @@ class Steam
      * @param Carbon  $date
      *
      * @return string
+     * @throws JsonException
      */
     public function balanceIgnoreVirtual(Account $account, Carbon $date): string
     {
@@ -164,6 +164,8 @@ class Steam
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
@@ -246,6 +248,7 @@ class Steam
      * @param Carbon  $date
      *
      * @return array
+     * @throws JsonException
      */
     public function balancePerCurrency(Account $account, Carbon $date): array
     {
@@ -279,6 +282,8 @@ class Steam
      * @param Carbon     $date
      *
      * @return array
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function balancesByAccounts(Collection $accounts, Carbon $date): array
     {
@@ -311,6 +316,7 @@ class Steam
      * @param Carbon     $date
      *
      * @return array
+     * @throws JsonException
      */
     public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
     {
@@ -444,6 +450,7 @@ class Steam
      * Get user's language.
      *
      * @return string
+     * @throws FireflyException
      */
     public function getLanguage(): string // get preference
     {
@@ -454,6 +461,7 @@ class Steam
      * Get user's locale.
      *
      * @return string
+     * @throws FireflyException
      */
     public function getLocale(): string // get preference
     {

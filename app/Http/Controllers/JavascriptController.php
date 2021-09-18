@@ -46,6 +46,7 @@ class JavascriptController extends Controller
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return Response
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
@@ -128,6 +129,7 @@ class JavascriptController extends Controller
      * @param CurrencyRepositoryInterface $currencyRepository
      *
      * @return Response
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {

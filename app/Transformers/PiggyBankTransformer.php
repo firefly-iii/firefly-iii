@@ -22,7 +22,6 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;

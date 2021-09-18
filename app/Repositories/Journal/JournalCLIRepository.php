@@ -117,6 +117,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      * @param string             $field
      *
      * @return null|Carbon
+     * @throws \JsonException
      */
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
     {
@@ -160,6 +161,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      * @param string             $field
      *
      * @return null|string
+     * @throws \JsonException
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {

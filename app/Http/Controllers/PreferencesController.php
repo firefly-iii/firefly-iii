@@ -64,6 +64,7 @@ class PreferencesController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -144,7 +145,7 @@ class PreferencesController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse|Redirector
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function postIndex(Request $request)
     {

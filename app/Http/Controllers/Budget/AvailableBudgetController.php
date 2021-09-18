@@ -133,7 +133,7 @@ class AvailableBudgetController extends Controller
     }
 
     /**
-     * @param AvailableBudget $availableBudget
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
      */

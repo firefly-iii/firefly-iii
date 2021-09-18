@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Destroy;
 use Exception;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
-use Log;
 
 /**
  * @codeCoverageIgnore

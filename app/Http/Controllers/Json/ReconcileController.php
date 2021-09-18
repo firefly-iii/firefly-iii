@@ -215,7 +215,8 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {

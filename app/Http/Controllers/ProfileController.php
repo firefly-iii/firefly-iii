@@ -389,7 +389,10 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function newBackupCodes(Request $request)
     {
@@ -506,6 +509,7 @@ class ProfileController extends Controller
      * @param TokenFormRequest $request
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -657,9 +661,10 @@ class ProfileController extends Controller
     }
 
     /**
-* See reference nr. 64
+     * See reference nr. 64
      *
      * @param string $mfaCode
+     * @throws FireflyException
      */
     private function addToMFAHistory(string $mfaCode): void
     {

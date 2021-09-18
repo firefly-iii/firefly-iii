@@ -109,6 +109,8 @@ class Amount
 
     /**
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function getCurrencyCode(): string
     {
@@ -145,6 +147,8 @@ class Amount
      * @param User $user
      *
      * @return TransactionCurrency
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {

@@ -44,7 +44,7 @@ class AccountController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     *
+     * @throws \JsonException
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

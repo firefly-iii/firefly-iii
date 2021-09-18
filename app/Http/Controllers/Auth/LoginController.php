@@ -194,7 +194,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      *
-     * @return Factory|Response|View
+     * @return Factory|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\View|\Illuminate\Routing\Redirector|RedirectResponse
      * @throws FireflyException
      */
     public function showLoginForm(Request $request)

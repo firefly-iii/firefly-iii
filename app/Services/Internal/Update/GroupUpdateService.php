@@ -122,6 +122,7 @@ class GroupUpdateService
      * @param array            $transactions
      *
      * @return array
+     * @throws DuplicateTransactionException
      * @throws FireflyException
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array

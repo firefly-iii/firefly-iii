@@ -76,6 +76,7 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
@@ -115,6 +116,7 @@ class ShowController extends Controller
      * @param Category $category
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function showAll(Request $request, Category $category)
     {

@@ -23,10 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class AutoCompleteController.

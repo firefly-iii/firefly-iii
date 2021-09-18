@@ -24,7 +24,6 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;

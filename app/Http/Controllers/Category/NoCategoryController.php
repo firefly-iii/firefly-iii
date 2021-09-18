@@ -74,6 +74,7 @@ class NoCategoryController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -111,6 +112,7 @@ class NoCategoryController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function showAll(Request $request)
     {

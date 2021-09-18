@@ -262,7 +262,7 @@ class CreditRecalculateService
         // if it's a credit, we don't care, because sending more money
         // to a credit-liability doesn't increase the amount (yet)
         if (
-            in_array($type, [TransactionType::WITHDRAWAL])
+            $type === TransactionType::WITHDRAWAL
             && (int)$account->id === (int)$transaction->account_id
             && 1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction
@@ -274,7 +274,7 @@ class CreditRecalculateService
 
         // likewise deposit into a credit debt does not change the amount
         if (
-            in_array($type, [TransactionType::DEPOSIT])
+            $type === TransactionType::DEPOSIT
             && (int)$account->id === (int)$transaction->account_id
             && -1 === bccomp($transaction->amount, '0')
             && 'credit' === $direction

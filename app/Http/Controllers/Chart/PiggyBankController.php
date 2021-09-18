@@ -31,7 +31,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
  * Class PiggyBankController.
@@ -58,13 +57,13 @@ class PiggyBankController extends Controller
     /**
      * Shows the piggy bank history.
      *
-* See reference nr. 53
+     * See reference nr. 53
      *
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
      * @return JsonResponse
-     *
+     * @throws \JsonException
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {

@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Request;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use Exception;
 use Log;
 
 /**

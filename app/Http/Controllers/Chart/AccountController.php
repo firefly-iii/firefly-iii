@@ -83,6 +83,7 @@ class AccountController extends Controller
      * This chart is (multi) currency aware.
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseAccounts(): JsonResponse
     {
@@ -194,6 +195,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -268,6 +270,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -322,6 +325,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
@@ -364,6 +368,7 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -421,6 +426,8 @@ class AccountController extends Controller
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -458,6 +465,8 @@ class AccountController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
@@ -528,6 +537,7 @@ class AccountController extends Controller
      * This chart is multi-currency aware.
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function revenueAccounts(): JsonResponse
     {

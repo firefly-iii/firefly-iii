@@ -348,6 +348,7 @@ class UserRepository implements UserRepositoryInterface
      * @param array $data
      *
      * @return User
+     * @throws FireflyException
      */
     public function update(User $user, array $data): User
     {

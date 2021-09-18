@@ -74,7 +74,6 @@ class CacheProperties
 
     /**
      * @return bool
-     * @throws JsonException
      */
     public function has(): bool
     {

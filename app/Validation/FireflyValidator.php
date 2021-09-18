@@ -117,7 +117,6 @@ class FireflyValidator extends Validator
      * @param mixed $value
      *
      * @return bool
-     * @throws FireflyException
      */
     public function validateIban($attribute, $value): bool
     {

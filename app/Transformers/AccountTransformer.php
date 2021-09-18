@@ -51,6 +51,8 @@ class AccountTransformer extends AbstractTransformer
      * @param Account $account
      *
      * @return array
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function transform(Account $account): array
     {

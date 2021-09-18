@@ -72,6 +72,7 @@ class IndexController extends Controller
      * @param string  $objectType
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function inactive(Request $request, string $objectType)
     {

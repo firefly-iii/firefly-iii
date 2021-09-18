@@ -67,6 +67,7 @@ class FiscalHelper implements FiscalHelperInterface
      * @param Carbon $date
      *
      * @return Carbon date object
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {

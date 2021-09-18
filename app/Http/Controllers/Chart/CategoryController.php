@@ -63,11 +63,13 @@ class CategoryController extends Controller
 
     /**
      * Show an overview for a category for all time, per month/week/year.
-* See reference nr. 59
+     * See reference nr. 59
      *
      * @param Category $category
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function all(Category $category): JsonResponse
     {
@@ -111,9 +113,10 @@ class CategoryController extends Controller
 
     /**
      * Shows the category chart on the front page.
-* See reference nr. 60
+     * See reference nr. 60
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function frontPage(): JsonResponse
     {
@@ -138,7 +141,7 @@ class CategoryController extends Controller
 
     /**
      * Chart report.
-* See reference nr. 61
+     * See reference nr. 61
      *
      * @param Category   $category
      * @param Collection $accounts
@@ -146,6 +149,7 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -254,13 +258,14 @@ class CategoryController extends Controller
 
     /**
      * Chart for period for transactions without a category.
-* See reference nr. 62
+     * See reference nr. 62
      *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -281,12 +286,14 @@ class CategoryController extends Controller
 
     /**
      * Chart for a specific period.
-* See reference nr. 63
+     * See reference nr. 63
      *
      * @param Category $category
      * @param Carbon   $date
      *
      * @return JsonResponse
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {

@@ -65,6 +65,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @param TransactionCurrency $currency
      *
      * @return bool
+     * @throws FireflyException
      */
     public function currencyInUse(TransactionCurrency $currency): bool
     {

@@ -518,15 +518,11 @@ trait TransactionValidation
      */
     private function compareAccountData(string $type, array $comparison): bool
     {
-        switch ($type) {
-            default:
-            case 'withdrawal':
-                return $this->compareAccountDataWithdrawal($comparison);
-            case 'deposit':
-                return $this->compareAccountDataDeposit($comparison);
-            case 'transfer':
-                return $this->compareAccountDataTransfer($comparison);
-        }
+        return match ($type) {
+            default => $this->compareAccountDataWithdrawal($comparison),
+            'deposit' => $this->compareAccountDataDeposit($comparison),
+            'transfer' => $this->compareAccountDataTransfer($comparison),
+        };
     }
 
     /**

@@ -53,6 +53,7 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function index()
     {

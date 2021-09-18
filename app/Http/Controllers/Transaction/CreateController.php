@@ -31,7 +31,6 @@ use FireflyIII\Services\Internal\Update\GroupCloneService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\View\View;
 
 /**
  * Class CreateController
@@ -88,6 +87,7 @@ class CreateController extends Controller
      * @param string|null $objectType
      *
      * @return Factory|\Illuminate\Contracts\View\View
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function create(?string $objectType)
     {

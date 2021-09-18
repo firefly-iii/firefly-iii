@@ -78,6 +78,7 @@ class ShowController extends Controller
      * @param Carbon|null $end
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
@@ -113,6 +114,7 @@ class ShowController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function noBudgetAll(Request $request)
     {
@@ -141,6 +143,7 @@ class ShowController extends Controller
      * @param Budget  $budget
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function show(Request $request, Budget $budget)
     {

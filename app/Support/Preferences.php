@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Log;
 use PDOException;
 use Session;
 
@@ -107,6 +106,7 @@ class Preferences
      * @param mixed  $default
      *
      * @return Preference|null
+     * @throws FireflyException
      */
     public function getFresh(string $name, $default = null): ?Preference
     {
@@ -207,6 +207,7 @@ class Preferences
 
     /**
      * @return string
+     * @throws FireflyException
      */
     public function lastActivity(): string
     {

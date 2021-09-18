@@ -45,7 +45,8 @@ trait ChartGeneration
      * @param Carbon     $end
      *
      * @return array
-     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \JsonException
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {

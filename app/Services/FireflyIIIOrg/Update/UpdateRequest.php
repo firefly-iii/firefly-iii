@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;

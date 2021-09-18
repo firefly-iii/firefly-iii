@@ -99,10 +99,10 @@ class CurrencyController extends Controller
     /**
      * Make currency the default currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
+     * @param Request $request
      *
      * @return RedirectResponse|Redirector
+     * @throws FireflyException
      */
     public function defaultCurrency(Request $request)
     {
@@ -328,6 +328,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return Factory|View
+     * @throws FireflyException
      */
     public function index(Request $request)
     {

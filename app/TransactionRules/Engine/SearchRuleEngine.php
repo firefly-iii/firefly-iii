@@ -527,6 +527,7 @@ class SearchRuleEngine implements RuleEngineInterface
      * @param RuleGroup $group
      *
      * @return bool
+     * @throws FireflyException
      */
     private function fireGroup(RuleGroup $group): bool
     {

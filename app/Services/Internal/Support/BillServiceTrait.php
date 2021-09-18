@@ -27,7 +27,6 @@ use Exception;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Support\Collection;
 use Log;
 
 /**

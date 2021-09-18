@@ -272,7 +272,7 @@ class TagController extends Controller
      * @param Tag     $tag
      *
      * @return Factory|View
-     *
+     * @throws FireflyException
      */
     public function showAll(Request $request, Tag $tag)
     {
