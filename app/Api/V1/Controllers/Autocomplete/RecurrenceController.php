@@ -25,7 +25,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\Rule;
+use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
@@ -53,22 +53,25 @@ class RecurrenceController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getRecurringAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
      */
     public function recurring(AutocompleteRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $rules    = $this->repository->searchRecurrence($data['query'], $data['limit']);
-        $response = [];
+        $data        = $request->getData();
+        $recurrences = $this->repository->searchRecurrence($data['query'], $data['limit']);
+        $response    = [];
 
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
+        /** @var Recurrence $recurrence */
+        foreach ($recurrences as $recurrence) {
             $response[] = [
-                'id'          => (string)$rule->id,
-                'name'        => $rule->title,
-                'description' => $rule->description,
+                'id'          => (string)$recurrence->id,
+                'name'        => $recurrence->title,
+                'description' => $recurrence->description,
             ];
         }
 

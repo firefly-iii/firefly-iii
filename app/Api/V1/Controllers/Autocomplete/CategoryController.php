@@ -56,6 +56,9 @@ class CategoryController extends Controller
     }
 
     /**
+     * Documentation for this endpoint is at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getCategoriesAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

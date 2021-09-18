@@ -53,6 +53,9 @@ class RuleController extends Controller
     }
 
     /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getRulesAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

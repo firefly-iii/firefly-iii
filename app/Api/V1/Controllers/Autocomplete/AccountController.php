@@ -25,12 +25,14 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use JsonException;
 
 /**
  * Class AccountController
@@ -62,9 +64,14 @@ class AccountController extends Controller
     }
 
     /**
+     * Documentation for this endpoint:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getAccountsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
+     * @throws JsonException
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {

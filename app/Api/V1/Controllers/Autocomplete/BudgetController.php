@@ -56,6 +56,9 @@ class BudgetController extends Controller
     }
 
     /**
+     * Documentation for this endpoint is at:
+     * https://api-docs.firefly-iii.org/#/autocomplete/getBudgetsAC
+     *
      * @param AutocompleteRequest $request
      *
      * @return JsonResponse

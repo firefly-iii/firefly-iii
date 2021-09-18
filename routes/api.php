@@ -98,14 +98,6 @@ Route::group(
         Route::post('transactions', ['uses' => 'TransactionController@update', 'as' => 'transactions']);
     }
 );
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V1\Controllers\Data\Bulk', 'prefix' => 'data/bulk',
-//     'as'        => 'api.v1.data.bulk.',],
-//    static function () {
-//        Route::post('transactions', ['uses' => 'AccountController@moveTransactions', 'as' => 'accounts.move-transactions']);
-//    }
-//);
-
 
 /**
  * INSIGHTS ROUTES
